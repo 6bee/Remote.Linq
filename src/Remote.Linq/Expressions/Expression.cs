@@ -29,6 +29,11 @@ namespace Remote.Linq.Expressions
         {
             return new PropertyAccessExpression(propertyInfo, parent);
         }
+
+        public static PropertyAccessExpression PropertyAccess(string propertyName, Type propertyType, Type declaringType, PropertyAccessExpression parent = null)
+        {
+            return new PropertyAccessExpression(propertyName, propertyType, declaringType, parent);
+        }
         
         public static ConstantValueExpression ConstantValue(object value)
         {

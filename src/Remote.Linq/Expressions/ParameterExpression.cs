@@ -14,7 +14,7 @@ namespace Remote.Linq.Expressions
         internal ParameterExpression(string parameterName, Type type)
         {
             ParameterName = parameterName;
-            ParameterTypeName = type.AssemblyQualifiedName;
+            ParameterTypeName = type.FullName;//.AssemblyQualifiedName;
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Parameter; } }
@@ -23,7 +23,11 @@ namespace Remote.Linq.Expressions
         public string ParameterName { get; private set; }
 
         [DataMember(Name = "ParameterType", IsRequired = true, EmitDefaultValue = false)]
+#if SILVERLIGHT
+        public string ParameterTypeName { get; private set; }
+#else
         private string ParameterTypeName { get; set; }
+#endif
 
         public Type ParameterType
         {
@@ -32,6 +36,16 @@ namespace Remote.Linq.Expressions
                 if (ReferenceEquals(_parameterType, null))
                 {
                     _parameterType = Type.GetType(ParameterTypeName);
+#if !SILVERLIGHT
+                    if (ReferenceEquals(_parameterType, null))
+                    {
+                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                        {
+                            _parameterType = assembly.GetType(ParameterTypeName);
+                            if (!ReferenceEquals(_parameterType, null)) break;
+                        }
+                    }
+#endif
                 }
                 return _parameterType;
             }

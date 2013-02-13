@@ -14,7 +14,7 @@ namespace Remote.Linq.Expressions
         internal ConversionExpression(Expression operand, Type type)
         {
             Operand = operand;
-            TypeName = type.AssemblyQualifiedName;
+            TypeName = type.FullName;//.AssemblyQualifiedName;
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Conversion; } }
@@ -23,7 +23,11 @@ namespace Remote.Linq.Expressions
         public Expression Operand { get; private set; }
 
         [DataMember(Name = "Type", IsRequired = true, EmitDefaultValue = false)]
+#if SILVERLIGHT
+        public string TypeName { get; private set; }
+#else
         private string TypeName { get; set; }
+#endif
 
         public Type Type
         {
@@ -32,6 +36,16 @@ namespace Remote.Linq.Expressions
                 if (ReferenceEquals(_type, null))
                 {
                     _type = Type.GetType(TypeName);
+#if !SILVERLIGHT
+                    if (ReferenceEquals(_type, null))
+                    {
+                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                        {
+                            _type = assembly.GetType(TypeName);
+                            if (!ReferenceEquals(_type, null)) break;
+                        }
+                    }
+#endif
                 }
                 return _type;
             }

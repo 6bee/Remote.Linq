@@ -20,21 +20,33 @@ namespace Remote.Linq.Expressions
         internal PropertyAccessExpression(string propertyName, Type propertyType, Type declaringType, PropertyAccessExpression parent = null)
         {
             PropertyName = propertyName;
-            PropertyType = propertyType.AssemblyQualifiedName;
-            DeclaringType = declaringType.AssemblyQualifiedName;
+            PropertyType = propertyType.FullName;//.AssemblyQualifiedName;
+            DeclaringType = declaringType.FullName;//.AssemblyQualifiedName;
             Parent = parent;
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.PropertyAccess; } }
 
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
+#if SILVERLIGHT
+        public string PropertyName { get; private set; }
+#else
         private string PropertyName { get; set; }
+#endif
 
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
+#if SILVERLIGHT
+        public string PropertyType { get; private set; }
+#else
         private string PropertyType { get; set; }
+#endif
 
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
+#if SILVERLIGHT
+        public string DeclaringType { get; private set; }
+#else
         private string DeclaringType { get; set; }
+#endif
 
         public PropertyInfo PropertyInfo
         {
@@ -43,7 +55,27 @@ namespace Remote.Linq.Expressions
                 if (ReferenceEquals(_propertyInfo, null))
                 {
                     var declaringType = Type.GetType(DeclaringType);
+#if !SILVERLIGHT
+                    if (ReferenceEquals(declaringType, null))
+                    {
+                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                        {
+                            declaringType = assembly.GetType(DeclaringType);
+                            if (!ReferenceEquals(declaringType, null)) break;
+                        }
+                    }
+#endif
                     var propertyType = Type.GetType(PropertyType);
+#if !SILVERLIGHT
+                    if (ReferenceEquals(propertyType, null))
+                    {
+                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                        {
+                            propertyType = assembly.GetType(PropertyType);
+                            if (!ReferenceEquals(propertyType, null)) break;
+                        }
+                    }
+#endif
                     var propertyInfo = declaringType.GetProperty(PropertyName, propertyType);
                     if (propertyInfo == null) propertyInfo = declaringType.GetProperty(PropertyName);
                     _propertyInfo = propertyInfo;
