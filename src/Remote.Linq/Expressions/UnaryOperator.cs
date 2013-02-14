@@ -4,9 +4,7 @@ using System;
 
 namespace Remote.Linq.Expressions
 {
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public enum UnaryOperator
     {
         Not,

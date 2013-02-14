@@ -5,9 +5,7 @@ using System.Runtime.Serialization;
 
 namespace Remote.Linq.Expressions
 {
-#if !SILVERLIGHT
     [Serializable]
-#endif
     [DataContract]
     public sealed class ParameterExpression : Expression
     {
@@ -36,7 +34,6 @@ namespace Remote.Linq.Expressions
                 if (ReferenceEquals(_parameterType, null))
                 {
                     _parameterType = Type.GetType(ParameterTypeName);
-#if !SILVERLIGHT
                     if (ReferenceEquals(_parameterType, null))
                     {
                         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -45,7 +42,6 @@ namespace Remote.Linq.Expressions
                             if (!ReferenceEquals(_parameterType, null)) break;
                         }
                     }
-#endif
                 }
                 return _parameterType;
             }

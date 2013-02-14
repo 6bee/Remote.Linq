@@ -5,14 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{16E7030D-728D-40CF-9E6A-1AF15003FC5E}</ProjectGuid>
+    <ProjectGuid>{91CBF2BB-A03B-46B5-8258-32CDDB74E596}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Remote.Linq.TestClassLibrary</RootNamespace>
-    <AssemblyName>Remote.Linq.TestClassLibrary</AssemblyName>
+    <RootNamespace>Remote.Linq.QueryFunctions</RootNamespace>
+    <AssemblyName>Remote.Linq.QueryFunctions</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,15 +33,11 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="BusinessObject.cs" />
-    <Compile Include="Obj.cs" />
-    <Compile Include="OtherObj.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlFunctions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -10,7 +10,8 @@ namespace System.Linq.Expressions
     {
         private static readonly Dictionary<object, ParameterExpression> ParameterCache = new Dictionary<object, ParameterExpression>();
 
-        private static ParameterExpression GetParameterExpression(Type type, string name = "i")
+        // note: the central parameter repository is required since parameters within an expression tree must be represented by the same parameter expression insatnce
+        private static ParameterExpression GetParameterExpression(Type type, string name = "$")
         {
             lock (ParameterCache)
             {
@@ -89,7 +90,7 @@ namespace System.Linq.Expressions
             }
         }
 
-        private sealed class ExpressionToQueryExpressionTranslator : ExpressionVisitor
+        private sealed class ExpressionToQueryExpressionTranslator : ExpressionVisitorBase
         {
             public RLinq.Expression ToFilterExpression(LambdaExpression expression)
             {
@@ -264,17 +265,18 @@ namespace System.Linq.Expressions
 
             protected override Expression VisitMemberAccess(MemberExpression m)
             {
-                RLinq.PropertyAccessExpression parent = null;
+                RLinq.Expression instance = null;
 
                 if (m.Expression.NodeType == ExpressionType.Parameter)
                 {
+                    instance = new RLinq.ParameterExpression(((ParameterExpression)m.Expression).Name, m.Expression.Type);
                 }
                 else if (m.Expression.NodeType == ExpressionType.MemberAccess)
                 {
                     var exp = Visit(m.Expression);
                     var parentExpression = exp.Unwrap() as RLinq.PropertyAccessExpression;
                     if (parentExpression == null) throw new Exception("navigation path could not be resolved");
-                    parent = parentExpression;
+                    instance = parentExpression;
                 }
                 else
                 {
@@ -282,7 +284,7 @@ namespace System.Linq.Expressions
                 }
 
                 var propertyInfo = (PropertyInfo)m.Member;
-                return new RLinq.PropertyAccessExpression(propertyInfo, parent).Wrap();
+                return new RLinq.PropertyAccessExpression(instance, propertyInfo).Wrap();
             }
             
             protected override Expression VisitMethodCall(MethodCallExpression m)
@@ -291,10 +293,10 @@ namespace System.Linq.Expressions
                 if (m.Method.Name == "get_Item" && m.Arguments.Count == 1 && m.Arguments[0].NodeType == ExpressionType.Constant && ((ConstantExpression)m.Arguments[0]).Type == typeof(string))
                 {
                     var exp = (ConstantExpression)m.Arguments[0];
-                    var parent = Visit(m.Object).Unwrap() as RLinq.PropertyAccessExpression;
+                    var instance = Visit(m.Object).Unwrap();
                     var propertyInfo = m.Object.Type.GetProperty((string)exp.Value, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
                     if (propertyInfo == null) throw new Exception(string.Format("'{0}' is not a valid or an ambiguous property of type {1}", (string)exp.Value, m.Object.Type.FullName));
-                    return new RLinq.PropertyAccessExpression(propertyInfo, parent).Wrap();
+                    return new RLinq.PropertyAccessExpression(instance, propertyInfo).Wrap();
                 }
                 else if (m.Object != null && m.Object.Type == typeof(string) && m.Arguments.Count == 1)
                 {
@@ -323,6 +325,15 @@ namespace System.Linq.Expressions
                     var a2 = Visit(m.Arguments[1]).Unwrap();
 
                     return new RLinq.BinaryExpression(a2, new RLinq.CollectionExpression(list), RLinq.BinaryOperator.In).Wrap();
+                }
+                else
+                {
+                    var instance = m.Object == null ? null : Visit(m.Object).Unwrap();
+                    var arguments =
+                        from argument in m.Arguments
+                        select Visit(argument).Unwrap();
+
+                    return new RLinq.MethodCallExpression(instance, ((MethodCallExpression)m).Method, arguments).Wrap();
                 }
 
                 throw CreateNotSupportedException(m);
@@ -433,6 +444,8 @@ namespace System.Linq.Expressions
                         return Visit((RLinq.PropertyAccessExpression)expression);
                     case RLinq.ExpressionType.Unary:
                         return Visit((RLinq.UnaryExpression)expression);
+                    case RLinq.ExpressionType.MethodCall:
+                        return Visit((RLinq.MethodCallExpression)expression);
                     default:
                         throw new Exception(string.Format("Unknown expression note type: '{0}'", expression.NodeType));
                 }
@@ -461,18 +474,18 @@ namespace System.Linq.Expressions
 
             private Expression Visit(RLinq.PropertyAccessExpression propertyAccessExpression)
             {
-                Expression exp;
-                if (propertyAccessExpression.Parent != null)
-                {
-                    exp = Visit(propertyAccessExpression.Parent);
-                }
-                else
-                {
-                    //exp = Expression.Parameter(propertyAccessExpression.PropertyInfo.DeclaringType, "i");
-                    exp = GetParameterExpression(propertyAccessExpression.PropertyInfo.DeclaringType);
-                }
-
+                var exp = Visit(propertyAccessExpression.Instance);
                 return Expression.MakeMemberAccess(exp, propertyAccessExpression.PropertyInfo);                
+            }
+
+            private Expression Visit(RLinq.MethodCallExpression methodCallExpression)
+            {
+                var instance = methodCallExpression.Instance == null ? null : Visit(methodCallExpression.Instance);
+                var arguments =
+                    from argument in methodCallExpression.Arguments
+                    select Visit(argument);
+
+                return Expression.Call(instance, methodCallExpression.MethodInfo, arguments.ToArray());
             }
 
             private Expression Visit(RLinq.ConversionExpression conversionExpression)

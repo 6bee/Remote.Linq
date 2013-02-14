@@ -37,7 +37,7 @@ namespace System.Linq.Expressions
         /// <summary>  
         /// Evaluates & replaces sub-trees when first candidate is reached (top-down)  
         /// </summary>  
-        private class SubtreeEvaluator : ExpressionVisitor
+        private class SubtreeEvaluator : ExpressionVisitorBase
         {
             private HashSet<Expression> candidates;
 
@@ -80,7 +80,7 @@ namespace System.Linq.Expressions
         /// Performs bottom-up analysis to determine which nodes can possibly  
         /// be part of an evaluated sub-tree.  
         /// </summary>  
-        private class Nominator : ExpressionVisitor
+        private class Nominator : ExpressionVisitorBase
         {
             private Func<Expression, bool> fnCanBeEvaluated;
             private HashSet<Expression> candidates;

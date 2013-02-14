@@ -5,9 +5,7 @@ using System.Runtime.Serialization;
 
 namespace Remote.Linq.Expressions
 {
-#if !SILVERLIGHT
     [Serializable]
-#endif
     [DataContract]
     public sealed class SortExpression
     {

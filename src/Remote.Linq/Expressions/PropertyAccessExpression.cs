@@ -6,23 +6,21 @@ using System.Runtime.Serialization;
 
 namespace Remote.Linq.Expressions
 {
-#if !SILVERLIGHT
     [Serializable]
-#endif
     [DataContract]
     public sealed class PropertyAccessExpression : Expression
     {
-        internal PropertyAccessExpression(PropertyInfo propertyInfo, PropertyAccessExpression parent = null)
-            : this(propertyInfo.Name, propertyInfo.PropertyType, propertyInfo.DeclaringType, parent)
+        internal PropertyAccessExpression(Expression instance, PropertyInfo propertyInfo)
+            : this(instance, propertyInfo.Name, propertyInfo.PropertyType, propertyInfo.DeclaringType)
         {
         }
 
-        internal PropertyAccessExpression(string propertyName, Type propertyType, Type declaringType, PropertyAccessExpression parent = null)
+        internal PropertyAccessExpression(Expression instance, string propertyName, Type propertyType, Type declaringType)
         {
+            Instance = instance;
             PropertyName = propertyName;
             PropertyType = propertyType.FullName;//.AssemblyQualifiedName;
             DeclaringType = declaringType.FullName;//.AssemblyQualifiedName;
-            Parent = parent;
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.PropertyAccess; } }
@@ -55,7 +53,6 @@ namespace Remote.Linq.Expressions
                 if (ReferenceEquals(_propertyInfo, null))
                 {
                     var declaringType = Type.GetType(DeclaringType);
-#if !SILVERLIGHT
                     if (ReferenceEquals(declaringType, null))
                     {
                         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -64,9 +61,7 @@ namespace Remote.Linq.Expressions
                             if (!ReferenceEquals(declaringType, null)) break;
                         }
                     }
-#endif
                     var propertyType = Type.GetType(PropertyType);
-#if !SILVERLIGHT
                     if (ReferenceEquals(propertyType, null))
                     {
                         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -75,7 +70,6 @@ namespace Remote.Linq.Expressions
                             if (!ReferenceEquals(propertyType, null)) break;
                         }
                     }
-#endif
                     var propertyInfo = declaringType.GetProperty(PropertyName, propertyType);
                     if (propertyInfo == null) propertyInfo = declaringType.GetProperty(PropertyName);
                     _propertyInfo = propertyInfo;
@@ -85,12 +79,12 @@ namespace Remote.Linq.Expressions
         }
         private PropertyInfo _propertyInfo;
 
-        [DataMember(IsRequired = true, EmitDefaultValue = true)]
-        public PropertyAccessExpression Parent { get; private set; }
+        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        public Expression Instance { get; private set; }
 
         public override string ToString()
         {
-            return string.Format("{1}.{0}", PropertyName, Parent == null ? "$" : Parent.ToString().Trim().TrimStart('(').TrimEnd(')'));
+            return string.Format("{0}.{1}", Instance == null ? DeclaringType : Instance.ToString(), PropertyName);
         }
     }
 }

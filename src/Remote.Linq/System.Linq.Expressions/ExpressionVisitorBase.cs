@@ -16,9 +16,9 @@ namespace System.Linq.Expressions
     /// This recursive behavior enables a new expression tree to be built that either is the same as or a 
     /// modified version of the original expression that was passed to Visit.
     /// </remarks>
-    internal abstract class ExpressionVisitor
+    internal abstract class ExpressionVisitorBase
     {
-        protected ExpressionVisitor() { }
+        protected ExpressionVisitorBase() { }
 
         protected virtual Expression Visit(Expression exp)
         {

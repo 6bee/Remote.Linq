@@ -5,9 +5,7 @@ using System.Runtime.Serialization;
 
 namespace Remote.Linq.Expressions
 {
-#if !SILVERLIGHT
     [Serializable]
-#endif
     [DataContract]
     public sealed class ConversionExpression : Expression
     {
@@ -36,7 +34,6 @@ namespace Remote.Linq.Expressions
                 if (ReferenceEquals(_type, null))
                 {
                     _type = Type.GetType(TypeName);
-#if !SILVERLIGHT
                     if (ReferenceEquals(_type, null))
                     {
                         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -45,7 +42,6 @@ namespace Remote.Linq.Expressions
                             if (!ReferenceEquals(_type, null)) break;
                         }
                     }
-#endif
                 }
                 return _type;
             }

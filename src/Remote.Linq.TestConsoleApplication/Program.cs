@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Remote.Linq.TestClassLibrary;
+using Remote.Linq.QueryFunctions;
 
 namespace Remote.Linq.TestConsoleApplication
 {
@@ -9,9 +10,18 @@ namespace Remote.Linq.TestConsoleApplication
     {
         static void Main(string[] args)
         {
+            BusinessObject b = new BusinessObject();
+            QueryExtensions.TranslateAndPrint<int>(i => i.ToString().Contains("12"));
+            QueryExtensions.TranslateAndPrint<BusinessObject>(i => SqlFunctions.StringConvert(i.Amount) == b.ToString());
+            QueryExtensions.TranslateAndPrint<BusinessObject>(i => i.Flag);
+
+
             // translate expressions forth and back and execute
             var valueList = new[] { new Obj<int> { Value = 13 }, new Obj<int> { Value = 14 }, new Obj<int> { Value = 87 }, new Obj<int> { Value = 98 }, new Obj<int> { Value = 99 } };
+
             var sortedValueList = valueList.Sort(i => i.Value % 2);
+
+            var scount = sortedValueList.Count();
 
             //var idList = new[] { 87, 98, 99 };
             //var filteredLIdist = idList.Filter(x => x % 2 == 0);

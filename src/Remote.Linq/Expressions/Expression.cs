@@ -7,10 +7,10 @@ using System.Runtime.Serialization;
 
 namespace Remote.Linq.Expressions
 {
-#if !SILVERLIGHT
     [Serializable]
-#endif
     [DataContract]
+    [KnownType(typeof(ParameterExpression))]
+    [KnownType(typeof(MethodCallExpression))]
     [KnownType(typeof(PropertyAccessExpression))]
     [KnownType(typeof(ConstantValueExpression))]
     [KnownType(typeof(ConversionExpression))]
@@ -25,14 +25,24 @@ namespace Remote.Linq.Expressions
 
         #region Factory methods
 
-        public static PropertyAccessExpression PropertyAccess(PropertyInfo propertyInfo, PropertyAccessExpression parent = null)
+        public static PropertyAccessExpression PropertyAccess(Expression instance, PropertyInfo propertyInfo)
         {
-            return new PropertyAccessExpression(propertyInfo, parent);
+            return new PropertyAccessExpression(instance, propertyInfo);
         }
 
-        public static PropertyAccessExpression PropertyAccess(string propertyName, Type propertyType, Type declaringType, PropertyAccessExpression parent = null)
+        public static PropertyAccessExpression PropertyAccess(Expression instance, string propertyName, Type propertyType, Type declaringType)
         {
-            return new PropertyAccessExpression(propertyName, propertyType, declaringType, parent);
+            return new PropertyAccessExpression(instance, propertyName, propertyType, declaringType);
+        }
+
+        public static MethodCallExpression MethodCall(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
+        {
+            return new MethodCallExpression(insatnce, methodInfo, arguments);
+        }
+
+        public static MethodCallExpression MethodCall(Expression insatnce, string methodName, Type declaringType, BindingFlags bindingFlags, Type[] parameterTypes, IEnumerable<Expression> arguments)
+        {
+            return new MethodCallExpression(insatnce, methodName, declaringType, bindingFlags, parameterTypes, arguments);
         }
         
         public static ConstantValueExpression ConstantValue(object value)

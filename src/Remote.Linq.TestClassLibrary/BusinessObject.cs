@@ -15,5 +15,7 @@ namespace Remote.Linq.TestClassLibrary
         public BusinessObject Parent { get; set; }
         public object this[int index] { get { return null; } set { } }
         public object this[string propertyName] { get { return null; } set { } }
+
+        public decimal? Amount { get; set; }
     }
 }

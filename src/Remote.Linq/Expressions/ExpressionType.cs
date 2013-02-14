@@ -4,9 +4,7 @@ using System;
 
 namespace Remote.Linq.Expressions
 {
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public enum ExpressionType
     {
         PropertyAccess,
@@ -16,6 +14,7 @@ namespace Remote.Linq.Expressions
         Unary,
         Collection,
         Parameter,
+        MethodCall,
         Sort,
     }
 }

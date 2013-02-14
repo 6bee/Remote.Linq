@@ -36,11 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -51,13 +47,17 @@
     <Compile Include="QueryExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj">
-      <Project>{2E2B1850-C328-47C3-BED5-313F6E9DBB01}</Project>
-      <Name>Query</Name>
+    <ProjectReference Include="..\Remote.Linq.QueryFunctions\Remote.Linq.QueryFunctions.csproj">
+      <Project>{91CBF2BB-A03B-46B5-8258-32CDDB74E596}</Project>
+      <Name>Remote.Linq.QueryFunctions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Remote.Linq.TestClassLibrary\Remote.Linq.TestClassLibrary.csproj">
       <Project>{16E7030D-728D-40CF-9E6A-1AF15003FC5E}</Project>
-      <Name>TestClassLibrary</Name>
+      <Name>Remote.Linq.TestClassLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj">
+      <Project>{2E2B1850-C328-47C3-BED5-313F6E9DBB01}</Project>
+      <Name>Remote.Linq</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

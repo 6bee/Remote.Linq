@@ -45,6 +45,7 @@
     <Compile Include="Expressions\CollectionExpression.cs" />
     <Compile Include="Expressions\ConstantValueExpression.cs" />
     <Compile Include="Expressions\ConversionExpression.cs" />
+    <Compile Include="Expressions\MethodCallExpression.cs" />
     <Compile Include="Expressions\Expression.cs" />
     <Compile Include="Expressions\ExpressionType.cs" />
     <Compile Include="Expressions\ParameterExpression.cs" />
@@ -53,13 +54,19 @@
     <Compile Include="Expressions\SortExpression.cs" />
     <Compile Include="Expressions\UnaryExpression.cs" />
     <Compile Include="Expressions\UnaryOperator.cs" />
-    <Compile Include="System.Linq.Expressions\ExpressionEvaluator.cs" />
-    <Compile Include="System.Linq.Expressions\ExpressionTranslator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="System.Linq.Expressions\ExpressionVisitor.cs">
+    <Compile Include="System.Linq.Expressions\ExpressionEvaluator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="System.Linq.Expressions\IQueryableExtensions.cs" />
+    <Compile Include="System.Linq.Expressions\ExpressionTranslator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System.Linq.Expressions\ExpressionVisitorBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System.Linq.Expressions\IQueryableExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -48,8 +48,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="mscorlib" />
     <Reference Include="system" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +75,9 @@
     </Compile>
     <Compile Include="..\Remote.Linq\Expressions\ExpressionType.cs">
       <Link>Expressions\ExpressionType.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\MethodCallExpression.cs">
+      <Link>Expressions\MethodCallExpression.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\Expressions\ParameterExpression.cs">
       <Link>Expressions\ParameterExpression.cs</Link>
@@ -98,8 +103,8 @@
     <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionTranslator.cs">
       <Link>System.Linq.Expressions\ExpressionTranslator.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionVisitor.cs">
-      <Link>System.Linq.Expressions\ExpressionVisitor.cs</Link>
+    <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionVisitorBase.cs">
+      <Link>System.Linq.Expressions\ExpressionVisitorBase.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\System.Linq.Expressions\IQueryableExtensions.cs">
       <Link>System.Linq.Expressions\IQueryableExtensions.cs</Link>
@@ -107,7 +112,9 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AppDomainExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="System\SerializableAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
