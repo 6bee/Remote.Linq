@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Remote.Linq.TestClassLibrary;
 using Remote.Linq.QueryFunctions;
+using Remote.Linq.TestClassLibrary;
 
-namespace Remote.Linq.TestConsoleApplication
+namespace Remote.Linq.TestConsole
 {
     class Program
     {
