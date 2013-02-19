@@ -70,9 +70,9 @@ namespace Remote.Linq.Expressions
             return new UnaryExpression(operand, @operator);
         }
         
-        public static CollectionExpression Collection(IEnumerable<ConstantValueExpression> list)
+        public static CollectionExpression Collection(IEnumerable<ConstantValueExpression> list, Type elementType)
         {
-            return new CollectionExpression(list);
+            return new CollectionExpression(list, elementType);
         }
 
         public static SortExpression Sort(Expression operand, SortDirection sortDirection)

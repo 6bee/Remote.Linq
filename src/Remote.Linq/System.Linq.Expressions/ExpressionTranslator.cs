@@ -318,13 +318,29 @@ namespace System.Linq.Expressions
                 }
                 else if (m.Method.Name == "Contains" && m.Object == null && m.Arguments.Count == 2 && m.Arguments[0].NodeType == ExpressionType.Constant && ((ConstantExpression)m.Arguments[0]).Value is System.Collections.IEnumerable)
                 {
+                    var collection = ((ConstantExpression)m.Arguments[0]).Value;
+                    var collectionType = collection.GetType();
+                    var elementType = collectionType.GetElementType();
+                    if (elementType == null)
+                    {
+                        var genericArguments = collectionType.GetGenericArguments();
+                        if (genericArguments != null && genericArguments.Length == 1)
+                        {
+                            elementType = genericArguments[0];
+                        }
+                    }
+                    if (elementType == null)
+                    {
+                        throw new Exception(string.Format("Unable to retrieve element type for collection type {0}", collectionType));
+                    }
+
                     var list =
-                        from item in ((System.Collections.IEnumerable)((ConstantExpression)m.Arguments[0]).Value).OfType<object>()
+                        from item in ((System.Collections.IEnumerable)collection).OfType<object>()
                         select new RLinq.ConstantValueExpression(item);
 
                     var a2 = Visit(m.Arguments[1]).Unwrap();
 
-                    return new RLinq.BinaryExpression(a2, new RLinq.CollectionExpression(list), RLinq.BinaryOperator.In).Wrap();
+                    return new RLinq.BinaryExpression(a2, new RLinq.CollectionExpression(list, elementType), RLinq.BinaryOperator.In).Wrap();
                 }
                 else
                 {
@@ -418,6 +434,7 @@ namespace System.Linq.Expressions
             private static readonly MethodInfo StringEndsWithMethodInfo = typeof(string).GetMethod("EndsWith", new[] { typeof(string) });
             private static readonly MethodInfo StringContainsMethodInfo = typeof(string).GetMethod("Contains", new[] { typeof(string) });
             private static readonly MethodInfo EnumerableOfTypeMethodInfo = typeof(System.Linq.Enumerable).GetMethod("OfType", BindingFlags.Public | BindingFlags.Static);
+            private static readonly MethodInfo EnumerableToListMethodInfo = typeof(System.Linq.Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
             private static readonly MethodInfo EnumerableContainsMethodInfo = typeof(System.Linq.Enumerable).GetMethods(BindingFlags.Public | BindingFlags.Static).Single(m => m.Name == "Contains" && m.GetParameters().Length == 2);
 
             public Expression ToExpression(RLinq.Expression expression)
@@ -501,10 +518,22 @@ namespace System.Linq.Expressions
 
             private Expression Visit(RLinq.CollectionExpression collectionExpression)
             {
-                var list =
+                var collection =
                     from exp in collectionExpression.List
                     select exp.Value;
-                return Expression.Constant(list.ToList());
+
+                if (collectionExpression.ElementType == typeof(object))
+                {
+                    return Expression.Constant(collection.ToList());
+                }
+                else
+                {
+                    var objectCollectionExpression = Expression.Constant(collection);
+                    var typeConvertionMethodExpression = Expression.Call(null, EnumerableOfTypeMethodInfo.MakeGenericMethod(collectionExpression.ElementType), objectCollectionExpression);
+                    var toListMethodExpression = Expression.Call(null, EnumerableToListMethodInfo.MakeGenericMethod(collectionExpression.ElementType), typeConvertionMethodExpression);
+                    var obj = Expression.Lambda(toListMethodExpression).Compile().DynamicInvoke();
+                    return Expression.Constant(obj);
+                }
             }
 
             private Expression Visit(RLinq.BinaryExpression binaryExpression)
@@ -528,7 +557,9 @@ namespace System.Linq.Expressions
                         else
                         {
                             var typeConvertionMethod = Expression.Call(null, EnumerableOfTypeMethodInfo.MakeGenericMethod(p1.Type), p2);
-                            return Expression.Call(null, EnumerableContainsMethodInfo.MakeGenericMethod(p1.Type), typeConvertionMethod, p1);
+                            var obj = Expression.Lambda(typeConvertionMethod).Compile().DynamicInvoke();
+                            var exp =  Expression.Constant(obj);
+                            return Expression.Call(null, EnumerableContainsMethodInfo.MakeGenericMethod(p1.Type), exp, p1);
                         }
                     default:
                         var type = TranslateBinaryOperator(binaryExpression.Operator);

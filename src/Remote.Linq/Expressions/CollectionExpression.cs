@@ -11,15 +11,44 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class CollectionExpression : Expression
     {
-        internal CollectionExpression(IEnumerable<ConstantValueExpression> list)
+        internal CollectionExpression(IEnumerable<ConstantValueExpression> list, Type elementType)
         {
             List = list.ToList();
+            ElementTypeName = elementType.FullName;
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Collection; } }
 
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
         public IEnumerable<ConstantValueExpression> List { get; private set; }
+
+        [DataMember(Name = "ElementType", IsRequired = true, EmitDefaultValue = false)]
+#if SILVERLIGHT
+        public string ElementTypeName { get; private set; }
+#else
+        private string ElementTypeName { get; set; }
+#endif
+
+        public Type ElementType
+        {
+            get
+            {
+                if (ReferenceEquals(_elementType, null))
+                {
+                    _elementType = Type.GetType(ElementTypeName);
+                    if (ReferenceEquals(_elementType, null))
+                    {
+                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                        {
+                            _elementType = assembly.GetType(ElementTypeName);
+                            if (!ReferenceEquals(_elementType, null)) break;
+                        }
+                    }
+                }
+                return _elementType;
+            }
+        }
+        private Type _elementType;
 
         public override string ToString()
         {
