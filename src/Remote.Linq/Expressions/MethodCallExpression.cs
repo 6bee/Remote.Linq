@@ -24,8 +24,8 @@ namespace Remote.Linq.Expressions
         {
             Instance = insatnce;
             MethodName = methodName;
-            DeclaringType = declaringType.FullName;//.AssemblyQualifiedName;
-            ParameterTypes = parameterTypes.Length == 0 ? null : parameterTypes.Select(p => p.FullName).ToArray();
+            DeclaringTypeName = declaringType.FullName;//.AssemblyQualifiedName;
+            ParameterTypeNames = parameterTypes.Length == 0 ? null : parameterTypes.Select(p => p.FullName).ToArray();
             Arguments = arguments.ToArray();
         }
 
@@ -41,18 +41,18 @@ namespace Remote.Linq.Expressions
         private string MethodName { get; set; }
 #endif
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "DeclaringType", IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string DeclaringType { get; private set; }
+        public string DeclaringTypeName { get; private set; }
 #else
-        private string DeclaringType { get; set; }
+        private string DeclaringTypeName { get; set; }
 #endif
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        [DataMember(Name = "ParameterTypes", IsRequired = false, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string[] ParameterTypes { get; private set; }
+        public string[] ParameterTypeNames { get; private set; }
 #else
-        private string[] ParameterTypes { get; set; }
+        private string[] ParameterTypeNames { get; set; }
 #endif
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
@@ -68,18 +68,22 @@ namespace Remote.Linq.Expressions
             {
                 if (ReferenceEquals(_methodInfo, null))
                 {
-                    var declaringType = Type.GetType(DeclaringType);
+                    var declaringType = Type.GetType(DeclaringTypeName);
                     if (ReferenceEquals(declaringType, null))
                     {
                         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                         {
-                            declaringType = assembly.GetType(DeclaringType);
+                            declaringType = assembly.GetType(DeclaringTypeName);
                             if (!ReferenceEquals(declaringType, null)) break;
+                        }
+                        if (ReferenceEquals(declaringType, null))
+                        {
+                            throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringTypeName));
                         }
                     }
 
 
-                    var parameterTypes = ParameterTypes == null ? new Type[0] : ParameterTypes
+                    var parameterTypes = ParameterTypeNames == null ? new Type[0] : ParameterTypeNames
                         .Select(p =>
                         {
                             var parameterType = Type.GetType(p);
@@ -89,6 +93,10 @@ namespace Remote.Linq.Expressions
                                 {
                                     parameterType = assembly.GetType(p);
                                     if (!ReferenceEquals(parameterType, null)) break;
+                                }
+                                if (ReferenceEquals(parameterType, null))
+                                {
+                                    throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", p));
                                 }
                             }
                             return parameterType;
@@ -111,7 +119,7 @@ namespace Remote.Linq.Expressions
         public override string ToString()
         {
             return string.Format("{0}.{1}({2})",
-                Instance == null ? DeclaringType : Instance.ToString(), 
+                Instance == null ? DeclaringTypeName : Instance.ToString(), 
                 MethodName, 
                 // ParameterTypes == null ? null : string.Join(", ", ParameterTypes)
                 Arguments == null ? null : string.Join(", ", Arguments.Select(a => a.ToString()).ToArray()));

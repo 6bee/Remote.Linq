@@ -41,6 +41,10 @@ namespace Remote.Linq.Expressions
                             _type = assembly.GetType(TypeName);
                             if (!ReferenceEquals(_type, null)) break;
                         }
+                        if (ReferenceEquals(_type, null))
+                        {
+                            throw new Exception(string.Format("Type '{0}' could not be reconstructed", TypeName));
+                        }
                     }
                 }
                 return _type;

@@ -43,6 +43,10 @@ namespace Remote.Linq.Expressions
                             _elementType = assembly.GetType(ElementTypeName);
                             if (!ReferenceEquals(_elementType, null)) break;
                         }
+                        if (ReferenceEquals(_elementType, null))
+                        {
+                            throw new Exception(string.Format("Element type '{0}' could not be reconstructed", ElementTypeName));
+                        }
                     }
                 }
                 return _elementType;

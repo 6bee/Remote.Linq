@@ -19,8 +19,8 @@ namespace Remote.Linq.Expressions
         {
             Instance = instance;
             PropertyName = propertyName;
-            PropertyType = propertyType.FullName;//.AssemblyQualifiedName;
-            DeclaringType = declaringType.FullName;//.AssemblyQualifiedName;
+            PropertyTypeName = propertyType.FullName;//.AssemblyQualifiedName;
+            DeclaringTypeName = declaringType.FullName;//.AssemblyQualifiedName;
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.PropertyAccess; } }
@@ -32,18 +32,18 @@ namespace Remote.Linq.Expressions
         private string PropertyName { get; set; }
 #endif
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "PropertyType", IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string PropertyType { get; private set; }
+        public string PropertyTypeName { get; private set; }
 #else
-        private string PropertyType { get; set; }
+        private string PropertyTypeName { get; set; }
 #endif
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "DeclaringType", IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string DeclaringType { get; private set; }
+        public string DeclaringTypeName { get; private set; }
 #else
-        private string DeclaringType { get; set; }
+        private string DeclaringTypeName { get; set; }
 #endif
 
         public PropertyInfo PropertyInfo
@@ -52,22 +52,30 @@ namespace Remote.Linq.Expressions
             {
                 if (ReferenceEquals(_propertyInfo, null))
                 {
-                    var declaringType = Type.GetType(DeclaringType);
+                    var declaringType = Type.GetType(DeclaringTypeName);
                     if (ReferenceEquals(declaringType, null))
                     {
                         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                         {
-                            declaringType = assembly.GetType(DeclaringType);
+                            declaringType = assembly.GetType(DeclaringTypeName);
                             if (!ReferenceEquals(declaringType, null)) break;
                         }
+                        if (ReferenceEquals(declaringType, null))
+                        {
+                            throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringTypeName));
+                        }
                     }
-                    var propertyType = Type.GetType(PropertyType);
+                    var propertyType = Type.GetType(PropertyTypeName);
                     if (ReferenceEquals(propertyType, null))
                     {
                         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                         {
-                            propertyType = assembly.GetType(PropertyType);
+                            propertyType = assembly.GetType(PropertyTypeName);
                             if (!ReferenceEquals(propertyType, null)) break;
+                        }
+                        if (ReferenceEquals(declaringType, null))
+                        {
+                            throw new Exception(string.Format("Property type '{0}' could not be reconstructed", PropertyTypeName));
                         }
                     }
                     var propertyInfo = declaringType.GetProperty(PropertyName, propertyType);
@@ -84,7 +92,7 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("{0}.{1}", Instance == null ? DeclaringType : Instance.ToString(), PropertyName);
+            return string.Format("{0}.{1}", Instance == null ? DeclaringTypeName : Instance.ToString(), PropertyName);
         }
     }
 }

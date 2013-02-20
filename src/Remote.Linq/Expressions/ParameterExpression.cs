@@ -41,6 +41,10 @@ namespace Remote.Linq.Expressions
                             _parameterType = assembly.GetType(ParameterTypeName);
                             if (!ReferenceEquals(_parameterType, null)) break;
                         }
+                        if (ReferenceEquals(_parameterType, null))
+                        {
+                            throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", ParameterTypeName));
+                        }
                     }
                 }
                 return _parameterType;
