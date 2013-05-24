@@ -46,6 +46,7 @@
     <Compile Include="Expressions\CollectionExpression.cs" />
     <Compile Include="Expressions\ConstantValueExpression.cs" />
     <Compile Include="Expressions\ConversionExpression.cs" />
+    <Compile Include="Expressions\LambdaExpression.cs" />
     <Compile Include="Expressions\MethodCallExpression.cs" />
     <Compile Include="Expressions\Expression.cs" />
     <Compile Include="Expressions\ExpressionType.cs" />

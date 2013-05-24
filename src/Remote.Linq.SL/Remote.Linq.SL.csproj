@@ -76,6 +76,9 @@
     <Compile Include="..\Remote.Linq\Expressions\ExpressionType.cs">
       <Link>Expressions\ExpressionType.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\LambdaExpression.cs">
+      <Link>Expressions\LambdaExpression.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Expressions\MethodCallExpression.cs">
       <Link>Expressions\MethodCallExpression.cs</Link>
     </Compile>

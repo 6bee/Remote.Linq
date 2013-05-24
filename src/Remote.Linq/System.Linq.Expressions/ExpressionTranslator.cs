@@ -8,21 +8,29 @@ namespace System.Linq.Expressions
 {
     public static class ExpressionTranslator
     {
-        private static readonly Dictionary<object, ParameterExpression> ParameterCache = new Dictionary<object, ParameterExpression>();
-
-        // note: the central parameter repository is required since parameters within an expression tree must be represented by the same parameter expression insatnce
-        private static ParameterExpression GetParameterExpression(Type type, string name = "$")
+        private sealed class ParameterCache
         {
-            lock (ParameterCache)
+            private readonly Dictionary<object, ParameterExpression> _cache = new Dictionary<object, ParameterExpression>();
+
+            // note: the central parameter repository is required since parameters within an expression tree must be represented by the same parameter expression insatnce
+            public ParameterExpression GetParameterExpression(Type type, string name = "$")
             {
-                var key = new { type, name };
-                ParameterExpression exp;
-                if (!ParameterCache.TryGetValue(key, out exp))
+                lock (_cache)
                 {
-                    exp = Expression.Parameter(type, name);
-                    ParameterCache.Add(key, exp);
+                    var key = new { type, name };
+                    ParameterExpression exp;
+                    if (!_cache.TryGetValue(key, out exp))
+                    {
+                        exp = Expression.Parameter(type, name);
+                        _cache.Add(key, exp);
+                    }
+                    return exp;
                 }
-                return exp;
+            }
+
+            public IEnumerable<ParameterExpression> GetAllParameters()
+            {
+                return _cache.Values.ToList();
             }
         }
         
@@ -31,7 +39,7 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static RLinq.Expression ToQueryExpression(this LambdaExpression expression)
+        public static RLinq.LambdaExpression ToQueryExpression(this LambdaExpression expression)
         {
             return new ExpressionToQueryExpressionTranslator().ToFilterExpression(expression);
         }
@@ -43,7 +51,7 @@ namespace System.Linq.Expressions
         /// <returns></returns>
         public static Expression ToLinqExpression(this RLinq.Expression expression)
         {
-            var exp = new FilterExpressionToExpressionTranslator().ToExpression(expression);
+            var exp = new FilterExpressionToExpressionTranslator(new ParameterCache()).ToExpression(expression);
             return exp;
         }
 
@@ -52,25 +60,47 @@ namespace System.Linq.Expressions
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static Expression<Func<T, TResult>> ToLinqExpression<T, TResult>(this RLinq.Expression expression)
+        public static Expression<Func<T, TResult>> ToLinqExpression<T, TResult>(this RLinq.LambdaExpression expression)
         {
+            //var parameterCache = new ParameterCache();
+            //var exp = new FilterExpressionToExpressionTranslator(parameterCache).ToExpression(expression);
+            //if (exp is LambdaExpression) exp = ((LambdaExpression)exp).Body;
+            //var parameters = parameterCache.GetAllParameters();
+            //var lambdaExpression = Expression.Lambda<Func<T, TResult>>(exp, parameters.ToArray());
+            //return lambdaExpression;
             var exp = expression.ToLinqExpression();
-            var parameter = GetParameterExpression(typeof(T));
-            var lambdaExpression = Expression.Lambda<Func<T, TResult>>(exp, parameter);
+            var lambdaExpression = Expression.Lambda<Func<T, TResult>>(exp.Body, exp.Parameters);
             return lambdaExpression;
         }
+
+        ///// <summary>
+        ///// Translates a given query expression into a lambda expression
+        ///// </summary>
+        ///// <param name="expression"></param>
+        ///// <returns></returns>
+        //public static LambdaExpression ToLinqExpression<T>(this RLinq.Expression expression)
+        //{
+        //    //var exp = expression.ToLinqExpression();
+        //    var parameterCache = new ParameterCache();
+        //    var exp = new FilterExpressionToExpressionTranslator(parameterCache).ToExpression(expression);
+        //    //var parameter = ParameterCacheInstance.GetParameterExpression(typeof(T));
+        //    //var lambdaExpression = Expression.Lambda(exp, parameter);
+        //    var parameters = parameterCache.GetAllParameters();
+        //    var lambdaExpression = Expression.Lambda(exp, parameters.ToArray());
+        //    return lambdaExpression;
+        //}
 
         /// <summary>
         /// Translates a given query expression into a lambda expression
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static LambdaExpression ToLinqExpression<T>(this RLinq.Expression expression)
+        public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression)
         {
-            var exp = expression.ToLinqExpression();
-            var parameter = GetParameterExpression(typeof(T));
-            var lambdaExpression = Expression.Lambda(exp, parameter);
-            return lambdaExpression;
+            //var lambdaExpression = (LambdaExpression)expression.ToLinqExpression();
+            var parameterCache = new ParameterCache();
+            var lambdaExpression = new FilterExpressionToExpressionTranslator(parameterCache).ToExpression(expression);
+            return (LambdaExpression)lambdaExpression;
         }
 
         private static System.Linq.Expressions.ConstantExpression Wrap(this RLinq.Expression expression)
@@ -92,12 +122,16 @@ namespace System.Linq.Expressions
 
         private sealed class ExpressionToQueryExpressionTranslator : ExpressionVisitorBase
         {
-            public RLinq.Expression ToFilterExpression(LambdaExpression expression)
+            public RLinq.LambdaExpression ToFilterExpression(LambdaExpression expression)
             {
                 var partialEvalExpression = expression.PartialEval() as LambdaExpression;
                 if (partialEvalExpression == null) throw CreateNotSupportedException(expression);
                 var constExpression = Visit(partialEvalExpression.Body);
-                return constExpression.Unwrap();
+                //return constExpression.Unwrap();
+                var parameters =
+                    from p in partialEvalExpression.Parameters
+                    select new RLinq.ParameterExpression(p.Name, p.Type);
+                return new RLinq.LambdaExpression(constExpression.Unwrap(), parameters);
             }
 
             protected override Expression VisitConstant(ConstantExpression c)
@@ -355,6 +389,15 @@ namespace System.Linq.Expressions
                 throw CreateNotSupportedException(m);
             }
 
+            protected override Expression VisitLambda(LambdaExpression lambda)
+            {
+                var body = Visit(lambda.Body).Unwrap();
+                var parameters =
+                    from p in lambda.Parameters
+                    select (RLinq.ParameterExpression)VisitParameter(p).Unwrap();
+                return new RLinq.LambdaExpression(body, parameters).Wrap();
+            }
+
             protected override Expression VisitUnary(UnaryExpression u)
             {
                 var operand = Visit(u.Operand).Unwrap();
@@ -403,7 +446,7 @@ namespace System.Linq.Expressions
                     case ExpressionType.OrElse:
                         return RLinq.BinaryOperator.Or;
                     case ExpressionType.LessThan:
-                        return RLinq.BinaryOperator.And;
+                        return RLinq.BinaryOperator.LessThan;
                     case ExpressionType.LessThanOrEqual:
                         return RLinq.BinaryOperator.LessThanOrEqual;
                     case ExpressionType.GreaterThan:
@@ -437,6 +480,13 @@ namespace System.Linq.Expressions
             private static readonly MethodInfo EnumerableToListMethodInfo = typeof(System.Linq.Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
             private static readonly MethodInfo EnumerableContainsMethodInfo = typeof(System.Linq.Enumerable).GetMethods(BindingFlags.Public | BindingFlags.Static).Single(m => m.Name == "Contains" && m.GetParameters().Length == 2);
 
+            private readonly ParameterCache _parameterCache;
+
+            public FilterExpressionToExpressionTranslator(ParameterCache parameterCache)
+            {
+                _parameterCache = parameterCache;
+            }
+
             public Expression ToExpression(RLinq.Expression expression)
             {
                 var exp = Visit(expression);
@@ -463,14 +513,16 @@ namespace System.Linq.Expressions
                         return Visit((RLinq.UnaryExpression)expression);
                     case RLinq.ExpressionType.MethodCall:
                         return Visit((RLinq.MethodCallExpression)expression);
+                    case RLinq.ExpressionType.Lambda:
+                        return Visit((RLinq.LambdaExpression)expression);
                     default:
                         throw new Exception(string.Format("Unknown expression note type: '{0}'", expression.NodeType));
                 }
             }
 
-            private Expression Visit(RLinq.ParameterExpression parameterExpression)
+            private ParameterExpression Visit(RLinq.ParameterExpression parameterExpression)
             {
-                return GetParameterExpression(parameterExpression.ParameterType/*, parameterExpression.ParameterName*/);
+                return _parameterCache.GetParameterExpression(parameterExpression.ParameterType, parameterExpression.ParameterName);
             }
 
             private Expression Visit(RLinq.UnaryExpression unaryExpression)
@@ -565,6 +617,15 @@ namespace System.Linq.Expressions
                         var type = TranslateBinaryOperator(binaryExpression.Operator);
                         return Expression.MakeBinary(type, p1, p2);
                 }
+            }
+
+            private Expression Visit(RLinq.LambdaExpression lambdaExpression)
+            {
+                var body = Visit(lambdaExpression.Expression);
+                var parameters =
+                    from p in lambdaExpression.Parameters
+                    select Visit(p);
+                return Expression.Lambda(body, parameters.ToArray());
             }
 
             private static ExpressionType TranslateBinaryOperator(RLinq.BinaryOperator @operator)

@@ -17,5 +17,7 @@ namespace Remote.Linq.TestClassLibrary
         public object this[string propertyName] { get { return null; } set { } }
 
         public decimal? Amount { get; set; }
+
+        public IEnumerable<Obj<int>> Numbers { get; set; }
     }
 }

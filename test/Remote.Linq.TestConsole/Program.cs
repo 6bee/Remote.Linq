@@ -9,6 +9,7 @@ namespace Remote.Linq.TestConsole
     {
         static void Main(string[] args)
         {
+            QueryExtensions.TranslateAndPrint<BusinessObject>(i => i.Numbers.Sum(number => number.Value) > 0);
             BusinessObject b = new BusinessObject();
             QueryExtensions.TranslateAndPrint<int>(i => i.ToString().Contains("12"));
             QueryExtensions.TranslateAndPrint<BusinessObject>(i => SqlFunctions.StringConvert(i.Amount) == b.ToString());
@@ -17,6 +18,8 @@ namespace Remote.Linq.TestConsole
 
             // translate expressions forth and back and execute
             var valueList = new[] { new Obj<int> { Value = 13 }, new Obj<int> { Value = 14 }, new Obj<int> { Value = 87 }, new Obj<int> { Value = 98 }, new Obj<int> { Value = 99 } };
+
+            //QueryExtensions.TranslateAndPrint<Obj<int>>(item => valueList.Sum(i => i.Value));
 
             var sortedValueList = valueList.Sort(i => i.Value % 2);
 

@@ -16,5 +16,6 @@ namespace Remote.Linq.Expressions
         Parameter,
         MethodCall,
         Sort,
+        Lambda,
     }
 }

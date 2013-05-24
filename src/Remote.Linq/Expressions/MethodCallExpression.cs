@@ -13,20 +13,22 @@ namespace Remote.Linq.Expressions
     public sealed class MethodCallExpression : Expression
     {
         internal MethodCallExpression(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
-            : this(insatnce, methodInfo.Name, methodInfo.DeclaringType, BindingFlags.Default, methodInfo.GetParameters().Select(p => p.ParameterType).ToArray(), arguments)
+            : this(insatnce, methodInfo.Name, methodInfo.DeclaringType, BindingFlags.Default, methodInfo.GetGenericArguments(), methodInfo.GetParameters().Select(p => p.ParameterType).ToArray(), arguments)
         {
             var bindingFlags = methodInfo.IsStatic ? BindingFlags.Static : BindingFlags.Instance;
             bindingFlags |= methodInfo.IsPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             BindingFlags = bindingFlags;
         }
 
-        internal MethodCallExpression(Expression insatnce, string methodName, Type declaringType, BindingFlags bindingFlags, Type[] parameterTypes, IEnumerable<Expression> arguments)
+        internal MethodCallExpression(Expression insatnce, string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
         {
             Instance = insatnce;
             MethodName = methodName;
             DeclaringTypeName = declaringType.FullName;//.AssemblyQualifiedName;
+            GenericArgumentNames = genericArguments.Length == 0 ? null : genericArguments.Select(p => p.FullName).ToArray();
             ParameterTypeNames = parameterTypes.Length == 0 ? null : parameterTypes.Select(p => p.FullName).ToArray();
             Arguments = arguments.ToArray();
+            BindingFlags = bindingFlags;
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.MethodCall; } }
@@ -53,6 +55,13 @@ namespace Remote.Linq.Expressions
         public string[] ParameterTypeNames { get; private set; }
 #else
         private string[] ParameterTypeNames { get; set; }
+#endif
+
+        [DataMember(Name = "GenericArguments", IsRequired = false, EmitDefaultValue = false)]
+#if SILVERLIGHT
+        public string[] GenericArgumentNames { get; private set; }
+#else
+        private string[] GenericArgumentNames { get; set; }
 #endif
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
@@ -82,6 +91,25 @@ namespace Remote.Linq.Expressions
                         }
                     }
 
+                    var genericArguments = GenericArgumentNames == null ? new Type[0] : GenericArgumentNames
+                        .Select(a =>
+                        {
+                            var genericArgument = Type.GetType(a);
+                            if (ReferenceEquals(genericArgument, null))
+                            {
+                                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                                {
+                                    genericArgument = assembly.GetType(a);
+                                    if (!ReferenceEquals(genericArgument, null)) break;
+                                }
+                                if (ReferenceEquals(genericArgument, null))
+                                {
+                                    throw new Exception(string.Format("Generic argument '{0}' could not be reconstructed", a));
+                                }
+                            }
+                            return genericArgument;
+                        })
+                        .ToArray();
 
                     var parameterTypes = ParameterTypeNames == null ? new Type[0] : ParameterTypeNames
                         .Select(p =>
@@ -105,7 +133,25 @@ namespace Remote.Linq.Expressions
 
 
                     var methodInfo = declaringType.GetMethod(MethodName, BindingFlags, null, parameterTypes, null);
-                    if (methodInfo == null) methodInfo = declaringType.GetMethod(MethodName);
+                    //if (methodInfo == null) methodInfo = declaringType.GetMethod(MethodName);
+                    if (methodInfo == null)
+                    {
+                        methodInfo = declaringType.GetMethods(BindingFlags)
+                            .Where(m => m.Name == MethodName)
+                            .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments.Length)
+                            .Where(m => m.GetParameters().Length == parameterTypes.Length)
+                            .Select(m => m.IsGenericMethod ? m.MakeGenericMethod(genericArguments) : m)
+                            .Where(m =>
+                            {
+                                var paramTypes = m.GetParameters();
+                                for (int i = 0; i < parameterTypes.Length; i++)
+                                {
+                                    if (paramTypes[i].ParameterType != parameterTypes[i]) return false;
+                                }
+                                return true;
+                            })
+                            .Single();
+                    }
                     _methodInfo = methodInfo;
                 }
                 return _methodInfo;
