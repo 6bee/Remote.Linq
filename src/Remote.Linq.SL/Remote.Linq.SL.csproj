@@ -100,6 +100,24 @@
     <Compile Include="..\Remote.Linq\Expressions\UnaryOperator.cs">
       <Link>Expressions\UnaryOperator.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\IOrderedQuery.cs">
+      <Link>IOrderedQuery.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IOrderedQuery`.cs">
+      <Link>IOrderedQuery`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IQuery.cs">
+      <Link>IQuery.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IQuery`.cs">
+      <Link>IQuery`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Query.cs">
+      <Link>Query.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Query`.cs">
+      <Link>Query`.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionEvaluator.cs">
       <Link>System.Linq.Expressions\ExpressionEvaluator.cs</Link>
     </Compile>
@@ -108,6 +126,9 @@
     </Compile>
     <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionVisitorBase.cs">
       <Link>System.Linq.Expressions\ExpressionVisitorBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\System.Linq.Expressions\IEnumerableExtensions.cs">
+      <Link>System.Linq.Expressions\IEnumerableExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\System.Linq.Expressions\IQueryableExtensions.cs">
       <Link>System.Linq.Expressions\IQueryableExtensions.cs</Link>

@@ -56,7 +56,13 @@
     <Compile Include="Expressions\SortExpression.cs" />
     <Compile Include="Expressions\UnaryExpression.cs" />
     <Compile Include="Expressions\UnaryOperator.cs" />
+    <Compile Include="IOrderedQuery.cs" />
+    <Compile Include="IOrderedQuery`.cs" />
+    <Compile Include="IQuery.cs" />
+    <Compile Include="IQuery`.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query.cs" />
+    <Compile Include="Query`.cs" />
     <Compile Include="System.Linq.Expressions\ExpressionEvaluator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -66,6 +72,7 @@
     <Compile Include="System.Linq.Expressions\ExpressionVisitorBase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="System.Linq.Expressions\IEnumerableExtensions.cs" />
     <Compile Include="System.Linq.Expressions\IQueryableExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
