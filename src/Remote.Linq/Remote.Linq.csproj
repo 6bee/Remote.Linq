@@ -72,8 +72,8 @@
     <Compile Include="System.Linq.Expressions\ExpressionVisitorBase.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="System.Linq.Expressions\IEnumerableExtensions.cs" />
-    <Compile Include="System.Linq.Expressions\IQueryableExtensions.cs">
+    <Compile Include="System.Linq\IEnumerableExtensions.cs" />
+    <Compile Include="System.Linq\IQueryableExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+using System.Linq.Expressions;
 using System.Reflection;
 using Remote.Linq;
 
-namespace System.Linq.Expressions
+namespace System.Linq
 {
     public static class IQueryableExtensions
     {

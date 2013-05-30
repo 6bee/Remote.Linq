@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using Remote.Linq;
 
-namespace System.Linq.Expressions
+namespace System.Linq
 {
     public static class IEnumerableExtensions
     {
