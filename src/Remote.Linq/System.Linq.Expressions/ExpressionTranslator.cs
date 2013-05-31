@@ -33,7 +33,7 @@ namespace System.Linq.Expressions
                 return _cache.Values.ToList();
             }
         }
-        
+
         /// <summary>
         /// Translates a given lambda expression into a query expression
         /// </summary>
@@ -41,9 +41,9 @@ namespace System.Linq.Expressions
         /// <returns></returns>
         public static RLinq.LambdaExpression ToQueryExpression(this LambdaExpression expression)
         {
-            return new ExpressionToQueryExpressionTranslator().ToFilterExpression(expression);
+            return new LinqExpressionToQueryExpressionTranslator().ToFilterExpression(expression);
         }
-        
+
         /// <summary>
         /// Translates a given query expression into an expression
         /// </summary>
@@ -51,7 +51,7 @@ namespace System.Linq.Expressions
         /// <returns></returns>
         public static Expression ToLinqExpression(this RLinq.Expression expression)
         {
-            var exp = new FilterExpressionToExpressionTranslator(new ParameterCache()).ToExpression(expression);
+            var exp = new QueryExpressionToLinqExpressionTranslator(new ParameterCache()).ToExpression(expression);
             return exp;
         }
 
@@ -99,7 +99,7 @@ namespace System.Linq.Expressions
         {
             //var lambdaExpression = (LambdaExpression)expression.ToLinqExpression();
             var parameterCache = new ParameterCache();
-            var lambdaExpression = new FilterExpressionToExpressionTranslator(parameterCache).ToExpression(expression);
+            var lambdaExpression = new QueryExpressionToLinqExpressionTranslator(parameterCache).ToExpression(expression);
             return (LambdaExpression)lambdaExpression;
         }
 
@@ -120,7 +120,7 @@ namespace System.Linq.Expressions
             }
         }
 
-        private sealed class ExpressionToQueryExpressionTranslator : ExpressionVisitorBase
+        private sealed class LinqExpressionToQueryExpressionTranslator : ExpressionVisitorBase
         {
             public RLinq.LambdaExpression ToFilterExpression(LambdaExpression expression)
             {
@@ -320,7 +320,7 @@ namespace System.Linq.Expressions
                 var propertyInfo = (PropertyInfo)m.Member;
                 return new RLinq.PropertyAccessExpression(instance, propertyInfo).Wrap();
             }
-            
+
             protected override Expression VisitMethodCall(MethodCallExpression m)
             {
                 // property selector
@@ -332,7 +332,8 @@ namespace System.Linq.Expressions
                     if (propertyInfo == null) throw new Exception(string.Format("'{0}' is not a valid or an ambiguous property of type {1}", (string)exp.Value, m.Object.Type.FullName));
                     return new RLinq.PropertyAccessExpression(instance, propertyInfo).Wrap();
                 }
-                else if (m.Object != null && m.Object.Type == typeof(string) && m.Arguments.Count == 1)
+
+                if (m.Object != null && m.Object.Type == typeof(string) && m.Arguments.Count == 1)
                 {
                     var obj = Visit(m.Object);
                     var p1 = obj.Unwrap();
@@ -350,7 +351,8 @@ namespace System.Linq.Expressions
                             return new RLinq.BinaryExpression(p1, p2, RLinq.BinaryOperator.EndsWith).Wrap();
                     }
                 }
-                else if (m.Method.Name == "Contains" && m.Object == null && m.Arguments.Count == 2 && m.Arguments[0].NodeType == ExpressionType.Constant && ((ConstantExpression)m.Arguments[0]).Value is System.Collections.IEnumerable)
+
+                if (m.Method.Name == "Contains" && m.Object == null && m.Arguments.Count == 2 && m.Arguments[0].NodeType == ExpressionType.Constant && ((ConstantExpression)m.Arguments[0]).Value is System.Collections.IEnumerable)
                 {
                     var collection = ((ConstantExpression)m.Arguments[0]).Value;
                     var collectionType = collection.GetType();
@@ -376,7 +378,7 @@ namespace System.Linq.Expressions
 
                     return new RLinq.BinaryExpression(a2, new RLinq.CollectionExpression(list, elementType), RLinq.BinaryOperator.In).Wrap();
                 }
-                else
+
                 {
                     var instance = m.Object == null ? null : Visit(m.Object).Unwrap();
                     var arguments =
@@ -386,7 +388,7 @@ namespace System.Linq.Expressions
                     return new RLinq.MethodCallExpression(instance, ((MethodCallExpression)m).Method, arguments).Wrap();
                 }
 
-                throw CreateNotSupportedException(m);
+                //throw CreateNotSupportedException(m);
             }
 
             protected override Expression VisitLambda(LambdaExpression lambda)
@@ -471,7 +473,7 @@ namespace System.Linq.Expressions
             }
         }
 
-        private sealed class FilterExpressionToExpressionTranslator
+        private sealed class QueryExpressionToLinqExpressionTranslator
         {
             private static readonly MethodInfo StringStartsWithMethodInfo = typeof(string).GetMethod("StartsWith", new[] { typeof(string) });
             private static readonly MethodInfo StringEndsWithMethodInfo = typeof(string).GetMethod("EndsWith", new[] { typeof(string) });
@@ -482,7 +484,7 @@ namespace System.Linq.Expressions
 
             private readonly ParameterCache _parameterCache;
 
-            public FilterExpressionToExpressionTranslator(ParameterCache parameterCache)
+            public QueryExpressionToLinqExpressionTranslator(ParameterCache parameterCache)
             {
                 _parameterCache = parameterCache;
             }
@@ -544,7 +546,7 @@ namespace System.Linq.Expressions
             private Expression Visit(RLinq.PropertyAccessExpression propertyAccessExpression)
             {
                 var exp = Visit(propertyAccessExpression.Instance);
-                return Expression.MakeMemberAccess(exp, propertyAccessExpression.PropertyInfo);                
+                return Expression.MakeMemberAccess(exp, propertyAccessExpression.PropertyInfo);
             }
 
             private Expression Visit(RLinq.MethodCallExpression methodCallExpression)
@@ -576,11 +578,11 @@ namespace System.Linq.Expressions
 
                 if (collectionExpression.ElementType == typeof(object))
                 {
-                    return Expression.Constant(collection.ToList());
+                    return Expression.Constant(collection.ToArray());
                 }
                 else
                 {
-                    var objectCollectionExpression = Expression.Constant(collection);
+                    var objectCollectionExpression = Expression.Constant(collection.ToArray());
                     var typeConvertionMethodExpression = Expression.Call(null, EnumerableOfTypeMethodInfo.MakeGenericMethod(collectionExpression.ElementType), objectCollectionExpression);
                     var toListMethodExpression = Expression.Call(null, EnumerableToListMethodInfo.MakeGenericMethod(collectionExpression.ElementType), typeConvertionMethodExpression);
                     var obj = Expression.Lambda(toListMethodExpression).Compile().DynamicInvoke();
@@ -610,7 +612,7 @@ namespace System.Linq.Expressions
                         {
                             var typeConvertionMethod = Expression.Call(null, EnumerableOfTypeMethodInfo.MakeGenericMethod(p1.Type), p2);
                             var obj = Expression.Lambda(typeConvertionMethod).Compile().DynamicInvoke();
-                            var exp =  Expression.Constant(obj);
+                            var exp = Expression.Constant(obj);
                             return Expression.Call(null, EnumerableContainsMethodInfo.MakeGenericMethod(p1.Type), exp, p1);
                         }
                     default:
