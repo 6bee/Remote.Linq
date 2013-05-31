@@ -2,6 +2,7 @@ _ReSharper*
 bin
 Bin
 obj
+tmp
 App_Data
 TestResults
 *.user
