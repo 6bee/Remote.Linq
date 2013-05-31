@@ -11,6 +11,7 @@ namespace Remote.Linq.Expressions
     {
         internal ParameterExpression(string parameterName, Type type)
         {
+            _parameterType = type;
             ParameterName = parameterName;
             ParameterTypeName = type.FullName;//.AssemblyQualifiedName;
         }
@@ -50,6 +51,7 @@ namespace Remote.Linq.Expressions
                 return _parameterType;
             }
         }
+        [NonSerialized]
         private Type _parameterType;
 
         public override string ToString()

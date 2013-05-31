@@ -15,6 +15,7 @@ namespace Remote.Linq.Expressions
         internal MethodCallExpression(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
             : this(insatnce, methodInfo.Name, methodInfo.DeclaringType, BindingFlags.Default, methodInfo.GetGenericArguments(), methodInfo.GetParameters().Select(p => p.ParameterType).ToArray(), arguments)
         {
+            _methodInfo = methodInfo;
             var bindingFlags = methodInfo.IsStatic ? BindingFlags.Static : BindingFlags.Instance;
             bindingFlags |= methodInfo.IsPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             BindingFlags = bindingFlags;
@@ -157,6 +158,7 @@ namespace Remote.Linq.Expressions
                 return _methodInfo;
             }
         }
+        [NonSerialized]
         private MethodInfo _methodInfo;
         
         [DataMember(IsRequired = false, EmitDefaultValue = false)]

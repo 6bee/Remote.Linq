@@ -14,7 +14,7 @@ namespace Remote.Linq.Expressions
         internal LambdaExpression(Expression expression, IEnumerable<ParameterExpression> parameters)
         {
             Expression = expression;
-            Parameters = parameters;
+            Parameters = parameters.ToArray();
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Lambda; } }

@@ -13,6 +13,7 @@ namespace Remote.Linq.Expressions
         internal PropertyAccessExpression(Expression instance, PropertyInfo propertyInfo)
             : this(instance, propertyInfo.Name, propertyInfo.PropertyType, propertyInfo.DeclaringType)
         {
+            _propertyInfo = propertyInfo;
         }
 
         internal PropertyAccessExpression(Expression instance, string propertyName, Type propertyType, Type declaringType)
@@ -85,6 +86,7 @@ namespace Remote.Linq.Expressions
                 return _propertyInfo;
             }
         }
+        [NonSerialized]
         private PropertyInfo _propertyInfo;
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]

@@ -13,7 +13,8 @@ namespace Remote.Linq.Expressions
     {
         internal CollectionExpression(IEnumerable<ConstantValueExpression> list, Type elementType)
         {
-            List = list.ToList();
+            _elementType = elementType;
+            List = list.ToArray();
             ElementTypeName = elementType.FullName;
         }
 
@@ -52,6 +53,7 @@ namespace Remote.Linq.Expressions
                 return _elementType;
             }
         }
+        [NonSerialized]
         private Type _elementType;
 
         public override string ToString()

@@ -11,6 +11,7 @@ namespace Remote.Linq.Expressions
     {
         internal ConversionExpression(Expression operand, Type type)
         {
+            _type = type;
             Operand = operand;
             TypeName = type.FullName;//.AssemblyQualifiedName;
         }
@@ -50,6 +51,7 @@ namespace Remote.Linq.Expressions
                 return _type;
             }
         }
+        [NonSerialized]
         private Type _type;
 
         public override string ToString()

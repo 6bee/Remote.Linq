@@ -127,17 +127,18 @@
     <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionVisitorBase.cs">
       <Link>System.Linq.Expressions\ExpressionVisitorBase.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\System.Linq.Expressions\IEnumerableExtensions.cs">
-      <Link>System.Linq.Expressions\IEnumerableExtensions.cs</Link>
+    <Compile Include="..\Remote.Linq\System.Linq\IEnumerableExtensions.cs">
+      <Link>System.Linq\IEnumerableExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\System.Linq.Expressions\IQueryableExtensions.cs">
-      <Link>System.Linq.Expressions\IQueryableExtensions.cs</Link>
+    <Compile Include="..\Remote.Linq\System.Linq\IQueryableExtensions.cs">
+      <Link>System.Linq\IQueryableExtensions.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AppDomainExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="System\NonSerializedAttribute.cs" />
     <Compile Include="System\SerializableAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
