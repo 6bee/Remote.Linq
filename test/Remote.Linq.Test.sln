@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.TestConsole", "Remote.Linq.TestConsole\Remote.Linq.TestConsole.csproj", "{A28CF14B-2AE2-4351-9393-A47A1C3AB5E8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{AFF7E88F-A99A-4FD5-980D-6F6516FE0A28}"
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq", "..\src\Remote.Linq\Remote.Linq.csproj", "{2E2B1850-C328-47C3-BED5-313F6E9DBB01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.QueryFunctions", "..\src\Remote.Linq.QueryFunctions\Remote.Linq.QueryFunctions.csproj", "{91CBF2BB-A03B-46B5-8258-32CDDB74E596}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.UnitTest", "Remote.Linq.UnitTest\Remote.Linq.UnitTest.csproj", "{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,16 @@ Global
 		{91CBF2BB-A03B-46B5-8258-32CDDB74E596}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{91CBF2BB-A03B-46B5-8258-32CDDB74E596}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{91CBF2BB-A03B-46B5-8258-32CDDB74E596}.Release|x86.ActiveCfg = Release|Any CPU
+		{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{DB08DE06-BAEE-48D5-B8CA-DE40C16299D0}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
