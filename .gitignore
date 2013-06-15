@@ -13,6 +13,7 @@ TestResults
 *.log
 *.exe
 *.dll
+*.pdb
 *.resources
 packages
 *.BASE.*

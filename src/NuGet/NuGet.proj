@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+        <OutputPath Condition=" '$(OutputPath)' == '' ">..\bin\$(Configuration)\</OutputPath>
+        <NuGetExePath>$(MSBuildProjectDirectory)\..\..\tools\nuget.exe</NuGetExePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <NET35CLIENT Include="..\bin\$(Configuration)\net35-client\**\Remote.Linq.*" />
+        <SL4 Include="..\bin\$(Configuration)\sl4\**\Remote.Linq.*" />
+    </ItemGroup>
+
+    <Target Name="Build">
+        <Copy DestinationFolder="lib\net35-client" SourceFiles="@(NET35CLIENT)" />
+        <Copy DestinationFolder="lib\sl4" SourceFiles="@(SL4)" />
+        <MakeDir Directories="$(OutputPath)" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack Remote.Linq.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
+    </Target>
+    
+</Project>

@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.SL", "Remote.Li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.QueryFunctions", "Remote.Linq.QueryFunctions\Remote.Linq.QueryFunctions.csproj", "{91CBF2BB-A03B-46B5-8258-32CDDB74E596}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{525376AC-4864-4F0D-A886-A67C87C0C46F}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet\NuGet.proj = NuGet\NuGet.proj
+		NuGet\Remote.Linq.nuspec = NuGet\Remote.Linq.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
