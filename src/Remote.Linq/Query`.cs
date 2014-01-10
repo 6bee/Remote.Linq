@@ -155,7 +155,7 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="count">The number of elements to skip before returning the remaining elements.</param>
         /// <returns>A new query instance containing all specified query parameters</returns>
-        public new IQuery<T> Skip(int count)
+        public IQuery<T> Skip(int count)
         {
             var query = new Query<T>(this);
             query._skip = count;
@@ -167,7 +167,7 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="count">The number of elements to return.</param>
         /// <returns>A new query instance containing all specified query parameters</returns>
-        public new IQuery<T> Take(int count)
+        public IQuery<T> Take(int count)
         {
             var query = new Query<T>(this);
             query._take = count;

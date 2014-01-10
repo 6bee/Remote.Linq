@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BC07B68B-3462-4D2C-86F3-632FF5E1A7FB}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Remote.Linq</RootNamespace>
+    <AssemblyName>Remote.Linq</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <TargetFrameworkProfile />
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\sl5\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\sl5\</OutputPath>
+    <DefineConstants>SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Remote.Linq.SL4\System\NonSerializedAttribute.cs">
+      <Link>System\NonSerializedAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq.SL4\System\SerializableAttribute.cs">
+      <Link>System\SerializableAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\BinaryExpression.cs">
+      <Link>Expressions\BinaryExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\BinaryOperator.cs">
+      <Link>Expressions\BinaryOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\CollectionExpression.cs">
+      <Link>Expressions\CollectionExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\ConstantValueExpression.cs">
+      <Link>Expressions\ConstantValueExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\ConversionExpression.cs">
+      <Link>Expressions\ConversionExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\Expression.cs">
+      <Link>Expressions\Expression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\ExpressionType.cs">
+      <Link>Expressions\ExpressionType.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\LambdaExpression.cs">
+      <Link>Expressions\LambdaExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\MethodCallExpression.cs">
+      <Link>Expressions\MethodCallExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\ParameterExpression.cs">
+      <Link>Expressions\ParameterExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\PropertyAccessExpression.cs">
+      <Link>Expressions\PropertyAccessExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\SortDirection.cs">
+      <Link>Expressions\SortDirection.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\SortExpression.cs">
+      <Link>Expressions\SortExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\UnaryExpression.cs">
+      <Link>Expressions\UnaryExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\UnaryOperator.cs">
+      <Link>Expressions\UnaryOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IOrderedQuery.cs">
+      <Link>IOrderedQuery.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IOrderedQuery`.cs">
+      <Link>IOrderedQuery`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IQuery.cs">
+      <Link>IQuery.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IQuery`.cs">
+      <Link>IQuery`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Query.cs">
+      <Link>Query.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Query`.cs">
+      <Link>Query`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionEvaluator.cs">
+      <Link>System.Linq.Expressions\ExpressionEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionTranslator.cs">
+      <Link>System.Linq.Expressions\ExpressionTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionVisitorBase.cs">
+      <Link>System.Linq.Expressions\ExpressionVisitorBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\System.Linq\IEnumerableExtensions.cs">
+      <Link>System.Linq\IEnumerableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\System.Linq\IQueryableExtensions.cs">
+      <Link>System.Linq\IQueryableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
