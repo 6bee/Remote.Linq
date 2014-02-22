@@ -13,9 +13,6 @@ namespace Remote.Linq
     {
         #region Fields
 
-        [DataMember(Name = "TypeName")]
-        protected readonly string _typeName;
-
         [DataMember(Name = "FilterExpressions")]
         protected readonly List<Expressions.LambdaExpression> _filterExpressions;
 
@@ -235,7 +232,7 @@ namespace Remote.Linq
             foreach (var expression in _sortExpressions)
             {
                 sb.AppendLine();
-                sb.AppendFormat("\t", expression);
+                sb.AppendFormat("\t{0}", expression);
             }
             if (_skip.HasValue)
             {

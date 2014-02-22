@@ -34,13 +34,19 @@ namespace Remote.Linq
         /// <summary>
         /// Creates a new query instance.
         /// </summary>
-        /// <param name="dataProvider">A delegate to be invoked to retrieve the actual data.</param>
+        /// <param name="type">The type to be queried</param>
         public Query(Type type)
+            : this(type, type.FullName)
         {
-            _type = type;
-            _typeName = type.FullName;
-            _filterExpressions = new List<Remote.Linq.Expressions.LambdaExpression>();
-            _sortExpressions = new List<Remote.Linq.Expressions.SortExpression>();
+        }
+
+        /// <summary>
+        /// Creates a new query instance.
+        /// </summary>
+        /// <param name="typeFullName">The full name of the type to be queried</param>
+        public Query(string typeFullName)
+            : this(null, typeFullName)
+        {
         }
 
         /// <summary>
@@ -48,12 +54,24 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="parent">The existing query instance to copy the query parameters from.</param>
         protected Query(Query parent)
-            : this(parent._type)
+            : this(parent._type, parent._typeName)
         {
             _filterExpressions.AddRange(parent._filterExpressions);
             _sortExpressions.AddRange(parent._sortExpressions);
             _skip = parent._skip;
             _take = parent._take;
+        }
+
+        /// <summary>
+        /// Creates a new query instance.
+        /// </summary>
+        /// <param name="typeFullName">The full name of the type to be queried</param>
+        private Query(Type type, string typeFullName)
+        {
+            _type = type;
+            _typeName = typeFullName;
+            _filterExpressions = new List<Remote.Linq.Expressions.LambdaExpression>();
+            _sortExpressions = new List<Remote.Linq.Expressions.SortExpression>();
         }
 
         #endregion Constructor
@@ -212,7 +230,7 @@ namespace Remote.Linq
         public override string ToString()
         {
             var queryParameters = QueryParametersToString();
-            return string.Format("Query{0}{1}", string.IsNullOrEmpty(queryParameters) ? null : ": ", queryParameters);
+            return string.Format("Query {0}{1}{2}", _typeName, string.IsNullOrEmpty(queryParameters) ? null : ": ", queryParameters);
         }
 
         protected string QueryParametersToString()
@@ -226,7 +244,7 @@ namespace Remote.Linq
             foreach (var expression in _sortExpressions)
             {
                 sb.AppendLine();
-                sb.AppendFormat("\t", expression);
+                sb.AppendFormat("\t{0}", expression);
             }
             if (_skip.HasValue)
             {
