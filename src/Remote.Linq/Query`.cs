@@ -8,6 +8,7 @@ using System.Text;
 
 namespace Remote.Linq
 {
+    [Serializable]
     [DataContract]
     public class Query<T> : IQuery<T>, IOrderedQuery<T>
     {
@@ -26,6 +27,7 @@ namespace Remote.Linq
         protected int? _take;
 
         // no serializable function delegate for invocation of actual data provider (typically used on client side)
+        [NonSerialized]
         private readonly Func<Query<T>, IEnumerable<T>> _dataProvider;
 
         #endregion Fields

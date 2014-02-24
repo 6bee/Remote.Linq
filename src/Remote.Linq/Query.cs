@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Remote.Linq
 {
+    [Serializable]
     [DataContract]
     public class Query : IQuery, IOrderedQuery
     {
