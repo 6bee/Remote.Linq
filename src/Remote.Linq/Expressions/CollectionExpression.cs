@@ -34,20 +34,15 @@ namespace Remote.Linq.Expressions
         {
             get
             {
-                if (ReferenceEquals(_elementType, null))
+                if (ReferenceEquals(null, _elementType))
                 {
-                    _elementType = Type.GetType(ElementTypeName);
-                    if (ReferenceEquals(_elementType, null))
+                    try
                     {
-                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            _elementType = assembly.GetType(ElementTypeName);
-                            if (!ReferenceEquals(_elementType, null)) break;
-                        }
-                        if (ReferenceEquals(_elementType, null))
-                        {
-                            throw new Exception(string.Format("Element type '{0}' could not be reconstructed", ElementTypeName));
-                        }
+                        _elementType = TypeResolver.Instance.ResolveType(ElementTypeName);
+                    }
+                    catch
+                    {
+                        throw new Exception(string.Format("Element type '{0}' could not be reconstructed", ElementTypeName));
                     }
                 }
                 return _elementType;

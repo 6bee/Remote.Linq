@@ -53,32 +53,26 @@ namespace Remote.Linq.Expressions
             {
                 if (ReferenceEquals(_propertyInfo, null))
                 {
-                    var declaringType = Type.GetType(DeclaringTypeName);
-                    if (ReferenceEquals(declaringType, null))
+                    Type declaringType;
+                    try
                     {
-                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            declaringType = assembly.GetType(DeclaringTypeName);
-                            if (!ReferenceEquals(declaringType, null)) break;
-                        }
-                        if (ReferenceEquals(declaringType, null))
-                        {
-                            throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringTypeName));
-                        }
+                        declaringType = TypeResolver.Instance.ResolveType(DeclaringTypeName);
                     }
-                    var propertyType = Type.GetType(PropertyTypeName);
-                    if (ReferenceEquals(propertyType, null))
+                    catch
                     {
-                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            propertyType = assembly.GetType(PropertyTypeName);
-                            if (!ReferenceEquals(propertyType, null)) break;
-                        }
-                        if (ReferenceEquals(declaringType, null))
-                        {
-                            throw new Exception(string.Format("Property type '{0}' could not be reconstructed", PropertyTypeName));
-                        }
+                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringTypeName));
                     }
+
+                    Type propertyType;
+                    try
+                    {
+                        propertyType = TypeResolver.Instance.ResolveType(PropertyTypeName);
+                    }
+                    catch
+                    {
+                        throw new Exception(string.Format("Property type '{0}' could not be reconstructed", PropertyTypeName));
+                    }
+                    
                     var propertyInfo = declaringType.GetProperty(PropertyName, propertyType);
                     if (propertyInfo == null) propertyInfo = declaringType.GetProperty(PropertyName);
                     _propertyInfo = propertyInfo;

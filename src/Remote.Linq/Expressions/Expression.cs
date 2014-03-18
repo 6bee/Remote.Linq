@@ -20,7 +20,7 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(UnaryOperator))]
     [KnownType(typeof(BinaryOperator))]
     [KnownType(typeof(LambdaExpression))]
-    public abstract class Expression
+    public abstract partial class Expression
     {
         public abstract ExpressionType NodeType { get; }
 
@@ -39,11 +39,6 @@ namespace Remote.Linq.Expressions
         public static MethodCallExpression MethodCall(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
         {
             return new MethodCallExpression(insatnce, methodInfo, arguments);
-        }
-
-        public static MethodCallExpression MethodCall(Expression insatnce, string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
-        {
-            return new MethodCallExpression(insatnce, methodName, declaringType, bindingFlags, genericArguments, parameterTypes, arguments);
         }
         
         public static ConstantValueExpression ConstantValue(object value)

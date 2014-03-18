@@ -32,21 +32,9 @@ namespace Remote.Linq.Expressions
         {
             get
             {
-                if (ReferenceEquals(_type, null))
+                if (ReferenceEquals(null, _type))
                 {
-                    _type = Type.GetType(TypeName);
-                    if (ReferenceEquals(_type, null))
-                    {
-                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            _type = assembly.GetType(TypeName);
-                            if (!ReferenceEquals(_type, null)) break;
-                        }
-                        if (ReferenceEquals(_type, null))
-                        {
-                            throw new Exception(string.Format("Type '{0}' could not be reconstructed", TypeName));
-                        }
-                    }
+                    _type = TypeResolver.Instance.ResolveType(TypeName);
                 }
                 return _type;
             }

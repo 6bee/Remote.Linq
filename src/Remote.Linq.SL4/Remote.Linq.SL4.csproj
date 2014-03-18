@@ -72,6 +72,9 @@
     <Compile Include="..\Remote.Linq\Expressions\Expression.cs">
       <Link>Expressions\Expression.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\Expression.NET.cs">
+      <Link>Expressions\Expression.NET.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Expressions\ExpressionType.cs">
       <Link>Expressions\ExpressionType.cs</Link>
     </Compile>
@@ -111,6 +114,9 @@
     <Compile Include="..\Remote.Linq\IQuery`.cs">
       <Link>IQuery`.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\ITypeResolver.cs">
+      <Link>ITypeResolver.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Query.cs">
       <Link>Query.cs</Link>
     </Compile>
@@ -131,6 +137,15 @@
     </Compile>
     <Compile Include="..\Remote.Linq\System.Linq\IQueryableExtensions.cs">
       <Link>System.Linq\IQueryableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\System\TypeExtensions.cs">
+      <Link>System\TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeResolver.cs">
+      <Link>TypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeResolver.NET.cs">
+      <Link>TypeResolver.NET.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>

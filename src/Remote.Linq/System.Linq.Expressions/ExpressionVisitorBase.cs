@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 
-namespace System.Linq.Expressions
+namespace Remote.Linq
 {
     /// <summary>
     /// From http://msdn.microsoft.com/en-us/library/bb882521.aspx

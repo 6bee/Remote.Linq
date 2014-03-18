@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using System.Collections.Generic;
-using Remote.Linq;
+using System.Linq;
 
-namespace System.Linq
+namespace Remote.Linq
 {
     public static class IEnumerableExtensions
     {

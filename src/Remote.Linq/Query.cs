@@ -92,21 +92,9 @@ namespace Remote.Linq
         {
             get
             {
-                if (ReferenceEquals(_type, null))
+                if (ReferenceEquals(null, _type))
                 {
-                    _type = Type.GetType(_typeName);
-                    if (ReferenceEquals(_type, null))
-                    {
-                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            _type = assembly.GetType(_typeName);
-                            if (!ReferenceEquals(_type, null)) break;
-                        }
-                        if (ReferenceEquals(_type, null))
-                        {
-                            throw new Exception(string.Format("Type '{0}' could not be reconstructed", _typeName));
-                        }
-                    }
+                    _type = TypeResolver.Instance.ResolveType(_typeName);
                 }
                 return _type;
             }

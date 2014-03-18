@@ -11,12 +11,14 @@
         <NET35CLIENT Include="..\bin\$(Configuration)\net35-client\**\Remote.Linq.*" />
         <SL4 Include="..\bin\$(Configuration)\sl4\**\Remote.Linq.*" />
         <SL5 Include="..\bin\$(Configuration)\sl5\**\Remote.Linq.*" />
+        <WIN Include="..\bin\$(Configuration)\win\**\Remote.Linq.*" />
     </ItemGroup>
 
     <Target Name="Build">
         <Copy DestinationFolder="Remote.Linq\lib\net35-client" SourceFiles="@(NET35CLIENT)" />
         <Copy DestinationFolder="Remote.Linq\lib\sl4" SourceFiles="@(SL4)" />
         <Copy DestinationFolder="Remote.Linq\lib\sl5" SourceFiles="@(SL5)" />
+        <Copy DestinationFolder="Remote.Linq\lib\win" SourceFiles="@(WIN)" />
         <MakeDir Directories="$(OutputPath)" />
         <Exec Command="&quot;$(NuGetExePath)&quot; pack Remote.Linq\Remote.Linq.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
     </Target>

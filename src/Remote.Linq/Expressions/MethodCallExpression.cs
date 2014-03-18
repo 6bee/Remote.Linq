@@ -78,57 +78,43 @@ namespace Remote.Linq.Expressions
             {
                 if (ReferenceEquals(_methodInfo, null))
                 {
-                    var declaringType = Type.GetType(DeclaringTypeName);
-                    if (ReferenceEquals(declaringType, null))
+                    Type declaringType;
+                    try
                     {
-                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            declaringType = assembly.GetType(DeclaringTypeName);
-                            if (!ReferenceEquals(declaringType, null)) break;
-                        }
-                        if (ReferenceEquals(declaringType, null))
-                        {
-                            throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringTypeName));
-                        }
+                        declaringType = TypeResolver.Instance.ResolveType(DeclaringTypeName);
+                    }
+                    catch
+                    {
+                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringTypeName));
                     }
 
                     var genericArguments = GenericArgumentNames == null ? new Type[0] : GenericArgumentNames
                         .Select(a =>
                         {
-                            var genericArgument = Type.GetType(a);
-                            if (ReferenceEquals(genericArgument, null))
+                            try
                             {
-                                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                                {
-                                    genericArgument = assembly.GetType(a);
-                                    if (!ReferenceEquals(genericArgument, null)) break;
-                                }
-                                if (ReferenceEquals(genericArgument, null))
-                                {
-                                    throw new Exception(string.Format("Generic argument '{0}' could not be reconstructed", a));
-                                }
+                                var genericArgumentType = TypeResolver.Instance.ResolveType(a);
+                                return genericArgumentType;
                             }
-                            return genericArgument;
+                            catch
+                            {
+                                throw new Exception(string.Format("Generic argument type '{0}' could not be reconstructed", a));
+                            }
                         })
                         .ToArray();
 
                     var parameterTypes = ParameterTypeNames == null ? new Type[0] : ParameterTypeNames
                         .Select(p =>
                         {
-                            var parameterType = Type.GetType(p);
-                            if (ReferenceEquals(parameterType, null))
+                            try
                             {
-                                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                                {
-                                    parameterType = assembly.GetType(p);
-                                    if (!ReferenceEquals(parameterType, null)) break;
-                                }
-                                if (ReferenceEquals(parameterType, null))
-                                {
-                                    throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", p));
-                                }
+                                var parameterType = TypeResolver.Instance.ResolveType(p);
+                                return parameterType;
                             }
-                            return parameterType;
+                            catch
+                            {
+                                throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", p));
+                            }
                         })
                         .ToArray();
 

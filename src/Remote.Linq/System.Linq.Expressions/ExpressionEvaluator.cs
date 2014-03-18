@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
-namespace System.Linq.Expressions
+namespace Remote.Linq
 {
     /// <summary>  
     /// Enables the partial evalutation of queries.  

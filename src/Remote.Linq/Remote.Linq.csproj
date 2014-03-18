@@ -46,6 +46,7 @@
     <Compile Include="Expressions\CollectionExpression.cs" />
     <Compile Include="Expressions\ConstantValueExpression.cs" />
     <Compile Include="Expressions\ConversionExpression.cs" />
+    <Compile Include="Expressions\Expression.NET.cs" />
     <Compile Include="Expressions\LambdaExpression.cs" />
     <Compile Include="Expressions\MethodCallExpression.cs" />
     <Compile Include="Expressions\Expression.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="IOrderedQuery`.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="IQuery`.cs" />
+    <Compile Include="ITypeResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Query`.cs" />
@@ -76,7 +78,13 @@
     <Compile Include="System.Linq\IQueryableExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="System\TypeExtensions.cs" />
+    <Compile Include="TypeResolver.cs" />
+    <Compile Include="TypeResolver.NET.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

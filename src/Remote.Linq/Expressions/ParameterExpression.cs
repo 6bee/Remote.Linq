@@ -32,20 +32,15 @@ namespace Remote.Linq.Expressions
         {
             get
             {
-                if (ReferenceEquals(_parameterType, null))
+                if (ReferenceEquals(null, _parameterType))
                 {
-                    _parameterType = Type.GetType(ParameterTypeName);
-                    if (ReferenceEquals(_parameterType, null))
+                    try
                     {
-                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            _parameterType = assembly.GetType(ParameterTypeName);
-                            if (!ReferenceEquals(_parameterType, null)) break;
-                        }
-                        if (ReferenceEquals(_parameterType, null))
-                        {
-                            throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", ParameterTypeName));
-                        }
+                        _parameterType = TypeResolver.Instance.ResolveType(ParameterTypeName);
+                    }
+                    catch
+                    {
+                        throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", ParameterTypeName));
                     }
                 }
                 return _parameterType;

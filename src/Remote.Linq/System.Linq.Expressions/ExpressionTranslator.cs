@@ -1,10 +1,13 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using RLinq = Remote.Linq.Expressions;
 
-namespace System.Linq.Expressions
+namespace Remote.Linq
 {
     public static class ExpressionTranslator
     {
@@ -404,7 +407,7 @@ namespace System.Linq.Expressions
             {
                 var operand = Visit(u.Operand).Unwrap();
 
-                if (u.NodeType == ExpressionType.Convert && u.Type == u.Type.UnderlyingSystemType)
+                if (u.NodeType == ExpressionType.Convert && u.Type == u.Type.GetUnderlyingSystemType())
                 {
                     return new RLinq.ConversionExpression(operand, u.Type).Wrap();
                 }
