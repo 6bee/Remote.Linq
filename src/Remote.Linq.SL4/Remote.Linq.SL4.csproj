@@ -63,8 +63,8 @@
     <Compile Include="..\Remote.Linq\Expressions\CollectionExpression.cs">
       <Link>Expressions\CollectionExpression.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\Expressions\ConstantValueExpression.cs">
-      <Link>Expressions\ConstantValueExpression.cs</Link>
+    <Compile Include="..\Remote.Linq\Expressions\ConstantExpression.cs">
+      <Link>Expressions\ConstantExpression.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\Expressions\ConversionExpression.cs">
       <Link>Expressions\ConversionExpression.cs</Link>

@@ -7,9 +7,9 @@ namespace Remote.Linq.Expressions
 {
     [Serializable]
     [DataContract]
-    public sealed class ConstantValueExpression : Expression
+    public sealed class ConstantExpression : Expression
     {
-        internal ConstantValueExpression(object value, Type type = null)
+        internal ConstantExpression(object value, Type type = null)
         {
             Value = value;
             if (ReferenceEquals(null, type))

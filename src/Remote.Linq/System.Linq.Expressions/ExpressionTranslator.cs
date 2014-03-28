@@ -139,7 +139,7 @@ namespace Remote.Linq
 
             protected override Expression VisitConstant(ConstantExpression c)
             {
-                return new RLinq.ConstantValueExpression(c.Value, c.Type).Wrap();
+                return new RLinq.ConstantExpression(c.Value, c.Type).Wrap();
             }
 
             protected override Expression VisitParameter(ParameterExpression p)
@@ -230,11 +230,11 @@ namespace Remote.Linq
                         {
                             if (b.NodeType == ExpressionType.Equal || b.NodeType == ExpressionType.NotEqual)
                             {
-                                if (typeof(RLinq.ConstantValueExpression).IsAssignableFrom(left.Type))
+                                if (typeof(RLinq.ConstantExpression).IsAssignableFrom(left.Type))
                                 {
-                                    if (((RLinq.ConstantValueExpression)((ConstantExpression)left).Value).Value is bool)
+                                    if (((RLinq.ConstantExpression)((ConstantExpression)left).Value).Value is bool)
                                     {
-                                        if (b.NodeType == ExpressionType.Equal ^ (bool)((RLinq.ConstantValueExpression)((ConstantExpression)left).Value).Value)
+                                        if (b.NodeType == ExpressionType.Equal ^ (bool)((RLinq.ConstantExpression)((ConstantExpression)left).Value).Value)
                                         {
                                             // != true
                                             // == false
@@ -250,7 +250,7 @@ namespace Remote.Linq
                                             return right;
                                         }
                                     }
-                                    if (((RLinq.ConstantValueExpression)((ConstantExpression)left).Value).Value == null/* && ((Filter.ConstantValueExpression)((ConstantExpression)right).Value).Value != null*/)
+                                    if (((RLinq.ConstantExpression)((ConstantExpression)left).Value).Value == null/* && ((Filter.ConstantValueExpression)((ConstantExpression)right).Value).Value != null*/)
                                     {
                                         return new RLinq.UnaryExpression(
                                             right.Unwrap(),
@@ -258,11 +258,11 @@ namespace Remote.Linq
                                         ).Wrap();
                                     }
                                 }
-                                if (typeof(RLinq.ConstantValueExpression).IsAssignableFrom(right.Type))
+                                if (typeof(RLinq.ConstantExpression).IsAssignableFrom(right.Type))
                                 {
-                                    if (((RLinq.ConstantValueExpression)((ConstantExpression)right).Value).Value is bool)
+                                    if (((RLinq.ConstantExpression)((ConstantExpression)right).Value).Value is bool)
                                     {
-                                        if (b.NodeType == ExpressionType.Equal ^ (bool)((RLinq.ConstantValueExpression)((ConstantExpression)right).Value).Value)
+                                        if (b.NodeType == ExpressionType.Equal ^ (bool)((RLinq.ConstantExpression)((ConstantExpression)right).Value).Value)
                                         {
                                             // != true
                                             // == false
@@ -278,7 +278,7 @@ namespace Remote.Linq
                                             return left;
                                         }
                                     }
-                                    if (((RLinq.ConstantValueExpression)((ConstantExpression)right).Value).Value == null/* && ((Filter.ConstantValueExpression)((ConstantExpression)left).Value).Value != null*/)
+                                    if (((RLinq.ConstantExpression)((ConstantExpression)right).Value).Value == null/* && ((Filter.ConstantValueExpression)((ConstantExpression)left).Value).Value != null*/)
                                     {
                                         return new RLinq.UnaryExpression(
                                             left.Unwrap(),
@@ -375,7 +375,7 @@ namespace Remote.Linq
 
                     var list =
                         from item in ((System.Collections.IEnumerable)collection).OfType<object>()
-                        select new RLinq.ConstantValueExpression(item);
+                        select new RLinq.ConstantExpression(item);
 
                     var a2 = Visit(m.Arguments[1]).Unwrap();
 
@@ -507,7 +507,7 @@ namespace Remote.Linq
                     case RLinq.ExpressionType.Collection:
                         return Visit((RLinq.CollectionExpression)expression);
                     case RLinq.ExpressionType.ConstantValue:
-                        return Visit((RLinq.ConstantValueExpression)expression);
+                        return Visit((RLinq.ConstantExpression)expression);
                     case RLinq.ExpressionType.Conversion:
                         return Visit((RLinq.ConversionExpression)expression);
                     case RLinq.ExpressionType.Parameter:
@@ -568,7 +568,7 @@ namespace Remote.Linq
                 return Expression.Convert(exp, conversionExpression.Type);
             }
 
-            private Expression Visit(RLinq.ConstantValueExpression constantValueExpression)
+            private Expression Visit(RLinq.ConstantExpression constantValueExpression)
             {
                 return Expression.Constant(constantValueExpression.Value, constantValueExpression.Type);
             }

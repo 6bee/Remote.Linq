@@ -12,7 +12,7 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(ParameterExpression))]
     [KnownType(typeof(MethodCallExpression))]
     [KnownType(typeof(PropertyAccessExpression))]
-    [KnownType(typeof(ConstantValueExpression))]
+    [KnownType(typeof(ConstantExpression))]
     [KnownType(typeof(ConversionExpression))]
     [KnownType(typeof(BinaryExpression))]
     [KnownType(typeof(UnaryExpression))]
@@ -41,14 +41,14 @@ namespace Remote.Linq.Expressions
             return new MethodCallExpression(insatnce, methodInfo, arguments);
         }
 
-        public static ConstantValueExpression ConstantValue(object value)
+        public static ConstantExpression Constant(object value)
         {
-            return new ConstantValueExpression(value);
+            return new ConstantExpression(value);
         }
 
-        public static ConstantValueExpression ConstantValue(object value, Type type)
+        public static ConstantExpression Constant(object value, Type type)
         {
-            return new ConstantValueExpression(value, type);
+            return new ConstantExpression(value, type);
         }
 
         public static ConversionExpression Conversion(Expression operand, Type type)
@@ -71,7 +71,7 @@ namespace Remote.Linq.Expressions
             return new UnaryExpression(operand, @operator);
         }
 
-        public static CollectionExpression Collection(IEnumerable<ConstantValueExpression> list, Type elementType)
+        public static CollectionExpression Collection(IEnumerable<ConstantExpression> list, Type elementType)
         {
             return new CollectionExpression(list, elementType);
         }

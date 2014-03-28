@@ -11,7 +11,7 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class CollectionExpression : Expression
     {
-        internal CollectionExpression(IEnumerable<ConstantValueExpression> list, Type elementType)
+        internal CollectionExpression(IEnumerable<ConstantExpression> list, Type elementType)
         {
             _elementType = elementType;
             List = list.ToArray();
@@ -21,7 +21,7 @@ namespace Remote.Linq.Expressions
         public override ExpressionType NodeType { get { return ExpressionType.Collection; } }
 
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public IEnumerable<ConstantValueExpression> List { get; private set; }
+        public IEnumerable<ConstantExpression> List { get; private set; }
 
         [DataMember(Name = "ElementType", IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
