@@ -40,32 +40,37 @@ namespace Remote.Linq.Expressions
         {
             return new MethodCallExpression(insatnce, methodInfo, arguments);
         }
-        
+
         public static ConstantValueExpression ConstantValue(object value)
         {
             return new ConstantValueExpression(value);
         }
-        
+
+        public static ConstantValueExpression ConstantValue(object value, Type type)
+        {
+            return new ConstantValueExpression(value, type);
+        }
+
         public static ConversionExpression Conversion(Expression operand, Type type)
         {
             return new ConversionExpression(operand, type);
         }
-        
+
         public static ParameterExpression Parameter(string parameterName, Type type)
         {
             return new ParameterExpression(parameterName, type);
         }
-        
+
         public static BinaryExpression Binary(Expression leftOperand, Expression rightOperand, BinaryOperator @operator)
         {
             return new BinaryExpression(leftOperand, rightOperand, @operator);
         }
-        
+
         public static UnaryExpression Unary(Expression operand, UnaryOperator @operator)
         {
             return new UnaryExpression(operand, @operator);
         }
-        
+
         public static CollectionExpression Collection(IEnumerable<ConstantValueExpression> list, Type elementType)
         {
             return new CollectionExpression(list, elementType);

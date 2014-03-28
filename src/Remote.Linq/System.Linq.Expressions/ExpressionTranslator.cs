@@ -139,7 +139,7 @@ namespace Remote.Linq
 
             protected override Expression VisitConstant(ConstantExpression c)
             {
-                return new RLinq.ConstantValueExpression(c.Value).Wrap();
+                return new RLinq.ConstantValueExpression(c.Value, c.Type).Wrap();
             }
 
             protected override Expression VisitParameter(ParameterExpression p)
@@ -570,7 +570,7 @@ namespace Remote.Linq
 
             private Expression Visit(RLinq.ConstantValueExpression constantValueExpression)
             {
-                return Expression.Constant(constantValueExpression.Value);
+                return Expression.Constant(constantValueExpression.Value, constantValueExpression.Type);
             }
 
             private Expression Visit(RLinq.CollectionExpression collectionExpression)
