@@ -80,7 +80,7 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters</returns>
         public IQuery<T> Where(Expression<Func<T, bool>> predicate)
         {
-            var filter = predicate.ToQueryExpression();
+            var filter = predicate.ToRemoteLinqExpression();
 
             var query = new Query<T>(this);
             query._filterExpressions.Add(filter);
@@ -95,7 +95,7 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters</returns>
         public IOrderedQuery<T> OrderBy<TKey>(System.Linq.Expressions.Expression<Func<T, TKey>> keySelector)
         {
-            var sortExpression = keySelector.ToQueryExpression();
+            var sortExpression = keySelector.ToRemoteLinqExpression();
 
             var query = new Query<T>(this);
             query._sortExpressions.Clear();
@@ -111,7 +111,7 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters</returns>
         public IOrderedQuery<T> OrderByDescending<TKey>(System.Linq.Expressions.Expression<Func<T, TKey>> keySelector)
         {
-            var sortExpression = keySelector.ToQueryExpression();
+            var sortExpression = keySelector.ToRemoteLinqExpression();
 
             var query = new Query<T>(this);
             query._sortExpressions.Clear();
@@ -127,7 +127,7 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters</returns>
         IOrderedQuery<T> IOrderedQuery<T>.ThenBy<TKey>(System.Linq.Expressions.Expression<Func<T, TKey>> keySelector)
         {
-            var sortExpression = keySelector.ToQueryExpression();
+            var sortExpression = keySelector.ToRemoteLinqExpression();
 
             var query = new Query<T>(this);
             query._sortExpressions.Add(Remote.Linq.Expressions.Expression.Sort(sortExpression, Remote.Linq.Expressions.SortDirection.Ascending));
@@ -142,7 +142,7 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters</returns>
         IOrderedQuery<T> IOrderedQuery<T>.ThenByDescending<TKey>(System.Linq.Expressions.Expression<Func<T, TKey>> keySelector)
         {
-            var sortExpression = keySelector.ToQueryExpression();
+            var sortExpression = keySelector.ToRemoteLinqExpression();
 
             var query = new Query<T>(this);
             query._sortExpressions.Add(Remote.Linq.Expressions.Expression.Sort(sortExpression, Remote.Linq.Expressions.SortDirection.Descending));
@@ -214,7 +214,7 @@ namespace Remote.Linq
             instance._take = query.TakeValue;
             return instance;
         }
-        
+
         #endregion Conversion methods
 
         public override string ToString()
@@ -249,7 +249,7 @@ namespace Remote.Linq
             var queryParameters = sb.ToString();
             return queryParameters;
         }
-        
+
         #endregion Methods
     }
 }
