@@ -93,6 +93,17 @@ namespace Remote.Linq
                 .ApplyPaging(query);
         }
 
+        /// <summary>
+        /// Applies this query instance to a queryable
+        /// </summary>
+        /// <param name="queriable"></param>
+        /// <returns></returns>
+        public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, Query query)
+        {
+            var q = Query<TEntity>.CreateFromNonGeneric(query);
+            return queryable.ApplyQuery(q);
+        }
+
         private static IQueryable<T> ApplyFilters<T>(this IQueryable<T> queriable, Query<T> query)
         {
             foreach (var filter in query.FilterExpressions)

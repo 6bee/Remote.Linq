@@ -19,5 +19,18 @@ namespace Remote.Linq
                 .ApplyQuery(query)
                 .AsEnumerable();
         }
+
+        /// <summary>
+        /// Applies this query instance to an enumerable
+        /// </summary>
+        /// <param name="queriable"></param>
+        /// <returns></returns>
+        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, Query query)
+        {
+            return enumerable
+                .AsQueryable()
+                .ApplyQuery(query)
+                .AsEnumerable();
+        }
     }
 }
