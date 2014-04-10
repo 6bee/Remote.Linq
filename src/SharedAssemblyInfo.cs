@@ -15,6 +15,10 @@ using System.Runtime.InteropServices;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
+#if SILVERLIGHT
+[assembly: InternalsVisibleTo("System.Runtime.Serialization")]
+#endif
+
 
 // Version information for an assembly consists of the following four values:
 //

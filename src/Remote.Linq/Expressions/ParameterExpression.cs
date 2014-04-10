@@ -23,7 +23,7 @@ namespace Remote.Linq.Expressions
 
         [DataMember(Name = "ParameterType", IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string ParameterTypeName { get; private set; }
+        internal string ParameterTypeName { get; private set; }
 #else
         private string ParameterTypeName { get; set; }
 #endif

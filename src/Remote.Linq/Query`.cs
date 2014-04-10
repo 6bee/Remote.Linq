@@ -15,16 +15,32 @@ namespace Remote.Linq
         #region Fields
 
         [DataMember(Name = "FilterExpressions")]
+#if SILVERLIGHT
+        protected internal readonly List<Expressions.LambdaExpression> _filterExpressions;
+#else
         protected readonly List<Expressions.LambdaExpression> _filterExpressions;
+#endif
 
         [DataMember(Name = "SortExpressions")]
+#if SILVERLIGHT
+        protected internal readonly List<Expressions.SortExpression> _sortExpressions;
+#else
         protected readonly List<Expressions.SortExpression> _sortExpressions;
+#endif
 
         [DataMember(Name = "Skip")]
+#if SILVERLIGHT
+        protected internal int? _skip;
+#else
         protected int? _skip;
+#endif
 
         [DataMember(Name = "Take")]
+#if SILVERLIGHT
+        protected internal int? _take;
+#else
         protected int? _take;
+#endif
 
         // no serializable function delegate for invocation of actual data provider (typically used on client side)
         [NonSerialized]

@@ -28,21 +28,21 @@ namespace Remote.Linq.Expressions
 
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string PropertyName { get; private set; }
+        internal string PropertyName { get; private set; }
 #else
         private string PropertyName { get; set; }
 #endif
 
         [DataMember(Name = "PropertyType", IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string PropertyTypeName { get; private set; }
+        internal string PropertyTypeName { get; private set; }
 #else
         private string PropertyTypeName { get; set; }
 #endif
 
         [DataMember(Name = "DeclaringType", IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string DeclaringTypeName { get; private set; }
+        internal string DeclaringTypeName { get; private set; }
 #else
         private string DeclaringTypeName { get; set; }
 #endif

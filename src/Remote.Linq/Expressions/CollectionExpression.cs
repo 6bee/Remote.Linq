@@ -25,7 +25,7 @@ namespace Remote.Linq.Expressions
 
         [DataMember(Name = "ElementType", IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string ElementTypeName { get; private set; }
+        internal string ElementTypeName { get; private set; }
 #else
         private string ElementTypeName { get; set; }
 #endif

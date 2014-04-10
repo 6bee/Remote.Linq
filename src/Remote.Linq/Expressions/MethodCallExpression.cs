@@ -12,6 +12,13 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class MethodCallExpression : Expression
     {
+        [DataMember(Name = "Arguments", IsRequired = false, EmitDefaultValue = false)]
+#if SILVERLIGHT
+        internal readonly Expression[] _arguments;
+#else
+        private readonly Expression[] _arguments;
+#endif
+
         internal MethodCallExpression(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
             : this(insatnce, methodInfo.Name, methodInfo.DeclaringType, BindingFlags.Default, methodInfo.GetGenericArguments(), methodInfo.GetParameters().Select(p => p.ParameterType).ToArray(), arguments)
         {
@@ -28,7 +35,7 @@ namespace Remote.Linq.Expressions
             DeclaringTypeName = declaringType.FullName;//.AssemblyQualifiedName;
             GenericArgumentNames = genericArguments.Length == 0 ? null : genericArguments.Select(p => p.FullName).ToArray();
             ParameterTypeNames = parameterTypes.Length == 0 ? null : parameterTypes.Select(p => p.FullName).ToArray();
-            Arguments = arguments.ToArray();
+            _arguments = arguments.ToArray();
             BindingFlags = bindingFlags;
         }
 
@@ -39,35 +46,35 @@ namespace Remote.Linq.Expressions
 
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string MethodName { get; private set; }
+        internal string MethodName { get; private set; }
 #else
         private string MethodName { get; set; }
 #endif
 
         [DataMember(Name = "DeclaringType", IsRequired = true, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string DeclaringTypeName { get; private set; }
+        internal string DeclaringTypeName { get; private set; }
 #else
         private string DeclaringTypeName { get; set; }
 #endif
 
         [DataMember(Name = "ParameterTypes", IsRequired = false, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string[] ParameterTypeNames { get; private set; }
+        internal string[] ParameterTypeNames { get; private set; }
 #else
         private string[] ParameterTypeNames { get; set; }
 #endif
 
         [DataMember(Name = "GenericArguments", IsRequired = false, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public string[] GenericArgumentNames { get; private set; }
+        internal string[] GenericArgumentNames { get; private set; }
 #else
         private string[] GenericArgumentNames { get; set; }
 #endif
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
 #if SILVERLIGHT
-        public BindingFlags BindingFlags { get; private set; }
+        internal BindingFlags BindingFlags { get; private set; }
 #else
         private BindingFlags BindingFlags { get; set; }
 #endif
@@ -146,9 +153,8 @@ namespace Remote.Linq.Expressions
         }
         [NonSerialized]
         private MethodInfo _methodInfo;
-        
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public Expression[] Arguments { get; private set; }
+
+        public Expression[] Arguments { get { return _arguments.ToArray(); } }
 
         public override string ToString()
         {
@@ -156,7 +162,7 @@ namespace Remote.Linq.Expressions
                 Instance == null ? DeclaringTypeName : Instance.ToString(), 
                 MethodName, 
                 // ParameterTypes == null ? null : string.Join(", ", ParameterTypes)
-                Arguments == null ? null : string.Join(", ", Arguments.Select(a => a.ToString()).ToArray()));
+                _arguments == null ? null : string.Join(", ", _arguments.Select(a => a.ToString()).ToArray()));
         }
     }
 }
