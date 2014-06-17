@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -53,6 +54,7 @@ namespace Remote.Linq
         /// <param name="expression"></param>
         /// <returns></returns>
         [Obsolete("This method will be removed in future, use the method called ToRemoteLinqExpression instead.", true)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static RLinq.LambdaExpression ToQueryExpression(this LambdaExpression expression)
         {
             return ToRemoteLinqExpression(expression);
@@ -493,7 +495,7 @@ namespace Remote.Linq
             private static readonly MethodInfo StringEndsWithMethodInfo = typeof(string).GetMethod("EndsWith", new[] { typeof(string) });
             private static readonly MethodInfo StringContainsMethodInfo = typeof(string).GetMethod("Contains", new[] { typeof(string) });
             private static readonly MethodInfo EnumerableOfTypeMethodInfo = typeof(System.Linq.Enumerable).GetMethod("OfType", BindingFlags.Public | BindingFlags.Static);
-            private static readonly MethodInfo EnumerableToListMethodInfo = typeof(System.Linq.Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
+            private static readonly MethodInfo EnumerableToArrayMethodInfo = typeof(System.Linq.Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
             private static readonly MethodInfo EnumerableContainsMethodInfo = typeof(System.Linq.Enumerable).GetMethods(BindingFlags.Public | BindingFlags.Static).Single(m => m.Name == "Contains" && m.GetParameters().Length == 2);
 
             private readonly ParameterCache _parameterCache;
@@ -598,8 +600,8 @@ namespace Remote.Linq
                 {
                     var objectCollectionExpression = Expression.Constant(collection.ToArray());
                     var typeConvertionMethodExpression = Expression.Call(null, EnumerableOfTypeMethodInfo.MakeGenericMethod(collectionExpression.ElementType), objectCollectionExpression);
-                    var toListMethodExpression = Expression.Call(null, EnumerableToListMethodInfo.MakeGenericMethod(collectionExpression.ElementType), typeConvertionMethodExpression);
-                    var obj = Expression.Lambda(toListMethodExpression).Compile().DynamicInvoke();
+                    var toArrayMethodExpression = Expression.Call(null, EnumerableToArrayMethodInfo.MakeGenericMethod(collectionExpression.ElementType), typeConvertionMethodExpression);
+                    var obj = Expression.Lambda(toArrayMethodExpression).Compile().DynamicInvoke();
                     return Expression.Constant(obj);
                 }
             }
@@ -625,7 +627,8 @@ namespace Remote.Linq
                         else
                         {
                             var typeConvertionMethod = Expression.Call(null, EnumerableOfTypeMethodInfo.MakeGenericMethod(p1.Type), p2);
-                            var obj = Expression.Lambda(typeConvertionMethod).Compile().DynamicInvoke();
+                            var toArrayMethodExpression = Expression.Call(null, EnumerableToArrayMethodInfo.MakeGenericMethod(p1.Type), typeConvertionMethod);
+                            var obj = Expression.Lambda(toArrayMethodExpression).Compile().DynamicInvoke();
                             var exp = Expression.Constant(obj);
                             return Expression.Call(null, EnumerableContainsMethodInfo.MakeGenericMethod(p1.Type), exp, p1);
                         }
