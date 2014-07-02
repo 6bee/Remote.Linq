@@ -8,7 +8,8 @@ namespace Remote.Linq.Expressions
     public enum ExpressionType
     {
         PropertyAccess,
-        ConstantValue,
+        Conditional,
+        Constant,
         Conversion,
         Binary,
         Unary,

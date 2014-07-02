@@ -13,6 +13,7 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(MethodCallExpression))]
     [KnownType(typeof(PropertyAccessExpression))]
     [KnownType(typeof(ConstantExpression))]
+    [KnownType(typeof(ConditionalExpression))]
     [KnownType(typeof(ConversionExpression))]
     [KnownType(typeof(BinaryExpression))]
     [KnownType(typeof(UnaryExpression))]
@@ -39,6 +40,11 @@ namespace Remote.Linq.Expressions
         public static MethodCallExpression MethodCall(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
         {
             return new MethodCallExpression(insatnce, methodInfo, arguments);
+        }
+
+        public static ConditionalExpression Conditional(Expression test, Expression ifTrue, Expression ifFalse)
+        {
+            return new ConditionalExpression(test, ifTrue, ifFalse);
         }
 
         public static ConstantExpression Constant(object value)

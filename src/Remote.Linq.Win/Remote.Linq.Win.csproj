@@ -119,6 +119,9 @@
     <Compile Include="..\Remote.Linq\Expressions\CollectionExpression.cs">
       <Link>Expressions\CollectionExpression.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\ConditionalExpression.cs">
+      <Link>Expressions\ConditionalExpression.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Expressions\ConstantExpression.cs">
       <Link>Expressions\ConstantExpression.cs</Link>
     </Compile>

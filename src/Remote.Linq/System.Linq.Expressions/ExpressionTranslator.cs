@@ -433,6 +433,14 @@ namespace Remote.Linq
                 throw CreateNotSupportedException(u);
             }
 
+            protected override Expression VisitConditional(ConditionalExpression c)
+            {
+                var test = Visit(c.Test).Unwrap();
+                var ifTrue = Visit(c.IfTrue).Unwrap();
+                var ifFalse = Visit(c.IfFalse).Unwrap();
+                return new RLinq.ConditionalExpression(test, ifTrue, ifFalse).Wrap();
+            }
+
             private static NotSupportedException CreateNotSupportedException(Expression expression)
             {
                 return new NotSupportedException(string.Format("expression: '{0}'", expression));
@@ -519,7 +527,9 @@ namespace Remote.Linq
                         return Visit((RLinq.BinaryExpression)expression);
                     case RLinq.ExpressionType.Collection:
                         return Visit((RLinq.CollectionExpression)expression);
-                    case RLinq.ExpressionType.ConstantValue:
+                    case RLinq.ExpressionType.Conditional:
+                        return Visit((RLinq.ConditionalExpression)expression);
+                    case RLinq.ExpressionType.Constant:
                         return Visit((RLinq.ConstantExpression)expression);
                     case RLinq.ExpressionType.Conversion:
                         return Visit((RLinq.ConversionExpression)expression);
@@ -579,6 +589,14 @@ namespace Remote.Linq
             {
                 var exp = Visit(conversionExpression.Operand);
                 return Expression.Convert(exp, conversionExpression.Type);
+            }
+
+            private Expression Visit(RLinq.ConditionalExpression expression)
+            {
+                var test = Visit(expression.Test);
+                var ifTrue = Visit(expression.IfTrue);
+                var ifFalse = Visit(expression.IfFalse);
+                return Expression.Condition(test, ifTrue, ifFalse);
             }
 
             private Expression Visit(RLinq.ConstantExpression constantValueExpression)
