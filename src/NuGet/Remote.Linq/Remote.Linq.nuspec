@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Remote.Linq</id>
-    <version>2.2.1</version>
+    <version>2.3.0</version>
     <authors>Christof Senn</authors>
     <owners>Christof Senn</owners>
     <licenseUrl>http://remotelinq.codeplex.com/license</licenseUrl>
@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Remote Linq is a simple and easy to use library to translate Expression Trees from and to strongly typed, serializable expression trees.</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
-    <copyright>Copyright Christof Senn 2013</copyright>
+    <copyright>Copyright Christof Senn 2013-2014</copyright>
     <tags>expression tree fluent interface lambda LINQ multi-tier n-tier remote</tags>
   </metadata>
 </package>

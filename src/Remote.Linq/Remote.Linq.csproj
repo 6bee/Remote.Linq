@@ -44,6 +44,7 @@
     <Compile Include="Expressions\BinaryExpression.cs" />
     <Compile Include="Expressions\BinaryOperator.cs" />
     <Compile Include="Expressions\CollectionExpression.cs" />
+    <Compile Include="Expressions\ConditionalExpression.cs" />
     <Compile Include="Expressions\ConstantExpression.cs" />
     <Compile Include="Expressions\ConversionExpression.cs" />
     <Compile Include="Expressions\Expression.NET.cs" />

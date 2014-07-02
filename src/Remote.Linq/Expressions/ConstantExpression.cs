@@ -30,7 +30,7 @@ namespace Remote.Linq.Expressions
             TypeName = _type.FullName;//.AssemblyQualifiedName;
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.ConstantValue; } }
+        public override ExpressionType NodeType { get { return ExpressionType.Constant; } }
 
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
         public object Value { get; private set; }

@@ -41,6 +41,11 @@ namespace Remote.Linq.Expressions
             return new MethodCallExpression(insatnce, methodInfo, arguments);
         }
 
+        public static ConditionalExpression Conditional(Expression test, Expression ifTrue, Expression ifFalse)
+        {
+            return new ConditionalExpression(test, ifTrue, ifFalse);
+        }
+
         public static ConstantExpression Constant(object value)
         {
             return new ConstantExpression(value);
