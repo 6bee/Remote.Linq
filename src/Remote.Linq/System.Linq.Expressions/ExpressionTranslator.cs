@@ -39,13 +39,23 @@ namespace Remote.Linq
         }
 
         /// <summary>
+        /// Translates a given expression into a remote linq expression
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static RLinq.Expression ToRemoteLinqExpression(this Expression expression)
+        {
+            return new LinqExpressionToRemoteExpressionTranslator().ToRemoteExpression(expression);
+        }
+
+        /// <summary>
         /// Translates a given lambda expression into a remote linq expression
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
         public static RLinq.LambdaExpression ToRemoteLinqExpression(this LambdaExpression expression)
         {
-            return new LinqExpressionToQueryExpressionTranslator().ToFilterExpression(expression);
+            return new LinqExpressionToRemoteExpressionTranslator().ToRemoteExpression(expression);
         }
 
         /// <summary>
@@ -136,9 +146,17 @@ namespace Remote.Linq
             }
         }
 
-        private sealed class LinqExpressionToQueryExpressionTranslator : ExpressionVisitorBase
+        private sealed class LinqExpressionToRemoteExpressionTranslator : ExpressionVisitorBase
         {
-            public RLinq.LambdaExpression ToFilterExpression(LambdaExpression expression)
+            public RLinq.Expression ToRemoteExpression(Expression expression)
+            {
+                var partialEvalExpression = expression.PartialEval();
+                if (partialEvalExpression == null) throw CreateNotSupportedException(expression);
+                var constExpression = Visit(partialEvalExpression);
+                return constExpression.Unwrap();
+            }
+
+            public RLinq.LambdaExpression ToRemoteExpression(LambdaExpression expression)
             {
                 var partialEvalExpression = expression.PartialEval() as LambdaExpression;
                 if (partialEvalExpression == null) throw CreateNotSupportedException(expression);
@@ -428,6 +446,11 @@ namespace Remote.Linq
                 if (u.NodeType == ExpressionType.Not && operand != null)
                 {
                     return new RLinq.UnaryExpression(operand, RLinq.UnaryOperator.Not).Wrap();
+                }
+
+                if (u.NodeType == ExpressionType.Quote && operand != null)
+                {
+                    return operand.Wrap();
                 }
 
                 throw CreateNotSupportedException(u);
