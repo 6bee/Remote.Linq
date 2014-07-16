@@ -104,11 +104,26 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Remote.Linq.SL4\System\NonSerializedAttribute.cs">
-      <Link>System\NonSerializedAttribute.cs</Link>
+    <Compile Include="..\Remote.Linq\Dynamic\DynamicObject.cs">
+      <Link>Dynamic\DynamicObject.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq.SL4\System\SerializableAttribute.cs">
-      <Link>System\SerializableAttribute.cs</Link>
+    <Compile Include="..\Remote.Linq\Dynamic\DynamicObject.MetaObject.cs">
+      <Link>Dynamic\DynamicObject.MetaObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Dynamic\QueryableDescriptor.cs">
+      <Link>Dynamic\QueryableDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Dynamic\QueryableDescriptor`.cs">
+      <Link>Dynamic\QueryableDescriptor`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Dynamic\QueryableResourceDescriptor.cs">
+      <Link>Dynamic\QueryableResourceDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Dynamic\RemoteExpressionReWriter.cs">
+      <Link>Dynamic\RemoteExpressionReWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Dynamic\SystemExpressionReWriter.cs">
+      <Link>Dynamic\SystemExpressionReWriter.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\Expressions\BinaryExpression.cs">
       <Link>Expressions\BinaryExpression.cs</Link>
@@ -128,6 +143,9 @@
     <Compile Include="..\Remote.Linq\Expressions\ConversionExpression.cs">
       <Link>Expressions\ConversionExpression.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\ElementInit.cs">
+      <Link>Expressions\ElementInit.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Expressions\Expression.cs">
       <Link>Expressions\Expression.cs</Link>
     </Compile>
@@ -137,8 +155,35 @@
     <Compile Include="..\Remote.Linq\Expressions\LambdaExpression.cs">
       <Link>Expressions\LambdaExpression.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\ListInitExpression.cs">
+      <Link>Expressions\ListInitExpression.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Expressions\MethodCallExpression.cs">
       <Link>Expressions\MethodCallExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\MemberInitExpression.cs">
+      <Link>Expressions\MemberInitExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\MemberMemberBinding.cs">
+      <Link>Expressions\MemberMemberBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\MemberListBinding.cs">
+      <Link>Expressions\MemberListBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\MemberAssignment.cs">
+      <Link>Expressions\MemberAssignment.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\MemberBindingType.cs">
+      <Link>Expressions\MemberBindingType.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\MemberBinding.cs">
+      <Link>Expressions\MemberBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\NewArrayExpression.cs">
+      <Link>Expressions\NewArrayExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\Expressions\NewExpression.cs">
+      <Link>Expressions\NewExpression.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\Expressions\ParameterExpression.cs">
       <Link>Expressions\ParameterExpression.cs</Link>
@@ -158,6 +203,61 @@
     <Compile Include="..\Remote.Linq\Expressions\UnaryOperator.cs">
       <Link>Expressions\UnaryOperator.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\ExpressionEvaluator.cs">
+      <Link>ExpressionVisitors\ExpressionEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\ExpressionTranslator.cs">
+      <Link>ExpressionVisitors\ExpressionTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\ExpressionVisitorBase.cs">
+      <Link>ExpressionVisitors\ExpressionVisitorBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\RemoteExpressionVisitorBase.cs">
+      <Link>ExpressionVisitors\RemoteExpressionVisitorBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\FieldInfo.cs">
+      <Link>TypeSystem\FieldInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\ConstructorInfo.cs">
+      <Link>TypeSystem\ConstructorInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\MethodInfo.cs">
+      <Link>TypeSystem\MethodInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\MethodBaseInfo.cs">
+      <Link>TypeSystem\MethodBaseInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\PropertyInfo.cs">
+      <Link>TypeSystem\PropertyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\MemberTypes.cs">
+      <Link>TypeSystem\MemberTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\MemberInfo.cs">
+      <Link>TypeSystem\MemberInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\TypeInfoExtensions.cs">
+      <Link>TypeSystem\TypeInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\TypeInfo.cs">
+      <Link>TypeSystem\TypeInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\ITypeResolver.cs">
+      <Link>TypeSystem\ITypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\TypeResolver.cs">
+      <Link>TypeSystem\TypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TypeSystem\TypeHelper.cs">
+      <Link>TypeSystem\TypeHelper.cs</Link>
+    </Compile>
+    <Compile Include="TypeSystem\BindingFlags.cs" />
+    <Compile Include="MemberInfoExtensions.cs" />
+    <Compile Include="TypeExtensions.cs" />
+    <Compile Include="TypeSystem\TypeResolver.Win.cs" />
+    <Compile Include="..\Remote.Linq\ExpressionExtensions.cs">
+      <Link>ExpressionExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\IOrderedQuery.cs">
       <Link>IOrderedQuery.cs</Link>
     </Compile>
@@ -170,8 +270,11 @@
     <Compile Include="..\Remote.Linq\IQuery`.cs">
       <Link>IQuery`.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\ITypeResolver.cs">
-      <Link>ITypeResolver.cs</Link>
+    <Compile Include="..\Remote.Linq\MethodInfos.cs">
+      <Link>MethodInfos.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\ProviderRegistry.cs">
+      <Link>ProviderRegistry.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\Query.cs">
       <Link>Query.cs</Link>
@@ -179,32 +282,32 @@
     <Compile Include="..\Remote.Linq\Query`.cs">
       <Link>Query`.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionEvaluator.cs">
-      <Link>System.Linq.Expressions\ExpressionEvaluator.cs</Link>
+    <Compile Include="..\Remote.Linq\IEnumerableExtensions.cs">
+      <Link>IEnumerableExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionTranslator.cs">
-      <Link>System.Linq.Expressions\ExpressionTranslator.cs</Link>
+    <Compile Include="..\Remote.Linq\IQueryableExtensions.cs">
+      <Link>IQueryableExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\System.Linq.Expressions\ExpressionVisitorBase.cs">
-      <Link>System.Linq.Expressions\ExpressionVisitorBase.cs</Link>
+    <Compile Include="..\Remote.Linq\RemoteQueryable.cs">
+      <Link>RemoteQueryable.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\System.Linq\IEnumerableExtensions.cs">
-      <Link>System.Linq\IEnumerableExtensions.cs</Link>
+    <Compile Include="..\Remote.Linq\RemoteQueryable`.cs">
+      <Link>RemoteQueryable`.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\System.Linq\IQueryableExtensions.cs">
-      <Link>System.Linq\IQueryableExtensions.cs</Link>
+    <Compile Include="..\Remote.Linq\RemoteQueryProvider.cs">
+      <Link>RemoteQueryProvider.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\TypeResolver.cs">
-      <Link>TypeResolver.cs</Link>
+    <Compile Include="..\Remote.Linq.SL5\NonSerializedAttribute.cs">
+      <Link>NonSerializedAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq.SL5\SerializableAttribute.cs">
+      <Link>SerializableAttribute.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="System.Collections.Generic\ListExtensions.cs" />
-    <Compile Include="System.Reflection\BindingFlags.cs" />
-    <Compile Include="System\TypeExtensions.cs" />
-    <Compile Include="TypeResolver.Win.cs" />
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">

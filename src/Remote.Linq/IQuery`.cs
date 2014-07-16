@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Remote.Linq
 {
@@ -11,8 +12,8 @@ namespace Remote.Linq
         bool HasSorting { get; }
         bool HasPaging { get; }
 
-        IEnumerable<Expressions.LambdaExpression> FilterExpressions { get; }
-        IEnumerable<Expressions.SortExpression> SortExpressions { get; }
+        ReadOnlyCollection<Expressions.LambdaExpression> FilterExpressions { get; }
+        ReadOnlyCollection<Expressions.SortExpression> SortExpressions { get; }
         int? SkipValue { get; }
         int? TakeValue { get; }
 

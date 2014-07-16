@@ -12,3 +12,5 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("eb6c25d1-7713-455b-b3a4-9eaea1438708")]
+
+[assembly: InternalsVisibleTo("System.Runtime.Serialization")]

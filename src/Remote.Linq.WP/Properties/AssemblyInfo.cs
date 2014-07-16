@@ -14,4 +14,6 @@ using System.Resources;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("62f6813e-8484-4e62-b2d4-40b35610b71d")]
 
+[assembly: InternalsVisibleTo("System.Runtime.Serialization")]
+
 [assembly: NeutralResourcesLanguageAttribute("en-US")]

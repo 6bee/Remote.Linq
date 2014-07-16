@@ -9,18 +9,22 @@ namespace Remote.Linq.Expressions
 {
     [Serializable]
     [DataContract]
-    [KnownType(typeof(ParameterExpression))]
-    [KnownType(typeof(MethodCallExpression))]
-    [KnownType(typeof(PropertyAccessExpression))]
-    [KnownType(typeof(ConstantExpression))]
-    [KnownType(typeof(ConditionalExpression))]
-    [KnownType(typeof(ConversionExpression))]
     [KnownType(typeof(BinaryExpression))]
-    [KnownType(typeof(UnaryExpression))]
     [KnownType(typeof(CollectionExpression))]
-    [KnownType(typeof(UnaryOperator))]
-    [KnownType(typeof(BinaryOperator))]
+    [KnownType(typeof(ConditionalExpression))]
+    [KnownType(typeof(ConstantExpression))]
+    [KnownType(typeof(ConversionExpression))]
     [KnownType(typeof(LambdaExpression))]
+    [KnownType(typeof(ListInitExpression))]
+    [KnownType(typeof(MemberInitExpression))]
+    [KnownType(typeof(MethodCallExpression))]
+    [KnownType(typeof(NewExpression))]
+    [KnownType(typeof(NewArrayExpression))]
+    [KnownType(typeof(ParameterExpression))]
+    [KnownType(typeof(PropertyAccessExpression))]
+    [KnownType(typeof(UnaryExpression))]
+    [KnownType(typeof(UnaryOperator))]
+    [KnownType(typeof(Remote.Linq.Dynamic.QueryableResourceDescriptor))]
     public abstract partial class Expression
     {
         public abstract ExpressionType NodeType { get; }
@@ -95,6 +99,62 @@ namespace Remote.Linq.Expressions
         public static LambdaExpression Lambda(Expression expression, params ParameterExpression[] parameters)
         {
             return Lambda(expression, (IEnumerable<ParameterExpression>)parameters);
+        }
+
+        public static NewExpression New(ConstructorInfo constructor, IEnumerable<Expression> arguments)
+        {
+            return new NewExpression(constructor, arguments);
+        }
+
+        public static NewExpression New(ConstructorInfo constructor, params Expression[] arguments)
+        {
+            return New(constructor, (IEnumerable<Expression>)arguments);
+        }
+
+        public static ListInitExpression ListInit(NewExpression expression, IEnumerable<ElementInit> initializers)
+        {
+            return new ListInitExpression(expression, initializers);
+        }
+
+        public static MemberInitExpression MemberInit(NewExpression newExpression, IEnumerable<MemberBinding> bindings)
+        {
+            return new MemberInitExpression(newExpression, bindings);
+        }
+
+        public static MemberInitExpression MemberInit(NewExpression newExpression, params MemberBinding[] bindings)
+        {
+            return MemberInit(newExpression, (IEnumerable<MemberBinding>)bindings);
+        }
+
+        public static MemberAssignment Bind(TypeSystem.MemberInfo member, Expression expression)
+        {
+            return new MemberAssignment(member, expression);
+        }
+
+        public static MemberMemberBinding MemberBind(TypeSystem.MemberInfo member, IEnumerable<MemberBinding> bindings)
+        {
+            return new MemberMemberBinding(member, bindings);
+        }
+
+        public static MemberListBinding ListBind(TypeSystem.MemberInfo member, IEnumerable<ElementInit> initializers)
+        {
+            return new MemberListBinding(member, initializers);
+        }
+
+        public static ElementInit ElementInit(TypeSystem.MethodInfo addMethod, System.Collections.ObjectModel.ReadOnlyCollection<Expression> arguments)
+        {
+            return new ElementInit(addMethod, arguments);
+        }
+
+        public static ElementInit ElementInit(System.Reflection.MethodInfo addMethod, IEnumerable<Expression> arguments)
+        {
+            return new ElementInit(addMethod, arguments);
+        }
+
+        // TODO: replace binding flags by bool flags        
+        internal static ElementInit ElementInit(string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
+        {
+            return new ElementInit(methodName, declaringType, bindingFlags, genericArguments, parameterTypes, arguments);
         }
 
         #endregion Factory methods

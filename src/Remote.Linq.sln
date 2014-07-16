@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq", "Remote.Linq\Remote.Linq.csproj", "{2E2B1850-C328-47C3-BED5-313F6E9DBB01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.NET35", "Remote.Linq.NET35\Remote.Linq.NET35.csproj", "{70B7C494-F1DD-4EF7-897E-CC556793407E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.SL4", "Remote.Linq.SL4\Remote.Linq.SL4.csproj", "{7A7940B6-BA23-48EA-9B99-932E7E19FA62}"
 EndProject
@@ -49,6 +51,20 @@ Global
 		{2E2B1850-C328-47C3-BED5-313F6E9DBB01}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2E2B1850-C328-47C3-BED5-313F6E9DBB01}.Release|x64.ActiveCfg = Release|Any CPU
 		{2E2B1850-C328-47C3-BED5-313F6E9DBB01}.Release|x86.ActiveCfg = Release|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Release|x64.ActiveCfg = Release|Any CPU
+		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Release|x86.ActiveCfg = Release|Any CPU
 		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Debug|ARM.ActiveCfg = Debug|Any CPU

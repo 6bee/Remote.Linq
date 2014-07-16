@@ -10,27 +10,30 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Remote.Linq</RootNamespace>
     <AssemblyName>Remote.Linq</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\net35-client\</OutputPath>
+    <OutputPath>..\bin\Debug\net45\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\net35-client\</OutputPath>
+    <OutputPath>..\bin\Release\net45\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,6 +44,24 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Dynamic\DynamicObject.cs" />
+    <Compile Include="Dynamic\DynamicObject.Serializable.cs" />
+    <Compile Include="Dynamic\DynamicObject.MetaObject.cs" />
+    <Compile Include="Dynamic\QueryableDescriptor.cs" />
+    <Compile Include="Dynamic\QueryableDescriptor`.cs" />
+    <Compile Include="Dynamic\QueryableResourceDescriptor.cs" />
+    <Compile Include="Dynamic\SystemExpressionReWriter.cs" />
+    <Compile Include="Dynamic\RemoteExpressionReWriter.cs" />
+    <Compile Include="Expressions\ElementInit.cs" />
+    <Compile Include="Expressions\ListInitExpression.cs" />
+    <Compile Include="Expressions\MemberInitExpression.cs" />
+    <Compile Include="Expressions\MemberMemberBinding.cs" />
+    <Compile Include="Expressions\MemberListBinding.cs" />
+    <Compile Include="Expressions\MemberAssignment.cs" />
+    <Compile Include="Expressions\MemberBindingType.cs" />
+    <Compile Include="Expressions\MemberBinding.cs" />
+    <Compile Include="Expressions\NewArrayExpression.cs" />
+    <Compile Include="Expressions\NewExpression.cs" />
     <Compile Include="Expressions\BinaryExpression.cs" />
     <Compile Include="Expressions\BinaryOperator.cs" />
     <Compile Include="Expressions\CollectionExpression.cs" />
@@ -58,32 +79,40 @@
     <Compile Include="Expressions\SortExpression.cs" />
     <Compile Include="Expressions\UnaryExpression.cs" />
     <Compile Include="Expressions\UnaryOperator.cs" />
+    <Compile Include="ExpressionVisitors\ExpressionEvaluator.cs" />
+    <Compile Include="ExpressionVisitors\ExpressionTranslator.cs" />
+    <Compile Include="ExpressionVisitors\ExpressionVisitorBase.cs" />
+    <Compile Include="ExpressionVisitors\RemoteExpressionVisitorBase.cs" />
+    <Compile Include="MethodInfos.cs" />
+    <Compile Include="TypeSystem\FieldInfo.cs" />
+    <Compile Include="TypeSystem\ConstructorInfo.cs" />
+    <Compile Include="MemberInfoExtensions.cs" />
+    <Compile Include="TypeSystem\MethodInfo.cs" />
+    <Compile Include="TypeSystem\MethodBaseInfo.cs" />
+    <Compile Include="TypeSystem\PropertyInfo.cs" />
+    <Compile Include="TypeSystem\MemberTypes.cs" />
+    <Compile Include="TypeSystem\MemberInfo.cs" />
+    <Compile Include="TypeSystem\TypeInfoExtensions.cs" />
+    <Compile Include="TypeExtensions.cs" />
+    <Compile Include="TypeSystem\TypeInfo.cs" />
+    <Compile Include="TypeSystem\TypeResolver.cs" />
+    <Compile Include="TypeSystem\TypeResolver.NET.cs" />
+    <Compile Include="TypeSystem\TypeHelper.cs" />
+    <Compile Include="RemoteQueryable`.cs" />
+    <Compile Include="RemoteQueryable.cs" />
+    <Compile Include="RemoteQueryProvider.cs" />
+    <Compile Include="ExpressionExtensions.cs" />
+    <Compile Include="ProviderRegistry.cs" />
     <Compile Include="IOrderedQuery.cs" />
     <Compile Include="IOrderedQuery`.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="IQuery`.cs" />
-    <Compile Include="ITypeResolver.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
+    <Compile Include="IQueryableExtensions.cs" />
+    <Compile Include="TypeSystem\ITypeResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Query`.cs" />
-    <Compile Include="System.Linq.Expressions\ExpressionEvaluator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="System.Linq.Expressions\ExpressionTranslator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="System.Linq.Expressions\ExpressionVisitorBase.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="System.Linq\IEnumerableExtensions.cs" />
-    <Compile Include="System.Linq\IQueryableExtensions.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="System\TypeExtensions.cs" />
-    <Compile Include="TypeResolver.cs" />
-    <Compile Include="TypeResolver.NET.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

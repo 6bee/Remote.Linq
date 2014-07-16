@@ -7,6 +7,7 @@ namespace Remote.Linq.Expressions
     [Serializable]
     public enum UnaryOperator
     {
+        Negate,
         Not,
         IsNull,
         IsNotNull,

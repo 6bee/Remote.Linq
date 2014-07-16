@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+using Remote.Linq.TypeSystem;
 using System;
 using System.Runtime.Serialization;
 
@@ -11,9 +12,8 @@ namespace Remote.Linq.Expressions
     {
         internal ConversionExpression(Expression operand, Type type)
         {
-            _type = type;
             Operand = operand;
-            TypeName = type.FullName;//.AssemblyQualifiedName;
+            Type = new TypeInfo(type);
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Conversion; } }
@@ -21,30 +21,12 @@ namespace Remote.Linq.Expressions
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
         public Expression Operand { get; private set; }
 
-        [DataMember(Name = "Type", IsRequired = true, EmitDefaultValue = false)]
-#if SILVERLIGHT
-        internal string TypeName { get; private set; }
-#else
-        private string TypeName { get; set; }
-#endif
-
-        public Type Type
-        {
-            get
-            {
-                if (ReferenceEquals(null, _type))
-                {
-                    _type = TypeResolver.Instance.ResolveType(TypeName);
-                }
-                return _type;
-            }
-        }
-        [NonSerialized]
-        private Type _type;
+        [DataMember(IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo Type { get; private set; }
 
         public override string ToString()
         {
-            return string.Format("Convert (({0}), {1})", Operand, Type.FullName);
+            return string.Format("Convert (({0}), {1})", Operand, Type);
         }
     }
 }

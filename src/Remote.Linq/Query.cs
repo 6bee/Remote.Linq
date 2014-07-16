@@ -1,7 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+using Remote.Linq.Expressions;
+using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -11,115 +15,52 @@ namespace Remote.Linq
     [DataContract]
     public class Query : IQuery, IOrderedQuery
     {
-        #region Fields
-
-        [DataMember(Name = "TypeName")]
-#if SILVERLIGHT
-        protected internal readonly string _typeName;
-#else
-        protected readonly string _typeName;
-#endif
-
-        [DataMember(Name = "FilterExpressions")]
-#if SILVERLIGHT
-        protected internal readonly List<Expressions.LambdaExpression> _filterExpressions;
-#else
-        protected readonly List<Expressions.LambdaExpression> _filterExpressions;
-#endif
-
-        [DataMember(Name = "SortExpressions")]
-#if SILVERLIGHT
-        protected internal readonly List<Expressions.SortExpression> _sortExpressions;
-#else
-        protected readonly List<Expressions.SortExpression> _sortExpressions;
-#endif
-
-        [DataMember(Name = "Skip")]
-#if SILVERLIGHT
-        protected internal int? _skip;
-#else
-        protected int? _skip;
-#endif
-
-        [DataMember(Name = "Take")]
-#if SILVERLIGHT
-        protected internal int? _take;
-#else
-        protected int? _take;
-#endif
-
-        #endregion Fields
-
         #region Constructor
 
         /// <summary>
         /// Creates a new query instance.
         /// </summary>
         /// <param name="type">The type to be queried</param>
-        public Query(Type type)
-            : this(type, type.FullName)
+        public Query(Type type, IEnumerable<LambdaExpression> filterExpressions = null, IEnumerable<SortExpression> sortExpressions = null, int? skip = null, int? take = null)
+            : this(new TypeInfo(type), filterExpressions, sortExpressions, skip, take)
         {
         }
 
         /// <summary>
         /// Creates a new query instance.
         /// </summary>
-        /// <param name="typeFullName">The full name of the type to be queried</param>
-        public Query(string typeFullName)
-            : this(null, typeFullName)
+        /// <param name="typeInfo">The type to be queried</param>
+        public Query(TypeInfo typeInfo, IEnumerable<LambdaExpression> filterExpressions = null, IEnumerable<SortExpression> sortExpressions = null, int? skip = null, int? take = null)
         {
-        }
-
-        /// <summary>
-        /// Creates a new query instance and copies query parameters from an existing one.
-        /// </summary>
-        /// <param name="parent">The existing query instance to copy the query parameters from.</param>
-        protected Query(Query parent)
-            : this(parent._type, parent._typeName)
-        {
-            _filterExpressions.AddRange(parent._filterExpressions);
-            _sortExpressions.AddRange(parent._sortExpressions);
-            _skip = parent._skip;
-            _take = parent._take;
-        }
-
-        /// <summary>
-        /// Creates a new query instance.
-        /// </summary>
-        /// <param name="typeFullName">The full name of the type to be queried</param>
-        private Query(Type type, string typeFullName)
-        {
-            _type = type;
-            _typeName = typeFullName;
-            _filterExpressions = new List<Remote.Linq.Expressions.LambdaExpression>();
-            _sortExpressions = new List<Remote.Linq.Expressions.SortExpression>();
+            Type = typeInfo;
+            FilterExpressions = (filterExpressions ?? new LambdaExpression[0]).ToList().AsReadOnly();
+            SortExpressions = (sortExpressions ?? new SortExpression[0]).ToList().AsReadOnly();
+            SkipValue = skip;
+            TakeValue = take;
         }
 
         #endregion Constructor
 
         #region Properties
 
-        public bool HasFilters { get { return _filterExpressions.Count > 0; } }
-        public bool HasSorting { get { return _sortExpressions.Count > 0; } }
-        public bool HasPaging { get { return _take.HasValue; } }
+        [DataMember(IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo Type { get; private set; }
 
-        public IEnumerable<Expressions.LambdaExpression> FilterExpressions { get { return _filterExpressions.AsReadOnly(); } }
-        public IEnumerable<Expressions.SortExpression> SortExpressions { get { return _sortExpressions.AsReadOnly(); } }
-        public int? SkipValue { get { return _skip; } }
-        public int? TakeValue { get { return _take; } }
+        public bool HasFilters { get { return FilterExpressions.Count > 0; } }
+        public bool HasSorting { get { return SortExpressions.Count > 0; } }
+        public bool HasPaging { get { return TakeValue.HasValue; } }
 
-        public Type Type
-        {
-            get
-            {
-                if (ReferenceEquals(null, _type))
-                {
-                    _type = TypeResolver.Instance.ResolveType(_typeName);
-                }
-                return _type;
-            }
-        }
-        private Type _type;
+        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        public ReadOnlyCollection<LambdaExpression> FilterExpressions { get; private set; }
+
+        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        public ReadOnlyCollection<SortExpression> SortExpressions { get; private set; }
+
+        [DataMember(Name = "Skip", IsRequired = false, EmitDefaultValue = false)]
+        public int? SkipValue { get; private set; }
+
+        [DataMember(Name = "Take", IsRequired = false, EmitDefaultValue = false)]
+        public int? TakeValue { get; private set; }
 
         #endregion Properties
 
@@ -132,10 +73,12 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="predicate">A lambda expression to test each element for a condition.</param>
         /// <returns>A new query instance containing all specified query parameters</returns>
-        public IQuery Where(Expressions.LambdaExpression predicate)
+        public IQuery Where(LambdaExpression predicate)
         {
-            var query = new Query(this);
-            query._filterExpressions.Add(predicate);
+            var filterExpressions = FilterExpressions.ToList();
+            filterExpressions.Add(predicate);
+            
+            var query = new Query(Type, filterExpressions, SortExpressions, SkipValue, TakeValue);
             return query;
         }
 
@@ -145,11 +88,14 @@ namespace Remote.Linq
         /// <typeparam name="TKey">The type of the key returned by the function that is represented by keySelector.</typeparam>
         /// <param name="lambdaExpression">A function to extract a key from an element.</param>
         /// <returns>A new query instance containing all specified query parameters</returns>
-        public IOrderedQuery OrderBy(Expressions.SortExpression sortExpression)
+        public IOrderedQuery OrderBy(SortExpression sortExpression)
         {
-            var query = new Query(this);
-            query._sortExpressions.Clear();
-            query._sortExpressions.Add(sortExpression);
+            if (sortExpression.SortDirection != SortDirection.Ascending)
+            {
+                throw new ArgumentException("Expected sort expresson to be ascending.");
+            }
+
+            var query = new Query(Type, FilterExpressions, new[] { sortExpression }, SkipValue, TakeValue);
             return query;
         }
 
@@ -159,11 +105,14 @@ namespace Remote.Linq
         /// <typeparam name="TKey">The type of the key returned by the function that is represented by keySelector.</typeparam>
         /// <param name="keySelector">A function to extract a key from an element.</param>
         /// <returns>A new query instance containing all specified query parameters</returns>
-        public IOrderedQuery OrderByDescending(Expressions.SortExpression sortExpression)
+        public IOrderedQuery OrderByDescending(SortExpression sortExpression)
         {
-            var query = new Query(this);
-            query._sortExpressions.Clear();
-            query._sortExpressions.Add(sortExpression);
+            if (sortExpression.SortDirection != SortDirection.Descending)
+            {
+                throw new ArgumentException("Expected sort expresson to be descending.");
+            }
+
+            var query = new Query(Type, FilterExpressions, new[] { sortExpression }, SkipValue, TakeValue);
             return query;
         }
 
@@ -172,10 +121,21 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="sortExpression">A sort expression to extract a key from each element and define a sort direction.</param>
         /// <returns>A new query instance containing all specified query parameters</returns>
-        IOrderedQuery IOrderedQuery.ThenBy(Expressions.SortExpression sortExpression)
+        IOrderedQuery IOrderedQuery.ThenBy(SortExpression sortExpression)
         {
-            var query = new Query(this);
-            query._sortExpressions.Add(sortExpression);
+            if (!SortExpressions.Any())
+            {
+                throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
+            }
+            if (sortExpression.SortDirection != SortDirection.Ascending)
+            {
+                throw new ArgumentException("Expected sort expresson to be ascending.");
+            }
+
+            var sortExpressions = SortExpressions.ToList();
+            sortExpressions.Add(sortExpression);
+
+            var query = new Query(Type, FilterExpressions, sortExpressions, SkipValue, TakeValue);
             return query;
         }
 
@@ -184,10 +144,21 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="sortExpression">A sort expression to extract a key from each element and define a sort direction.</param>
         /// <returns>A new query instance containing all specified query parameters</returns>
-        IOrderedQuery IOrderedQuery.ThenByDescending(Expressions.SortExpression sortExpression)
+        IOrderedQuery IOrderedQuery.ThenByDescending(SortExpression sortExpression)
         {
-            var query = new Query(this);
-            query._sortExpressions.Add(sortExpression);
+            if (!SortExpressions.Any())
+            {
+                throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
+            }
+            if (sortExpression.SortDirection != SortDirection.Descending)
+            {
+                throw new ArgumentException("Expected sort expresson to be descending.");
+            }
+
+            var sortExpressions = SortExpressions.ToList();
+            sortExpressions.Add(sortExpression);
+
+            var query = new Query(Type, FilterExpressions, sortExpressions, SkipValue, TakeValue);
             return query;
         }
 
@@ -198,8 +169,7 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters</returns>
         public IQuery Skip(int count)
         {
-            var query = new Query(this);
-            query._skip = count;
+            var query = new Query(Type, FilterExpressions, SortExpressions, count, TakeValue);
             return query;
         }
 
@@ -210,8 +180,7 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters</returns>
         public IQuery Take(int count)
         {
-            var query = new Query(this);
-            query._take = count;
+            var query = new Query(Type, FilterExpressions, SortExpressions, SkipValue, count);
             return query;
         }
 
@@ -226,11 +195,7 @@ namespace Remote.Linq
         /// <returns>A non-generic version of the specified query instance.</returns>
         public static Query CreateFromGeneric<T>(Query<T> query)
         {
-            var instance = new Query(typeof(T));
-            instance._filterExpressions.AddRange(query.FilterExpressions);
-            instance._sortExpressions.AddRange(query.SortExpressions);
-            instance._skip = query.SkipValue;
-            instance._take = query.TakeValue;
+            var instance = new Query(typeof(T), query.FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
             return instance;
         }
 
@@ -239,32 +204,47 @@ namespace Remote.Linq
         public override string ToString()
         {
             var queryParameters = QueryParametersToString();
-            return string.Format("Query {0}{1}{2}", _typeName, string.IsNullOrEmpty(queryParameters) ? null : ": ", queryParameters);
+            return string.Format("Query {0}{1}{2}", Type, string.IsNullOrEmpty(queryParameters) ? null : ": ", queryParameters);
         }
 
         protected string QueryParametersToString()
         {
             var sb = new StringBuilder();
-            foreach (var expression in _filterExpressions)
+
+            var filterExpressions = FilterExpressions;
+            if (!ReferenceEquals(null, filterExpressions))
+            {
+                foreach (var expression in filterExpressions)
+                {
+                    sb.AppendLine();
+                    sb.AppendFormat("\tWhere {0}", expression);
+                }
+            }
+
+            var sortExpressions = SortExpressions;
+            if (!ReferenceEquals(null, sortExpressions))
+            {
+                foreach (var expression in sortExpressions)
+                {
+                    sb.AppendLine();
+                    sb.AppendFormat("\t{0}", expression);
+                }
+            }
+
+            var skipValue = SkipValue;
+            if (skipValue.HasValue)
             {
                 sb.AppendLine();
-                sb.AppendFormat("\tWhere {0}", expression);
+                sb.AppendFormat("\tSkip {0}", skipValue.Value);
             }
-            foreach (var expression in _sortExpressions)
+
+            var takeValue = TakeValue;
+            if (takeValue.HasValue)
             {
                 sb.AppendLine();
-                sb.AppendFormat("\t{0}", expression);
+                sb.AppendFormat("\tTake {0}", takeValue.Value);
             }
-            if (_skip.HasValue)
-            {
-                sb.AppendLine();
-                sb.AppendFormat("\tSkip {0}", _skip.Value);
-            }
-            if (_take.HasValue)
-            {
-                sb.AppendLine();
-                sb.AppendFormat("\tTake {0}", _take.Value);
-            }
+
             var queryParameters = sb.ToString();
             return queryParameters;
         }

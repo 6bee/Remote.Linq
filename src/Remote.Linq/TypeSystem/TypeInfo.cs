@@ -1,0 +1,99 @@
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+using System;
+using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
+using System.Linq;
+
+namespace Remote.Linq.TypeSystem
+{
+    [Serializable]
+    [DataContract(Name = "Type")]
+    public sealed class TypeInfo
+    {
+        public TypeInfo(Type type)
+        {
+            if (ReferenceEquals(null, type)) throw new ArgumentNullException("type");
+            _type = type;
+            Name = type.Name;
+            Namespace = type.Namespace;
+            if (type.GetIsGenericType())
+            {
+                GenericArguments = type.GetGenericArguments().Select(x => new TypeInfo(x)).ToList().AsReadOnly();
+            }
+        }
+
+        [DataMember(IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; private set; }
+
+        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        public string Namespace { get; private set; }
+
+        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        public ReadOnlyCollection<TypeInfo> GenericArguments { get; private set; }
+        
+        public bool IsGenericType { get { return !ReferenceEquals(null, GenericArguments) && !GenericArguments.Any(); } }
+
+        internal string FullName
+        {
+            get
+            {
+                var fullname = string.Format("",
+                    Namespace,
+                    string.IsNullOrEmpty(Namespace) ? null : ".",
+                    Name,
+                    IsGenericType ? string.Format("`{0}", GenericArguments.Count) : null);
+                return fullname;
+            }
+        }
+
+        public Type Type
+        {
+            get
+            {
+                if (ReferenceEquals(null, _type))
+                {
+                    _type = TypeResolver.Instance.ResolveType(this);
+                }
+                return _type;
+            }
+        }
+        [NonSerialized]
+        private Type _type;
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return Equals(obj as TypeInfo);
+        }
+
+        public bool Equals(TypeInfo typeInfo)
+        {
+            if (ReferenceEquals(null, typeInfo)) return false;
+            if (ReferenceEquals(this, typeInfo)) return true;
+            var s0 = ToString();
+            var s1 = typeInfo.ToString();
+            return string.Compare(s0, s1) == 0;
+        }
+
+        public override int GetHashCode()
+        {
+            var s = ToString();
+            return s.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            var genericArguments = IsGenericType
+                ? string.Format("[{0}]", GenericArguments.Count, string.Join(",", GenericArguments.Select(x => x.ToString()).ToArray()))
+                : null;
+            return string.Format("{0}{1}", FullName, genericArguments);
+        }
+
+        public static implicit operator Type(TypeInfo t)
+        {
+            return t.Type;
+        }
+    }
+}

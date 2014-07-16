@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -14,7 +15,7 @@ namespace Remote.Linq.Expressions
         internal LambdaExpression(Expression expression, IEnumerable<ParameterExpression> parameters)
         {
             Expression = expression;
-            Parameters = parameters.ToArray();
+            Parameters = parameters.ToList().AsReadOnly();
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Lambda; } }
@@ -23,7 +24,7 @@ namespace Remote.Linq.Expressions
         public Expression Expression { get; private set; }
 
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public IEnumerable<ParameterExpression> Parameters { get; private set; }
+        public ReadOnlyCollection<ParameterExpression> Parameters { get; private set; }
 
         public override string ToString()
         {

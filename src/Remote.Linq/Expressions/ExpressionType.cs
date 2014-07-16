@@ -7,16 +7,20 @@ namespace Remote.Linq.Expressions
     [Serializable]
     public enum ExpressionType
     {
-        PropertyAccess,
+        Binary,
+        Collection,
         Conditional,
         Constant,
         Conversion,
-        Binary,
-        Unary,
-        Collection,
-        Parameter,
-        MethodCall,
-        Sort,
         Lambda,
+        ListInit,
+        MemberInit,
+        MethodCall,
+        New,
+        NewArray,
+        Parameter,
+        PropertyAccess,
+        Sort,
+        Unary,
     }
 }
