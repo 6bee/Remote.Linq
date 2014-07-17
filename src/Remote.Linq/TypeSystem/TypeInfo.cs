@@ -32,17 +32,16 @@ namespace Remote.Linq.TypeSystem
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
         public ReadOnlyCollection<TypeInfo> GenericArguments { get; private set; }
         
-        public bool IsGenericType { get { return !ReferenceEquals(null, GenericArguments) && !GenericArguments.Any(); } }
+        public bool IsGenericType { get { return !ReferenceEquals(null, GenericArguments) && GenericArguments.Any(); } }
 
         internal string FullName
         {
             get
             {
-                var fullname = string.Format("",
+                var fullname = string.Format("{0}{1}{2}",
                     Namespace,
                     string.IsNullOrEmpty(Namespace) ? null : ".",
-                    Name,
-                    IsGenericType ? string.Format("`{0}", GenericArguments.Count) : null);
+                    Name);
                 return fullname;
             }
         }
@@ -86,7 +85,7 @@ namespace Remote.Linq.TypeSystem
         public override string ToString()
         {
             var genericArguments = IsGenericType
-                ? string.Format("[{0}]", GenericArguments.Count, string.Join(",", GenericArguments.Select(x => x.ToString()).ToArray()))
+                ? string.Format("[{0}]", string.Join(",", GenericArguments.Select(x => x.ToString()).ToArray()))
                 : null;
             return string.Format("{0}{1}", FullName, genericArguments);
         }
