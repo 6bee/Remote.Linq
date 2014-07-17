@@ -17,6 +17,10 @@ namespace Remote.Linq.TypeSystem
             _type = type;
             Name = type.Name;
             Namespace = type.Namespace;
+            if (type.IsNested && !type.IsGenericParameter)
+            {
+                DeclaringType = new TypeInfo(type.DeclaringType);
+            }
             if (type.GetIsGenericType())
             {
                 GenericArguments = type.GetGenericArguments().Select(x => new TypeInfo(x)).ToList().AsReadOnly();
@@ -30,19 +34,33 @@ namespace Remote.Linq.TypeSystem
         public string Namespace { get; private set; }
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        public TypeInfo DeclaringType { get; private set; }
+
+        [DataMember(IsRequired = false, EmitDefaultValue = false)]
         public ReadOnlyCollection<TypeInfo> GenericArguments { get; private set; }
-        
+
+        public bool IsNested { get { return !ReferenceEquals(null, DeclaringType); } }
         public bool IsGenericType { get { return !ReferenceEquals(null, GenericArguments) && GenericArguments.Any(); } }
 
         internal string FullName
         {
             get
             {
-                var fullname = string.Format("{0}{1}{2}",
-                    Namespace,
-                    string.IsNullOrEmpty(Namespace) ? null : ".",
-                    Name);
-                return fullname;
+                if (IsNested)
+                {
+                    var fullname = string.Format("{0}+{1}",
+                        DeclaringType.FullName,
+                        Name);
+                    return fullname;
+                }
+                else
+                {
+                    var fullname = string.Format("{0}{1}{2}",
+                        Namespace,
+                        string.IsNullOrEmpty(Namespace) ? null : ".",
+                        Name);
+                    return fullname;
+                }
             }
         }
 
