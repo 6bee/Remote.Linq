@@ -74,7 +74,7 @@
     <Compile Include="Expressions\Expression.cs" />
     <Compile Include="Expressions\ExpressionType.cs" />
     <Compile Include="Expressions\ParameterExpression.cs" />
-    <Compile Include="Expressions\PropertyAccessExpression.cs" />
+    <Compile Include="Expressions\MemberExpression.cs" />
     <Compile Include="Expressions\SortDirection.cs" />
     <Compile Include="Expressions\SortExpression.cs" />
     <Compile Include="Expressions\UnaryExpression.cs" />

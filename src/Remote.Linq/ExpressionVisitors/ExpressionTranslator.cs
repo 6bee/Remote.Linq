@@ -307,28 +307,9 @@ namespace Remote.Linq
 
             protected override Expression VisitMemberAccess(MemberExpression m)
             {
-                RLinq.Expression instance = null;
-
-                if (m.Expression.NodeType == ExpressionType.Parameter)
-                {
-                    instance = new RLinq.ParameterExpression(((ParameterExpression)m.Expression).Name, m.Expression.Type);
-                }
-                else if (m.Expression.NodeType == ExpressionType.MemberAccess)
-                {
-                    var exp = Visit(m.Expression);
-                    var parentExpression = exp.Unwrap() as RLinq.PropertyAccessExpression;
-                    if (parentExpression == null) throw new Exception("navigation path could not be resolved");
-                    instance = parentExpression;
-                }
-                else
-                {
-                    //throw CreateNotSupportedException(m);
-                    // TODO: replace PropertyAccessExpression by MemberExpression
-                    instance = Visit(m.Expression).Unwrap();
-                }
-
+                var instance = Visit(m.Expression).Unwrap();
                 var propertyInfo = (System.Reflection.PropertyInfo)m.Member;
-                return new RLinq.PropertyAccessExpression(instance, propertyInfo).Wrap();
+                return new RLinq.MemberExpression(instance, propertyInfo).Wrap();
             }
 
             protected override Expression VisitMemberInit(MemberInitExpression init)
@@ -391,7 +372,7 @@ namespace Remote.Linq
                     var instance = Visit(m.Object).Unwrap();
                     var propertyInfo = m.Object.Type.GetProperty((string)exp.Value, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
                     if (propertyInfo == null) throw new Exception(string.Format("'{0}' is not a valid or an ambiguous property of type {1}", (string)exp.Value, m.Object.Type.FullName));
-                    return new RLinq.PropertyAccessExpression(instance, propertyInfo).Wrap();
+                    return new RLinq.MemberExpression(instance, propertyInfo).Wrap();
                 }
 
                 if (m.Object != null && m.Object.Type == typeof(string) && m.Arguments.Count == 1)
@@ -602,8 +583,8 @@ namespace Remote.Linq
                         return Visit((RLinq.ConversionExpression)expression);
                     case RLinq.ExpressionType.Parameter:
                         return Visit((RLinq.ParameterExpression)expression);
-                    case RLinq.ExpressionType.PropertyAccess:
-                        return Visit((RLinq.PropertyAccessExpression)expression);
+                    case RLinq.ExpressionType.Member:
+                        return Visit((RLinq.MemberExpression)expression);
                     case RLinq.ExpressionType.Unary:
                         return Visit((RLinq.UnaryExpression)expression);
                     case RLinq.ExpressionType.MethodCall:
@@ -751,11 +732,11 @@ namespace Remote.Linq
                 }
             }
 
-            private Expression Visit(RLinq.PropertyAccessExpression propertyAccessExpression)
+            private Expression Visit(RLinq.MemberExpression memberExpression)
             {
-                var exp = Visit(propertyAccessExpression.Instance);
-                System.Reflection.PropertyInfo p = propertyAccessExpression.Property;
-                return Expression.MakeMemberAccess(exp, p);
+                var exp = Visit(memberExpression.Expression);
+                System.Reflection.MemberInfo m = memberExpression.Member;
+                return Expression.MakeMemberAccess(exp, m);
             }
 
             private Expression Visit(RLinq.MethodCallExpression methodCallExpression)

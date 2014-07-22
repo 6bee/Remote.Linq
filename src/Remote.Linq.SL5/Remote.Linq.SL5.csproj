@@ -142,8 +142,8 @@
     <Compile Include="..\Remote.Linq\Expressions\ParameterExpression.cs">
       <Link>Expressions\ParameterExpression.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\Expressions\PropertyAccessExpression.cs">
-      <Link>Expressions\PropertyAccessExpression.cs</Link>
+    <Compile Include="..\Remote.Linq\Expressions\MemberExpression.cs">
+      <Link>Expressions\MemberExpression.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\Expressions\SortDirection.cs">
       <Link>Expressions\SortDirection.cs</Link>

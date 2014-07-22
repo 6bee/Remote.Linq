@@ -29,8 +29,8 @@ namespace Remote.Linq
                     return VisitConversion((ConversionExpression)expression);
                 case ExpressionType.Parameter:
                     return VisitParameter((ParameterExpression)expression);
-                case ExpressionType.PropertyAccess:
-                    return VisitPropertyAccess((PropertyAccessExpression)expression);
+                case ExpressionType.Member:
+                    return VisitMemberAccess((MemberExpression)expression);
                 case ExpressionType.Unary:
                     return VisitUnary((UnaryExpression)expression);
                 case ExpressionType.MethodCall:
@@ -300,13 +300,13 @@ namespace Remote.Linq
             return expression;
         }
 
-        protected virtual Expression VisitPropertyAccess(PropertyAccessExpression expression)
+        protected virtual Expression VisitMemberAccess(MemberExpression expression)
         {
-            var instance = Visit(expression.Instance);
+            var instance = Visit(expression.Expression);
 
-            if (!ReferenceEquals(instance, expression.Instance))
+            if (!ReferenceEquals(instance, expression.Expression))
             {
-                return new PropertyAccessExpression(instance, expression.Property);
+                return new MemberExpression(instance, expression.Member);
             }
             else
             {

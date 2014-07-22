@@ -14,12 +14,12 @@ namespace Remote.Linq.Expressions
         Conversion,
         Lambda,
         ListInit,
+        Member,
         MemberInit,
         MethodCall,
         New,
         NewArray,
         Parameter,
-        PropertyAccess,
         Sort,
         Unary,
     }

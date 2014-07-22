@@ -16,12 +16,12 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(ConversionExpression))]
     [KnownType(typeof(LambdaExpression))]
     [KnownType(typeof(ListInitExpression))]
+    [KnownType(typeof(MemberExpression))]
     [KnownType(typeof(MemberInitExpression))]
     [KnownType(typeof(MethodCallExpression))]
     [KnownType(typeof(NewExpression))]
     [KnownType(typeof(NewArrayExpression))]
     [KnownType(typeof(ParameterExpression))]
-    [KnownType(typeof(PropertyAccessExpression))]
     [KnownType(typeof(UnaryExpression))]
     [KnownType(typeof(UnaryOperator))]
     [KnownType(typeof(Remote.Linq.Dynamic.QueryableResourceDescriptor))]
@@ -31,14 +31,14 @@ namespace Remote.Linq.Expressions
 
         #region Factory methods
 
-        public static PropertyAccessExpression PropertyAccess(Expression instance, PropertyInfo propertyInfo)
+        public static MemberExpression MakeMemberAccess(Expression expression, Remote.Linq.TypeSystem.MemberInfo member)
         {
-            return new PropertyAccessExpression(instance, propertyInfo);
+            return new MemberExpression(expression, member);
         }
 
-        public static PropertyAccessExpression PropertyAccess(Expression instance, string propertyName, Type propertyType, Type declaringType)
+        public static MemberExpression MakeMemberAccess(Expression expression, System.Reflection.MemberInfo member)
         {
-            return new PropertyAccessExpression(instance, propertyName, propertyType, declaringType);
+            return new MemberExpression(expression, member);
         }
 
         public static MethodCallExpression MethodCall(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
