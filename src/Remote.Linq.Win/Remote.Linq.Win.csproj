@@ -110,6 +110,9 @@
     <Compile Include="..\Remote.Linq\Dynamic\DynamicObject.MetaObject.cs">
       <Link>Dynamic\DynamicObject.MetaObject.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\Dynamic\DynamicObjectMapper.cs">
+      <Link>Dynamic\DynamicObjectMapper.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Dynamic\QueryableDescriptor.cs">
       <Link>Dynamic\QueryableDescriptor.cs</Link>
     </Compile>

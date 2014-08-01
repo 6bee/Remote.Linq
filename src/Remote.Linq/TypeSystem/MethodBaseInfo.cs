@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -34,17 +35,25 @@ namespace Remote.Linq.TypeSystem
 
         // TODO: replace binding flags by bool flags
         protected MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes)
+            : this(
+            name, declaringType, bindingFlags, 
+            ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => new TypeInfo(x)), 
+            ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => new TypeInfo(x)))
+        {
+        }
+
+        protected MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, IEnumerable<TypeInfo> genericArguments, IEnumerable<TypeInfo> parameterTypes)
             : base(name, declaringType)
         {
             BindingFlags = bindingFlags;
 
-            GenericArgumentTypes = ReferenceEquals(null, genericArguments) || genericArguments.Length == 0
+            GenericArgumentTypes = ReferenceEquals(null, genericArguments) || !genericArguments.Any()
                 ? null
-                : genericArguments.Select(x => new TypeInfo(x)).ToList().AsReadOnly();
+                : genericArguments.ToList().AsReadOnly();
 
-            ParameterTypes = ReferenceEquals(null, parameterTypes) || parameterTypes.Length == 0
+            ParameterTypes = ReferenceEquals(null, parameterTypes) || !parameterTypes.Any()
                 ? null
-                : parameterTypes.Select(x => new TypeInfo(x)).ToList().AsReadOnly();
+                : parameterTypes.ToList().AsReadOnly();
         }
 
         // TODO: replace binding flags by bool flags
@@ -56,6 +65,8 @@ namespace Remote.Linq.TypeSystem
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
         internal ReadOnlyCollection<TypeInfo> ParameterTypes { get; private set; }
+
+        public bool IsGenericMethod { get { return !ReferenceEquals(null, GenericArgumentTypes) && GenericArgumentTypes.Any(); } }
 
         public override string ToString()
         {

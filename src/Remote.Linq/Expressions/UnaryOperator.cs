@@ -11,5 +11,6 @@ namespace Remote.Linq.Expressions
         Not,
         IsNull,
         IsNotNull,
+        Quote,
     }
 }

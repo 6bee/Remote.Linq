@@ -63,6 +63,11 @@ namespace Remote.Linq
 
         protected virtual IEnumerable<MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> original)
         {
+            if (ReferenceEquals(null, original))
+            {
+                return null;
+            }
+
             List<MemberBinding> list = null;
             for (int i = 0, n = original.Count; i < n; i++)
             {
@@ -135,6 +140,11 @@ namespace Remote.Linq
 
         protected virtual IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original)
         {
+            if (ReferenceEquals(null, original))
+            {
+                return null;
+            }
+
             List<ElementInit> list = null;
             for (int i = 0, n = original.Count; i < n; i++)
             {
@@ -172,6 +182,11 @@ namespace Remote.Linq
 
         protected virtual ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original)
         {
+            if (ReferenceEquals(null, original))
+            {
+                return null;
+            }
+
             List<Expression> list = null;
             for (int i = 0, n = original.Count; i < n; i++)
             {
@@ -199,7 +214,15 @@ namespace Remote.Linq
 
         protected virtual NewExpression VisitNew(NewExpression newExpression)
         {
-            return newExpression;
+            var args = VisitExpressionList(newExpression.Arguments);
+            if (ReferenceEquals(args, newExpression.Arguments))
+            {
+                return newExpression;
+            }
+            else
+            {
+                return new NewExpression(newExpression.Constructor, args);
+            }
         }
 
         private Expression VisitNewArray(NewArrayExpression newArrayExpression)
@@ -232,10 +255,11 @@ namespace Remote.Linq
         {
             var leftOperand = Visit(expression.LeftOperand);
             var rightOperand = Visit(expression.RightOperand);
-
-            if (!ReferenceEquals(leftOperand, expression.LeftOperand) || !ReferenceEquals(rightOperand, expression.RightOperand))
+            var conversion = Visit(expression.Conversion) as LambdaExpression;
+            if (!ReferenceEquals(leftOperand, expression.LeftOperand) || !ReferenceEquals(rightOperand, expression.RightOperand) || !ReferenceEquals(conversion, expression.Conversion))
             {
-                return new BinaryExpression(leftOperand, rightOperand, expression.Operator);
+
+                return new BinaryExpression(leftOperand, rightOperand, expression.Operator, expression.IsLiftedToNull, expression.Method, conversion);
             }
             else
             {
@@ -278,6 +302,10 @@ namespace Remote.Linq
 
         protected virtual ConstantExpression VisitConstant(ConstantExpression expression)
         {
+            //if (expression.Value is Expression)
+            //{
+            //    var exp = Visit((Expression))
+            //}
             return expression;
         }
 

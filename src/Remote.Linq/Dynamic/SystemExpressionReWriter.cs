@@ -19,26 +19,10 @@ namespace Remote.Linq.Dynamic
         private sealed class AnonymousTypesReplacer : ExpressionVisitorBase
         {
             private static readonly NewExpression NewDynamicObjectExpression = Expression.New(typeof(DynamicObject));
+            private static readonly System.Reflection.ConstructorInfo _keyValuePairContructorInfo = typeof(KeyValuePair<string, object>).GetConstructor(new[] { typeof(string), typeof(object) });
+            private static readonly System.Reflection.ConstructorInfo _dynamicObjectContructorInfo = typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<KeyValuePair<string, object>>) });
             private static readonly System.Reflection.MethodInfo DynamicObjectAddMethod = typeof(DynamicObject).GetMethod("Add");
             private static readonly System.Reflection.MethodInfo DynamicObjectGetMethod = typeof(DynamicObject).GetMethod("Get");
-            private static readonly System.Reflection.MethodInfo EnumerableCastMethodInfo = typeof(System.Linq.Enumerable).GetMethod("Cast", BindingFlags.Public | BindingFlags.Static);
-            private static readonly System.Reflection.MethodInfo QueryableSelectMethodInfo = typeof(System.Linq.Queryable)
-                .GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .Where(i => i.Name == "Select")
-                .Where(i => i.IsGenericMethod)
-                .Where(i =>
-                {
-                    var parameters = i.GetParameters();
-                    if (parameters.Length != 2) return false;
-                    var expressionParamType = parameters[1].ParameterType;
-                    if (!expressionParamType.IsGenericType()) return false;
-                    var genericArguments = expressionParamType.GetGenericArguments().ToArray();
-                    if (genericArguments.Count() != 1) return false;
-                    if (!genericArguments.Single().IsGenericType()) return false;
-                    if (genericArguments.Single().GetGenericArguments().Count() != 2) return false;
-                    return true;
-                })
-                .Single();
 
             private readonly Dictionary<ParameterExpression, ParameterExpression> _parameterMap = new Dictionary<ParameterExpression, ParameterExpression>();
 
@@ -52,7 +36,7 @@ namespace Remote.Linq.Dynamic
                 else
                 {
                     var elementType = TypeHelper.GetElementType(expression.Type);
-                    var projectionMethod = QueryableSelectMethodInfo.MakeGenericMethod(elementType, elementType);
+                    var projectionMethod = MethodInfos.Queryable.Select.MakeGenericMethod(elementType, elementType);
                     var parameter = Expression.Parameter(elementType, "x");
                     var lambda = Expression.Lambda(parameter, parameter);
                     //var quote = Expression.MakeUnary(ExpressionType.Quote, lambda, elementType);
@@ -117,21 +101,17 @@ namespace Remote.Linq.Dynamic
 
             protected override Expression VisitMethodCall(MethodCallExpression call)
             {
-                MethodCallExpression call2;
-
                 var instance = Visit(call.Object);
                 var arguments = VisitExpressionList(call.Arguments);
                 if (!ReferenceEquals(instance, call.Object) || !ReferenceEquals(arguments, call.Arguments))
                 {
                     var method = ReplaceAnonymousType(call.Method);
-                    call2 = Expression.Call(instance, method, arguments);
+                    return Expression.Call(instance, method, arguments);
                 }
                 else
                 {
-                    call2 = call;
+                    return call;
                 }
-
-                return call2;
             }
 
             protected override NewExpression VisitNew(NewExpression newExpression)
@@ -146,7 +126,7 @@ namespace Remote.Linq.Dynamic
                         {
                             var arg = a.Type == typeof(object) ? a : Expression.Convert(a, typeof(object));
                             return (Expression)Expression.New(
-                                typeof(KeyValuePair<string, object>).GetConstructor(new[] { typeof(string), typeof(object) }),
+                                _keyValuePairContructorInfo,
                                 Expression.Constant(GetMemberName(newExpression.Members[i])),
                                 arg);
                         });
@@ -156,7 +136,7 @@ namespace Remote.Linq.Dynamic
                         throw new NotImplementedException("unecpected case");
                     }
                     var argsExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arguments);
-                    var x = Expression.New(typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<KeyValuePair<string, object>>) }), argsExpression);
+                    var x = Expression.New(_dynamicObjectContructorInfo, argsExpression);
                     return x;
                 }
                 else
@@ -237,17 +217,17 @@ namespace Remote.Linq.Dynamic
                 return false;
             }
 
-            private static Expression CreateProjectionToDynamicObject(Expression sourceExpression, Type resultType, IEnumerable<ParameterExpression> parameters, IEnumerable<KeyValuePair<Expression, Expression>> initMap)
-            {
-                var inits =
-                    from i in initMap
-                    select Expression.ElementInit(DynamicObjectAddMethod, i.Key, i.Value);
-                var listInit = Expression.ListInit(NewDynamicObjectExpression, inits);
-                var listInitExpression = Expression.Lambda(listInit, parameters.ToArray());
-                var projectionMethod = QueryableSelectMethodInfo.MakeGenericMethod(resultType, typeof(DynamicObject));
-                var exp = Expression.Call(projectionMethod, sourceExpression, listInitExpression);
-                return exp;
-            }
+            //private static Expression CreateProjectionToDynamicObject(Expression sourceExpression, Type resultType, IEnumerable<ParameterExpression> parameters, IEnumerable<KeyValuePair<Expression, Expression>> initMap)
+            //{
+            //    var inits =
+            //        from i in initMap
+            //        select Expression.ElementInit(DynamicObjectAddMethod, i.Key, i.Value);
+            //    var listInit = Expression.ListInit(NewDynamicObjectExpression, inits);
+            //    var listInitExpression = Expression.Lambda(listInit, parameters.ToArray());
+            //    var projectionMethod = QueryableSelectMethodInfo.MakeGenericMethod(resultType, typeof(DynamicObject));
+            //    var exp = Expression.Call(projectionMethod, sourceExpression, listInitExpression);
+            //    return exp;
+            //}
         }
     }
 }

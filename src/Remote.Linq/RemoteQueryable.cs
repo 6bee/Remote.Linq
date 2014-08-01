@@ -14,17 +14,12 @@ namespace Remote.Linq
         protected readonly Expression _expression;
         protected readonly IQueryProvider _provider;
 
-        private RemoteQueryable(Type elemntType, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
-            : this(new QueryableDescriptor(elemntType), dataProvider)
-        {
-        }
-
-        internal RemoteQueryable(IQueryable queryableDescriptor, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
+        internal RemoteQueryable(Type elementType, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
         {
             if (dataProvider == null) throw new ArgumentNullException("dataProvider");
 
-            _elemntType = queryableDescriptor.ElementType;
-            _expression = Expression.Constant(queryableDescriptor);
+            _elemntType = elementType;
+            _expression = Expression.Constant(this);
             _provider = new RemoteQueryProvider(dataProvider);
         }
 

@@ -3,51 +3,16 @@
 using Remote.Linq.Dynamic;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Remote.Linq
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class IQueryableExtensions
     {
-        private static readonly MethodInfo _lambdaExpressionMethodInfo = typeof(Expression)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Single(m =>
-                m.Name == "Lambda" &&
-                m.IsGenericMethod &&
-                m.GetParameters().Length == 2 &&
-                m.GetParameters()[1].ParameterType == typeof(ParameterExpression[]));
-
-        private static readonly MethodInfo _orderByMethodInfo = typeof(System.Linq.Queryable)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Single(m =>
-                m.Name == "OrderBy" &&
-                m.IsGenericMethod &&
-                m.GetParameters().Length == 2);
-
-        private static readonly MethodInfo _orderByDescendingMethodInfo = typeof(System.Linq.Queryable)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Single(m =>
-                m.Name == "OrderByDescending" &&
-                m.IsGenericMethod &&
-                m.GetParameters().Length == 2);
-
-        private static readonly MethodInfo _thenByMethodInfo = typeof(System.Linq.Queryable)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Single(m =>
-                m.Name == "ThenBy" &&
-                m.IsGenericMethod &&
-                m.GetParameters().Length == 2);
-
-        private static readonly MethodInfo _thenByDescendingMethodInfo = typeof(System.Linq.Queryable)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Single(m =>
-                m.Name == "ThenByDescending" &&
-                m.IsGenericMethod &&
-                m.GetParameters().Length == 2);
-
-
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified
         /// </summary>
@@ -76,7 +41,7 @@ namespace Remote.Linq
             var exp = lambdaExpression.Body;
             var resultType = exp.Type;
             var funcType = typeof(Func<,>).MakeGenericType(typeof(T), resultType);
-            var lambdaExpressionMethodInfo = _lambdaExpressionMethodInfo.MakeGenericMethod(funcType);
+            var lambdaExpressionMethodInfo = MethodInfos.Expression.Lambda.MakeGenericMethod(funcType);
 
             var funcExpression = lambdaExpressionMethodInfo.Invoke(null, new object[] { exp, lambdaExpression.Parameters.ToArray() });
 
@@ -88,22 +53,22 @@ namespace Remote.Linq
 
         public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression)
         {
-            return queryable.Sort<T>(lambdaExpression, _orderByMethodInfo);
+            return queryable.Sort<T>(lambdaExpression, MethodInfos.Queryable.OrderBy);
         }
 
         public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression)
         {
-            return queryable.Sort<T>(lambdaExpression, _orderByDescendingMethodInfo);
+            return queryable.Sort<T>(lambdaExpression, MethodInfos.Queryable.OrderByDescending);
         }
 
         public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> queryable, LambdaExpression lambdaExpression)
         {
-            return queryable.Sort<T>(lambdaExpression, _thenByMethodInfo);
+            return queryable.Sort<T>(lambdaExpression, MethodInfos.Queryable.ThenBy);
         }
 
         public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> queryable, LambdaExpression lambdaExpression)
         {
-            return queryable.Sort<T>(lambdaExpression, _thenByDescendingMethodInfo);
+            return queryable.Sort<T>(lambdaExpression, MethodInfos.Queryable.ThenByDescending);
         }
 
         /// <summary>

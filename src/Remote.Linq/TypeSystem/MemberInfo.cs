@@ -69,16 +69,16 @@ namespace Remote.Linq.TypeSystem
             switch (memberInfo.MemberType)
             {
                 case MemberTypes.Field:
-                    return (System.Reflection.FieldInfo)(FieldInfo)memberInfo;
+                    return ((FieldInfo)memberInfo).Field;
 
                 case MemberTypes.Constructor:
-                    return (System.Reflection.ConstructorInfo)(ConstructorInfo)memberInfo;
+                    return ((ConstructorInfo)memberInfo).Constructor;
 
                 case MemberTypes.Property:
-                    return (System.Reflection.PropertyInfo)(PropertyInfo)memberInfo;
+                    return ((PropertyInfo)memberInfo).Property;
 
                 case MemberTypes.Method:
-                    return (System.Reflection.MethodInfo)(MethodInfo)memberInfo;
+                    return ((MethodInfo)memberInfo).Method;
 
                 default:
                     throw new NotImplementedException(string.Format("Implementation missing for conversion of member type: {0}", memberInfo.MemberType));

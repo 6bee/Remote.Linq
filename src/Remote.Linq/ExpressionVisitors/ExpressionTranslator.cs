@@ -12,6 +12,7 @@ using RLinq = Remote.Linq.Expressions;
 
 namespace Remote.Linq
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionTranslator
     {
         private sealed class ParameterCache
@@ -109,17 +110,17 @@ namespace Remote.Linq
 
         internal static System.Linq.Expressions.ConstantExpression Wrap(this RLinq.Expression expression)
         {
-            return System.Linq.Expressions.Expression.Constant(expression);
+            return ReferenceEquals(null, expression) ? null : System.Linq.Expressions.Expression.Constant(expression);
         }
 
         internal static RLinq.ConstantExpression Wrap(this System.Linq.Expressions.Expression expression)
         {
-            return RLinq.Expression.Constant(expression);
+            return ReferenceEquals(null, expression) ? null : RLinq.Expression.Constant(expression);
         }
 
         internal static RLinq.Expression Unwrap(this System.Linq.Expressions.Expression expression)
         {
-            if (expression.NodeType == ExpressionType.Constant && typeof(RLinq.Expression).IsAssignableFrom(expression.Type))
+            if (!ReferenceEquals(null, expression) && expression.NodeType == ExpressionType.Constant && typeof(RLinq.Expression).IsAssignableFrom(expression.Type))
             {
                 return (RLinq.Expression)((System.Linq.Expressions.ConstantExpression)expression).Value;
             }
@@ -131,7 +132,7 @@ namespace Remote.Linq
 
         internal static System.Linq.Expressions.Expression Unwrap(this RLinq.Expression expression)
         {
-            if (expression.NodeType == RLinq.ExpressionType.Constant && typeof(System.Linq.Expressions.Expression).IsAssignableFrom(((RLinq.ConstantExpression)expression).Type))
+            if (!ReferenceEquals(null, expression) && expression.NodeType == RLinq.ExpressionType.Constant && typeof(System.Linq.Expressions.Expression).IsAssignableFrom(((RLinq.ConstantExpression)expression).Type))
             {
                 return (System.Linq.Expressions.Expression)((RLinq.ConstantExpression)expression).Value;
             }
@@ -145,9 +146,11 @@ namespace Remote.Linq
         {
             public RLinq.Expression ToRemoteExpression(Expression expression)
             {
+                // TODO: should PartialEval be removed, EF query expression fails to eval due to method invocation of a call expression
                 var partialEvalExpression = expression.PartialEval();
                 if (partialEvalExpression == null) throw CreateNotSupportedException(expression);
                 var constExpression = Visit(partialEvalExpression);
+                //var constExpression = Visit(expression);
                 return constExpression.Unwrap();
             }
 
@@ -209,7 +212,7 @@ namespace Remote.Linq
                         from arg in nex.Arguments
                         select Visit(arg).Unwrap();
                 }
-                return new RLinq.NewExpression(nex.Constructor, arguments);
+                return new RLinq.NewExpression(nex.Constructor, arguments, nex.Members);
             }
 
             protected override Expression VisitConstant(ConstantExpression c)
@@ -224,92 +227,68 @@ namespace Remote.Linq
 
             protected override Expression VisitBinary(BinaryExpression b)
             {
-                if (b.Conversion == null)
-                {
-                    var left = Visit(b.Left);
-                    var right = Visit(b.Right);
+                var left = Visit(b.Left).Unwrap();
+                var right = Visit(b.Right).Unwrap();
 
-                    if (left.NodeType == ExpressionType.Constant && right.NodeType == ExpressionType.Constant)
+                if (ReferenceEquals(null, b.Conversion))
+                {
+                    if (b.NodeType == ExpressionType.Equal || b.NodeType == ExpressionType.NotEqual)
                     {
-                        if (typeof(RLinq.Expression).IsAssignableFrom(left.Type) && typeof(RLinq.Expression).IsAssignableFrom(right.Type))
+                        if (left is RLinq.ConstantExpression)
                         {
-                            if (b.NodeType == ExpressionType.Equal || b.NodeType == ExpressionType.NotEqual)
+                            if (((RLinq.ConstantExpression)left).Value is bool)
                             {
-                                if (typeof(RLinq.ConstantExpression).IsAssignableFrom(left.Type))
+                                if (b.NodeType == ExpressionType.Equal ^ (bool)((RLinq.ConstantExpression)left).Value)
                                 {
-                                    if (((RLinq.ConstantExpression)((ConstantExpression)left).Value).Value is bool)
-                                    {
-                                        if (b.NodeType == ExpressionType.Equal ^ (bool)((RLinq.ConstantExpression)((ConstantExpression)left).Value).Value)
-                                        {
-                                            // != true
-                                            // == false
-                                            return new RLinq.UnaryExpression(
-                                                right.Unwrap(),
-                                                RLinq.UnaryOperator.Not
-                                            ).Wrap();
-                                        }
-                                        else
-                                        {
-                                            // == true
-                                            // != false
-                                            return right;
-                                        }
-                                    }
-                                    if (((RLinq.ConstantExpression)((ConstantExpression)left).Value).Value == null/* && ((Filter.ConstantValueExpression)((ConstantExpression)right).Value).Value != null*/)
-                                    {
-                                        return new RLinq.UnaryExpression(
-                                            right.Unwrap(),
-                                            b.NodeType == ExpressionType.Equal ? RLinq.UnaryOperator.IsNull : RLinq.UnaryOperator.IsNotNull
-                                        ).Wrap();
-                                    }
+                                    // != true
+                                    // == false
+                                    return new RLinq.UnaryExpression(right, RLinq.UnaryOperator.Not).Wrap();
                                 }
-                                if (typeof(RLinq.ConstantExpression).IsAssignableFrom(right.Type))
+                                else
                                 {
-                                    if (((RLinq.ConstantExpression)((ConstantExpression)right).Value).Value is bool)
-                                    {
-                                        if (b.NodeType == ExpressionType.Equal ^ (bool)((RLinq.ConstantExpression)((ConstantExpression)right).Value).Value)
-                                        {
-                                            // != true
-                                            // == false
-                                            return new RLinq.UnaryExpression(
-                                                left.Unwrap(),
-                                                RLinq.UnaryOperator.Not
-                                            ).Wrap();
-                                        }
-                                        else
-                                        {
-                                            // == true
-                                            // != false
-                                            return left;
-                                        }
-                                    }
-                                    if (((RLinq.ConstantExpression)((ConstantExpression)right).Value).Value == null/* && ((Filter.ConstantValueExpression)((ConstantExpression)left).Value).Value != null*/)
-                                    {
-                                        return new RLinq.UnaryExpression(
-                                            left.Unwrap(),
-                                            b.NodeType == ExpressionType.Equal ? RLinq.UnaryOperator.IsNull : RLinq.UnaryOperator.IsNotNull
-                                        ).Wrap();
-                                    }
+                                    // == true
+                                    // != false
+                                    return right.Wrap();
                                 }
                             }
-
-                            return new RLinq.BinaryExpression(
-                                left.Unwrap(),
-                                right.Unwrap(),
-                                TranslateBinaryOperator(b.NodeType)
-                            ).Wrap();
+                            if (ReferenceEquals(null, ((RLinq.ConstantExpression)left).Value) /* && ReferenceEquals(null, ((Filter.ConstantValueExpression)right).Value)*/)
+                            {
+                                return new RLinq.UnaryExpression(right, b.NodeType == ExpressionType.Equal ? RLinq.UnaryOperator.IsNull : RLinq.UnaryOperator.IsNotNull).Wrap();
+                            }
+                        }
+                        if (right is RLinq.ConstantExpression)
+                        {
+                            if (((RLinq.ConstantExpression)right).Value is bool)
+                            {
+                                if (b.NodeType == ExpressionType.Equal ^ (bool)((RLinq.ConstantExpression)right).Value)
+                                {
+                                    // != true
+                                    // == false
+                                    return new RLinq.UnaryExpression(left, RLinq.UnaryOperator.Not).Wrap();
+                                }
+                                else
+                                {
+                                    // == true
+                                    // != false
+                                    return left.Wrap();
+                                }
+                            }
+                            if (ReferenceEquals(null, ((RLinq.ConstantExpression)right).Value) /* && !ReferenceEquals(null, ((Filter.ConstantValueExpression)left).Value)*/)
+                            {
+                                return new RLinq.UnaryExpression(left, b.NodeType == ExpressionType.Equal ? RLinq.UnaryOperator.IsNull : RLinq.UnaryOperator.IsNotNull).Wrap();
+                            }
                         }
                     }
                 }
 
-                throw CreateNotSupportedException(b);
+                var conversion = Visit(b.Conversion).Unwrap() as RLinq.LambdaExpression;
+                return new RLinq.BinaryExpression(left, right, TranslateBinaryOperator(b.NodeType), b.IsLiftedToNull, b.Method, conversion).Wrap();
             }
 
             protected override Expression VisitMemberAccess(MemberExpression m)
             {
                 var instance = Visit(m.Expression).Unwrap();
-                var propertyInfo = (System.Reflection.PropertyInfo)m.Member;
-                return new RLinq.MemberExpression(instance, propertyInfo).Wrap();
+                return new RLinq.MemberExpression(instance, m.Member).Wrap();
             }
 
             protected override Expression VisitMemberInit(MemberInitExpression init)
@@ -323,11 +302,11 @@ namespace Remote.Linq
             {
                 var list =
                     from i in original
-                    select VisitBinding(i);
+                    select VisitMemberBinding(i);
                 return list.ToArray();
             }
-    
-            private new RLinq.MemberBinding VisitBinding(MemberBinding binding)
+
+            private new RLinq.MemberBinding VisitMemberBinding(MemberBinding binding)
             {
                 switch (binding.BindingType)
                 {
@@ -362,7 +341,7 @@ namespace Remote.Linq
                 var m = TypeSystem.MemberInfo.Create(binding.Member);
                 return new RLinq.MemberListBinding(m, initializers);
             }
-	
+
             protected override Expression VisitMethodCall(MethodCallExpression m)
             {
                 // property selector
@@ -463,7 +442,8 @@ namespace Remote.Linq
 
                 if (u.NodeType == ExpressionType.Quote && operand != null)
                 {
-                    return operand.Wrap();
+                    //return operand.Wrap();
+                    return new RLinq.UnaryExpression(operand, RLinq.UnaryOperator.Quote).Wrap();
                 }
 
                 throw CreateNotSupportedException(u);
@@ -476,7 +456,7 @@ namespace Remote.Linq
                 var ifFalse = Visit(c.IfFalse).Unwrap();
                 return new RLinq.ConditionalExpression(test, ifTrue, ifFalse).Wrap();
             }
-            
+
             protected override Expression VisitNewArray(NewArrayExpression na)
             {
                 var expressions = VisitExpressionList(na.Expressions);
@@ -572,62 +552,77 @@ namespace Remote.Linq
                 switch (expression.NodeType)
                 {
                     case RLinq.ExpressionType.Binary:
-                        return Visit((RLinq.BinaryExpression)expression);
+                        return VisitBinary((RLinq.BinaryExpression)expression);
                     case RLinq.ExpressionType.Collection:
-                        return Visit((RLinq.CollectionExpression)expression);
+                        return VisitCollection((RLinq.CollectionExpression)expression);
                     case RLinq.ExpressionType.Conditional:
-                        return Visit((RLinq.ConditionalExpression)expression);
+                        return VisitConditional((RLinq.ConditionalExpression)expression);
                     case RLinq.ExpressionType.Constant:
-                        return Visit((RLinq.ConstantExpression)expression);
+                        return VisitConstant((RLinq.ConstantExpression)expression);
                     case RLinq.ExpressionType.Conversion:
-                        return Visit((RLinq.ConversionExpression)expression);
+                        return VisitConversion((RLinq.ConversionExpression)expression);
                     case RLinq.ExpressionType.Parameter:
-                        return Visit((RLinq.ParameterExpression)expression);
+                        return VisitParameter((RLinq.ParameterExpression)expression);
                     case RLinq.ExpressionType.Member:
-                        return Visit((RLinq.MemberExpression)expression);
+                        return VisitMember((RLinq.MemberExpression)expression);
                     case RLinq.ExpressionType.Unary:
-                        return Visit((RLinq.UnaryExpression)expression);
+                        return VisitUnary((RLinq.UnaryExpression)expression);
                     case RLinq.ExpressionType.MethodCall:
-                        return Visit((RLinq.MethodCallExpression)expression);
+                        return VisitMethodCall((RLinq.MethodCallExpression)expression);
                     case RLinq.ExpressionType.Lambda:
-                        return Visit((RLinq.LambdaExpression)expression);
+                        return VisitLambda((RLinq.LambdaExpression)expression);
                     case RLinq.ExpressionType.ListInit:
-                        return Visit((RLinq.ListInitExpression)expression);
+                        return VisitListInit((RLinq.ListInitExpression)expression);
                     case RLinq.ExpressionType.New:
-                        return Visit((RLinq.NewExpression)expression);
+                        return VisitNew((RLinq.NewExpression)expression);
                     case RLinq.ExpressionType.NewArray:
-                        return Visit((RLinq.NewArrayExpression)expression);
+                        return VisitNewArray((RLinq.NewArrayExpression)expression);
                     case RLinq.ExpressionType.MemberInit:
-                        return Visit((RLinq.MemberInitExpression)expression);
+                        return VisitMemberInit((RLinq.MemberInitExpression)expression);
                     default:
                         throw new Exception(string.Format("Unknown expression note type: '{0}'", expression.NodeType));
                 }
             }
 
-            private NewExpression Visit(RLinq.NewExpression newExpression)
+            private NewExpression VisitNew(RLinq.NewExpression newExpression)
             {
                 if (newExpression.Arguments != null)
                 {
                     var arguments =
                         from a in newExpression.Arguments
                         select Visit(a);
-                    return Expression.New(newExpression.Constructor, arguments);
+                    if (ReferenceEquals(null, newExpression.Members))
+                    {
+                        return Expression.New(newExpression.Constructor, arguments);
+                    }
+                    else
+                    {
+                        var members = newExpression.Members.Select(x => (System.Reflection.MemberInfo)x).ToArray();
+                        return Expression.New(newExpression.Constructor, arguments, members);
+                    }
                 }
                 else
                 {
-                    return Expression.New(newExpression.Constructor);
+                    if (ReferenceEquals(null, newExpression.Members))
+                    {
+                        return Expression.New(newExpression.Constructor);
+                    }
+                    else
+                    {
+                        return Expression.New(newExpression.Constructor, new Expression[0], newExpression.Members.Cast<System.Reflection.MemberInfo>());
+                    }
                 }
             }
 
-            private Expression Visit(RLinq.NewArrayExpression expression)
+            private Expression VisitNewArray(RLinq.NewArrayExpression expression)
             {
                 var expressions = VisitExpressionList(expression.Expressions);
                 return Expression.NewArrayInit(expression.Type, expressions);
             }
 
-            private Expression Visit(RLinq.MemberInitExpression expression)
+            private Expression VisitMemberInit(RLinq.MemberInitExpression expression)
             {
-                var n = Visit(expression.NewExpression);
+                var n = VisitNew(expression.NewExpression);
                 var bindings = VisitBindingList(expression.Bindings);
                 return Expression.MemberInit(n, bindings);
             }
@@ -636,11 +631,11 @@ namespace Remote.Linq
             {
                 var list =
                     from i in original
-                    select VisitBinding(i);
+                    select VisitMemberBinding(i);
                 return list.ToArray();
             }
 
-            private MemberBinding VisitBinding(RLinq.MemberBinding binding)
+            private MemberBinding VisitMemberBinding(RLinq.MemberBinding binding)
             {
                 switch (binding.BindingType)
                 {
@@ -699,9 +694,9 @@ namespace Remote.Linq
                 return list.ToArray();
             }
 
-            private Expression Visit(RLinq.ListInitExpression listInitExpression)
+            private Expression VisitListInit(RLinq.ListInitExpression listInitExpression)
             {
-                var n = Visit(listInitExpression.NewExpression);
+                var n = VisitNew(listInitExpression.NewExpression);
                 var initializers =
                     from i in listInitExpression.Initializers
                     select Expression.ElementInit(i.AddMethod, i.Arguments.Select(a => Visit(a)));
@@ -709,12 +704,12 @@ namespace Remote.Linq
                 return Expression.ListInit(n, initializers);
             }
 
-            private ParameterExpression Visit(RLinq.ParameterExpression parameterExpression)
+            private ParameterExpression VisitParameter(RLinq.ParameterExpression parameterExpression)
             {
                 return _parameterCache.GetParameterExpression(parameterExpression.ParameterType, parameterExpression.ParameterName);
             }
 
-            private Expression Visit(RLinq.UnaryExpression unaryExpression)
+            private Expression VisitUnary(RLinq.UnaryExpression unaryExpression)
             {
                 var exp = Visit(unaryExpression.Operand);
                 switch (unaryExpression.Operator)
@@ -727,35 +722,68 @@ namespace Remote.Linq
                         return Expression.MakeUnary(ExpressionType.Negate, exp, null);
                     case RLinq.UnaryOperator.Not:
                         return Expression.MakeUnary(ExpressionType.Not, exp, typeof(bool));
+                    case RLinq.UnaryOperator.Quote:
+                        return Expression.MakeUnary(ExpressionType.Quote, exp, null);
                     default:
                         throw new Exception(string.Format("Unknown unary operation: '{0}'", unaryExpression.Operator));
                 }
             }
 
-            private Expression Visit(RLinq.MemberExpression memberExpression)
+            private Expression VisitMember(RLinq.MemberExpression memberExpression)
             {
                 var exp = Visit(memberExpression.Expression);
                 System.Reflection.MemberInfo m = memberExpression.Member;
                 return Expression.MakeMemberAccess(exp, m);
             }
 
-            private Expression Visit(RLinq.MethodCallExpression methodCallExpression)
+            private Expression VisitMethodCall(RLinq.MethodCallExpression methodCallExpression)
             {
                 var instance = methodCallExpression.Instance == null ? null : Visit(methodCallExpression.Instance);
                 var arguments =
                     from argument in methodCallExpression.Arguments
                     select Visit(argument);
 
+                var method = methodCallExpression.Method;
+                if (string.Compare(method.Name, "SelectMany") == 0 && method.DeclaringType.Type == typeof(System.Linq.Queryable) && method.IsGenericMethod && method.GenericArgumentTypes.Count == 3 && method.ParameterTypes.Count == 3)
+                {
+                    // HACK: cast IQueriable<> to IEnumerable<> to match method signature of SelectMany
+                    var argumentArray = arguments.ToArray();
+                    var exp = argumentArray[1];
+                    LambdaExpression lambda;
+                    if (exp is UnaryExpression)
+                    {
+                        lambda = (LambdaExpression)((UnaryExpression)exp).Operand;
+                    }
+                    else if (exp is ConstantExpression)
+                    {
+                        lambda = (LambdaExpression)((ConstantExpression)exp).Value;
+                    }
+                    else
+                    {
+                        throw new NotImplementedException(string.Format("missing implemntation for expression type ({0})  {1}", exp.NodeType, exp.GetType()));
+                    }
+                    var collectionSelector = lambda.Body;
+                    var collectionType = collectionSelector.Type;
+                    if ((collectionType.IsGenericType() && collectionType.GetGenericTypeDefinition() == typeof(IQueryable<>)) || collectionType.GetInterfaces().Any(x => x.IsGenericType() && x.GetGenericTypeDefinition() == typeof(IQueryable<>)))
+                    {
+                        var elementType = collectionSelector.Type.GetGenericArguments().First();
+                        var conversionMethod = typeof(System.Linq.Enumerable).GetMethod("AsEnumerable").MakeGenericMethod(elementType);
+                        var conversionExpression = Expression.Call(null, conversionMethod, collectionSelector);
+                        var lambda2 = Expression.Lambda(conversionExpression, lambda.Parameters.ToArray());
+                        arguments = new[] { argumentArray[0], lambda2, argumentArray[2] };
+                    }
+                }
+
                 return Expression.Call(instance, methodCallExpression.Method, arguments.ToArray());
             }
 
-            private Expression Visit(RLinq.ConversionExpression conversionExpression)
+            private Expression VisitConversion(RLinq.ConversionExpression conversionExpression)
             {
                 var exp = Visit(conversionExpression.Operand);
                 return Expression.Convert(exp, conversionExpression.Type);
             }
 
-            private Expression Visit(RLinq.ConditionalExpression expression)
+            private Expression VisitConditional(RLinq.ConditionalExpression expression)
             {
                 var test = Visit(expression.Test);
                 var ifTrue = Visit(expression.IfTrue);
@@ -763,12 +791,12 @@ namespace Remote.Linq
                 return Expression.Condition(test, ifTrue, ifFalse);
             }
 
-            private Expression Visit(RLinq.ConstantExpression constantValueExpression)
+            private Expression VisitConstant(RLinq.ConstantExpression constantValueExpression)
             {
                 return Expression.Constant(constantValueExpression.Value, constantValueExpression.Type);
             }
 
-            private Expression Visit(RLinq.CollectionExpression collectionExpression)
+            private Expression VisitCollection(RLinq.CollectionExpression collectionExpression)
             {
                 var collection =
                     from exp in collectionExpression.List
@@ -788,44 +816,62 @@ namespace Remote.Linq
                 }
             }
 
-            private Expression Visit(RLinq.BinaryExpression binaryExpression)
+            private Expression VisitBinary(RLinq.BinaryExpression binaryExpression)
             {
                 var p1 = Visit(binaryExpression.LeftOperand);
                 var p2 = Visit(binaryExpression.RightOperand);
+                var conversion = Visit(binaryExpression.Conversion) as LambdaExpression;
 
-                switch (binaryExpression.Operator)
+                if (ReferenceEquals(null, conversion))
                 {
-                    case RLinq.BinaryOperator.StartsWith:
-                        return Expression.Call(p1, StringStartsWithMethodInfo, p2);
-                    case RLinq.BinaryOperator.EndsWith:
-                        return Expression.Call(p1, StringEndsWithMethodInfo, p2);
-                    case RLinq.BinaryOperator.Contains:
-                        return Expression.Call(p1, StringContainsMethodInfo, p2);
-                    case RLinq.BinaryOperator.In:
-                        if (p1.Type == typeof(object))
-                        {
-                            return Expression.Call(null, EnumerableContainsMethodInfo.MakeGenericMethod(p1.Type), p2, p1);
-                        }
-                        else
-                        {
-                            var typeConvertionMethod = Expression.Call(null, EnumerableOfTypeMethodInfo.MakeGenericMethod(p1.Type), p2);
-                            var toArrayMethodExpression = Expression.Call(null, EnumerableToArrayMethodInfo.MakeGenericMethod(p1.Type), typeConvertionMethod);
-                            var obj = Expression.Lambda(toArrayMethodExpression).Compile().DynamicInvoke();
-                            var exp = Expression.Constant(obj);
-                            return Expression.Call(null, EnumerableContainsMethodInfo.MakeGenericMethod(p1.Type), exp, p1);
-                        }
-                    default:
-                        var type = TranslateBinaryOperator(binaryExpression.Operator);
-                        return Expression.MakeBinary(type, p1, p2);
+                    switch (binaryExpression.Operator)
+                    {
+                        case RLinq.BinaryOperator.StartsWith:
+                            return Expression.Call(p1, StringStartsWithMethodInfo, p2);
+                        case RLinq.BinaryOperator.EndsWith:
+                            return Expression.Call(p1, StringEndsWithMethodInfo, p2);
+                        case RLinq.BinaryOperator.Contains:
+                            return Expression.Call(p1, StringContainsMethodInfo, p2);
+                        case RLinq.BinaryOperator.In:
+                            if (p1.Type == typeof(object))
+                            {
+                                return Expression.Call(null, EnumerableContainsMethodInfo.MakeGenericMethod(p1.Type), p2, p1);
+                            }
+                            else
+                            {
+                                var typeConvertionMethod = Expression.Call(null, EnumerableOfTypeMethodInfo.MakeGenericMethod(p1.Type), p2);
+                                var toArrayMethodExpression = Expression.Call(null, EnumerableToArrayMethodInfo.MakeGenericMethod(p1.Type), typeConvertionMethod);
+                                var obj = Expression.Lambda(toArrayMethodExpression).Compile().DynamicInvoke();
+                                var exp = Expression.Constant(obj);
+                                return Expression.Call(null, EnumerableContainsMethodInfo.MakeGenericMethod(p1.Type), exp, p1);
+                            }
+                        //default:{
+                        //    var type = TranslateBinaryOperator(binaryExpression.Operator);
+                        //    return Expression.MakeBinary(type, p1, p2);
+                    }
+                }
+
+                var type = TranslateBinaryOperator(binaryExpression.Operator);
+                if (!ReferenceEquals(null, conversion))
+                {
+                    return Expression.MakeBinary(type, p1, p2, binaryExpression.IsLiftedToNull, binaryExpression.Method, conversion);
+                }
+                else if (!ReferenceEquals(null, binaryExpression.Method))
+                {
+                    return Expression.MakeBinary(type, p1, p2, binaryExpression.IsLiftedToNull, binaryExpression.Method);
+                }
+                else
+                {
+                    return Expression.MakeBinary(type, p1, p2);
                 }
             }
 
-            private Expression Visit(RLinq.LambdaExpression lambdaExpression)
+            private Expression VisitLambda(RLinq.LambdaExpression lambdaExpression)
             {
                 var body = Visit(lambdaExpression.Expression);
                 var parameters =
                     from p in lambdaExpression.Parameters
-                    select Visit(p);
+                    select VisitParameter(p);
                 return Expression.Lambda(body, parameters.ToArray());
             }
 

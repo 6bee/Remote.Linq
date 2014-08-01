@@ -12,60 +12,44 @@ namespace Remote.Linq.TypeSystem
         public PropertyInfo(System.Reflection.PropertyInfo propertyInfo)
             : base(propertyInfo)
         {
-            _systemPropertyInfo = propertyInfo;
-            PropertyType = new TypeInfo(propertyInfo.PropertyType);
+            _property = propertyInfo;
         }
 
-        public PropertyInfo(string propertyName, Type propertyType, Type declaringType)
+        public PropertyInfo(string propertyName, Type declaringType)
             : base(propertyName, declaringType)
         {
-            PropertyType = new TypeInfo(propertyType);
         }
 
         public override MemberTypes MemberType { get { return Remote.Linq.TypeSystem.MemberTypes.Property; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo PropertyType { get; private set; }
-
-        private System.Reflection.PropertyInfo SystemPropertyInfo
+        internal System.Reflection.PropertyInfo Property
         {
             get
             {
-                if (ReferenceEquals(null, _systemPropertyInfo))
+                if (ReferenceEquals(null, _property))
                 {
                     Type declaringType;
                     try
                     {
                         declaringType = DeclaringType;
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType));
+                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
                     }
 
-                    Type propertyType;
-                    try
-                    {
-                        propertyType = PropertyType;
-                    }
-                    catch
-                    {
-                        throw new Exception(string.Format("Property type '{0}' could not be reconstructed", PropertyType));
-                    }
-
-                    var propertyInfo = declaringType.GetProperty(Name, propertyType);
-                    if (propertyInfo == null) propertyInfo = declaringType.GetProperty(Name);
-                    _systemPropertyInfo = propertyInfo;
+                    var propertyInfo = declaringType.GetProperty(Name);
+                    _property = propertyInfo;
                 }
-                return _systemPropertyInfo;
+                return _property;
             }
         }
         [NonSerialized]
-        private System.Reflection.PropertyInfo _systemPropertyInfo;
+        private System.Reflection.PropertyInfo _property;
 
         public static implicit operator System.Reflection.PropertyInfo(PropertyInfo p)
         {
-            return p.SystemPropertyInfo;
+            return p.Property;
         }
     }
 }

@@ -61,6 +61,9 @@
     <Compile Include="..\Remote.Linq\Dynamic\DynamicObject.MetaObject.cs">
       <Link>Dynamic\DynamicObject.MetaObject.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\Dynamic\DynamicObjectMapper.cs">
+      <Link>Dynamic\DynamicObjectMapper.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Dynamic\QueryableDescriptor.cs">
       <Link>Dynamic\QueryableDescriptor.cs</Link>
     </Compile>
@@ -255,6 +258,9 @@
     </Compile>
     <Compile Include="..\Remote.Linq\TypeExtensions.cs">
       <Link>TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq.NET35\TypeExtensions.NET35.cs">
+      <Link>TypeExtensions.NET35.cs</Link>
     </Compile>
     <Compile Include="NonSerializedAttribute.cs" />
     <Compile Include="SerializableAttribute.cs" />

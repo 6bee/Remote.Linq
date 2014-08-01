@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using BindingFlags = System.Reflection.BindingFlags;
@@ -14,7 +15,7 @@ namespace Remote.Linq.TypeSystem
         public MethodInfo(System.Reflection.MethodInfo methodInfo)
             : base(methodInfo)
         {
-            _systemMethodInfo = methodInfo;
+            _method = methodInfo;
         }
 
         // TODO: replace binding flags by bool flags
@@ -23,22 +24,27 @@ namespace Remote.Linq.TypeSystem
         {
         }
 
+        public MethodInfo(string name, TypeInfo declaringType, BindingFlags bindingFlags, IEnumerable<TypeInfo> genericArguments, IEnumerable<TypeInfo> parameterTypes)
+            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes)
+        {
+        }
+
         public override MemberTypes MemberType { get { return TypeSystem.MemberTypes.Method; } }
 
-        private System.Reflection.MethodInfo SystemMethodInfo
+        internal System.Reflection.MethodInfo Method
         {
             get
             {
-                if (ReferenceEquals(null, _systemMethodInfo))
+                if (ReferenceEquals(null, _method))
                 {
                     Type declaringType;
                     try
                     {
                         declaringType = DeclaringType;
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType));
+                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
                     }
 
                     var genericArguments = ReferenceEquals(null, GenericArgumentTypes) ? new Type[0] : GenericArgumentTypes
@@ -49,9 +55,9 @@ namespace Remote.Linq.TypeSystem
                                 Type genericArgumentType = typeInfo;
                                 return genericArgumentType;
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                throw new Exception(string.Format("Generic argument type '{0}' could not be reconstructed", typeInfo));
+                                throw new Exception(string.Format("Generic argument type '{0}' could not be reconstructed", typeInfo), ex);
                             }
                         })
                         .ToArray();
@@ -64,9 +70,9 @@ namespace Remote.Linq.TypeSystem
                                 Type parameterType = typeInfo;
                                 return parameterType;
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", typeInfo));
+                                throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", typeInfo), ex);
                             }
                         })
                         .ToArray();
@@ -92,22 +98,22 @@ namespace Remote.Linq.TypeSystem
                             })
                             .Single();
                     }
-                    _systemMethodInfo = methodInfo;
+                    _method = methodInfo;
                 }
-                return _systemMethodInfo;
+                return _method;
             }
         }
         [NonSerialized]
-        private System.Reflection.MethodInfo _systemMethodInfo;
+        private System.Reflection.MethodInfo _method;
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", new TypeInfo(SystemMethodInfo.ReturnType), base.ToString());
+            return string.Format("{0} {1}", new TypeInfo(Method.ReturnType), base.ToString());
         }
 
         public static implicit operator System.Reflection.MethodInfo(MethodInfo m)
         {
-            return m.SystemMethodInfo;
+            return m.Method;
         }
     }
 }

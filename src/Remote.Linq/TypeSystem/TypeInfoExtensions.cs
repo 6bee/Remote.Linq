@@ -2,9 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Remote.Linq.TypeSystem
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class TypeInfoExtensions
     {
         public static Type GetGenericTypeDefinition(this TypeInfo typeInfo)

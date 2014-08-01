@@ -3,10 +3,12 @@
 using Remote.Linq.Dynamic;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Remote.Linq
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class IEnumerableExtensions
     {
         /// <summary>
@@ -45,6 +47,11 @@ namespace Remote.Linq
                 .AsQueryable()
                 .ApplyQuery(query)
                 .AsEnumerable();
+        }
+
+        internal static bool Any(this System.Collections.IEnumerable enumerable)
+        {
+            return !ReferenceEquals(null, enumerable) && enumerable.GetEnumerator().MoveNext();
         }
     }
 }

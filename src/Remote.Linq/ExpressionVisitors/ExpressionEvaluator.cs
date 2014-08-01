@@ -72,6 +72,10 @@ namespace Remote.Linq
                 {
                     return e;
                 }
+                if (e.NodeType == ExpressionType.Quote)
+                {
+                    return e;
+                }
                 LambdaExpression lambda = Expression.Lambda(e);
                 Delegate fn = lambda.Compile();
                 return Expression.Constant(fn.DynamicInvoke(null), e.Type);

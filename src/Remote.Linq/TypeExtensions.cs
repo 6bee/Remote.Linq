@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Remote.Linq
 {
-    internal static class TypeExtensions
+    internal static partial class TypeExtensions
     {
         public static Type GetUnderlyingSystemType(this Type type)
         {
@@ -22,6 +22,16 @@ namespace Remote.Linq
         {
             return type.Name.StartsWith("<>")
                 && type.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false).Any();
+        }
+
+        public static bool IsEnum(this Type type)
+        {
+            return type.IsEnum;
+        }
+
+        public static bool IsValueType(this Type type)
+        {
+            return type.IsValueType;
         }
 
         public static Type GetBaseType(this Type type)

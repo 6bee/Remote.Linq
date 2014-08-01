@@ -22,6 +22,16 @@ namespace Remote.Linq
             return type.GetTypeInfo().IsGenericType;
         }
 
+        public static bool IsEnum(this Type type)
+        {
+            return type.GetTypeInfo().IsEnum;
+        }
+
+        public static bool IsValueType(this Type type)
+        {
+            return type.GetTypeInfo().IsValueType;
+        }
+
         public static IEnumerable<Type> GetInterfaces(this Type type)
         {
             return type.GetTypeInfo().ImplementedInterfaces;
@@ -238,7 +248,7 @@ namespace Remote.Linq
 
         public static System.Reflection.PropertyInfo GetProperty(this Type type, string name, Type returnType)
         {
-            var properties = type.GetTypeInfo().DeclaredProperties
+            var properties = type.GetProperties()
                 .Where(p => string.Compare(p.Name, name) == 0 && p.PropertyType == returnType)
                 .ToList();
 
@@ -255,7 +265,7 @@ namespace Remote.Linq
 
         public static System.Reflection.PropertyInfo GetProperty(this Type type, string name, BindingFlags bindingAttr)
         {
-            var properties = type.GetTypeInfo().DeclaredProperties
+            var properties = type.GetProperties()
                 .Where(p => string.Compare(p.Name, name) == 0)
                 .Filter(bindingAttr)
                 .ToList();
@@ -269,6 +279,18 @@ namespace Remote.Linq
                 default:
                     throw new AmbiguousMatchException("More than one property is found with the specified name and matching the specified binding constraints.");
             }
+        }
+
+        public static IEnumerable<System.Reflection.PropertyInfo> GetProperties(this Type type)
+        {
+            return type.GetTypeInfo().DeclaredProperties;
+        }
+
+        public static IEnumerable<System.Reflection.PropertyInfo> GetProperties(this Type type, BindingFlags bindingAttr)
+        {
+            return type.GetProperties()
+                .Filter(bindingAttr)
+                .ToList();
         }
 
         public static bool IsAssignableFrom(this Type type, Type c)

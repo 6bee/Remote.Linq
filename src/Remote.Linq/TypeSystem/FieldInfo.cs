@@ -12,6 +12,7 @@ namespace Remote.Linq.TypeSystem
         public FieldInfo(System.Reflection.FieldInfo fieldInfo)
             : base(fieldInfo)
         {
+            _field = fieldInfo;
         }
 
         public FieldInfo(string fieldName, Type declaringType)
@@ -21,34 +22,34 @@ namespace Remote.Linq.TypeSystem
 
         public override MemberTypes MemberType { get { return Remote.Linq.TypeSystem.MemberTypes.Field; } }
 
-        private System.Reflection.FieldInfo SystemFieldInfo
+        internal System.Reflection.FieldInfo Field
         {
             get
             {
-                if (ReferenceEquals(null, _systemFieldInfo))
+                if (ReferenceEquals(null, _field))
                 {
                     Type declaringType;
                     try
                     {
                         declaringType = DeclaringType;
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType));
+                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
                     }
 
                     var fieldInfo = declaringType.GetField(Name);
-                    _systemFieldInfo = fieldInfo;
+                    _field = fieldInfo;
                 }
-                return _systemFieldInfo;
+                return _field;
             }
         }
         [NonSerialized]
-        private System.Reflection.FieldInfo _systemFieldInfo;
+        private System.Reflection.FieldInfo _field;
 
         public static implicit operator System.Reflection.FieldInfo(FieldInfo f)
         {
-            return f.SystemFieldInfo;
+            return f.Field;
         }
     }
 }

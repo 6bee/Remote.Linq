@@ -14,7 +14,7 @@ namespace Remote.Linq.TypeSystem
         public ConstructorInfo(System.Reflection.ConstructorInfo constructorInfo)
             : base(constructorInfo)
         {
-            _systemConstructorInfo = constructorInfo;
+            _constructor = constructorInfo;
         }
 
         // TODO: replace binding flags by bool flags
@@ -25,20 +25,20 @@ namespace Remote.Linq.TypeSystem
 
         public override MemberTypes MemberType { get { return TypeSystem.MemberTypes.Constructor; } }
 
-        private System.Reflection.ConstructorInfo SystemConstructorInfo
+        internal System.Reflection.ConstructorInfo Constructor
         {
             get
             {
-                if (ReferenceEquals(null, _systemConstructorInfo))
+                if (ReferenceEquals(null, _constructor))
                 {
                     Type declaringType;
                     try
                     {
                         declaringType = DeclaringType;
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType));
+                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
                     }
 
                     var genericArguments = ReferenceEquals(null, GenericArgumentTypes) ? new Type[0] : GenericArgumentTypes
@@ -49,9 +49,9 @@ namespace Remote.Linq.TypeSystem
                                 Type genericArgumentType = typeInfo;
                                 return genericArgumentType;
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                throw new Exception(string.Format("Generic argument type '{0}' could not be reconstructed", typeInfo));
+                                throw new Exception(string.Format("Generic argument type '{0}' could not be reconstructed", typeInfo), ex);
                             }
                         })
                         .ToArray();
@@ -64,9 +64,9 @@ namespace Remote.Linq.TypeSystem
                                 Type parameterType = typeInfo;
                                 return parameterType;
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", typeInfo));
+                                throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", typeInfo), ex);
                             }
                         })
                         .ToArray();
@@ -89,13 +89,13 @@ namespace Remote.Linq.TypeSystem
                             })
                             .Single();
                     }
-                    _systemConstructorInfo = constructorInfo;
+                    _constructor = constructorInfo;
                 }
-                return _systemConstructorInfo;
+                return _constructor;
             }
         }
         [NonSerialized]
-        private System.Reflection.ConstructorInfo _systemConstructorInfo;
+        private System.Reflection.ConstructorInfo _constructor;
 
         public override string ToString()
         {
@@ -104,7 +104,7 @@ namespace Remote.Linq.TypeSystem
 
         public static implicit operator System.Reflection.ConstructorInfo(ConstructorInfo c)
         {
-            return c.SystemConstructorInfo;
+            return c.Constructor;
         }
     }
 }

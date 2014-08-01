@@ -11,7 +11,7 @@ namespace Remote.Linq
     internal sealed class RemoteQueryable<T> : RemoteQueryable, IQueryable<T>
     {
         internal RemoteQueryable(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
-            :base(new QueryableDescriptor<T>(), dataProvider)
+            :base(typeof(T), dataProvider)
         {
         }
 

@@ -25,6 +25,11 @@ namespace Remote.Linq.TypeSystem
             {
                 GenericArguments = type.GetGenericArguments().Select(x => new TypeInfo(x)).ToList().AsReadOnly();
             }
+            IsAnonymousType = type.IsAnonymousType();
+            if (IsAnonymousType)
+            {
+                Properties = type.GetProperties().Select(x => x.Name).ToList().AsReadOnly();
+            }
         }
 
         [DataMember(IsRequired = true, EmitDefaultValue = false)]
@@ -38,6 +43,12 @@ namespace Remote.Linq.TypeSystem
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
         public ReadOnlyCollection<TypeInfo> GenericArguments { get; private set; }
+
+        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        internal bool IsAnonymousType { get; private set; }
+
+        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        internal ReadOnlyCollection<string> Properties { get; private set; }
 
         public bool IsNested { get { return !ReferenceEquals(null, DeclaringType); } }
         public bool IsGenericType { get { return !ReferenceEquals(null, GenericArguments) && GenericArguments.Any(); } }

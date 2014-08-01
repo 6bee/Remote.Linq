@@ -89,7 +89,7 @@ namespace Remote.Linq
             }
         }
 
-        protected virtual MemberBinding VisitBinding(MemberBinding binding)
+        protected virtual MemberBinding VisitMemberBinding(MemberBinding binding)
         {
             switch (binding.BindingType)
             {
@@ -258,7 +258,7 @@ namespace Remote.Linq
             List<MemberBinding> list = null;
             for (int i = 0, n = original.Count; i < n; i++)
             {
-                MemberBinding b = VisitBinding(original[i]);
+                MemberBinding b = VisitMemberBinding(original[i]);
                 if (list != null)
                 {
                     list.Add(b);

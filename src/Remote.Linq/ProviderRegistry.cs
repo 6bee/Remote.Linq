@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Remote.Linq
 {
+    // not publicly exposed in order to reduce complexity of API
     internal static class ProviderRegistry
     {
         public static Func<Type, IQueryable> QueryableResourceProvider { get; set; }

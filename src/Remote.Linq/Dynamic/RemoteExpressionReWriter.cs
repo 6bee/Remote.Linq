@@ -30,7 +30,8 @@ namespace Remote.Linq.Dynamic
 
             public Expression ReplaceResourceDescriptorsByQueryable(Expression expression)
             {
-                return Visit(expression);
+                var result = Visit(expression);
+                return result;
             }
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
@@ -57,15 +58,43 @@ namespace Remote.Linq.Dynamic
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
-                if (expression.Type.IsGenericType && expression.Type.GetGenericTypeDefinition() == typeof(QueryableDescriptor<>) && !ReferenceEquals(null, expression.Value))
+                if (!ReferenceEquals(null, expression.Value) && typeof(IQueryable).IsAssignableFrom(expression.Value.GetType()))
                 {
-                    var queryableResourceDescriptor = new QueryableResourceDescriptor(expression.Type.GetGenericArguments().Single());
+                    var queryableResourceDescriptor = new QueryableResourceDescriptor(((IQueryable)expression.Value).ElementType);
                     return Expression.Constant(queryableResourceDescriptor);
                 }
                 else
                 {
                     return base.VisitConstant(expression);
                 }
+            }
+
+            protected override Expression VisitMemberAccess(MemberExpression expression)
+            {
+                var member = expression.Member;
+                Type type;
+                switch (member.MemberType)
+                {
+                    case MemberTypes.Field:
+                        type = ((FieldInfo)member).Field.FieldType;
+                        break;
+                    case MemberTypes.Property:
+                        type = ((PropertyInfo)member).Property.PropertyType;
+                        break;
+                    case MemberTypes.Method:
+                        type = ((MethodInfo)member).Method.ReturnType;
+                        break;
+                    default:
+                        type = null;
+                        break;
+                }
+                if (!ReferenceEquals(null, type) && type.IsGenericType() && typeof(IQueryable<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+                {
+                    var elementType = type.GetGenericArguments().Single();
+                    var queryableResourceDescriptor = new QueryableResourceDescriptor(elementType);
+                    return Expression.Constant(queryableResourceDescriptor);
+                }
+                return base.VisitMemberAccess(expression);
             }
         }
     }

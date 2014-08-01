@@ -61,7 +61,7 @@ namespace Remote.Linq.Expressions
             return new ConstantExpression(value, type);
         }
 
-        public static ConversionExpression Conversion(Expression operand, Type type)
+        public static ConversionExpression Convert(Expression operand, Type type)
         {
             return new ConversionExpression(operand, type);
         }
@@ -74,6 +74,11 @@ namespace Remote.Linq.Expressions
         public static BinaryExpression Binary(Expression leftOperand, Expression rightOperand, BinaryOperator @operator)
         {
             return new BinaryExpression(leftOperand, rightOperand, @operator);
+        }
+
+        public static BinaryExpression Binary(Expression leftOperand, Expression rightOperand, BinaryOperator @operator, bool liftToNull, System.Reflection.MethodInfo method, LambdaExpression conversion = null)
+        {
+            return new BinaryExpression(leftOperand, rightOperand, @operator, liftToNull, method, conversion);
         }
 
         public static UnaryExpression Unary(Expression operand, UnaryOperator @operator)

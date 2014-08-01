@@ -8,7 +8,7 @@ namespace Remote.Linq.TypeSystem
     public partial class TypeResolver : ITypeResolver
     {
         private static readonly ITypeResolver _defaultTypeResolver = new TypeResolver();
-        
+
         protected TypeResolver()
         {
         }
@@ -33,17 +33,48 @@ namespace Remote.Linq.TypeSystem
                     type = assembly.GetType(typeName);
                     if (!ReferenceEquals(null, type)) break;
                 }
-                if (ReferenceEquals(null, type))
-                {
-                    throw new Exception(string.Format("Type '{0}' could not be resolved", typeName));
-                }
             }
             return type;
         }
 
         public virtual Type ResolveType(TypeInfo typeInfo)
         {
-            var type = ResolveType(typeInfo.FullName);
+#if NET
+            Type type;
+            if (typeInfo.IsAnonymousType)
+            {
+                type = new Remote.Linq.TypeSystem.Emit.TypeEmitter().EmitType(typeInfo);
+            }
+            else
+            {
+                type = ResolveType(typeInfo.FullName);
+            }
+#else
+            Type type = ResolveType(typeInfo.FullName);
+
+            if (!ReferenceEquals(null, type) && (type.IsAnonymousType() || typeInfo.IsAnonymousType))
+            {
+                var properties = type.GetProperties().Select(x => x.Name).ToList();
+                var propertyNames = typeInfo.Properties;
+
+                var match =
+                    type.IsAnonymousType() &&
+                    typeInfo.IsAnonymousType &&
+                    properties.Count == propertyNames.Count &&
+                    propertyNames.All(x => properties.Contains(x));
+
+                if (!match)
+                {
+                    throw new Exception(string.Format("Anonymous type '{0}' could not be resolved, expecting properties: {1}", typeInfo.FullName, string.Join(", ", propertyNames.ToArray())));
+                }
+            }
+#endif
+
+            if (ReferenceEquals(null, type))
+            {
+                throw new Exception(string.Format("Type '{0}' could not be resolved", typeInfo.FullName));
+            }
+
             if (typeInfo.IsGenericType)
             {
                 var generigArguments =

@@ -8,6 +8,8 @@ namespace Remote.Linq.Dynamic
 {
     [Serializable]
     //[DataContract(IsReference = true)]
+    [KnownType(typeof(object))]
+    [KnownType(typeof(object[]))]
     public sealed partial class DynamicObject : Dictionary<string, object>
     {
         public DynamicObject()
