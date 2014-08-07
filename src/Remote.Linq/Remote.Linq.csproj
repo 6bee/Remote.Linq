@@ -101,7 +101,7 @@
     <Compile Include="RemoteQueryable`.cs" />
     <Compile Include="RemoteQueryable.cs" />
     <Compile Include="RemoteQueryProvider.cs" />
-    <Compile Include="ExpressionExtensions.cs" />
+    <Compile Include="Expressions\ExpressionExtensions.cs" />
     <Compile Include="ProviderRegistry.cs" />
     <Compile Include="IOrderedQuery.cs" />
     <Compile Include="IOrderedQuery`.cs" />
