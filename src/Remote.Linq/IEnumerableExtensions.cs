@@ -28,7 +28,7 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="queriable"></param>
         /// <returns></returns>
-        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, Query<TEntity> query)
+        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery<TEntity> query)
         {
             return enumerable
                 .AsQueryable()
@@ -41,7 +41,7 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="queriable"></param>
         /// <returns></returns>
-        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, Query query)
+        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery query)
         {
             return enumerable
                 .AsQueryable()

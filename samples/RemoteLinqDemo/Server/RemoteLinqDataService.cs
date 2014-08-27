@@ -16,7 +16,6 @@ namespace Server
             var result = DataSource.Products
                 .ApplyQuery(query)
                 .ToList();
-
             return result;
         }
 
@@ -25,7 +24,6 @@ namespace Server
             var result = DataSource.Orders
                 .ApplyQuery(query)
                 .ToList();
-
             return result;
         }
 

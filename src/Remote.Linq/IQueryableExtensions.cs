@@ -76,7 +76,7 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="queriable"></param>
         /// <returns></returns>
-        public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, Query<TEntity> query)
+        public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, IQuery<TEntity> query)
         {
             return queryable
                 .ApplyFilters(query)
@@ -89,13 +89,13 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="queriable"></param>
         /// <returns></returns>
-        public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, Query query)
+        public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, IQuery query)
         {
             var q = Query<TEntity>.CreateFromNonGeneric(query);
             return queryable.ApplyQuery(q);
         }
 
-        private static IQueryable<T> ApplyFilters<T>(this IQueryable<T> queriable, Query<T> query)
+        private static IQueryable<T> ApplyFilters<T>(this IQueryable<T> queriable, IQuery<T> query)
         {
             foreach (var filter in query.FilterExpressions)
             {
@@ -105,7 +105,7 @@ namespace Remote.Linq
             return queriable;
         }
 
-        private static IQueryable<T> ApplySorting<T>(this IQueryable<T> queriable, Query<T> query)
+        private static IQueryable<T> ApplySorting<T>(this IQueryable<T> queriable, IQuery<T> query)
         {
             IOrderedQueryable<T> orderedQueriable = null;
             foreach (var sort in query.SortExpressions)
@@ -139,7 +139,7 @@ namespace Remote.Linq
             return orderedQueriable ?? queriable;
         }
 
-        private static IQueryable<T> ApplyPaging<T>(this IQueryable<T> queriable, Query<T> query)
+        private static IQueryable<T> ApplyPaging<T>(this IQueryable<T> queriable, IQuery<T> query)
         {
             if (query.SkipValue.HasValue)
             {

@@ -77,7 +77,7 @@ namespace Client
                 var service = serviceProxy.Channel;
 
                 System.Linq.Expressions.Expression<Func<Product,bool>> productFilterLinqExpression = product => product.Name == "Car";
-                Remote.Linq.Expressions.LambdaExpression productFilterRemoteExpression = productFilterLinqExpression.ToQueryExpression();
+                Remote.Linq.Expressions.LambdaExpression productFilterRemoteExpression = productFilterLinqExpression.ToRemoteLinqExpression();
                 var productQuery = new Query(typeof(Product)).Where(productFilterRemoteExpression) as Query;
 
                 var products = service.GetData(productQuery);
@@ -88,7 +88,7 @@ namespace Client
                     Console.WriteLine("\t{0}", product);
 
                     System.Linq.Expressions.Expression<Func<Order, bool>> orderFilterLinqExpression = order => order.Items.Where(i => i.ProductId == product.Id).Sum(i => i.Quantity) > 1;
-                    Remote.Linq.Expressions.LambdaExpression orderFilterRemoteExpression = orderFilterLinqExpression.ToQueryExpression();
+                    Remote.Linq.Expressions.LambdaExpression orderFilterRemoteExpression = orderFilterLinqExpression.ToRemoteLinqExpression();
                     var orderQuery = new Query(typeof(Order)).Where(orderFilterRemoteExpression) as Query;
 
                     var orders = service.GetData(orderQuery);

@@ -20,7 +20,7 @@ namespace Client
 
         public T Channel { get { return _channel; } }
 
-        public Query<Entity> CreateQuery<Entity>(Func<T, Func<Query<Entity>, IEnumerable<Entity>>> serviceMethod)
+        public IQuery<Entity> CreateQuery<Entity>(Func<T, Func<Query<Entity>, IEnumerable<Entity>>> serviceMethod)
         {
             return new Query<Entity>(serviceMethod(Channel));
         }
