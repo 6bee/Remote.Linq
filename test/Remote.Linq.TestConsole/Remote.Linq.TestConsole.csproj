@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Remote.Linq">
+      <HintPath>..\packages\Remote.Linq.3.0.0\lib\net35-client\Remote.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -46,14 +49,13 @@
       <Project>{91CBF2BB-A03B-46B5-8258-32CDDB74E596}</Project>
       <Name>Remote.Linq.QueryFunctions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Remote.Linq\Remote.Linq.csproj">
-      <Project>{2E2B1850-C328-47C3-BED5-313F6E9DBB01}</Project>
-      <Name>Remote.Linq</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Remote.Linq.TestClassLibrary\Remote.Linq.TestClassLibrary.csproj">
       <Project>{0F1CA80D-5006-4A76-95E7-444AB26DA403}</Project>
       <Name>Remote.Linq.TestClassLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

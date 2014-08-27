@@ -9,11 +9,11 @@ namespace Remote.Linq.TestConsole
     {
         public static Remote.Linq.Expressions.Expression TranslateAndPrint<T>(Expression<Func<T, bool>> predicate)
         {
-            var query = predicate.ToQueryExpression();
+            var query = predicate.ToRemoteLinqExpression();
             Console.WriteLine(query);
 
             var exp = query.ToLinqExpression<T, bool>();
-            var query2 = exp.ToQueryExpression();
+            var query2 = exp.ToRemoteLinqExpression();
             Console.WriteLine(query2);
 
             Console.WriteLine();
@@ -25,14 +25,14 @@ namespace Remote.Linq.TestConsole
         public static IEnumerable<T> Filter<T>(this IEnumerable<T> list, Expression<Func<T, bool>> predicate)
         {
             var result = list.AsQueryable().Where(predicate).AsEnumerable();
-            var query = predicate.ToQueryExpression();
+            var query = predicate.ToRemoteLinqExpression();
             var expression = query.ToLinqExpression<T, bool>();
             return list.AsQueryable().Where(expression).AsEnumerable();
         }
 
         public static IEnumerable<T> Sort<T, T2>(this IEnumerable<T> list, Expression<Func<T, T2>> orderby)
         {
-            var query = orderby.ToQueryExpression();
+            var query = orderby.ToRemoteLinqExpression();
             var expression = query.ToLinqExpression<T, T2>();
             return list.AsQueryable().OrderByDescending(expression).AsEnumerable();
         }

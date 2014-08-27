@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Remote.Linq, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Remote.Linq.3.0.0\lib\net45\Remote.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.XML" />
@@ -57,14 +61,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Remote.Linq\Remote.Linq.csproj">
-      <Project>{2e2b1850-c328-47c3-bed5-313f6e9dbb01}</Project>
-      <Name>Remote.Linq</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Remote.Linq.TestClassLibrary\Remote.Linq.TestClassLibrary.csproj">
       <Project>{0f1ca80d-5006-4a76-95e7-444ab26da403}</Project>
       <Name>Remote.Linq.TestClassLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

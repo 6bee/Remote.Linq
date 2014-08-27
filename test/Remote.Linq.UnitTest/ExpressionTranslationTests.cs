@@ -59,7 +59,7 @@ namespace Remote.Linq.UnitTest
 
         private static void TestByClone<T>(Expression<Func<T, bool>> originalLinqExpression, T value)
         {
-            var queryExpression = originalLinqExpression.ToQueryExpression();
+            var queryExpression = originalLinqExpression.ToRemoteLinqExpression();
             var queryExpressionClone = queryExpression.Clone();
             var recreatedLinqExpression = queryExpressionClone.ToLinqExpression<T, bool>();
             var result1 = originalLinqExpression.Compile()(value);
@@ -69,7 +69,7 @@ namespace Remote.Linq.UnitTest
 
         private static void TestByCloneWithDataContractSerializer<T>(Expression<Func<T, bool>> originalLinqExpression, T value)
         {
-            var queryExpression = originalLinqExpression.ToQueryExpression();
+            var queryExpression = originalLinqExpression.ToRemoteLinqExpression();
             var queryExpressionClone = queryExpression.CloneWithDataContractSerializer();
             var recreatedLinqExpression = queryExpressionClone.ToLinqExpression<T, bool>();
             var result1 = originalLinqExpression.Compile()(value);
@@ -79,7 +79,7 @@ namespace Remote.Linq.UnitTest
 
         private static void TestByCloneWithNetDataContractSerializer<T>(Expression<Func<T, bool>> originalLinqExpression, T value)
         {
-            var queryExpression = originalLinqExpression.ToQueryExpression();
+            var queryExpression = originalLinqExpression.ToRemoteLinqExpression();
             var queryExpressionClone = queryExpression.CloneWithNetDataContractSerializer();
             var recreatedLinqExpression = queryExpressionClone.ToLinqExpression<T, bool>();
             var result1 = originalLinqExpression.Compile()(value);
