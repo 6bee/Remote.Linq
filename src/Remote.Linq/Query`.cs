@@ -186,7 +186,7 @@ namespace Remote.Linq
         /// <returns>The data retrieved from the data provider.</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            if (_dataProvider == null) throw new Exception("A query may only be enumerated if a data provider has been specified via constructor parameter.");
+            if (ReferenceEquals(null, _dataProvider)) throw new Exception("A query may only be enumerated if a data provider has been specified via constructor parameter.");
             return _dataProvider(this).GetEnumerator();
         }
 
@@ -203,22 +203,15 @@ namespace Remote.Linq
         /// Creates a generic version of the specified query instance. 
         /// </summary>
         /// <param name="query">The query instance to be converted into a generc query object.</param>
+        /// <param name="dataProvider">A delegate to be invoked to retrieve the actual data</param>
         /// <returns>A generic version of the specified query instance.</returns>
         /// <exception cref="Exception">If the query's type does not match the generic type.</exception>
-        public static Query<T> CreateFromNonGeneric(Query query)
+        public static Query<T> CreateFromNonGeneric(IQuery query, Func<Query<T>, IEnumerable<T>> dataProvider = null)
         {
+            if (ReferenceEquals(null, query)) throw new ArgumentNullException("query");
             if (typeof(T) != query.Type.Type) throw new Exception(string.Format("Generic type missmatch: {0} vs. {1}", typeof(T), query.Type));
 
-            var type = typeof(Query<>).MakeGenericType(typeof(T));
-            var arguments = new object[]
-            {
-                default(Func<Query<T>, IEnumerable<T>>), 
-                query.FilterExpressions, 
-                query.SortExpressions, 
-                query.SkipValue, 
-                query.TakeValue
-            };
-            var instance = (Query<T>)Activator.CreateInstance(type, arguments);
+            var instance = new Query<T>(dataProvider, query.FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
             return instance;
         }
 

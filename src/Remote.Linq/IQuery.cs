@@ -1,11 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+using Remote.Linq.TypeSystem;
 using System.Collections.ObjectModel;
 
 namespace Remote.Linq
 {
     public interface IQuery
     {
+        TypeInfo Type { get; }
+
         bool HasFilters { get; }
         bool HasSorting { get; }
         bool HasPaging { get; }

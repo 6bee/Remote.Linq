@@ -77,7 +77,7 @@ namespace Remote.Linq
         {
             var filterExpressions = FilterExpressions.ToList();
             filterExpressions.Add(predicate);
-            
+
             var query = new Query(Type, filterExpressions, SortExpressions, SkipValue, TakeValue);
             return query;
         }
@@ -193,8 +193,10 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="query">The query instance to be converted into a non-generc query object.</param>
         /// <returns>A non-generic version of the specified query instance.</returns>
-        public static Query CreateFromGeneric<T>(Query<T> query)
+        public static Query CreateFromGeneric<T>(IQuery<T> query)
         {
+            if (ReferenceEquals(null, query)) throw new ArgumentNullException("query");
+
             var instance = new Query(typeof(T), query.FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
             return instance;
         }
