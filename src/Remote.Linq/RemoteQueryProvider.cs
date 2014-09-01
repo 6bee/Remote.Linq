@@ -9,13 +9,13 @@ using System.Linq.Expressions;
 
 namespace Remote.Linq
 {
-    internal sealed class RemoteQueryProvider : IQueryProvider
+    internal sealed partial class RemoteQueryProvider : IQueryProvider
     {
         private readonly Func<Expressions.Expression, IEnumerable<DynamicObject>> _dataProvider;
 
-        public RemoteQueryProvider(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
+        internal RemoteQueryProvider(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
         {
-            if (dataProvider == null) throw new ArgumentNullException("dataProvider");
+            if (ReferenceEquals(null, dataProvider)) throw new ArgumentNullException("dataProvider");
             _dataProvider = dataProvider;
         }
 
@@ -32,44 +32,21 @@ namespace Remote.Linq
 
         public TResult Execute<TResult>(Expression expression)
         {
-            var rlinq1 = expression.ToRemoteLinqExpression();
-            var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors();
-
-            var dataRecords = _dataProvider(rlinq2);
-
-            var elementType = TypeHelper.GetElementType(typeof(TResult));
-            var mapper = DynamicObjectMapper.MapDynamicObjectListMethod.MakeGenericMethod(elementType);
-            var result = mapper.Invoke(null, new object[] { dataRecords });
-
-            if (ReferenceEquals(null, result))
-            {
-                return default(TResult);
-            }
-            
-            if (typeof(TResult).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
-            {
-                return (TResult)result;
-            }
-            
-            if (typeof(TResult).IsAssignableFrom(elementType))
-            {
-                try
-                {
-                    var single = MethodInfos.Enumerable.Single.MakeGenericMethod(elementType).Invoke(null, new object[] { result });
-                    return (TResult)single;
-                }
-                catch (System.Reflection.TargetInvocationException ex)
-                {
-                    throw ex.InnerException;
-                }
-            }
-            
-            throw new Exception(string.Format("Failed to cast result of type '{0}' to '{1}'", result.GetType(), typeof(TResult)));
+            var rlinq = TranslateExpression(expression);
+            var dataRecords = _dataProvider(rlinq);
+            return DynamicObjectMapper.ToType<TResult>(dataRecords);
         }
 
         public object Execute(Expression expression)
         {
             throw new NotImplementedException();
+        }
+
+        internal static Expressions.Expression TranslateExpression(Expression expression)
+        {
+            var rlinq1 = expression.ToRemoteLinqExpression();
+            var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors();
+            return rlinq2;
         }
     }
 }

@@ -81,7 +81,14 @@
     <Compile Include="ExpressionVisitors\ExpressionTranslator.cs" />
     <Compile Include="ExpressionVisitors\ExpressionVisitorBase.cs" />
     <Compile Include="ExpressionVisitors\RemoteExpressionVisitorBase.cs" />
+    <Compile Include="IAsyncQueryProvider.cs" />
+    <Compile Include="IAsyncQueryable.cs" />
+    <Compile Include="IEnumerableAsyncExtensions.cs" />
     <Compile Include="MethodInfos.cs" />
+    <Compile Include="RemoteQueryable.async.cs" />
+    <Compile Include="AsyncRemoteQueryable`.cs" />
+    <Compile Include="RemoteQueryable`.cs" />
+    <Compile Include="AsyncRemoteQueryProvider.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.Cache.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.cs" />
     <Compile Include="TypeSystem\FieldInfo.cs" />
@@ -98,7 +105,6 @@
     <Compile Include="TypeSystem\TypeResolver.cs" />
     <Compile Include="TypeSystem\TypeResolver.NET.cs" />
     <Compile Include="TypeSystem\TypeHelper.cs" />
-    <Compile Include="RemoteQueryable`.cs" />
     <Compile Include="RemoteQueryable.cs" />
     <Compile Include="RemoteQueryProvider.cs" />
     <Compile Include="Expressions\ExpressionExtensions.cs" />

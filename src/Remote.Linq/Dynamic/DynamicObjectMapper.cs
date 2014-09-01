@@ -10,7 +10,7 @@ namespace Remote.Linq.Dynamic
 {
     public static class DynamicObjectMapper
     {
-        internal static readonly System.Reflection.MethodInfo MapDynamicObjectListMethod = typeof(DynamicObjectMapper)
+        private static readonly System.Reflection.MethodInfo MapDynamicObjectListMethod = typeof(DynamicObjectMapper)
             .GetMethods(BindingFlags.Static | BindingFlags.Public)
             .Where(x => x.Name == "Map")
             .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
@@ -156,6 +156,38 @@ namespace Remote.Linq.Dynamic
             }
 
             throw new Exception(string.Format("Failed to project dynamic objects into type {0}", typeof(T).FullName));
+        }
+
+        internal static T ToType<T>(this IEnumerable<DynamicObject> dataRecords)
+        {
+            var elementType = TypeHelper.GetElementType(typeof(T));
+            var mapper = MapDynamicObjectListMethod.MakeGenericMethod(elementType);
+            var result = mapper.Invoke(null, new object[] { dataRecords });
+
+            if (ReferenceEquals(null, result))
+            {
+                return default(T);
+            }
+
+            if (typeof(T).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
+            {
+                return (T)result;
+            }
+
+            if (typeof(T).IsAssignableFrom(elementType))
+            {
+                try
+                {
+                    var single = MethodInfos.Enumerable.Single.MakeGenericMethod(elementType).Invoke(null, new object[] { result });
+                    return (T)single;
+                }
+                catch (System.Reflection.TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            }
+
+            throw new Exception(string.Format("Failed to cast result of type '{0}' to '{1}'", result.GetType(), typeof(T)));
         }
 
         public static IEnumerable<DynamicObject> Map(object obj)

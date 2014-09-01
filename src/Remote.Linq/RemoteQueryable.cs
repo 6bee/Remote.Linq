@@ -8,26 +8,29 @@ using System.Linq.Expressions;
 
 namespace Remote.Linq
 {
-    public class RemoteQueryable : IQueryable
+    public partial class RemoteQueryable : IQueryable
     {
         protected readonly Type _elemntType;
         protected readonly Expression _expression;
         protected readonly IQueryProvider _provider;
 
-        internal RemoteQueryable(Type elementType, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
+        protected RemoteQueryable(Type elementType, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
+            : this(elementType, new RemoteQueryProvider(dataProvider))
         {
-            if (dataProvider == null) throw new ArgumentNullException("dataProvider");
+        }
 
-            _elemntType = elementType;
+        private RemoteQueryable(Type elemntType, IQueryProvider provider)
+        {
+            _elemntType = elemntType;
+            _provider = provider;
             _expression = Expression.Constant(this);
-            _provider = new RemoteQueryProvider(dataProvider);
         }
 
         internal RemoteQueryable(Type elemntType, IQueryProvider provider, Expression expression)
         {
             _elemntType = elemntType;
-            _expression = expression;
             _provider = provider;
+            _expression = expression;
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
