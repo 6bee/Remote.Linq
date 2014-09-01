@@ -261,6 +261,21 @@
     <Compile Include="MemberInfoExtensions.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeSystem\TypeResolver.Win.cs" />
+    <Compile Include="..\Remote.Linq\AsyncRemoteQueryable`.cs">
+      <Link>AsyncRemoteQueryable`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\AsyncRemoteQueryProvider.cs">
+      <Link>AsyncRemoteQueryProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IAsyncQueryProvider.cs">
+      <Link>IAsyncQueryProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IAsyncQueryable.cs">
+      <Link>IAsyncQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IEnumerableAsyncExtensions.cs">
+      <Link>IEnumerableAsyncExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\IOrderedQuery.cs">
       <Link>IOrderedQuery.cs</Link>
     </Compile>
@@ -293,6 +308,9 @@
     </Compile>
     <Compile Include="..\Remote.Linq\RemoteQueryable.cs">
       <Link>RemoteQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\RemoteQueryable.async.cs">
+      <Link>RemoteQueryable.async.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\RemoteQueryable`.cs">
       <Link>RemoteQueryable`.cs</Link>

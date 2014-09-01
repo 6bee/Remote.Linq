@@ -5,23 +5,64 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using MethodInfo = System.Reflection.MethodInfo;
 
 namespace Remote.Linq.Dynamic
 {
+    // TODO: handle cyclic references
     public static class DynamicObjectMapper
     {
-        private static readonly System.Reflection.MethodInfo MapDynamicObjectListMethod = typeof(DynamicObjectMapper)
+        private static readonly MethodInfo _mapDynamicObjectListMethod = typeof(DynamicObjectMapper)
             .GetMethods(BindingFlags.Static | BindingFlags.Public)
             .Where(x => x.Name == "Map")
             .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
             .Where(x => x.GetParameters().Length == 1 && x.GetParameters()[0].ParameterType == typeof(IEnumerable<DynamicObject>))
             .Single();
 
+        private static readonly MethodInfo _mapDynamicObjectMethod = typeof(DynamicObjectMapper)
+            .GetMethods(BindingFlags.Static | BindingFlags.Public)
+            .Where(x => x.Name == "Map")
+            .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
+            .Where(x => x.GetParameters().Length == 1 && x.GetParameters()[0].ParameterType == typeof(DynamicObject))
+            .Single();
+
+        private static MethodInfo GetMapDynamicObjectListMethod(Type type)
+        {
+            return _mapDynamicObjectListMethod.MakeGenericMethod(type);
+        }
+
+        private static MethodInfo GetMapDynamicObjectMethod(Type type)
+        {
+            return _mapDynamicObjectMethod.MakeGenericMethod(type);
+        }
+
+        internal static IEnumerable<object> MapDynamicObjectList(Type type, IEnumerable<DynamicObject> dataRecords)
+        {
+            var mapper = GetMapDynamicObjectListMethod(type);
+            var result = mapper.Invoke(null, new object[] { dataRecords });
+            return (IEnumerable<object>)result;
+        }
+
+        internal static object MapDynamicObject(Type type, DynamicObject obj)
+        {
+            var method = GetMapDynamicObjectMethod(type);
+            var result = method.Invoke(null, new object[] { obj });
+            return result;
+        }
+
         public static T Map<T>(DynamicObject obj)
         {
             return Map<T>(new[] { obj }).SingleOrDefault();
         }
 
+        public static object Map(DynamicObject obj)
+        {
+            if (ReferenceEquals(null, obj)) throw new ArgumentNullException("obj");
+            if (ReferenceEquals(null, obj.Type)) throw new InvalidOperationException("Type property must not be null");
+
+            var result = MapDynamicObject(obj.Type, obj);
+            return result;
+        }
         public static IEnumerable<T> Map<T>(IEnumerable<DynamicObject> objects)
         {
             if (ReferenceEquals(null, objects))
@@ -97,7 +138,7 @@ namespace Remote.Linq.Dynamic
                                 {
                                     // subsequent mapping of nested anonymous type
                                     var targetType = constructor.Parameters[i].ParameterType;
-                                    var method = MapDynamicObjectListMethod.MakeGenericMethod(targetType);
+                                    var method = _mapDynamicObjectListMethod.MakeGenericMethod(targetType);
                                     var args = new[] { (DynamicObject)x }.AsEnumerable();
                                     var mappedValues = (System.Collections.IEnumerable)method.Invoke(null, new[] { args });
                                     var mappedValue = mappedValues.Cast<object>().Single();
@@ -143,6 +184,23 @@ namespace Remote.Linq.Dynamic
                         var list = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
                         foreach (var item in objects)
                         {
+                            foreach (var property in item.Keys.ToArray())
+                            {
+                                var value = item[property];
+                                if (!ReferenceEquals(null, value))
+                                {
+                                    var valueType = value.GetType();
+                                    if (typeof(DynamicObject).IsAssignableFrom(valueType))
+                                    {
+                                        item[property] = Map((DynamicObject)value);
+                                    }
+                                    else if (typeof(IEnumerable<DynamicObject>).IsAssignableFrom(valueType))
+                                    {
+                                        var values = (IEnumerable<DynamicObject>)value;
+                                        item[property] = values.Select(Map).ToArray();
+                                    }
+                                }
+                            }
                             var dataRecord = objectMapper(item);
                             list.Add(dataRecord);
                         }
@@ -161,8 +219,7 @@ namespace Remote.Linq.Dynamic
         internal static T ToType<T>(this IEnumerable<DynamicObject> dataRecords)
         {
             var elementType = TypeHelper.GetElementType(typeof(T));
-            var mapper = MapDynamicObjectListMethod.MakeGenericMethod(elementType);
-            var result = mapper.Invoke(null, new object[] { dataRecords });
+            var result = MapDynamicObjectList(elementType, dataRecords);
 
             if (ReferenceEquals(null, result))
             {
@@ -181,7 +238,7 @@ namespace Remote.Linq.Dynamic
                     var single = MethodInfos.Enumerable.Single.MakeGenericMethod(elementType).Invoke(null, new object[] { result });
                     return (T)single;
                 }
-                catch (System.Reflection.TargetInvocationException ex)
+                catch (TargetInvocationException ex)
                 {
                     throw ex.InnerException;
                 }
@@ -222,7 +279,7 @@ namespace Remote.Linq.Dynamic
                         .OfType<object>()
                         .Select(x =>
                         {
-                            var dynamicObject = new DynamicObject();
+                            var dynamicObject = new DynamicObject(elementType);
                             foreach (var property in properties)
                             {
                                 var value = property.GetValue(x);
@@ -239,7 +296,7 @@ namespace Remote.Linq.Dynamic
                 var value = MapSingle(obj);
                 enumerable = new[] { value };
             }
-            var list = ReferenceEquals(null,enumerable) ? null : enumerable.ToList();
+            var list = ReferenceEquals(null, enumerable) ? null : enumerable.ToList();
             return list;
         }
 
@@ -257,7 +314,7 @@ namespace Remote.Linq.Dynamic
             var type = obj.GetType();
             if (type.IsEnum() || type.IsValueType() || type == typeof(string))
             {
-                return new DynamicObject { { string.Empty, obj } };
+                return new DynamicObject(type) { { string.Empty, obj } };
             }
             if (type.IsArray)
             {
@@ -266,12 +323,12 @@ namespace Remote.Linq.Dynamic
                     .Select(MapValueIfRequired)
                     .ToArray();
                 //return !list.Any() ? null : new DynamicObject { { string.Empty, list } };
-                return new DynamicObject { { string.Empty, list.Any() ? list : null } };
+                return new DynamicObject(type) { { string.Empty, list.Any() ? list : null } };
             }
             var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(x => x.CanRead)
                 .ToList();
-            var dynamicObject = new DynamicObject();
+            var dynamicObject = new DynamicObject(type);
             foreach (var property in properties)
             {
                 var value = property.GetValue(obj);

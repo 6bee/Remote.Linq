@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -7,13 +8,22 @@ using System.Runtime.Serialization;
 namespace Remote.Linq.Dynamic
 {
     [Serializable]
-    //[DataContract(IsReference = true)]
     [KnownType(typeof(object))]
     [KnownType(typeof(object[]))]
-    public sealed partial class DynamicObject : Dictionary<string, object>
+    public partial class DynamicObject : Dictionary<string, object>
     {
         public DynamicObject()
         {
+        }
+
+        public DynamicObject(Type type)
+            : this(new TypeInfo(type))
+        {
+        }
+
+        public DynamicObject(TypeInfo type)
+        {
+            Type = type;
         }
 
         public DynamicObject(IEnumerable<KeyValuePair<string, object>> data)
@@ -23,6 +33,9 @@ namespace Remote.Linq.Dynamic
                 Add(item.Key, item.Value);
             }
         }
+
+        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        public TypeInfo Type { get; private set; }
 
         public object Set(string name, object value)
         {
