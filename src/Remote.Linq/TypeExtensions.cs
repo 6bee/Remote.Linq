@@ -34,6 +34,15 @@ namespace Remote.Linq
             return type.IsValueType;
         }
 
+        public static bool IsSerializable(this Type type)
+        {
+#if SILVERLIGHT
+            return false;
+#else
+            return type.IsSerializable;
+#endif
+        }
+
         public static Type GetBaseType(this Type type)
         {
             return type.BaseType;

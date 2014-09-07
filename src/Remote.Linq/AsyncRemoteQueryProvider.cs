@@ -51,7 +51,7 @@ namespace Remote.Linq
                     throw;
                 }
             }
-            return DynamicObjectMapper.ToType<TResult>(dataRecords);
+            return RemoteQueryProvider.MapToType<TResult>(dataRecords);
         }
 
         public object Execute(Expression expression)
@@ -63,7 +63,7 @@ namespace Remote.Linq
         {
             var rlinq = RemoteQueryProvider.TranslateExpression(expression);
             var dataRecords = await _dataProvider(rlinq);
-            return DynamicObjectMapper.ToType<TResult>(dataRecords);
+            return RemoteQueryProvider.MapToType<TResult>(dataRecords);
         }
     }
 }

@@ -64,6 +64,9 @@
     <Compile Include="..\Remote.Linq\Dynamic\DynamicObjectMapper.cs">
       <Link>Dynamic\DynamicObjectMapper.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq.Win\Dynamic\DynamicObjectMapper.NETCORE.cs">
+      <Link>Dynamic\DynamicObjectMapper.NETCORE.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Dynamic\QueryableDescriptor.cs">
       <Link>Dynamic\QueryableDescriptor.cs</Link>
     </Compile>
@@ -231,6 +234,9 @@
     </Compile>
     <Compile Include="..\Remote.Linq\MethodInfos.cs">
       <Link>MethodInfos.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\ObjectReferenceEqualityComparer`.cs">
+      <Link>ObjectReferenceEqualityComparer`.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\ProviderRegistry.cs">
       <Link>ProviderRegistry.cs</Link>

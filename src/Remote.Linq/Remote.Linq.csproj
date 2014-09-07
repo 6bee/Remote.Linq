@@ -44,6 +44,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Dynamic\DynamicObject.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper.NET.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper.cs" />
     <Compile Include="Dynamic\DynamicObject.Serializable.cs" />
     <Compile Include="Dynamic\DynamicObject.MetaObject.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="ExpressionVisitors\ExpressionTranslator.cs" />
     <Compile Include="ExpressionVisitors\ExpressionVisitorBase.cs" />
     <Compile Include="ExpressionVisitors\RemoteExpressionVisitorBase.cs" />
+    <Compile Include="ObjectReferenceEqualityComparer`.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.Cache.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.cs" />
     <Compile Include="TypeSystem\FieldInfo.cs" />

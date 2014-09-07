@@ -257,6 +257,7 @@
     <Compile Include="..\Remote.Linq\TypeSystem\TypeHelper.cs">
       <Link>TypeSystem\TypeHelper.cs</Link>
     </Compile>
+    <Compile Include="Dynamic\DynamicObjectMapper.NETCORE.cs" />
     <Compile Include="TypeSystem\BindingFlags.cs" />
     <Compile Include="MemberInfoExtensions.cs" />
     <Compile Include="TypeExtensions.cs" />
@@ -290,6 +291,9 @@
     </Compile>
     <Compile Include="..\Remote.Linq\MethodInfos.cs">
       <Link>MethodInfos.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\ObjectReferenceEqualityComparer`.cs">
+      <Link>ObjectReferenceEqualityComparer`.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\ProviderRegistry.cs">
       <Link>ProviderRegistry.cs</Link>

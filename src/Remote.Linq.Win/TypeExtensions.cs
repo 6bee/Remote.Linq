@@ -32,6 +32,11 @@ namespace Remote.Linq
             return type.GetTypeInfo().IsValueType;
         }
 
+        public static bool IsSerializable(this Type type)
+        {
+            return type.GetTypeInfo().IsSerializable;
+        }
+
         public static IEnumerable<Type> GetInterfaces(this Type type)
         {
             return type.GetTypeInfo().ImplementedInterfaces;

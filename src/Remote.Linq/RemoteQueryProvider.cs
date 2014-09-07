@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Remote.Linq
 {
@@ -34,7 +35,7 @@ namespace Remote.Linq
         {
             var rlinq = TranslateExpression(expression);
             var dataRecords = _dataProvider(rlinq);
-            return DynamicObjectMapper.ToType<TResult>(dataRecords);
+            return MapToType<TResult>(dataRecords);
         }
 
         public object Execute(Expression expression)
@@ -48,5 +49,37 @@ namespace Remote.Linq
             var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors();
             return rlinq2;
         }
+
+        internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords)
+        {
+            var elementType = TypeHelper.GetElementType(typeof(T));
+            var result = DynamicObjectMapper.MapDynamicObjectList(elementType, dataRecords);
+
+            if (ReferenceEquals(null, result))
+            {
+                return default(T);
+            }
+
+            if (typeof(T).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
+            {
+                return (T)result;
+            }
+
+            if (typeof(T).IsAssignableFrom(elementType))
+            {
+                try
+                {
+                    var single = MethodInfos.Enumerable.Single.MakeGenericMethod(elementType).Invoke(null, new object[] { result });
+                    return (T)single;
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            }
+
+            throw new Exception(string.Format("Failed to cast result of type '{0}' to '{1}'", result.GetType(), typeof(T)));
+        }
+
     }
 }

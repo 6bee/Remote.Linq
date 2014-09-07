@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -55,7 +54,7 @@ namespace Remote.Linq.Dynamic
             public override IEnumerable<string> GetDynamicMemberNames()
             {
                 var dynObj = (DynamicObject)Value;
-                return dynObj.Keys.ToList();
+                return dynObj.GetMemberNames();
             }
         }
     }

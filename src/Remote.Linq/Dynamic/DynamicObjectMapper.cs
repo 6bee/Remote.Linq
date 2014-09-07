@@ -5,30 +5,105 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using MethodInfo = System.Reflection.MethodInfo;
 
 namespace Remote.Linq.Dynamic
 {
-    // TODO: handle cyclic references
-    public static class DynamicObjectMapper
+    public static partial class DynamicObjectMapper
     {
+        internal sealed class ObjectFormatterContext<TFrom, TTo>
+        {
+            public ObjectFormatterContext(bool suppressTypeInformation = false)
+            {
+                SuppressTypeInformation = suppressTypeInformation;
+                ReferenceMap = new Dictionary<TFrom, TTo>(ObjectReferenceEqualityComparer<TFrom>.Instance);
+            }
+
+            internal readonly bool SuppressTypeInformation;
+            private readonly IDictionary<TFrom, TTo> ReferenceMap;
+
+            /// <summary>
+            /// Returns an existing instance if found in the reference map, creates a new instance otherwise
+            /// </summary>
+            internal TTo TryGetOrCreateNew(Type objectType, TFrom from, Func<Type, TFrom, ObjectFormatterContext<TFrom, TTo>, TTo> factory, Action<Type, TFrom, TTo, ObjectFormatterContext<TFrom, TTo>> initializer = null)
+            {
+                TTo to;
+                if (!ReferenceMap.TryGetValue(from, out to))
+                {
+                    var type = SuppressTypeInformation ? null : objectType;
+
+                    to = factory(type, from, this);
+
+                    try
+                    {
+                        ReferenceMap.Add(from, to);
+                    }
+                    catch
+                    {
+                        // detected cyclic reference
+                        // can happen for non-serializable types without parameterless constructor, which have cyclic references 
+                        return ReferenceMap[from];
+                    }
+
+                    if (!ReferenceEquals(null, initializer))
+                    {
+                        initializer(type, from, to, this);
+                    }
+                }
+                return to;
+            }
+        }
+
+        private static readonly Regex BackingFieldRegex = new Regex(@"^(.+\+)?\<(?<name>.+)\>k__BackingField$", BackingFieldRegexOptions);
+
         private static readonly MethodInfo _mapDynamicObjectListMethod = typeof(DynamicObjectMapper)
             .GetMethods(BindingFlags.Static | BindingFlags.Public)
             .Where(x => x.Name == "Map")
             .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
-            .Where(x => x.GetParameters().Length == 1 && x.GetParameters()[0].ParameterType == typeof(IEnumerable<DynamicObject>))
+            .Where(x => x.MatchParameters(typeof(IEnumerable<DynamicObject>)))
+            .Single();
+
+        private static readonly MethodInfo _mapDynamicObjectListInternalMethod = typeof(DynamicObjectMapper)
+            .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
+            .Where(x => x.Name == "Map")
+            .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
+            .Where(x => x.MatchParameters(typeof(IEnumerable<DynamicObject>), typeof(ObjectFormatterContext<DynamicObject, object>)))
             .Single();
 
         private static readonly MethodInfo _mapDynamicObjectMethod = typeof(DynamicObjectMapper)
             .GetMethods(BindingFlags.Static | BindingFlags.Public)
             .Where(x => x.Name == "Map")
             .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
-            .Where(x => x.GetParameters().Length == 1 && x.GetParameters()[0].ParameterType == typeof(DynamicObject))
+            .Where(x => x.MatchParameters(typeof(DynamicObject)))
             .Single();
+
+        private static readonly MethodInfo _mapDynamicObjectInternalMethod = typeof(DynamicObjectMapper)
+            .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
+            .Where(x => x.Name == "Map")
+            .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
+            .Where(x => x.MatchParameters(typeof(DynamicObject), typeof(ObjectFormatterContext<DynamicObject, object>)))
+            .Single();
+
+        private static bool MatchParameters(this MethodInfo x, params Type[] types)
+        {
+            var parameters = x.GetParameters();
+            if (parameters.Length != types.Length) return false;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                if (parameters[i].ParameterType != types[i]) return false;
+            }
+            return true;
+        }
 
         private static MethodInfo GetMapDynamicObjectListMethod(Type type)
         {
             return _mapDynamicObjectListMethod.MakeGenericMethod(type);
+        }
+
+        private static MethodInfo GetMapDynamicObjectListInternalMethod(Type type)
+        {
+            return _mapDynamicObjectListInternalMethod.MakeGenericMethod(type);
         }
 
         private static MethodInfo GetMapDynamicObjectMethod(Type type)
@@ -36,34 +111,93 @@ namespace Remote.Linq.Dynamic
             return _mapDynamicObjectMethod.MakeGenericMethod(type);
         }
 
+        private static MethodInfo GetMapDynamicObjectInternalMethod(Type type)
+        {
+            return _mapDynamicObjectInternalMethod.MakeGenericMethod(type);
+        }
+
+        private static object InvokeMethod(this MethodInfo method, params object[] args)
+        {
+            try
+            {
+                return method.Invoke(null, args);
+            }
+            catch (System.Reflection.TargetInvocationException ex)
+            {
+                Exception innerException;
+                if (ReferenceEquals(null, ex.InnerException))
+                {
+                    innerException = ex;
+                }
+                else if (ReferenceEquals(null, ex.InnerException.InnerException))
+                {
+                    innerException = ex.InnerException;
+                }
+                else
+                {
+                    innerException = ex.InnerException.InnerException;
+                }
+                throw new Exception(innerException.Message, innerException);
+            }
+        }
+
         internal static IEnumerable<object> MapDynamicObjectList(Type type, IEnumerable<DynamicObject> dataRecords)
         {
             var mapper = GetMapDynamicObjectListMethod(type);
-            var result = mapper.Invoke(null, new object[] { dataRecords });
+            var result = mapper.InvokeMethod(dataRecords);
+            return (IEnumerable<object>)result;
+        }
+
+        private static IEnumerable<object> MapDynamicObjectListInternal(Type type, IEnumerable<DynamicObject> dataRecords, ObjectFormatterContext<DynamicObject, object> context)
+        {
+            var mapper = GetMapDynamicObjectListMethod(type);
+            var result = mapper.InvokeMethod(dataRecords, context);
             return (IEnumerable<object>)result;
         }
 
         internal static object MapDynamicObject(Type type, DynamicObject obj)
         {
-            var method = GetMapDynamicObjectMethod(type);
-            var result = method.Invoke(null, new object[] { obj });
+            var mapper = GetMapDynamicObjectMethod(type);
+            var result = mapper.InvokeMethod(obj);
+            return result;
+        }
+
+        private static object MapDynamicObjectInternal(Type type, DynamicObject obj, ObjectFormatterContext<DynamicObject, object> context)
+        {
+            var mapper = GetMapDynamicObjectInternalMethod(type);
+            var result = mapper.InvokeMethod(obj, context);
             return result;
         }
 
         public static T Map<T>(DynamicObject obj)
         {
-            return Map<T>(new[] { obj }).SingleOrDefault();
+            return Map<T>(obj, new ObjectFormatterContext<DynamicObject, object>());
+        }
+
+        private static T Map<T>(DynamicObject obj, ObjectFormatterContext<DynamicObject, object> context)
+        {
+            return Map<T>(new[] { obj }, context).SingleOrDefault();
         }
 
         public static object Map(DynamicObject obj)
         {
             if (ReferenceEquals(null, obj)) throw new ArgumentNullException("obj");
             if (ReferenceEquals(null, obj.Type)) throw new InvalidOperationException("Type property must not be null");
+            return Map(obj, new ObjectFormatterContext<DynamicObject, object>());
+        }
 
-            var result = MapDynamicObject(obj.Type, obj);
+        private static object Map(DynamicObject obj, ObjectFormatterContext<DynamicObject, object> context)
+        {
+            var result = MapDynamicObjectInternal(obj.Type, obj, context);
             return result;
         }
+
         public static IEnumerable<T> Map<T>(IEnumerable<DynamicObject> objects)
+        {
+            return Map<T>(objects, new ObjectFormatterContext<DynamicObject, object>());
+        }
+
+        private static IEnumerable<T> Map<T>(IEnumerable<DynamicObject> objects, ObjectFormatterContext<DynamicObject, object> context)
         {
             if (ReferenceEquals(null, objects))
             {
@@ -83,10 +217,10 @@ namespace Remote.Linq.Dynamic
             var elementType = TypeHelper.GetElementType(typeof(T));
             if (objects.Any())
             {
-                if (objects.All(item => item.Count == 1 && string.IsNullOrEmpty(item.Keys.Single())))
+                if (objects.All(item => item.GetCount() == 1 && string.IsNullOrEmpty(item.GetMemberNames().Single())))
                 {
                     // project single property
-                    var items = objects.SelectMany(i => i.Values).Where(x => !ReferenceEquals(null, x)).ToArray();
+                    var items = objects.SelectMany(i => i.GetValues()).Where(x => !ReferenceEquals(null, x)).ToArray();
                     var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
                     var r2 = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
                     try
@@ -102,157 +236,134 @@ namespace Remote.Linq.Dynamic
                 else
                 {
                     // project data record
-                    var propertyCount = objects.First().Count;
-                    var propertyTypes = new Type[propertyCount];
-                    for (int i = 0; i < propertyCount; i++)
+                    Func<Type, DynamicObject, ObjectFormatterContext<DynamicObject, object>, object> factory;
+                    Action<Type, DynamicObject, object, ObjectFormatterContext<DynamicObject, object>> initializer = null;
+                    if (elementType.IsSerializable())
                     {
-                        var value = objects.Select(record => record.Values.ElementAt(i)).Where(x => !ReferenceEquals(null, x)).FirstOrDefault();
-                        propertyTypes[i] = ReferenceEquals(null, value) ? null : value.GetType();
-                    }
-
-                    var constructors = elementType.GetConstructors()
-                        .Select(i => new { Info = i, Parameters = i.GetParameters() })
-                        .OrderByDescending(i => i.Parameters.Length).ToList();
-                    var constructor = constructors.FirstOrDefault(ctor =>
-                    {
-                        if (ctor.Parameters.Length != propertyCount) return false;
-                        for (int i = 0; i < propertyCount; i++)
-                        {
-                            var propertyType = propertyTypes[i];
-                            if (propertyType == null || propertyType == typeof(DynamicObject)) continue;
-                            var parameterType = ctor.Parameters[i];
-                            if (!parameterType.ParameterType.IsAssignableFrom(propertyType)) return false;
-                        }
-                        return true;
-                    });
-
-                    Func<DynamicObject, object> objectMapper = null;
-
-                    if (constructor != null)
-                    {
-                        objectMapper = item =>
-                        {
-                            var values = item.Values.Select((x, i) =>
-                            {
-                                if (x is DynamicObject)
-                                {
-                                    // subsequent mapping of nested anonymous type
-                                    var targetType = constructor.Parameters[i].ParameterType;
-                                    var method = _mapDynamicObjectListMethod.MakeGenericMethod(targetType);
-                                    var args = new[] { (DynamicObject)x }.AsEnumerable();
-                                    var mappedValues = (System.Collections.IEnumerable)method.Invoke(null, new[] { args });
-                                    var mappedValue = mappedValues.Cast<object>().Single();
-                                    return mappedValue;
-                                }
-                                else
-                                {
-                                    return x;
-                                }
-                            });
-                            var dataRecord = constructor.Info.Invoke(values.ToArray());
-                            return dataRecord;
-                        };
-                    }
-                    else if (constructors.Any(x => x.Parameters.Length == 0))
-                    {
-                        constructor = constructors.Single(x => x.Parameters.Length == 0);
-                        if (constructor != null)
-                        {
-                            var properties = elementType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                                .Where(x => x.CanWrite)
-                                .ToDictionary(x => x.Name);
-
-                            objectMapper = item =>
-                            {
-                                if (item.Keys.Any(key => !properties.ContainsKey(key)))
-                                {
-                                    throw new Exception(string.Format("Failed to set properties of type {0}: ({1})", item.GetType(), string.Join(", ", item.Keys.Where(key => !properties.ContainsKey(key)).ToArray())));
-                                }
-                                var dataRecord = constructor.Info.Invoke(new object[0]);
-                                foreach (var property in properties)
-                                {
-                                    property.Value.SetValue(dataRecord, item[property.Key]);
-                                }
-                                return dataRecord;
-                            };
-                        }
-                    }
-                    // TODO: suport combinaton of contrcutor an member asignments
-
-                    if (constructor != null && objectMapper != null)
-                    {
-                        var list = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
-                        foreach (var item in objects)
-                        {
-                            foreach (var property in item.Keys.ToArray())
-                            {
-                                var value = item[property];
-                                if (!ReferenceEquals(null, value))
-                                {
-                                    var valueType = value.GetType();
-                                    if (typeof(DynamicObject).IsAssignableFrom(valueType))
-                                    {
-                                        item[property] = Map((DynamicObject)value);
-                                    }
-                                    else if (typeof(IEnumerable<DynamicObject>).IsAssignableFrom(valueType))
-                                    {
-                                        var values = (IEnumerable<DynamicObject>)value;
-                                        item[property] = values.Select(Map).ToArray();
-                                    }
-                                }
-                            }
-                            var dataRecord = objectMapper(item);
-                            list.Add(dataRecord);
-                        }
-                        return (IEnumerable<T>)list;
+                        factory = (type, item, map) => GetUninitializedObject(type);
+                        initializer = PopulateObjectMembers;
                     }
                     else
                     {
-                        throw new Exception(string.Format("Failed to pick matching contructor for type {0}", elementType.FullName));
+                        var propertyCount = objects.First().GetCount();
+                        var propertyTypes = new Type[propertyCount];
+                        for (int i = 0; i < propertyCount; i++)
+                        {
+                            var value = objects.Select(record => record.GetValues().ElementAt(i)).Where(x => !ReferenceEquals(null, x)).FirstOrDefault();
+                            propertyTypes[i] = ReferenceEquals(null, value) ? null : value.GetType();
+                        }
+
+                        var constructors = elementType.GetConstructors()
+                            .Select(i => new { Info = i, Parameters = i.GetParameters() })
+                            .OrderByDescending(i => i.Parameters.Length).ToList();
+                        var constructor = constructors.FirstOrDefault(ctor =>
+                        {
+                            if (ctor.Parameters.Length != propertyCount) return false;
+                            for (int i = 0; i < propertyCount; i++)
+                            {
+                                var propertyType = propertyTypes[i];
+                                if (ReferenceEquals(null, propertyType) || propertyType == typeof(DynamicObject)) continue;
+                                var parameterType = ctor.Parameters[i];
+                                if (!parameterType.ParameterType.IsAssignableFrom(propertyType)) return false;
+                            }
+                            return true;
+                        });
+
+                        if (constructor != null)
+                        {
+                            factory = (type, item, map) =>
+                            {
+                                var parameterValues = item.GetValues()
+                                    .Select((x, i) =>
+                                    {
+                                        var parameterType = constructor.Parameters[i].ParameterType;
+                                        return MapDynamicObjectIfRequired(parameterType, x, map);
+                                    })
+                                    .ToArray();
+                                var obj = constructor.Info.Invoke(parameterValues);
+                                return obj;
+                            };
+                        }
+                        // TODO: reverse order - try use parameterless constructor first - to support cyclic references where possible
+                        else if (constructors.Any(x => x.Parameters.Length == 0))
+                        {
+                            constructor = constructors.Single(x => x.Parameters.Length == 0);
+                            var properties = elementType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                                .Where(x => x.CanWrite)
+                                //.ToDictionary(x => x.Name);
+                                .ToList();
+                            factory = (type, item, map) =>
+                            {
+                                var obj = constructor.Info.Invoke(new object[0]);
+                                return obj;
+                            };
+                            initializer = (type, item, obj, map) =>
+                            {
+                                // silently skipping values with no matching writable property
+                                var memberNames = item.GetMemberNames();
+                                foreach (var property in properties.Where(p => memberNames.Contains(p.Name)))
+                                {
+                                    var value = MapDynamicObjectIfRequired(property.PropertyType, item[property.Name], map);
+                                    property.SetValue(obj, value);
+                                }
+                            };
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format("Failed to pick matching contructor for type {0}", elementType.FullName));
+                        }
+                        // TODO: support combination of constructor and member asignments or provide API with registration hook
                     }
+
+                    var list = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+                    foreach (var item in objects)
+                    {
+                        var obj = context.TryGetOrCreateNew(elementType, item, factory, initializer);
+                        list.Add(obj);
+
+                    }
+                    return (IEnumerable<T>)list;
                 }
             }
 
             throw new Exception(string.Format("Failed to project dynamic objects into type {0}", typeof(T).FullName));
         }
 
-        internal static T ToType<T>(this IEnumerable<DynamicObject> dataRecords)
+        private static object MapDynamicObjectIfRequired(Type targetType, object obj, ObjectFormatterContext<DynamicObject, object> context)
         {
-            var elementType = TypeHelper.GetElementType(typeof(T));
-            var result = MapDynamicObjectList(elementType, dataRecords);
-
-            if (ReferenceEquals(null, result))
+            var dynamicObj = obj as DynamicObject;
+            if (ReferenceEquals(null, dynamicObj))
             {
-                return default(T);
+                return obj;
             }
-
-            if (typeof(T).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
+            else
             {
-                return (T)result;
-            }
-
-            if (typeof(T).IsAssignableFrom(elementType))
-            {
-                try
+                // subsequent mapping of nested dynamic object
+                if (!context.SuppressTypeInformation && !ReferenceEquals(null, dynamicObj.Type) && targetType.IsAssignableFrom(dynamicObj.Type.Type))
                 {
-                    var single = MethodInfos.Enumerable.Single.MakeGenericMethod(elementType).Invoke(null, new object[] { result });
-                    return (T)single;
+                    targetType = dynamicObj.Type.Type;
                 }
-                catch (TargetInvocationException ex)
-                {
-                    throw ex.InnerException;
-                }
+                var mappedValue = MapDynamicObjectInternal(targetType, dynamicObj, context);
+                return mappedValue;
             }
-
-            throw new Exception(string.Format("Failed to cast result of type '{0}' to '{1}'", result.GetType(), typeof(T)));
         }
 
-        public static IEnumerable<DynamicObject> Map(object obj)
+        /// <summary>
+        /// Maps an instance of <see cref="System.Object"/> or collection of <see cref="System.Object"/> to a collection of <see cref="Remote.Linq.Dynamic.DynamicObject"/>
+        /// </summary>
+        public static IEnumerable<DynamicObject> Map(object obj, bool suppressTypeInformation = false)
+        {
+            return Map(obj, new ObjectFormatterContext<object, DynamicObject>(suppressTypeInformation));
+        }
+
+        /// <summary>
+        /// Maps an instance of collection of objects to a collection of dynamic objects
+        /// </summary>
+        private static IEnumerable<DynamicObject> Map(object obj, ObjectFormatterContext<object, DynamicObject> context)
         {
             IEnumerable<DynamicObject> enumerable;
             if (ReferenceEquals(null, obj))
             {
-                //enumerable = new DynamicObject[0];
                 enumerable = null;
             }
             else if (obj is IEnumerable<DynamicObject>)
@@ -260,7 +371,7 @@ namespace Remote.Linq.Dynamic
                 // cast
                 enumerable = (IEnumerable<DynamicObject>)obj;
             }
-            else if (IEnumerableExtensions.Any(obj as System.Collections.IEnumerable))
+            else if ((obj as System.Collections.IEnumerable).Any())
             {
                 // put collection into dynamic object collection
                 var elementType = TypeHelper.GetElementType(obj.GetType());
@@ -268,7 +379,7 @@ namespace Remote.Linq.Dynamic
                 {
                     enumerable = ((System.Collections.IEnumerable)obj)
                         .OfType<object>()
-                        .Select(MapSingle);
+                        .Select(x => MapSingle(x, context));
                 }
                 else
                 {
@@ -279,90 +390,144 @@ namespace Remote.Linq.Dynamic
                         .OfType<object>()
                         .Select(x =>
                         {
-                            var dynamicObject = new DynamicObject(elementType);
-                            foreach (var property in properties)
+                            Func<Type, object, ObjectFormatterContext<object, DynamicObject>, DynamicObject> factory = (t, o, ctx) => new DynamicObject(t);
+                            Action<Type, object, DynamicObject, ObjectFormatterContext<object, DynamicObject>> initializer = (t, o, dynamicObject, c) =>
                             {
-                                var value = property.GetValue(x);
-                                value = MapValueIfRequired(value);
-                                dynamicObject[property.Name] = value;
-                            }
-                            return dynamicObject;
+                                foreach (var property in properties)
+                                {
+                                    var value = property.GetValue(x);
+                                    value = MapValueIfRequired(value, context);
+                                    dynamicObject[property.Name] = value;
+                                }
+                            };
+                            return context.TryGetOrCreateNew(elementType, x, factory, initializer);
                         });
                 }
             }
             else
             {
                 // put single object into dynamic object
-                var value = MapSingle(obj);
+                var value = MapSingle(obj, context);
                 enumerable = new[] { value };
             }
             var list = ReferenceEquals(null, enumerable) ? null : enumerable.ToList();
             return list;
         }
 
-        public static DynamicObject MapSingle(object obj)
+        /// <summary>
+        /// Maps an <see cref="Object"/> to a <see cref="DynamicObject"/>
+        /// </summary>
+        /// <remarks>Null references and dynamic objects are not mapped.</remarks>
+        public static DynamicObject MapSingle(object obj, bool suppressTypeInformation = false)
+        {
+            return MapSingle(obj, new ObjectFormatterContext<object, DynamicObject>(suppressTypeInformation));
+        }
+
+        /// <summary>
+        /// Maps an object to a dynamic object
+        /// </summary>
+        /// <remarks>Null references and dynamic objects are not mapped.</remarks>
+        private static DynamicObject MapSingle(object obj, ObjectFormatterContext<object, DynamicObject> context)
         {
             if (ReferenceEquals(null, obj))
             {
                 return null;
-                //return new DynamicObject { { string.Empty, null } };
             }
+
             if (obj is DynamicObject)
             {
                 return (DynamicObject)obj;
             }
+
+            Func<Type, object, ObjectFormatterContext<object, DynamicObject>, DynamicObject> facotry;
+            Action<Type, object, DynamicObject, ObjectFormatterContext<object, DynamicObject>> initializer = null;
+
             var type = obj.GetType();
+            // TODO: are custom value types supported?
             if (type.IsEnum() || type.IsValueType() || type == typeof(string))
             {
-                return new DynamicObject(type) { { string.Empty, obj } };
+                facotry = (t, o, m) => new DynamicObject(t) { { string.Empty, o } };
             }
-            if (type.IsArray)
+            else if (type.IsArray)
             {
-                var list = ((System.Collections.IEnumerable)obj)
-                    .OfType<object>()
-                    .Select(MapValueIfRequired)
-                    .ToArray();
-                //return !list.Any() ? null : new DynamicObject { { string.Empty, list } };
-                return new DynamicObject(type) { { string.Empty, list.Any() ? list : null } };
+                facotry = (t, o, m) =>
+                {
+                    var list = ((System.Collections.IEnumerable)o)
+                        .OfType<object>()
+                        .Select(x => MapValueIfRequired(x, m))
+                        .ToArray();
+                    return new DynamicObject(t) { { string.Empty, list.Any() ? list : null } };
+                };
             }
-            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(x => x.CanRead)
-                .ToList();
-            var dynamicObject = new DynamicObject(type);
-            foreach (var property in properties)
+            else
             {
-                var value = property.GetValue(obj);
-                value = MapValueIfRequired(value);
-                dynamicObject[property.Name] = value;
+                facotry = (t, o, m) => new DynamicObject(t);
+                initializer = PopulateObjectMembers;
             }
-            return dynamicObject;
+
+            return context.TryGetOrCreateNew(type, obj, facotry, initializer);
         }
 
-        private static object MapValueIfRequired(object obj)
+        /// <summary>
+        /// Maps from object to dynamic object if required.
+        /// </summary>
+        /// <remarks>Null references, strings, value types, and dynamic objects are no mapped.</remarks>
+        private static object MapValueIfRequired(object obj, ObjectFormatterContext<object, DynamicObject> context)
         {
             if (ReferenceEquals(null, obj))
             {
                 return null;
             }
+
             if (obj is DynamicObject || obj is string)
             {
                 return obj;
             }
+
             var type = obj.GetType();
             if (type.IsEnum() || type.IsValueType())
             {
                 return obj;
             }
+
             if (type.IsArray)
             {
                 var list = ((System.Collections.IEnumerable)obj)
                     .OfType<object>()
-                    .Select(MapValueIfRequired)
+                    .Select(x => MapValueIfRequired(x, context))
                     .ToArray();
-                //return new DynamicObject { { string.Empty, list } };
                 return list;
             }
-            return MapSingle(obj);
+
+            return MapSingle(obj, context);
+        }
+
+        /// <summary>
+        /// Extrancts member values from source object and populates to dynamic object 
+        /// </summary>
+        private static void PopulateObjectMembers(Type type, object from, DynamicObject to, ObjectFormatterContext<object, DynamicObject> context)
+        {
+            //var type = to.Type.Type;
+
+            // TODO: add support for ISerializable
+            // TODO: add support for OnSerializingAttribute, OnSerializedAttribute, OnDeserializingAttribute, OnDeserializedAttribute
+            if (type.IsSerializable())
+            {
+                MapObjectMembers(from, to, context);
+            }
+            else
+            {
+                // TODO: should fields be supported too?
+                var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                    .Where(x => x.CanRead)
+                    .ToList();
+                foreach (var property in properties)
+                {
+                    var value = property.GetValue(from);
+                    value = MapValueIfRequired(value, context);
+                    to[property.Name] = value;
+                }
+            }
         }
     }
 }
