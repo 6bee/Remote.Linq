@@ -46,7 +46,6 @@
     <Compile Include="Dynamic\DynamicObject.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper.NET.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper.cs" />
-    <Compile Include="Dynamic\DynamicObject.Serializable.cs" />
     <Compile Include="Dynamic\DynamicObject.MetaObject.cs" />
     <Compile Include="Dynamic\QueryableResourceDescriptor.cs" />
     <Compile Include="Dynamic\SystemExpressionReWriter.cs" />

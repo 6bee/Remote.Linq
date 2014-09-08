@@ -54,7 +54,7 @@ namespace Remote.Linq.Dynamic
             public override IEnumerable<string> GetDynamicMemberNames()
             {
                 var dynObj = (DynamicObject)Value;
-                return dynObj.GetMemberNames();
+                return dynObj.MemberNames;
             }
         }
     }

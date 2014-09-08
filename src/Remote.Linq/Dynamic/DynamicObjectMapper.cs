@@ -31,9 +31,7 @@ namespace Remote.Linq.Dynamic
                 TTo to;
                 if (!ReferenceMap.TryGetValue(from, out to))
                 {
-                    var type = SuppressTypeInformation ? null : objectType;
-
-                    to = factory(type, from, this);
+                    to = factory(SuppressTypeInformation ? null : objectType, from, this);
 
                     try
                     {
@@ -48,7 +46,7 @@ namespace Remote.Linq.Dynamic
 
                     if (!ReferenceEquals(null, initializer))
                     {
-                        initializer(type, from, to, this);
+                        initializer(objectType, from, to, this);
                     }
                 }
                 return to;
@@ -141,21 +139,21 @@ namespace Remote.Linq.Dynamic
             }
         }
 
-        internal static IEnumerable<object> MapDynamicObjectList(Type type, IEnumerable<DynamicObject> dataRecords)
+        public static IEnumerable<object> Map(Type type, IEnumerable<DynamicObject> objects)
         {
             var mapper = GetMapDynamicObjectListMethod(type);
-            var result = mapper.InvokeMethod(dataRecords);
+            var result = mapper.InvokeMethod(objects);
             return (IEnumerable<object>)result;
         }
 
-        private static IEnumerable<object> MapDynamicObjectListInternal(Type type, IEnumerable<DynamicObject> dataRecords, ObjectFormatterContext<DynamicObject, object> context)
+        private static IEnumerable<object> MapDynamicObjectListInternal(Type type, IEnumerable<DynamicObject> objects, ObjectFormatterContext<DynamicObject, object> context)
         {
             var mapper = GetMapDynamicObjectListMethod(type);
-            var result = mapper.InvokeMethod(dataRecords, context);
+            var result = mapper.InvokeMethod(objects, context);
             return (IEnumerable<object>)result;
         }
 
-        internal static object MapDynamicObject(Type type, DynamicObject obj)
+        public static object Map(Type type, DynamicObject obj)
         {
             var mapper = GetMapDynamicObjectMethod(type);
             var result = mapper.InvokeMethod(obj);
@@ -217,10 +215,10 @@ namespace Remote.Linq.Dynamic
             var elementType = TypeHelper.GetElementType(typeof(T));
             if (objects.Any())
             {
-                if (objects.All(item => item.GetCount() == 1 && string.IsNullOrEmpty(item.GetMemberNames().Single())))
+                if (objects.All(item => item.MemberCount == 1 && string.IsNullOrEmpty(item.MemberNames.Single())))
                 {
                     // project single property
-                    var items = objects.SelectMany(i => i.GetValues()).Where(x => !ReferenceEquals(null, x)).ToArray();
+                    var items = objects.SelectMany(i => i.Values).Where(x => !ReferenceEquals(null, x)).ToArray();
                     var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
                     var r2 = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
                     try
@@ -245,11 +243,11 @@ namespace Remote.Linq.Dynamic
                     }
                     else
                     {
-                        var propertyCount = objects.First().GetCount();
+                        var propertyCount = objects.First().MemberCount;
                         var propertyTypes = new Type[propertyCount];
                         for (int i = 0; i < propertyCount; i++)
                         {
-                            var value = objects.Select(record => record.GetValues().ElementAt(i)).Where(x => !ReferenceEquals(null, x)).FirstOrDefault();
+                            var value = objects.Select(record => record.Values.ElementAt(i)).Where(x => !ReferenceEquals(null, x)).FirstOrDefault();
                             propertyTypes[i] = ReferenceEquals(null, value) ? null : value.GetType();
                         }
 
@@ -273,7 +271,7 @@ namespace Remote.Linq.Dynamic
                         {
                             factory = (type, item, map) =>
                             {
-                                var parameterValues = item.GetValues()
+                                var parameterValues = item.Values
                                     .Select((x, i) =>
                                     {
                                         var parameterType = constructor.Parameters[i].ParameterType;
@@ -300,7 +298,7 @@ namespace Remote.Linq.Dynamic
                             initializer = (type, item, obj, map) =>
                             {
                                 // silently skipping values with no matching writable property
-                                var memberNames = item.GetMemberNames();
+                                var memberNames = item.MemberNames;
                                 foreach (var property in properties.Where(p => memberNames.Contains(p.Name)))
                                 {
                                     var value = MapDynamicObjectIfRequired(property.PropertyType, item[property.Name], map);

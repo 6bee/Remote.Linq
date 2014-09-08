@@ -53,7 +53,7 @@ namespace Remote.Linq
         internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords)
         {
             var elementType = TypeHelper.GetElementType(typeof(T));
-            var result = DynamicObjectMapper.MapDynamicObjectList(elementType, dataRecords);
+            var result = DynamicObjectMapper.Map(elementType, dataRecords);
 
             if (ReferenceEquals(null, result))
             {

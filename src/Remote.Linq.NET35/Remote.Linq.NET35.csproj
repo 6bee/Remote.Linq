@@ -40,9 +40,6 @@
     <Compile Include="..\Remote.Linq\Dynamic\DynamicObject.cs">
       <Link>Dynamic\DynamicObject.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\Dynamic\DynamicObject.Serializable.cs">
-      <Link>Dynamic\DynamicObject.Serializable.cs</Link>
-    </Compile>
     <Compile Include="..\Remote.Linq\Dynamic\DynamicObjectMapper.cs">
       <Link>Dynamic\DynamicObjectMapper.cs</Link>
     </Compile>
