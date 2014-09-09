@@ -12,7 +12,7 @@ namespace WcfClient
         {
             var repo = new RemoteRepository("http://localhost:50105/QueryService.svc");
 
-            Console.WriteLine("\nCROSS JOIN:");
+            Console.WriteLine("\n\nCROSS JOIN:\n-----------------------------------------");
             Func<object, string> sufix = (x) => x + "ending";
             var crossJoinQuery =
                 from c in repo.ProductCategories
@@ -25,7 +25,7 @@ namespace WcfClient
             }
 
 
-            Console.WriteLine("\nINNER JOIN:");
+            Console.WriteLine("\n\nINNER JOIN:\n-----------------------------------------");
             var innerJoinQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
@@ -37,7 +37,7 @@ namespace WcfClient
             }
 
 
-            Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
+            Console.WriteLine("\n\nTOTAL AMOUNT BY CATEGORY:\n-----------------------------------------");
             var totalAmountByCategoryQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products
@@ -59,7 +59,7 @@ namespace WcfClient
             }
 
 
-            Console.WriteLine("\nINVALID OPERATION:");
+            Console.WriteLine("\n\nINVALID OPERATION:\n-----------------------------------------");
             try
             {
                 var first = totalAmountByCategoryQuery.Where(x => false).First();
