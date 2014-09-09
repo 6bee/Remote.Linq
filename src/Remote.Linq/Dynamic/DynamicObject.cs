@@ -16,29 +16,67 @@ namespace Remote.Linq.Dynamic
     [DebuggerDisplay("Count = {MemberCount}")]
     public partial class DynamicObject : IEnumerable<KeyValuePair<string, object>>
     {
+        /// <summary>
+        /// Creates a new instance of a dynamic object
+        /// </summary>
         public DynamicObject()
         {
             Members = new Dictionary<string, object>();
         }
 
+        /// <summary>
+        /// Creates a new instance of a dynamic object, setting the specified type
+        /// </summary>
+        /// <param name="type">The type to be set</param>
         public DynamicObject(Type type)
             : this(ReferenceEquals(null, type) ? null : new TypeInfo(type))
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of a dynamic object, setting the specified type
+        /// </summary>
+        /// <param name="type">The type to be set</param>
         public DynamicObject(TypeInfo type)
             : this()
         {
             Type = type;
         }
 
-        public DynamicObject(IEnumerable<KeyValuePair<string, object>> data)
+        /// <summary>
+        /// Creates a new instance of a dynamic object, setting the specified members
+        /// </summary>
+        /// <param name="members">Initial collection of properties and values</param>
+        /// <exception cref="ArgumentNullException">The specified members collection is null</exception>
+        public DynamicObject(IEnumerable<KeyValuePair<string, object>> members)
             : this()
         {
-            foreach (var item in data)
+            if (ReferenceEquals(null, members))
+            {
+                throw new ArgumentNullException("data");
+            }
+
+            foreach (var item in members)
             {
                 Add(item.Key, item.Value);
             }
+        }
+
+        /// <summary>
+        /// Creates a new instance of a dynamic object, representing the object structure defined by the specified object
+        /// </summary>
+        /// <param name="obj">The object to be represented by the new dynamic object</param>
+        /// <exception cref="ArgumentNullException">The specified object is null</exception>
+        public DynamicObject(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                throw new ArgumentNullException("obj");
+            }
+
+            var dynamicObject = DynamicObjectMapper.MapSingle(obj);
+            Type = dynamicObject.Type;
+            Members = dynamicObject.Members;
         }
 
         /// <summary>
