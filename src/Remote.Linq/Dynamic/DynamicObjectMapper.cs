@@ -287,8 +287,7 @@ namespace Remote.Linq.Dynamic
                         {
                             constructor = constructors.Single(x => x.Parameters.Length == 0);
                             var properties = elementType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                                .Where(x => x.CanWrite)
-                                //.ToDictionary(x => x.Name);
+                                .Where(x => x.CanWrite && x.GetIndexParameters().Length == 0)
                                 .ToList();
                             factory = (type, item, map) =>
                             {
@@ -517,8 +516,7 @@ namespace Remote.Linq.Dynamic
             {
                 // TODO: should fields be supported too?
                 var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                    .Where(x => x.CanRead)
-                    .ToList();
+                    .Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
                 foreach (var property in properties)
                 {
                     var value = property.GetValue(from);
