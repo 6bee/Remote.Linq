@@ -381,7 +381,7 @@ namespace Remote.Linq.Dynamic
                 else
                 {
                     var properties = elementType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                        .Where(x => x.CanRead)
+                        .Where(x => x.CanRead && x.GetIndexParameters().Length == 0)
                         .ToList();
                     enumerable = ((System.Collections.IEnumerable)obj)
                         .OfType<object>()
