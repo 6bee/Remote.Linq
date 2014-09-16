@@ -329,11 +329,7 @@ namespace Remote.Linq.Dynamic
         private static object MapDynamicObjectIfRequired(Type targetType, object obj, ObjectFormatterContext<DynamicObject, object> context)
         {
             var dynamicObj = obj as DynamicObject;
-            if (ReferenceEquals(null, dynamicObj))
-            {
-                return obj;
-            }
-            else
+            if (!ReferenceEquals(null, dynamicObj))
             {
                 // subsequent mapping of nested dynamic object
                 if (!context.SuppressTypeInformation && !ReferenceEquals(null, dynamicObj.Type) && targetType.IsAssignableFrom(dynamicObj.Type.Type))
@@ -342,6 +338,28 @@ namespace Remote.Linq.Dynamic
                 }
                 var mappedValue = MapDynamicObjectInternal(targetType, dynamicObj, context);
                 return mappedValue;
+            }
+            else if (obj is System.Collections.IEnumerable && !(obj is string))
+            {
+                var elementType = TypeHelper.GetElementType(targetType);
+                var items = ((System.Collections.IEnumerable)obj).OfType<object>()
+                    .Select(x => MapDynamicObjectIfRequired(elementType, x, context))
+                    .ToList();
+                var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
+                if (targetType.IsArray)
+                {
+                    var r2 = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
+                    return r2;
+                }
+                else
+                {
+                    var r2 = MethodInfos.Enumerable.ToList.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
+                    return r2;
+                }
+            }
+            else
+            {
+                return obj;
             }
         }
 
@@ -487,7 +505,8 @@ namespace Remote.Linq.Dynamic
                 return obj;
             }
 
-            if (type.IsArray)
+            //if (type.IsArray)
+            if (obj is System.Collections.IEnumerable)
             {
                 var list = ((System.Collections.IEnumerable)obj)
                     .OfType<object>()

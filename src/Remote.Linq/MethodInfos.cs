@@ -20,6 +20,9 @@ namespace Remote.Linq
             internal static readonly MethodInfo ToArray = typeof(System.Linq.Enumerable)
                 .GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
 
+            internal static readonly MethodInfo ToList = typeof(System.Linq.Enumerable)
+                .GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
+
             internal static readonly MethodInfo Single = typeof(System.Linq.Enumerable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(x => x.Name == "Single")
