@@ -10,7 +10,7 @@ namespace Remote.Linq.Dynamic
         /// <summary>
         /// Platform specific regex options (WinRT, WP, SL)
         /// </summary>
-        private const RegexOptions BackingFieldRegexOptions = RegexOptions.ExplicitCapture | RegexOptions.Singleline;
+        private const RegexOptions LocalRegexOptions = RegexOptions.ExplicitCapture | RegexOptions.Singleline;
 
         /// <summary>
         /// Not supported for this platform (WinRT, WP, SL)

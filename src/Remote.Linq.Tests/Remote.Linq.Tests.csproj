@@ -44,13 +44,31 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_list_of_custom_reference_type_to_dynamic_objects.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_list_of_nullable_guids.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_list_of_string_to_dynamic_objects.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_list_of_guids.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_dictionary_to_dynamic_objects.cs" />
-    <Compile Include="Dynamic\DynamicObject\DynamicObjectTests.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_indexer.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_enum.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_dictionary_property.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_guid_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_datetime_object.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_nullable_guid.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_guid.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_guid_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_enum_property.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_indexer.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_tree_with_circular_references.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_dictionary_property.cs" />
     <Compile Include="Dynamic\DynamicObject\When_created_based_on_custom_value_type.cs" />
     <Compile Include="Dynamic\DynamicObject\When_created_based_on_custom_type.cs" />
     <Compile Include="Dynamic\DynamicObject\When_created_based_on_a_keyvaluepair.cs" />
     <Compile Include="Dynamic\DynamicObject\When_created_based_on_datetime_object.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_using_collection_initializer.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_typeinfo.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_type.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_using_parameterless_constructor.cs" />
     <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_invalid_constructor_parameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunnableInDebugOnlyAttribute.cs" />

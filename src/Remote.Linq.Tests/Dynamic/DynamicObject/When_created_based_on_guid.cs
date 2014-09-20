@@ -8,21 +8,22 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
     using Xunit;
     using Xunit.Should;
 
-    public class When_created_based_on_datetime_object
+    public class When_created_based_on_guid
     {
-        DateTime value;
+        Guid guid;
         DynamicObject dynamicObject;
 
-        public When_created_based_on_datetime_object()
+        public When_created_based_on_guid()
         {
-            value = DateTime.Now;
-            dynamicObject = new DynamicObject(value);
+            guid = Guid.NewGuid();
+
+            dynamicObject = new DynamicObject(guid);
         }
 
         [Fact]
-        public void Type_property_should_be_set_to_datetime()
+        public void Type_property_should_be_set_to_type_of_guid()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(DateTime));
+            dynamicObject.Type.Type.ShouldBe(typeof(Guid));
         }
 
         [Fact]
@@ -38,9 +39,15 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
         }
 
         [Fact]
-        public void Member_value_should_be_initial_value()
+        public void Dynamic_guid_properties_should_be_of_type_string()
         {
-            dynamicObject[string.Empty].ShouldBe(value);
+            dynamicObject.Values.Single().ShouldBeInstanceOf<Guid>();
+        }
+
+        [Fact]
+        public void Dynamic_guid_properties_should_be_string_represenation_of_guid_values()
+        {
+            dynamicObject[string.Empty].ShouldBe(guid);
         }
     }
 }

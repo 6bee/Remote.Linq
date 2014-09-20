@@ -19,10 +19,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
 
         public When_created_based_on_custom_type()
         {
-            source = new CustomClass
-            {
-                Prop1 = "Value1"
-            };
+            source = new CustomClass { Prop1 = "Value1" };
             dynamicObject = new DynamicObject(source);
         }
 

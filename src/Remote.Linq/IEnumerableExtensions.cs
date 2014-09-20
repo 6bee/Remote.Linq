@@ -49,9 +49,9 @@ namespace Remote.Linq
                 .AsEnumerable();
         }
 
-        internal static bool Any(this System.Collections.IEnumerable enumerable)
-        {
-            return !ReferenceEquals(null, enumerable) && enumerable.GetEnumerator().MoveNext();
-        }
+        //internal static bool Any(this System.Collections.IEnumerable enumerable)
+        //{
+        //    return !ReferenceEquals(null, enumerable) && enumerable.GetEnumerator().MoveNext();
+        //}
     }
 }

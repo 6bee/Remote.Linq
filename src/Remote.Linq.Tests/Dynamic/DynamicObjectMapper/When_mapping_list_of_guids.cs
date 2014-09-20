@@ -3,19 +3,20 @@
 namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
 {
     using Remote.Linq.Dynamic;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
     using Xunit.Should;
 
-    public class When_mapping_list_of_string_to_dynamic_objects
+    public class When_mapping_list_of_guids
     {
-        List<string> source;
+        List<Guid> source;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_list_of_string_to_dynamic_objects()
+        public When_mapping_list_of_guids()
         {
-            source = new List<string> { "V1", "V2", "V3" };
+            source = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
             dynamicObjects = DynamicObjectMapper.Map(source);
         }
 
@@ -26,11 +27,11 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
         }
 
         [Fact]
-        public void Dynamic_objects_type_property_should_be_set_to_string()
+        public void Dynamic_objects_type_property_should_be_set_to_guid()
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.Type.Type.ShouldBe(typeof(string));
+                dynamicObject.Type.Type.ShouldBe(typeof(Guid));
             }
         }
 

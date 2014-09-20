@@ -53,17 +53,24 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.MemberNames.ShouldContain("Key");
-                dynamicObject.MemberNames.ShouldContain("Value");
+                dynamicObject.MemberNames.ShouldContain("key");
+                dynamicObject.MemberNames.ShouldContain("value");
             }
         }
 
         [Fact]
         public void Dynamic_objects_member_values_should_be_key_and_value_of_source()
         {
-            var dynamicObject = dynamicObjects.First();
-            dynamicObject["Key"].ShouldBe("K1");
-            dynamicObject["Value"].ShouldBe("V1");
+            for (int i = 0; i < source.Count; i++)
+            {
+                var dynamicObject = dynamicObjects.ElementAt(i);
+
+                var key = source.Keys.ElementAt(i);
+                var value = source.Values.ElementAt(i);
+
+                dynamicObject["key"].ShouldBe(key);
+                dynamicObject["value"].ShouldBe(value);
+            }
         }
     }
 }

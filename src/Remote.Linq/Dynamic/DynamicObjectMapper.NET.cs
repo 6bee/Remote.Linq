@@ -14,7 +14,7 @@ namespace Remote.Linq.Dynamic
         /// <summary>
         /// .NET platform specific regex options
         /// </summary>
-        private const RegexOptions BackingFieldRegexOptions = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline;
+        private const RegexOptions LocalRegexOptions = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline;
 
         /// <summary>
         /// Gets an uninitialized instance of the specified type by using <see cref="FormatterServices" />
@@ -71,7 +71,7 @@ namespace Remote.Linq.Dynamic
 
         private static string CleanName(string memberName)
         {
-            var match = BackingFieldRegex.Match(memberName);
+            var match = _backingFieldRegex.Match(memberName);
             if (match.Success && match.Groups.Count == 2)
             {
                 memberName = match.Groups[1].Value;

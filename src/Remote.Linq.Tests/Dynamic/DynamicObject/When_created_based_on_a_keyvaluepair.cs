@@ -33,15 +33,15 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
         [Fact]
         public void Member_names_should_be_key_and_value()
         {
-            dynamicObject.MemberNames.ShouldContain("Key");
-            dynamicObject.MemberNames.ShouldContain("Value");
+            dynamicObject.MemberNames.ShouldContain("key");
+            dynamicObject.MemberNames.ShouldContain("value");
         }
 
         [Fact]
         public void Member_values_should_be_key_and_value_of_source()
         {
-            dynamicObject["Key"].ShouldBe("K1");
-            dynamicObject["Value"].ShouldBe("V1");
+            dynamicObject["key"].ShouldBe(source.Key);
+            dynamicObject["value"].ShouldBe(source.Value);
         }
     }
 }
