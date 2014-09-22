@@ -69,6 +69,11 @@ namespace WcfClient
                 Console.WriteLine("  {0}", ex.Message);
                 Debug.WriteLine("  {0}", ex.Message);
             }
+
+            Console.WriteLine();
+            Console.WriteLine("Done");
+            Console.WriteLine("Press <ENTER> to terminate the client.");
+            Console.ReadLine();
         }
     }
 }

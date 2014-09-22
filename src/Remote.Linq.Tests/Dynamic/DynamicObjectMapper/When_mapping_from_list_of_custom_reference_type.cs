@@ -8,7 +8,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
     using Xunit;
     using Xunit.Should;
 
-    public class When_mapping_list_of_custom_reference_type_to_dynamic_objects
+    public class When_mapping_from_list_of_custom_reference_type
     {
         class CustomReferenceType
         {
@@ -19,7 +19,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
         List<CustomReferenceType> source;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_list_of_custom_reference_type_to_dynamic_objects()
+        public When_mapping_from_list_of_custom_reference_type()
         {
             source = new List<CustomReferenceType> 
             { 

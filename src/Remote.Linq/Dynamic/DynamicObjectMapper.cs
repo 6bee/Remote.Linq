@@ -158,11 +158,16 @@ namespace Remote.Linq.Dynamic
         private static bool MatchParameters(this MethodInfo x, params Type[] types)
         {
             var parameters = x.GetParameters();
-            if (parameters.Length != types.Length) return false;
+            if (parameters.Length != types.Length)
+            {
+                return false;
+            }
+
             for (int i = 0; i < parameters.Length; i++)
             {
                 if (parameters[i].ParameterType != types[i]) return false;
             }
+            
             return true;
         }
 
@@ -251,8 +256,16 @@ namespace Remote.Linq.Dynamic
 
         public static object Map(DynamicObject obj)
         {
-            if (ReferenceEquals(null, obj)) throw new ArgumentNullException("obj");
-            if (ReferenceEquals(null, obj.Type)) throw new InvalidOperationException("Type property must not be null");
+            if (ReferenceEquals(null, obj))
+            {
+                return null;
+            }
+
+            if (ReferenceEquals(null, obj.Type))
+            {
+                throw new InvalidOperationException("Type property must not be null");
+            }
+
             return Map(obj, new ObjectFormatterContext<DynamicObject, object>());
         }
 
@@ -271,7 +284,8 @@ namespace Remote.Linq.Dynamic
         {
             if (ReferenceEquals(null, objects))
             {
-                return null;
+                //return null;
+                throw new ArgumentNullException("objects");
             }
 
             if (!objects.Any())
@@ -285,12 +299,12 @@ namespace Remote.Linq.Dynamic
             }
 
             var elementType = TypeHelper.GetElementType(typeof(T));
-            if (objects.All(item => item.MemberCount == 1 && string.IsNullOrEmpty(item.MemberNames.Single())))
+            if (objects.All(item => ReferenceEquals(null, item) || (item.MemberCount == 1 && string.IsNullOrEmpty(item.MemberNames.Single()))))
             {
                 // project single property
                 //var items = objects.SelectMany(i => i.Values).Where(x => !ReferenceEquals(null, x)).ToArray();
                 var items = objects
-                    .SelectMany(i => i.Values)
+                    .SelectMany(i => ReferenceEquals(null, i) ? new object[] { null } : i.Values)
                     .Select(x => MapDynamicObjectIfRequired(elementType, x, context))
                     .ToArray();
                 var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
@@ -389,7 +403,7 @@ namespace Remote.Linq.Dynamic
                 var list = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
                 foreach (var item in objects)
                 {
-                    var obj = context.TryGetOrCreateNew(elementType, item, factory, initializer);
+                    var obj = ReferenceEquals(null, item) ? null : context.TryGetOrCreateNew(elementType, item, factory, initializer);
                     list.Add(obj);
 
                 }
@@ -443,10 +457,13 @@ namespace Remote.Linq.Dynamic
                     return r2;
                 }
 
+                if (targetType.IsAssignableFrom(typeof(List<>).MakeGenericType(elementType)))
                 {
                     var r2 = MethodInfos.Enumerable.ToList.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
                     return r2;
                 }
+
+                throw new Exception(string.Format("Failed to project collection of {0} into type {1}", elementType, targetType));
             }
 
             if (targetType.IsEnum())
@@ -833,8 +850,6 @@ namespace Remote.Linq.Dynamic
         /// </summary>
         private static void PopulateObjectMembers(Type type, object from, DynamicObject to, ObjectFormatterContext<object, DynamicObject> context)
         {
-            //var type = to.Type.Type;
-
             // TODO: add support for ISerializable
             // TODO: add support for OnSerializingAttribute, OnSerializedAttribute, OnDeserializingAttribute, OnDeserializedAttribute
             if (type.IsSerializable())
@@ -843,7 +858,6 @@ namespace Remote.Linq.Dynamic
             }
             else
             {
-                // TODO: should fields be supported too?
                 var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                     .Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
                 foreach (var property in properties)

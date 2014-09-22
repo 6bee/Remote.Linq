@@ -8,12 +8,12 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
     using Xunit;
     using Xunit.Should;
 
-    public class When_mapping_list_of_string_to_dynamic_objects
+    public class When_mapping_from_list_of_strings
     {
         List<string> source;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_list_of_string_to_dynamic_objects()
+        public When_mapping_from_list_of_strings()
         {
             source = new List<string> { "V1", "V2", "V3" };
             dynamicObjects = DynamicObjectMapper.Map(source);

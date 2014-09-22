@@ -3,24 +3,20 @@
 namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
 {
     using Remote.Linq.Dynamic;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
     using Xunit.Should;
 
-    public class When_mapping_dictionary_to_dynamic_objects
+    public class When_mapping_from_list_of_guids
     {
-        Dictionary<string, string> source;
+        List<Guid> source;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_dictionary_to_dynamic_objects()
+        public When_mapping_from_list_of_guids()
         {
-            source = new Dictionary<string, string>
-            {
-                { "K1", "V1" },
-                { "K2", "V2" },
-                { "K3", "V3" },
-            };
+            source = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
             dynamicObjects = DynamicObjectMapper.Map(source);
         }
 
@@ -31,45 +27,41 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
         }
 
         [Fact]
-        public void Dynamic_objects_type_property_should_be_set_to_keyvaluepair()
+        public void Dynamic_objects_type_property_should_be_set_to_guid()
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.Type.Type.ShouldBe(typeof(KeyValuePair<string, string>));
+                dynamicObject.Type.Type.ShouldBe(typeof(Guid));
             }
         }
 
         [Fact]
-        public void Dynamic_objects_should_have_two_members()
+        public void Dynamic_objects_should_have_one_member()
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.MemberCount.ShouldBe(2);
+                dynamicObject.MemberCount.ShouldBe(1);
             }
         }
 
         [Fact]
-        public void Dynamic_objects_member_names_should_be_key_and_value()
+        public void Dynamic_objects_member_name_should_be_empty_string()
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.MemberNames.ShouldContain("key");
-                dynamicObject.MemberNames.ShouldContain("value");
+                dynamicObject.MemberNames.Single().ShouldBe(string.Empty);
             }
         }
 
         [Fact]
-        public void Dynamic_objects_member_values_should_be_key_and_value_of_source()
+        public void Dynamic_objects_member_values_should_be_value_of_source()
         {
             for (int i = 0; i < source.Count; i++)
             {
                 var dynamicObject = dynamicObjects.ElementAt(i);
+                var value = source.ElementAt(i);
 
-                var key = source.Keys.ElementAt(i);
-                var value = source.Values.ElementAt(i);
-
-                dynamicObject["key"].ShouldBe(key);
-                dynamicObject["value"].ShouldBe(value);
+                dynamicObject[string.Empty].ShouldBe(value);
             }
         }
     }

@@ -44,11 +44,13 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_list_of_custom_reference_type_to_dynamic_objects.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_list_of_nullable_guids.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_list_of_string_to_dynamic_objects.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_list_of_guids.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_dictionary_to_dynamic_objects.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_null.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_custom_value_type.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_custom_reference_type.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_nullable_guids.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_strings.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_guids.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_dictionary.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_indexer.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_enum.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_dictionary_property.cs" />
