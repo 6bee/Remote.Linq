@@ -74,7 +74,7 @@ namespace Remote.Linq.Dynamic
                 throw new ArgumentNullException("obj");
             }
 
-            var dynamicObject = DynamicObjectMapper.MapSingle(obj);
+            var dynamicObject = DynamicObjectMapper.InstanceProvider().MapObject(obj);
             Type = dynamicObject.Type;
             Members = dynamicObject.Members;
         }
@@ -198,7 +198,7 @@ namespace Remote.Linq.Dynamic
         /// <remarks>Requires the Type property to be set on this dynamic object.</remarks>
         public object CreateObject()
         {
-            return DynamicObjectMapper.Map(this);
+            return DynamicObjectMapper.InstanceProvider().Map(this);
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace Remote.Linq.Dynamic
         /// <param name="type">Type of object to be created</param>
         public object CreateObject(Type type)
         {
-            return DynamicObjectMapper.Map(type, this);
+            return DynamicObjectMapper.InstanceProvider().Map(this, type);
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace Remote.Linq.Dynamic
         /// <typeparam name="T">Type of object to be created</typeparam>
         public T CreateObject<T>()
         {
-            return DynamicObjectMapper.Map<T>(this);
+            return DynamicObjectMapper.InstanceProvider().Map<T>(this);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Remote.Linq.Dynamic
         /// </summary>
         public static DynamicObject CreateDynamicObject(object obj)
         {
-            return DynamicObjectMapper.MapSingle(obj);
+            return DynamicObjectMapper.InstanceProvider().MapObject(obj);
         }
     }
 }

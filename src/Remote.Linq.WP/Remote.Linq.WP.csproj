@@ -95,6 +95,9 @@
     <Compile Include="..\Remote.Linq.Win\Dynamic\DynamicObjectMapper.NETCORE.cs">
       <Link>Dynamic\DynamicObjectMapper.NETCORE.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\Dynamic\IDynamicObjectMapper.cs">
+      <Link>Dynamic\IDynamicObjectMapper.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Dynamic\QueryableDescriptor.cs">
       <Link>Dynamic\QueryableDescriptor.cs</Link>
     </Compile>

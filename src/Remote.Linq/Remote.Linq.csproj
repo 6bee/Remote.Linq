@@ -45,6 +45,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Dynamic\DynamicObject.cs" />
+    <Compile Include="Dynamic\IDynamicObjectMapper.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper.NET.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper.cs" />
     <Compile Include="Dynamic\DynamicObject.MetaObject.cs" />

@@ -53,7 +53,7 @@ namespace Remote.Linq
         internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords)
         {
             var elementType = TypeHelper.GetElementType(typeof(T));
-            var result = DynamicObjectMapper.Map(elementType, dataRecords);
+            var result = DynamicObjectMapper.InstanceProvider().Map(dataRecords, elementType);
 
             if (ReferenceEquals(null, result))
             {
@@ -80,6 +80,5 @@ namespace Remote.Linq
 
             throw new Exception(string.Format("Failed to cast result of type '{0}' to '{1}'", result.GetType(), typeof(T)));
         }
-
     }
 }

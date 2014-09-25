@@ -44,6 +44,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Dynamic\DynamicObjectMapper\CustomMapper\When_mapping_int_as_string_and_long_as_long.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_null.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_custom_value_type.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_custom_reference_type.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_type.cs" />
     <Compile Include="Dynamic\DynamicObject\When_created_using_parameterless_constructor.cs" />
     <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_invalid_constructor_parameters.cs" />
+    <Compile Include="IEnumerableAsyncExtensions\When_using_async_with_non_async_queriables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunnableInDebugOnlyAttribute.cs" />
   </ItemGroup>

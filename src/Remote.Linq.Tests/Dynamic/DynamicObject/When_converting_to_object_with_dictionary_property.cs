@@ -34,7 +34,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
                 },
             };
 
-            obj = DynamicObjectMapper.Map(dynamicObject);
+            obj = DynamicObjectMapper.InstanceProvider().Map(dynamicObject);
 
             objectWithDictionaryProperty = obj as ClassWithDictionaryProperty;
         }

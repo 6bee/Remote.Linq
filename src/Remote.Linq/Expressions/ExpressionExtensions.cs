@@ -72,7 +72,11 @@ namespace Remote.Linq.Expressions
                     queryResult = queryable;
                 }
             }
-            var dynamicObjects = DynamicObjectMapper.Map(queryResult, suppressTypeInformation: true);
+            // TODO: use custom mapper?
+            //var dynamicObjects = DynamicObjectMapper.Map(queryResult, suppressTypeInformation: true);
+            var mapper = DynamicObjectMapper.InstanceProvider();
+            mapper.SuppressDynamicTypeInformation = true;
+            var dynamicObjects = mapper.MapCollection(queryResult);
             return dynamicObjects;
         }
     }

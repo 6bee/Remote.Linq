@@ -18,35 +18,34 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Map_should_be_null_for_null_dynamic_object()
         {
-            var result = DynamicObjectMapper.Map((DynamicObject)null);
+            var result = DynamicObjectMapper.InstanceProvider().Map((DynamicObject)null);
             result.ShouldBeNull();
         }
 
         [Fact]
         public void Map_type_should_be_null_for_null_dynamic_object()
         {
-            var result = DynamicObjectMapper.Map(typeof(CustomClass), (DynamicObject)null);
+            var result = DynamicObjectMapper.InstanceProvider().Map((DynamicObject)null, typeof(CustomClass));
             result.ShouldBeNull();
         }
 
         [Fact]
         public void Map_generic_type_should_be_null_for_null_dynamic_object()
         {
-            var result = DynamicObjectMapper.Map<CustomClass>((DynamicObject)null);
+            var result = DynamicObjectMapper.InstanceProvider().Map<CustomClass>((DynamicObject)null);
             result.ShouldBeNull();
         }
 
         [Fact]
         public void Map_type_should_throw_for_null_dynamic_object_enumerable()
         {
-            var ex = Assert.Throws<Exception>(() => DynamicObjectMapper.Map(typeof(object), (IEnumerable<DynamicObject>)null));
-            ex.InnerException.ShouldBeInstanceOf<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(() => DynamicObjectMapper.InstanceProvider().Map((IEnumerable<DynamicObject>)null, typeof(object)));
         }
 
         [Fact]
         public void Map_generic_type_should_throw_for_null_dynamic_object_enumerable()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => DynamicObjectMapper.Map<object>((IEnumerable<DynamicObject>)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => DynamicObjectMapper.InstanceProvider().Map<object>((IEnumerable<DynamicObject>)null));
         }
 
         [Fact]
@@ -58,8 +57,8 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
                 null,
                 new DynamicObject(new CustomClass()),
             };
-            
-            var result = DynamicObjectMapper.Map<CustomClass>(dynamicObjects);
+
+            var result = DynamicObjectMapper.InstanceProvider().Map<CustomClass>(dynamicObjects);
             
             result.ShouldNotBeNull();
             result.Count().ShouldBe(3);
@@ -79,7 +78,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
                 new DynamicObject(new CustomClass()),
             };
 
-            var result = DynamicObjectMapper.Map(typeof(CustomClass), dynamicObjects);
+            var result = DynamicObjectMapper.InstanceProvider().Map(dynamicObjects, typeof(CustomClass));
 
             result.ShouldNotBeNull();
             result.Count().ShouldBe(3);
@@ -91,14 +90,14 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Map_should_be_null_for_null_object()
         {
-            var result = DynamicObjectMapper.Map((object)null);
+            var result = DynamicObjectMapper.InstanceProvider().MapObject((object)null);
             result.ShouldBeNull();
         }
 
         [Fact]
         public void Map_single_should_be_null_for_null_object()
         {
-            var result = DynamicObjectMapper.MapSingle((object)null);
+            var result = DynamicObjectMapper.InstanceProvider().MapObject((object)null);
             result.ShouldBeNull();
         }
 
@@ -112,7 +111,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
                 new CustomClass(),
             };
 
-            var result = DynamicObjectMapper.Map(objects);
+            var result = DynamicObjectMapper.InstanceProvider().MapCollection(objects);
 
             result.ShouldNotBeNull();
             result.Count().ShouldBe(3);

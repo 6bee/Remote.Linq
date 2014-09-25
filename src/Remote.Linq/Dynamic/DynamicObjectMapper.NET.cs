@@ -1,15 +1,13 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.TypeSystem;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Remote.Linq.Dynamic
 {
-    static partial class DynamicObjectMapper
+    partial class DynamicObjectMapper
     {
         /// <summary>
         /// .NET platform specific regex options
@@ -27,7 +25,7 @@ namespace Remote.Linq.Dynamic
         /// <summary>
         /// Populate object members type by using <see cref="FormatterServices" />
         /// </summary>
-        private static void PopulateObjectMembers(Type type, DynamicObject from, object to, ObjectFormatterContext<DynamicObject, object> contect)
+        private void PopulateObjectMembers(Type type, DynamicObject from, object to)
         {
             var members = FormatterServices.GetSerializableMembers(type);
             var values = from
@@ -46,7 +44,7 @@ namespace Remote.Linq.Dynamic
                         default:
                             throw new Exception(string.Format("Unsupported member type {0}.", member.MemberType));
                     }
-                    return MapDynamicObjectIfRequired(memberType, x.Value, contect);
+                    return MapFromDynamicObjectGraph(x.Value, memberType);
                 })
                 .ToArray();
             FormatterServices.PopulateObjectMembers(to, members, values);
@@ -55,7 +53,7 @@ namespace Remote.Linq.Dynamic
         /// <summary>
         /// Retrieves object members type by using <see cref="FormatterServices" /> and populates dynamic object
         /// </summary>
-        private static void MapObjectMembers(object from, DynamicObject to, ObjectFormatterContext<object, DynamicObject> context)
+        private void MapObjectMembers(object from, DynamicObject to)
         {
             var type = to.Type.Type;
 
@@ -64,7 +62,7 @@ namespace Remote.Linq.Dynamic
             for (int i = 0; i < members.Length; i++)
             {
                 var memberName = CleanName(members[i].Name);
-                var value = MapValueIfRequired(values[i], context);
+                var value = MapToDynamicObjectIfRequired(values[i]);
                 to[memberName] = value;
             }
         }

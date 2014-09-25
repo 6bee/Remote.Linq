@@ -37,7 +37,7 @@ using Xunit.Should;
                 { "Guid3", null },
             }; ;
 
-            obj = DynamicObjectMapper.Map(dynamicObject) as ClassWithGuidProperties;
+            obj = DynamicObjectMapper.InstanceProvider().Map(dynamicObject) as ClassWithGuidProperties;
         }
 
         [Fact]

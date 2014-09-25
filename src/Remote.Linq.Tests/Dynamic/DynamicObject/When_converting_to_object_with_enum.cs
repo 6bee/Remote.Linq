@@ -44,7 +44,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
                 },
             };
 
-            objects = DynamicObjectMapper.Map<ClassWithEnum>(dynamicObjects);
+            objects = DynamicObjectMapper.InstanceProvider().Map<ClassWithEnum>(dynamicObjects);
         }
 
         [Fact]
