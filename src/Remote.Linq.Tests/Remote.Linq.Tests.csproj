@@ -52,6 +52,9 @@
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_strings.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_guids.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_dictionary.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_abstract_properties_with_type_information.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_abstract_properties_in_absence_of_type_information.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_abstract_properties.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_indexer.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_enum.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_dictionary_property.cs" />

@@ -58,8 +58,6 @@ namespace Remote.Linq.Dynamic
 
         private static readonly Type[] _nativeTypes = new[]
                 {
-                    typeof(object),
-
                     typeof(string),
 
                     typeof(int),
@@ -154,9 +152,16 @@ namespace Remote.Linq.Dynamic
 
             var items = objects.Select(x => Map(x, type));
 
-            var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(type).Invoke(null, new[] { items });
-            var r2 = MethodInfos.Enumerable.ToArray.MakeGenericMethod(type).Invoke(null, new[] { r1 });
-            return (IEnumerable<object>)r2;
+            if (ReferenceEquals(null, type))
+            {
+                return items.ToArray();
+            }
+            else
+            {
+                var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(type).Invoke(null, new[] { items });
+                var r2 = MethodInfos.Enumerable.ToArray.MakeGenericMethod(type).Invoke(null, new[] { r1 });
+                return (IEnumerable<object>)r2;
+            }
         }
 
         public object Map(DynamicObject obj, Type type)
@@ -459,7 +464,7 @@ namespace Remote.Linq.Dynamic
                 return new T[0];
             }
 
-            if (typeof(T).IsAssignableFrom(typeof(DynamicObject)))
+            if (typeof(T).IsAssignableFrom(typeof(DynamicObject)) && typeof(T) != typeof(object))
             {
                 return objects.Cast<T>();
             }
@@ -657,7 +662,7 @@ namespace Remote.Linq.Dynamic
                 }
                 return character;
 #else
-                    return char.Parse(value);
+                return char.Parse(value);
 #endif
             }
 
@@ -690,39 +695,26 @@ namespace Remote.Linq.Dynamic
                 return TimeSpan.Parse(value);
             }
 #if NET
-                if (targetType == typeof(System.Numerics.BigInteger) || targetType == typeof(System.Numerics.BigInteger?))
-                {
-                    return System.Numerics.BigInteger.Parse(value);
-                }
-
-                if (targetType == typeof(System.Numerics.Complex) || targetType == typeof(System.Numerics.Complex?))
-                {
-                    var m = _complexNumberParserRegex.Match(value);
-                    if (m.Success)
-                    {
-                        var re = double.Parse(m.Groups["Re"].Value);
-                        var im = double.Parse(m.Groups["Sign"].Value + m.Groups["Im"].Value);
-                        return new System.Numerics.Complex(re, im);
-                    }
-                    else
-                    {
-                        throw new FormatException(string.Format("Value '{0}' cannot be parsed into complex number.", value));
-                    }
-                }
-#endif
-            if (targetType == typeof(object))
+            if (targetType == typeof(System.Numerics.BigInteger) || targetType == typeof(System.Numerics.BigInteger?))
             {
-                var newObject = new object();
-                if (string.Compare(value, string.Empty) == 0 || string.Compare(value, newObject.ToString()) == 0)
-                {
-                    return newObject;
-                }
-
-                throw new FormatException(string.Format(
-                    "Value '{0}' cannot be parsed into object. Creating instance of type {1} is only allowed for empty strings and '{2}'.",
-                    value, typeof(object), newObject.ToString()));
+                return System.Numerics.BigInteger.Parse(value);
             }
 
+            if (targetType == typeof(System.Numerics.Complex) || targetType == typeof(System.Numerics.Complex?))
+            {
+                var m = _complexNumberParserRegex.Match(value);
+                if (m.Success)
+                {
+                    var re = double.Parse(m.Groups["Re"].Value);
+                    var im = double.Parse(m.Groups["Sign"].Value + m.Groups["Im"].Value);
+                    return new System.Numerics.Complex(re, im);
+                }
+                else
+                {
+                    throw new FormatException(string.Format("Value '{0}' cannot be parsed into complex number.", value));
+                }
+            }
+#endif
             throw new NotImplementedException(string.Format("string parser for type {0} is not implemented", targetType));
         }
 
@@ -782,16 +774,16 @@ namespace Remote.Linq.Dynamic
                 return ((double)obj).ToString("R");
             }
 #if NET
-                if (type == typeof(System.Numerics.BigInteger) || type == typeof(System.Numerics.BigInteger?))
-                {
-                    return ((DateTime)obj).ToString("R");
-                }
+            if (type == typeof(System.Numerics.BigInteger) || type == typeof(System.Numerics.BigInteger?))
+            {
+                return ((DateTime)obj).ToString("R");
+            }
 
-                if (type == typeof(System.Numerics.Complex) || type == typeof(System.Numerics.Complex?))
-                {
-                    var c = (System.Numerics.Complex)obj;
-                    return string.Format("{0:R}{1:+;-}i{2:R}", c.Real, Math.Sign(c.Imaginary), Math.Abs(c.Imaginary));
-                }
+            if (type == typeof(System.Numerics.Complex) || type == typeof(System.Numerics.Complex?))
+            {
+                var c = (System.Numerics.Complex)obj;
+                return string.Format("{0:R}{1:+;-}i{2:R}", c.Real, Math.Sign(c.Imaginary), Math.Abs(c.Imaginary));
+            }
 #endif
             return obj.ToString();
         }
