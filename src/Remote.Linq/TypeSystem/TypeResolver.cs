@@ -8,6 +8,7 @@ namespace Remote.Linq.TypeSystem
     public partial class TypeResolver : ITypeResolver
     {
         private static readonly ITypeResolver _defaultTypeResolver = new TypeResolver();
+        private static ITypeResolver _instance;
 
         protected TypeResolver()
         {
@@ -18,24 +19,6 @@ namespace Remote.Linq.TypeSystem
             get { return _instance ?? _defaultTypeResolver; }
             set { _instance = value; }
         }
-        private static ITypeResolver _instance;
-
-        protected virtual Type ResolveType(string typeName)
-        {
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentNullException("typeName", "Expected a valid type name");
-
-            var type = Type.GetType(typeName);
-            if (ReferenceEquals(null, type))
-            {
-                var assemblies = GetAssemblies();
-                foreach (var assembly in assemblies)
-                {
-                    type = assembly.GetType(typeName);
-                    if (!ReferenceEquals(null, type)) break;
-                }
-            }
-            return type;
-        }
 
         public virtual Type ResolveType(TypeInfo typeInfo)
         {
@@ -43,7 +26,7 @@ namespace Remote.Linq.TypeSystem
             Type type;
             if (typeInfo.IsAnonymousType)
             {
-                type = new Remote.Linq.TypeSystem.Emit.TypeEmitter().EmitType(typeInfo);
+                type = EmitType(typeInfo);
             }
             else
             {
@@ -82,7 +65,33 @@ namespace Remote.Linq.TypeSystem
                     select ResolveType(x);
                 type = type.MakeGenericType(generigArguments.ToArray());
             }
+
             return type;
         }
+
+        protected virtual Type ResolveType(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName)) throw new ArgumentNullException("typeName", "Expected a valid type name");
+
+            var type = Type.GetType(typeName);
+            if (ReferenceEquals(null, type))
+            {
+                var assemblies = GetAssemblies();
+                foreach (var assembly in assemblies)
+                {
+                    type = assembly.GetType(typeName);
+                    if (!ReferenceEquals(null, type)) break;
+                }
+            }
+            return type;
+        }
+
+#if NET
+        protected Type EmitType(TypeInfo typeInfo)
+        {
+            var type = new Emit.TypeEmitter().EmitType(typeInfo);
+            return type;
+        }
+#endif
     }
 }
