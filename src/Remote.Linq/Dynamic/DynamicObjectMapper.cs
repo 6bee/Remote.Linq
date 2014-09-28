@@ -123,22 +123,13 @@ namespace Remote.Linq.Dynamic
             .Where(x => MatchParameters(x, typeof(DynamicObject)))
             .Single();
 
-        private static readonly Func<IDynamicObjectMapper> _defaulInstanceProvider = () => new DynamicObjectMapper();
-        private static Func<IDynamicObjectMapper> _instanceProvider;
-
         private readonly ObjectFormatterContext<DynamicObject, object> _fromContext;
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
 
-        protected DynamicObjectMapper()
+        public DynamicObjectMapper()
         {
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
             _toContext = new ObjectFormatterContext<object, DynamicObject>();
-        }
-
-        public static Func<IDynamicObjectMapper> InstanceProvider
-        {
-            get { return _instanceProvider ?? _defaulInstanceProvider; }
-            set { _instanceProvider = value; }
         }
 
         public bool SuppressDynamicTypeInformation { get; set; }
@@ -287,7 +278,7 @@ namespace Remote.Linq.Dynamic
                 {
                     var targetTypeGenericArguments = targetType.GetGenericArguments();
                     var method = typeof(DynamicObjectMapper)
-                        .GetMethod("ToDictoonary", BindingFlags.Static | BindingFlags.NonPublic)
+                        .GetMethod("ToDictionary", BindingFlags.Static | BindingFlags.NonPublic)
                         .MakeGenericMethod(targetTypeGenericArguments.ToArray());
                     var r2 = method.Invoke(null, new object[] { r1 });
                     return r2;
@@ -747,7 +738,7 @@ namespace Remote.Linq.Dynamic
             return true;
         }
 
-        private static object ToDictoonary<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> items)
+        private static object ToDictionary<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> items)
         {
             return items.ToDictionary(x => x.Key, x => x.Value);
         }

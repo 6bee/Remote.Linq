@@ -16,7 +16,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
         public When_mapping_from_list_of_strings()
         {
             source = new List<string> { "V1", "V2", "V3" };
-            dynamicObjects = DynamicObjectMapper.InstanceProvider().MapCollection(source);
+            dynamicObjects = new DynamicObjectMapper().MapCollection(source);
         }
 
         [Fact]

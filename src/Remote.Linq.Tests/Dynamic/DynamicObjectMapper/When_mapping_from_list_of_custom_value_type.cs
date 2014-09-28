@@ -26,7 +26,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
                 new CustomValueType{ Int32Property = 1, StringProperty="One"},
                 new CustomValueType{ Int32Property = 2, StringProperty="Two"},
             };
-            dynamicObjects = DynamicObjectMapper.InstanceProvider().MapCollection(source);
+            dynamicObjects = new DynamicObjectMapper().MapCollection(source);
         }
 
         [Fact]

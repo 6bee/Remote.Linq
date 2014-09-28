@@ -21,7 +21,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
                 { "K2", "V2" },
                 { "K3", "V3" },
             };
-            dynamicObjects = DynamicObjectMapper.InstanceProvider().MapCollection(source);
+            dynamicObjects = new DynamicObjectMapper().MapCollection(source);
         }
 
         [Fact]

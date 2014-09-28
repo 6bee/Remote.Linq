@@ -6,19 +6,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 
 namespace Remote.Linq.Expressions
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionExtensions
     {
-        public static IEnumerable<DynamicObject> Execute(this Remote.Linq.Expressions.Expression expression, Func<Type, System.Linq.IQueryable> queryableProvider)
+        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, Func<IDynamicObjectMapper> mapper = null)
         {
             var queryableExpression = expression.ReplaceResourceDescriptorsByQueryable(queryableProvider);
             var linqExpression = queryableExpression.ToLinqExpression();
-
-            //System.Diagnostics.Debug.WriteLine("Remote expression: {0}", queryableExpression);
-            //System.Diagnostics.Debug.WriteLine("System expression: {0}", linqExpression);
 
             var lambdaExpression = linqExpression as System.Linq.Expressions.LambdaExpression;
             if (lambdaExpression == null)
@@ -31,13 +29,11 @@ namespace Remote.Linq.Expressions
             {
                 queryable = lambdaExpression.Compile().DynamicInvoke();
             }
-            catch (System.Reflection.TargetInvocationException ex)
+            catch (TargetInvocationException ex)
             {
                 var excption = ex.InnerException;
 
-                System.Diagnostics.Debug.WriteLine(excption);
-
-                if (excption is System.InvalidOperationException && string.Compare(excption.Message, "Sequence contains no elements") == 0)
+                if (excption is InvalidOperationException && string.Compare(excption.Message, "Sequence contains no elements") == 0)
                 {
                     return new DynamicObject[0];
                 }
@@ -72,11 +68,13 @@ namespace Remote.Linq.Expressions
                     queryResult = queryable;
                 }
             }
-            // TODO: use custom mapper?
-            //var dynamicObjects = DynamicObjectMapper.Map(queryResult, suppressTypeInformation: true);
-            var mapper = DynamicObjectMapper.InstanceProvider();
-            mapper.SuppressDynamicTypeInformation = true;
-            var dynamicObjects = mapper.MapCollection(queryResult);
+
+            if (ReferenceEquals(null, mapper))
+            {
+                mapper = () => new DynamicObjectMapper { SuppressDynamicTypeInformation = true };
+            }
+
+            var dynamicObjects = mapper().MapCollection(queryResult);
             return dynamicObjects;
         }
     }

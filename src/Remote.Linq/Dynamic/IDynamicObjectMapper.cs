@@ -7,8 +7,6 @@ namespace Remote.Linq.Dynamic
 {
     public interface IDynamicObjectMapper
     {
-        bool SuppressDynamicTypeInformation { get; set; }
-
         object Map(DynamicObject obj, Type targetType = null);
 
         T Map<T>(DynamicObject obj);

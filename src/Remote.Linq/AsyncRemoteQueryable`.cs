@@ -11,8 +11,8 @@ namespace Remote.Linq
 {
     internal sealed partial class AsyncRemoteQueryable<T> : RemoteQueryable, IAsyncQueryable<T>
     {
-        internal AsyncRemoteQueryable(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider)
-            : base(typeof(T), dataProvider)
+        internal AsyncRemoteQueryable(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, Func<IDynamicObjectMapper> mapper)
+            : base(typeof(T), dataProvider, mapper)
         {
         }
 

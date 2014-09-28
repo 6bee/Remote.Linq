@@ -19,9 +19,9 @@ namespace Remote.Linq
         /// <param name="resource"></param>
         /// <param name="dataProvider"></param>
         /// <returns></returns>
-        public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
+        public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper = null)
         {
-            return RemoteQueryable.Create<T>(dataProvider);
+            return RemoteQueryable.Create<T>(dataProvider, mapper);
         }
 
         /// <summary>
@@ -31,9 +31,9 @@ namespace Remote.Linq
         /// <param name="resource"></param>
         /// <param name="dataProvider"></param>
         /// <returns></returns>
-        public static IQueryable AsQueryable<T>(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
+        public static IQueryable AsQueryable<T>(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper = null)
         {
-            return RemoteQueryable.Create(resource.ElementType, dataProvider);
+            return RemoteQueryable.Create(resource.ElementType, dataProvider, mapper);
         }
 
         private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression, MethodInfo methodInfo)

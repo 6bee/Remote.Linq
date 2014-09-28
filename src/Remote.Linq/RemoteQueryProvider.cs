@@ -13,11 +13,13 @@ namespace Remote.Linq
     internal sealed partial class RemoteQueryProvider : IQueryProvider
     {
         private readonly Func<Expressions.Expression, IEnumerable<DynamicObject>> _dataProvider;
+        private readonly Func<IDynamicObjectMapper> _mapper;
 
-        internal RemoteQueryProvider(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
+        internal RemoteQueryProvider(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper)
         {
             if (ReferenceEquals(null, dataProvider)) throw new ArgumentNullException("dataProvider");
             _dataProvider = dataProvider;
+            _mapper = mapper;
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
@@ -35,7 +37,7 @@ namespace Remote.Linq
         {
             var rlinq = TranslateExpression(expression);
             var dataRecords = _dataProvider(rlinq);
-            return MapToType<TResult>(dataRecords);
+            return MapToType<TResult>(dataRecords, _mapper);
         }
 
         public object Execute(Expression expression)
@@ -50,10 +52,16 @@ namespace Remote.Linq
             return rlinq2;
         }
 
-        internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords)
+        internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords, Func<IDynamicObjectMapper> mapper)
         {
             var elementType = TypeHelper.GetElementType(typeof(T));
-            var result = DynamicObjectMapper.InstanceProvider().Map(dataRecords, elementType);
+
+            if (ReferenceEquals(null, mapper))
+            {
+                mapper = () => new DynamicObjectMapper();
+            }
+
+            var result = mapper().Map(dataRecords, elementType);
 
             if (ReferenceEquals(null, result))
             {

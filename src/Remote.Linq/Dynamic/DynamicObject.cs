@@ -66,15 +66,16 @@ namespace Remote.Linq.Dynamic
         /// Creates a new instance of a dynamic object, representing the object structure defined by the specified object
         /// </summary>
         /// <param name="obj">The object to be represented by the new dynamic object</param>
+        /// <param name="mapper">Optional instance of dynamic object mapper</param>
         /// <exception cref="ArgumentNullException">The specified object is null</exception>
-        public DynamicObject(object obj)
+        public DynamicObject(object obj, IDynamicObjectMapper mapper = null)
         {
             if (ReferenceEquals(null, obj))
             {
                 throw new ArgumentNullException("obj");
             }
 
-            var dynamicObject = DynamicObjectMapper.InstanceProvider().MapObject(obj);
+            var dynamicObject = (mapper ?? new DynamicObjectMapper()).MapObject(obj);
             Type = dynamicObject.Type;
             Members = dynamicObject.Members;
         }
@@ -196,35 +197,39 @@ namespace Remote.Linq.Dynamic
         /// Creates an instance of the object represented by this dynamic object.
         /// </summary>
         /// <remarks>Requires the Type property to be set on this dynamic object.</remarks>
-        public object CreateObject()
+        /// <param name="mapper">Optional instance of dynamic object mapper</param>
+        public object CreateObject(IDynamicObjectMapper mapper = null)
         {
-            return DynamicObjectMapper.InstanceProvider().Map(this);
+            return (mapper ?? new DynamicObjectMapper()).Map(this);
         }
 
         /// <summary>
         /// Creates an instance of the object type specified and populates the object structure represented by this dynamic object.
         /// </summary>
         /// <param name="type">Type of object to be created</param>
-        public object CreateObject(Type type)
+        /// <param name="mapper">Optional instance of dynamic object mapper</param>
+        public object CreateObject(Type type, IDynamicObjectMapper mapper = null)
         {
-            return DynamicObjectMapper.InstanceProvider().Map(this, type);
+            return (mapper ?? new DynamicObjectMapper()).Map(this, type);
         }
 
         /// <summary>
         /// Creates an instance of the object type specified and populates the object structure represented by this dynamic object.
         /// </summary>
         /// <typeparam name="T">Type of object to be created</typeparam>
-        public T CreateObject<T>()
+        /// <param name="mapper">Optional instance of dynamic object mapper</param>
+        public T CreateObject<T>(IDynamicObjectMapper mapper = null)
         {
-            return DynamicObjectMapper.InstanceProvider().Map<T>(this);
+            return (mapper ?? new DynamicObjectMapper()).Map<T>(this);
         }
 
         /// <summary>
         /// Creates a dynamic objects representing the object structure defined by the specified object
         /// </summary>
-        public static DynamicObject CreateDynamicObject(object obj)
+        /// <param name="mapper">Optional instance of dynamic object mapper</param>
+        public static DynamicObject CreateDynamicObject(object obj, IDynamicObjectMapper mapper = null)
         {
-            return DynamicObjectMapper.InstanceProvider().MapObject(obj);
+            return (mapper ?? new DynamicObjectMapper()).MapObject(obj);
         }
     }
 }

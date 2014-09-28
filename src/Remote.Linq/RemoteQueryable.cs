@@ -14,8 +14,8 @@ namespace Remote.Linq
         protected readonly Expression _expression;
         protected readonly IQueryProvider _provider;
 
-        protected RemoteQueryable(Type elementType, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
-            : this(elementType, new RemoteQueryProvider(dataProvider))
+        protected RemoteQueryable(Type elementType, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper)
+            : this(elementType, new RemoteQueryProvider(dataProvider, mapper))
         {
         }
 
@@ -47,18 +47,18 @@ namespace Remote.Linq
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
         /// </summary>
-        public static IQueryable Create(Type elementType, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
+        public static IQueryable Create(Type elementType, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper = null)
         {
-            return new RemoteQueryable(elementType, dataProvider);
+            return new RemoteQueryable(elementType, dataProvider, mapper);
         }
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified
         /// </summary>
         /// <typeparam name="T">Element type</typeparam>
-        public static IQueryable<T> Create<T>(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider)
+        public static IQueryable<T> Create<T>(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper = null)
         {
-            return new RemoteQueryable<T>(dataProvider);
+            return new RemoteQueryable<T>(dataProvider, mapper);
         }
     }
 }

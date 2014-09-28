@@ -17,7 +17,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
         public When_mapping_from_list_of_guids()
         {
             source = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
-            dynamicObjects = DynamicObjectMapper.InstanceProvider().MapCollection(source);
+            dynamicObjects = new DynamicObjectMapper().MapCollection(source);
         }
 
         [Fact]
