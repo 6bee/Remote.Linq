@@ -13,12 +13,14 @@ namespace Remote.Linq
     internal sealed partial class RemoteQueryProvider : IQueryProvider
     {
         private readonly Func<Expressions.Expression, IEnumerable<DynamicObject>> _dataProvider;
+        private readonly ITypeResolver _typeResolver;
         private readonly Func<IDynamicObjectMapper> _mapper;
 
-        internal RemoteQueryProvider(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper)
+        internal RemoteQueryProvider(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver, Func<IDynamicObjectMapper> mapper)
         {
             if (ReferenceEquals(null, dataProvider)) throw new ArgumentNullException("dataProvider");
             _dataProvider = dataProvider;
+            _typeResolver = typeResolver;
             _mapper = mapper;
         }
 
@@ -35,7 +37,7 @@ namespace Remote.Linq
 
         public TResult Execute<TResult>(Expression expression)
         {
-            var rlinq = TranslateExpression(expression);
+            var rlinq = TranslateExpression(expression, _typeResolver);
             var dataRecords = _dataProvider(rlinq);
             return MapToType<TResult>(dataRecords, _mapper);
         }
@@ -45,10 +47,10 @@ namespace Remote.Linq
             throw new NotImplementedException();
         }
 
-        internal static Expressions.Expression TranslateExpression(Expression expression)
+        internal static Expressions.Expression TranslateExpression(Expression expression, ITypeResolver typeResolver)
         {
             var rlinq1 = expression.ToRemoteLinqExpression();
-            var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors();
+            var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors(typeResolver);
             return rlinq2;
         }
 

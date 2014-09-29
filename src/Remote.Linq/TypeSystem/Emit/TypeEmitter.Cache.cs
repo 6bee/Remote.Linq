@@ -68,7 +68,7 @@ namespace Remote.Linq.TypeSystem.Emit
                     {
                         type = (Type)typeref.Target;
                     }
-                    // emit type if not fount in cache 
+                    // emit type if not found in cache 
                     if (ReferenceEquals(null, type))
                     {
                         type = factory(properties);

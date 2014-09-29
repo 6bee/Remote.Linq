@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using Remote.Linq.Expressions;
+using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +12,13 @@ namespace Remote.Linq
 {
     internal abstract class RemoteExpressionVisitorBase
     {
+        protected readonly ITypeResolver _typeResolver;
+
+        protected RemoteExpressionVisitorBase(ITypeResolver typeResolver)
+        {
+            _typeResolver = typeResolver ?? TypeResolver.Instance;
+        }
+
         protected virtual Expression Visit(Expression expression)
         {
             if (ReferenceEquals(null, expression)) return null;
@@ -258,8 +266,8 @@ namespace Remote.Linq
             var conversion = Visit(expression.Conversion) as LambdaExpression;
             if (!ReferenceEquals(leftOperand, expression.LeftOperand) || !ReferenceEquals(rightOperand, expression.RightOperand) || !ReferenceEquals(conversion, expression.Conversion))
             {
-
-                return new BinaryExpression(leftOperand, rightOperand, expression.Operator, expression.IsLiftedToNull, expression.Method, conversion);
+                var method = expression.Method.ResolveMethod(_typeResolver);
+                return new BinaryExpression(leftOperand, rightOperand, expression.Operator, expression.IsLiftedToNull, method, conversion);
             }
             else
             {
@@ -276,7 +284,8 @@ namespace Remote.Linq
 
             if (items.Any(i => !ReferenceEquals(i.Old, i.New)))
             {
-                return new CollectionExpression(items.Select(i => i.New), expression.ElementType);
+                var elementType = _typeResolver.ResolveType(expression.ElementType);
+                return new CollectionExpression(items.Select(i => i.New), elementType);
             }
             else
             {
@@ -315,7 +324,8 @@ namespace Remote.Linq
 
             if (!ReferenceEquals(operand, expression.Operand))
             {
-                return new ConversionExpression(operand, expression.Type);
+                var type = _typeResolver.ResolveType(expression.Type);
+                return new ConversionExpression(operand, type);
             }
             else
             {

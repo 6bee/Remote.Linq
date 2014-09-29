@@ -55,7 +55,7 @@ namespace Remote.Linq.Dynamic
         /// </summary>
         private void MapObjectMembers(object from, DynamicObject to)
         {
-            var type = to.Type.Type;
+            var type = _typeResolver.ResolveType(to.Type);
 
             var members = FormatterServices.GetSerializableMembers(type);
             var values = FormatterServices.GetObjectData(from, members);

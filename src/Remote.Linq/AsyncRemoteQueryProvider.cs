@@ -13,12 +13,14 @@ namespace Remote.Linq
     internal sealed partial class AsyncRemoteQueryProvider : IAsyncQueryProvider
     {
         private readonly Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> _dataProvider;
+        private readonly ITypeResolver _typeResolver;
         private readonly Func<IDynamicObjectMapper> _mapper;
 
-        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, Func<IDynamicObjectMapper> mapper)
+        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, ITypeResolver typeResolver, Func<IDynamicObjectMapper> mapper)
         {
             if (ReferenceEquals(null, dataProvider)) throw new ArgumentNullException("dataProvider");
             _dataProvider = dataProvider;
+            _typeResolver = typeResolver;
             _mapper = mapper;
         }
 
@@ -35,7 +37,7 @@ namespace Remote.Linq
 
         public TResult Execute<TResult>(Expression expression)
         {
-            var rlinq = RemoteQueryProvider.TranslateExpression(expression);
+            var rlinq = RemoteQueryProvider.TranslateExpression(expression, _typeResolver);
             var task = _dataProvider(rlinq);
             IEnumerable<DynamicObject> dataRecords;
             try
@@ -63,7 +65,7 @@ namespace Remote.Linq
 
         public async Task<TResult> ExecuteAsync<TResult>(Expression expression)
         {
-            var rlinq = RemoteQueryProvider.TranslateExpression(expression);
+            var rlinq = RemoteQueryProvider.TranslateExpression(expression, _typeResolver);
             var dataRecords = await _dataProvider(rlinq);
             return RemoteQueryProvider.MapToType<TResult>(dataRecords, _mapper);
         }

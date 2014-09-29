@@ -21,13 +21,13 @@ namespace Remote.Linq.TypeSystem
             DeclaringType = new TypeInfo(memberInfo.DeclaringType);
         }
 
-        protected MemberInfo(string name, Type declaringType)
+        protected MemberInfo(string name, TypeInfo declaringType)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name", "Expected a valid member name");
             if (ReferenceEquals(null, declaringType)) throw new ArgumentNullException("declaringType");
 
             Name = name;
-            DeclaringType = new TypeInfo(declaringType);
+            DeclaringType = declaringType;
         }
 
         public abstract MemberTypes MemberType { get; }
@@ -64,25 +64,30 @@ namespace Remote.Linq.TypeSystem
             }
         }
 
-        public static implicit operator System.Reflection.MemberInfo(MemberInfo memberInfo)
+        internal System.Reflection.MemberInfo ResolveMemberInfo(ITypeResolver typeResolver)
         {
-            switch (memberInfo.MemberType)
+            switch (MemberType)
             {
                 case MemberTypes.Field:
-                    return ((FieldInfo)memberInfo).Field;
+                    return ((FieldInfo)this).ResolveField(typeResolver);
 
                 case MemberTypes.Constructor:
-                    return ((ConstructorInfo)memberInfo).Constructor;
+                    return ((ConstructorInfo)this).ResolveConstructor(typeResolver);
 
                 case MemberTypes.Property:
-                    return ((PropertyInfo)memberInfo).Property;
+                    return ((PropertyInfo)this).ResolveProperty(typeResolver);
 
                 case MemberTypes.Method:
-                    return ((MethodInfo)memberInfo).Method;
+                    return ((MethodInfo)this).ResolveMethod(typeResolver);
 
                 default:
-                    throw new NotImplementedException(string.Format("Implementation missing for conversion of member type: {0}", memberInfo.MemberType));
+                    throw new NotImplementedException(string.Format("Implementation missing for conversion of member type: {0}", this.MemberType));
             }
+        }
+
+        public static implicit operator System.Reflection.MemberInfo(MemberInfo memberInfo)
+        {
+            return memberInfo.ResolveMemberInfo(TypeResolver.Instance);
         }
     }
 }

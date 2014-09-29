@@ -36,13 +36,13 @@ namespace Remote.Linq.TypeSystem
         // TODO: replace binding flags by bool flags
         protected MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes)
             : this(
-            name, declaringType, bindingFlags, 
+            name, new TypeInfo(declaringType), bindingFlags, 
             ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => new TypeInfo(x)), 
             ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => new TypeInfo(x)))
         {
         }
 
-        protected MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, IEnumerable<TypeInfo> genericArguments, IEnumerable<TypeInfo> parameterTypes)
+        protected MethodBaseInfo(string name, TypeInfo declaringType, BindingFlags bindingFlags, IEnumerable<TypeInfo> genericArguments, IEnumerable<TypeInfo> parameterTypes)
             : base(name, declaringType)
         {
             BindingFlags = bindingFlags;

@@ -57,64 +57,64 @@ namespace Remote.Linq.Dynamic
         private static readonly Type _genericKeyValuePairType = typeof(KeyValuePair<,>);
 
         private static readonly Type[] _nativeTypes = new[]
-                {
-                    typeof(string),
+            {
+                typeof(string),
 
-                    typeof(int),
-                    typeof(int?),
-                    typeof(uint),
-                    typeof(uint?),
+                typeof(int),
+                typeof(int?),
+                typeof(uint),
+                typeof(uint?),
 
-                    typeof(byte),
-                    typeof(byte?),
-                    typeof(sbyte),
-                    typeof(sbyte?),
+                typeof(byte),
+                typeof(byte?),
+                typeof(sbyte),
+                typeof(sbyte?),
 
-                    typeof(short),
-                    typeof(short?),
-                    typeof(ushort),
-                    typeof(ushort?),
+                typeof(short),
+                typeof(short?),
+                typeof(ushort),
+                typeof(ushort?),
 
-                    typeof(long),
-                    typeof(long?),
-                    typeof(ulong),
-                    typeof(ulong?),
+                typeof(long),
+                typeof(long?),
+                typeof(ulong),
+                typeof(ulong?),
 
-                    typeof(float),
-                    typeof(float?),
+                typeof(float),
+                typeof(float?),
 
-                    typeof(double),
-                    typeof(double?),
+                typeof(double),
+                typeof(double?),
 
-                    typeof(decimal),
-                    typeof(decimal?),
+                typeof(decimal),
+                typeof(decimal?),
 
-                    typeof(char),
-                    typeof(char?),
+                typeof(char),
+                typeof(char?),
 
-                    typeof(bool),
-                    typeof(bool?),
+                typeof(bool),
+                typeof(bool?),
 
-                    typeof(Guid),
-                    typeof(Guid?),
+                typeof(Guid),
+                typeof(Guid?),
 
-                    typeof(DateTime),
-                    typeof(DateTime?),
+                typeof(DateTime),
+                typeof(DateTime?),
 
-                    typeof(TimeSpan),
-                    typeof(TimeSpan?),
+                typeof(TimeSpan),
+                typeof(TimeSpan?),
 
-                    typeof(DateTimeOffset),
-                    typeof(DateTimeOffset?),
+                typeof(DateTimeOffset),
+                typeof(DateTimeOffset?),
 
-    #if NET
-                    typeof(System.Numerics.BigInteger),
-                    typeof(System.Numerics.BigInteger?),
+#if NET
+                typeof(System.Numerics.BigInteger),
+                typeof(System.Numerics.BigInteger?),
 
-                    typeof(System.Numerics.Complex),
-                    typeof(System.Numerics.Complex?),
-    #endif
-                };
+                typeof(System.Numerics.Complex),
+                typeof(System.Numerics.Complex?),
+#endif
+            };
 
         private static readonly MethodInfo _mapDynamicObjectInternalMethod = typeof(DynamicObjectMapper)
             .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
@@ -125,11 +125,13 @@ namespace Remote.Linq.Dynamic
 
         private readonly ObjectFormatterContext<DynamicObject, object> _fromContext;
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
+        private readonly ITypeResolver _typeResolver;
 
-        public DynamicObjectMapper()
+        public DynamicObjectMapper(ITypeResolver typeResolver = null)
         {
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
             _toContext = new ObjectFormatterContext<object, DynamicObject>();
+            _typeResolver = typeResolver ?? TypeResolver.Instance;
         }
 
         public bool SuppressDynamicTypeInformation { get; set; }
@@ -172,7 +174,8 @@ namespace Remote.Linq.Dynamic
                 throw new InvalidOperationException("Type property must not be null");
             }
 
-            return Map(obj, obj.Type.Type);
+            var type = _typeResolver.ResolveType(obj.Type);
+            return Map(obj, type);
         }
 
         public T Map<T>(DynamicObject obj)
@@ -251,9 +254,13 @@ namespace Remote.Linq.Dynamic
             if (!ReferenceEquals(null, dynamicObj))
             {
                 // subsequent mapping of nested dynamic object
-                if (ReferenceEquals(null, targetType) || (!ReferenceEquals(null, dynamicObj.Type) && targetType.IsAssignableFrom(dynamicObj.Type.Type)))
+                if (!ReferenceEquals(null, dynamicObj.Type))
                 {
-                    targetType = dynamicObj.Type.Type;
+                    var type = _typeResolver.ResolveType(dynamicObj.Type);
+                    if (ReferenceEquals(null, targetType) || targetType.IsAssignableFrom(type))
+                    {
+                        targetType = type;
+                    }
                 }
 
                 var mappedValue = MapInternal(dynamicObj, targetType);

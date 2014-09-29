@@ -15,7 +15,13 @@ namespace Remote.Linq.TypeSystem
             _property = propertyInfo;
         }
 
+
         public PropertyInfo(string propertyName, Type declaringType)
+            : this(propertyName, new TypeInfo(declaringType))
+        {
+        }
+
+        public PropertyInfo(string propertyName, TypeInfo declaringType)
             : base(propertyName, declaringType)
         {
         }
@@ -28,24 +34,29 @@ namespace Remote.Linq.TypeSystem
             {
                 if (ReferenceEquals(null, _property))
                 {
-                    Type declaringType;
-                    try
-                    {
-                        declaringType = DeclaringType;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
-                    }
-
-                    var propertyInfo = declaringType.GetProperty(Name);
-                    _property = propertyInfo;
+                    _property = ResolveProperty(TypeResolver.Instance);
                 }
                 return _property;
             }
         }
         [NonSerialized]
         private System.Reflection.PropertyInfo _property;
+
+        internal System.Reflection.PropertyInfo ResolveProperty(ITypeResolver typeResolver)
+        {
+            Type declaringType;
+            try
+            {
+                declaringType = typeResolver.ResolveType(DeclaringType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
+            }
+
+            var propertyInfo = declaringType.GetProperty(Name);
+            return propertyInfo;
+        }
 
         public static implicit operator System.Reflection.PropertyInfo(PropertyInfo p)
         {

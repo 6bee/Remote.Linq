@@ -37,78 +37,99 @@ namespace Remote.Linq.TypeSystem
             {
                 if (ReferenceEquals(null, _method))
                 {
-                    Type declaringType;
-                    try
-                    {
-                        declaringType = DeclaringType;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
-                    }
-
-                    var genericArguments = ReferenceEquals(null, GenericArgumentTypes) ? new Type[0] : GenericArgumentTypes
-                        .Select(typeInfo =>
-                        {
-                            try
-                            {
-                                Type genericArgumentType = typeInfo;
-                                return genericArgumentType;
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new Exception(string.Format("Generic argument type '{0}' could not be reconstructed", typeInfo), ex);
-                            }
-                        })
-                        .ToArray();
-
-                    var parameterTypes = ReferenceEquals(null, ParameterTypes) ? new Type[0] : ParameterTypes
-                        .Select(typeInfo =>
-                        {
-                            try
-                            {
-                                Type parameterType = typeInfo;
-                                return parameterType;
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", typeInfo), ex);
-                            }
-                        })
-                        .ToArray();
-
-
-                    var methodInfo = declaringType.GetMethod(Name, BindingFlags, null, parameterTypes, null);
-                    //if (methodInfo == null) methodInfo = declaringType.GetMethod(MethodName);
-                    if (ReferenceEquals(null, methodInfo))
-                    {
-                        methodInfo = declaringType.GetMethods(BindingFlags)
-                            .Where(m => m.Name == Name)
-                            .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments.Length)
-                            .Where(m => m.GetParameters().Length == parameterTypes.Length)
-                            .Select(m => m.IsGenericMethod ? m.MakeGenericMethod(genericArguments) : m)
-                            .Where(m =>
-                            {
-                                var paramTypes = m.GetParameters();
-                                for (int i = 0; i < parameterTypes.Length; i++)
-                                {
-                                    if (paramTypes[i].ParameterType != parameterTypes[i]) return false;
-                                }
-                                return true;
-                            })
-                            .Single();
-                    }
-                    _method = methodInfo;
+                    _method = ResolveMethod(TypeResolver.Instance);
                 }
+
                 return _method;
             }
         }
         [NonSerialized]
         private System.Reflection.MethodInfo _method;
 
+        internal System.Reflection.MethodInfo ResolveMethod(ITypeResolver typeResolver)
+        {
+            Type declaringType;
+            try
+            {
+                declaringType = typeResolver.ResolveType(DeclaringType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
+            }
+
+            var genericArguments = ReferenceEquals(null, GenericArgumentTypes) ? new Type[0] : GenericArgumentTypes
+                .Select(typeInfo =>
+                {
+                    try
+                    {
+                        var genericArgumentType = typeResolver.ResolveType(typeInfo);
+                        return genericArgumentType;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(string.Format("Generic argument type '{0}' could not be reconstructed", typeInfo), ex);
+                    }
+                })
+                .ToArray();
+
+            var parameterTypes = ReferenceEquals(null, ParameterTypes) ? new Type[0] : ParameterTypes
+                .Select(typeInfo =>
+                {
+                    try
+                    {
+                        var parameterType = typeResolver.ResolveType(typeInfo);
+                        return parameterType;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", typeInfo), ex);
+                    }
+                })
+                .ToArray();
+
+
+            var methodInfo = declaringType.GetMethod(Name, BindingFlags, null, parameterTypes, null);
+            //if (methodInfo == null) methodInfo = declaringType.GetMethod(MethodName);
+            if (ReferenceEquals(null, methodInfo))
+            {
+                methodInfo = declaringType.GetMethods(BindingFlags)
+                    .Where(m => m.Name == Name)
+                    .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments.Length)
+                    .Where(m => m.GetParameters().Length == parameterTypes.Length)
+                    .Select(m => m.IsGenericMethod ? m.MakeGenericMethod(genericArguments) : m)
+                    .Where(m =>
+                    {
+                        var paramTypes = m.GetParameters();
+                        for (int i = 0; i < parameterTypes.Length; i++)
+                        {
+                            if (paramTypes[i].ParameterType != parameterTypes[i])
+                            {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    })
+                    .Single();
+            }
+
+            return methodInfo;
+        }
+
         public override string ToString()
         {
-            return string.Format("{0} {1}", new TypeInfo(Method.ReturnType), base.ToString());
+            string returnType = null;
+            try
+            {
+                returnType = new TypeInfo(Method.ReturnType).ToString();
+            }
+            catch
+            {
+                returnType = "'failed to resolve return type'";
+            }
+
+            return string.Format("{0} {1}", returnType, base.ToString());
         }
 
         public static implicit operator System.Reflection.MethodInfo(MethodInfo m)

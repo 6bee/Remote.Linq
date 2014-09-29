@@ -14,6 +14,13 @@ namespace Remote.Linq.TypeSystem
         {
         }
 
+        /// <summary>
+        /// Sets or gets an instance of ITypeResolver.
+        /// </summary>
+        /// <remarks>
+        /// Setting this property allows for registring a custom type resolver. 
+        /// Setting this property to null makes it fall-back to the default resolver.
+        /// </remarks>
         public static ITypeResolver Instance
         {
             get { return _instance ?? _defaultTypeResolver; }

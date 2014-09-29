@@ -75,6 +75,9 @@ namespace Remote.Linq.TypeSystem
             }
         }
 
+        /// <summary>
+        /// Resolves this type info instance to it's type using the default type resolver instance.
+        /// </summary>
         public Type Type
         {
             get

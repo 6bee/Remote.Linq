@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using Remote.Linq.Dynamic;
+using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using MethodInfo = System.Reflection.MethodInfo;
 
 namespace Remote.Linq
 {
@@ -19,9 +21,9 @@ namespace Remote.Linq
         /// <param name="resource"></param>
         /// <param name="dataProvider"></param>
         /// <returns></returns>
-        public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper = null)
+        public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, Func<IDynamicObjectMapper> mapper = null)
         {
-            return RemoteQueryable.Create<T>(dataProvider, mapper);
+            return RemoteQueryable.Create<T>(dataProvider, typeResolver, mapper);
         }
 
         /// <summary>
@@ -31,9 +33,9 @@ namespace Remote.Linq
         /// <param name="resource"></param>
         /// <param name="dataProvider"></param>
         /// <returns></returns>
-        public static IQueryable AsQueryable<T>(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper = null)
+        public static IQueryable AsQueryable<T>(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, Func<IDynamicObjectMapper> mapper = null)
         {
-            return RemoteQueryable.Create(resource.ElementType, dataProvider, mapper);
+            return RemoteQueryable.Create(resource.ElementType, dataProvider, typeResolver, mapper);
         }
 
         private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression, MethodInfo methodInfo)

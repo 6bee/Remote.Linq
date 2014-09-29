@@ -9,21 +9,22 @@ namespace Remote.Linq.Dynamic
 {
     internal static class RemoteExpressionReWriter
     {
-        internal static Expression ReplaceResourceDescriptorsByQueryable(this Expression expression, Func<Type, System.Linq.IQueryable> provider = null)
+        internal static Expression ReplaceResourceDescriptorsByQueryable(this Expression expression, ITypeResolver typeResolver, Func<Type, System.Linq.IQueryable> provider = null)
         {
-            return new QueryableResourceVisitor(provider ?? ProviderRegistry.QueryableResourceProvider).ReplaceResourceDescriptorsByQueryable(expression);
+            return new QueryableResourceVisitor(provider ?? ProviderRegistry.QueryableResourceProvider, typeResolver).ReplaceResourceDescriptorsByQueryable(expression);
         }
 
-        internal static Expression ReplaceQueryableByResourceDescriptors(this Expression expression)
+        internal static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeResolver typeResolver)
         {
-            return new QueryableResourceDescriptorVisitor().ReplaceQueryableResourceDescriptors(expression);
+            return new QueryableResourceDescriptorVisitor(typeResolver).ReplaceQueryableResourceDescriptors(expression);
         }
 
         private sealed class QueryableResourceVisitor : RemoteExpressionVisitorBase
         {
             private readonly Func<Type, System.Linq.IQueryable> _provider;
 
-            public QueryableResourceVisitor(Func<Type, System.Linq.IQueryable> provider)
+            public QueryableResourceVisitor(Func<Type, System.Linq.IQueryable> provider, ITypeResolver typeResolver)
+                : base(typeResolver)
             {
                 _provider = provider;
             }
@@ -36,10 +37,12 @@ namespace Remote.Linq.Dynamic
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
-                if (expression.Type.Type == typeof(QueryableResourceDescriptor) && !ReferenceEquals(null, expression.Value))
+                var type = _typeResolver.ResolveType(expression.Type);
+                if (type == typeof(QueryableResourceDescriptor) && !ReferenceEquals(null, expression.Value))
                 {
                     var queryableResourceDescriptor = (QueryableResourceDescriptor)expression.Value;
-                    var queryable = _provider(queryableResourceDescriptor.Type);
+                    var queryableType = _typeResolver.ResolveType(queryableResourceDescriptor.Type);
+                    var queryable = _provider(queryableType);
                     return Expression.Constant(queryable);
                 }
                 else
@@ -51,6 +54,11 @@ namespace Remote.Linq.Dynamic
 
         private sealed class QueryableResourceDescriptorVisitor : RemoteExpressionVisitorBase
         {
+            public QueryableResourceDescriptorVisitor(ITypeResolver typeResolver)
+                : base(typeResolver)
+            {
+            }
+
             public Expression ReplaceQueryableResourceDescriptors(Expression expression)
             {
                 return Visit(expression);
@@ -71,6 +79,7 @@ namespace Remote.Linq.Dynamic
 
             protected override Expression VisitMemberAccess(MemberExpression expression)
             {
+                //TODO: use _typeResolver
                 var member = expression.Member;
                 Type type;
                 switch (member.MemberType)

@@ -16,6 +16,11 @@ namespace Remote.Linq.TypeSystem
         }
 
         public FieldInfo(string fieldName, Type declaringType)
+            : this(fieldName, new TypeInfo(declaringType))
+        {
+        }
+
+        public FieldInfo(string fieldName, TypeInfo declaringType)
             : base(fieldName, declaringType)
         {
         }
@@ -28,24 +33,29 @@ namespace Remote.Linq.TypeSystem
             {
                 if (ReferenceEquals(null, _field))
                 {
-                    Type declaringType;
-                    try
-                    {
-                        declaringType = DeclaringType;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
-                    }
-
-                    var fieldInfo = declaringType.GetField(Name);
-                    _field = fieldInfo;
+                    _field = ResolveField(TypeResolver.Instance);
                 }
                 return _field;
             }
         }
         [NonSerialized]
         private System.Reflection.FieldInfo _field;
+
+        internal System.Reflection.FieldInfo ResolveField(ITypeResolver typeResolver)
+        {
+            Type declaringType;
+            try
+            {
+                declaringType = typeResolver.ResolveType(DeclaringType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
+            }
+
+            var fieldInfo = declaringType.GetField(Name);
+            return fieldInfo;
+        }
 
         public static implicit operator System.Reflection.FieldInfo(FieldInfo f)
         {

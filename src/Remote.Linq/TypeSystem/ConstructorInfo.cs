@@ -31,71 +31,81 @@ namespace Remote.Linq.TypeSystem
             {
                 if (ReferenceEquals(null, _constructor))
                 {
-                    Type declaringType;
-                    try
-                    {
-                        declaringType = DeclaringType;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
-                    }
-
-                    var genericArguments = ReferenceEquals(null, GenericArgumentTypes) ? new Type[0] : GenericArgumentTypes
-                        .Select(typeInfo =>
-                        {
-                            try
-                            {
-                                Type genericArgumentType = typeInfo;
-                                return genericArgumentType;
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new Exception(string.Format("Generic argument type '{0}' could not be reconstructed", typeInfo), ex);
-                            }
-                        })
-                        .ToArray();
-
-                    var parameterTypes = ReferenceEquals(null, ParameterTypes) ? new Type[0] : ParameterTypes
-                        .Select(typeInfo =>
-                        {
-                            try
-                            {
-                                Type parameterType = typeInfo;
-                                return parameterType;
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", typeInfo), ex);
-                            }
-                        })
-                        .ToArray();
-
-                    var constructorInfo = declaringType.GetConstructor(BindingFlags, null, parameterTypes, null);
-                    if (ReferenceEquals(null, constructorInfo))
-                    {
-                        constructorInfo = declaringType.GetConstructors(BindingFlags)
-                            .Where(m => m.Name == Name)
-                            .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments.Length)
-                            .Where(m => m.GetParameters().Length == parameterTypes.Length)
-                            .Where(m =>
-                            {
-                                var paramTypes = m.GetParameters();
-                                for (int i = 0; i < parameterTypes.Length; i++)
-                                {
-                                    if (paramTypes[i].ParameterType != parameterTypes[i]) return false;
-                                }
-                                return true;
-                            })
-                            .Single();
-                    }
-                    _constructor = constructorInfo;
+                    _constructor = ResolveConstructor(TypeResolver.Instance);
                 }
                 return _constructor;
             }
         }
         [NonSerialized]
         private System.Reflection.ConstructorInfo _constructor;
+
+        internal System.Reflection.ConstructorInfo ResolveConstructor(ITypeResolver typeResolver)
+        {
+            Type declaringType;
+            try
+            {
+                declaringType = typeResolver.ResolveType(DeclaringType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
+            }
+
+            var genericArguments = ReferenceEquals(null, GenericArgumentTypes) ? new Type[0] : GenericArgumentTypes
+                .Select(typeInfo =>
+                {
+                    try
+                    {
+                        var genericArgumentType = typeResolver.ResolveType(typeInfo);
+                        return genericArgumentType;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(string.Format("Generic argument type '{0}' could not be reconstructed", typeInfo), ex);
+                    }
+                })
+                .ToArray();
+
+            var parameterTypes = ReferenceEquals(null, ParameterTypes) ? new Type[0] : ParameterTypes
+                .Select(typeInfo =>
+                {
+                    try
+                    {
+                        var parameterType = typeResolver.ResolveType(typeInfo);
+                        return parameterType;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", typeInfo), ex);
+                    }
+                })
+                .ToArray();
+
+            var constructorInfo = declaringType.GetConstructor(BindingFlags, null, parameterTypes, null);
+            if (ReferenceEquals(null, constructorInfo))
+            {
+                constructorInfo = declaringType.GetConstructors(BindingFlags)
+                    .Where(m => m.Name == Name)
+                    .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments.Length)
+                    .Where(m => m.GetParameters().Length == parameterTypes.Length)
+                    .Where(m =>
+                    {
+                        var paramTypes = m.GetParameters();
+                        for (int i = 0; i < parameterTypes.Length; i++)
+                        {
+                            if (paramTypes[i].ParameterType != parameterTypes[i])
+                            {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    })
+                    .Single();
+            }
+
+            return constructorInfo;
+        }
 
         public override string ToString()
         {

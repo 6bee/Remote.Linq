@@ -78,9 +78,9 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static Expression ToLinqExpression(this RLinq.Expression expression)
+        public static Expression ToLinqExpression(this RLinq.Expression expression, ITypeResolver typeResolver = null)
         {
-            var exp = new RemoteExpressionToLinqExpressionTranslator(new ParameterCache()).ToExpression(expression);
+            var exp = new RemoteExpressionToLinqExpressionTranslator(new ParameterCache(), typeResolver).ToExpression(expression);
             return exp;
         }
 
@@ -101,10 +101,10 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression)
+        public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression, ITypeResolver typeResolver = null)
         {
             var parameterCache = new ParameterCache();
-            var lambdaExpression = new RemoteExpressionToLinqExpressionTranslator(parameterCache).ToExpression(expression);
+            var lambdaExpression = new RemoteExpressionToLinqExpressionTranslator(parameterCache, typeResolver).ToExpression(expression);
             return (LambdaExpression)lambdaExpression;
         }
 
@@ -130,17 +130,17 @@ namespace Remote.Linq
             }
         }
 
-        internal static System.Linq.Expressions.Expression Unwrap(this RLinq.Expression expression)
-        {
-            if (!ReferenceEquals(null, expression) && expression.NodeType == RLinq.ExpressionType.Constant && typeof(System.Linq.Expressions.Expression).IsAssignableFrom(((RLinq.ConstantExpression)expression).Type))
-            {
-                return (System.Linq.Expressions.Expression)((RLinq.ConstantExpression)expression).Value;
-            }
-            else
-            {
-                return null;
-            }
-        }
+        //internal static System.Linq.Expressions.Expression Unwrap(this RLinq.Expression expression)
+        //{
+        //    if (!ReferenceEquals(null, expression) && expression.NodeType == RLinq.ExpressionType.Constant && typeof(System.Linq.Expressions.Expression).IsAssignableFrom(((RLinq.ConstantExpression)expression).Type))
+        //    {
+        //        return (System.Linq.Expressions.Expression)((RLinq.ConstantExpression)expression).Value;
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
 
         private sealed class LinqExpressionToRemoteExpressionTranslator : ExpressionVisitorBase
         {
@@ -533,10 +533,12 @@ namespace Remote.Linq
             private static readonly System.Reflection.MethodInfo EnumerableContainsMethodInfo = typeof(System.Linq.Enumerable).GetMethods(BindingFlags.Public | BindingFlags.Static).Single(m => m.Name == "Contains" && m.GetParameters().Length == 2);
 
             private readonly ParameterCache _parameterCache;
+            private readonly ITypeResolver _typeResolver;
 
-            public RemoteExpressionToLinqExpressionTranslator(ParameterCache parameterCache)
+            public RemoteExpressionToLinqExpressionTranslator(ParameterCache parameterCache, ITypeResolver typeResolver)
             {
                 _parameterCache = parameterCache;
+                _typeResolver = typeResolver ?? TypeResolver.Instance;
             }
 
             public Expression ToExpression(RLinq.Expression expression)
@@ -586,6 +588,7 @@ namespace Remote.Linq
 
             private NewExpression VisitNew(RLinq.NewExpression newExpression)
             {
+                        var constructor = newExpression.Constructor.ResolveConstructor(_typeResolver);
                 if (newExpression.Arguments != null)
                 {
                     var arguments =
@@ -593,23 +596,24 @@ namespace Remote.Linq
                         select Visit(a);
                     if (ReferenceEquals(null, newExpression.Members))
                     {
-                        return Expression.New(newExpression.Constructor, arguments);
+                        return Expression.New(constructor, arguments);
                     }
                     else
                     {
-                        var members = newExpression.Members.Select(x => (System.Reflection.MemberInfo)x).ToArray();
-                        return Expression.New(newExpression.Constructor, arguments, members);
+                        var members = newExpression.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
+                        return Expression.New(constructor, arguments, members);
                     }
                 }
                 else
                 {
                     if (ReferenceEquals(null, newExpression.Members))
                     {
-                        return Expression.New(newExpression.Constructor);
+                        return Expression.New(constructor);
                     }
                     else
                     {
-                        return Expression.New(newExpression.Constructor, new Expression[0], newExpression.Members.Cast<System.Reflection.MemberInfo>());
+                        var members = newExpression.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
+                        return Expression.New(constructor, new Expression[0], members);
                     }
                 }
             }
@@ -617,7 +621,8 @@ namespace Remote.Linq
             private Expression VisitNewArray(RLinq.NewArrayExpression expression)
             {
                 var expressions = VisitExpressionList(expression.Expressions);
-                return Expression.NewArrayInit(expression.Type, expressions);
+                var type = _typeResolver.ResolveType(expression.Type);
+                return Expression.NewArrayInit(type, expressions);
             }
 
             private Expression VisitMemberInit(RLinq.MemberInitExpression expression)
@@ -653,21 +658,21 @@ namespace Remote.Linq
             private MemberAssignment VisitMemberAssignment(RLinq.MemberAssignment assignment)
             {
                 var e = Visit(assignment.Expression);
-                System.Reflection.MemberInfo m = assignment.Member;
+                var m = assignment.Member.ResolveMemberInfo(_typeResolver);
                 return Expression.Bind(m, e);
             }
 
             private MemberMemberBinding VisitMemberMemberBinding(RLinq.MemberMemberBinding binding)
             {
                 var bindings = VisitBindingList(binding.Bindings);
-                System.Reflection.MemberInfo m = binding.Member;
+                var m = binding.Member.ResolveMemberInfo(_typeResolver);
                 return Expression.MemberBind(m, bindings);
             }
 
             private MemberListBinding VisitMemberListBinding(RLinq.MemberListBinding binding)
             {
                 var initializers = VisitElementInitializerList(binding.Initializers);
-                System.Reflection.MemberInfo m = binding.Member;
+                var m = binding.Member.ResolveMemberInfo(_typeResolver);
                 return Expression.ListBind(m, initializers);
             }
 
@@ -682,7 +687,7 @@ namespace Remote.Linq
             private ElementInit VisitElementInitializer(RLinq.ElementInit initializer)
             {
                 var arguments = VisitExpressionList(initializer.Arguments);
-                var m = initializer.AddMethod;
+                var m = initializer.AddMethod.ResolveMethod(_typeResolver);
                 return Expression.ElementInit(m, arguments);
             }
 
@@ -699,14 +704,15 @@ namespace Remote.Linq
                 var n = VisitNew(listInitExpression.NewExpression);
                 var initializers =
                     from i in listInitExpression.Initializers
-                    select Expression.ElementInit(i.AddMethod, i.Arguments.Select(a => Visit(a)));
+                    select Expression.ElementInit(i.AddMethod.ResolveMethod(_typeResolver), i.Arguments.Select(a => Visit(a)));
 
                 return Expression.ListInit(n, initializers);
             }
 
             private ParameterExpression VisitParameter(RLinq.ParameterExpression parameterExpression)
             {
-                return _parameterCache.GetParameterExpression(parameterExpression.ParameterType, parameterExpression.ParameterName);
+                var parameterType = _typeResolver.ResolveType(parameterExpression.ParameterType);
+                return _parameterCache.GetParameterExpression(parameterType, parameterExpression.ParameterName);
             }
 
             private Expression VisitUnary(RLinq.UnaryExpression unaryExpression)
@@ -732,7 +738,7 @@ namespace Remote.Linq
             private Expression VisitMember(RLinq.MemberExpression memberExpression)
             {
                 var exp = Visit(memberExpression.Expression);
-                System.Reflection.MemberInfo m = memberExpression.Member;
+                var m = memberExpression.Member.ResolveMemberInfo(_typeResolver);
                 return Expression.MakeMemberAccess(exp, m);
             }
 
@@ -744,7 +750,12 @@ namespace Remote.Linq
                     select Visit(argument);
 
                 var method = methodCallExpression.Method;
-                if (string.Compare(method.Name, "SelectMany") == 0 && method.DeclaringType.Type == typeof(System.Linq.Queryable) && method.IsGenericMethod && method.GenericArgumentTypes.Count == 3 && method.ParameterTypes.Count == 3)
+                var declaringType = _typeResolver.ResolveType(method.DeclaringType);
+                if (string.Compare(method.Name, "SelectMany") == 0 && 
+                    declaringType == typeof(System.Linq.Queryable) && 
+                    method.IsGenericMethod && 
+                    method.GenericArgumentTypes.Count == 3 && 
+                    method.ParameterTypes.Count == 3)
                 {
                     // HACK: cast IQueriable<> to IEnumerable<> to match method signature of SelectMany
                     var argumentArray = arguments.ToArray();
@@ -774,13 +785,15 @@ namespace Remote.Linq
                     }
                 }
 
-                return Expression.Call(instance, methodCallExpression.Method, arguments.ToArray());
+                var methodInfo = method.ResolveMethod(_typeResolver);
+                return Expression.Call(instance, methodInfo, arguments.ToArray());
             }
 
             private Expression VisitConversion(RLinq.ConversionExpression conversionExpression)
             {
                 var exp = Visit(conversionExpression.Operand);
-                return Expression.Convert(exp, conversionExpression.Type);
+                var type = _typeResolver.ResolveType(conversionExpression.Type);
+                return Expression.Convert(exp, type);
             }
 
             private Expression VisitConditional(RLinq.ConditionalExpression expression)
@@ -793,7 +806,8 @@ namespace Remote.Linq
 
             private Expression VisitConstant(RLinq.ConstantExpression constantValueExpression)
             {
-                return Expression.Constant(constantValueExpression.Value, constantValueExpression.Type);
+                var type = _typeResolver.ResolveType(constantValueExpression.Type);
+                return Expression.Constant(constantValueExpression.Value, type);
             }
 
             private Expression VisitCollection(RLinq.CollectionExpression collectionExpression)
@@ -802,15 +816,16 @@ namespace Remote.Linq
                     from exp in collectionExpression.List
                     select exp.Value;
 
-                if (collectionExpression.ElementType.Type == typeof(object))
+                var elementType = _typeResolver.ResolveType(collectionExpression.ElementType);
+                if (elementType == typeof(object))
                 {
                     return Expression.Constant(collection.ToArray());
                 }
                 else
                 {
                     var objectCollectionExpression = Expression.Constant(collection.ToArray());
-                    var typeConvertionMethodExpression = Expression.Call(null, EnumerableOfTypeMethodInfo.MakeGenericMethod(collectionExpression.ElementType), objectCollectionExpression);
-                    var toArrayMethodExpression = Expression.Call(null, EnumerableToArrayMethodInfo.MakeGenericMethod(collectionExpression.ElementType), typeConvertionMethodExpression);
+                    var typeConvertionMethodExpression = Expression.Call(null, EnumerableOfTypeMethodInfo.MakeGenericMethod(elementType), objectCollectionExpression);
+                    var toArrayMethodExpression = Expression.Call(null, EnumerableToArrayMethodInfo.MakeGenericMethod(elementType), typeConvertionMethodExpression);
                     var obj = Expression.Lambda(toArrayMethodExpression).Compile().DynamicInvoke();
                     return Expression.Constant(obj);
                 }
@@ -852,13 +867,17 @@ namespace Remote.Linq
                 }
 
                 var type = TranslateBinaryOperator(binaryExpression.Operator);
-                if (!ReferenceEquals(null, conversion))
+                if (!ReferenceEquals(null, binaryExpression.Method))
                 {
-                    return Expression.MakeBinary(type, p1, p2, binaryExpression.IsLiftedToNull, binaryExpression.Method, conversion);
-                }
-                else if (!ReferenceEquals(null, binaryExpression.Method))
-                {
-                    return Expression.MakeBinary(type, p1, p2, binaryExpression.IsLiftedToNull, binaryExpression.Method);
+                    var method = binaryExpression.Method.ResolveMethod(_typeResolver);
+                    if (!ReferenceEquals(null, conversion))
+                    {
+                        return Expression.MakeBinary(type, p1, p2, binaryExpression.IsLiftedToNull, method, conversion);
+                    }
+                    else
+                    {
+                        return Expression.MakeBinary(type, p1, p2, binaryExpression.IsLiftedToNull, method);
+                    }
                 }
                 else
                 {

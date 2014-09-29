@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -206,10 +207,18 @@ namespace Remote.Linq
         /// <param name="dataProvider">A delegate to be invoked to retrieve the actual data</param>
         /// <returns>A generic version of the specified query instance.</returns>
         /// <exception cref="Exception">If the query's type does not match the generic type.</exception>
-        public static Query<T> CreateFromNonGeneric(IQuery query, Func<Query<T>, IEnumerable<T>> dataProvider = null)
+        public static Query<T> CreateFromNonGeneric(IQuery query, Func<Query<T>, IEnumerable<T>> dataProvider = null, ITypeResolver typeResolver = null)
         {
-            if (ReferenceEquals(null, query)) throw new ArgumentNullException("query");
-            if (typeof(T) != query.Type.Type) throw new Exception(string.Format("Generic type missmatch: {0} vs. {1}", typeof(T), query.Type));
+            if (ReferenceEquals(null, query))
+            {
+                throw new ArgumentNullException("query");
+            }
+
+            var type = (typeResolver ?? TypeResolver.Instance).ResolveType(query.Type);
+            if (typeof(T) != type)
+            {
+                throw new Exception(string.Format("Generic type missmatch: {0} vs. {1}", typeof(T), query.Type));
+            }
 
             var instance = new Query<T>(dataProvider, query.FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
             return instance;
