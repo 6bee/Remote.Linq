@@ -76,9 +76,15 @@ namespace Remote.Linq
         /// <summary>
         /// Translates a given query expression into an expression
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public static Expression ToLinqExpression(this RLinq.Expression expression, ITypeResolver typeResolver = null)
+        public static Expression ToLinqExpression(this RLinq.Expression expression)
+        {
+            return ToLinqExpression(expression, null);
+        }
+
+        /// <summary>
+        /// Translates a given query expression into an expression
+        /// </summary>
+        public static Expression ToLinqExpression(this RLinq.Expression expression, ITypeResolver typeResolver)
         {
             var exp = new RemoteExpressionToLinqExpressionTranslator(new ParameterCache(), typeResolver).ToExpression(expression);
             return exp;
@@ -99,9 +105,15 @@ namespace Remote.Linq
         /// <summary>
         /// Translates a given query expression into a lambda expression
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression, ITypeResolver typeResolver = null)
+        public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression)
+        {
+            return ToLinqExpression(expression, null);
+        }
+
+        /// <summary>
+        /// Translates a given query expression into a lambda expression
+        /// </summary>
+        public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression, ITypeResolver typeResolver)
         {
             var parameterCache = new ParameterCache();
             var lambdaExpression = new RemoteExpressionToLinqExpressionTranslator(parameterCache, typeResolver).ToExpression(expression);

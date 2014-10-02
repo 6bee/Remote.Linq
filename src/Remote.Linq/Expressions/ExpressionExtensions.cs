@@ -13,7 +13,7 @@ namespace Remote.Linq.Expressions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionExtensions
     {
-        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, Func<IDynamicObjectMapper> mapper = null)
+        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, Func<IDynamicObjectMapper> mapper = null, ITypeResolver typeResolver = null)
         {
             var queryableExpression = expression.ReplaceResourceDescriptorsByQueryable(typeResolver, queryableProvider);
             var linqExpression = queryableExpression.ToLinqExpression();

@@ -127,7 +127,12 @@ namespace Remote.Linq.Dynamic
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
         private readonly ITypeResolver _typeResolver;
 
-        public DynamicObjectMapper(ITypeResolver typeResolver = null)
+        public DynamicObjectMapper()
+            : this(null)
+        {
+        }
+
+        public DynamicObjectMapper(ITypeResolver typeResolver)
         {
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
             _toContext = new ObjectFormatterContext<object, DynamicObject>();
