@@ -5,7 +5,7 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">Any CPU</Platform>
         <BuildProperties>Platform=$(Platform)</BuildProperties>
-        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)\src\</SolutionDir>
+        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)src\</SolutionDir>
         <OutputPath Condition=" '$(OutputPath)' == '' ">$(SolutionDir)bin\$(Configuration)\</OutputPath>
         <SolutionFile>Remote.Linq.sln</SolutionFile>
     </PropertyGroup>

@@ -24,7 +24,7 @@
         <Copy DestinationFolder="Remote.Linq\lib\win" SourceFiles="@(WIN)" />
         <Copy DestinationFolder="Remote.Linq\lib\wp8" SourceFiles="@(WP8)" />
         <MakeDir Directories="$(OutputPath)" />
-        <Exec Command="&quot;$(NuGetExePath)&quot; pack Remote.Linq\Remote.Linq.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack Remote.Linq\Remote.Linq.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -Verbosity detailed -NoPackageAnalysis" />
     </Target>
     
 </Project>
