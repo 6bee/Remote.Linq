@@ -21,3 +21,4 @@ packages
 *.LOCAL.*
 StyleCop.Cache
 *.csproj.DotSettings
+src/NuGet/Remote.Linq/lib

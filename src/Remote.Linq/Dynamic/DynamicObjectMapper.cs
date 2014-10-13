@@ -46,7 +46,7 @@ namespace Remote.Linq.Dynamic
             }
         }
 
-        const string NumericPattern = @"([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?";
+        private const string NumericPattern = @"([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?";
 
         private static readonly Regex _complexNumberParserRegex = new Regex(string.Format("^(?<Re>[+-]?({0}))(?<Sign>[+-])[iI](?<Im>{0})$", NumericPattern), LocalRegexOptions);
 
@@ -56,7 +56,7 @@ namespace Remote.Linq.Dynamic
 
         private static readonly Type _genericKeyValuePairType = typeof(KeyValuePair<,>);
 
-        private static readonly Type[] _nativeTypes = new[]
+        private static readonly Dictionary<Type, object> _nativeTypes = new[]
             {
                 typeof(string),
 
@@ -114,7 +114,7 @@ namespace Remote.Linq.Dynamic
                 typeof(System.Numerics.Complex),
                 typeof(System.Numerics.Complex?),
 #endif
-            };
+            }.ToDictionary(x => x, x => (object)null);
 
         private static readonly MethodInfo _mapDynamicObjectInternalMethod = typeof(DynamicObjectMapper)
             .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
@@ -126,17 +126,19 @@ namespace Remote.Linq.Dynamic
         private readonly ObjectFormatterContext<DynamicObject, object> _fromContext;
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
         private readonly ITypeResolver _typeResolver;
+        private readonly Dictionary<Type, object> _knownTypes;
 
-        public DynamicObjectMapper()
-            : this(null)
-        {
-        }
-
-        public DynamicObjectMapper(ITypeResolver typeResolver)
+        /// <summary>
+        /// Creates a new instance of <see cref="DynamicObjectMapper"/>
+        /// </summary>
+        /// <param name="typeResolver">Instance of <see cref="ITypeResolver"/> to be used to resolve types</param>
+        /// <param name="knownTypes">Types not required to be mapped into <see cref="DynamicObject"/></param>
+        public DynamicObjectMapper(ITypeResolver typeResolver = null, IEnumerable<Type> knownTypes = null)
         {
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
             _toContext = new ObjectFormatterContext<object, DynamicObject>();
             _typeResolver = typeResolver ?? TypeResolver.Instance;
+            _knownTypes = ReferenceEquals(null, knownTypes) ? new Dictionary<Type,object>(0) : knownTypes.ToDictionary(x => x, x => (object)null);
         }
 
         public bool SuppressDynamicTypeInformation { get; set; }
@@ -268,8 +270,30 @@ namespace Remote.Linq.Dynamic
                     }
                 }
 
+                if (IsSingleValueWrapper(dynamicObj))
+                {
+                    return MapFromDynamicObjectIfRequired(dynamicObj.Values.Single(), targetType);
+                }
+                
                 var mappedValue = MapInternal(dynamicObj, targetType);
                 return mappedValue;
+            }
+
+            var objectType = obj.GetType();
+
+            if (objectType == targetType)
+            {
+                return obj;
+            }
+
+            if (IsKnownType(objectType))
+            {
+                return obj;
+            }
+
+            if (IsNativeType(targetType))
+            {
+                return obj is string ? ParseToNativeType(targetType, (string)obj) : obj;
             }
 
             if (obj is System.Collections.IEnumerable && !(obj is string))
@@ -307,7 +331,6 @@ namespace Remote.Linq.Dynamic
 
             if (targetType.IsEnum())
             {
-                var objectType = obj.GetType();
                 if (objectType.IsEnum())
                 {
                     if (objectType.Equals(targetType))
@@ -327,11 +350,6 @@ namespace Remote.Linq.Dynamic
                     var enumValue = Enum.ToObject(targetType, obj);
                     return enumValue;
                 }
-            }
-
-            if (obj is string && IsNativeType(targetType))
-            {
-                return ParseToNativeType(targetType, (string)obj);
             }
 
             return obj;
@@ -357,7 +375,7 @@ namespace Remote.Linq.Dynamic
             Action<Type, object, DynamicObject> initializer = null;
 
             var type = obj.GetType();
-            if (IsNativeType(type))
+            if (IsNativeType(type) || IsKnownType(type))
             {
                 facotry = (t, o) =>
                 {
@@ -402,6 +420,11 @@ namespace Remote.Linq.Dynamic
             }
 
             var type = obj.GetType();
+
+            if (IsKnownType(type))
+            {
+                return obj;
+            }
 
             if (IsNativeType(type))
             {
@@ -473,7 +496,7 @@ namespace Remote.Linq.Dynamic
             }
 
             var elementType = TypeHelper.GetElementType(typeof(T));
-            if (objects.All(item => ReferenceEquals(null, item) || (item.MemberCount == 1 && string.IsNullOrEmpty(item.MemberNames.Single()))))
+            if (objects.All(item => ReferenceEquals(null, item) || IsSingleValueWrapper(item)))
             {
                 // project single property
                 var items = objects
@@ -591,6 +614,11 @@ namespace Remote.Linq.Dynamic
             var mapper = GetMapInternalMethod(type);
             var result = InvokeMethod(this, mapper, obj);
             return result;
+        }
+
+        private bool IsKnownType(Type type)
+        {
+            return _knownTypes.ContainsKey(type);
         }
 
         private static object ParseToNativeType(Type targetType, string value)
@@ -721,6 +749,11 @@ namespace Remote.Linq.Dynamic
             throw new NotImplementedException(string.Format("string parser for type {0} is not implemented", targetType));
         }
 
+        private static bool IsSingleValueWrapper(DynamicObject item)
+        {
+            return (item.MemberCount == 1 && string.IsNullOrEmpty(item.MemberNames.Single()));
+        }
+
         private static bool IsMatchingDictionary(Type targetType, Type elementType)
         {
             if (!(targetType.IsGenericType() && elementType.IsGenericType()))
@@ -757,7 +790,7 @@ namespace Remote.Linq.Dynamic
 
         private static bool IsNativeType(Type type)
         {
-            return _nativeTypes.Contains(type);
+            return _nativeTypes.ContainsKey(type);
         }
 
         private static object FormatNativeTypeAsString(object obj, Type type)
@@ -779,7 +812,7 @@ namespace Remote.Linq.Dynamic
 #if NET
             if (type == typeof(System.Numerics.BigInteger) || type == typeof(System.Numerics.BigInteger?))
             {
-                return ((DateTime)obj).ToString("R");
+                return ((System.Numerics.BigInteger)obj).ToString("R");
             }
 
             if (type == typeof(System.Numerics.Complex) || type == typeof(System.Numerics.Complex?))

@@ -8,7 +8,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
     using Xunit;
     using Xunit.Should;
 
-    public class When_mapping_from_list_of_custom_reference_type
+    public class When_mapping_from_list_of_known_types
     {
         class CustomReferenceType
         {
@@ -16,17 +16,20 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
             public string StringProperty { get; set; }
         }
 
-        List<CustomReferenceType> source;
+        CustomReferenceType[] sourceObjects;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_from_list_of_custom_reference_type()
+        public When_mapping_from_list_of_known_types()
         {
-            source = new List<CustomReferenceType> 
+            sourceObjects = new[]
             { 
                 new CustomReferenceType { Int32Property = 1, StringProperty="One" },
                 new CustomReferenceType { Int32Property = 2, StringProperty="Two" },
             };
-            dynamicObjects = new DynamicObjectMapper().MapCollection(source);
+
+            var mapper = new DynamicObjectMapper(knownTypes: new[] { typeof(CustomReferenceType) });
+            
+            dynamicObjects = mapper.MapCollection(sourceObjects);
         }
 
         [Fact]
@@ -45,36 +48,33 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
         }
 
         [Fact]
-        public void Dynamic_objects_should_have_two_members()
+        public void Dynamic_objects_should_have_one_member_only()
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.MemberCount.ShouldBe(2);
+                dynamicObject.MemberCount.ShouldBe(1);
             }
         }
 
         [Fact]
-        public void Dynamic_objects_member_names_should_be_property_names()
+        public void Dynamic_objects_member_name_should_be_empty_strings()
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.MemberNames.ElementAt(0).ShouldBe("Int32Property");
-                dynamicObject.MemberNames.ElementAt(1).ShouldBe("StringProperty");
+                dynamicObject.MemberNames.Single().ShouldBeEmpty();
             }
         }
 
         [Fact]
-        public void Dynamic_objects_member_values_should_be_key_and_value_of_source()
+        public void Dynamic_objects_member_value_should_be_source_objects()
         {
-            for (int i = 0; i < source.Count; i++)
+            for (int i = 0; i < sourceObjects.Length; i++)
             {
                 var dynamicObject = dynamicObjects.ElementAt(i);
 
-                var intValue = source.ElementAt(i).Int32Property;
-                var stringValue = source.ElementAt(i).StringProperty;
+                var sourceObject = sourceObjects.ElementAt(i);
 
-                dynamicObject["Int32Property"].ShouldBe(intValue);
-                dynamicObject["StringProperty"].ShouldBe(stringValue);
+                dynamicObject[""].ShouldBeSameAs(sourceObject);
             }
         }
     }

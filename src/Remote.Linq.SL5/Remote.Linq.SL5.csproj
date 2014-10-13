@@ -48,6 +48,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>..\bin\Release\sl5\Remote.Linq.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -264,6 +265,9 @@
     </Compile>
     <Compile Include="..\Remote.Linq\RemoteQueryProvider.cs">
       <Link>RemoteQueryProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TransparentCache.cs">
+      <Link>TransparentCache.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\TypeExtensions.cs">
       <Link>TypeExtensions.cs</Link>

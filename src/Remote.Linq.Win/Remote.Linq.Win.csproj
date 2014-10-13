@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <GenerateLibraryLayout>False</GenerateLibraryLayout>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>..\bin\Release\win\Remote.Linq.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -324,6 +325,9 @@
     </Compile>
     <Compile Include="..\Remote.Linq\RemoteQueryProvider.cs">
       <Link>RemoteQueryProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TransparentCache.cs">
+      <Link>TransparentCache.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq.SL5\NonSerializedAttribute.cs">
       <Link>NonSerializedAttribute.cs</Link>

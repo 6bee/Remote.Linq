@@ -33,6 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>..\bin\Release\net45\Remote.Linq.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -85,6 +86,7 @@
     <Compile Include="ExpressionVisitors\ExpressionVisitorBase.cs" />
     <Compile Include="ExpressionVisitors\RemoteExpressionVisitorBase.cs" />
     <Compile Include="ObjectReferenceEqualityComparer`.cs" />
+    <Compile Include="TransparentCache.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.Cache.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.cs" />
     <Compile Include="TypeSystem\FieldInfo.cs" />

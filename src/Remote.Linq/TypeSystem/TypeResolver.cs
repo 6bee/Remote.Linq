@@ -10,8 +10,11 @@ namespace Remote.Linq.TypeSystem
         private static readonly ITypeResolver _defaultTypeResolver = new TypeResolver();
         private static ITypeResolver _instance;
 
+        private readonly TransparentCache<TypeInfo, Type> _typeCache;
+
         protected TypeResolver()
         {
+            _typeCache = new TransparentCache<TypeInfo, Type>();
         }
 
         /// <summary>
@@ -28,6 +31,36 @@ namespace Remote.Linq.TypeSystem
         }
 
         public virtual Type ResolveType(TypeInfo typeInfo)
+        {
+            return _typeCache.GetOrCreate(typeInfo, ResolveTypeInternal);
+        }
+
+        protected virtual Type ResolveType(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName)) throw new ArgumentNullException("typeName", "Expected a valid type name");
+
+            var type = Type.GetType(typeName);
+            if (ReferenceEquals(null, type))
+            {
+                var assemblies = GetAssemblies();
+                foreach (var assembly in assemblies)
+                {
+                    type = assembly.GetType(typeName);
+                    if (!ReferenceEquals(null, type)) break;
+                }
+            }
+            return type;
+        }
+
+#if NET
+        protected Type EmitType(TypeInfo typeInfo)
+        {
+            var type = new Emit.TypeEmitter().EmitType(typeInfo);
+            return type;
+        }
+#endif
+
+        private Type ResolveTypeInternal(TypeInfo typeInfo)
         {
 #if NET
             Type type;
@@ -75,30 +108,5 @@ namespace Remote.Linq.TypeSystem
 
             return type;
         }
-
-        protected virtual Type ResolveType(string typeName)
-        {
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentNullException("typeName", "Expected a valid type name");
-
-            var type = Type.GetType(typeName);
-            if (ReferenceEquals(null, type))
-            {
-                var assemblies = GetAssemblies();
-                foreach (var assembly in assemblies)
-                {
-                    type = assembly.GetType(typeName);
-                    if (!ReferenceEquals(null, type)) break;
-                }
-            }
-            return type;
-        }
-
-#if NET
-        protected Type EmitType(TypeInfo typeInfo)
-        {
-            var type = new Emit.TypeEmitter().EmitType(typeInfo);
-            return type;
-        }
-#endif
     }
 }

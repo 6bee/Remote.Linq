@@ -30,6 +30,7 @@
     <DefineConstants>NET35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\bin\Release\net35-client\Remote.Linq.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -244,6 +245,9 @@
     <Compile Include="..\Remote.Linq\RemoteQueryProvider.cs">
       <Link>RemoteQueryProvider.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\TransparentCache.cs">
+      <Link>TransparentCache.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\TypeExtensions.cs">
       <Link>TypeExtensions.cs</Link>
     </Compile>
@@ -255,6 +259,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.NET35.cs" />
+    <Compile Include="Lazy.cs" />
     <Compile Include="TypeExtensions.NET35.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

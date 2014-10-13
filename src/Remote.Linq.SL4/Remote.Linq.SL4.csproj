@@ -46,6 +46,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\bin\Release\sl4\Remote.Linq.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -260,6 +261,9 @@
     </Compile>
     <Compile Include="..\Remote.Linq\RemoteQueryProvider.cs">
       <Link>RemoteQueryProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\TransparentCache.cs">
+      <Link>TransparentCache.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\TypeExtensions.cs">
       <Link>TypeExtensions.cs</Link>

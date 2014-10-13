@@ -23,8 +23,8 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
         {
             source = new List<CustomValueType> 
             { 
-                new CustomValueType{ Int32Property = 1, StringProperty="One"},
-                new CustomValueType{ Int32Property = 2, StringProperty="Two"},
+                new CustomValueType { Int32Property = 1, StringProperty="One" },
+                new CustomValueType { Int32Property = 2, StringProperty="Two" },
             };
             dynamicObjects = new DynamicObjectMapper().MapCollection(source);
         }
