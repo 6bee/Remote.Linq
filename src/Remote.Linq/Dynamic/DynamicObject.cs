@@ -14,7 +14,7 @@ namespace Remote.Linq.Dynamic
     [KnownType(typeof(object))]
     [KnownType(typeof(object[]))]
     [DebuggerDisplay("Count = {MemberCount}")]
-    public partial class DynamicObject : IEnumerable<KeyValuePair<string, object>>
+    public partial class DynamicObject : IEnumerable<KeyValuePair<string, object>>, IDictionary<string, object>
     {
         /// <summary>
         /// Creates a new instance of a dynamic object
@@ -231,5 +231,68 @@ namespace Remote.Linq.Dynamic
         {
             return (mapper ?? new DynamicObjectMapper()).MapObject(obj);
         }
+
+        #region ICollection<KeyValuePair<string, object>>
+
+        void ICollection<KeyValuePair<string, object>>.Add(KeyValuePair<string, object> item)
+        {
+            ((ICollection<KeyValuePair<string, object>>)Members).Add(item);
+        }
+
+        void ICollection<KeyValuePair<string, object>>.Clear()
+        {
+            Members.Clear();
+        }
+
+        bool ICollection<KeyValuePair<string, object>>.Contains(KeyValuePair<string, object> item)
+        {
+            return Members.Contains(item);
+        }
+
+        void ICollection<KeyValuePair<string, object>>.CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<string, object>>)Members).CopyTo(array, arrayIndex);
+        }
+
+        int ICollection<KeyValuePair<string, object>>.Count
+        {
+            get { return Members.Count; }
+        }
+
+        bool ICollection<KeyValuePair<string, object>>.IsReadOnly
+        {
+            get { return false; }
+        }
+
+        bool ICollection<KeyValuePair<string, object>>.Remove(KeyValuePair<string, object> item)
+        {
+            return ((ICollection<KeyValuePair<string, object>>)Members).Remove(item);
+        }
+
+        #endregion ICollection<KeyValuePair<string, object>>
+
+        #region IDictionary<string, object>
+
+        bool IDictionary<string, object>.ContainsKey(string key)
+        {
+            return Members.ContainsKey(key);
+        }
+
+        ICollection<string> IDictionary<string, object>.Keys
+        {
+            get { return Members.Keys; }
+        }
+
+        bool IDictionary<string, object>.TryGetValue(string key, out object value)
+        {
+            return Members.TryGetValue(key, out value);
+        }
+
+        ICollection<object> IDictionary<string, object>.Values
+        {
+            get { return Members.Values; }
+        }
+
+        #endregion IDictionary<string, object>
     }
 }
