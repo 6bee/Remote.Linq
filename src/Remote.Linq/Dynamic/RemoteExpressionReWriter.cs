@@ -9,14 +9,14 @@ using System.Linq;
 namespace Remote.Linq.Dynamic
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class RemoteExpressionReWriter
+    internal static class RemoteExpressionReWriter
     {
-        public static Expression ReplaceResourceDescriptorsByQueryable(this Expression expression, ITypeResolver typeResolver = null, Func<Type, System.Linq.IQueryable> provider = null)
+        internal static Expression ReplaceResourceDescriptorsByQueryable(this Expression expression, ITypeResolver typeResolver = null, Func<Type, System.Linq.IQueryable> provider = null)
         {
             return new QueryableResourceVisitor(provider ?? ProviderRegistry.QueryableResourceProvider, typeResolver).ReplaceResourceDescriptorsByQueryable(expression);
         }
 
-        public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeResolver typeResolver = null)
+        internal static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeResolver typeResolver = null)
         {
             return new QueryableResourceDescriptorVisitor(typeResolver).ReplaceQueryableResourceDescriptors(expression);
         }

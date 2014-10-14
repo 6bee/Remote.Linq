@@ -80,12 +80,11 @@ namespace Remote.Linq.Expressions
         /// <param name="expression">The <see cref="Expression"/> to be executed</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Remote.Linq.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
+        /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped result of the query execution</returns>
         public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
         {
-            var queryableExpression = expression.ReplaceResourceDescriptorsByQueryable(typeResolver, queryableProvider);
-
-            var linqExpression = queryableExpression.ToLinqExpression();
+            var linqExpression = PrepareForExecution(expression, queryableProvider, typeResolver);
 
             var queryResult = Execute(linqExpression);
 
@@ -96,6 +95,22 @@ namespace Remote.Linq.Expressions
 
             var dynamicObjects = mapper.MapCollection(queryResult, setTypeInformation: false);
             return dynamicObjects;
+        }
+
+        /// <summary>
+        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/> 
+        /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself.
+        /// </summary>
+        /// <param name="expression">The <see cref="Expression"/> to be executed</param>
+        /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Remote.Linq.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
+        /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
+        public static System.Linq.Expressions.Expression PrepareForExecution(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null)
+        {
+            var queryableExpression = expression.ReplaceResourceDescriptorsByQueryable(typeResolver, queryableProvider);
+
+            var linqExpression = queryableExpression.ToLinqExpression();
+            return linqExpression;
         }
     }
 }

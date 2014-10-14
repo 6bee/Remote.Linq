@@ -84,6 +84,52 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Remote.Linq\DynamicQuery\AsyncRemoteQueryable`.cs">
+      <Link>DynamicQuery\AsyncRemoteQueryable`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\DynamicQuery\AsyncRemoteQueryProvider`.cs">
+      <Link>DynamicQuery\AsyncRemoteQueryProvider`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\DynamicQuery\AsyncObjectResultCaster.cs">
+      <Link>DynamicQuery\AsyncObjectResultCaster.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\DynamicQuery\AsyncDynamicResultMapper.cs">
+      <Link>DynamicQuery\AsyncDynamicResultMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\DynamicQuery\ObjectResultCaster.cs">
+      <Link>DynamicQuery\ObjectResultCaster.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\DynamicQuery\DynamicResultMapper.cs">
+      <Link>DynamicQuery\DynamicResultMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\DynamicQuery\RemoteQueryable.cs">
+      <Link>DynamicQuery\RemoteQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\DynamicQuery\RemoteQueryable`.cs">
+      <Link>DynamicQuery\RemoteQueryable`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\DynamicQuery\RemoteQueryProvider`.cs">
+      <Link>DynamicQuery\RemoteQueryProvider`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IAsyncQueryResultMapper.cs">
+      <Link>IAsyncQueryResultMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IQueryResultMapper.cs">
+      <Link>IQueryResultMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\RemoteQueryable.cs">
+      <Link>RemoteQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\AsyncRemoteQueryable.cs">
+      <Link>AsyncRemoteQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IAsyncQueryProvider.cs">
+      <Link>IAsyncQueryProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IAsyncQueryable.cs">
+      <Link>IAsyncQueryable.cs</Link>
+    </Compile>
+    <Compile Include="IEnumerableAsyncExtensions.cs" />
     <Compile Include="..\Remote.Linq\Dynamic\DynamicObject.cs">
       <Link>Dynamic\DynamicObject.cs</Link>
     </Compile>
@@ -98,12 +144,6 @@
     </Compile>
     <Compile Include="..\Remote.Linq\Dynamic\IDynamicObjectMapper.cs">
       <Link>Dynamic\IDynamicObjectMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\Dynamic\QueryableDescriptor.cs">
-      <Link>Dynamic\QueryableDescriptor.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\Dynamic\QueryableDescriptor`.cs">
-      <Link>Dynamic\QueryableDescriptor`.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\Dynamic\QueryableResourceDescriptor.cs">
       <Link>Dynamic\QueryableResourceDescriptor.cs</Link>
@@ -284,15 +324,6 @@
     </Compile>
     <Compile Include="..\Remote.Linq\IQueryableExtensions.cs">
       <Link>IQueryableExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\RemoteQueryable.cs">
-      <Link>RemoteQueryable.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\RemoteQueryable`.cs">
-      <Link>RemoteQueryable`.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\RemoteQueryProvider.cs">
-      <Link>RemoteQueryProvider.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\TransparentCache.cs">
       <Link>TransparentCache.cs</Link>
