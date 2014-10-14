@@ -53,7 +53,7 @@ namespace Remote.Linq.Dynamic
         /// <summary>
         /// Retrieves object members type by using <see cref="FormatterServices" /> and populates dynamic object
         /// </summary>
-        private void MapObjectMembers(object from, DynamicObject to)
+        private void MapObjectMembers(object from, DynamicObject to, bool setTypeInformation)
         {
             var type = _typeResolver.ResolveType(to.Type);
 
@@ -62,7 +62,7 @@ namespace Remote.Linq.Dynamic
             for (int i = 0; i < members.Length; i++)
             {
                 var memberName = CleanName(members[i].Name);
-                var value = MapToDynamicObjectIfRequired(values[i]);
+                var value = MapToDynamicObjectIfRequired(values[i], setTypeInformation);
                 to[memberName] = value;
             }
         }

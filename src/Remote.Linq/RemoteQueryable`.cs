@@ -11,8 +11,8 @@ namespace Remote.Linq
 {
     internal sealed partial class RemoteQueryable<T> : RemoteQueryable, IQueryable<T>
     {
-        internal RemoteQueryable(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper, ITypeResolver typeResolver)
-            : base(typeof(T), dataProvider, mapper, typeResolver)
+        internal RemoteQueryable(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver, IDynamicObjectMapper mapper)
+            : base(typeof(T), dataProvider, typeResolver, mapper)
         {
         }
 

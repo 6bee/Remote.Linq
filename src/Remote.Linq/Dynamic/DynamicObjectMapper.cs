@@ -14,17 +14,17 @@ namespace Remote.Linq.Dynamic
     {
         private sealed class ObjectFormatterContext<TFrom, TTo>
         {
-            private readonly IDictionary<TFrom, TTo> ReferenceMap = new Dictionary<TFrom, TTo>(ObjectReferenceEqualityComparer<TFrom>.Instance);
+            private readonly Dictionary<TFrom, TTo> ReferenceMap = new Dictionary<TFrom, TTo>(ObjectReferenceEqualityComparer<TFrom>.Instance);
 
             /// <summary>
             /// Returns an existing instance if found in the reference map, creates a new instance otherwise
             /// </summary>
-            internal TTo TryGetOrCreateNew(Type objectType, bool suppressDynamicTypeInformation, TFrom from, Func<Type, TFrom, TTo> factory, Action<Type, TFrom, TTo> initializer = null)
+            internal TTo TryGetOrCreateNew(Type objectType, TFrom from, Func<Type, TFrom, TTo> factory, Action<Type, TFrom, TTo> initializer)
             {
                 TTo to;
                 if (!ReferenceMap.TryGetValue(from, out to))
                 {
-                    to = factory(suppressDynamicTypeInformation ? null : objectType, from);
+                    to = factory(objectType, from);
 
                     try
                     {
@@ -40,6 +40,35 @@ namespace Remote.Linq.Dynamic
                     if (!ReferenceEquals(null, initializer))
                     {
                         initializer(objectType, from, to);
+                    }
+                }
+                return to;
+            }
+
+            /// <summary>
+            /// Returns an existing instance if found in the reference map, creates a new instance otherwise
+            /// </summary>
+            internal TTo TryGetOrCreateNew(Type objectType, TFrom from, Func<Type, TFrom, bool, TTo> factory, Action<Type, TFrom, TTo, bool> initializer, bool setTypeInformation)
+            {
+                TTo to;
+                if (!ReferenceMap.TryGetValue(from, out to))
+                {
+                    to = factory(setTypeInformation ? objectType : null, from, setTypeInformation);
+
+                    try
+                    {
+                        ReferenceMap.Add(from, to);
+                    }
+                    catch
+                    {
+                        // detected cyclic reference
+                        // can happen for non-serializable types without parameterless constructor, which have cyclic references 
+                        return ReferenceMap[from];
+                    }
+
+                    if (!ReferenceEquals(null, initializer))
+                    {
+                        initializer(objectType, from, to, setTypeInformation);
                     }
                 }
                 return to;
@@ -141,8 +170,6 @@ namespace Remote.Linq.Dynamic
             _knownTypes = ReferenceEquals(null, knownTypes) ? new Dictionary<Type,object>(0) : knownTypes.ToDictionary(x => x, x => (object)null);
         }
 
-        public bool SuppressDynamicTypeInformation { get; set; }
-
         public IEnumerable<object> Map(IEnumerable<DynamicObject> objects, Type type)
         {
             if (ReferenceEquals(null, objects))
@@ -164,6 +191,12 @@ namespace Remote.Linq.Dynamic
             }
         }
 
+        /// <summary>
+        /// Maps a <see cref="DynamicObject"/> into a collection of objects
+        /// </summary>
+        /// <param name="obj"><see cref="DynamicObject"/> to be mapped</param>
+        /// <param name="targetType">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
+        /// <returns>The object created based on the <see cref="DynamicObject"/> specified</returns>
         public object Map(DynamicObject obj, Type type)
         {
             return MapFromDynamicObjectGraph(obj, type);
@@ -185,20 +218,35 @@ namespace Remote.Linq.Dynamic
             return Map(obj, type);
         }
 
+        /// <summary>
+        /// Maps a <see cref="DynamicObject"/> into an instance of <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T">The target type in which the <see cref="DynamicObject"/> have to be mapped to</typeparam>
+        /// <param name="obj"><see cref="DynamicObject"/> to be mapped</param>
+        /// <returns>The object created based on the <see cref="DynamicObject"/> specified</returns>
         public T Map<T>(DynamicObject obj)
         {
             return (T)MapFromDynamicObjectGraph(obj, typeof(T));
         }
 
+        /// <summary>
+        /// Maps a collection of <see cref="DynamicObject"/>s into a collection of <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T">The target type in which the <see cref="DynamicObject"/> have to be mapped to</typeparam>
+        /// <param name="objects">Collection of <see cref="DynamicObject"/>s to be mapped</param>
+        /// <returns>Collection of <typeparamref name="T"/> created based on the <see cref="DynamicObject"/>s specified</returns>
         public IEnumerable<T> Map<T>(IEnumerable<DynamicObject> objects)
         {
             return objects.Select(x => Map<T>(x)).ToList();
         }
 
         /// <summary>
-        /// Maps an instance of <see cref="System.Object"/> or collection of <see cref="System.Object"/> to a collection of <see cref="Remote.Linq.Dynamic.DynamicObject"/>
+        /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>
         /// </summary>
-        public IEnumerable<DynamicObject> MapCollection(object obj)
+        /// <param name="objects">The objects to be mapped</param>
+        /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>s, set it to false otherwise.</param>
+        /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified</returns>
+        public IEnumerable<DynamicObject> MapCollection(object obj, bool setTypeInformation = true)
         {
             IEnumerable<DynamicObject> enumerable;
             if (ReferenceEquals(null, obj))
@@ -214,12 +262,12 @@ namespace Remote.Linq.Dynamic
             {
                 enumerable = ((System.Collections.IEnumerable)obj)
                     .Cast<object>()
-                    .Select(x => MapObject(x));
+                    .Select(x => MapObject(x, setTypeInformation));
             }
             else
             {
                 // put single object into dynamic object
-                var value = MapObject(obj);
+                var value = MapObject(obj, setTypeInformation);
                 enumerable = new[] { value };
             }
             var list = ReferenceEquals(null, enumerable) ? null : enumerable.ToList();
@@ -227,12 +275,15 @@ namespace Remote.Linq.Dynamic
         }
 
         /// <summary>
-        /// Maps an <see cref="Object"/> to a <see cref="DynamicObject"/>
+        /// Mapps the specified instance into a <see cref="DynamicObject"/>
         /// </summary>
-        /// <remarks>Null references and dynamic objects are not mapped.</remarks>
-        public DynamicObject MapObject(object obj)
+        /// <remarks>Null references and <see cref="DynamicObject"/> are not mapped.</remarks>
+        /// <param name="obj">The instance to be mapped</param>
+        /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>, set it to false otherwise.</param>
+        /// <returns>An instance of <see cref="DynamicObject"/> representing the mapped instance</returns>
+        public DynamicObject MapObject(object obj, bool setTypeInformation = true)
         {
-            return MapToDynamicObjectGraph(obj);
+            return MapToDynamicObjectGraph(obj, setTypeInformation);
         }
 
         protected virtual bool FormatNativeTypesAsString
@@ -245,9 +296,9 @@ namespace Remote.Linq.Dynamic
             return MapFromDynamicObjectIfRequired(obj, targetType);
         }
 
-        protected virtual DynamicObject MapToDynamicObjectGraph(object obj)
+        protected virtual DynamicObject MapToDynamicObjectGraph(object obj, bool setTypeInformation)
         {
-            return MapInternal(obj);
+            return MapInternal(obj, setTypeInformation);
         }
 
         private object MapFromDynamicObjectIfRequired(object obj, Type targetType)
@@ -359,7 +410,7 @@ namespace Remote.Linq.Dynamic
         /// Maps an object to a dynamic object
         /// </summary>
         /// <remarks>Null references and dynamic objects are not mapped.</remarks>
-        private DynamicObject MapInternal(object obj)
+        private DynamicObject MapInternal(object obj, bool setTypeInformation)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -371,43 +422,43 @@ namespace Remote.Linq.Dynamic
                 return (DynamicObject)obj;
             }
 
-            Func<Type, object, DynamicObject> facotry;
-            Action<Type, object, DynamicObject> initializer = null;
+            Func<Type, object, bool, DynamicObject> facotry;
+            Action<Type, object, DynamicObject, bool> initializer = null;
 
             var type = obj.GetType();
             if (IsNativeType(type) || IsKnownType(type))
             {
-                facotry = (t, o) =>
+                facotry = (t, o, f) =>
                 {
-                    var value = MapToDynamicObjectIfRequired(o);
+                    var value = MapToDynamicObjectIfRequired(o, f);
                     return new DynamicObject(t) { { string.Empty, value } };
                 };
             }
             else if (type.IsArray)
             {
-                facotry = (t, o) =>
+                facotry = (t, o, f) =>
                 {
                     var list = ((System.Collections.IEnumerable)o)
                         .OfType<object>()
-                        .Select(x => MapToDynamicObjectIfRequired(x))
+                        .Select(x => MapToDynamicObjectIfRequired(x, f))
                         .ToArray();
                     return new DynamicObject(t) { { string.Empty, list.Any() ? list : null } };
                 };
             }
             else
             {
-                facotry = (t, o) => new DynamicObject(t);
+                facotry = (t, o, f) => new DynamicObject(t);
                 initializer = PopulateObjectMembers;
             }
 
-            return _toContext.TryGetOrCreateNew(type, SuppressDynamicTypeInformation, obj, facotry, initializer);
+            return _toContext.TryGetOrCreateNew(type, obj, facotry, initializer, setTypeInformation);
         }
 
         /// <summary>
         /// Maps from object to dynamic object if required.
         /// </summary>
         /// <remarks>Null references, strings, value types, and dynamic objects are no mapped.</remarks>
-        private object MapToDynamicObjectIfRequired(object obj)
+        private object MapToDynamicObjectIfRequired(object obj, bool setTypeInformation)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -440,24 +491,24 @@ namespace Remote.Linq.Dynamic
             {
                 var list = ((System.Collections.IEnumerable)obj)
                     .OfType<object>()
-                    .Select(x => MapToDynamicObjectIfRequired(x))
+                    .Select(x => MapToDynamicObjectIfRequired(x, setTypeInformation))
                     .ToArray();
                 return list;
             }
 
-            return MapToDynamicObjectGraph(obj);
+            return MapToDynamicObjectGraph(obj, setTypeInformation);
         }
 
         /// <summary>
         /// Extrancts member values from source object and populates to dynamic object 
         /// </summary>
-        private void PopulateObjectMembers(Type type, object from, DynamicObject to)
+        private void PopulateObjectMembers(Type type, object from, DynamicObject to, bool setTypeInformation)
         {
             // TODO: add support for ISerializable
             // TODO: add support for OnSerializingAttribute, OnSerializedAttribute, OnDeserializingAttribute, OnDeserializedAttribute
             if (type.IsSerializable())
             {
-                MapObjectMembers(from, to);
+                MapObjectMembers(from, to, setTypeInformation);
             }
             else
             {
@@ -466,7 +517,7 @@ namespace Remote.Linq.Dynamic
                 foreach (var property in properties)
                 {
                     var value = property.GetValue(from);
-                    value = MapToDynamicObjectIfRequired(value);
+                    value = MapToDynamicObjectIfRequired(value, setTypeInformation);
                     to[property.Name] = value;
                 }
             }
@@ -599,7 +650,7 @@ namespace Remote.Linq.Dynamic
                 var list = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
                 foreach (var item in objects)
                 {
-                    var obj = ReferenceEquals(null, item) ? null : _fromContext.TryGetOrCreateNew(elementType, SuppressDynamicTypeInformation, item, factory, initializer);
+                    var obj = ReferenceEquals(null, item) ? null : _fromContext.TryGetOrCreateNew(elementType, item, factory, initializer);
                     list.Add(obj);
 
                 }

@@ -13,10 +13,10 @@ namespace Remote.Linq
     internal sealed partial class RemoteQueryProvider : IQueryProvider
     {
         private readonly Func<Expressions.Expression, IEnumerable<DynamicObject>> _dataProvider;
-        private readonly Func<IDynamicObjectMapper> _mapper;
+        private readonly IDynamicObjectMapper _mapper;
         private readonly ITypeResolver _typeResolver;
 
-        internal RemoteQueryProvider(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper, ITypeResolver typeResolver)
+        internal RemoteQueryProvider(Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver, IDynamicObjectMapper mapper)
         {
             if (ReferenceEquals(null, dataProvider)) throw new ArgumentNullException("dataProvider");
             _dataProvider = dataProvider;
@@ -54,16 +54,16 @@ namespace Remote.Linq
             return rlinq2;
         }
 
-        internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords, Func<IDynamicObjectMapper> mapper)
+        internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords, IDynamicObjectMapper mapper)
         {
             var elementType = TypeHelper.GetElementType(typeof(T));
 
             if (ReferenceEquals(null, mapper))
             {
-                mapper = () => new DynamicObjectMapper();
+                mapper = new DynamicObjectMapper();
             }
 
-            var result = mapper().Map(dataRecords, elementType);
+            var result = mapper.Map(dataRecords, elementType);
 
             if (ReferenceEquals(null, result))
             {

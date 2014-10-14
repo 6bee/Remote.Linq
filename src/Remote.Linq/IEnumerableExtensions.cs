@@ -18,10 +18,12 @@ namespace Remote.Linq
         /// <typeparam name="T"></typeparam>
         /// <param name="resource"></param>
         /// <param name="dataProvider"></param>
+        /// <param name="typeResolver"></param>
+        /// <param name="mapper"></param>
         /// <returns></returns>
-        public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, Func<IDynamicObjectMapper> mapper = null, ITypeResolver typeResolver = null)
+        public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
         {
-            return RemoteQueryable.Create<T>(dataProvider, mapper, typeResolver);
+            return RemoteQueryable.Create<T>(dataProvider, typeResolver, mapper);
         }
 
         /// <summary>
@@ -49,10 +51,5 @@ namespace Remote.Linq
                 .ApplyQuery(query)
                 .AsEnumerable();
         }
-
-        //internal static bool Any(this System.Collections.IEnumerable enumerable)
-        //{
-        //    return !ReferenceEquals(null, enumerable) && enumerable.GetEnumerator().MoveNext();
-        //}
     }
 }

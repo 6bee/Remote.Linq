@@ -13,10 +13,10 @@ namespace Remote.Linq
     internal sealed partial class AsyncRemoteQueryProvider : IAsyncQueryProvider
     {
         private readonly Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> _dataProvider;
-        private readonly Func<IDynamicObjectMapper> _mapper;
+        private readonly IDynamicObjectMapper _mapper;
         private readonly ITypeResolver _typeResolver;
 
-        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, Func<IDynamicObjectMapper> mapper, ITypeResolver typeResolver)
+        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, ITypeResolver typeResolver, IDynamicObjectMapper mapper)
         {
             if (ReferenceEquals(null, dataProvider)) throw new ArgumentNullException("dataProvider");
             _dataProvider = dataProvider;

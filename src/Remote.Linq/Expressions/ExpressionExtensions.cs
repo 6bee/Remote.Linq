@@ -13,15 +13,17 @@ namespace Remote.Linq.Expressions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionExtensions
     {
-        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, Func<IDynamicObjectMapper> mapper = null, ITypeResolver typeResolver = null)
+        /// <summary>
+        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result
+        /// </summary>
+        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed</param>
+        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified</returns>
+        public static object Execute(this System.Linq.Expressions.Expression expression)
         {
-            var queryableExpression = expression.ReplaceResourceDescriptorsByQueryable(typeResolver, queryableProvider);
-            var linqExpression = queryableExpression.ToLinqExpression();
-
-            var lambdaExpression = linqExpression as System.Linq.Expressions.LambdaExpression;
+            var lambdaExpression = expression as System.Linq.Expressions.LambdaExpression;
             if (lambdaExpression == null)
             {
-                lambdaExpression = System.Linq.Expressions.Expression.Lambda(linqExpression);
+                lambdaExpression = System.Linq.Expressions.Expression.Lambda(expression);
             }
 
             object queryable;
@@ -69,12 +71,30 @@ namespace Remote.Linq.Expressions
                 }
             }
 
+            return queryResult;
+        }
+
+        /// <summary>
+        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects
+        /// </summary>
+        /// <param name="expression">The <see cref="Expression"/> to be executed</param>
+        /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Remote.Linq.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
+        /// <returns>The mapped result of the query execution</returns>
+        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
+        {
+            var queryableExpression = expression.ReplaceResourceDescriptorsByQueryable(typeResolver, queryableProvider);
+
+            var linqExpression = queryableExpression.ToLinqExpression();
+
+            var queryResult = Execute(linqExpression);
+
             if (ReferenceEquals(null, mapper))
             {
-                mapper = () => new DynamicObjectMapper { SuppressDynamicTypeInformation = true };
+                mapper = new DynamicObjectMapper();
             }
 
-            var dynamicObjects = mapper().MapCollection(queryResult);
+            var dynamicObjects = mapper.MapCollection(queryResult, setTypeInformation: false);
             return dynamicObjects;
         }
     }

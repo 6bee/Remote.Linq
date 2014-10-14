@@ -3,18 +3,20 @@
 using Remote.Linq.Expressions;
 using Remote.Linq.TypeSystem;
 using System;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Remote.Linq.Dynamic
 {
-    internal static class RemoteExpressionReWriter
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static class RemoteExpressionReWriter
     {
-        internal static Expression ReplaceResourceDescriptorsByQueryable(this Expression expression, ITypeResolver typeResolver, Func<Type, System.Linq.IQueryable> provider = null)
+        public static Expression ReplaceResourceDescriptorsByQueryable(this Expression expression, ITypeResolver typeResolver = null, Func<Type, System.Linq.IQueryable> provider = null)
         {
             return new QueryableResourceVisitor(provider ?? ProviderRegistry.QueryableResourceProvider, typeResolver).ReplaceResourceDescriptorsByQueryable(expression);
         }
 
-        internal static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeResolver typeResolver)
+        public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeResolver typeResolver = null)
         {
             return new QueryableResourceDescriptorVisitor(typeResolver).ReplaceQueryableResourceDescriptors(expression);
         }

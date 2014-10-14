@@ -4,7 +4,6 @@ using Remote.Linq.Dynamic;
 using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -12,8 +11,8 @@ namespace Remote.Linq
 {
     internal sealed partial class AsyncRemoteQueryable<T> : RemoteQueryable, IAsyncQueryable<T>
     {
-        internal AsyncRemoteQueryable(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, Func<IDynamicObjectMapper> mapper, ITypeResolver typeResolver)
-            : base(typeof(T), dataProvider, mapper, typeResolver)
+        internal AsyncRemoteQueryable(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, ITypeResolver typeResolver, IDynamicObjectMapper mapper)
+            : base(typeof(T), dataProvider, typeResolver, mapper)
         {
         }
 

@@ -30,7 +30,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper.CustomMapper
                 throw new NotSupportedException();
             }
 
-            protected override DynamicObject MapToDynamicObjectGraph(object obj)
+            protected override DynamicObject MapToDynamicObjectGraph(object obj, bool setTypeInformation)
             {
                 if (obj is int)
                 {

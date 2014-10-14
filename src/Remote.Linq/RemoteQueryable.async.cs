@@ -11,26 +11,26 @@ namespace Remote.Linq
 {
     partial class RemoteQueryable 
     {
-        protected RemoteQueryable(Type elementType, Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, Func<IDynamicObjectMapper> mapper, ITypeResolver typeResolver)
-            : this(elementType, new AsyncRemoteQueryProvider(dataProvider, mapper, typeResolver))
+        protected RemoteQueryable(Type elementType, Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, ITypeResolver typeResolver, IDynamicObjectMapper mapper)
+            : this(elementType, new AsyncRemoteQueryProvider(dataProvider, typeResolver, mapper))
         {
         }
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
         /// </summary>
-        public static IQueryable Create(Type elementType, Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, Func<IDynamicObjectMapper> mapper = null, ITypeResolver typeResolver = null)
+        public static IQueryable Create(Type elementType, Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
         {
-            return new RemoteQueryable(elementType, dataProvider, mapper, typeResolver);
+            return new RemoteQueryable(elementType, dataProvider, typeResolver, mapper);
         }
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified
         /// </summary>
         /// <typeparam name="T">Element type</typeparam>
-        public static IQueryable<T> Create<T>(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, Func<IDynamicObjectMapper> mapper = null, ITypeResolver typeResolver = null)
+        public static IQueryable<T> Create<T>(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
         {
-            return new AsyncRemoteQueryable<T>(dataProvider, mapper, typeResolver);
+            return new AsyncRemoteQueryable<T>(dataProvider, typeResolver, mapper);
         }
     }
 }

@@ -60,19 +60,7 @@ namespace Remote.Linq
         {
             return new LinqExpressionToRemoteExpressionTranslator().ToRemoteExpression(expression);
         }
-
-        /// <summary>
-        /// Translates a given lambda expression into a query expression
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        [Obsolete("This method will be removed in future, use the method called ToRemoteLinqExpression instead.", true)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static RLinq.LambdaExpression ToQueryExpression(this LambdaExpression expression)
-        {
-            return ToRemoteLinqExpression(expression);
-        }
-
+        
         /// <summary>
         /// Translates a given query expression into an expression
         /// </summary>

@@ -31,7 +31,7 @@ namespace Remote.Linq.Dynamic
         /// <summary>
         /// Not supported for this platform (WinRT, WP, SL)
         /// </summary>
-        private static void MapObjectMembers(object from, DynamicObject to)
+        private static void MapObjectMembers(object from, DynamicObject to, bool setTypeInformation)
         {
             throw new NotSupportedException();
         }
