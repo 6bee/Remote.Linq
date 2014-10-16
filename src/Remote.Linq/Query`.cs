@@ -217,7 +217,7 @@ namespace Remote.Linq
             var type = (typeResolver ?? TypeResolver.Instance).ResolveType(query.Type);
             if (typeof(T) != type)
             {
-                throw new Exception(string.Format("Generic type missmatch: {0} vs. {1}", typeof(T), query.Type));
+                throw new Exception(string.Format("Generic type mismatch: {0} vs. {1}", typeof(T), query.Type));
             }
 
             var instance = new Query<T>(dataProvider, query.FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
