@@ -48,7 +48,7 @@ namespace Remote.Linq.Dynamic
 
             protected override Expression VisitMemberAccess(MemberExpression m)
             {
-                if (m.Member.DeclaringType.IsAnonymousType() || (m.Member.DeclaringType.GetIsGenericType() && m.Member.DeclaringType.GetGenericArguments().Any(x => x.IsAnonymousType())))
+                if (m.Member.DeclaringType.IsAnonymousType() || (m.Member.DeclaringType.IsGenericType() && m.Member.DeclaringType.GetGenericArguments().Any(x => x.IsAnonymousType())))
                 {
                     var name = m.Member.Name;
                     var instance = Visit(m.Expression);
@@ -183,7 +183,7 @@ namespace Remote.Linq.Dynamic
 
             private Type ReplaceAnonymousType(Type type)
             {
-                if (type.GetIsGenericType())
+                if (type.IsGenericType())
                 {
                     if (type.IsAnonymousType())
                     {

@@ -52,7 +52,10 @@ namespace Remote.Linq.Dynamic
 
                     var value = MapFromDynamicObjectGraph(item.Value, memberType);
 
-                    memberValueMap[member] = value;
+                    if (_suppressMemberAssignabilityValidation || IsAssignable(memberType, value))
+                    {
+                        memberValueMap[member] = value;
+                    }
                 }
             }
 

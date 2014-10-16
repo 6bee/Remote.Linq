@@ -13,11 +13,7 @@ namespace Remote.Linq.NET35.Tests.Lazy
 
         public When_using_threadsave_lazy_object()
         {
-            lazy = new Lazy<int>(() =>
-            {
-                Interlocked.Increment(ref count);
-                return count;
-            }, true);
+            lazy = new Lazy<int>(() => Interlocked.Increment(ref count), true);
         }
 
         [Fact]

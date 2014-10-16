@@ -144,6 +144,21 @@ namespace Remote.Linq.Dynamic
                 typeof(System.Numerics.Complex?),
 #endif
             }.ToDictionary(x => x, x => (object)null);
+        
+        private readonly static Dictionary<Type, Dictionary<Type, object>> _implicitNumericConversionsTable = new Dictionary<Type, Dictionary<Type, object>>() 
+        {
+            // source: http://msdn.microsoft.com/en-us/library/y5b434w4.aspx
+            { typeof(sbyte), new[] { typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
+            { typeof(byte), new[] { typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
+            { typeof(short), new[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
+            { typeof(ushort), new[] { typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
+            { typeof(int), new[] { typeof(long), typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
+            { typeof(uint), new[] { typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
+            { typeof(long), new[] { typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
+            { typeof(char), new[] { typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
+            { typeof(float), new[] { typeof(double) }.ToDictionary(x => x, x => default(object)) },
+            { typeof(ulong), new[] { typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
+        };
 
         private static readonly MethodInfo _mapDynamicObjectInternalMethod = typeof(DynamicObjectMapper)
             .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
@@ -156,18 +171,22 @@ namespace Remote.Linq.Dynamic
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
         private readonly ITypeResolver _typeResolver;
         private readonly Dictionary<Type, object> _knownTypes;
+        private readonly bool _suppressMemberAssignabilityValidation;
 
         /// <summary>
         /// Creates a new instance of <see cref="DynamicObjectMapper"/>
         /// </summary>
         /// <param name="typeResolver">Instance of <see cref="ITypeResolver"/> to be used to resolve types</param>
         /// <param name="knownTypes">Types not required to be mapped into <see cref="DynamicObject"/></param>
-        public DynamicObjectMapper(ITypeResolver typeResolver = null, IEnumerable<Type> knownTypes = null)
+        /// <param name="silentlySkipUnassignableMembers">If set to true properties which cannot be assigned due to a type mismatch are silently skipped, 
+        /// if set to false no validation will be performed resulting in an exception when trying to assign a property value with an unmatching type.</param>
+        public DynamicObjectMapper(ITypeResolver typeResolver = null, IEnumerable<Type> knownTypes = null, bool silentlySkipUnassignableMembers = true)
         {
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
             _toContext = new ObjectFormatterContext<object, DynamicObject>();
             _typeResolver = typeResolver ?? TypeResolver.Instance;
-            _knownTypes = ReferenceEquals(null, knownTypes) ? new Dictionary<Type,object>(0) : knownTypes.ToDictionary(x => x, x => (object)null);
+            _knownTypes = ReferenceEquals(null, knownTypes) ? new Dictionary<Type, object>(0) : knownTypes.ToDictionary(x => x, x => (object)null);
+            _suppressMemberAssignabilityValidation = !silentlySkipUnassignableMembers;
         }
 
         public IEnumerable<object> Map(IEnumerable<DynamicObject> objects, Type type)
@@ -636,7 +655,11 @@ namespace Remote.Linq.Dynamic
                             foreach (var property in properties.Where(p => memberNames.Contains(p.Name)))
                             {
                                 var value = MapFromDynamicObjectGraph(item[property.Name], property.PropertyType);
-                                property.SetValue(obj, value);
+
+                                if (_suppressMemberAssignabilityValidation || IsAssignable(property.PropertyType, value))
+                                {
+                                    property.SetValue(obj, value);
+                                }
                             }
                         };
                     }
@@ -839,6 +862,31 @@ namespace Remote.Linq.Dynamic
             return items.ToDictionary(x => x.Key, x => x.Value);
         }
 
+        private static bool IsAssignable(Type targetType, object value)
+        {
+            if (targetType.IsValueType())
+            {
+                if (ReferenceEquals(null, value))
+                {
+                    return targetType.IsGenericType() 
+                        && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
+                }
+
+                var type = value.GetType();
+                return targetType.IsAssignableFrom(type) || HasImplicitNumericConversions(type, targetType);
+            }
+            else
+            {
+                return ReferenceEquals(null, value) || targetType.IsAssignableFrom(value.GetType());
+            }
+        }
+
+        private static bool HasImplicitNumericConversions(Type from, Type to)
+        {
+            Dictionary<Type, object> toList;
+            return _implicitNumericConversionsTable.TryGetValue(from, out toList) && toList.ContainsKey(to);
+        }
+
         private static bool IsNativeType(Type type)
         {
             return _nativeTypes.ContainsKey(type);
@@ -917,7 +965,7 @@ namespace Remote.Linq.Dynamic
                 {
                     innerException = ex.InnerException.InnerException;
                 }
-                throw new Exception(innerException.Message, innerException);
+				throw new Exception(innerException.Message, innerException);
             }
         }
     }

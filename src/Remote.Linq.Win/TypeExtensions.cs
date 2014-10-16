@@ -89,11 +89,6 @@ namespace Remote.Linq
             return type.GetTypeInfo().GetCustomAttributes(attributeType, inherit);
         }
 
-        public static bool GetIsGenericType(this Type type)
-        {
-            return type.GetTypeInfo().IsGenericType;
-        }
-
         public static bool IsAnonymousType(this Type type)
         {
             return type.Name.StartsWith("<>")

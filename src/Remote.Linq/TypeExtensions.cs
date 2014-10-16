@@ -53,10 +53,5 @@ namespace Remote.Linq
             var t = (System.Reflection.MemberTypes)memberType;
             return type.GetMember(name, t, bindingFlags);
         }
-
-        public static bool GetIsGenericType(this Type type)
-        {
-            return type.IsGenericType;
-        }
     }
 }

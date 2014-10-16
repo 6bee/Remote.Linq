@@ -56,6 +56,9 @@
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_dictionary.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_different_target_type.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_based_on_typeinfo.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_dynamic_object_to_type_with_different_property_types.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_different_property_types_unassignable.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_different_property_types_assignable.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_missing_properties.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_additional_properies.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_private_properties.cs" />

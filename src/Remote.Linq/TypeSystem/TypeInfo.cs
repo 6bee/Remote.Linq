@@ -21,7 +21,7 @@ namespace Remote.Linq.TypeSystem
             {
                 DeclaringType = new TypeInfo(type.DeclaringType);
             }
-            if (type.GetIsGenericType())
+            if (type.IsGenericType())
             {
                 GenericArguments = type.GetGenericArguments().Select(x => new TypeInfo(x)).ToList().AsReadOnly();
             }
