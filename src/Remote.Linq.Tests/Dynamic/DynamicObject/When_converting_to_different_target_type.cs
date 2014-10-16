@@ -7,10 +7,15 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
     using Xunit;
     using Xunit.Should;
 
-    public class When_converting_to_serializable_object
+    public class When_converting_to_different_target_type
     {
-        [Serializable]
-        class SerializableType
+        class SourceType
+        {
+            //public int Int32Value { get; set; }
+            //public string StringValue { get; set; }
+        }
+
+        class TargetType
         {
             public int Int32Value { get; set; }
             public string StringValue { get; set; }
@@ -19,17 +24,17 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
         const int Int32Value = 11;
         const string StringValue = "eleven";
 
-        SerializableType obj;
+        TargetType obj;
 
-        public When_converting_to_serializable_object()
+        public When_converting_to_different_target_type()
         {
-            var dynamicObject = new DynamicObject()
+            var dynamicObject = new DynamicObject(typeof(SourceType))
             {
-                { "Int32Value", Int32Value },
                 { "StringValue", StringValue },
+                { "Int32Value", Int32Value },
             };
 
-            obj = dynamicObject.CreateObject<SerializableType>();
+            obj = dynamicObject.CreateObject(typeof(TargetType)) as TargetType;
         }
 
         [Fact]

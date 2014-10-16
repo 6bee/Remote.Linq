@@ -54,6 +54,17 @@
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_strings.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_guids.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_dictionary.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_different_target_type.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_based_on_typeinfo.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_missing_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_additional_properies.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_private_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_private_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_properties_ordered_differently.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_private_property_setters.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_private_property_setter.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_missing_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_additional_properties.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object.cs" />
     <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_abstract_properties_with_type_information.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_abstract_properties_in_absence_of_type_information.cs" />

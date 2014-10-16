@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
@@ -28,10 +29,14 @@ namespace Remote.Linq.Dynamic
         private void PopulateObjectMembers(Type type, DynamicObject from, object to)
         {
             var members = FormatterServices.GetSerializableMembers(type);
-            var values = from
-                .Select((x, i) =>
+            var membersByCleanName = members.ToDictionary(x => CleanBackingFieldNameIfRequired(x.Name));
+            var memberValueMap = new Dictionary<System.Reflection.MemberInfo, object>();
+
+            foreach (var item in from)
+            {
+                System.Reflection.MemberInfo member;
+                if (membersByCleanName.TryGetValue(item.Key, out member))
                 {
-                    var member = members[i];
                     Type memberType;
                     switch (member.MemberType)
                     {
@@ -44,10 +49,14 @@ namespace Remote.Linq.Dynamic
                         default:
                             throw new Exception(string.Format("Unsupported member type {0}.", member.MemberType));
                     }
-                    return MapFromDynamicObjectGraph(x.Value, memberType);
-                })
-                .ToArray();
-            FormatterServices.PopulateObjectMembers(to, members, values);
+
+                    var value = MapFromDynamicObjectGraph(item.Value, memberType);
+
+                    memberValueMap[member] = value;
+                }
+            }
+
+            FormatterServices.PopulateObjectMembers(to, memberValueMap.Keys.ToArray(), memberValueMap.Values.ToArray());
         }
 
         /// <summary>
@@ -61,13 +70,13 @@ namespace Remote.Linq.Dynamic
             var values = FormatterServices.GetObjectData(from, members);
             for (int i = 0; i < members.Length; i++)
             {
-                var memberName = CleanName(members[i].Name);
+                var memberName = CleanBackingFieldNameIfRequired(members[i].Name);
                 var value = MapToDynamicObjectIfRequired(values[i], setTypeInformation);
                 to[memberName] = value;
             }
         }
 
-        private static string CleanName(string memberName)
+        private static string CleanBackingFieldNameIfRequired(string memberName)
         {
             var match = _backingFieldRegex.Match(memberName);
             if (match.Success && match.Groups.Count == 2)

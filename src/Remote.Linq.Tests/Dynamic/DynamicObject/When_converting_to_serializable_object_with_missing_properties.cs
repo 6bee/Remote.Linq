@@ -7,7 +7,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
     using Xunit;
     using Xunit.Should;
 
-    public class When_converting_to_serializable_object
+    public class When_converting_to_serializable_object_with_missing_properties
     {
         [Serializable]
         class SerializableType
@@ -17,15 +17,19 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
         }
 
         const int Int32Value = 11;
+        const double DoubleValue = 12.3456789;
+        readonly DateTime? NullableDateTimeValue = DateTime.Now;
         const string StringValue = "eleven";
 
         SerializableType obj;
 
-        public When_converting_to_serializable_object()
+        public When_converting_to_serializable_object_with_missing_properties()
         {
             var dynamicObject = new DynamicObject()
             {
                 { "Int32Value", Int32Value },
+                { "DoubleValue", DoubleValue },
+                { "NullableDateTimeValue", NullableDateTimeValue },
                 { "StringValue", StringValue },
             };
 

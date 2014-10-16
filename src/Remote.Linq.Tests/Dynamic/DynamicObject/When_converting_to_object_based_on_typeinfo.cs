@@ -7,41 +7,31 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
     using Xunit;
     using Xunit.Should;
 
-    public class When_converting_to_serializable_object
+    public class When_converting_to_object_based_on_typeinfo
     {
-        [Serializable]
-        class SerializableType
+        class CustomType
         {
-            public int Int32Value { get; set; }
             public string StringValue { get; set; }
         }
 
-        const int Int32Value = 11;
         const string StringValue = "eleven";
 
-        SerializableType obj;
+        CustomType obj;
 
-        public When_converting_to_serializable_object()
+        public When_converting_to_object_based_on_typeinfo()
         {
-            var dynamicObject = new DynamicObject()
+            var dynamicObject = new DynamicObject(typeof(CustomType))
             {
-                { "Int32Value", Int32Value },
                 { "StringValue", StringValue },
             };
 
-            obj = dynamicObject.CreateObject<SerializableType>();
+            obj = dynamicObject.CreateObject() as CustomType;
         }
 
         [Fact]
-        public void Should_create_an_instance()
+        public void Should_create_an_instance_of_the_expected_type()
         {
             obj.ShouldNotBeNull();
-        }
-
-        [Fact]
-        public void Should_have_the_int_property_set()
-        {
-            obj.Int32Value.ShouldBe(Int32Value);
         }
 
         [Fact]

@@ -4,28 +4,32 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
 {
     using Remote.Linq.Dynamic;
     using System;
+    using System.Reflection;
     using Xunit;
     using Xunit.Should;
 
-    public class When_converting_to_serializable_object
+    public class When_converting_to_serializable_object_with_private_properties
     {
         [Serializable]
         class SerializableType
         {
             public int Int32Value { get; set; }
-            public string StringValue { get; set; }
+            private double DoubleValue { get; set; }
+            private string StringValue { get; set; }
         }
 
         const int Int32Value = 11;
+        const double DoubleValue = 12.3456789;
         const string StringValue = "eleven";
 
         SerializableType obj;
 
-        public When_converting_to_serializable_object()
+        public When_converting_to_serializable_object_with_private_properties()
         {
-            var dynamicObject = new DynamicObject()
+            var dynamicObject = new DynamicObject
             {
                 { "Int32Value", Int32Value },
+                { "DoubleValue", DoubleValue },
                 { "StringValue", StringValue },
             };
 
@@ -45,9 +49,20 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
         }
 
         [Fact]
+        public void Should_have_the_double_property_set()
+        {
+            GetPropertyValue("DoubleValue").ShouldBe(DoubleValue);
+        }
+
+        [Fact]
         public void Should_have_the_string_property_set()
         {
-            obj.StringValue.ShouldBe(StringValue);
+            GetPropertyValue("StringValue").ShouldBe(StringValue);
+        }
+
+        private object GetPropertyValue(string propertyName)
+        {
+            return typeof(SerializableType).GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Instance).GetValue(obj);
         }
     }
 }

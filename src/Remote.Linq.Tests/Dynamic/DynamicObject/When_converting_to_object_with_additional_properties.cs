@@ -7,29 +7,30 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
     using Xunit;
     using Xunit.Should;
 
-    public class When_converting_to_serializable_object
+    public class When_converting_to_object_with_additional_properties
     {
-        [Serializable]
-        class SerializableType
+        class CustomType
         {
             public int Int32Value { get; set; }
+            public double DoubleValue { get; set; }
+            public DateTime? NullableDateTime { get; set; }
             public string StringValue { get; set; }
         }
 
         const int Int32Value = 11;
         const string StringValue = "eleven";
 
-        SerializableType obj;
+        CustomType obj;
 
-        public When_converting_to_serializable_object()
+        public When_converting_to_object_with_additional_properties()
         {
-            var dynamicObject = new DynamicObject()
+            var dynamicObject = new DynamicObject
             {
                 { "Int32Value", Int32Value },
                 { "StringValue", StringValue },
             };
 
-            obj = dynamicObject.CreateObject<SerializableType>();
+            obj = dynamicObject.CreateObject<CustomType>();
         }
 
         [Fact]
@@ -42,6 +43,18 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
         public void Should_have_the_int_property_set()
         {
             obj.Int32Value.ShouldBe(Int32Value);
+        }
+
+        [Fact]
+        public void Should_have_the_double_property_not_set()
+        {
+            obj.DoubleValue.ShouldBe(default(double));
+        }
+
+        [Fact]
+        public void Should_have_the_date_property_not_set()
+        {
+            obj.NullableDateTime.ShouldBeNull();
         }
 
         [Fact]

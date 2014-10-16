@@ -7,7 +7,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
     using Xunit;
     using Xunit.Should;
 
-    public class When_converting_to_serializable_object
+    public class When_converting_to_serializable_object_with_properties_ordered_differently
     {
         [Serializable]
         class SerializableType
@@ -21,12 +21,12 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObject
 
         SerializableType obj;
 
-        public When_converting_to_serializable_object()
+        public When_converting_to_serializable_object_with_properties_ordered_differently()
         {
             var dynamicObject = new DynamicObject()
             {
-                { "Int32Value", Int32Value },
                 { "StringValue", StringValue },
+                { "Int32Value", Int32Value },
             };
 
             obj = dynamicObject.CreateObject<SerializableType>();
