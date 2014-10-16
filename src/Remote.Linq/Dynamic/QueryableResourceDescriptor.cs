@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 
 namespace Remote.Linq.Dynamic
 {
+    [Serializable]
     [DataContract]
     public sealed class QueryableResourceDescriptor
     {

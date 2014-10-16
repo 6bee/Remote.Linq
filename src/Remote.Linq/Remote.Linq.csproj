@@ -52,10 +52,10 @@
     <Compile Include="Dynamic\DynamicObject.MetaObject.cs" />
     <Compile Include="Dynamic\QueryableResourceDescriptor.cs" />
     <Compile Include="Dynamic\SystemExpressionReWriter.cs" />
-    <Compile Include="Dynamic\RemoteExpressionReWriter.cs" />	
+    <Compile Include="Dynamic\RemoteExpressionReWriter.cs" />
     <Compile Include="DynamicQuery\AsyncRemoteQueryable`.cs" />
-    <Compile Include="DynamicQuery\AsyncRemoteQueryProvider`.cs" />    
-	<Compile Include="DynamicQuery\AsyncObjectResultCaster.cs" />
+    <Compile Include="DynamicQuery\AsyncRemoteQueryProvider`.cs" />
+    <Compile Include="DynamicQuery\AsyncObjectResultCaster.cs" />
     <Compile Include="DynamicQuery\AsyncDynamicResultMapper.cs" />
     <Compile Include="DynamicQuery\ObjectResultCaster.cs" />
     <Compile Include="DynamicQuery\DynamicResultMapper.cs" />
@@ -65,7 +65,7 @@
     <Compile Include="IAsyncQueryResultMapper.cs" />
     <Compile Include="IQueryResultMapper.cs" />
     <Compile Include="RemoteQueryable.cs" />
-    <Compile Include="AsyncRemoteQueryable.cs" />	
+    <Compile Include="AsyncRemoteQueryable.cs" />
     <Compile Include="Expressions\ElementInit.cs" />
     <Compile Include="Expressions\ListInitExpression.cs" />
     <Compile Include="Expressions\MemberInitExpression.cs" />
