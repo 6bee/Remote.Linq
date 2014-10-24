@@ -12,11 +12,11 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Wait for query service to indicate that it's started, then press");
-            Console.WriteLine("<ENTER> to start the client.");
+            Console.WriteLine("Wait for query service to indicate that it's started, ");
+            Console.WriteLine("then press <ENTER> to start the client.");
             Console.ReadLine();
 
-            Run().Wait();
+            RunAsync().Wait();
 
             Console.WriteLine();
             Console.WriteLine("Press <ENTER> to terminate.");
@@ -24,9 +24,15 @@ namespace Client
             Console.ReadLine();
         }
 
-        private static async Task Run()
+        private static async Task RunAsync()
         {
             var repo = new RemoteRepository("net.pipe://localhost/8080/query");
+
+            Console.WriteLine("\nGET ALL PRODUCTS:");
+            foreach (var i in repo.Products)
+            {
+                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+            }
 
             Console.WriteLine("\nCROSS JOIN:");
             Func<object, string> sufix = (x) => x + "ending";
@@ -45,7 +51,7 @@ namespace Client
             var innerJoinQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
-                select new { X = new { Y = new { c.Name } }, P = new { p.Price }, Z = new { Q = new { K = string.Concat(c.Name, "-", p.Name) } } };
+                select new { c.Name, P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
             var innerJoinResult = await innerJoinQuery.ToListAsync();
             foreach (var i in innerJoinResult)
             {
@@ -65,7 +71,6 @@ namespace Client
                 {
                     Category = g.Key,
                     Amount = g.Sum(x => x.i.Quantity * x.p.Price),
-                    Amount2 = new { Amount = g.Sum(x => x.i.Quantity * x.p.Price) },
                 };
 
             var totalAmountByCategroyResult = await totalAmountByCategoryQuery.ToDictionaryAsync(x => x.Category);

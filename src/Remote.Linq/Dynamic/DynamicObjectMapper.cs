@@ -172,6 +172,7 @@ namespace Remote.Linq.Dynamic
         private readonly ITypeResolver _typeResolver;
         private readonly Dictionary<Type, object> _knownTypes;
         private readonly bool _suppressMemberAssignabilityValidation;
+        private readonly bool _formatPrimitiveTypesAsString;
 
         /// <summary>
         /// Creates a new instance of <see cref="DynamicObjectMapper"/>
@@ -180,13 +181,14 @@ namespace Remote.Linq.Dynamic
         /// <param name="knownTypes">Types not required to be mapped into <see cref="DynamicObject"/></param>
         /// <param name="silentlySkipUnassignableMembers">If set to true properties which cannot be assigned due to a type mismatch are silently skipped, 
         /// if set to false no validation will be performed resulting in an exception when trying to assign a property value with an unmatching type.</param>
-        public DynamicObjectMapper(ITypeResolver typeResolver = null, IEnumerable<Type> knownTypes = null, bool silentlySkipUnassignableMembers = true)
+        public DynamicObjectMapper(ITypeResolver typeResolver = null, IEnumerable<Type> knownTypes = null, bool silentlySkipUnassignableMembers = true, bool formatPrimitiveTypesAsString = false)
         {
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
             _toContext = new ObjectFormatterContext<object, DynamicObject>();
             _typeResolver = typeResolver ?? TypeResolver.Instance;
             _knownTypes = ReferenceEquals(null, knownTypes) ? new Dictionary<Type, object>(0) : knownTypes.ToDictionary(x => x, x => (object)null);
             _suppressMemberAssignabilityValidation = !silentlySkipUnassignableMembers;
+            _formatPrimitiveTypesAsString = formatPrimitiveTypesAsString;
         }
 
         public IEnumerable<object> Map(IEnumerable<DynamicObject> objects, Type type)
@@ -303,11 +305,6 @@ namespace Remote.Linq.Dynamic
         public DynamicObject MapObject(object obj, bool setTypeInformation = true)
         {
             return MapToDynamicObjectGraph(obj, setTypeInformation);
-        }
-
-        protected virtual bool FormatNativeTypesAsString
-        {
-            get { return false; }
         }
 
         protected virtual object MapFromDynamicObjectGraph(object obj, Type targetType)
@@ -498,7 +495,7 @@ namespace Remote.Linq.Dynamic
 
             if (IsNativeType(type))
             {
-                return FormatNativeTypesAsString ? FormatNativeTypeAsString(obj, type) : obj;
+                return _formatPrimitiveTypesAsString ? FormatNativeTypeAsString(obj, type) : obj;
             }
 
             if (type.IsEnum())
@@ -597,68 +594,54 @@ namespace Remote.Linq.Dynamic
                 }
                 else
                 {
-                    var propertyCount = objects.First().MemberCount;
-                    var propertyTypes = new Type[propertyCount];
-                    for (int i = 0; i < propertyCount; i++)
-                    {
-                        var value = objects.Select(record => record.Values.ElementAt(i)).Where(x => !ReferenceEquals(null, x)).FirstOrDefault();
-                        propertyTypes[i] = ReferenceEquals(null, value) ? null : value.GetType();
-                    }
-
-                    var constructors = elementType.GetConstructors()
-                        .Select(i => new { Info = i, Parameters = i.GetParameters() })
-                        .OrderByDescending(i => i.Parameters.Length).ToList();
-                    var constructor = constructors.FirstOrDefault(ctor =>
-                    {
-                        if (ctor.Parameters.Length != propertyCount) return false;
-                        for (int i = 0; i < propertyCount; i++)
+                    var dynamicProperties = objects.SelectMany(x => x.Members).Distinct().ToList();
+                    var constructor = elementType.GetConstructors()
+                        .Select(i => 
                         {
-                            var propertyType = propertyTypes[i];
-                            if (ReferenceEquals(null, propertyType) || propertyType == typeof(DynamicObject)) continue;
-                            var parameterType = ctor.Parameters[i];
-                            if (!parameterType.ParameterType.IsAssignableFrom(propertyType)) return false;
-                        }
-                        return true;
-                    });
+                            var paramterList = i.GetParameters();
+                            return new 
+                            { 
+                                Info = i, 
+                                ParametersCount = paramterList.Length,
+                                Parameters = paramterList
+                                    .Select(parameter => new 
+                                    {
+                                        Info = parameter,
+                                        Property = dynamicProperties
+                                            .Where(dynamicProperty => string.Compare(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase) == 0)
+                                            .Select(dynamicProperty => new { Name = dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
+                                            .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),
+                                    })
+                                    .ToArray(),
+                            };
+                        })
+                        .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
+                        .FirstOrDefault(i => i.Parameters.All(p => !ReferenceEquals(null, p.Property)));
 
-                    if (constructor != null)
+                    if (!ReferenceEquals(null, constructor))
                     {
                         factory = (type, item) =>
                         {
-                            var parameterValues = item.Values
-                                .Select((x, i) =>
-                                {
-                                    var parameterType = constructor.Parameters[i].ParameterType;
-                                    return MapFromDynamicObjectGraph(x, parameterType);
-                                })
+                            var arguments = constructor.Parameters
+                                .Select(x => x.Property.Value)
                                 .ToArray();
-                            var obj = constructor.Info.Invoke(parameterValues);
-                            return obj;
-                        };
-                    }
-                    // TODO: reverse order - try use parameterless constructor first - to support cyclic references where possible
-                    else if (constructors.Any(x => x.Parameters.Length == 0))
-                    {
-                        constructor = constructors.Single(x => x.Parameters.Length == 0);
-                        var properties = elementType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                            .Where(x => x.CanWrite && x.GetIndexParameters().Length == 0)
-                            .ToList();
-                        factory = (type, item) =>
-                        {
-                            var obj = constructor.Info.Invoke(new object[0]);
+                            var obj = constructor.Info.Invoke(arguments);
                             return obj;
                         };
                         initializer = (type, item, obj) =>
                         {
-                            // silently skipping values with no matching writable property
-                            var memberNames = item.MemberNames;
-                            foreach (var property in properties.Where(p => memberNames.Contains(p.Name)))
+                            var targetProperties = obj.GetType().GetProperties().Where(p => p.CanWrite);
+                            foreach (var property in targetProperties)
                             {
-                                var value = MapFromDynamicObjectGraph(item[property.Name], property.PropertyType);
-
-                                if (_suppressMemberAssignabilityValidation || IsAssignable(property.PropertyType, value))
+                                object rawValue;
+                                if (item.TryGet(property.Name, out rawValue))
                                 {
-                                    property.SetValue(obj, value);
+                                    var value = MapFromDynamicObjectGraph(rawValue, property.PropertyType);
+
+                                    if (_suppressMemberAssignabilityValidation || IsAssignable(property.PropertyType, value))
+                                    {
+                                        property.SetValue(obj, value);
+                                    }
                                 }
                             }
                         };
@@ -667,7 +650,6 @@ namespace Remote.Linq.Dynamic
                     {
                         throw new Exception(string.Format("Failed to pick matching contructor for type {0}", elementType.FullName));
                     }
-                    // TODO: support combination of constructor and member asignments or provide API with registration hook
                 }
 
                 var list = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
@@ -965,7 +947,8 @@ namespace Remote.Linq.Dynamic
                 {
                     innerException = ex.InnerException.InnerException;
                 }
-				throw new Exception(innerException.Message, innerException);
+
+                throw new Exception(innerException.Message, innerException);
             }
         }
     }

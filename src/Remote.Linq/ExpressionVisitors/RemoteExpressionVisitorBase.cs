@@ -68,7 +68,7 @@ namespace Remote.Linq
             return init;
         }
 
-        protected virtual IEnumerable<MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> original)
+        protected virtual List<MemberBinding> VisitBindingList(List<MemberBinding> original)
         {
             if (ReferenceEquals(null, original))
             {
@@ -127,7 +127,7 @@ namespace Remote.Linq
 
         protected virtual MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding binding)
         {
-            IEnumerable<MemberBinding> bindings = VisitBindingList(binding.Bindings);
+            IEnumerable<MemberBinding> bindings = VisitBindingList(binding.Bindings.ToList());
             if (bindings != binding.Bindings)
             {
                 return Expression.MemberBind(binding.Member, bindings);
@@ -138,14 +138,14 @@ namespace Remote.Linq
         protected virtual MemberListBinding VisitMemberListBinding(MemberListBinding binding)
         {
             IEnumerable<ElementInit> initializers = VisitElementInitializerList(binding.Initializers);
-            if (initializers != binding.Initializers)
+            if (!ReferenceEquals(initializers, binding.Initializers))
             {
                 return Expression.ListBind(binding.Member, initializers);
             }
             return binding;
         }
 
-        protected virtual IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> original)
+        protected virtual List<ElementInit> VisitElementInitializerList(List<ElementInit> original)
         {
             if (ReferenceEquals(null, original))
             {
@@ -179,15 +179,15 @@ namespace Remote.Linq
 
         protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
         {
-            ReadOnlyCollection<Expression> arguments = VisitExpressionList(initializer.Arguments);
-            if (arguments != initializer.Arguments)
+            IEnumerable<Expression> arguments = VisitExpressionList(initializer.Arguments);
+            if (!ReferenceEquals(arguments, initializer.Arguments))
             {
-                return Expression.ElementInit(initializer.AddMethod, arguments);
+                return Expression.ElementInit(initializer.AddMethod.Method, arguments);
             }
             return initializer;
         }
 
-        protected virtual ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original)
+        protected virtual List<Expression> VisitExpressionList(List<Expression> original)
         {
             if (ReferenceEquals(null, original))
             {
@@ -212,10 +212,12 @@ namespace Remote.Linq
                     list.Add(p);
                 }
             }
+            
             if (list != null)
             {
-                return list.AsReadOnly();
+                return list;
             }
+            
             return original;
         }
 

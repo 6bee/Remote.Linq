@@ -9,6 +9,10 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class SortExpression
     {
+        public SortExpression()
+        {
+        }
+
         internal SortExpression(LambdaExpression operand, SortDirection sortDirection)
         {
             Operand = operand;
@@ -17,11 +21,11 @@ namespace Remote.Linq.Expressions
 
         public ExpressionType NodeType { get { return ExpressionType.Sort; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public LambdaExpression Operand { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public LambdaExpression Operand { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = true)]
-        public SortDirection SortDirection { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = true)]
+        public SortDirection SortDirection { get; set; }
 
         public override string ToString()
         {

@@ -13,7 +13,10 @@ namespace Client
     {
         public static void Main()
         {
-            Console.WriteLine("This sample consumes data service and remote linq data service");
+            Console.WriteLine("This sample client retrieves data from the backend by using:");
+            Console.WriteLine(" a) a traditional data service (get by id/name), and");
+            Console.WriteLine(" b) a remote linq data service (dynamic filtering, sorting, and paging)");
+            Console.WriteLine();
             Console.WriteLine("Wait for the server to indicate that it's started, then");
             Console.WriteLine("press <ENTER> to start the client.");
             Console.WriteLine();
@@ -44,7 +47,7 @@ namespace Client
                     .Where(p => p.Name == "Car");
                 var products = productQuery.ToList();
 
-                Console.WriteLine("For product 'Car' list orders which have on order quantity bigger than one \nfor the corresponsing product:\n");
+                Console.WriteLine("For product 'Car' list orders having an order quantity bigger than one \nfor the corresponsing product:\n");
                 foreach (var product in products)
                 {
                     Console.WriteLine("\t{0}", product);
@@ -76,13 +79,13 @@ namespace Client
             {
                 var service = serviceProxy.Channel;
 
-                System.Linq.Expressions.Expression<Func<Product,bool>> productFilterLinqExpression = product => product.Name == "Car";
+                System.Linq.Expressions.Expression<Func<Product, bool>> productFilterLinqExpression = product => product.Name == "Car";
                 Remote.Linq.Expressions.LambdaExpression productFilterRemoteExpression = productFilterLinqExpression.ToRemoteLinqExpression();
                 var productQuery = new Query(typeof(Product)).Where(productFilterRemoteExpression) as Query;
 
                 var products = service.GetData(productQuery);
-                
-                Console.WriteLine("For product 'Car' list orders which have on order quantity bigger than one \nfor the corresponsing product:\n");
+
+                Console.WriteLine("For product 'Car' list orders having an order quantity bigger than one \nfor the corresponsing product:\n");
                 foreach (Product product in products)
                 {
                     Console.WriteLine("\t{0}", product);
@@ -117,7 +120,7 @@ namespace Client
 
                 var products = service.GetProductsByName("Car");
 
-                Console.WriteLine("For product 'Car' list orders which have on order quantity bigger than one \nfor the corresponsing product.\n");
+                Console.WriteLine("For product 'Car' list orders having an order quantity bigger than one \nfor the corresponsing product.\n");
                 Console.WriteLine("Please note that filtering based on number of order items is perfomed on the client.\n");
                 foreach (var product in products)
                 {

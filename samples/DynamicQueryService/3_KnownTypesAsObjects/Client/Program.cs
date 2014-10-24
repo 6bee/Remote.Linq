@@ -26,6 +26,12 @@ namespace Client
         {
             var repo = new RemoteRepository("net.pipe://localhost/8080/query");
 
+            Console.WriteLine("\nGET ALL PRODUCTS:");
+            foreach (var i in repo.Products)
+            {
+                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+            }
+
             Console.WriteLine("\nINNER JOIN FOR FILTERING:");
             Func<object, string> sufix = (x) => x + "ending";
             var crossJoinQuery =

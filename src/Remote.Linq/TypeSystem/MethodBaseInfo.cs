@@ -2,19 +2,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using BindingFlags = System.Reflection.BindingFlags;
 
 namespace Remote.Linq.TypeSystem
 {
     [Serializable]
     [DataContract(Name = "MethodBase")]
-    [KnownType(typeof(ConstructorInfo))]
-    [KnownType(typeof(MethodInfo))]
+    [KnownType(typeof(ConstructorInfo)), XmlInclude(typeof(ConstructorInfo))]
+    [KnownType(typeof(MethodInfo)), XmlInclude(typeof(MethodInfo))]
     public abstract class MethodBaseInfo : MemberInfo
     {
+        protected MethodBaseInfo()
+        {
+        }
+
         protected MethodBaseInfo(System.Reflection.MethodBase methodInfo)
             : base(methodInfo)
         {
@@ -25,12 +29,12 @@ namespace Remote.Linq.TypeSystem
             var genericArguments = methodInfo.IsGenericMethod ? methodInfo.GetGenericArguments() : null;
             GenericArgumentTypes = ReferenceEquals(null, genericArguments) || genericArguments.Length == 0
                 ? null
-                : genericArguments.Select(x => new TypeInfo(x)).ToList().AsReadOnly();
+                : genericArguments.Select(x => new TypeInfo(x)).ToList();
 
             var parameters = methodInfo.GetParameters();
             ParameterTypes = parameters.Length == 0
                 ? null
-                : parameters.Select(x => new TypeInfo(x.ParameterType)).ToList().AsReadOnly();
+                : parameters.Select(x => new TypeInfo(x.ParameterType)).ToList();
         }
 
         // TODO: replace binding flags by bool flags
@@ -49,22 +53,22 @@ namespace Remote.Linq.TypeSystem
 
             GenericArgumentTypes = ReferenceEquals(null, genericArguments) || !genericArguments.Any()
                 ? null
-                : genericArguments.ToList().AsReadOnly();
+                : genericArguments.ToList();
 
             ParameterTypes = ReferenceEquals(null, parameterTypes) || !parameterTypes.Any()
                 ? null
-                : parameterTypes.ToList().AsReadOnly();
+                : parameterTypes.ToList();
         }
 
         // TODO: replace binding flags by bool flags
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public BindingFlags BindingFlags { get; private set; }
+        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
+        public BindingFlags BindingFlags { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public ReadOnlyCollection<TypeInfo> GenericArgumentTypes { get; private set; }
+        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
+        public List<TypeInfo> GenericArgumentTypes { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        internal ReadOnlyCollection<TypeInfo> ParameterTypes { get; private set; }
+        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+        public List<TypeInfo> ParameterTypes { get; set; }
 
         public bool IsGenericMethod { get { return !ReferenceEquals(null, GenericArgumentTypes) && GenericArgumentTypes.Any(); } }
 

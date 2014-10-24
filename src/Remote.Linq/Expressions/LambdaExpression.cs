@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -12,19 +11,23 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class LambdaExpression : Expression
     {
+        public LambdaExpression()
+        {
+        }
+
         internal LambdaExpression(Expression expression, IEnumerable<ParameterExpression> parameters)
         {
             Expression = expression;
-            Parameters = parameters.ToList().AsReadOnly();
+            Parameters = parameters.ToList();
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Lambda; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public Expression Expression { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public Expression Expression { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public ReadOnlyCollection<ParameterExpression> Parameters { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public List<ParameterExpression> Parameters { get; set; }
 
         public override string ToString()
         {

@@ -9,6 +9,10 @@ namespace Remote.Linq.TypeSystem
     [DataContract(Name = "Property")]
     public sealed class PropertyInfo : MemberInfo
     {
+        public PropertyInfo()
+        {
+        }
+
         public PropertyInfo(System.Reflection.PropertyInfo propertyInfo)
             : base(propertyInfo)
         {
@@ -58,7 +62,7 @@ namespace Remote.Linq.TypeSystem
             return propertyInfo;
         }
 
-        public static implicit operator System.Reflection.PropertyInfo(PropertyInfo p)
+        public static explicit operator System.Reflection.PropertyInfo(PropertyInfo p)
         {
             return p.Property;
         }

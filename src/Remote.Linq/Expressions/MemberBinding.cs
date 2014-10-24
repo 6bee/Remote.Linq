@@ -3,14 +3,15 @@
 using Remote.Linq.TypeSystem;
 using System;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Remote.Linq.Expressions
 {
     [Serializable]
     [DataContract]
-    [KnownType(typeof(MemberAssignment))]
-    [KnownType(typeof(MemberListBinding))]
-    [KnownType(typeof(MemberMemberBinding))]
+    [KnownType(typeof(MemberAssignment)), XmlInclude(typeof(MemberAssignment))]
+    [KnownType(typeof(MemberListBinding)), XmlInclude(typeof(MemberListBinding))]
+    [KnownType(typeof(MemberMemberBinding)), XmlInclude(typeof(MemberMemberBinding))]
     public abstract class MemberBinding
     {
         protected MemberBinding(MemberInfo member)
@@ -20,7 +21,7 @@ namespace Remote.Linq.Expressions
 
         public abstract MemberBindingType BindingType { get; }
 
-        [DataMember]
-        public MemberInfo Member { get; private set; }
+        [DataMember(Order = 1)]
+        public MemberInfo Member { get; set; }
     }
 }

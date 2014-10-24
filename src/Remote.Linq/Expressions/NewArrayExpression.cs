@@ -3,7 +3,6 @@
 using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -13,10 +12,14 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class NewArrayExpression : Expression
     {
+        public NewArrayExpression()
+        {
+        }
+
         internal NewArrayExpression(TypeInfo typeInfo, IEnumerable<Expression> expressions)
         {
             Type = typeInfo;
-            Expressions = expressions.ToList().AsReadOnly();
+            Expressions = expressions.ToList();
         }
 
         internal NewArrayExpression(Type type, IEnumerable<Expression> expressions)
@@ -26,11 +29,11 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType { get { return ExpressionType.NewArray; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo Type { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public ReadOnlyCollection<Expression> Expressions { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public List<Expression> Expressions { get; set; }
 
         public override string ToString()
         {

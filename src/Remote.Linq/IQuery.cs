@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using Remote.Linq.TypeSystem;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace Remote.Linq
 {
@@ -13,8 +13,8 @@ namespace Remote.Linq
         bool HasSorting { get; }
         bool HasPaging { get; }
 
-        ReadOnlyCollection<Expressions.LambdaExpression> FilterExpressions { get; }
-        ReadOnlyCollection<Expressions.SortExpression> SortExpressions { get; }
+        List<Expressions.LambdaExpression> FilterExpressions { get; }
+        List<Expressions.SortExpression> SortExpressions { get; }
         int? SkipValue { get; }
         int? TakeValue { get; }
 

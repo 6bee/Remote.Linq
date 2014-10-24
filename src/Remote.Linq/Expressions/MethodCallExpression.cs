@@ -3,7 +3,6 @@
 using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using BindingFlags = System.Reflection.BindingFlags;
@@ -14,11 +13,15 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class MethodCallExpression : Expression
     {
+        public MethodCallExpression()
+        {
+        }
+
         internal MethodCallExpression(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
         {
             Instance = insatnce;
             Method = methodInfo;
-            Arguments = arguments.ToList().AsReadOnly();
+            Arguments = arguments.ToList();
         }
 
         internal MethodCallExpression(Expression insatnce, System.Reflection.MethodInfo methodInfo, IEnumerable<Expression> arguments)
@@ -33,14 +36,14 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType { get { return ExpressionType.MethodCall; } }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public Expression Instance { get; private set; }
+        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
+        public Expression Instance { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public MethodInfo Method { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public MethodInfo Method { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public ReadOnlyCollection<Expression> Arguments { get; private set; }
+        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+        public List<Expression> Arguments { get; set; }
 
         public override string ToString()
         {

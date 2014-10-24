@@ -4,27 +4,28 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Remote.Linq.Expressions
 {
     [Serializable]
     [DataContract]
-    [KnownType(typeof(BinaryExpression))]
-    [KnownType(typeof(CollectionExpression))]
-    [KnownType(typeof(ConditionalExpression))]
-    [KnownType(typeof(ConstantExpression))]
-    [KnownType(typeof(ConversionExpression))]
-    [KnownType(typeof(LambdaExpression))]
-    [KnownType(typeof(ListInitExpression))]
-    [KnownType(typeof(MemberExpression))]
-    [KnownType(typeof(MemberInitExpression))]
-    [KnownType(typeof(MethodCallExpression))]
-    [KnownType(typeof(NewExpression))]
-    [KnownType(typeof(NewArrayExpression))]
-    [KnownType(typeof(ParameterExpression))]
-    [KnownType(typeof(UnaryExpression))]
-    [KnownType(typeof(UnaryOperator))]
-    [KnownType(typeof(Remote.Linq.Dynamic.QueryableResourceDescriptor))]
+    [KnownType(typeof(BinaryExpression)), XmlInclude(typeof(BinaryExpression))]
+    [KnownType(typeof(CollectionExpression)), XmlInclude(typeof(CollectionExpression))]
+    [KnownType(typeof(ConditionalExpression)), XmlInclude(typeof(ConditionalExpression))]
+    [KnownType(typeof(ConstantExpression)), XmlInclude(typeof(ConstantExpression))]
+    [KnownType(typeof(ConversionExpression)), XmlInclude(typeof(ConversionExpression))]
+    [KnownType(typeof(LambdaExpression)), XmlInclude(typeof(LambdaExpression))]
+    [KnownType(typeof(ListInitExpression)), XmlInclude(typeof(ListInitExpression))]
+    [KnownType(typeof(MemberExpression)), XmlInclude(typeof(MemberExpression))]
+    [KnownType(typeof(MemberInitExpression)), XmlInclude(typeof(MemberInitExpression))]
+    [KnownType(typeof(MethodCallExpression)), XmlInclude(typeof(MethodCallExpression))]
+    [KnownType(typeof(NewExpression)), XmlInclude(typeof(NewExpression))]
+    [KnownType(typeof(NewArrayExpression)), XmlInclude(typeof(NewArrayExpression))]
+    [KnownType(typeof(ParameterExpression)), XmlInclude(typeof(ParameterExpression))]
+    [KnownType(typeof(UnaryExpression)), XmlInclude(typeof(UnaryExpression))]
+    [KnownType(typeof(UnaryOperator)), XmlInclude(typeof(UnaryOperator))]
+    [KnownType(typeof(Remote.Linq.Dynamic.QueryableResourceDescriptor)), XmlInclude(typeof(Remote.Linq.Dynamic.QueryableResourceDescriptor))]
     public abstract partial class Expression
     {
         public abstract ExpressionType NodeType { get; }

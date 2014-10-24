@@ -3,7 +3,6 @@
 using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -13,15 +12,20 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class MemberMemberBinding : MemberBinding
     {
+        public MemberMemberBinding()
+            : base(null)
+        {
+        }
+
         public MemberMemberBinding(MemberInfo member, IEnumerable<MemberBinding> bindings)
             : base(member)
         {
-            Bindings = bindings.ToList().AsReadOnly();
+            Bindings = bindings.ToList();
         }
 
         public override MemberBindingType BindingType { get { return MemberBindingType.MemberBinding; } }
 
-        [DataMember]
-        public ReadOnlyCollection<MemberBinding> Bindings { get; private set; }
+        [DataMember(Order = 1)]
+        public List<MemberBinding> Bindings { get; set; }
     }
 }

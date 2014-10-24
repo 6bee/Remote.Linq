@@ -10,6 +10,10 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class MemberExpression : Expression
     {
+        public MemberExpression()
+        {
+        }
+
         internal MemberExpression(Expression expression, MemberInfo member)
         {
             Expression = expression;
@@ -23,11 +27,11 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType { get { return ExpressionType.Member; } }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public Expression Expression { get; private set; }
+        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
+        public Expression Expression { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public MemberInfo Member { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public MemberInfo Member { get; set; }
 
         public override string ToString()
         {

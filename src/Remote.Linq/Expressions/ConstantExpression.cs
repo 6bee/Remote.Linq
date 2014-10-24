@@ -10,6 +10,10 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class ConstantExpression : Expression
     {
+        public ConstantExpression()
+        {
+        }
+
         internal ConstantExpression(object value, Type type = null)
         {
             if (ReferenceEquals(null, type))
@@ -29,11 +33,11 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType { get { return ExpressionType.Constant; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = true)]
-        public object Value { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo Type { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = true)]
+        public object Value { get; set; }
 
         public override string ToString()
         {

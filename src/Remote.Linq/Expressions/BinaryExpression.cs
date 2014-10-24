@@ -10,6 +10,10 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class BinaryExpression : Expression
     {
+        public BinaryExpression()
+        {
+        }
+
         internal BinaryExpression(Expression leftOperand, Expression rightOperand, BinaryOperator @operator)
         {
             LeftOperand = leftOperand;
@@ -27,23 +31,23 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType { get { return ExpressionType.Binary; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public Expression LeftOperand { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public Expression LeftOperand { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public Expression RightOperand { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public Expression RightOperand { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = true)]
-        public BinaryOperator Operator { get; private set; }
+        [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = true)]
+        public BinaryOperator Operator { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public bool IsLiftedToNull { get; private set; }
+        [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
+        public bool IsLiftedToNull { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public MethodInfo Method { get; private set; }
+        [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
+        public MethodInfo Method { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public LambdaExpression Conversion { get; private set; }
+        [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
+        public LambdaExpression Conversion { get; set; }
 
         public override string ToString()
         {

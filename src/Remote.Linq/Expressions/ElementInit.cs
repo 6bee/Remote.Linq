@@ -3,7 +3,6 @@
 using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using BindingFlags = System.Reflection.BindingFlags;
@@ -14,10 +13,14 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class ElementInit
     {
+        public ElementInit()
+        {
+        }
+
         internal ElementInit(MethodInfo addMethod, IEnumerable<Expression> arguments)
         {
             AddMethod = addMethod;
-            Arguments = arguments.ToList().AsReadOnly();
+            Arguments = arguments.ToList();
         }
 
         internal ElementInit(System.Reflection.MethodInfo addMethod, IEnumerable<Expression> arguments)
@@ -30,11 +33,11 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public MethodInfo AddMethod { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public MethodInfo AddMethod { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public ReadOnlyCollection<Expression> Arguments { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public List<Expression> Arguments { get; set; }
 
         public override string ToString()
         {

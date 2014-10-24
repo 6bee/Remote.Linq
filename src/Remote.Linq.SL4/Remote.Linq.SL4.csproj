@@ -53,6 +53,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="system" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>  
     <Compile Include="..\Remote.Linq\DynamicQuery\ObjectResultCaster.cs">

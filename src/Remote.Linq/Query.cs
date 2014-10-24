@@ -4,7 +4,6 @@ using Remote.Linq.Expressions;
 using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -16,6 +15,10 @@ namespace Remote.Linq
     public class Query : IQuery, IOrderedQuery
     {
         #region Constructor
+
+        public Query()
+        {
+        }
 
         /// <summary>
         /// Creates a new query instance.
@@ -33,8 +36,8 @@ namespace Remote.Linq
         public Query(TypeInfo typeInfo, IEnumerable<LambdaExpression> filterExpressions = null, IEnumerable<SortExpression> sortExpressions = null, int? skip = null, int? take = null)
         {
             Type = typeInfo;
-            FilterExpressions = (filterExpressions ?? new LambdaExpression[0]).ToList().AsReadOnly();
-            SortExpressions = (sortExpressions ?? new SortExpression[0]).ToList().AsReadOnly();
+            FilterExpressions = (filterExpressions ?? new LambdaExpression[0]).ToList();
+            SortExpressions = (sortExpressions ?? new SortExpression[0]).ToList();
             SkipValue = skip;
             TakeValue = take;
         }
@@ -43,24 +46,24 @@ namespace Remote.Linq
 
         #region Properties
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo Type { get; set; }
 
         public bool HasFilters { get { return FilterExpressions.Count > 0; } }
         public bool HasSorting { get { return SortExpressions.Count > 0; } }
         public bool HasPaging { get { return TakeValue.HasValue; } }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public ReadOnlyCollection<LambdaExpression> FilterExpressions { get; private set; }
+        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
+        public List<LambdaExpression> FilterExpressions { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public ReadOnlyCollection<SortExpression> SortExpressions { get; private set; }
+        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+        public List<SortExpression> SortExpressions { get; set; }
 
-        [DataMember(Name = "Skip", IsRequired = false, EmitDefaultValue = false)]
-        public int? SkipValue { get; private set; }
+        [DataMember(Name = "Skip", Order = 4, IsRequired = false, EmitDefaultValue = false)]
+        public int? SkipValue { get; set; }
 
-        [DataMember(Name = "Take", IsRequired = false, EmitDefaultValue = false)]
-        public int? TakeValue { get; private set; }
+        [DataMember(Name = "Take", Order = 5,  IsRequired = false, EmitDefaultValue = false)]
+        public int? TakeValue { get; set; }
 
         #endregion Properties
 

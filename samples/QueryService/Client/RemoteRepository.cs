@@ -36,8 +36,8 @@ namespace Client
             };
         }
 
-        public IQueryable<ProductCategory> ProductCategories { get { return RemoteQueryable.Create<ProductCategory>(_dataProvider); } }
-        public IQueryable<Product> Products { get { return RemoteQueryable.Create<Product>(_dataProvider); } }
-        public IQueryable<OrderItem> OrderItems { get { return RemoteQueryable.Create<OrderItem>(_dataProvider); } }
+        public IQueryable<ProductCategory> ProductCategories { get { return AsyncRemoteQueryable.Create<ProductCategory>(_dataProvider); } }
+        public IQueryable<Product> Products { get { return AsyncRemoteQueryable.Create<Product>(_dataProvider); } }
+        public IQueryable<OrderItem> OrderItems { get { return AsyncRemoteQueryable.Create<OrderItem>(_dataProvider); } }
     }
 }

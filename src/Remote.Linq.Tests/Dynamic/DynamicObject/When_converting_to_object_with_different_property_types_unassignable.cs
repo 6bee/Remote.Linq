@@ -3,7 +3,7 @@
 namespace Remote.Linq.Tests.Dynamic.DynamicObject
 {
     using Remote.Linq.Dynamic;
-	using Xunit;
+    using Xunit;
     using Xunit.Should;
 
     /// <summary>

@@ -32,10 +32,10 @@ namespace Remote.Linq.Dynamic
             var membersByCleanName = members.ToDictionary(x => CleanBackingFieldNameIfRequired(x.Name));
             var memberValueMap = new Dictionary<System.Reflection.MemberInfo, object>();
 
-            foreach (var item in from)
+            foreach (var dynamicProperty in from)
             {
                 System.Reflection.MemberInfo member;
-                if (membersByCleanName.TryGetValue(item.Key, out member))
+                if (membersByCleanName.TryGetValue(dynamicProperty.Name, out member))
                 {
                     Type memberType;
                     switch (member.MemberType)
@@ -43,14 +43,16 @@ namespace Remote.Linq.Dynamic
                         case System.Reflection.MemberTypes.Field:
                             memberType = ((System.Reflection.FieldInfo)member).FieldType;
                             break;
+
                         case System.Reflection.MemberTypes.Property:
                             memberType = ((System.Reflection.PropertyInfo)member).PropertyType;
                             break;
+
                         default:
                             throw new Exception(string.Format("Unsupported member type {0}.", member.MemberType));
                     }
 
-                    var value = MapFromDynamicObjectGraph(item.Value, memberType);
+                    var value = MapFromDynamicObjectGraph(dynamicProperty.Value, memberType);
 
                     if (_suppressMemberAssignabilityValidation || IsAssignable(memberType, value))
                     {

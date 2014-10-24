@@ -28,6 +28,12 @@ namespace Client
         {
             var repo = new RemoteRepository("net.pipe://localhost/8080/query");
 
+            Console.WriteLine("\nGET ALL PRODUCTS:");
+            foreach (var i in repo.Products)
+            {
+                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+            }
+
             Console.WriteLine("\nCROSS JOIN:");
             Func<object, string> sufix = (x) => x + "ending";
             var crossJoinQuery =
@@ -45,7 +51,7 @@ namespace Client
             var innerJoinQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
-                select new { X = new { Y = new { c.Name } }, P = new { p.Price }, Z = new { Q = new { K = string.Concat(c.Name, "-", p.Name) } } };
+                select new { c.Name, P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
             var innerJoinResult = await innerJoinQuery.ToListAsync();
             foreach (var i in innerJoinResult)
             {

@@ -9,6 +9,10 @@ namespace Remote.Linq.TypeSystem
     [DataContract(Name = "Field")]
     public sealed class FieldInfo : MemberInfo
     {
+        public FieldInfo()
+        {
+        }
+
         public FieldInfo(System.Reflection.FieldInfo fieldInfo)
             : base(fieldInfo)
         {
@@ -57,7 +61,7 @@ namespace Remote.Linq.TypeSystem
             return fieldInfo;
         }
 
-        public static implicit operator System.Reflection.FieldInfo(FieldInfo f)
+        public static explicit operator System.Reflection.FieldInfo(FieldInfo f)
         {
             return f.Field;
         }

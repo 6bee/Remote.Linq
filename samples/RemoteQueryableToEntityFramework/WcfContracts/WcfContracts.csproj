@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="Remote.Linq, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Remote.Linq.4.0.0-alpha003\lib\net45\Remote.Linq.dll</HintPath>
+      <HintPath>..\packages\Remote.Linq.4.0.0-alpha008\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

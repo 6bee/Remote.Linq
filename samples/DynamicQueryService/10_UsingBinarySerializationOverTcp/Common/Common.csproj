@@ -44,11 +44,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\StreamExtensions.cs" />
+    <Compile Include="BinaryDataFormatter.cs" />
     <Compile Include="Model\OrderItem.cs" />
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\ProductCategory.cs" />

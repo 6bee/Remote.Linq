@@ -3,7 +3,6 @@
 using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using BindingFlags = System.Reflection.BindingFlags;
@@ -14,11 +13,15 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class NewExpression : Expression
     {
+        public NewExpression()
+        {
+        }
+
         internal NewExpression(ConstructorInfo constructor, IEnumerable<Expression> arguments, IEnumerable<MemberInfo> members = null)
         {
             Constructor = constructor;
-            Arguments = ReferenceEquals(null, arguments) || !arguments.Any() ? null : arguments.ToList().AsReadOnly();
-            Members = ReferenceEquals(null, members) || !members.Any() ? null : members.ToList().AsReadOnly();
+            Arguments = ReferenceEquals(null, arguments) || !arguments.Any() ? null : arguments.ToList();
+            Members = ReferenceEquals(null, members) || !members.Any() ? null : members.ToList();
         }
 
         internal NewExpression(System.Reflection.ConstructorInfo constructor, IEnumerable<Expression> arguments = null, IEnumerable<System.Reflection.MemberInfo> members = null)
@@ -33,14 +36,14 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType { get { return ExpressionType.New; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public ConstructorInfo Constructor { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public ConstructorInfo Constructor { get; set; }
 
-        [DataMember(EmitDefaultValue = true, IsRequired = false)]
-        public ReadOnlyCollection<Expression> Arguments { get; private set; }
+        [DataMember(Order = 2, EmitDefaultValue = true, IsRequired = false)]
+        public List<Expression> Arguments { get; set; }
 
-        [DataMember(EmitDefaultValue = true, IsRequired = false)]
-        public ReadOnlyCollection<MemberInfo> Members { get; private set; }
+        [DataMember(Order = 3, EmitDefaultValue = true, IsRequired = false)]
+        public List<MemberInfo> Members { get; set; }
 
         public override string ToString()
         {

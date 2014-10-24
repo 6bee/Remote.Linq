@@ -11,6 +11,10 @@ namespace Remote.Linq.TypeSystem
     [DataContract(Name = "Constructor")]
     public class ConstructorInfo : MethodBaseInfo
     {
+        public ConstructorInfo()
+        {
+        }
+
         public ConstructorInfo(System.Reflection.ConstructorInfo constructorInfo)
             : base(constructorInfo)
         {
@@ -112,7 +116,7 @@ namespace Remote.Linq.TypeSystem
             return string.Format(".ctor {1}", base.ToString());
         }
 
-        public static implicit operator System.Reflection.ConstructorInfo(ConstructorInfo c)
+        public static explicit operator System.Reflection.ConstructorInfo(ConstructorInfo c)
         {
             return c.Constructor;
         }

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -9,48 +9,63 @@ namespace Remote.Linq.TypeSystem
 {
     [Serializable]
     [DataContract(Name = "Type")]
-    public sealed class TypeInfo
+    public class TypeInfo
     {
+        public TypeInfo()
+        {
+        }
+
         public TypeInfo(Type type)
         {
-            if (ReferenceEquals(null, type)) throw new ArgumentNullException("type");
+            if (ReferenceEquals(null, type))
+            {
+                throw new ArgumentNullException("type");
+            }
+
             _type = type;
+
             Name = type.Name;
+
             Namespace = type.Namespace;
+
             if (type.IsNested && !type.IsGenericParameter)
             {
                 DeclaringType = new TypeInfo(type.DeclaringType);
             }
+
             if (type.IsGenericType())
             {
-                GenericArguments = type.GetGenericArguments().Select(x => new TypeInfo(x)).ToList().AsReadOnly();
+                GenericArguments = type.GetGenericArguments().Select(x => new TypeInfo(x)).ToList();
             }
+
             IsAnonymousType = type.IsAnonymousType();
+
             if (IsAnonymousType)
             {
-                Properties = type.GetProperties().Select(x => x.Name).ToList().AsReadOnly();
+                Properties = type.GetProperties().Select(x => x.Name).ToList();
             }
         }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public string Name { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public string Namespace { get; private set; }
+        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
+        public string Namespace { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo DeclaringType { get; private set; }
+        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+        public TypeInfo DeclaringType { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public ReadOnlyCollection<TypeInfo> GenericArguments { get; private set; }
+        [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
+        public List<TypeInfo> GenericArguments { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        internal bool IsAnonymousType { get; private set; }
+        [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
+        public bool IsAnonymousType { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        internal ReadOnlyCollection<string> Properties { get; private set; }
+        [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
+        public List<string> Properties { get; set; }
 
         public bool IsNested { get { return !ReferenceEquals(null, DeclaringType); } }
+
         public bool IsGenericType { get { return !ReferenceEquals(null, GenericArguments) && GenericArguments.Any(); } }
 
         internal string FullName
@@ -122,7 +137,7 @@ namespace Remote.Linq.TypeSystem
             return string.Format("{0}{1}", FullName, genericArguments);
         }
 
-        public static implicit operator Type(TypeInfo t)
+        public static explicit operator Type(TypeInfo t)
         {
             return t.Type;
         }

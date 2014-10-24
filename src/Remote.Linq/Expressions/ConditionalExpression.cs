@@ -9,6 +9,10 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class ConditionalExpression : Expression
     {
+        public ConditionalExpression()
+        {
+        }
+
         internal ConditionalExpression(Expression test, Expression ifTrue, Expression ifFalse)
         {
             Test = test;
@@ -18,14 +22,14 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType { get { return ExpressionType.Conditional; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public Expression Test { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public Expression Test { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public Expression IfTrue { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public Expression IfTrue { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public Expression IfFalse { get; private set; }
+        [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
+        public Expression IfFalse { get; set; }
 
         public override string ToString()
         {

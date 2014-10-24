@@ -1,8 +1,10 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+using Remote.Linq;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WcfClient
 {
@@ -10,34 +12,50 @@ namespace WcfClient
     {
         static void Main(string[] args)
         {
+            RunAsync().Wait();
+
+            Console.WriteLine();
+            Console.WriteLine("Press <ENTER> to terminate.");
+            Console.WriteLine();
+            Console.ReadLine();
+        }
+
+        private static async Task RunAsync()
+        {
             var repo = new RemoteRepository("http://localhost:50105/QueryService.svc");
 
-            Console.WriteLine("\n\nCROSS JOIN:\n-----------------------------------------");
+            Console.WriteLine("\nGET ALL PRODUCTS:");
+            foreach (var i in repo.Products)
+            {
+                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+            }
+
+            Console.WriteLine("\nCROSS JOIN:");
             Func<object, string> sufix = (x) => x + "ending";
             var crossJoinQuery =
                 from c in repo.ProductCategories
                 from p in repo.Products
                 select new { Category = "#" + c.Name + sufix("-"), p.Name };
-            var crossJoinResult = crossJoinQuery.ToList();
+            var crossJoinResult = await crossJoinQuery.ToListAsync();
             foreach (var i in crossJoinResult)
             {
                 Console.WriteLine("  {0}", i);
             }
 
 
-            Console.WriteLine("\n\nINNER JOIN:\n-----------------------------------------");
+            Console.WriteLine("\nINNER JOIN:");
             var innerJoinQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
-                select new { X = new { Y = new { c.Name } }, P = new { p.Price }, Z = new { Q = new { K = string.Concat(c.Name, "-", p.Name) } } };
-            var innerJoinResult = innerJoinQuery.ToList();
+                select new { c.Name, P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
+            var innerJoinResult = await innerJoinQuery.ToListAsync();
             foreach (var i in innerJoinResult)
             {
                 Console.WriteLine("  {0}", i);
             }
 
 
-            Console.WriteLine("\n\nTOTAL AMOUNT BY CATEGORY:\n-----------------------------------------");
+            Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
             var totalAmountByCategoryQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products
@@ -49,31 +67,25 @@ namespace WcfClient
                 {
                     Category = g.Key,
                     Amount = g.Sum(x => x.i.Quantity * x.p.Price),
-                    Amount2 = new { Amount = g.Sum(x => x.i.Quantity * x.p.Price) },
                 };
 
-            var totalAmountByCategroyResult = totalAmountByCategoryQuery.ToDictionary(x => x.Category);
+            var totalAmountByCategroyResult = await totalAmountByCategoryQuery.ToDictionaryAsync(x => x.Category);
             foreach (var i in totalAmountByCategroyResult)
             {
                 Console.WriteLine("  {0}", i);
             }
 
 
-            Console.WriteLine("\n\nINVALID OPERATION:\n-----------------------------------------");
+            Console.WriteLine("\nINVALID OPERATION:");
             try
             {
-                var first = totalAmountByCategoryQuery.Where(x => false).First();
+                var first = await totalAmountByCategoryQuery.FirstAsync(x => false);
             }
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine("  {0}", ex.Message);
                 Debug.WriteLine("  {0}", ex.Message);
             }
-
-            Console.WriteLine();
-            Console.WriteLine("Done");
-            Console.WriteLine("Press <ENTER> to terminate the client.");
-            Console.ReadLine();
         }
     }
 }

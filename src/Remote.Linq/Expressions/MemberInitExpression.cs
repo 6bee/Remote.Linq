@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -12,19 +11,23 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class MemberInitExpression : Expression
     {
+        public MemberInitExpression()
+        {
+        }
+
         internal MemberInitExpression(NewExpression newExpression, IEnumerable<MemberBinding> bindings)
         {
             NewExpression = newExpression;
-            Bindings = bindings.ToList().AsReadOnly();
+            Bindings = bindings.ToList();
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.MemberInit; } }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public NewExpression NewExpression { get; private set; }
+        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
+        public NewExpression NewExpression { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public ReadOnlyCollection<MemberBinding> Bindings { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public List<MemberBinding> Bindings { get; set; }
 
         public override string ToString()
         {

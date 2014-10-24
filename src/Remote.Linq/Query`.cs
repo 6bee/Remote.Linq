@@ -3,7 +3,6 @@
 using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
@@ -24,6 +23,10 @@ namespace Remote.Linq
 
         #region Constructor
 
+        public Query()
+        {
+        }
+
         /// <summary>
         /// Creates a new query instance
         /// </summary>
@@ -31,8 +34,8 @@ namespace Remote.Linq
         public Query(Func<Query<T>, IEnumerable<T>> dataProvider = null, IEnumerable<Remote.Linq.Expressions.LambdaExpression> filterExpressions = null, IEnumerable<Remote.Linq.Expressions.SortExpression> sortExpressions = null, int? skip = null, int? take = null)
         {
             _dataProvider = dataProvider;
-            FilterExpressions = (filterExpressions ?? new Remote.Linq.Expressions.LambdaExpression[0]).ToList().AsReadOnly();
-            SortExpressions = (sortExpressions ?? new Remote.Linq.Expressions.SortExpression[0]).ToList().AsReadOnly();
+            FilterExpressions = (filterExpressions ?? new Remote.Linq.Expressions.LambdaExpression[0]).ToList();
+            SortExpressions = (sortExpressions ?? new Remote.Linq.Expressions.SortExpression[0]).ToList();
             SkipValue = skip;
             TakeValue = take;
         }
@@ -45,17 +48,17 @@ namespace Remote.Linq
         public bool HasSorting { get { return SortExpressions.Count > 0; } }
         public bool HasPaging { get { return TakeValue.HasValue; } }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public ReadOnlyCollection<Remote.Linq.Expressions.LambdaExpression> FilterExpressions { get; private set; }
+        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
+        public List<Remote.Linq.Expressions.LambdaExpression> FilterExpressions { get; set; }
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public ReadOnlyCollection<Remote.Linq.Expressions.SortExpression> SortExpressions { get; private set; }
+        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
+        public List<Remote.Linq.Expressions.SortExpression> SortExpressions { get; set; }
 
-        [DataMember(Name = "Skip", IsRequired = false, EmitDefaultValue = false)]
-        public int? SkipValue { get; private set; }
+        [DataMember(Name = "Skip", Order = 3, IsRequired = false, EmitDefaultValue = false)]
+        public int? SkipValue { get; set; }
 
-        [DataMember(Name = "Take", IsRequired = false, EmitDefaultValue = false)]
-        public int? TakeValue { get; private set; }
+        [DataMember(Name = "Take", Order = 4, IsRequired = false, EmitDefaultValue = false)]
+        public int? TakeValue { get; set; }
 
         #endregion Properties
 

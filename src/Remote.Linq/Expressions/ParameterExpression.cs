@@ -10,6 +10,10 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class ParameterExpression : Expression
     {
+        public ParameterExpression()
+        {
+        }
+
         internal ParameterExpression(string parameterName, Type type)
         {
             ParameterName = parameterName;
@@ -18,11 +22,11 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType { get { return ExpressionType.Parameter; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public string ParameterName { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public string ParameterName { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo ParameterType { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo ParameterType { get; set; }
 
         public override string ToString()
         {

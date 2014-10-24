@@ -2,17 +2,22 @@
 
 using System;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Remote.Linq.TypeSystem
 {
     [Serializable]
     [DataContract(Name = "Member")]
-    [KnownType(typeof(ConstructorInfo))]
-    [KnownType(typeof(FieldInfo))]
-    [KnownType(typeof(MethodInfo))]
-    [KnownType(typeof(PropertyInfo))]
+    [KnownType(typeof(ConstructorInfo)), XmlInclude(typeof(ConstructorInfo))]
+    [KnownType(typeof(FieldInfo)), XmlInclude(typeof(FieldInfo))]
+    [KnownType(typeof(MethodInfo)), XmlInclude(typeof(MethodInfo))]
+    [KnownType(typeof(PropertyInfo)), XmlInclude(typeof(PropertyInfo))]
     public abstract class MemberInfo
     {
+        protected MemberInfo()
+        {
+        }
+
         protected MemberInfo(System.Reflection.MemberInfo memberInfo)
         {
             if (ReferenceEquals(null, memberInfo)) throw new ArgumentNullException("memberInfo");
@@ -32,11 +37,11 @@ namespace Remote.Linq.TypeSystem
 
         public abstract MemberTypes MemberType { get; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public string Name { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo DeclaringType { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo DeclaringType { get; set; }
 
         public override string ToString()
         {
@@ -85,7 +90,7 @@ namespace Remote.Linq.TypeSystem
             }
         }
 
-        public static implicit operator System.Reflection.MemberInfo(MemberInfo memberInfo)
+        public static explicit operator System.Reflection.MemberInfo(MemberInfo memberInfo)
         {
             return memberInfo.ResolveMemberInfo(TypeResolver.Instance);
         }

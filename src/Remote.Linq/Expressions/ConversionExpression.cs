@@ -10,6 +10,10 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class ConversionExpression : Expression
     {
+        public ConversionExpression()
+        {
+        }
+
         internal ConversionExpression(Expression operand, Type type)
         {
             Operand = operand;
@@ -18,11 +22,11 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType { get { return ExpressionType.Conversion; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public Expression Operand { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo Type { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public Expression Operand { get; set; }
 
         public override string ToString()
         {

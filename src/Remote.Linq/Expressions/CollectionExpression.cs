@@ -3,7 +3,6 @@
 using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -13,19 +12,23 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class CollectionExpression : Expression
     {
+        public CollectionExpression()
+        {
+        }
+
         internal CollectionExpression(IEnumerable<ConstantExpression> list, Type elementType)
         {
-            List = list.ToList().AsReadOnly();
+            List = list.ToList();
             ElementType = new TypeInfo(elementType);
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Collection; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public ReadOnlyCollection<ConstantExpression> List { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo ElementType { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo ElementType { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public List<ConstantExpression> List { get; set; }
 
         public override string ToString()
         {

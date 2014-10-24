@@ -27,25 +27,25 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
             };
         }
 
-		[Fact]
-		public void Should_throw_when_preventing_type_validation()
-		{
-			var mapper = new DynamicObjectMapper(silentlySkipUnassignableMembers: false);
+        [Fact]
+        public void Should_throw_when_preventing_type_validation()
+        {
+            var mapper = new DynamicObjectMapper(silentlySkipUnassignableMembers: false);
 
-			var ex = Assert.Throws<Exception>(() => mapper.Map<CustomType>(dynamicObject));
+            var ex = Assert.Throws<Exception>(() => mapper.Map<CustomType>(dynamicObject));
 
-			ex.InnerException.ShouldBeInstanceOf<ArgumentException>();
-			ex.InnerException.Message.ShouldBe("Object of type 'System.Double' cannot be converted to type 'System.Int32'.");
-		}
+            ex.InnerException.ShouldBeInstanceOf<ArgumentException>();
+            ex.InnerException.Message.ShouldBe("Object of type 'System.Double' cannot be converted to type 'System.Int32'.");
+        }
 
-		[Fact]
-		public void Should_silently_skip_unmatching_value_when_allowing_type_validation()
-		{
-			var mapper = new DynamicObjectMapper(silentlySkipUnassignableMembers: true);
+        [Fact]
+        public void Should_silently_skip_unmatching_value_when_allowing_type_validation()
+        {
+            var mapper = new DynamicObjectMapper(silentlySkipUnassignableMembers: true);
 
-			var obj = mapper.Map<CustomType>(dynamicObject);
+            var obj = mapper.Map<CustomType>(dynamicObject);
 
-			obj.ShouldNotBeNull();
-		}
+            obj.ShouldNotBeNull();
+        }
     }
 }

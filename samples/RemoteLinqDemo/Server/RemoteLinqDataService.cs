@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. 
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Common.DataContract;
 using Common.ServiceContract;
 using Remote.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Server
 {
@@ -29,14 +30,14 @@ namespace Server
 
         public IEnumerable<object> GetData(Query query)
         {
-            var result = GetType()
+            var result = typeof(RemoteLinqDataService)
                 .GetMethod("OpenTypeQuery", BindingFlags.Instance | BindingFlags.NonPublic)
-                .MakeGenericMethod(query.Type)
+                .MakeGenericMethod((Type)query.Type)
                 .Invoke(this, new object[] { query });
             return (IEnumerable<object>)result;
         }
 
-        private IEnumerable<T> OpenTypeQuery<T>(Query query)
+        private IEnumerable<T> OpenTypeQuery<T>(IQuery query)
         {
             Query<T> genericQuery = Query<T>.CreateFromNonGeneric(query);
             var data = DataSource.Query<T>()

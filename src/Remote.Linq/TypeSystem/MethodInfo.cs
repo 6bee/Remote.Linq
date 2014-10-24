@@ -12,6 +12,10 @@ namespace Remote.Linq.TypeSystem
     [DataContract(Name = "Method")]
     public class MethodInfo : MethodBaseInfo
     {
+        public MethodInfo()
+        {
+        }
+
         public MethodInfo(System.Reflection.MethodInfo methodInfo)
             : base(methodInfo)
         {
@@ -132,7 +136,7 @@ namespace Remote.Linq.TypeSystem
             return string.Format("{0} {1}", returnType, base.ToString());
         }
 
-        public static implicit operator System.Reflection.MethodInfo(MethodInfo m)
+        public static explicit operator System.Reflection.MethodInfo(MethodInfo m)
         {
             return m.Method;
         }

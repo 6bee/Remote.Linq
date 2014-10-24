@@ -10,6 +10,11 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class MemberAssignment : MemberBinding
     {
+        public MemberAssignment()
+            : base(null)
+        {
+        }
+
         public MemberAssignment(MemberInfo member, Expression expression)
             : base(member)
         {
@@ -18,7 +23,7 @@ namespace Remote.Linq.Expressions
 
         public override MemberBindingType BindingType { get { return MemberBindingType.Assignment; } }
 
-        [DataMember]
-        public Expression Expression { get; private set; }
+        [DataMember(Order = 1)]
+        public Expression Expression { get; set; }
     }
 }

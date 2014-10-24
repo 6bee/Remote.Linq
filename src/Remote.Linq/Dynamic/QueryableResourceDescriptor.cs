@@ -10,6 +10,10 @@ namespace Remote.Linq.Dynamic
     [DataContract]
     public sealed class QueryableResourceDescriptor
     {
+        public QueryableResourceDescriptor()
+        {
+        }
+
         public QueryableResourceDescriptor(Type type)
             : this(new TypeInfo(type))
         {
@@ -20,7 +24,7 @@ namespace Remote.Linq.Dynamic
             Type = type;
         }
 
-        [DataMember(Name = "Type", IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; private set; }
+        [DataMember(Name = "Type", Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo Type { get; set; }
     }
 }

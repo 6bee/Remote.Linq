@@ -9,6 +9,10 @@ namespace Remote.Linq.Expressions
     [DataContract]
     public sealed class UnaryExpression : Expression
     {
+        public UnaryExpression()
+        {
+        }
+
         internal UnaryExpression(Expression operand, UnaryOperator @operator)
         {
             Operand = operand;
@@ -17,11 +21,11 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType { get { return ExpressionType.Unary; } }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
-        public Expression Operand { get; private set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
+        public UnaryOperator Operator { get; set; }
 
-        [DataMember(IsRequired = true, EmitDefaultValue = true)]
-        public UnaryOperator Operator { get; private set; }
+        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public Expression Operand { get; set; }
 
         public override string ToString()
         {

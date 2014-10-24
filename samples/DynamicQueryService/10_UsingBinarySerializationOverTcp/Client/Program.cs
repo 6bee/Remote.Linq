@@ -26,29 +26,35 @@ namespace Client
         {
             var repo = new RemoteRepository("localhost", 8899);
 
-			Console.WriteLine("\nCROSS JOIN:");
-			Func<object, string> suffix = (x) => x + "ending";
-			var crossJoinQuery =
-				from c in repo.ProductCategories
-				from p in repo.Products
-				select new { Category = "#" + c.Name + suffix("-"), p.Name };
-			var crossJoinResult = crossJoinQuery.ToList();
-			foreach (var i in crossJoinResult)
-			{
-				Console.WriteLine("  {0}", i);
-			}
+            Console.WriteLine("\nGET ALL PRODUCTS:");
+            foreach (var i in repo.Products)
+            {
+                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+            }
+
+            Console.WriteLine("\nCROSS JOIN:");
+            Func<object, string> suffix = (x) => x + "ending";
+            var crossJoinQuery =
+                from c in repo.ProductCategories
+                from p in repo.Products
+                select new { Category = "#" + c.Name + suffix("-"), p.Name };
+            var crossJoinResult = crossJoinQuery.ToList();
+            foreach (var i in crossJoinResult)
+            {
+                Console.WriteLine("  {0}", i);
+            }
 
 
-			Console.WriteLine("\nINNER JOIN:");
-			var innerJoinQuery =
-				from c in repo.ProductCategories
-				join p in repo.Products on c.Id equals p.ProductCategoryId
-				select new { c.Name , P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
-			var innerJoinResult = innerJoinQuery.ToList();
-			foreach (var i in innerJoinResult)
-			{
-				Console.WriteLine("  {0}", i);
-			}
+            Console.WriteLine("\nINNER JOIN:");
+            var innerJoinQuery =
+                from c in repo.ProductCategories
+                join p in repo.Products on c.Id equals p.ProductCategoryId
+                select new { c.Name , P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
+            var innerJoinResult = innerJoinQuery.ToList();
+            foreach (var i in innerJoinResult)
+            {
+                Console.WriteLine("  {0}", i);
+            }
 
 
             Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
@@ -65,11 +71,11 @@ namespace Client
                     Amount = g.Sum(x => x.i.Quantity * x.p.Price),
                 };
 
-			var totalAmountByCategroyResult = totalAmountByCategoryQuery.ToDictionary(x => x.Category);
-			foreach (var i in totalAmountByCategroyResult)
-			{
-				Console.WriteLine("  {0}", i);
-			}
+            var totalAmountByCategroyResult = totalAmountByCategoryQuery.ToDictionary(x => x.Category);
+            foreach (var i in totalAmountByCategroyResult)
+            {
+                Console.WriteLine("  {0}", i);
+            }
 
 
             Console.WriteLine("\nINVALID OPERATION:");
