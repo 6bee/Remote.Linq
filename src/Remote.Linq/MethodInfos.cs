@@ -9,9 +9,6 @@ namespace Remote.Linq
 {
     internal static class MethodInfos
     {
-        /// <summary>
-        /// MethodInfo objects for type <
-        /// </summary>
         internal static class Enumerable
         {
             internal static readonly MethodInfo Cast = typeof(System.Linq.Enumerable)
@@ -93,7 +90,7 @@ namespace Remote.Linq
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Where(i => i.Name == "Select")
                 .Where(i => i.IsGenericMethod)
-                .Where(i =>
+                .Single(i =>
                 {
                     var parameters = i.GetParameters();
                     if (parameters.Length != 2) return false;
@@ -104,8 +101,7 @@ namespace Remote.Linq
                     if (!genericArguments.Single().IsGenericType()) return false;
                     if (genericArguments.Single().GetGenericArguments().Count() != 2) return false;
                     return true;
-                })
-                .Single();
+                });
         }
     }
 }

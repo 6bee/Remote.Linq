@@ -191,7 +191,7 @@ namespace Remote.Linq.Dynamic
             _formatPrimitiveTypesAsString = formatPrimitiveTypesAsString;
         }
 
-        public IEnumerable<object> Map(IEnumerable<DynamicObject> objects, Type type)
+        public System.Collections.IEnumerable Map(IEnumerable<DynamicObject> objects, Type type)
         {
             if (ReferenceEquals(null, objects))
             {
@@ -208,7 +208,7 @@ namespace Remote.Linq.Dynamic
             {
                 var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(type).Invoke(null, new[] { items });
                 var r2 = MethodInfos.Enumerable.ToArray.MakeGenericMethod(type).Invoke(null, new[] { r1 });
-                return (IEnumerable<object>)r2;
+                return (System.Collections.IEnumerable)r2;
             }
         }
 

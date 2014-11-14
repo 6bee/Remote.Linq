@@ -29,7 +29,7 @@ namespace Remote.Linq.Dynamic
         /// <param name="objects">Collection of <see cref="DynamicObject"/> to be mapped</param>
         /// <param name="targetType">Target type for mapping, set this parameter to null if type information included within individual <see cref="DynamicObject"/>s should be used.</param>
         /// <returns>Collection of objects created based on the <see cref="DynamicObject"/>s specified</returns>
-        IEnumerable<object> Map(IEnumerable<DynamicObject> objects, Type targetType = null);
+        System.Collections.IEnumerable Map(IEnumerable<DynamicObject> objects, Type targetType = null);
 
         /// <summary>
         /// Maps a collection of <see cref="DynamicObject"/>s into a collection of <typeparamref name="T"/>

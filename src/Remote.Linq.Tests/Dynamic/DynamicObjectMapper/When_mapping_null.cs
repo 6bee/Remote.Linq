@@ -78,7 +78,7 @@ namespace Remote.Linq.Tests.Dynamic.DynamicObjectMapper
                 new DynamicObject(new CustomClass()),
             };
 
-            var result = new DynamicObjectMapper().Map(dynamicObjects, typeof(CustomClass));
+            var result = new DynamicObjectMapper().Map(dynamicObjects, typeof(CustomClass)).Cast<object>();
 
             result.ShouldNotBeNull();
             result.Count().ShouldBe(3);
