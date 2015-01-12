@@ -58,15 +58,15 @@ namespace Client
 			}
 
 
-			//Console.WriteLine("\nSELECT IDs:");
-			//var productIdsQuery =
-			//	from p in repo.Products
-			//	select p.Id;
-			//var productIds = productIdsQuery.ToList();
-			//foreach (var id in productIdsQuery)
-			//{
-			//	Console.WriteLine("  {0}", id);
-			//}
+			Console.WriteLine("\nSELECT IDs:");
+			var productIdsQuery =
+				from p in repo.Products
+				select p.Id;
+			var productIds = productIdsQuery.ToList();
+			foreach (var id in productIdsQuery)
+			{
+				Console.WriteLine("  {0}", id);
+			}
 
 
 			Console.WriteLine("\nCOUNT:");

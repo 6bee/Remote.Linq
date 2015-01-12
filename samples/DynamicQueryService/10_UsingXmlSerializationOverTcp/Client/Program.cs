@@ -57,22 +57,22 @@ namespace Client
 			}
 
 
-			//Console.WriteLine("\nSELECT IDs:");
-			//var productIdsQuery =
-			//	from p in repo.Products
-			//	select p.Id;
-			//var productIds = productIdsQuery.ToList();
-			//foreach (var id in productIdsQuery)
-			//{
-			//	Console.WriteLine("  {0}", id);
-			//}
+			Console.WriteLine("\nSELECT IDs:");
+			var productIdsQuery =
+				from p in repo.Products
+				select p.Id;
+			var productIds = productIdsQuery.ToList();
+			foreach (var id in productIdsQuery)
+			{
+				Console.WriteLine("  {0}", id);
+			}
 
 
-			//Console.WriteLine("\nCOUNT:");
-			//var productsQuery =
-			//	from p in repo.Products
-			//	select p;
-			//Console.WriteLine("  Count = {0}", productsQuery.Count());
+			Console.WriteLine("\nCOUNT:");
+			var productsQuery =
+				from p in repo.Products
+				select p;
+			Console.WriteLine("  Count = {0}", productsQuery.Count());
 
 
             Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
