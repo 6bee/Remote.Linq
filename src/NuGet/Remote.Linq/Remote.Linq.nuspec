@@ -15,12 +15,12 @@
     <tags>LINQ expression-tree lambda dynamic remote remote-query multi-tier n-tier fluent-interface</tags>
   </metadata>
   <files>  
-    <file src="..\..\Remote.Linq\bin\Debug\Remote.Linq.*" target="lib\net45" />
-	<file src="..\..\Remote.Linq.NET35\bin\Debug\Remote.Linq.*" target="lib\net35-client" />
-    <file src="..\..\Remote.Linq.SL4\bin\Debug\Remote.Linq.*" target="lib\sl4" />
-    <file src="..\..\Remote.Linq.SL5\bin\Debug\Remote.Linq.*" target="lib\sl5" />
-    <file src="..\..\Remote.Linq.Win\bin\Debug\Remote.Linq.*" target="lib\win" />
-    <file src="..\..\Remote.Linq.WP\bin\Debug\Remote.Linq.*" target="lib\wp8" />
-	<file src="..\..\**\*.cs" target="src" exclude="..\..\**\bin\**;..\..\**\obj\**;..\..\**\NuGet\**;..\..\**\*.Tests\**;..\..\Remote.Linq.QueryFunctions\**" />
+    <file src="..\..\Remote.Linq\Remote.Linq\bin\Debug\Remote.Linq.*" target="lib\net45" />
+	<file src="..\..\Remote.Linq\Remote.Linq.NET35\bin\Debug\Remote.Linq.*" target="lib\net35-client" />
+    <file src="..\..\Remote.Linq\Remote.Linq.SL4\bin\Debug\Remote.Linq.*" target="lib\sl4" />
+    <file src="..\..\Remote.Linq\Remote.Linq.SL5\bin\Debug\Remote.Linq.*" target="lib\sl5" />
+    <file src="..\..\Remote.Linq\Remote.Linq.Win\bin\Debug\Remote.Linq.*" target="lib\win" />
+    <file src="..\..\Remote.Linq\Remote.Linq.WP\bin\Debug\Remote.Linq.*" target="lib\wp8" />
+	<file src="..\..\Remote.Linq\**\*.cs" target="src" exclude="..\..\**\bin\**;..\..\**\obj\**;..\..\**\*.Tests\**;..\..\Remote.Linq.QueryFunctions\**" />
   </files>
 </package>

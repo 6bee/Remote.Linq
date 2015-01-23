@@ -5,21 +5,30 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">Any CPU</Platform>
         <BuildProperties>Platform=$(Platform)</BuildProperties>
-        <SolutionDirectory Condition="$(SolutionDirectory) == '' Or $(SolutionDirectory) == '*Undefined*'">$(MSBuildThisFileDirectory)src\</SolutionDirectory>
-        <OutputDirectory Condition=" '$(OutputDirectory)' == '' ">$(SolutionDirectory)bin\$(Configuration)\</OutputDirectory>
-        <SolutionFile>Remote.Linq.sln</SolutionFile>
+        <SourceDirectory Condition="$(SourceDirectory) == '' Or $(SourceDirectory) == '*Undefined*'">$(MSBuildThisFileDirectory)src\</SourceDirectory>
+        <OutputDirectory Condition=" '$(OutputDirectory)' == '' ">$(SourceDirectory)bin\$(Configuration)\</OutputDirectory>
+        <!--<SolutionFile>Remote.Linq.sln</SolutionFile>-->
+        <NuGetExePath>$(MSBuildThisFileDirectory)tools\nuget.exe</NuGetExePath>
     </PropertyGroup>
+
+    <ItemGroup>
+        <SolutionFiles Include="$(SourceDirectory)\**\Remote.linq*.sln" />
+    </ItemGroup>
 
     <Target Name="Clean">
         <RemoveDir Directories="$(OutputDirectory)" />
     </Target>
 
-    <Target Name="Rebuild" DependsOnTargets="Clean;Build">
+    <Target Name="Rebuild" DependsOnTargets="Clean;Restore;Build">
+    </Target>
+
+    <Target Name="Restore">
+        <Exec Command="&quot;$(NuGetExePath)&quot; restore &quot;%(SolutionFiles.Identity)&quot;" />
     </Target>
 
     <Target Name="Build">
         <MSBuild Targets="Rebuild"
-                 Projects="$(SolutionDirectory)\$(SolutionFile)"
+                 Projects="@(SolutionFiles)"
                  Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
     </Target>
 
@@ -28,7 +37,7 @@
 
     <Target Name="Package">
         <MSBuild Targets="Build"
-                 Projects="$(SolutionDirectory)\NuGet\NuGet.proj"
+                 Projects="$(SourceDirectory)NuGet\NuGet.proj"
                  Properties="Configuration=$(Configuration);OutputDirectory=$(OutputDirectory);$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
     </Target>
 

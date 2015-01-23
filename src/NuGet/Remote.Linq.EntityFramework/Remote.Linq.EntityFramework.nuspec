@@ -9,7 +9,7 @@
     <projectUrl>http://remotelinq.codeplex.com/</projectUrl>
     <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Remote Linq is a small and easy to use - yet very powerful - library to translate linq expression trees to strongly typed, serializable expression trees and vice versa. It provides functionality to send arbitrary linq queries to a remote service to be applied and executed against any enumerable or queryable data collection.</description>
+    <description>Entity framework extensions for remote linq. E.g. applies client defined Include-expressoins to EF queries.</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>Copyright Christof Senn 2013-2015</copyright>
     <tags>LINQ expression-tree lambda dynamic remote remote-query multi-tier n-tier fluent-interface entity-framework ef</tags>
@@ -20,6 +20,6 @@
   </metadata>
   <files>
     <file src="..\..\Remote.Linq.EntityFramework\Remote.Linq.EntityFramework\bin\Debug\Remote.Linq.EntityFramework.*" target="lib\net45" exclude="..\..\**\*.config" />
-    <file src="..\..\Remote.Linq.EntityFramework\Remote.Linq.EntityFramework\**\*.cs" target="src" exclude="..\..\Remote.Linq.EntityFramework\Remote.Linq.EntityFramework\obj\**\*.*" />
+    <file src="..\..\Remote.Linq.EntityFramework\**\*.cs" target="src" exclude="..\..\**\bin\**;..\..\**\obj\**;..\..\**\*.Tests\**;" />
   </files>
 </package>
