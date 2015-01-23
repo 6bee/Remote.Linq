@@ -6,7 +6,7 @@
         <Platform Condition=" '$(Platform)' == '' ">Any CPU</Platform>
         <BuildProperties>Platform=$(Platform)</BuildProperties>
         <SourceDirectory Condition="$(SourceDirectory) == '' Or $(SourceDirectory) == '*Undefined*'">$(MSBuildThisFileDirectory)src\</SourceDirectory>
-        <OutputDirectory Condition=" '$(OutputDirectory)' == '' ">$(SourceDirectory)bin\$(Configuration)\</OutputDirectory>
+        <OutputDirectory Condition=" '$(OutputDirectory)' == '' ">$(MSBuildThisFileDirectory)bin\$(Configuration)\</OutputDirectory>
         <!--<SolutionFile>Remote.Linq.sln</SolutionFile>-->
         <NuGetExePath>$(MSBuildThisFileDirectory)tools\nuget.exe</NuGetExePath>
     </PropertyGroup>

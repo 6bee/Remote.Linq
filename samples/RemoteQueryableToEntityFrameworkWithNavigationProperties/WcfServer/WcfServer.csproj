@@ -50,8 +50,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Remote.Linq.4.0.0-alpha010\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Remote.Linq.EntityFramework">
-      <HintPath>..\..\..\src\Remote.Linq.EntityFramework\Remote.Linq.EntityFramework\bin\Debug\Remote.Linq.EntityFramework.dll</HintPath>
+    <Reference Include="Remote.Linq.EntityFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Remote.Linq.EntityFramework.1.0.0-alpha001\lib\net45\Remote.Linq.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Security" />
