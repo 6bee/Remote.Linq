@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.TypeSystem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using MethodInfo = System.Reflection.MethodInfo;
-
 namespace Remote.Linq.Dynamic
 {
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text.RegularExpressions;
+    using MethodInfo = System.Reflection.MethodInfo;
+
     public partial class DynamicObjectMapper : IDynamicObjectMapper
     {
         private sealed class ObjectFormatterContext<TFrom, TTo>
@@ -144,7 +144,7 @@ namespace Remote.Linq.Dynamic
                 typeof(System.Numerics.Complex?),
 #endif
             }.ToDictionary(x => x, x => (object)null);
-        
+
         private readonly static Dictionary<Type, Dictionary<Type, object>> _implicitNumericConversionsTable = new Dictionary<Type, Dictionary<Type, object>>() 
         {
             // source: http://msdn.microsoft.com/en-us/library/y5b434w4.aspx
@@ -341,7 +341,7 @@ namespace Remote.Linq.Dynamic
                 {
                     return MapFromDynamicObjectIfRequired(dynamicObj.Values.Single(), targetType);
                 }
-                
+
                 var mappedValue = MapInternal(dynamicObj, targetType);
                 return mappedValue;
             }
@@ -596,15 +596,15 @@ namespace Remote.Linq.Dynamic
                 {
                     var dynamicProperties = objects.SelectMany(x => x.Members).Distinct().ToList();
                     var constructor = elementType.GetConstructors()
-                        .Select(i => 
+                        .Select(i =>
                         {
                             var paramterList = i.GetParameters();
-                            return new 
-                            { 
-                                Info = i, 
+                            return new
+                            {
+                                Info = i,
                                 ParametersCount = paramterList.Length,
                                 Parameters = paramterList
-                                    .Select(parameter => new 
+                                    .Select(parameter => new
                                     {
                                         Info = parameter,
                                         Property = dynamicProperties
@@ -850,7 +850,7 @@ namespace Remote.Linq.Dynamic
             {
                 if (ReferenceEquals(null, value))
                 {
-                    return targetType.IsGenericType() 
+                    return targetType.IsGenericType()
                         && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
                 }
 

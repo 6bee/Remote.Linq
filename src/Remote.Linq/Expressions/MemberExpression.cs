@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.TypeSystem;
-using System;
-using System.Runtime.Serialization;
-
 namespace Remote.Linq.Expressions
 {
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Runtime.Serialization;
+
     [Serializable]
     [DataContract]
     public sealed class MemberExpression : Expression
@@ -35,8 +35,8 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("{0}->{1}", 
-                ReferenceEquals(null, Expression) ? null : Expression.ToString(), 
+            return string.Format("{0}->{1}",
+                ReferenceEquals(null, Expression) ? null : Expression.ToString(),
                 Member);
         }
     }

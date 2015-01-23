@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
-
 namespace Remote.Linq.Expressions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
+
     [Serializable]
     [DataContract]
     [KnownType(typeof(BinaryExpression)), XmlInclude(typeof(BinaryExpression))]
@@ -25,7 +25,7 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(ParameterExpression)), XmlInclude(typeof(ParameterExpression))]
     [KnownType(typeof(UnaryExpression)), XmlInclude(typeof(UnaryExpression))]
     [KnownType(typeof(UnaryOperator)), XmlInclude(typeof(UnaryOperator))]
-    [KnownType(typeof(Remote.Linq.Dynamic.QueryableResourceDescriptor)), XmlInclude(typeof(Remote.Linq.Dynamic.QueryableResourceDescriptor))]
+    [KnownType(typeof(Remote.Linq.DynamicQuery.QueryableResourceDescriptor)), XmlInclude(typeof(Remote.Linq.DynamicQuery.QueryableResourceDescriptor))]
     public abstract partial class Expression
     {
         public abstract ExpressionType NodeType { get; }
@@ -43,6 +43,11 @@ namespace Remote.Linq.Expressions
         }
 
         public static MethodCallExpression MethodCall(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
+        {
+            return new MethodCallExpression(insatnce, methodInfo, arguments);
+        }
+
+        public static MethodCallExpression MethodCall(Expression insatnce, Remote.Linq.TypeSystem.MethodInfo methodInfo, IEnumerable<Expression> arguments)
         {
             return new MethodCallExpression(insatnce, methodInfo, arguments);
         }

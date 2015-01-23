@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
-using BindingFlags = System.Reflection.BindingFlags;
-
 namespace Remote.Linq.TypeSystem
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
+    using BindingFlags = System.Reflection.BindingFlags;
+
     [Serializable]
     [DataContract(Name = "MethodBase")]
     [KnownType(typeof(ConstructorInfo)), XmlInclude(typeof(ConstructorInfo))]
@@ -40,8 +40,8 @@ namespace Remote.Linq.TypeSystem
         // TODO: replace binding flags by bool flags
         protected MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes)
             : this(
-            name, new TypeInfo(declaringType), bindingFlags, 
-            ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => new TypeInfo(x)), 
+            name, new TypeInfo(declaringType), bindingFlags,
+            ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => new TypeInfo(x)),
             ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => new TypeInfo(x)))
         {
         }

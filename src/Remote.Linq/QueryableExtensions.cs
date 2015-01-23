@@ -1,18 +1,19 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.Dynamic;
-using Remote.Linq.TypeSystem;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using MethodInfo = System.Reflection.MethodInfo;
-
 namespace Remote.Linq
 {
+    using Remote.Linq.Dynamic;
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Reflection;
+    using MethodInfo = System.Reflection.MethodInfo;
+
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class IQueryableExtensions
+    public static class QueryableExtensions
     {
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified
@@ -155,6 +156,124 @@ namespace Remote.Linq
                 queriable = queriable.Take(query.TakeValue.Value);
             }
             return queriable;
+        }
+
+        public static IQueryable<T> Include<T>(this IQueryable<T> queryable, string path)
+        {
+            if (ReferenceEquals(null, queryable))
+            {
+                throw new ArgumentNullException("queryable");
+            }
+
+            if (ReferenceEquals(null, path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("path must not be empty", "path");
+            }
+
+            if (queryable is IRemoteQueryable<T>)
+            {
+                var methodInfo = MethodInfos.QueryFuntion.Include.MakeGenericMethod(typeof(T));
+                var parameter1 = queryable.Expression;
+                var parameter2 = Expression.Constant(path);
+                var methodCallExpression = Expression.Call(methodInfo, parameter1, parameter2);
+                var newQueryable = queryable.Provider.CreateQuery<T>(methodCallExpression);
+                queryable = newQueryable;
+            }
+
+            return queryable;
+        }
+
+        public static IQueryable<T> Include<T, TProperty>(this IQueryable<T> queryable, Expression<Func<T, TProperty>> path)
+        {
+            if (ReferenceEquals(null, queryable))
+            {
+                throw new ArgumentNullException("queryable");
+            }
+
+            if (ReferenceEquals(null, path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            string path1;
+            if (!TryParsePath(path.Body, out path1) || path1 == null)
+            {
+                throw new ArgumentException("Invalid include path expression", "path");
+            }
+            else
+            {
+                return queryable.Include<T>(path1);
+            }
+        }
+
+        private static bool TryParsePath(Expression expression, out string path)
+        {
+            path = null;
+            var expression1 = RemoveConvert(expression);
+            var memberExpression = expression1 as MemberExpression;
+            var methodCallExpression = expression1 as MethodCallExpression;
+
+            if (memberExpression != null)
+            {
+                var name = memberExpression.Member.Name;
+                string path1;
+                if (!TryParsePath(memberExpression.Expression, out path1))
+                {
+                    return false;
+                }
+
+                path = path1 == null ? name : path1 + "." + name;
+            }
+            else if (methodCallExpression != null)
+            {
+                string path1;
+                if (methodCallExpression.Method.Name == "Select" && methodCallExpression.Arguments.Count == 2 && (TryParsePath(methodCallExpression.Arguments[0], out path1) && path1 != null))
+                {
+                    var lambdaExpression = methodCallExpression.Arguments[1] as LambdaExpression;
+                    string path2;
+                    if (lambdaExpression != null && TryParsePath(lambdaExpression.Body, out path2) && path2 != null)
+                    {
+                        path = path1 + "." + path2;
+                        return true;
+                    }
+                }
+
+                //string path1;
+                //var m = methodCallExpression.Method.Name;
+                //if (methodCallExpression.Arguments.Count > 0 && (TryParsePath(methodCallExpression.Arguments[0], out path1) && path1 != null))
+                //{
+                //    if (methodCallExpression.Arguments.Count == 2)
+                //    {
+                //        var lambdaExpression = methodCallExpression.Arguments[1] as LambdaExpression;
+                //        string path2;
+                //        if (lambdaExpression != null && TryParsePath(lambdaExpression.Body, out path2) && path2 != null)
+                //        {
+                //            path = path1 + "." + path2;
+                //        }
+                //    }
+                
+                //    return true;
+                //}
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private static Expression RemoveConvert(Expression expression)
+        {
+            while (expression.NodeType == ExpressionType.Convert || expression.NodeType == ExpressionType.ConvertChecked)
+            {
+                expression = ((UnaryExpression)expression).Operand;
+            }
+
+            return expression;
         }
     }
 }

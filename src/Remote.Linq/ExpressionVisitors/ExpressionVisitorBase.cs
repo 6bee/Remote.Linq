@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq.Expressions;
-
-namespace Remote.Linq
+﻿namespace Remote.Linq.ExpressionVisitors
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq.Expressions;
+
     /// <summary>
     /// From http://msdn.microsoft.com/en-us/library/bb882521.aspx
     /// </summary>
@@ -18,7 +18,7 @@ namespace Remote.Linq
     /// This recursive behavior enables a new expression tree to be built that either is the same as or a 
     /// modified version of the original expression that was passed to Visit.
     /// </remarks>
-    internal abstract class ExpressionVisitorBase
+    public abstract class ExpressionVisitorBase
     {
         protected virtual Expression Visit(Expression exp)
         {

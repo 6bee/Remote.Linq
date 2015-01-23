@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Threading;
-
 namespace Remote.Linq
 {
+    using System;
+    using System.Threading;
+
     // Custom implementation of the corresponding .NET framework class
     internal sealed class Lazy<T>
     {

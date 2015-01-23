@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.Expressions;
-using Remote.Linq.TypeSystem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-
 namespace Remote.Linq
 {
+    using Remote.Linq.Expressions;
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Text;
+
     [Serializable]
     [DataContract]
     public class Query : IQuery, IOrderedQuery
@@ -62,7 +62,7 @@ namespace Remote.Linq
         [DataMember(Name = "Skip", Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public int? SkipValue { get; set; }
 
-        [DataMember(Name = "Take", Order = 5,  IsRequired = false, EmitDefaultValue = false)]
+        [DataMember(Name = "Take", Order = 5, IsRequired = false, EmitDefaultValue = false)]
         public int? TakeValue { get; set; }
 
         #endregion Properties

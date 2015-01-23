@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Remote.Linq
 {
-    internal interface IAsyncQueryProvider : IQueryProvider
+    internal interface IAsyncRemoteQueryProvider : IRemoteQueryProvider
     {
         Task<TResult> ExecuteAsync<TResult>(Expression expression);
     }

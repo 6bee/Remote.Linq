@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-
 namespace Remote.Linq
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class IEnumerableAsyncExtensions
+    public static class AsyncEnumerableExtensions
     {
         public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source)
         {
@@ -402,12 +402,12 @@ namespace Remote.Linq
                 .AverageAsync();
         }
 
-        private static Task<TResult> ExecuteAsync<T, TResult>(IQueryable<T> source, Func<IEnumerable<T>,TResult> projection)
+        private static Task<TResult> ExecuteAsync<T, TResult>(IQueryable<T> source, Func<IEnumerable<T>, TResult> projection)
         {
             Task<IEnumerable<T>> task;
-            if (source is IAsyncQueryable<T>)
+            if (source is IAsyncRemoteQueryable<T>)
             {
-                var asyncQueryable = (IAsyncQueryable<T>)source;
+                var asyncQueryable = (IAsyncRemoteQueryable<T>)source;
                 task = asyncQueryable.ExecuteAsync();
             }
             else

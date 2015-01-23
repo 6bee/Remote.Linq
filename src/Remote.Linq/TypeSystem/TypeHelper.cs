@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Remote.Linq.TypeSystem
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     internal static class TypeHelper
     {
         internal static Type GetElementType(Type type)

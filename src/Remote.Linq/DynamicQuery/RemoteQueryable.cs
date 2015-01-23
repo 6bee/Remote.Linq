@@ -1,25 +1,26 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-
 namespace Remote.Linq.DynamicQuery
 {
-    internal partial class RemoteQueryable : IQueryable
+    using Remote.Linq.Dynamic;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+
+    internal partial class RemoteQueryable : IRemoteQueryable
     {
         protected readonly Type _elemntType;
         protected readonly Expression _expression;
-        protected readonly IQueryProvider _provider;
+        protected readonly IRemoteQueryProvider _provider;
 
-        internal RemoteQueryable(Type elemntType, IQueryProvider provider)
+        internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider)
         {
             _elemntType = elemntType;
             _provider = provider;
             _expression = Expression.Constant(this);
         }
 
-        internal RemoteQueryable(Type elemntType, IQueryProvider provider, Expression expression)
+        internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression expression)
         {
             _elemntType = elemntType;
             _provider = provider;

@@ -1,15 +1,16 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.Dynamic;
-using Remote.Linq.TypeSystem;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-
 namespace Remote.Linq.Expressions
 {
+    using Remote.Linq.Dynamic;
+    using Remote.Linq.ExpressionVisitors;
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Reflection;
+
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionExtensions
     {
@@ -88,6 +89,18 @@ namespace Remote.Linq.Expressions
 
             var queryResult = Execute(linqExpression);
 
+            var dynamicObjects = ConvertResultToDynamicObjects(queryResult, mapper);
+            return dynamicObjects;
+        }
+
+        /// <summary>
+        /// Converts the query result into a collection of <see cref="DynamicObject"/>
+        /// </summary>
+        /// <param name="queryResult">The reult of the query execution</param>
+        /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
+        /// <returns>The mapped query result</returns>
+        public static IEnumerable<DynamicObject> ConvertResultToDynamicObjects(object queryResult, IDynamicObjectMapper mapper = null)
+        {
             if (ReferenceEquals(null, mapper))
             {
                 mapper = new DynamicObjectMapper();

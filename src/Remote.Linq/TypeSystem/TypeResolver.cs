@@ -1,20 +1,22 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Linq;
-
 namespace Remote.Linq.TypeSystem
 {
+    using System;
+    using System.Linq;
+
     public partial class TypeResolver : ITypeResolver
     {
         private static readonly ITypeResolver _defaultTypeResolver = new TypeResolver();
         private static ITypeResolver _instance;
 
         private readonly TransparentCache<TypeInfo, Type> _typeCache;
+        private readonly TransparentCache<string, Type> _typeCacheByName;
 
         protected TypeResolver()
         {
             _typeCache = new TransparentCache<TypeInfo, Type>();
+            _typeCacheByName = new TransparentCache<string, Type>();
         }
 
         /// <summary>
@@ -35,7 +37,20 @@ namespace Remote.Linq.TypeSystem
             return _typeCache.GetOrCreate(typeInfo, ResolveTypeInternal);
         }
 
-        protected virtual Type ResolveType(string typeName)
+        public virtual Type ResolveType(string typeName)
+        {
+            return _typeCacheByName.GetOrCreate(typeName, ResolveTypeInternal);
+        }
+
+#if NET
+        protected Type EmitType(TypeInfo typeInfo)
+        {
+            var type = new Emit.TypeEmitter().EmitType(typeInfo);
+            return type;
+        }
+#endif
+
+        private Type ResolveTypeInternal(string typeName)
         {
             if (string.IsNullOrEmpty(typeName)) throw new ArgumentNullException("typeName", "Expected a valid type name");
 
@@ -46,19 +61,16 @@ namespace Remote.Linq.TypeSystem
                 foreach (var assembly in assemblies)
                 {
                     type = assembly.GetType(typeName);
-                    if (!ReferenceEquals(null, type)) break;
+
+                    if (!ReferenceEquals(null, type))
+                    {
+                        break;
+                    }
                 }
             }
-            return type;
-        }
 
-#if NET
-        protected Type EmitType(TypeInfo typeInfo)
-        {
-            var type = new Emit.TypeEmitter().EmitType(typeInfo);
             return type;
         }
-#endif
 
         private Type ResolveTypeInternal(TypeInfo typeInfo)
         {

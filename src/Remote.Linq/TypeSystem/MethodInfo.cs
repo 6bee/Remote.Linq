@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using BindingFlags = System.Reflection.BindingFlags;
-
 namespace Remote.Linq.TypeSystem
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using BindingFlags = System.Reflection.BindingFlags;
+
     [Serializable]
     [DataContract(Name = "Method")]
     public class MethodInfo : MethodBaseInfo
@@ -93,30 +93,25 @@ namespace Remote.Linq.TypeSystem
                 .ToArray();
 
 
-            var methodInfo = declaringType.GetMethod(Name, BindingFlags, null, parameterTypes, null);
-            //if (methodInfo == null) methodInfo = declaringType.GetMethod(MethodName);
-            if (ReferenceEquals(null, methodInfo))
-            {
-                methodInfo = declaringType.GetMethods(BindingFlags)
-                    .Where(m => m.Name == Name)
-                    .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments.Length)
-                    .Where(m => m.GetParameters().Length == parameterTypes.Length)
-                    .Select(m => m.IsGenericMethod ? m.MakeGenericMethod(genericArguments) : m)
-                    .Where(m =>
+            var methodInfo = declaringType.GetMethods(BindingFlags)
+                .Where(m => m.Name == Name)
+                .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments.Length)
+                .Where(m => m.GetParameters().Length == parameterTypes.Length)
+                .Select(m => m.IsGenericMethod ? m.MakeGenericMethod(genericArguments) : m)
+                .Where(m =>
+                {
+                    var paramTypes = m.GetParameters();
+                    for (int i = 0; i < parameterTypes.Length; i++)
                     {
-                        var paramTypes = m.GetParameters();
-                        for (int i = 0; i < parameterTypes.Length; i++)
+                        if (paramTypes[i].ParameterType != parameterTypes[i])
                         {
-                            if (paramTypes[i].ParameterType != parameterTypes[i])
-                            {
-                                return false;
-                            }
+                            return false;
                         }
+                    }
 
-                        return true;
-                    })
-                    .Single();
-            }
+                    return true;
+                })
+                .Single();
 
             return methodInfo;
         }

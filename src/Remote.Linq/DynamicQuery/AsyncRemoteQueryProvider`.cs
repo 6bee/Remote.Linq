@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.TypeSystem;
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-
 namespace Remote.Linq.DynamicQuery
 {
-    internal sealed partial class AsyncRemoteQueryProvider<TSource> : IAsyncQueryProvider
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+
+    internal sealed partial class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
     {
         private readonly Func<Expressions.Expression, Task<TSource>> _dataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
@@ -40,9 +40,9 @@ namespace Remote.Linq.DynamicQuery
         public TResult Execute<TResult>(Expression expression)
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver);
-            
+
             var task = _dataProvider(rlinq);
-            
+
             TResult result;
             try
             {
@@ -75,10 +75,6 @@ namespace Remote.Linq.DynamicQuery
         public Task<TResult> ExecuteAsync<TResult>(Expression expression)
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver);
-
-            //var dataRecords = await _dataProvider(rlinq);
-            //var result = await _resultMapper.MapResultAsync<TResult>(dataRecords);
-            //return result;
 
             var dataRecordsTask = _dataProvider(rlinq);
 

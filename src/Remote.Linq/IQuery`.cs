@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-
 namespace Remote.Linq
 {
+    using System;
+    using System.Collections.Generic;
+
     public interface IQuery<T> : IEnumerable<T>
     {
         bool HasFilters { get; }

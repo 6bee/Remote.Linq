@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using BindingFlags = System.Reflection.BindingFlags;
-using MemberTypes = Remote.Linq.TypeSystem.MemberTypes;
-
 namespace Remote.Linq
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using BindingFlags = System.Reflection.BindingFlags;
+    using MemberTypes = Remote.Linq.TypeSystem.MemberTypes;
+
     internal static class TypeExtensions
     {
         public static Type GetUnderlyingSystemType(this Type type)

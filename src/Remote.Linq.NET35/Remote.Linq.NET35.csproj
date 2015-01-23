@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\net35-client\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,11 +26,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\net35-client\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>NET35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\Release\net35-client\Remote.Linq.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Remote.Linq.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,6 +45,9 @@
     <Compile Include="..\Remote.Linq\DynamicQuery\DynamicResultMapper.cs">
       <Link>DynamicQuery\DynamicResultMapper.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\DynamicQuery\QueryFunctions.cs">
+      <Link>DynamicQuery\QueryFunctions.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\DynamicQuery\RemoteQueryable.cs">
       <Link>DynamicQuery\RemoteQueryable.cs</Link>
     </Compile>
@@ -56,6 +59,12 @@
     </Compile>
     <Compile Include="..\Remote.Linq\IQueryResultMapper.cs">
       <Link>IQueryResultMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IRemoteQueryable`.cs">
+      <Link>IRemoteQueryable`.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\IRemoteQueryable.cs">
+      <Link>IRemoteQueryable.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\Dynamic\DynamicObject.cs">
       <Link>Dynamic\DynamicObject.cs</Link>
@@ -69,14 +78,14 @@
     <Compile Include="..\Remote.Linq\Dynamic\IDynamicObjectMapper.cs">
       <Link>Dynamic\IDynamicObjectMapper.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\Dynamic\QueryableResourceDescriptor.cs">
-      <Link>Dynamic\QueryableResourceDescriptor.cs</Link>
+    <Compile Include="..\Remote.Linq\DynamicQuery\QueryableResourceDescriptor.cs">
+      <Link>DynamicQuery\QueryableResourceDescriptor.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\Dynamic\RemoteExpressionReWriter.cs">
-      <Link>Dynamic\RemoteExpressionReWriter.cs</Link>
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\RemoteExpressionReWriter.cs">
+      <Link>ExpressionVisitors\RemoteExpressionReWriter.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\Dynamic\SystemExpressionReWriter.cs">
-      <Link>Dynamic\SystemExpressionReWriter.cs</Link>
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\SystemExpressionReWriter.cs">
+      <Link>ExpressionVisitors\SystemExpressionReWriter.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\Expressions\BinaryExpression.cs">
       <Link>Expressions\BinaryExpression.cs</Link>
@@ -171,6 +180,12 @@
     <Compile Include="..\Remote.Linq\ExpressionVisitors\ExpressionVisitorBase.cs">
       <Link>ExpressionVisitors\ExpressionVisitorBase.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\QueryableResourceDescriptorVisitor.cs">
+      <Link>ExpressionVisitors\QueryableResourceDescriptorVisitor.cs</Link>
+    </Compile>	
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\QueryableResourceVisitor.cs">
+      <Link>ExpressionVisitors\QueryableResourceVisitor.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\ExpressionVisitors\RemoteExpressionVisitorBase.cs">
       <Link>ExpressionVisitors\RemoteExpressionVisitorBase.cs</Link>
     </Compile>
@@ -225,6 +240,9 @@
     <Compile Include="..\Remote.Linq\IQuery`.cs">
       <Link>IQuery`.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\IRemoteQueryProvider.cs">
+      <Link>IRemoteQueryProvider.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\MemberInfoExtensions.cs">
       <Link>MemberInfoExtensions.cs</Link>
     </Compile>
@@ -243,11 +261,11 @@
     <Compile Include="..\Remote.Linq\Query`.cs">
       <Link>Query`.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\IEnumerableExtensions.cs">
-      <Link>IEnumerableExtensions.cs</Link>
+    <Compile Include="..\Remote.Linq\EnumerableExtensions.cs">
+      <Link>EnumerableExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\IQueryableExtensions.cs">
-      <Link>IQueryableExtensions.cs</Link>
+    <Compile Include="..\Remote.Linq\QueryableExtensions.cs">
+      <Link>QueryableExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\RemoteQueryable.cs">
       <Link>RemoteQueryable.cs</Link>

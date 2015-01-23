@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.Dynamic;
-using Remote.Linq.TypeSystem;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-
 namespace Remote.Linq
 {
+    using Remote.Linq.Dynamic;
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class IEnumerableExtensions
+    public static class EnumerableExtensions
     {
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified

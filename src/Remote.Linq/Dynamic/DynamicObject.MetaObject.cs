@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq.Expressions;
-using System.Reflection;
-
 namespace Remote.Linq.Dynamic
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Dynamic;
+    using System.Linq.Expressions;
+    using System.Reflection;
+
     partial class DynamicObject : IDynamicMetaObjectProvider
     {
         DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression expression)

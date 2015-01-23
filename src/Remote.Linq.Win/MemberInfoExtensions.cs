@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using MemberTypes = Remote.Linq.TypeSystem.MemberTypes;
-
 namespace Remote.Linq
 {
+    using System;
+    using MemberTypes = Remote.Linq.TypeSystem.MemberTypes;
+
     internal static class MemberInfoExtensions
     {
         internal static MemberTypes GetMemberType(this System.Reflection.MemberInfo member)

@@ -44,6 +44,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DynamicQuery\RemoteQueryable\When_using_include_path.cs" />
+    <Compile Include="DynamicQuery\RemoteQueryable\When_using_include_on_subtype.cs" />
+    <Compile Include="DynamicQuery\RemoteQueryable\When_using_include_reference.cs" />
+    <Compile Include="DynamicQuery\RemoteQueryable\When_using_include_collection.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\CustomMapper\When_mapping_int_as_string_and_long_as_long.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_dynamic_objects_to_list_of_known_types.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_known_types.cs" />

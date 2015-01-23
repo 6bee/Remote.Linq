@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Threading;
-
 namespace Remote.Linq.TypeSystem.Emit
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Reflection.Emit;
+    using System.Threading;
+    using TypeInfo = Remote.Linq.TypeSystem.TypeInfo;
+
     internal sealed partial class TypeEmitter
     {
         private static readonly TypeCache _typeCache = new TypeCache();

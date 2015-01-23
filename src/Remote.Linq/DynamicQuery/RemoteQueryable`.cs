@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-
 namespace Remote.Linq.DynamicQuery
 {
-    internal sealed partial class RemoteQueryable<T> : RemoteQueryable, IQueryable<T>
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+
+    internal sealed partial class RemoteQueryable<T> : RemoteQueryable, IRemoteQueryable<T>
     {
-        internal RemoteQueryable(IQueryProvider provider)
+        internal RemoteQueryable(IRemoteQueryProvider provider)
             : base(typeof(T), provider)
         {
         }
 
-        internal RemoteQueryable(IQueryProvider provider, Expression expression)
+        internal RemoteQueryable(IRemoteQueryProvider provider, Expression expression)
             : base(typeof(T), provider, expression)
         {
         }

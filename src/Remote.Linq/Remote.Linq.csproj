@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\net45\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -28,12 +28,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\net45\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>..\bin\Release\net45\Remote.Linq.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Remote.Linq.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -51,20 +51,25 @@
     <Compile Include="Dynamic\DynamicObjectMapper.NET.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper.cs" />
     <Compile Include="Dynamic\DynamicObject.MetaObject.cs" />
-    <Compile Include="Dynamic\QueryableResourceDescriptor.cs" />
-    <Compile Include="Dynamic\SystemExpressionReWriter.cs" />
-    <Compile Include="Dynamic\RemoteExpressionReWriter.cs" />
+    <Compile Include="DynamicQuery\QueryableResourceDescriptor.cs" />
+    <Compile Include="ExpressionVisitors\SystemExpressionReWriter.cs" />
+    <Compile Include="ExpressionVisitors\RemoteExpressionReWriter.cs" />
     <Compile Include="DynamicQuery\AsyncRemoteQueryable`.cs" />
     <Compile Include="DynamicQuery\AsyncRemoteQueryProvider`.cs" />
     <Compile Include="DynamicQuery\AsyncObjectResultCaster.cs" />
     <Compile Include="DynamicQuery\AsyncDynamicResultMapper.cs" />
     <Compile Include="DynamicQuery\ObjectResultCaster.cs" />
     <Compile Include="DynamicQuery\DynamicResultMapper.cs" />
+    <Compile Include="DynamicQuery\QueryFunctions.cs" />
     <Compile Include="DynamicQuery\RemoteQueryable.cs" />
     <Compile Include="DynamicQuery\RemoteQueryable`.cs" />
     <Compile Include="DynamicQuery\RemoteQueryProvider`.cs" />
+    <Compile Include="IRemoteQueryProvider.cs" />
     <Compile Include="IAsyncQueryResultMapper.cs" />
+    <Compile Include="IAsyncRemoteQueryable`.cs" />
     <Compile Include="IQueryResultMapper.cs" />
+    <Compile Include="IRemoteQueryable`.cs" />
+    <Compile Include="IRemoteQueryable.cs" />
     <Compile Include="RemoteQueryable.cs" />
     <Compile Include="AsyncRemoteQueryable.cs" />
     <Compile Include="Expressions\ElementInit.cs" />
@@ -98,6 +103,8 @@
     <Compile Include="ExpressionVisitors\ExpressionEvaluator.cs" />
     <Compile Include="ExpressionVisitors\ExpressionTranslator.cs" />
     <Compile Include="ExpressionVisitors\ExpressionVisitorBase.cs" />
+    <Compile Include="ExpressionVisitors\QueryableResourceDescriptorVisitor.cs" />
+    <Compile Include="ExpressionVisitors\QueryableResourceVisitor.cs" />
     <Compile Include="ExpressionVisitors\RemoteExpressionVisitorBase.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.Cache.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.cs" />
@@ -119,16 +126,16 @@
     <Compile Include="TransparentCache.cs" />
     <Compile Include="MemberInfoExtensions.cs" />
     <Compile Include="MethodInfos.cs" />
-    <Compile Include="IAsyncQueryProvider.cs" />
-    <Compile Include="IAsyncQueryable.cs" />
+    <Compile Include="IAsyncRemoteQueryProvider.cs" />
+    <Compile Include="IAsyncRemoteQueryable.cs" />
     <Compile Include="ProviderRegistry.cs" />
     <Compile Include="IOrderedQuery.cs" />
     <Compile Include="IOrderedQuery`.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="IQuery`.cs" />
-    <Compile Include="IEnumerableExtensions.cs" />
-    <Compile Include="IEnumerableAsyncExtensions.cs" />
-    <Compile Include="IQueryableExtensions.cs" />
+    <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="AsyncEnumerableExtensions.cs" />
+    <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Query`.cs" />

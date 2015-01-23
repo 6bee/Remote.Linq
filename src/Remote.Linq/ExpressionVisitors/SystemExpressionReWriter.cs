@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.TypeSystem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using BindingFlags = System.Reflection.BindingFlags;
-
-namespace Remote.Linq.Dynamic
+namespace Remote.Linq.ExpressionVisitors
 {
+    using Remote.Linq.Dynamic;
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using BindingFlags = System.Reflection.BindingFlags;
+
     internal static class SystemExpressionReWriter
     {
         internal static Expression ReplaceAnonymousTypes(this Expression expression)
@@ -39,7 +40,6 @@ namespace Remote.Linq.Dynamic
                     var projectionMethod = MethodInfos.Queryable.Select.MakeGenericMethod(elementType, elementType);
                     var parameter = Expression.Parameter(elementType, "x");
                     var lambda = Expression.Lambda(parameter, parameter);
-                    //var quote = Expression.MakeUnary(ExpressionType.Quote, lambda, elementType);
                     projection = Expression.Call(null, projectionMethod, expression, lambda);
                 }
 
@@ -216,18 +216,6 @@ namespace Remote.Linq.Dynamic
                 }
                 return false;
             }
-
-            //private static Expression CreateProjectionToDynamicObject(Expression sourceExpression, Type resultType, IEnumerable<ParameterExpression> parameters, IEnumerable<KeyValuePair<Expression, Expression>> initMap)
-            //{
-            //    var inits =
-            //        from i in initMap
-            //        select Expression.ElementInit(DynamicObjectAddMethod, i.Key, i.Value);
-            //    var listInit = Expression.ListInit(NewDynamicObjectExpression, inits);
-            //    var listInitExpression = Expression.Lambda(listInit, parameters.ToArray());
-            //    var projectionMethod = QueryableSelectMethodInfo.MakeGenericMethod(resultType, typeof(DynamicObject));
-            //    var exp = Expression.Call(projectionMethod, sourceExpression, listInitExpression);
-            //    return exp;
-            //}
         }
     }
 }

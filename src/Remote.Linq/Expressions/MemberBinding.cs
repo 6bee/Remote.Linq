@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.TypeSystem;
-using System;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
-
 namespace Remote.Linq.Expressions
 {
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
+
     [Serializable]
     [DataContract]
     [KnownType(typeof(MemberAssignment)), XmlInclude(typeof(MemberAssignment))]

@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-
-namespace Remote.Linq
+﻿namespace Remote.Linq.ExpressionVisitors
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq.Expressions;
+
     /// <summary>  
     /// Enables the partial evalutation of queries.  
     /// From http://msdn.microsoft.com/en-us/library/bb546158.aspx  
     /// </summary>  
-    internal static class ExpressionEvaluator
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static class ExpressionEvaluator
     {
         /// <summary>  
         /// Performs evaluation & replacement of independent sub-trees  
@@ -33,52 +35,73 @@ namespace Remote.Linq
 
         private static bool CanBeEvaluatedLocally(Expression expression)
         {
-            return expression.NodeType != ExpressionType.Parameter;
+            if (expression.NodeType == ExpressionType.Parameter)
+            {
+                return false;
+            }
+
+            var methodCallExpression = expression as MethodCallExpression;
+            if (!ReferenceEquals(null, methodCallExpression))
+            {
+                if (methodCallExpression.Method.IsGenericMethod &&
+                    methodCallExpression.Method.GetGenericMethodDefinition() == MethodInfos.QueryFuntion.Include)
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>  
         /// Evaluates & replaces sub-trees when first candidate is reached (top-down)  
         /// </summary>  
-        private class SubtreeEvaluator : ExpressionVisitorBase
+        private sealed class SubtreeEvaluator : ExpressionVisitorBase
         {
-            private HashSet<Expression> candidates;
+            private readonly HashSet<Expression> _candidates;
 
             internal SubtreeEvaluator(HashSet<Expression> candidates)
             {
-                this.candidates = candidates;
+                _candidates = candidates;
             }
 
-            internal Expression Eval(Expression exp)
+            internal Expression Eval(Expression expression)
             {
-                return this.Visit(exp);
+                var expression2 = Visit(expression);
+                return expression2;
             }
 
-            protected override Expression Visit(Expression exp)
+            protected override Expression Visit(Expression expression)
             {
-                if (exp == null)
+                if (expression == null)
                 {
                     return null;
                 }
-                if (this.candidates.Contains(exp))
+
+                if (_candidates.Contains(expression))
                 {
-                    return this.Evaluate(exp);
+                    return Evaluate(expression);
                 }
-                return base.Visit(exp);
+                
+                return base.Visit(expression);
             }
 
-            private Expression Evaluate(Expression e)
+            private Expression Evaluate(Expression expression)
             {
-                if (e.NodeType == ExpressionType.Constant)
+                if (expression.NodeType == ExpressionType.Constant)
                 {
-                    return e;
+                    return expression;
                 }
-                if (e.NodeType == ExpressionType.Quote)
+
+                if (expression.NodeType == ExpressionType.Quote)
                 {
-                    return e;
+                    return expression;
                 }
-                LambdaExpression lambda = Expression.Lambda(e);
+                
+                LambdaExpression lambda = Expression.Lambda(expression);
                 Delegate fn = lambda.Compile();
-                return Expression.Constant(fn.DynamicInvoke(null), e.Type);
+                var value = fn.DynamicInvoke(null);
+                return Expression.Constant(value, expression.Type);
             }
         }
 
@@ -86,44 +109,48 @@ namespace Remote.Linq
         /// Performs bottom-up analysis to determine which nodes can possibly  
         /// be part of an evaluated sub-tree.  
         /// </summary>  
-        private class Nominator : ExpressionVisitorBase
+        private sealed class Nominator : ExpressionVisitorBase
         {
-            private Func<Expression, bool> fnCanBeEvaluated;
-            private HashSet<Expression> candidates;
-            private bool cannotBeEvaluated;
+            private Func<Expression, bool> _fnCanBeEvaluated;
+            private HashSet<Expression> _candidates;
+            private bool _cannotBeEvaluated;
 
             internal Nominator(Func<Expression, bool> fnCanBeEvaluated)
             {
-                this.fnCanBeEvaluated = fnCanBeEvaluated;
+                _fnCanBeEvaluated = fnCanBeEvaluated;
             }
 
             internal HashSet<Expression> Nominate(Expression expression)
             {
-                this.candidates = new HashSet<Expression>();
-                this.Visit(expression);
-                return this.candidates;
+                _candidates = new HashSet<Expression>();
+                Visit(expression);
+                return _candidates;
             }
 
             protected override Expression Visit(Expression expression)
             {
                 if (expression != null)
                 {
-                    bool saveCannotBeEvaluated = this.cannotBeEvaluated;
-                    this.cannotBeEvaluated = false;
+                    bool saveCannotBeEvaluated = _cannotBeEvaluated;
+                    _cannotBeEvaluated = false;
+                    
                     base.Visit(expression);
-                    if (!this.cannotBeEvaluated)
+                    
+                    if (!_cannotBeEvaluated)
                     {
-                        if (this.fnCanBeEvaluated(expression))
+                        if (_fnCanBeEvaluated(expression))
                         {
-                            this.candidates.Add(expression);
+                            _candidates.Add(expression);
                         }
                         else
                         {
-                            this.cannotBeEvaluated = true;
+                            _cannotBeEvaluated = true;
                         }
                     }
-                    this.cannotBeEvaluated |= saveCannotBeEvaluated;
+                    
+                    _cannotBeEvaluated |= saveCannotBeEvaluated;
                 }
+
                 return expression;
             }
         }

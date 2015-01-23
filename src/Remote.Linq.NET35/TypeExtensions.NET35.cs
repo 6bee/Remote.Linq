@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System.Reflection;
-
 namespace Remote.Linq
 {
+    using System.Reflection;
+
     partial class TypeExtensions
     {
         public static void SetValue(this PropertyInfo property, object obj, object value)

@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Linq;
-using System.Runtime.Serialization;
-using BindingFlags = System.Reflection.BindingFlags;
-
 namespace Remote.Linq.TypeSystem
 {
+    using System;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using BindingFlags = System.Reflection.BindingFlags;
+
     [Serializable]
     [DataContract(Name = "Constructor")]
     public class ConstructorInfo : MethodBaseInfo

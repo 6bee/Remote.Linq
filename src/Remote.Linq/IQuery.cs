@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.TypeSystem;
-using System.Collections.Generic;
-
 namespace Remote.Linq
 {
+    using Remote.Linq.TypeSystem;
+    using System.Collections.Generic;
+
     public interface IQuery
     {
         TypeInfo Type { get; }

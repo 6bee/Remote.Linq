@@ -1,19 +1,19 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.Expressions;
-using Remote.Linq.TypeSystem;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-
-namespace Remote.Linq
+namespace Remote.Linq.ExpressionVisitors
 {
-    internal abstract class RemoteExpressionVisitorBase
+    using Remote.Linq.Expressions;
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+
+    public abstract class RemoteExpressionVisitorBase
     {
         protected readonly ITypeResolver _typeResolver;
 
-        protected RemoteExpressionVisitorBase(ITypeResolver typeResolver)
+        protected RemoteExpressionVisitorBase(ITypeResolver typeResolver = null)
         {
             _typeResolver = typeResolver ?? TypeResolver.Instance;
         }

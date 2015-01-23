@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Remote.Linq
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     internal static partial class TypeExtensions
     {
         public static Type GetUnderlyingSystemType(this Type type)

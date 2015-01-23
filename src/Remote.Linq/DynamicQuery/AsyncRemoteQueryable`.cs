@@ -1,19 +1,19 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-
 namespace Remote.Linq.DynamicQuery
 {
-    internal sealed partial class AsyncRemoteQueryable<T> : RemoteQueryable, IAsyncQueryable<T>
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+
+    internal sealed partial class AsyncRemoteQueryable<T> : RemoteQueryable, IAsyncRemoteQueryable<T>
     {
-        internal AsyncRemoteQueryable(IAsyncQueryProvider provider)
+        internal AsyncRemoteQueryable(IAsyncRemoteQueryProvider provider)
             : base(typeof(T), provider)
         {
         }
 
-        internal AsyncRemoteQueryable(IAsyncQueryProvider provider, Expression expression)
+        internal AsyncRemoteQueryable(IAsyncRemoteQueryProvider provider, Expression expression)
             : base(typeof(T), provider, expression)
         {
         }
@@ -25,7 +25,7 @@ namespace Remote.Linq.DynamicQuery
 
         public Task<IEnumerable<T>> ExecuteAsync()
         {
-            return ((IAsyncQueryProvider)_provider).ExecuteAsync<IEnumerable<T>>(_expression);
+            return ((IAsyncRemoteQueryProvider)_provider).ExecuteAsync<IEnumerable<T>>(_expression);
         }
     }
 }

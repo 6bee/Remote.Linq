@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Runtime.Serialization;
-
 namespace Remote.Linq.TypeSystem
 {
+    using System;
+    using System.Runtime.Serialization;
+
     [Serializable]
     [DataContract(Name = "Field")]
     public sealed class FieldInfo : MemberInfo

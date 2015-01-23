@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.TypeSystem;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization;
-
 namespace Remote.Linq.Dynamic
 {
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.Serialization;
+
     [Serializable]
     [DataContract(IsReference = true)]
     [DebuggerDisplay("Count = {MemberCount}")]
@@ -325,7 +325,7 @@ namespace Remote.Linq.Dynamic
         {
             return ((IEnumerable<KeyValuePair<string, object>>)Data).GetEnumerator();
         }
-        
+
         #endregion IEnumerable<KeyValuePair<string, object>>
 
         #region ICollection<KeyValuePair<string, object>>

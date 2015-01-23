@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.TypeSystem;
-using System;
-using System.Linq;
-using Remote.Linq.Dynamic;
-using Expression = System.Linq.Expressions.Expression;
-
 namespace Remote.Linq.DynamicQuery
 {
-    internal sealed partial class RemoteQueryProvider<TSource> : IQueryProvider
+    using Remote.Linq.ExpressionVisitors;
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Linq;
+    using Expression = System.Linq.Expressions.Expression;
+
+    internal sealed partial class RemoteQueryProvider<TSource> : IRemoteQueryProvider
     {
         private readonly Func<Expressions.Expression, TSource> _dataProvider;
         private readonly IQueryResultMapper<TSource> _resultMapper;

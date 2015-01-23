@@ -1,25 +1,33 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System.Collections.Generic;
-using System.Linq;
-using BindingFlags = System.Reflection.BindingFlags;
-using MethodInfo = System.Reflection.MethodInfo;
-
 namespace Remote.Linq
 {
+    using Remote.Linq.DynamicQuery;
+    using System.Collections.Generic;
+    using System.Linq;
+    using BindingFlags = System.Reflection.BindingFlags;
+    using MethodInfo = System.Reflection.MethodInfo;
+    
     internal static class MethodInfos
     {
         internal static class Enumerable
         {
             internal static readonly MethodInfo Cast = typeof(System.Linq.Enumerable)
                 .GetMethod("Cast", BindingFlags.Public | BindingFlags.Static);
+            
+            internal static readonly MethodInfo OfType = typeof(System.Linq.Enumerable)
+                .GetMethod("OfType", BindingFlags.Public | BindingFlags.Static);
 
             internal static readonly MethodInfo ToArray = typeof(System.Linq.Enumerable)
                 .GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
 
             internal static readonly MethodInfo ToList = typeof(System.Linq.Enumerable)
                 .GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
-
+            
+            internal static readonly MethodInfo Contains = typeof(System.Linq.Enumerable)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Single(m => m.Name == "Contains" && m.GetParameters().Length == 2);
+            
             internal static readonly MethodInfo Single = typeof(System.Linq.Enumerable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(x => x.Name == "Single")
@@ -102,6 +110,33 @@ namespace Remote.Linq
                     if (genericArguments.Single().GetGenericArguments().Count() != 2) return false;
                     return true;
                 });
+        }
+
+        internal static class String
+        {
+            internal static readonly MethodInfo StartsWith = typeof(string)
+                .GetMethod("StartsWith", new[] { typeof(string) });
+
+            internal static readonly MethodInfo EndsWith = typeof(string)
+                .GetMethod("EndsWith", new[] { typeof(string) });
+
+            internal static readonly MethodInfo Contains = typeof(string)
+                .GetMethod("Contains", new[] { typeof(string) });            
+        }
+
+        internal static class QueryFuntion
+        {
+            internal static readonly MethodInfo Include = typeof(QueryFunctions)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Where(x => x.Name == "Include")
+                .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
+                .Where(x =>
+                {
+                    var parameters = x.GetParameters().ToArray();
+                    return parameters.Length == 2
+                        && parameters[1].ParameterType == typeof(string);
+                })
+                .Single();
         }
     }
 }

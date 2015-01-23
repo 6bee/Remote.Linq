@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.Dynamic;
-using Remote.Linq.DynamicQuery;
-using Remote.Linq.TypeSystem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Remote.Linq
 {
+    using Remote.Linq.Dynamic;
+    using Remote.Linq.DynamicQuery;
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public static partial class RemoteQueryable
     {
         /// <summary>

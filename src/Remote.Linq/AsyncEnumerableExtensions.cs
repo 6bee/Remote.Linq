@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-
 namespace Remote.Linq
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class IEnumerableAsyncExtensions
+    public static class AsyncEnumerableExtensions
     {
         public static async Task<List<T>> ToListAsync<T>(this IQueryable<T> source)
         {
@@ -440,10 +440,15 @@ namespace Remote.Linq
         private static async Task<IEnumerable<T>> ExecuteAsync<T>(IQueryable<T> source)
         {
             IEnumerable<T> enumerable;
-            if (source is IAsyncQueryable<T>)
+            //if (source is IAsyncRemoteQueryable<T>)
+            //{
+            //    var asyncQueryable = (IAsyncRemoteQueryable<T>)source;
+            //    enumerable = await asyncQueryable.ExecuteAsync();
+            //}
+            if (source.Provider is IAsyncRemoteQueryProvider)
             {
-                var asyncQueryable = (IAsyncQueryable<T>)source;
-                enumerable = await asyncQueryable.ExecuteAsync();
+                var asyncQueryableProvider = (IAsyncRemoteQueryProvider)source.Provider;
+                enumerable = await asyncQueryableProvider.ExecuteAsync<IEnumerable<T>>(source.Expression);
             }
             else
             {
