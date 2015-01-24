@@ -9,8 +9,6 @@
 
     <Target Name="Build">
         <MakeDir Directories="$(OutputDirectory)"/>
-
-	
         <Exec Command="&quot;$(NuGetExePath)&quot; pack Remote.Linq\Remote.Linq.nuspec                                 -Symbols -OutputDirectory &quot;$(OutputDirectory).&quot; -Verbosity detailed -NoPackageAnalysis" />
         <Exec Command="&quot;$(NuGetExePath)&quot; pack Remote.Linq.EntityFramework\Remote.Linq.EntityFramework.nuspec -Symbols -OutputDirectory &quot;$(OutputDirectory).&quot; -Verbosity detailed -NoPackageAnalysis" />
     </Target>
