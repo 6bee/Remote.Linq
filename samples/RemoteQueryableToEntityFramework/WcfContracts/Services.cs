@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. 
 
-using Remote.Linq.Dynamic;
-using Remote.Linq.Expressions;
-using System.Collections.Generic;
-using System.ServiceModel;
-
 namespace WcfContracts
 {
+    using Remote.Linq.Dynamic;
+    using Remote.Linq.Expressions;
+    using System.Collections.Generic;
+    using System.ServiceModel;
+
     [ServiceContract]
     public interface IQueryService
     {

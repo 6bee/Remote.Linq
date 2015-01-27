@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. 
 
-using System.Data.Entity;
-using WcfContracts;
-
 namespace WcfService
 {
+    using System.Data.Entity;
+    using WcfContracts;
+
     public partial class EFContext : DbContext
     {
         public virtual DbSet<OrderItem> OrderItems { get; set; }

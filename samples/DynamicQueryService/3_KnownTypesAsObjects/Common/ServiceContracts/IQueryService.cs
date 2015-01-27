@@ -11,8 +11,8 @@ namespace Common.ServiceContracts
     {
         [OperationContract]
         [ServiceKnownType(typeof(Product[]))]
-		[ServiceKnownType(typeof(string[]))]
-		[ServiceKnownType(typeof(int[]))]
+        [ServiceKnownType(typeof(string[]))]
+        [ServiceKnownType(typeof(int[]))]
         [ServiceKnownType(typeof(decimal))]
         object ExecuteQuery(Expression queryExpression);
     }

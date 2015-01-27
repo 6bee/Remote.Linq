@@ -1,4 +1,4 @@
-﻿	// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+﻿    // Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using Remote.Linq;
 using System;
@@ -56,25 +56,25 @@ namespace Client
             foreach (var i in innerJoinResult)
             {
                 Console.WriteLine("  {0}", i);
-			}
+            }
 
 
-			Console.WriteLine("\nSELECT IDs:");
-			var productIdsQuery =
-				from p in repo.Products
-				select p.Id;
-			var productIds = await productIdsQuery.ToListAsync();
-			foreach (var id in productIdsQuery)
-			{
-				Console.WriteLine("  {0}", id);
-			}
+            Console.WriteLine("\nSELECT IDs:");
+            var productIdsQuery =
+                from p in repo.Products
+                select p.Id;
+            var productIds = await productIdsQuery.ToListAsync();
+            foreach (var id in productIdsQuery)
+            {
+                Console.WriteLine("  {0}", id);
+            }
 
 
-			Console.WriteLine("\nCOUNT:");
-			var productsQuery =
-				from p in repo.Products
-				select p;
-			Console.WriteLine("  Count = {0}", await productsQuery.CountAsync());
+            Console.WriteLine("\nCOUNT:");
+            var productsQuery =
+                from p in repo.Products
+                select p;
+            Console.WriteLine("  Count = {0}", await productsQuery.CountAsync());
 
 
             Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
