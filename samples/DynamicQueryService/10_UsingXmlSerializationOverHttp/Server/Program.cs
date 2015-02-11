@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-
 namespace Server
 {
+    using System;
+
     class Program
     {
         static void Main(string[] args)
         {
-            using (var serviceHost = new HttpServer("127.0.0.1", 8899))
+            using (var serviceHost = new HttpServer("127.0.0.1", 8088))
             {
                 serviceHost.Open();
 

@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Common.Model;
-using Remote.Linq.Dynamic;
-using Remote.Linq.Expressions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Server
 {
+    using Common.Model;
+    using Remote.Linq.Dynamic;
+    using Remote.Linq.Expressions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class QueryService
     {
         private static readonly Func<Type, IQueryable> _queryableResourceProvider = type =>

@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Common.Model;
-using System.Collections.Generic;
-
 namespace Server
 {
+    using Common.Model;
+    using System.Collections.Generic;
+
     public sealed class InMemoryDataStore
     {
         private static readonly InMemoryDataStore _instance = new InMemoryDataStore();

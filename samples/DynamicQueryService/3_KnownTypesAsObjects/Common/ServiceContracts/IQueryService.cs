@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Common.Model;
-using Remote.Linq.Expressions;
-using System.ServiceModel;
-
 namespace Common.ServiceContracts
 {
+    using Common.Model;
+    using Remote.Linq.Expressions;
+    using System.ServiceModel;
+
     [ServiceContract]
     public interface IQueryService
     {

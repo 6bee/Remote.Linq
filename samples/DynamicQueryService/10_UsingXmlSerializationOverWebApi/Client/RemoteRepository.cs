@@ -1,21 +1,21 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Common.Model;
-using Remote.Linq;
-using Remote.Linq.Dynamic;
-using Remote.Linq.Expressions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Client
 {
+    using Common.Model;
+    using Remote.Linq;
+    using Remote.Linq.Dynamic;
+    using Remote.Linq.Expressions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Formatting;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading.Tasks;
+
     public class RemoteRepository
     {
         private readonly Func<Expression, Task<IEnumerable<DynamicObject>>> _dataProvider;

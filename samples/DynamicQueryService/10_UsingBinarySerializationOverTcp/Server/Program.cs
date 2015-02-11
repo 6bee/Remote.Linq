@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-
 namespace Server
 {
+    using System;
+
     class Program
     {
         static void Main(string[] args)
         {
-            using (var serviceHost = new TcpServer("127.0.0.1", 8899))
+            using (var tcpServiceHost = new TcpServer("127.0.0.1", 8899))
             {
-                serviceHost.Open();
+                tcpServiceHost.Open();
 
                 Console.WriteLine("The query service is ready.");
                 Console.WriteLine("Press <ENTER> to terminate service.");

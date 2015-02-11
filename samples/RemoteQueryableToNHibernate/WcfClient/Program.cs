@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using Remote.Linq;
+using Remote.Linq;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace WcfClient
             var repo = new RemoteRepository("http://localhost:50106/QueryService.svc");
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
-            foreach (var i in repo.Products)
+            foreach (var i in repo.Products.Include(x => x.Name))
             {
                 Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
             }

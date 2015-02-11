@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq.TypeSystem;
-using System;
-using System.IO;
-using System.Xml.Serialization;
-
 namespace Common
 {
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.IO;
+    using System.Xml.Serialization;
+
     public static class XmlFormatter
     {
         public static void Write(this Stream stream, object obj)
@@ -24,7 +24,7 @@ namespace Common
                 byte[] data;
                 using (var dataStream = new MemoryStream())
                 {
-                    var type = obj is Exception ? typeof(string): obj.GetType();
+                    var type = obj is Exception ? typeof(string) : obj.GetType();
 
                     var xmlSerializer = new XmlSerializer(type);
                     xmlSerializer.Serialize(dataStream, obj is Exception ? ((Exception)obj).Message : obj);

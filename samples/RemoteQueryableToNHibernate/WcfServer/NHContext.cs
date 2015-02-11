@@ -13,7 +13,7 @@ namespace WcfService
     {
         private static readonly ISessionFactory _sessionFactory = CreateSessionFactory();
 
-        private readonly ISession _session ;
+        private readonly ISession _session;
 
         public NHContext()
         {
@@ -38,7 +38,7 @@ namespace WcfService
         {
             _session.Dispose();
         }
-        
+
         private static ISessionFactory CreateSessionFactory()
         {
             return Fluently.Configure()

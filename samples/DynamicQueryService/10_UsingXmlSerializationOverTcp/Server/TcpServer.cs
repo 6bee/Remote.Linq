@@ -1,17 +1,22 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Common;
-using Remote.Linq.Expressions;
-using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-
 namespace Server
 {
+    using Common;
+    using Remote.Linq.Expressions;
+    using System;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Threading.Tasks;
+
     public class TcpServer : IDisposable
     {
         private readonly TcpListener _server;
+
+        public TcpServer(int port)
+            : this("127.0.0.1", port)
+        {
+        }
 
         public TcpServer(string ip, int port)
         {
@@ -29,11 +34,11 @@ namespace Server
                 {
                     while (true)
                     {
-                        Console.Write("Waiting for a connection... ");
+                        //Console.Write("Waiting for a connection... ");
 
                         using (var client = _server.AcceptTcpClient())
                         {
-                            Console.Write("Connected... ");
+                            //Console.Write("Connected... ");
 
                             using (var stream = client.GetStream())
                             {
@@ -54,13 +59,13 @@ namespace Server
                             }
 
                             client.Close();
-                            Console.WriteLine("Closed client session.");
+                            //Console.WriteLine("Closed client session.");
                         }
                     }
                 }
                 catch (SocketException ex)
                 {
-                    Console.WriteLine("SocketException: {0}", ex);
+                    //Console.WriteLine("SocketException: {0}", ex);
                 }
             });
         }

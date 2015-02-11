@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Newtonsoft.Json;
-using Remote.Linq.TypeSystem;
-using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-
 namespace Common
 {
+    using Newtonsoft.Json;
+    using Remote.Linq.TypeSystem;
+    using System;
+    using System.IO;
+    using System.Runtime.Serialization.Formatters.Binary;
+
     public static class JsonFormatter
     {
         private readonly static JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
@@ -15,6 +15,7 @@ namespace Common
         public static void Write(this Stream stream, object obj)
         {
             var typeInfo = new TypeInfo(obj.GetType());
+
             WriteInternal(stream, typeInfo);
 
             WriteInternal(stream, obj);
@@ -24,8 +25,8 @@ namespace Common
         {
             try
             {
-                var json = JsonConvert.SerializeObject(obj, Formatting.Indented, _jsonSerializerSettings); 
-            
+                var json = JsonConvert.SerializeObject(obj, Formatting.Indented, _jsonSerializerSettings);
+
                 byte[] data;
                 using (var dataStream = new MemoryStream())
                 {
