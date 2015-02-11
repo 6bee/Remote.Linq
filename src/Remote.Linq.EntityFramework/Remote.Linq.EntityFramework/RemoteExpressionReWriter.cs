@@ -18,6 +18,9 @@ namespace Remote.Linq.EntityFramework
                 .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
                 .Single();
 
+        /// <summary>
+        /// Replaces resource descriptors by queryable and replaces include method call with entity framework's include methods
+        /// </summary>
         internal static Expression ReplaceIncludeMethodCall(this Expression expression, Func<Type, System.Linq.IQueryable> provider, ITypeResolver typeResolver)
         {
             return new ElementReplacer(provider, typeResolver).Run(expression);

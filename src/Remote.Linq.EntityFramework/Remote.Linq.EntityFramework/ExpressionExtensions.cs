@@ -4,6 +4,7 @@ namespace Remote.Linq.EntityFramework
 {
     using Remote.Linq.Dynamic;
     using Remote.Linq.Expressions;
+    using Remote.Linq.ExpressionVisitors;
     using Remote.Linq.TypeSystem;
     using System;
     using System.Collections.Generic;
@@ -74,7 +75,9 @@ namespace Remote.Linq.EntityFramework
             var queryableExpression = expression.ReplaceIncludeMethodCall(queryableProvider, typeResolver);
 
             var linqExpression = queryableExpression.ToLinqExpression();
-            return linqExpression;
+
+            var locallyEvaluatedExpression = linqExpression.PartialEval();
+            return locallyEvaluatedExpression;
         }
 
         private static IQueryable GetQueryableSet(this DbContext dbContext, Type type)

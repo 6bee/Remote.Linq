@@ -30,27 +30,12 @@
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>  
         public static Expression PartialEval(this Expression expression)
         {
-            return PartialEval(expression, ExpressionEvaluator.CanBeEvaluatedLocally);
+            return PartialEval(expression, CanBeEvaluatedLocally);
         }
 
-        private static bool CanBeEvaluatedLocally(Expression expression)
+        internal static bool CanBeEvaluatedLocally(Expression expression)
         {
-            if (expression.NodeType == ExpressionType.Parameter)
-            {
-                return false;
-            }
-
-            var methodCallExpression = expression as MethodCallExpression;
-            if (!ReferenceEquals(null, methodCallExpression))
-            {
-                if (methodCallExpression.Method.IsGenericMethod &&
-                    methodCallExpression.Method.GetGenericMethodDefinition() == MethodInfos.QueryFuntion.Include)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return expression.NodeType != ExpressionType.Parameter;
         }
 
         /// <summary>  

@@ -143,20 +143,48 @@ namespace Remote.Linq
             }
         }
 
+        private static bool KeepMarkerFuncitons(Expression expression)
+        {
+            if (!ExpressionEvaluator.CanBeEvaluatedLocally(expression))
+            {
+                return false;
+            }
+
+            var methodCallExpression = expression as MethodCallExpression;
+            if (!ReferenceEquals(null, methodCallExpression))
+            {
+                if (methodCallExpression.Method.IsGenericMethod &&
+                    methodCallExpression.Method.GetGenericMethodDefinition() == MethodInfos.QueryFuntion.Include)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private sealed class LinqExpressionToRemoteExpressionTranslator : ExpressionVisitorBase
         {
             public RLinq.Expression ToRemoteExpression(Expression expression)
             {
-                var partialEvalExpression = expression.PartialEval();
-                if (partialEvalExpression == null) throw CreateNotSupportedException(expression);
+                var partialEvalExpression = expression.PartialEval(KeepMarkerFuncitons);
+                if (partialEvalExpression == null)
+                {
+                    throw CreateNotSupportedException(expression);
+                }
+
                 var constExpression = Visit(partialEvalExpression);
                 return constExpression.Unwrap();
             }
 
             public RLinq.LambdaExpression ToRemoteExpression(LambdaExpression expression)
             {
-                var partialEvalExpression = expression.PartialEval() as LambdaExpression;
-                if (partialEvalExpression == null) throw CreateNotSupportedException(expression);
+                var partialEvalExpression = expression.PartialEval(KeepMarkerFuncitons) as LambdaExpression;
+                if (partialEvalExpression == null)
+                {
+                    throw CreateNotSupportedException(expression);
+                }
+
                 var constExpression = Visit(partialEvalExpression.Body);
                 var parameters =
                     from p in partialEvalExpression.Parameters
