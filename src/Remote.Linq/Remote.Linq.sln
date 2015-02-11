@@ -15,12 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.QueryFunctions"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.Win", "Remote.Linq.Win\Remote.Linq.Win.csproj", "{A8539D88-FEAF-4283-9FA5-0FC81457C640}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{525376AC-4864-4F0D-A886-A67C87C0C46F}"
-	ProjectSection(SolutionItems) = preProject
-		NuGet\NuGet.proj = NuGet\NuGet.proj
-		NuGet\Remote.Linq\Remote.Linq.nuspec = NuGet\Remote.Linq\Remote.Linq.nuspec
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.WP", "Remote.Linq.WP\Remote.Linq.WP.csproj", "{62F6813E-8484-4E62-B2D4-40B35610B71D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C0DCE22E-09EB-4152-93FD-A54582B2C4BC}"
