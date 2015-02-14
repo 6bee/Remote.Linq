@@ -74,7 +74,7 @@ namespace Remote.Linq.EntityFramework
         {
             var queryableExpression = expression.ReplaceIncludeMethodCall(queryableProvider, typeResolver);
 
-            var linqExpression = queryableExpression.ToLinqExpression();
+            var linqExpression = queryableExpression.ToLinqExpression(typeResolver);
 
             var locallyEvaluatedExpression = linqExpression.PartialEval();
             return locallyEvaluatedExpression;

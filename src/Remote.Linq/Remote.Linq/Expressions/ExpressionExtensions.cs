@@ -122,7 +122,7 @@ namespace Remote.Linq.Expressions
         {
             var queryableExpression = expression.ReplaceResourceDescriptorsByQueryable(typeResolver, queryableProvider);
 
-            var linqExpression = queryableExpression.ToLinqExpression();
+            var linqExpression = queryableExpression.ToLinqExpression(typeResolver);
 
             var locallyEvaluatedExpression = linqExpression.PartialEval();
             return locallyEvaluatedExpression;
