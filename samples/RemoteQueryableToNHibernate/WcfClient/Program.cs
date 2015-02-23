@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Remote.Linq;
-using Remote.Linq;
-using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace WcfClient
 {
+    using Remote.Linq;
+    using Remote.Linq;
+    using System;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     class Program
     {
         static void Main(string[] args)

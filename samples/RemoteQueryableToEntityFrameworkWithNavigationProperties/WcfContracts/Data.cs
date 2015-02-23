@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. 
 
-using System.Collections.Generic;
-
 namespace WcfContracts
 {
+    using System.Collections.Generic;
+
     public class OrderItem
     {
         public int Id { get; set; }

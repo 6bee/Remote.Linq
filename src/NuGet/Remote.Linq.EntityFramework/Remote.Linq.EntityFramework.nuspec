@@ -2,24 +2,24 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Remote.Linq.EntityFramework</id>
-    <version>1.0.0-beta002</version>
+    <version>1.0.0</version>
     <authors>Christof Senn</authors>
     <owners>Christof Senn</owners>
     <licenseUrl>http://remotelinq.codeplex.com/license</licenseUrl>
     <projectUrl>http://remotelinq.codeplex.com/</projectUrl>
     <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Entity framework extensions for remote linq. E.g. applies client defined Include-expressoins to EF queries.</description>
+    <description>Entity framework extensions for remote linq. Use this package to apply eager-loading (Include-expressions) to EF queries.</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>Copyright Christof Senn 2013-2015</copyright>
     <tags>LINQ expression-tree lambda dynamic remote remote-query multi-tier n-tier fluent-interface entity-framework ef</tags>
     <dependencies>
-      <dependency id="Remote.Linq" version="[4.0.0-beta001,)" />
-      <dependency id="EntityFramework" version="[6.0,7.0)" />
+      <dependency id="Remote.Linq" version="[4.0.0,)" />
+      <dependency id="EntityFramework" version="[6.0.1,7.0)" />
     </dependencies>
   </metadata>
   <files>
-    <file src="..\..\Remote.Linq.EntityFramework\Remote.Linq.EntityFramework\bin\Debug\Remote.Linq.EntityFramework.*" target="lib\net45" exclude="..\..\**\*.config" />
+    <file src="..\..\Remote.Linq.EntityFramework\Remote.Linq.EntityFramework\bin\Release\Remote.Linq.EntityFramework.*" target="lib\net45" exclude="..\..\**\*.config" />
     <file src="..\..\Remote.Linq.EntityFramework\**\*.cs" target="src" exclude="..\..\**\bin\**;..\..\**\obj\**;..\..\**\*.Tests\**;" />
   </files>
 </package>

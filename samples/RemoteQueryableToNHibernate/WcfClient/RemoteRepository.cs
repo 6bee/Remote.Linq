@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. 
 
-using Remote.Linq;
-using Remote.Linq.Dynamic;
-using Remote.Linq.Expressions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using WcfContracts;
-
 namespace WcfClient
 {
+    using Remote.Linq;
+    using Remote.Linq.Dynamic;
+    using Remote.Linq.Expressions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.ServiceModel;
+    using WcfContracts;
+
     public class RemoteRepository
     {
         private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
@@ -35,7 +35,9 @@ namespace WcfClient
         }
 
         public IQueryable<ProductCategory> ProductCategories { get { return RemoteQueryable.Create<ProductCategory>(_dataProvider); } }
+        
         public IQueryable<Product> Products { get { return RemoteQueryable.Create<Product>(_dataProvider); } }
+        
         public IQueryable<OrderItem> OrderItems { get { return RemoteQueryable.Create<OrderItem>(_dataProvider); } }
     }
 }

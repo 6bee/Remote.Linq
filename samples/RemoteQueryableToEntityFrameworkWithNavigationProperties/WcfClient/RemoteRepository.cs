@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. 
 
-using Remote.Linq;
-using Remote.Linq.Dynamic;
-using Remote.Linq.Expressions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using WcfContracts;
-
 namespace WcfClient
 {
+    using Remote.Linq;
+    using Remote.Linq.Dynamic;
+    using Remote.Linq.Expressions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.ServiceModel;
+    using WcfContracts;
+
     public class RemoteRepository
     {
         private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
