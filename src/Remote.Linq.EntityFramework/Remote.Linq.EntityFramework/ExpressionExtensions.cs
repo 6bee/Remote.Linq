@@ -70,14 +70,12 @@ namespace Remote.Linq.EntityFramework
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Remote.Linq.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
-        public static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null)
+        private static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null)
         {
-            var queryableExpression = expression.ReplaceIncludeMethodCall(queryableProvider, typeResolver);
+            var expression1 = expression.ReplaceIncludeMethodCall(typeResolver);
 
-            var linqExpression = queryableExpression.ToLinqExpression(typeResolver);
-
-            var locallyEvaluatedExpression = linqExpression.PartialEval();
-            return locallyEvaluatedExpression;
+            var linqExpression = expression1.PrepareForExecution(queryableProvider, typeResolver);
+            return linqExpression;
         }
 
         private static IQueryable GetQueryableSet(this DbContext dbContext, Type type)

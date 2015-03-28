@@ -21,15 +21,15 @@ namespace Remote.Linq.EntityFramework
         /// <summary>
         /// Replaces resource descriptors by queryable and replaces include method call with entity framework's include methods
         /// </summary>
-        internal static Expression ReplaceIncludeMethodCall(this Expression expression, Func<Type, System.Linq.IQueryable> provider, ITypeResolver typeResolver)
+        internal static Expression ReplaceIncludeMethodCall(this Expression expression, ITypeResolver typeResolver)
         {
-            return new ElementReplacer(provider, typeResolver).Run(expression);
+            return new ElementReplacer(typeResolver).Run(expression);
         }
 
-        private sealed class ElementReplacer : QueryableResourceVisitor
+        private sealed class ElementReplacer : RemoteExpressionVisitorBase
         {
-            internal ElementReplacer(Func<Type, System.Linq.IQueryable> provider, ITypeResolver typeResolver)
-                : base(provider, typeResolver)
+            internal ElementReplacer(ITypeResolver typeResolver)
+                : base(typeResolver)
             {
             }
 
