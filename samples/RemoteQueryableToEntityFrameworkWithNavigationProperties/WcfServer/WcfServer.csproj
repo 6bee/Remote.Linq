@@ -48,13 +48,13 @@
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Remote.Linq, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Remote.Linq, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Remote.Linq.4.0.0\lib\net45\Remote.Linq.dll</HintPath>
+      <HintPath>..\packages\Remote.Linq.4.1.0-beta001\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Remote.Linq.EntityFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Remote.Linq.EntityFramework, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Remote.Linq.EntityFramework.1.0.0\lib\net45\Remote.Linq.EntityFramework.dll</HintPath>
+      <HintPath>..\packages\Remote.Linq.EntityFramework.1.1.0-beta001\lib\net45\Remote.Linq.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Security" />
@@ -99,7 +99,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
