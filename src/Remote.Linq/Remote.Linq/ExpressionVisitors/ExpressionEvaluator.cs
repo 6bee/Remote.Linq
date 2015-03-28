@@ -1,5 +1,6 @@
 ﻿namespace Remote.Linq.ExpressionVisitors
 {
+    using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -35,6 +36,15 @@
 
         internal static bool CanBeEvaluatedLocally(Expression expression)
         {
+            if (expression.NodeType == ExpressionType.Constant)
+            {
+                var type = expression.Type;
+                if (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                {
+                    return false;
+                }
+            }
+
             return expression.NodeType != ExpressionType.Parameter;
         }
 
@@ -67,7 +77,7 @@
                 {
                     return Evaluate(expression);
                 }
-                
+
                 return base.Visit(expression);
             }
 
@@ -82,11 +92,14 @@
                 {
                     return expression;
                 }
-                
+
                 LambdaExpression lambda = Expression.Lambda(expression);
                 Delegate fn = lambda.Compile();
                 var value = fn.DynamicInvoke(null);
-                return Expression.Constant(value, expression.Type);
+
+                var queryArgument = Activator.CreateInstance(typeof(VariableQueryArgument<>).MakeGenericType(expression.Type), new[] { value });
+                var propertyExpression = Expression.Property(Expression.Constant(queryArgument), "Value");
+                return propertyExpression;
             }
         }
 

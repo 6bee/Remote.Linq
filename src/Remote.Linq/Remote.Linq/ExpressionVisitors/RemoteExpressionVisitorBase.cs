@@ -26,32 +26,46 @@ namespace Remote.Linq.ExpressionVisitors
             {
                 case ExpressionType.Binary:
                     return VisitBinary((BinaryExpression)expression);
+
                 case ExpressionType.Collection:
                     return VisitCollection((CollectionExpression)expression);
+
                 case ExpressionType.Conditional:
                     return VisitConditional((ConditionalExpression)expression);
+
                 case ExpressionType.Constant:
                     return VisitConstant((ConstantExpression)expression);
+
                 case ExpressionType.Conversion:
                     return VisitConversion((ConversionExpression)expression);
+
                 case ExpressionType.Parameter:
                     return VisitParameter((ParameterExpression)expression);
+
                 case ExpressionType.Member:
                     return VisitMemberAccess((MemberExpression)expression);
+
                 case ExpressionType.Unary:
                     return VisitUnary((UnaryExpression)expression);
+
                 case ExpressionType.MethodCall:
                     return VisitMethodCall((MethodCallExpression)expression);
+
                 case ExpressionType.Lambda:
                     return VisitLambda((LambdaExpression)expression);
+
                 case ExpressionType.ListInit:
                     return VisitListInit((ListInitExpression)expression);
+
                 case ExpressionType.New:
                     return VisitNew((NewExpression)expression);
+
                 case ExpressionType.NewArray:
                     return VisitNewArray((NewArrayExpression)expression);
+
                 case ExpressionType.MemberInit:
                     return VisitMemberInit((MemberInitExpression)expression);
+
                 default:
                     throw new Exception(string.Format("Unknown expression type: '{0}'", expression.NodeType));
             }
@@ -212,25 +226,25 @@ namespace Remote.Linq.ExpressionVisitors
                     list.Add(p);
                 }
             }
-            
+
             if (list != null)
             {
                 return list;
             }
-            
+
             return original;
         }
 
         protected virtual NewExpression VisitNew(NewExpression newExpression)
         {
             var args = VisitExpressionList(newExpression.Arguments);
-            if (ReferenceEquals(args, newExpression.Arguments))
+            if (!ReferenceEquals(args, newExpression.Arguments))
             {
-                return newExpression;
+                return new NewExpression(newExpression.Constructor, args, newExpression.Members);
             }
             else
             {
-                return new NewExpression(newExpression.Constructor, args);
+                return newExpression;
             }
         }
 

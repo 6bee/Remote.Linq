@@ -120,7 +120,9 @@ namespace Remote.Linq.Expressions
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
         public static System.Linq.Expressions.Expression PrepareForExecution(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null)
         {
-            var queryableExpression = expression.ReplaceResourceDescriptorsByQueryable(typeResolver, queryableProvider);
+            var expression1 = expression.ReplaceNonGenericQueryArgumentsByGenericArguments();
+
+            var queryableExpression = expression1.ReplaceResourceDescriptorsByQueryable(typeResolver, queryableProvider);
 
             var linqExpression = queryableExpression.ToLinqExpression(typeResolver);
 

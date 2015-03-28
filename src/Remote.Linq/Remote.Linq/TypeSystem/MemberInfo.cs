@@ -20,7 +20,10 @@ namespace Remote.Linq.TypeSystem
 
         protected MemberInfo(System.Reflection.MemberInfo memberInfo)
         {
-            if (ReferenceEquals(null, memberInfo)) throw new ArgumentNullException("memberInfo");
+            if (ReferenceEquals(null, memberInfo))
+            {
+                throw new ArgumentNullException("memberInfo");
+            }
 
             Name = memberInfo.Name;
             DeclaringType = new TypeInfo(memberInfo.DeclaringType);
@@ -28,8 +31,15 @@ namespace Remote.Linq.TypeSystem
 
         protected MemberInfo(string name, TypeInfo declaringType)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name", "Expected a valid member name");
-            if (ReferenceEquals(null, declaringType)) throw new ArgumentNullException("declaringType");
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name", "Expected a valid member name");
+            }
+
+            if (ReferenceEquals(null, declaringType))
+            {
+                throw new ArgumentNullException("declaringType");
+            }
 
             Name = name;
             DeclaringType = declaringType;

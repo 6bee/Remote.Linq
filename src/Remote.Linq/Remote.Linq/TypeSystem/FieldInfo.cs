@@ -39,6 +39,7 @@ namespace Remote.Linq.TypeSystem
                 {
                     _field = ResolveField(TypeResolver.Instance);
                 }
+
                 return _field;
             }
         }

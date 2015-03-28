@@ -7,7 +7,7 @@ namespace Remote.Linq.ExpressionVisitors
     using Remote.Linq.TypeSystem;
     using System;
     using System.Linq;
- 
+
     public class QueryableResourceDescriptorVisitor : RemoteExpressionVisitorBase
     {
         internal protected QueryableResourceDescriptorVisitor(ITypeResolver typeResolver)
@@ -15,7 +15,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
         }
 
-        internal Expression ReplaceQueryableResourceDescriptors(Expression expression)
+        internal Expression ReplaceQueryablesByResourceDescriptors(Expression expression)
         {
             return Visit(expression);
         }
@@ -46,12 +46,15 @@ namespace Remote.Linq.ExpressionVisitors
                 case MemberTypes.Field:
                     type = ((FieldInfo)member).Field.FieldType;
                     break;
+
                 case MemberTypes.Property:
                     type = ((PropertyInfo)member).Property.PropertyType;
                     break;
+
                 case MemberTypes.Method:
                     type = ((MethodInfo)member).Method.ReturnType;
                     break;
+
                 default:
                     type = null;
                     break;

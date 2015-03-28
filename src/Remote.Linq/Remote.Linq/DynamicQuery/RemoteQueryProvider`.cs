@@ -54,7 +54,8 @@ namespace Remote.Linq.DynamicQuery
         {
             var rlinq1 = expression.ToRemoteLinqExpression();
             var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors(typeResolver);
-            return rlinq2;
+            var rlinq3 = rlinq2.ReplaceGenericQueryArgumentsByNonGenericArguments();
+            return rlinq3;
         }
     }
 }

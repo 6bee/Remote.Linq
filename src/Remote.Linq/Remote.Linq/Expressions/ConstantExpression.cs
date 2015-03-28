@@ -5,9 +5,12 @@ namespace Remote.Linq.Expressions
     using Remote.Linq.TypeSystem;
     using System;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     [Serializable]
     [DataContract]
+    [KnownType(typeof(Remote.Linq.DynamicQuery.QueryableResourceDescriptor)), XmlInclude(typeof(Remote.Linq.DynamicQuery.QueryableResourceDescriptor))]
+    [KnownType(typeof(Remote.Linq.VariableQueryArgument)), XmlInclude(typeof(Remote.Linq.VariableQueryArgument))]
     public sealed class ConstantExpression : Expression
     {
         public ConstantExpression()
@@ -27,6 +30,7 @@ namespace Remote.Linq.Expressions
                     type = value.GetType();
                 }
             }
+
             Type = new TypeInfo(type);
             Value = value;
         }

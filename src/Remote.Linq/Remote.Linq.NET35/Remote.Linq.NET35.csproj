@@ -81,12 +81,6 @@
     <Compile Include="..\Remote.Linq\DynamicQuery\QueryableResourceDescriptor.cs">
       <Link>DynamicQuery\QueryableResourceDescriptor.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\ExpressionVisitors\RemoteExpressionReWriter.cs">
-      <Link>ExpressionVisitors\RemoteExpressionReWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\ExpressionVisitors\SystemExpressionReWriter.cs">
-      <Link>ExpressionVisitors\SystemExpressionReWriter.cs</Link>
-    </Compile>
     <Compile Include="..\Remote.Linq\Expressions\BinaryExpression.cs">
       <Link>Expressions\BinaryExpression.cs</Link>
     </Compile>
@@ -189,6 +183,15 @@
     <Compile Include="..\Remote.Linq\ExpressionVisitors\RemoteExpressionVisitorBase.cs">
       <Link>ExpressionVisitors\RemoteExpressionVisitorBase.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\RemoteExpressionReWriter.cs">
+      <Link>ExpressionVisitors\RemoteExpressionReWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\SystemExpressionReWriter.cs">
+      <Link>ExpressionVisitors\SystemExpressionReWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\ExpressionVisitors\VariableQueryArgumentVisitor.cs">
+      <Link>ExpressionVisitors\VariableQueryArgumentVisitor.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\TypeSystem\FieldInfo.cs">
       <Link>TypeSystem\FieldInfo.cs</Link>
     </Compile>
@@ -275,6 +278,12 @@
     </Compile>
     <Compile Include="..\Remote.Linq\TypeExtensions.cs">
       <Link>TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\VariableQueryArgument.cs">
+      <Link>VariableQueryArgument.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq\VariableQueryArgument`.cs">
+      <Link>VariableQueryArgument`.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>

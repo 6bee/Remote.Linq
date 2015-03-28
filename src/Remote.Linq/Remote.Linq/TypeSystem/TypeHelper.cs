@@ -15,6 +15,7 @@ namespace Remote.Linq.TypeSystem
             {
                 return type;
             }
+
             return enumerableType.GetGenericArguments().First();
         }
 

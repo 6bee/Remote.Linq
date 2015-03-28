@@ -15,9 +15,19 @@ namespace Remote.Linq.ExpressionVisitors
             return new QueryableResourceVisitor(provider ?? ProviderRegistry.QueryableResourceProvider, typeResolver).ReplaceResourceDescriptorsByQueryable(expression);
         }
 
+        internal static Expression ReplaceNonGenericQueryArgumentsByGenericArguments(this Expression expression)
+        {
+            return new VariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
+        }
+
         internal static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeResolver typeResolver = null)
         {
-            return new QueryableResourceDescriptorVisitor(typeResolver).ReplaceQueryableResourceDescriptors(expression);
+            return new QueryableResourceDescriptorVisitor(typeResolver).ReplaceQueryablesByResourceDescriptors(expression);
+        }
+
+        internal static Expression ReplaceGenericQueryArgumentsByNonGenericArguments(this Expression expression)
+        {
+            return new VariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
         }
     }
 }

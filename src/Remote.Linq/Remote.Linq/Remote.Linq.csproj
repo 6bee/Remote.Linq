@@ -52,8 +52,6 @@
     <Compile Include="Dynamic\DynamicObjectMapper.cs" />
     <Compile Include="Dynamic\DynamicObject.MetaObject.cs" />
     <Compile Include="DynamicQuery\QueryableResourceDescriptor.cs" />
-    <Compile Include="ExpressionVisitors\SystemExpressionReWriter.cs" />
-    <Compile Include="ExpressionVisitors\RemoteExpressionReWriter.cs" />
     <Compile Include="DynamicQuery\AsyncRemoteQueryable`.cs" />
     <Compile Include="DynamicQuery\AsyncRemoteQueryProvider`.cs" />
     <Compile Include="DynamicQuery\AsyncObjectResultCaster.cs" />
@@ -106,6 +104,9 @@
     <Compile Include="ExpressionVisitors\QueryableResourceDescriptorVisitor.cs" />
     <Compile Include="ExpressionVisitors\QueryableResourceVisitor.cs" />
     <Compile Include="ExpressionVisitors\RemoteExpressionVisitorBase.cs" />
+    <Compile Include="ExpressionVisitors\RemoteExpressionReWriter.cs" />
+    <Compile Include="ExpressionVisitors\SystemExpressionReWriter.cs" />
+    <Compile Include="ExpressionVisitors\VariableQueryArgumentVisitor.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.Cache.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.cs" />
     <Compile Include="TypeSystem\FieldInfo.cs" />
@@ -139,6 +140,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Query`.cs" />
+    <Compile Include="VariableQueryArgument.cs" />
+    <Compile Include="VariableQueryArgument`.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -13,18 +13,22 @@ namespace Remote.Linq
             {
                 return MemberTypes.Field;
             }
+
             if (member is System.Reflection.ConstructorInfo)
             {
                 return MemberTypes.Constructor;
             }
+
             if (member is System.Reflection.MethodInfo)
             {
                 return MemberTypes.Method;
             }
+
             if (member is System.Reflection.PropertyInfo)
             {
                 return MemberTypes.Property;
             }
+
             throw new Exception(string.Format("Unsupported member type: {0}", member.GetType()));
         }
     }
