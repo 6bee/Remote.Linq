@@ -231,9 +231,6 @@
     <Compile Include="..\Remote.Linq\ExpressionVisitors\ExpressionVisitorBase.cs">
       <Link>ExpressionVisitors\ExpressionVisitorBase.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\ExpressionVisitors\QueryableResourceDescriptorVisitor.cs">
-      <Link>ExpressionVisitors\QueryableResourceDescriptorVisitor.cs</Link>
-    </Compile>
     <Compile Include="..\Remote.Linq\ExpressionVisitors\QueryableResourceVisitor.cs">
       <Link>ExpressionVisitors\QueryableResourceVisitor.cs</Link>
     </Compile>

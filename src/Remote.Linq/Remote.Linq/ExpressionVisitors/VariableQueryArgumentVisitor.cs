@@ -8,21 +8,21 @@ namespace Remote.Linq.ExpressionVisitors
 
     public class VariableQueryArgumentVisitor
     {
-        internal Expression ReplaceNonGenericQueryArgumentsByGenericArguments(Expression expression)
+        internal T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(T expression) where T : Expression
         {
-            return new NonGenericVariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
+            return (T)new NonGenericVariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
         }
 
-        internal Expression ReplaceGenericQueryArgumentsByNonGenericArguments(Expression expression)
+        internal T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(T expression) where T : Expression
         {
-            return new GenericVariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
+            return (T)new GenericVariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
         }
 
         protected class GenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
             private static readonly PropertyInfo QueryArgumentValuePropertyInfo = new PropertyInfo(typeof(VariableQueryArgument).GetProperty("Value"));
 
-            public Expression ReplaceGenericQueryArgumentsByNonGenericArguments(Expression expression)
+            internal Expression ReplaceGenericQueryArgumentsByNonGenericArguments(Expression expression)
             {
                 return Visit(expression);
             }
@@ -58,7 +58,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class NonGenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
-            public Expression ReplaceNonGenericQueryArgumentsByGenericArguments(Expression expression)
+            internal Expression ReplaceNonGenericQueryArgumentsByGenericArguments(Expression expression)
             {
                 return Visit(expression);
             }

@@ -101,7 +101,6 @@
     <Compile Include="ExpressionVisitors\ExpressionEvaluator.cs" />
     <Compile Include="ExpressionVisitors\ExpressionTranslator.cs" />
     <Compile Include="ExpressionVisitors\ExpressionVisitorBase.cs" />
-    <Compile Include="ExpressionVisitors\QueryableResourceDescriptorVisitor.cs" />
     <Compile Include="ExpressionVisitors\QueryableResourceVisitor.cs" />
     <Compile Include="ExpressionVisitors\RemoteExpressionVisitorBase.cs" />
     <Compile Include="ExpressionVisitors\RemoteExpressionReWriter.cs" />

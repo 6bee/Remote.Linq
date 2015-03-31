@@ -8,24 +8,24 @@ namespace Remote.Linq.ExpressionVisitors
     using System.ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    internal static class RemoteExpressionReWriter
+    public static class RemoteExpressionReWriter
     {
-        internal static Expression ReplaceResourceDescriptorsByQueryable(this Expression expression, ITypeResolver typeResolver = null, Func<Type, System.Linq.IQueryable> provider = null)
+        public static T ReplaceResourceDescriptorsByQueryable<T>(this T expression, ITypeResolver typeResolver = null, Func<Type, System.Linq.IQueryable> provider = null) where T : Expression
         {
-            return new QueryableResourceVisitor(provider ?? ProviderRegistry.QueryableResourceProvider, typeResolver).ReplaceResourceDescriptorsByQueryable(expression);
+            return new QueryableResourceVisitor().ReplaceResourceDescriptorsByQueryable(expression, provider ?? ProviderRegistry.QueryableResourceProvider, typeResolver);
         }
 
-        internal static Expression ReplaceNonGenericQueryArgumentsByGenericArguments(this Expression expression)
+        public static T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(this T expression) where T : Expression
         {
             return new VariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
         }
 
-        internal static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeResolver typeResolver = null)
+        public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeResolver typeResolver = null)
         {
-            return new QueryableResourceDescriptorVisitor(typeResolver).ReplaceQueryablesByResourceDescriptors(expression);
+            return new QueryableResourceVisitor().ReplaceQueryablesByResourceDescriptors(expression, typeResolver);
         }
 
-        internal static Expression ReplaceGenericQueryArgumentsByNonGenericArguments(this Expression expression)
+        public static T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(this T expression) where T : Expression
         {
             return new VariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
         }
