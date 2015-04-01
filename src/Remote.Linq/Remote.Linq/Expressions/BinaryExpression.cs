@@ -22,10 +22,15 @@ namespace Remote.Linq.Expressions
         }
 
         internal BinaryExpression(Expression leftOperand, Expression rightOperand, BinaryOperator @operator, bool liftToNull, System.Reflection.MethodInfo method, LambdaExpression conversion = null)
+            : this(leftOperand, rightOperand, @operator, liftToNull, ReferenceEquals(null, method) ? null : new MethodInfo(method), conversion)
+        {
+        }
+
+        internal BinaryExpression(Expression leftOperand, Expression rightOperand, BinaryOperator @operator, bool liftToNull, MethodInfo method, LambdaExpression conversion = null)
             : this(leftOperand, rightOperand, @operator)
         {
             IsLiftedToNull = liftToNull;
-            Method = ReferenceEquals(null, method) ? null : new MethodInfo(method);
+            Method = method;
             Conversion = conversion;
         }
 

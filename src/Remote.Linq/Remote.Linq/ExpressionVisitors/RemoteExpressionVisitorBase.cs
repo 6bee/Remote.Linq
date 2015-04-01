@@ -301,8 +301,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(leftOperand, expression.LeftOperand) || !ReferenceEquals(rightOperand, expression.RightOperand) || !ReferenceEquals(conversion, expression.Conversion))
             {
-                var method = expression.Method.ResolveMethod(_typeResolver);
-                return new BinaryExpression(leftOperand, rightOperand, expression.Operator, expression.IsLiftedToNull, method, conversion);
+                return new BinaryExpression(leftOperand, rightOperand, expression.Operator, expression.IsLiftedToNull, expression.Method, conversion);
             }
 
             return expression;
