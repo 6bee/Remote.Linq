@@ -10,7 +10,6 @@ namespace Remote.Linq
     using System.ComponentModel;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
     using RLinq = Remote.Linq.Expressions;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -109,17 +108,17 @@ namespace Remote.Linq
             return (LambdaExpression)lambdaExpression;
         }
 
-        internal static System.Linq.Expressions.ConstantExpression Wrap(this RLinq.Expression expression)
+        private static System.Linq.Expressions.ConstantExpression Wrap(this RLinq.Expression expression)
         {
             return ReferenceEquals(null, expression) ? null : System.Linq.Expressions.Expression.Constant(expression);
         }
 
-        internal static RLinq.ConstantExpression Wrap(this System.Linq.Expressions.Expression expression)
+        private static RLinq.ConstantExpression Wrap(this System.Linq.Expressions.Expression expression)
         {
             return ReferenceEquals(null, expression) ? null : RLinq.Expression.Constant(expression);
         }
 
-        internal static RLinq.Expression Unwrap(this System.Linq.Expressions.Expression expression)
+        private static RLinq.Expression Unwrap(this System.Linq.Expressions.Expression expression)
         {
             if (!ReferenceEquals(null, expression) && expression.NodeType == ExpressionType.Constant && typeof(RLinq.Expression).IsAssignableFrom(expression.Type))
             {
@@ -131,7 +130,7 @@ namespace Remote.Linq
             }
         }
 
-        internal static System.Linq.Expressions.Expression Unwrap(this RLinq.Expression expression)
+        private static System.Linq.Expressions.Expression Unwrap(this RLinq.Expression expression)
         {
             if (!ReferenceEquals(null, expression) && expression.NodeType == RLinq.ExpressionType.Constant && ((RLinq.ConstantExpression)expression).Value is System.Linq.Expressions.Expression)
             {
@@ -194,12 +193,16 @@ namespace Remote.Linq
 
             protected override Expression Visit(Expression exp)
             {
-                if (ReferenceEquals(null, exp)) return exp;
+                if (ReferenceEquals(null, exp))
+                {
+                    return exp;
+                }
 
                 switch (exp.NodeType)
                 {
                     case ExpressionType.New:
                         return VisitNew((NewExpression)exp).Wrap();
+
                     default:
                         return base.Visit(exp);
                 }
@@ -339,10 +342,13 @@ namespace Remote.Linq
                 {
                     case MemberBindingType.Assignment:
                         return VisitMemberAssignment((MemberAssignment)binding);
+
                     case MemberBindingType.MemberBinding:
                         return VisitMemberMemberBinding((MemberMemberBinding)binding);
+
                     case MemberBindingType.ListBinding:
                         return VisitMemberListBinding((MemberListBinding)binding);
+
                     default:
                         throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType));
                 }
@@ -371,16 +377,6 @@ namespace Remote.Linq
 
             protected override Expression VisitMethodCall(MethodCallExpression m)
             {
-                // property selector
-                if (m.Method.Name == "get_Item" && m.Arguments.Count == 1 && m.Arguments[0].NodeType == ExpressionType.Constant && ((ConstantExpression)m.Arguments[0]).Type == typeof(string))
-                {
-                    var exp = (ConstantExpression)m.Arguments[0];
-                    var instance = Visit(m.Object).Unwrap();
-                    var propertyInfo = m.Object.Type.GetProperty((string)exp.Value, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                    if (propertyInfo == null) throw new Exception(string.Format("'{0}' is not a valid or an ambiguous property of type {1}", (string)exp.Value, m.Object.Type.FullName));
-                    return new RLinq.MemberExpression(instance, propertyInfo).Wrap();
-                }
-
                 if (m.Object != null && m.Object.Type == typeof(string) && m.Arguments.Count == 1)
                 {
                     var obj = Visit(m.Object);
@@ -393,8 +389,10 @@ namespace Remote.Linq
                     {
                         case "Contains":
                             return new RLinq.BinaryExpression(p1, p2, RLinq.BinaryOperator.Contains).Wrap();
+
                         case "StartsWith":
                             return new RLinq.BinaryExpression(p1, p2, RLinq.BinaryOperator.StartsWith).Wrap();
+
                         case "EndsWith":
                             return new RLinq.BinaryExpression(p1, p2, RLinq.BinaryOperator.EndsWith).Wrap();
                     }
@@ -413,6 +411,7 @@ namespace Remote.Linq
                             elementType = genericArguments.Single();
                         }
                     }
+
                     if (elementType == null)
                     {
                         throw new Exception(string.Format("Unable to retrieve element type for collection type {0}", collectionType));
@@ -435,8 +434,6 @@ namespace Remote.Linq
 
                     return new RLinq.MethodCallExpression(instance, ((MethodCallExpression)m).Method, arguments).Wrap();
                 }
-
-                //throw CreateNotSupportedException(m);
             }
 
             protected override Expression VisitLambda(LambdaExpression lambda)
@@ -469,7 +466,6 @@ namespace Remote.Linq
 
                 if (u.NodeType == ExpressionType.Quote && operand != null)
                 {
-                    //return operand.Wrap();
                     return new RLinq.UnaryExpression(operand, RLinq.UnaryOperator.Quote).Wrap();
                 }
 
@@ -506,44 +502,63 @@ namespace Remote.Linq
                     case ExpressionType.Add:
                     case ExpressionType.AddChecked:
                         return RLinq.BinaryOperator.Add;
+
                     case ExpressionType.Subtract:
                     case ExpressionType.SubtractChecked:
                         return RLinq.BinaryOperator.Subtract;
+
                     case ExpressionType.Multiply:
                     case ExpressionType.MultiplyChecked:
                         return RLinq.BinaryOperator.Multiply;
+
                     case ExpressionType.Divide:
                         return RLinq.BinaryOperator.Divide;
+
                     case ExpressionType.Modulo:
                         return RLinq.BinaryOperator.Modulo;
+
                     case ExpressionType.And:
                         return RLinq.BinaryOperator.BitwiseAnd;
+
                     case ExpressionType.AndAlso:
                         return RLinq.BinaryOperator.And;
+
                     case ExpressionType.Or:
                         return RLinq.BinaryOperator.BitwiseOr;
+
                     case ExpressionType.OrElse:
                         return RLinq.BinaryOperator.Or;
+
                     case ExpressionType.LessThan:
                         return RLinq.BinaryOperator.LessThan;
+
                     case ExpressionType.LessThanOrEqual:
                         return RLinq.BinaryOperator.LessThanOrEqual;
+
                     case ExpressionType.GreaterThan:
                         return RLinq.BinaryOperator.GreaterThan;
+
                     case ExpressionType.GreaterThanOrEqual:
                         return RLinq.BinaryOperator.GreaterThanOrEqual;
+
                     case ExpressionType.Equal:
                         return RLinq.BinaryOperator.Equal;
+
                     case ExpressionType.NotEqual:
                         return RLinq.BinaryOperator.NotEqual;
+
                     //case ExpressionType.RightShift:
                     //    return Filter.BinaryOperator.RightShift;
+
                     //case ExpressionType.LeftShift:
                     //    return Filter.BinaryOperator.LeftShift;
+
                     case ExpressionType.ExclusiveOr:
                         return RLinq.BinaryOperator.ExclusiveOr;
+
                     case ExpressionType.Coalesce:
                         return RLinq.BinaryOperator.Coalesce;
+
                     //case ExpressionType.ArrayIndex:
                     default: throw new NotSupportedException(string.Format("No translation defined for binary operator {0}", nodeType));
                 }
@@ -575,32 +590,46 @@ namespace Remote.Linq
                 {
                     case RLinq.ExpressionType.Binary:
                         return VisitBinary((RLinq.BinaryExpression)expression);
+
                     case RLinq.ExpressionType.Collection:
                         return VisitCollection((RLinq.CollectionExpression)expression);
+
                     case RLinq.ExpressionType.Conditional:
                         return VisitConditional((RLinq.ConditionalExpression)expression);
+
                     case RLinq.ExpressionType.Constant:
                         return VisitConstant((RLinq.ConstantExpression)expression);
+
                     case RLinq.ExpressionType.Conversion:
                         return VisitConversion((RLinq.ConversionExpression)expression);
+
                     case RLinq.ExpressionType.Parameter:
                         return VisitParameter((RLinq.ParameterExpression)expression);
+
                     case RLinq.ExpressionType.Member:
                         return VisitMember((RLinq.MemberExpression)expression);
+
                     case RLinq.ExpressionType.Unary:
                         return VisitUnary((RLinq.UnaryExpression)expression);
+
                     case RLinq.ExpressionType.MethodCall:
                         return VisitMethodCall((RLinq.MethodCallExpression)expression);
+
                     case RLinq.ExpressionType.Lambda:
                         return VisitLambda((RLinq.LambdaExpression)expression);
+
                     case RLinq.ExpressionType.ListInit:
                         return VisitListInit((RLinq.ListInitExpression)expression);
+
                     case RLinq.ExpressionType.New:
                         return VisitNew((RLinq.NewExpression)expression);
+
                     case RLinq.ExpressionType.NewArray:
                         return VisitNewArray((RLinq.NewArrayExpression)expression);
+
                     case RLinq.ExpressionType.MemberInit:
                         return VisitMemberInit((RLinq.MemberInitExpression)expression);
+
                     default:
                         throw new Exception(string.Format("Unknown expression note type: '{0}'", expression.NodeType));
                 }
@@ -666,10 +695,13 @@ namespace Remote.Linq
                 {
                     case RLinq.MemberBindingType.Assignment:
                         return VisitMemberAssignment((RLinq.MemberAssignment)binding);
+
                     case RLinq.MemberBindingType.MemberBinding:
                         return VisitMemberMemberBinding((RLinq.MemberMemberBinding)binding);
+
                     case RLinq.MemberBindingType.ListBinding:
                         return VisitMemberListBinding((RLinq.MemberListBinding)binding);
+
                     default:
                         throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType));
                 }
@@ -742,14 +774,19 @@ namespace Remote.Linq
                 {
                     case RLinq.UnaryOperator.IsNotNull:
                         return Expression.MakeBinary(ExpressionType.NotEqual, exp, Expression.Constant(null));
+
                     case RLinq.UnaryOperator.IsNull:
                         return Expression.MakeBinary(ExpressionType.Equal, exp, Expression.Constant(null));
+
                     case RLinq.UnaryOperator.Negate:
                         return Expression.MakeUnary(ExpressionType.Negate, exp, null);
+
                     case RLinq.UnaryOperator.Not:
                         return Expression.MakeUnary(ExpressionType.Not, exp, typeof(bool));
+
                     case RLinq.UnaryOperator.Quote:
                         return Expression.MakeUnary(ExpressionType.Quote, exp, null);
+
                     default:
                         throw new Exception(string.Format("Unknown unary operation: '{0}'", unaryExpression.Operator));
                 }
@@ -883,10 +920,13 @@ namespace Remote.Linq
                     {
                         case RLinq.BinaryOperator.StartsWith:
                             return Expression.Call(p1, MethodInfos.String.StartsWith, p2);
+
                         case RLinq.BinaryOperator.EndsWith:
                             return Expression.Call(p1, MethodInfos.String.EndsWith, p2);
+
                         case RLinq.BinaryOperator.Contains:
                             return Expression.Call(p1, MethodInfos.String.Contains, p2);
+
                         case RLinq.BinaryOperator.In:
                             if (p1.Type == typeof(object))
                             {
@@ -900,6 +940,7 @@ namespace Remote.Linq
                                 var exp = Expression.Constant(obj);
                                 return Expression.Call(null, MethodInfos.Enumerable.Contains.MakeGenericMethod(p1.Type), exp, p1);
                             }
+
                         //default:{
                         //    var type = TranslateBinaryOperator(binaryExpression.Operator);
                         //    return Expression.MakeBinary(type, p1, p2);
@@ -940,48 +981,69 @@ namespace Remote.Linq
                 {
                     case RLinq.BinaryOperator.Add:
                         return ExpressionType.Add;
+
                     case RLinq.BinaryOperator.And:
                         return ExpressionType.AndAlso;
+
                     case RLinq.BinaryOperator.BitwiseAnd:
                         return ExpressionType.And;
+
                     case RLinq.BinaryOperator.BitwiseOr:
                         return ExpressionType.Or;
+
                     case RLinq.BinaryOperator.Coalesce:
                         return ExpressionType.Coalesce;
+
                     case RLinq.BinaryOperator.Contains:
                         throw new Exception("needs translation into method call expression");
+
                     case RLinq.BinaryOperator.Divide:
                         return ExpressionType.Divide;
+
                     case RLinq.BinaryOperator.EndsWith:
                         throw new Exception("needs translation into method call expression");
+
                     case RLinq.BinaryOperator.Equal:
                         return ExpressionType.Equal;
+
                     case RLinq.BinaryOperator.ExclusiveOr:
                         return ExpressionType.ExclusiveOr;
+
                     case RLinq.BinaryOperator.GreaterThan:
                         return ExpressionType.GreaterThan;
+
                     case RLinq.BinaryOperator.GreaterThanOrEqual:
                         return ExpressionType.GreaterThanOrEqual;
+
                     case RLinq.BinaryOperator.In:
                         throw new Exception("needs translation into method call expression");
+
                     case RLinq.BinaryOperator.LessThan:
                         return ExpressionType.LessThan;
+
                     case RLinq.BinaryOperator.LessThanOrEqual:
                         return ExpressionType.LessThanOrEqual;
+
                     //case Filter.BinaryOperator.Like:
                     case RLinq.BinaryOperator.Modulo:
                         return ExpressionType.Modulo;
+
                     case RLinq.BinaryOperator.Multiply:
                         return ExpressionType.Multiply;
+
                     case RLinq.BinaryOperator.NotEqual:
                         return ExpressionType.NotEqual;
+
                     //case Filter.BinaryOperator.NotLike:
                     case RLinq.BinaryOperator.Or:
                         return ExpressionType.OrElse;
+
                     case RLinq.BinaryOperator.StartsWith:
                         throw new Exception("needs translation into method call expression");
+
                     case RLinq.BinaryOperator.Subtract:
                         return ExpressionType.Subtract;
+
                     default:
                         throw new Exception(string.Format("Unknown binary operation: '{0}'", @operator));
                 }

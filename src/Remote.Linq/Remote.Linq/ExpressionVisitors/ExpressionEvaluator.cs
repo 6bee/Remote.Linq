@@ -93,9 +93,9 @@
                     return expression;
                 }
 
-                LambdaExpression lambda = Expression.Lambda(expression);
-                Delegate fn = lambda.Compile();
-                var value = fn.DynamicInvoke(null);
+                var lambda = Expression.Lambda(expression);
+                var func = lambda.Compile();
+                var value = func.DynamicInvoke(null);
 
                 var queryArgument = Activator.CreateInstance(typeof(VariableQueryArgument<>).MakeGenericType(expression.Type), new[] { value });
                 var propertyExpression = Expression.Property(Expression.Constant(queryArgument), "Value");

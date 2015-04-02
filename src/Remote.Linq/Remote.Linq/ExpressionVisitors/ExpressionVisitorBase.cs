@@ -22,7 +22,10 @@
     {
         protected virtual Expression Visit(Expression exp)
         {
-            if (ReferenceEquals(null, exp)) return exp;
+            if (ReferenceEquals(null, exp))
+            {
+                return exp;
+            }
 
             switch (exp.NodeType)
             {
@@ -35,6 +38,7 @@
                 case ExpressionType.Quote:
                 case ExpressionType.TypeAs:
                     return VisitUnary((UnaryExpression)exp);
+
                 case ExpressionType.Add:
                 case ExpressionType.AddChecked:
                 case ExpressionType.Subtract:
@@ -59,31 +63,44 @@
                 case ExpressionType.LeftShift:
                 case ExpressionType.ExclusiveOr:
                     return VisitBinary((BinaryExpression)exp);
+
                 case ExpressionType.TypeIs:
                     return VisitTypeIs((TypeBinaryExpression)exp);
+
                 case ExpressionType.Conditional:
                     return VisitConditional((ConditionalExpression)exp);
+
                 case ExpressionType.Constant:
                     return VisitConstant((ConstantExpression)exp);
+
                 case ExpressionType.Parameter:
                     return VisitParameter((ParameterExpression)exp);
+
                 case ExpressionType.MemberAccess:
                     return VisitMemberAccess((MemberExpression)exp);
+
                 case ExpressionType.Call:
                     return VisitMethodCall((MethodCallExpression)exp);
+
                 case ExpressionType.Lambda:
                     return VisitLambda((LambdaExpression)exp);
+
                 case ExpressionType.New:
                     return VisitNew((NewExpression)exp);
+
                 case ExpressionType.NewArrayInit:
                 case ExpressionType.NewArrayBounds:
                     return VisitNewArray((NewArrayExpression)exp);
+
                 case ExpressionType.Invoke:
                     return VisitInvocation((InvocationExpression)exp);
+
                 case ExpressionType.MemberInit:
                     return VisitMemberInit((MemberInitExpression)exp);
+
                 case ExpressionType.ListInit:
                     return VisitListInit((ListInitExpression)exp);
+
                 default:
                     throw new Exception(string.Format("Unhandled expression type: '{0}'", exp.NodeType));
             }
@@ -95,10 +112,13 @@
             {
                 case MemberBindingType.Assignment:
                     return VisitMemberAssignment((MemberAssignment)binding);
+
                 case MemberBindingType.MemberBinding:
                     return VisitMemberMemberBinding((MemberMemberBinding)binding);
+
                 case MemberBindingType.ListBinding:
                     return VisitMemberListBinding((MemberListBinding)binding);
+
                 default:
                     throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType));
             }
@@ -111,6 +131,7 @@
             {
                 return Expression.ElementInit(initializer.AddMethod, arguments);
             }
+
             return initializer;
         }
 
@@ -121,6 +142,7 @@
             {
                 return Expression.MakeUnary(u.NodeType, operand, u.Type, u.Method);
             }
+
             return u;
         }
 
@@ -140,6 +162,7 @@
                     return Expression.MakeBinary(b.NodeType, left, right, b.IsLiftedToNull, b.Method);
                 }
             }
+
             return b;
         }
 
@@ -150,6 +173,7 @@
             {
                 return Expression.TypeIs(expr, b.TypeOperand);
             }
+
             return b;
         }
 
@@ -167,6 +191,7 @@
             {
                 return Expression.Condition(test, ifTrue, ifFalse);
             }
+
             return c;
         }
 
@@ -182,6 +207,7 @@
             {
                 return Expression.MakeMemberAccess(exp, m.Member);
             }
+
             return m;
         }
 
@@ -193,6 +219,7 @@
             {
                 return Expression.Call(obj, m.Method, args);
             }
+
             return m;
         }
 
@@ -213,13 +240,16 @@
                     {
                         list.Add(original[j]);
                     }
+
                     list.Add(p);
                 }
             }
+
             if (list != null)
             {
                 return list.AsReadOnly();
             }
+
             return original;
         }
 
@@ -230,6 +260,7 @@
             {
                 return Expression.Bind(assignment.Member, e);
             }
+
             return assignment;
         }
 
@@ -240,6 +271,7 @@
             {
                 return Expression.MemberBind(binding.Member, bindings);
             }
+
             return binding;
         }
 
@@ -250,6 +282,7 @@
             {
                 return Expression.ListBind(binding.Member, initializers);
             }
+
             return binding;
         }
 
@@ -270,13 +303,16 @@
                     {
                         list.Add(original[j]);
                     }
+
                     list.Add(b);
                 }
             }
+
             if (list != null)
             {
                 return list;
             }
+
             return original;
         }
 
@@ -297,13 +333,16 @@
                     {
                         list.Add(original[j]);
                     }
+
                     list.Add(init);
                 }
             }
+
             if (list != null)
             {
                 return list;
             }
+
             return original;
         }
 
@@ -314,6 +353,7 @@
             {
                 return Expression.Lambda(lambda.Type, body, lambda.Parameters);
             }
+
             return lambda;
         }
 
@@ -331,6 +371,7 @@
                     return Expression.New(nex.Constructor, args);
                 }
             }
+
             return nex;
         }
 
@@ -342,6 +383,7 @@
             {
                 return Expression.MemberInit(n, bindings);
             }
+
             return init;
         }
 
@@ -353,6 +395,7 @@
             {
                 return Expression.ListInit(n, initializers);
             }
+
             return init;
         }
 
@@ -370,6 +413,7 @@
                     return Expression.NewArrayBounds(na.Type.GetElementType(), exprs);
                 }
             }
+
             return na;
         }
 
@@ -381,6 +425,7 @@
             {
                 return Expression.Invoke(expr, args);
             }
+
             return iv;
         }
     }

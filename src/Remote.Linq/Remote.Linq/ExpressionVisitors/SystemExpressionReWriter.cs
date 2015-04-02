@@ -3,18 +3,31 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Remote.Linq.Dynamic;
-    using Remote.Linq.TypeSystem;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Linq.Expressions;
     using BindingFlags = System.Reflection.BindingFlags;
+    using MemberTypes = Remote.Linq.TypeSystem.MemberTypes;
+    using TypeHelper = Remote.Linq.TypeSystem.TypeHelper;
 
-    internal static class SystemExpressionReWriter
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static class SystemExpressionReWriter
     {
         internal static Expression ReplaceAnonymousTypes(this Expression expression)
         {
             return new AnonymousTypesReplacer().ReWrite(expression);
+        }
+
+        public static Expression ResolveDynamicPropertySelectors(this Expression expression, bool throwOnInvalidProperty = false)
+        {
+            return new DynamicPropertyResolver(throwOnInvalidProperty).ResolveDynamicPropertySelectors(expression);
+        }
+
+        public static LambdaExpression ResolveDynamicPropertySelectors(this LambdaExpression expression, bool throwOnInvalidProperty = false)
+        {
+            return (LambdaExpression)ResolveDynamicPropertySelectors((Expression)expression, throwOnInvalidProperty);
         }
 
         private sealed class AnonymousTypesReplacer : ExpressionVisitorBase
@@ -215,6 +228,64 @@ namespace Remote.Linq.ExpressionVisitors
                     }
                 }
                 return false;
+            }
+        }
+
+        private sealed class DynamicPropertyResolver : ExpressionVisitorBase
+        {
+            private readonly bool _throwOnInvalidProperty;
+
+            internal DynamicPropertyResolver(bool throwOnInvalidProperty)
+            {
+                _throwOnInvalidProperty = throwOnInvalidProperty;
+            }
+
+            internal Expression ResolveDynamicPropertySelectors(Expression expression)
+            {
+                return Visit(expression);
+            }
+
+            protected override Expression VisitMethodCall(MethodCallExpression m)
+            {
+                if (m.Method.Name == "get_Item" && m.Arguments.Count == 1)
+                {
+                    string propertyName = null;
+
+                    var expression = m.Arguments[0];
+                    if (expression.Type == typeof(string))
+                    {
+                        if (expression.NodeType == ExpressionType.Constant)
+                        {
+                            var exp = (ConstantExpression)expression;
+                            propertyName = (string)exp.Value;
+                        }
+                        else 
+                        {
+                            var lambda = Expression.Lambda(expression);
+                            var func = lambda.Compile();
+                            var value = func.DynamicInvoke(null);
+                            propertyName = (string)value;
+                        }
+
+                        if (!ReferenceEquals(null, propertyName))
+                        {
+                            var instance = Visit(m.Object);
+                            var propertyInfo = m.Object.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
+                            if (!ReferenceEquals(null, propertyInfo))
+                            {
+                                return Expression.MakeMemberAccess(instance, propertyInfo);
+                            }
+
+                            if (_throwOnInvalidProperty)
+                            {
+                                throw new Exception(string.Format("'{0}' is not a valid or an ambiguous property of type {1}", propertyName, m.Object.Type.FullName));
+                            }
+                        }
+                    }
+                }
+
+                return base.VisitMethodCall(m);
             }
         }
     }
