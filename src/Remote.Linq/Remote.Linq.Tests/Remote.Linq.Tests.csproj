@@ -102,6 +102,11 @@
     <Compile Include="IEnumerableAsyncExtensions\When_using_async_with_non_async_queriables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunnableInDebugOnlyAttribute.cs" />
+    <Compile Include="Serialization\ExpressionHelper.cs" />
+    <Compile Include="Serialization\SerializationHelper.cs" />
+    <Compile Include="Serialization\VariableQueryArgument\When_using_instance_variable_query_argument.cs" />
+    <Compile Include="Serialization\VariableQueryArgument\When_using_local_variable_query_argument.cs" />
+    <Compile Include="Serialization\VariableQueryArgument\When_using_local_variable_query_argument_list.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj">

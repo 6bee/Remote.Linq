@@ -1,0 +1,19 @@
+﻿namespace Remote.Linq.Tests.Serialization
+{
+    using System.IO;
+    using System.Runtime.Serialization.Formatters.Binary;
+
+    public static class SerializationHelper
+    {
+        public static T Serialize<T>(this T graph) where T : Remote.Linq.Expressions.Expression
+        {
+            var serializer = new BinaryFormatter();
+            using (var stream = new MemoryStream())
+            {
+                serializer.Serialize(stream, graph);
+                stream.Seek(0, SeekOrigin.Begin);
+                return (T)serializer.Deserialize(stream);
+            }
+        }
+    }
+}

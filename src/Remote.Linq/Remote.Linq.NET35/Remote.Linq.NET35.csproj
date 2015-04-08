@@ -282,6 +282,9 @@
     <Compile Include="..\Remote.Linq\VariableQueryArgument`.cs">
       <Link>VariableQueryArgument`.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\VariableQueryArgumentList.cs">
+      <Link>VariableQueryArgumentList.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>

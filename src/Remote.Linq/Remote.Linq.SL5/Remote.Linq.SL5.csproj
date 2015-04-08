@@ -336,6 +336,9 @@
     <Compile Include="..\Remote.Linq\VariableQueryArgument`.cs">
       <Link>VariableQueryArgument`.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq\VariableQueryArgumentList.cs">
+      <Link>VariableQueryArgumentList.cs</Link>
+    </Compile>
     <Compile Include="NonSerializedAttribute.cs" />
     <Compile Include="SerializableAttribute.cs" />
     <Compile Include="..\SharedAssemblyInfo.cs">

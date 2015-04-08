@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.Tests", "Remote
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.NET35.Tests", "Remote.Linq.NET35.Tests\Remote.Linq.NET35.Tests.csproj", "{44ADE047-F2F6-4AB8-9249-6A24FBD3AD77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.Tests.Serialization.DataContractSerializer", "Remote.Linq.Tests.Serialization.DataContractSerializer\Remote.Linq.Tests.Serialization.DataContractSerializer.csproj", "{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.Tests.Serialization.NetDataContractSerializer", "Remote.Linq.Tests.Serialization.NetDataContractSerializer\Remote.Linq.Tests.Serialization.NetDataContractSerializer.csproj", "{11173297-FF69-4B47-B48F-61988E0BAF67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -173,6 +177,34 @@ Global
 		{44ADE047-F2F6-4AB8-9249-6A24FBD3AD77}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{44ADE047-F2F6-4AB8-9249-6A24FBD3AD77}.Release|x64.ActiveCfg = Release|Any CPU
 		{44ADE047-F2F6-4AB8-9249-6A24FBD3AD77}.Release|x86.ActiveCfg = Release|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Release|x64.ActiveCfg = Release|Any CPU
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}.Release|x86.ActiveCfg = Release|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Release|ARM.ActiveCfg = Release|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Release|x64.ActiveCfg = Release|Any CPU
+		{11173297-FF69-4B47-B48F-61988E0BAF67}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -180,5 +212,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{85AE4778-A174-4C29-90D2-D245A21B299C} = {C0DCE22E-09EB-4152-93FD-A54582B2C4BC}
 		{44ADE047-F2F6-4AB8-9249-6A24FBD3AD77} = {C0DCE22E-09EB-4152-93FD-A54582B2C4BC}
+		{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C} = {C0DCE22E-09EB-4152-93FD-A54582B2C4BC}
+		{11173297-FF69-4B47-B48F-61988E0BAF67} = {C0DCE22E-09EB-4152-93FD-A54582B2C4BC}
 	EndGlobalSection
 EndGlobal
