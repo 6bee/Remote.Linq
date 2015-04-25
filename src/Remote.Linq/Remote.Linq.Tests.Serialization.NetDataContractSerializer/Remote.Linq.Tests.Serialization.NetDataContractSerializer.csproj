@@ -43,6 +43,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Remote.Linq.Tests\Serialization\Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs">
+      <Link>Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq.Tests\Serialization\ExpressionHelper.cs">
       <Link>ExpressionHelper.cs</Link>
     </Compile>

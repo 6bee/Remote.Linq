@@ -6,23 +6,26 @@
 
     public static class SerializationHelper
     {
-        public static T Serialize<T>(this T graph) where T : Remote.Linq.Expressions.Expression
+        public static T Serialize<T>(this T graph)
         {
-            var serializer = new DataContractSerializer(typeof(T));
-
-            var graphToSerialize = graph.ReplaceGenericQueryArgumentsByNonGenericArguments();
+            var serializer = new NetDataContractSerializer();
 
             using (var stream = new MemoryStream())
             {
-                serializer.WriteObject(stream, graphToSerialize);
-
+                serializer.Serialize(stream, graph);
                 stream.Seek(0, SeekOrigin.Begin);
-
-                var deserializedGraph = (T)serializer.ReadObject(stream);
-
-                var graphToReturn = deserializedGraph.ReplaceNonGenericQueryArgumentsByGenericArguments();
-                return graphToReturn;
+                return (T)serializer.Deserialize(stream);
             }
+        }
+
+        public static T SerializeExpression<T>(this T graph) where T : Remote.Linq.Expressions.Expression
+        {
+            var graphToSerialize = graph.ReplaceGenericQueryArgumentsByNonGenericArguments();
+
+            var deserializedGraph = graphToSerialize.Serialize();
+
+            var graphToReturn = deserializedGraph.ReplaceNonGenericQueryArgumentsByGenericArguments();
+            return graphToReturn;
         }
     }
 }

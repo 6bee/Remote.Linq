@@ -27,7 +27,7 @@
 
             // HINT: since this test is used in multiple assemblies as linked file, 
             //       use serialize extension method to find out the context 
-            _serializedRemoteExpression = _remoteExpression.Serialize();
+            _serializedRemoteExpression = _remoteExpression.SerializeExpression();
         }
 
         [Fact]

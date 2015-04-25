@@ -5,7 +5,7 @@
 
     public static class SerializationHelper
     {
-        public static T Serialize<T>(this T graph) where T : Remote.Linq.Expressions.Expression
+        public static T Serialize<T>(this T graph)
         {
             var serializer = new BinaryFormatter();
             using (var stream = new MemoryStream())
@@ -14,6 +14,11 @@
                 stream.Seek(0, SeekOrigin.Begin);
                 return (T)serializer.Deserialize(stream);
             }
+        }
+
+        public static T SerializeExpression<T>(this T graph) where T : Remote.Linq.Expressions.Expression
+        {
+            return graph.Serialize();
         }
     }
 }
