@@ -7,14 +7,14 @@
 
     public static class ProtoTypeModel
     {
-        public static void Configure()
+        public static void ConfigureRemoteLinq()
         {
-            Configure(RuntimeTypeModel.Default);
+            ConfigureRemoteLinq(RuntimeTypeModel.Default);
         }
 
-        public static void Configure(RuntimeTypeModel typeModel)
+        public static RuntimeTypeModel ConfigureRemoteLinq(this RuntimeTypeModel typeModel)
         {
-            typeModel
+            return typeModel
                 .ConfigureDynamicObject()
                 .ConfigureExpression()
                 .ConfigureConstantExpression()

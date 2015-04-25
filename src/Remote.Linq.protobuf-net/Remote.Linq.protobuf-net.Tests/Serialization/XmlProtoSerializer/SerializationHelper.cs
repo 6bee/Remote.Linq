@@ -8,7 +8,7 @@
     {
         static SerializationHelper()
         {
-            ProtoTypeModel.Configure();
+            ProtoTypeModel.ConfigureRemoteLinq();
         }
 
         public static T Serialize<T>(this T graph)
