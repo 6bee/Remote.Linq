@@ -49,6 +49,18 @@
     <Compile Include="..\Remote.Linq.Tests\Serialization\ExpressionHelper.cs">
       <Link>ExpressionHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Remote.Linq.Tests\Serialization\Expressions\When_using_complex_expression_with_local_lambda.cs">
+      <Link>Expressions\When_using_complex_expression_with_local_lambda.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq.Tests\Serialization\Expressions\When_using_const_bool_expression.cs">
+      <Link>Expressions\When_using_const_bool_expression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq.Tests\Serialization\Expressions\When_using_simple_bool_expression.cs">
+      <Link>Expressions\When_using_simple_bool_expression.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq.Tests\Serialization\Expressions\When_using_simple_projection_to_single_member.cs">
+      <Link>Expressions\When_using_simple_projection_to_single_member.cs</Link>
+    </Compile>
     <Compile Include="..\Remote.Linq.Tests\Serialization\VariableQueryArgument\When_using_instance_variable_query_argument.cs">
       <Link>VariableQueryArgument\When_using_instance_variable_query_argument.cs</Link>
     </Compile>
@@ -57,6 +69,12 @@
     </Compile>
     <Compile Include="..\Remote.Linq.Tests\Serialization\VariableQueryArgument\When_using_local_variable_query_argument_list.cs">
       <Link>VariableQueryArgument\When_using_local_variable_query_argument_list.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq.Tests\Serialization\VariableQueryArgument\When_using_local_variable_query_string_argument.cs">
+      <Link>VariableQueryArgument\When_using_local_variable_query_string_argument.cs</Link>
+    </Compile>
+    <Compile Include="..\Remote.Linq.Tests\Serialization\VariableQueryArgument\When_using_local_variable_query_string_argument_list.cs">
+      <Link>VariableQueryArgument\When_using_local_variable_query_string_argument_list.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>

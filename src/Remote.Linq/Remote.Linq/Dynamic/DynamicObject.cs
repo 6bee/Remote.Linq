@@ -15,7 +15,7 @@ namespace Remote.Linq.Dynamic
     public partial class DynamicObject : IEnumerable<DynamicObject.Property>, IDictionary<string, object>
     {
         [Serializable]
-        [DataContract(IsReference = true)]
+        [DataContract(Name = "DynamicObjectProperty")]
         [KnownType(typeof(object))]
         [KnownType(typeof(object[]))]
         [DebuggerDisplay("{Name} = {Value}")]
@@ -48,13 +48,11 @@ namespace Remote.Linq.Dynamic
             }
         }
 
-        private readonly static object _lock = new object();
-        private Dictionary<string, object> _data;
-
         /// <summary>
         /// Creates a new instance of a dynamic object
         /// </summary>
         public DynamicObject()
+            : this(default(TypeInfo))
         {
         }
 
@@ -74,6 +72,7 @@ namespace Remote.Linq.Dynamic
         public DynamicObject(TypeInfo type)
         {
             Type = type;
+            Members = new List<Property>();
         }
 
         /// <summary>
@@ -88,10 +87,7 @@ namespace Remote.Linq.Dynamic
                 throw new ArgumentNullException("data");
             }
 
-            foreach (var item in members)
-            {
-                Add(item.Key, item.Value);
-            }
+            Members = members.Select(x => new Property(x)).ToList();
         }
 
         /// <summary>
@@ -106,10 +102,7 @@ namespace Remote.Linq.Dynamic
                 throw new ArgumentNullException("data");
             }
 
-            foreach (var item in members)
-            {
-                Add(item);
-            }
+            Members = members.ToList();
         }
 
         /// <summary>
@@ -127,25 +120,7 @@ namespace Remote.Linq.Dynamic
 
             var dynamicObject = (mapper ?? new DynamicObjectMapper()).MapObject(obj);
             Type = dynamicObject.Type;
-            _data = dynamicObject.Data;
-        }
-
-        private Dictionary<string, object> Data
-        {
-            get
-            {
-                if (ReferenceEquals(null, _data))
-                {
-                    lock (_lock)
-                    {
-                        if (ReferenceEquals(null, _data))
-                        {
-                            _data = new Dictionary<string, object>();
-                        }
-                    }
-                }
-                return _data;
-            }
+            Members = dynamicObject.Members;
         }
 
         /// <summary>
@@ -155,24 +130,14 @@ namespace Remote.Linq.Dynamic
         public TypeInfo Type { get; set; }
 
         [DataMember(Order = 2)]
-        public IEnumerable<Property> Members
-        {
-            get
-            {
-                return Data.Select(x => new Property(x)).ToList();
-            }
-            set
-            {
-                _data = value.ToDictionary(x => x.Name, x => x.Value);
-            }
-        }
+        public List<Property> Members { get; set; }
 
         /// <summary>
         /// Gets the count of members (dynamically added properties) hold by this dynamic object
         /// </summary>
         public int MemberCount
         {
-            get { return Data.Count; }
+            get { return Members.Count; }
         }
 
         /// <summary>
@@ -180,7 +145,7 @@ namespace Remote.Linq.Dynamic
         /// </summary>
         public IEnumerable<string> MemberNames
         {
-            get { return Data.Keys; }
+            get { return Members.Select(x => x.Name).ToList(); }
         }
 
         /// <summary>
@@ -188,7 +153,7 @@ namespace Remote.Linq.Dynamic
         /// </summary>
         public IEnumerable<object> Values
         {
-            get { return Data.Values; }
+            get { return Members.Select(x => x.Value).ToList(); }
         }
 
         /// <summary>
@@ -198,8 +163,20 @@ namespace Remote.Linq.Dynamic
         /// <returns>Value of the member specified</returns>
         public object this[string name]
         {
-            get { return Data[name]; }
-            set { Data[name] = value; }
+            get
+            {
+                object value;
+                if (TryGet(name, out value))
+                {
+                    return value;
+                }
+
+                throw new Exception(string.Format("Member not found for name '{0}'", name));
+            }
+            set
+            {
+                Set(name, value);
+            }
         }
 
         /// <summary>
@@ -210,7 +187,18 @@ namespace Remote.Linq.Dynamic
         /// <returns>The value specified</returns>
         public object Set(string name, object value)
         {
-            this[name] = value;
+            var property = Members.SingleOrDefault(x => string.Equals(x.Name, name));
+
+            if (ReferenceEquals(null, property))
+            {
+                property = new Property(name, value);
+                Members.Add(property);
+            }
+            else
+            {
+                property.Value = value;
+            }
+
             return value;
         }
 
@@ -225,6 +213,7 @@ namespace Remote.Linq.Dynamic
             {
                 value = null;
             }
+
             return value;
         }
 
@@ -233,16 +222,15 @@ namespace Remote.Linq.Dynamic
         /// </summary>
         public void Add(string name, object value)
         {
-            Data.Add(name, value);
+            Add(new Property(name, value));
         }
 
         /// <summary>
         /// Adds a property
         /// </summary>
-        /// <param name="property"></param>
         public void Add(Property property)
         {
-            Data.Add(property.Name, property.Value);
+            Members.Add(property);
         }
 
         /// <summary>
@@ -251,7 +239,15 @@ namespace Remote.Linq.Dynamic
         /// <returns>True if the member is successfully found and removed; otherwise, false</returns>
         public bool Remove(string name)
         {
-            return Data.Remove(name);
+            var property = Members.SingleOrDefault(x => string.Equals(x.Name, name));
+
+            if (ReferenceEquals(null, property))
+            {
+                return false;
+            }
+
+            Members.Remove(property);
+            return true;
         }
 
         /// <summary>
@@ -263,7 +259,16 @@ namespace Remote.Linq.Dynamic
         /// <returns>True is the dynamic object contains a member with the specified name; otherwise false</returns>
         public bool TryGet(string name, out object value)
         {
-            return Data.TryGetValue(name, out value);
+            var property = Members.SingleOrDefault(x => string.Equals(x.Name, name));
+
+            if (ReferenceEquals(null, property))
+            {
+                value = null;
+                return false;
+            }
+
+            value = property.Value;
+            return true;
         }
 
         /// <summary>
@@ -272,7 +277,7 @@ namespace Remote.Linq.Dynamic
         /// <returns></returns>
         public IEnumerator<Property> GetEnumerator()
         {
-            return Data.Select(x => new Property(x)).GetEnumerator();
+            return Members.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -323,7 +328,10 @@ namespace Remote.Linq.Dynamic
 
         IEnumerator<KeyValuePair<string, object>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator()
         {
-            return ((IEnumerable<KeyValuePair<string, object>>)Data).GetEnumerator();
+            foreach (var member in Members)
+            {
+                yield return (KeyValuePair<string, object>)member;
+            }
         }
 
         #endregion IEnumerable<KeyValuePair<string, object>>
@@ -332,27 +340,27 @@ namespace Remote.Linq.Dynamic
 
         void ICollection<KeyValuePair<string, object>>.Add(KeyValuePair<string, object> item)
         {
-            ((ICollection<KeyValuePair<string, object>>)Data).Add(item);
+            Add(new Property(item));
         }
 
         void ICollection<KeyValuePair<string, object>>.Clear()
         {
-            Data.Clear();
+            Members.Clear();
         }
 
         bool ICollection<KeyValuePair<string, object>>.Contains(KeyValuePair<string, object> item)
         {
-            return Data.Contains(item);
+            return Members.Any(x => string.Equals(x.Name, item.Key) && object.Equals(x.Value, item.Value));
         }
 
         void ICollection<KeyValuePair<string, object>>.CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
         {
-            ((ICollection<KeyValuePair<string, object>>)Data).CopyTo(array, arrayIndex);
+            ((IEnumerable<KeyValuePair<string, object>>)this).ToList().CopyTo(array, arrayIndex);
         }
 
         int ICollection<KeyValuePair<string, object>>.Count
         {
-            get { return Data.Count; }
+            get { return Members.Count; }
         }
 
         bool ICollection<KeyValuePair<string, object>>.IsReadOnly
@@ -362,7 +370,7 @@ namespace Remote.Linq.Dynamic
 
         bool ICollection<KeyValuePair<string, object>>.Remove(KeyValuePair<string, object> item)
         {
-            return ((ICollection<KeyValuePair<string, object>>)Data).Remove(item);
+            return Remove(item.Key);
         }
 
         #endregion ICollection<KeyValuePair<string, object>>
@@ -371,22 +379,22 @@ namespace Remote.Linq.Dynamic
 
         bool IDictionary<string, object>.ContainsKey(string key)
         {
-            return Data.ContainsKey(key);
+            return Members.Any(x => string.Equals(x.Name, key));
         }
 
         ICollection<string> IDictionary<string, object>.Keys
         {
-            get { return Data.Keys; }
+            get { return MemberNames.ToList(); }
         }
 
         bool IDictionary<string, object>.TryGetValue(string key, out object value)
         {
-            return Data.TryGetValue(key, out value);
+            return TryGet(key, out value);
         }
 
         ICollection<object> IDictionary<string, object>.Values
         {
-            get { return Data.Values; }
+            get { return Values.ToList(); }
         }
 
         #endregion IDictionary<string, object>

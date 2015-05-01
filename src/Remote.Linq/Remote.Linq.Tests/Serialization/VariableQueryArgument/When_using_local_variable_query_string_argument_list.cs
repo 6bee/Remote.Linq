@@ -4,38 +4,36 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
 {
     using Remote.Linq.Expressions;
     using System;
+    using System.Collections.Generic;
     using Xunit;
 
-    public class When_using_local_variable_query_argument
+    public class When_using_local_variable_query_string_argument_list
     {
         private class AType
         {
-            public int Number { get; set; }
+            public string Key { get; set; }
         }
 
         private LambdaExpression _remoteExpression;
 
         private LambdaExpression _serializedRemoteExpression;
 
-        public When_using_local_variable_query_argument()
+        public When_using_local_variable_query_string_argument_list()
         {
-            var value = 123;
+            var keys = new List<string>() { "K1", "K2" };
 
-            System.Linq.Expressions.Expression<Func<AType, bool>> expression = x => x.Number == value;
+            System.Linq.Expressions.Expression<Func<AType, bool>> expression = x => keys.Contains(x.Key);
 
             _remoteExpression = expression.ToRemoteLinqExpression();
 
             // HINT: since this test is used in multiple assemblies as linked file, 
-            //       use serialize extension method to find out the context 
+            //       use serialize extension method have context specific serialization applied
             _serializedRemoteExpression = _remoteExpression.SerializeExpression();
         }
 
         [Fact]
         public void Remote_expression_should_be_equal()
         {
-            var str1 = _remoteExpression.ToString();
-            var str2 = _serializedRemoteExpression.ToString();
-
             _remoteExpression.EqualsRemoteExpression(_serializedRemoteExpression);
         }
 

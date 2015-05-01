@@ -1,4 +1,6 @@
-﻿namespace Remote.Linq.Tests.Serialization
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+namespace Remote.Linq.Tests.Serialization
 {
     using Remote.Linq.ExpressionVisitors;
     using System.IO;
@@ -20,12 +22,10 @@
 
         public static T SerializeExpression<T>(this T graph) where T : Remote.Linq.Expressions.Expression
         {
-            var graphToSerialize = graph.ReplaceGenericQueryArgumentsByNonGenericArguments();
-
-            var deserializedGraph = graphToSerialize.Serialize();
-
-            var graphToReturn = deserializedGraph.ReplaceNonGenericQueryArgumentsByGenericArguments();
-            return graphToReturn;
+            return graph
+                .ReplaceGenericQueryArgumentsByNonGenericArguments()
+                .Serialize()
+                .ReplaceNonGenericQueryArgumentsByGenericArguments();
         }
     }
 }

@@ -6,27 +6,27 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
     using System;
     using Xunit;
 
-    public class When_using_local_variable_query_argument
+    public class When_using_local_variable_query_string_argument
     {
         private class AType
         {
-            public int Number { get; set; }
+            public string Key { get; set; }
         }
 
         private LambdaExpression _remoteExpression;
 
         private LambdaExpression _serializedRemoteExpression;
 
-        public When_using_local_variable_query_argument()
+        public When_using_local_variable_query_string_argument()
         {
-            var value = 123;
+            var key = "K1";
 
-            System.Linq.Expressions.Expression<Func<AType, bool>> expression = x => x.Number == value;
+            System.Linq.Expressions.Expression<Func<AType, bool>> expression = x => x.Key == key;
 
             _remoteExpression = expression.ToRemoteLinqExpression();
 
             // HINT: since this test is used in multiple assemblies as linked file, 
-            //       use serialize extension method to find out the context 
+            //       use serialize extension method have context specific serialization applied
             _serializedRemoteExpression = _remoteExpression.SerializeExpression();
         }
 

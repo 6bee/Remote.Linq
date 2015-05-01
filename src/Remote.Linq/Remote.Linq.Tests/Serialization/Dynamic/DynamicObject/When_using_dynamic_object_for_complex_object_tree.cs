@@ -1,4 +1,6 @@
-﻿namespace Remote.Linq.Tests.Serialization.Dynamic.DynamicObject
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+namespace Remote.Linq.Tests.Serialization.Dynamic.DynamicObject
 {
     using Remote.Linq.Dynamic;
     using System;

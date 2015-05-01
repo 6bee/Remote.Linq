@@ -45,7 +45,8 @@
                 }
             }
 
-            return expression.NodeType != ExpressionType.Parameter;
+            return expression.NodeType != ExpressionType.Parameter
+                && expression.NodeType != ExpressionType.Lambda;
         }
 
         /// <summary>  
