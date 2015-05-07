@@ -6,7 +6,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
-    internal sealed partial class AsyncRemoteQueryable<T> : RemoteQueryable, IAsyncRemoteQueryable<T>
+    internal sealed partial class AsyncRemoteQueryable<T> : RemoteQueryable, IAsyncRemoteQueryable<T>, IOrderedAsyncRemoteQueryable<T>
     {
         internal AsyncRemoteQueryable(IAsyncRemoteQueryProvider provider)
             : base(typeof(T), provider)

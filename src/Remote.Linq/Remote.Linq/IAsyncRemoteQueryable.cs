@@ -5,4 +5,8 @@ namespace Remote.Linq
     public interface IAsyncRemoteQueryable : IRemoteQueryable
     {
     }
+
+    public interface IOrderedAsyncRemoteQueryable : IAsyncRemoteQueryable, IOrderedRemoteQueryable
+    {
+    }
 }

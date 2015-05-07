@@ -9,4 +9,8 @@ namespace Remote.Linq
     {
         Task<IEnumerable<T>> ExecuteAsync();
     }
+
+    public interface IOrderedAsyncRemoteQueryable<T> : IAsyncRemoteQueryable<T>, IOrderedAsyncRemoteQueryable, IOrderedRemoteQueryable<T>
+    {
+    }
 }

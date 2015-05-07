@@ -7,7 +7,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Linq;
     using System.Linq.Expressions;
 
-    internal partial class RemoteQueryable : IRemoteQueryable
+    internal partial class RemoteQueryable : IRemoteQueryable, IOrderedRemoteQueryable
     {
         protected readonly Type _elemntType;
         protected readonly Expression _expression;
