@@ -25,30 +25,24 @@ namespace Client
             {
                 try
                 {
-                    IEnumerable<DynamicObject> result;
-
-                    HttpContent request;
                     using (var client = new HttpClient())
+                    using (var requestStream = new MemoryStream())
+                    using (var responseStream = new MemoryStream())
                     {
-                        using (var requestStream = new MemoryStream())
-                        using (var responseStream = new MemoryStream())
+                        requestStream.Write(expression);
+                        requestStream.Position = 0;
+
+                        var request = new StreamContent(requestStream);
+
+                        using (var response = await client.PostAsync(url, request))
                         {
-                            requestStream.Write(expression);
-                            requestStream.Position = 0;
+                            await response.Content.CopyToAsync(responseStream);
+                            responseStream.Position = 0;
 
-                            request = new StreamContent(requestStream);
-
-                            using (var response = await client.PostAsync(url, request))
-                            {
-                                await response.Content.CopyToAsync(responseStream);
-                                responseStream.Position = 0;
-
-                                result = responseStream.Read<IEnumerable<DynamicObject>>();
-                            }
+                            var result = responseStream.Read<IEnumerable<DynamicObject>>();
+                            return result;
                         }
                     }
-
-                    return result;
                 }
                 catch (SocketException ex)
                 {

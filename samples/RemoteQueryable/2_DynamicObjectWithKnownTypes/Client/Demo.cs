@@ -64,6 +64,7 @@ namespace Client
             Console.WriteLine("\nCOUNT:");
             var productsQuery =
                 from p in repo.Products
+                orderby p.Price descending
                 select p;
             Console.WriteLine("  Count = {0}", productsQuery.Count());
 

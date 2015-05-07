@@ -27,6 +27,7 @@ namespace Client
                 Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
             }
 
+
             Console.WriteLine("\nCROSS JOIN:");
             Func<object, string> sufix = (x) => x + "ending";
             var crossJoinQuery =
@@ -55,6 +56,7 @@ namespace Client
             Console.WriteLine("\nSELECT IDs:");
             var productIdsQuery =
                 from p in repo.Products
+                orderby p.Price descending
                 select p.Id;
             var productIds = productIdsQuery.ToList();
             foreach (var id in productIdsQuery)

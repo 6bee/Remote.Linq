@@ -13,33 +13,61 @@ namespace Client
     using System.ServiceModel;
     using System.Threading.Tasks;
 
-    public class RemoteRepository
+    public class RemoteRepository : IDisposable
     {
-        private readonly Func<Expression, Task<IEnumerable<DynamicObject>>> _dataProvider;
+        private readonly ChannelFactory<IQueryService> _channelFactory;
+
+        private readonly Func<Expression, Task<IEnumerable<DynamicObject>>> _asyncDataProvider;
 
         public RemoteRepository(string uri)
         {
-            _dataProvider = async expression =>
+            var binding = new NetNamedPipeBinding()
             {
-                var binding = new NetNamedPipeBinding()
-                {
-                    CloseTimeout = TimeSpan.FromMinutes(10),
-                    ReceiveTimeout = TimeSpan.FromMinutes(10),
-                    SendTimeout = TimeSpan.FromMinutes(10),
-                    MaxReceivedMessageSize = 640000L
-                };
-                var channelFactory = new ChannelFactory<IQueryService>(binding, uri);
-                var channel = channelFactory.CreateChannel();
-
-                var task = channel.ExecuteQueryAsync(expression);
-                return await task;
+                CloseTimeout = TimeSpan.FromMinutes(10),
+                ReceiveTimeout = TimeSpan.FromMinutes(10),
+                SendTimeout = TimeSpan.FromMinutes(10),
+                MaxReceivedMessageSize = 640000L
             };
+
+            _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
+
+            _asyncDataProvider = async expression =>
+                {
+                    IQueryService channel = null;
+                    try
+                    {
+                        channel = _channelFactory.CreateChannel();
+
+                        var result = await channel.ExecuteQueryAsync(expression);
+                        return result;
+                    }
+                    finally
+                    {
+                        var communicationObject = channel as ICommunicationObject;
+                        if (communicationObject != null)
+                        {
+                            if (communicationObject.State == CommunicationState.Faulted)
+                            {
+                                communicationObject.Abort();
+                            }
+                            else
+                            {
+                                communicationObject.Close();
+                            }
+                        }
+                    }
+                };
         }
 
-        public IQueryable<ProductCategory> ProductCategories { get { return AsyncRemoteQueryable.Create<ProductCategory>(_dataProvider); } }
+        public IQueryable<ProductCategory> ProductCategories { get { return AsyncRemoteQueryable.Create<ProductCategory>(_asyncDataProvider); } }
 
-        public IQueryable<Product> Products { get { return AsyncRemoteQueryable.Create<Product>(_dataProvider); } }
+        public IQueryable<Product> Products { get { return AsyncRemoteQueryable.Create<Product>(_asyncDataProvider); } }
 
-        public IQueryable<OrderItem> OrderItems { get { return AsyncRemoteQueryable.Create<OrderItem>(_dataProvider); } }
+        public IQueryable<OrderItem> OrderItems { get { return AsyncRemoteQueryable.Create<OrderItem>(_asyncDataProvider); } }
+
+        public void Dispose()
+        {
+            ((IDisposable)_channelFactory).Dispose();
+        }
     }
 }

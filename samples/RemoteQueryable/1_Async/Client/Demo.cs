@@ -55,6 +55,7 @@ namespace Client
             Console.WriteLine("\nSELECT IDs:");
             var productIdsQuery =
                 from p in repo.Products
+                orderby p.Price descending
                 select p.Id;
             var productIds = await productIdsQuery.ToListAsync();
             foreach (var id in productIdsQuery)

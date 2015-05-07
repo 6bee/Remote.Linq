@@ -12,30 +12,54 @@ namespace Client
     using System.Linq;
     using System.ServiceModel;
 
-    public class RemoteRepository
+    public class RemoteRepository : IDisposable
     {
         private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
+        
         private readonly IDynamicObjectMapper _mapper;
+
+        private readonly ChannelFactory<IQueryService> _channelFactory;
 
         public RemoteRepository(string uri)
         {
             _mapper = new DynamicObjectMapper(knownTypes: new[] { typeof(OrderItem), typeof(Product), typeof(ProductCategory) });
 
-            _dataProvider = expression =>
+            var binding = new NetNamedPipeBinding()
             {
-                var binding = new NetNamedPipeBinding()
-                {
-                    CloseTimeout = TimeSpan.FromMinutes(10),
-                    ReceiveTimeout = TimeSpan.FromMinutes(10),
-                    SendTimeout = TimeSpan.FromMinutes(10),
-                    MaxReceivedMessageSize = 640000L
-                };
-                var channelFactory = new ChannelFactory<IQueryService>(binding, uri);
-                var channel = channelFactory.CreateChannel();
-
-                var result = channel.ExecuteQuery(expression);
-                return result;
+                CloseTimeout = TimeSpan.FromMinutes(10),
+                ReceiveTimeout = TimeSpan.FromMinutes(10),
+                SendTimeout = TimeSpan.FromMinutes(10),
+                MaxReceivedMessageSize = 640000L
             };
+
+            _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
+
+            _dataProvider = expression =>
+                {
+                    IQueryService channel = null;
+                    try
+                    {
+                        channel = _channelFactory.CreateChannel();
+
+                        var result = channel.ExecuteQuery(expression);
+                        return result;
+                    }
+                    finally
+                    {
+                        var communicationObject = channel as ICommunicationObject;
+                        if (communicationObject != null)
+                        {
+                            if (communicationObject.State == CommunicationState.Faulted)
+                            {
+                                communicationObject.Abort();
+                            }
+                            else
+                            {
+                                communicationObject.Close();
+                            }
+                        }
+                    }
+                };
         }
 
         public IQueryable<ProductCategory> ProductCategories { get { return RemoteQueryable.Create<ProductCategory>(_dataProvider, mapper: _mapper); } }
@@ -43,5 +67,10 @@ namespace Client
         public IQueryable<Product> Products { get { return RemoteQueryable.Create<Product>(_dataProvider, mapper: _mapper); } }
 
         public IQueryable<OrderItem> OrderItems { get { return RemoteQueryable.Create<OrderItem>(_dataProvider, mapper: _mapper); } }
+
+        public void Dispose()
+        {
+            ((IDisposable)_channelFactory).Dispose();
+        }
     }
 }

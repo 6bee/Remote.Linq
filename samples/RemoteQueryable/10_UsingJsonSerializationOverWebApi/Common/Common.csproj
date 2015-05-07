@@ -39,7 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Remote.Linq">
-      <HintPath>..\packages\Remote.Linq.4.0.0\lib\net45\Remote.Linq.dll</HintPath>
+      <HintPath>..\packages\Remote.Linq.4.1.1\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
