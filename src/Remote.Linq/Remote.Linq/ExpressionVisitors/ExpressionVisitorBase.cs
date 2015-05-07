@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Linq.Expressions;
 
     /// <summary>
@@ -351,7 +352,7 @@
             Expression body = Visit(lambda.Body);
             if (body != lambda.Body)
             {
-                return Expression.Lambda(lambda.Type, body, lambda.Parameters);
+                return Expression.Lambda(body, lambda.Parameters.ToArray());
             }
 
             return lambda;
