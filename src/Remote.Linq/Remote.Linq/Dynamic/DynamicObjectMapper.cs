@@ -9,6 +9,7 @@ namespace Remote.Linq.Dynamic
     using System.Reflection;
     using System.Text.RegularExpressions;
     using MethodInfo = System.Reflection.MethodInfo;
+    using PropertyInfo = System.Reflection.PropertyInfo;
 
     public partial class DynamicObjectMapper : IDynamicObjectMapper
     {
@@ -78,8 +79,6 @@ namespace Remote.Linq.Dynamic
         private const string NumericPattern = @"([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?";
 
         private static readonly Regex _complexNumberParserRegex = new Regex(string.Format("^(?<Re>[+-]?({0}))(?<Sign>[+-])[iI](?<Im>{0})$", NumericPattern), LocalRegexOptions);
-
-        private static readonly Regex _backingFieldRegex = new Regex(@"^(.+\+)?\<(?<name>.+)\>k__BackingField$", LocalRegexOptions);
 
         private static readonly Type _genericDictionaryType = typeof(Dictionary<,>);
 
@@ -529,8 +528,9 @@ namespace Remote.Linq.Dynamic
             }
             else
             {
-                var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                    .Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
+                var properties = GetPropertiesForMapping(type) ??
+                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                        .Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
                 foreach (var property in properties)
                 {
                     var value = property.GetValue(from);
@@ -538,6 +538,15 @@ namespace Remote.Linq.Dynamic
                     to[property.Name] = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Can be overriden in a derived class to return a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied
+        /// </summary>
+        /// <returns>If overriden in a derived class, returns a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied</returns>
+        protected virtual IEnumerable<PropertyInfo> GetPropertiesForMapping(Type type)
+        {
+            return null;
         }
 
         private T MapInternal<T>(DynamicObject obj)

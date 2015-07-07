@@ -15,6 +15,8 @@ namespace Remote.Linq.Dynamic
         /// </summary>
         private const RegexOptions LocalRegexOptions = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline;
 
+        private static readonly Regex _backingFieldRegex = new Regex(@"^(.+\+)?\<(?<name>.+)\>k__BackingField$", LocalRegexOptions);
+
         /// <summary>
         /// Gets an uninitialized instance of the specified type by using <see cref="FormatterServices" />
         /// </summary>
@@ -28,12 +30,20 @@ namespace Remote.Linq.Dynamic
         /// </summary>
         private void PopulateObjectMembers(Type type, DynamicObject from, object to)
         {
+            var customPropertySet = GetPropertiesForMapping(type);
+            var customPropertyNames = ReferenceEquals(null, customPropertySet) ? null : customPropertySet.ToDictionary(x => x.Name);
+
             var members = FormatterServices.GetSerializableMembers(type);
             var membersByCleanName = members.ToDictionary(x => CleanBackingFieldNameIfRequired(x.Name));
             var memberValueMap = new Dictionary<System.Reflection.MemberInfo, object>();
 
             foreach (var dynamicProperty in from)
             {
+                if (!ReferenceEquals(null, customPropertyNames) && !customPropertyNames.ContainsKey(dynamicProperty.Name))
+                {
+                    continue;
+                }
+
                 System.Reflection.MemberInfo member;
                 if (membersByCleanName.TryGetValue(dynamicProperty.Name, out member))
                 {
@@ -71,11 +81,18 @@ namespace Remote.Linq.Dynamic
         {
             var type = _typeResolver.ResolveType(to.Type);
 
+            var customPropertySet = GetPropertiesForMapping(type);
+            var customPropertyNames = ReferenceEquals(null, customPropertySet) ? null : customPropertySet.ToDictionary(x => x.Name);
             var members = FormatterServices.GetSerializableMembers(type);
             var values = FormatterServices.GetObjectData(from, members);
             for (int i = 0; i < members.Length; i++)
             {
                 var memberName = CleanBackingFieldNameIfRequired(members[i].Name);
+                if (!ReferenceEquals(null, customPropertyNames) && !customPropertyNames.ContainsKey(memberName))
+                {
+                    continue;
+                }
+
                 var value = MapToDynamicObjectIfRequired(values[i], setTypeInformation);
                 to[memberName] = value;
             }
