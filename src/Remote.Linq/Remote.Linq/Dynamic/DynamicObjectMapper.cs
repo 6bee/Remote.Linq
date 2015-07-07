@@ -160,6 +160,9 @@ namespace Remote.Linq.Dynamic
             { typeof(ulong), new[] { typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
         };
 
+        private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper)
+            .GetMethod("ToDictionary", BindingFlags.Static | BindingFlags.NonPublic);
+
         private static readonly MethodInfo _mapDynamicObjectInternalMethod = typeof(DynamicObjectMapper)
             .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
             .Where(x => x.Name == "MapInternal")
@@ -380,9 +383,7 @@ namespace Remote.Linq.Dynamic
                 if (IsMatchingDictionary(targetType, elementType))
                 {
                     var targetTypeGenericArguments = targetType.GetGenericArguments();
-                    var method = typeof(DynamicObjectMapper)
-                        .GetMethod("ToDictionary", BindingFlags.Static | BindingFlags.NonPublic)
-                        .MakeGenericMethod(targetTypeGenericArguments.ToArray());
+                    var method = ToDictionaryMethodInfo.MakeGenericMethod(targetTypeGenericArguments.ToArray());
                     var r2 = method.Invoke(null, new object[] { r1 });
                     return r2;
                 }
