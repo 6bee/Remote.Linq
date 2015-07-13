@@ -103,6 +103,7 @@
     <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_invalid_constructor_parameters.cs" />
     <Compile Include="IEnumerableAsyncExtensions\When_using_async_with_non_async_queriables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteQueryable\When_running_cross_join_query.cs" />
     <Compile Include="RunnableInDebugOnlyAttribute.cs" />
     <Compile Include="Serialization\Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs" />
     <Compile Include="Serialization\ExpressionHelper.cs" />

@@ -352,7 +352,7 @@
             Expression body = Visit(lambda.Body);
             if (body != lambda.Body)
             {
-                return Expression.Lambda(body, lambda.Parameters.ToArray());
+                return Expression.Lambda(lambda.Type, body, lambda.Parameters);
             }
 
             return lambda;
