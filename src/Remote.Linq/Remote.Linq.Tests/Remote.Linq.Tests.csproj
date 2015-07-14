@@ -117,6 +117,16 @@
     <Compile Include="Serialization\VariableQueryArgument\When_using_local_variable_query_argument.cs" />
     <Compile Include="Serialization\VariableQueryArgument\When_using_local_variable_query_string_argument_list.cs" />
     <Compile Include="Serialization\VariableQueryArgument\When_using_local_variable_query_argument_list.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_anonymous_type.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_generic_type.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_array_type_of_generic_type.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_array_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_generic_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_anonymous_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_array_type_of_generic_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_array_type.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj">

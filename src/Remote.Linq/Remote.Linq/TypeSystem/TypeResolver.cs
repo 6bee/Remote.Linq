@@ -42,17 +42,12 @@ namespace Remote.Linq.TypeSystem
             return _typeCacheByName.GetOrCreate(typeName, ResolveTypeInternal);
         }
 
-#if NET
-        protected Type EmitType(TypeInfo typeInfo)
-        {
-            var type = new Emit.TypeEmitter().EmitType(typeInfo);
-            return type;
-        }
-#endif
-
         private Type ResolveTypeInternal(string typeName)
         {
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentNullException("typeName", "Expected a valid type name");
+            if (string.IsNullOrEmpty(typeName))
+            {
+                throw new ArgumentNullException("typeName", "Expected a valid type name");
+            }
 
             var type = Type.GetType(typeName);
             if (ReferenceEquals(null, type))
@@ -74,34 +69,27 @@ namespace Remote.Linq.TypeSystem
 
         private Type ResolveTypeInternal(TypeInfo typeInfo)
         {
+            var type = Type.GetType(typeInfo.FullName);
+            if (!IsValid(type, typeInfo))
+            {
+                var assemblies = GetAssemblies();
+                foreach (var assembly in assemblies)
+                {
+                    type = assembly.GetType(typeInfo.FullName);
+
+                    if (IsValid(type, typeInfo))
+                    {
+                        break;
+                    }
+
+                    type = null;
+                }
+            }
+
 #if NET
-            Type type;
-            if (typeInfo.IsAnonymousType)
+            if (ReferenceEquals(null, type) && typeInfo.IsAnonymousType)
             {
                 type = EmitType(typeInfo);
-            }
-            else
-            {
-                type = ResolveType(typeInfo.FullName);
-            }
-#else
-            Type type = ResolveType(typeInfo.FullName);
-
-            if (!ReferenceEquals(null, type) && (type.IsAnonymousType() || typeInfo.IsAnonymousType))
-            {
-                var properties = type.GetProperties().Select(x => x.Name).ToList();
-                var propertyNames = typeInfo.Properties;
-
-                var match =
-                    type.IsAnonymousType() &&
-                    typeInfo.IsAnonymousType &&
-                    properties.Count == propertyNames.Count &&
-                    propertyNames.All(x => properties.Contains(x));
-
-                if (!match)
-                {
-                    throw new Exception(string.Format("Anonymous type '{0}' could not be resolved, expecting properties: {1}", typeInfo.FullName, string.Join(", ", propertyNames.ToArray())));
-                }
             }
 #endif
 
@@ -115,10 +103,58 @@ namespace Remote.Linq.TypeSystem
                 var generigArguments =
                     from x in typeInfo.GenericArguments
                     select ResolveType(x);
-                type = type.MakeGenericType(generigArguments.ToArray());
+
+                if (typeInfo.IsArray)
+                {
+                    type = type.GetElementType().MakeGenericType(generigArguments.ToArray()).MakeArrayType();
+                }
+                else
+                {
+                    type = type.MakeGenericType(generigArguments.ToArray());
+                }
             }
 
             return type;
+        }
+
+#if NET
+        private static Type EmitType(TypeInfo typeInfo)
+        {
+            var type = new Emit.TypeEmitter().EmitType(typeInfo);
+            return type;
+        }
+#endif
+
+        private static bool IsValid(Type type, TypeInfo typeInfo)
+        {
+            if (!ReferenceEquals(null, type))
+            {
+                if (typeInfo.IsArray)
+                {
+                    type = type.GetElementType();
+                }
+
+                if (type.IsAnonymousType() || typeInfo.IsAnonymousType)
+                {
+                    var properties = type.GetProperties().Select(x => x.Name).ToList();
+                    var propertyNames = typeInfo.Properties;
+
+                    var match = 
+                        type.IsAnonymousType() && 
+                        typeInfo.IsAnonymousType && 
+                        properties.Count == propertyNames.Count && 
+                        propertyNames.All(x => properties.Contains(x));
+
+                    if (!match)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

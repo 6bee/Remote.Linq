@@ -28,6 +28,16 @@ namespace Remote.Linq.TypeSystem
 
             Namespace = type.Namespace;
 
+            if (type.IsArray)
+            {
+                if (!IsArray)
+                {
+                    throw new Exception("Name is not in expected format for array type");
+                }
+
+                type = type.GetElementType();
+            }
+
             if (type.IsNested && !type.IsGenericParameter)
             {
                 DeclaringType = new TypeInfo(type.DeclaringType);
@@ -67,6 +77,15 @@ namespace Remote.Linq.TypeSystem
         public bool IsNested { get { return !ReferenceEquals(null, DeclaringType); } }
 
         public bool IsGenericType { get { return !ReferenceEquals(null, GenericArguments) && GenericArguments.Any(); } }
+
+        public bool IsArray
+        {
+            get
+            {
+                var name = Name;
+                return !ReferenceEquals(null, name) && name.EndsWith("[]");
+            }
+        }
 
         internal string FullName
         {
