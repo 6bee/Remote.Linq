@@ -618,7 +618,7 @@ namespace Remote.Linq.Dynamic
                                     {
                                         Info = parameter,
                                         Property = dynamicProperties
-                                            .Where(dynamicProperty => string.Compare(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase) == 0)
+                                            .Where(dynamicProperty => string.Equals(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase))
                                             .Select(dynamicProperty => new { Name = dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
                                             .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),
                                     })

@@ -120,7 +120,7 @@ namespace Remote.Linq.TypeSystem
             if (ReferenceEquals(this, typeInfo)) return true;
             var s0 = ToString();
             var s1 = typeInfo.ToString();
-            return string.Compare(s0, s1) == 0;
+            return string.Equals(s0, s1, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()

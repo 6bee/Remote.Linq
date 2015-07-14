@@ -808,7 +808,7 @@ namespace Remote.Linq
 
                 var method = methodCallExpression.Method;
                 var declaringType = _typeResolver.ResolveType(method.DeclaringType);
-                if (string.Compare(method.Name, "SelectMany") == 0 &&
+                if (string.Equals(method.Name, "SelectMany", StringComparison.Ordinal) &&
                     declaringType == typeof(System.Linq.Queryable) &&
                     method.IsGenericMethod &&
                     method.GenericArgumentTypes.Count == method.ParameterTypes.Count) // covers two and three parameters

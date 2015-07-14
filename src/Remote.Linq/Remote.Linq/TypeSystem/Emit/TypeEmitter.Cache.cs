@@ -38,7 +38,7 @@ namespace Remote.Linq.TypeSystem.Emit
                 }
                 for (int i = 0; i < Properties.Count; i++)
                 {
-                    if (string.Compare(Properties[i], other.Properties[i]) != 0)
+                    if (!string.Equals(Properties[i], other.Properties[i], StringComparison.Ordinal))
                     {
                         return false;
                     }

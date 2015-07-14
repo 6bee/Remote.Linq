@@ -102,7 +102,7 @@ namespace Remote.Linq
 
             if ((memberType & MemberTypes.Constructor) == MemberTypes.Constructor)
             {
-                members.AddRange(type.GetTypeInfo().DeclaredConstructors.Where(x => string.Compare(x.Name, name) == 0));
+                members.AddRange(type.GetTypeInfo().DeclaredConstructors.Where(x => string.Equals(x.Name, name, StringComparison.Ordinal)));
             }
 
             if ((memberType & MemberTypes.Field) == MemberTypes.Field)
@@ -154,7 +154,7 @@ namespace Remote.Linq
         public static System.Reflection.MethodInfo GetMethod(this Type type, string name)
         {
             var methods = type.GetTypeInfo().DeclaredMethods
-                .Where(m => string.Compare(m.Name, name) == 0)
+                .Where(m => string.Equals(m.Name, name, StringComparison.Ordinal))
                 .ToList();
 
             switch (methods.Count)
@@ -171,7 +171,7 @@ namespace Remote.Linq
         public static System.Reflection.MethodInfo GetMethod(this Type type, string name, Type[] types)
         {
             var methods = type.GetTypeInfo().DeclaredMethods
-                .Where(m => string.Compare(m.Name, name) == 0)
+                .Where(m => string.Equals(m.Name, name, StringComparison.Ordinal))
                 .Where(m => ParametersMatch(m, types))
                 .ToList();
 
@@ -249,7 +249,7 @@ namespace Remote.Linq
         public static System.Reflection.PropertyInfo GetProperty(this Type type, string name, Type returnType)
         {
             var properties = type.GetProperties()
-                .Where(p => string.Compare(p.Name, name) == 0 && p.PropertyType == returnType)
+                .Where(p => string.Equals(p.Name, name, StringComparison.Ordinal) && p.PropertyType == returnType)
                 .ToList();
 
             switch (properties.Count)
@@ -266,7 +266,7 @@ namespace Remote.Linq
         public static System.Reflection.PropertyInfo GetProperty(this Type type, string name, BindingFlags bindingAttr)
         {
             var properties = type.GetProperties()
-                .Where(p => string.Compare(p.Name, name) == 0)
+                .Where(p => string.Equals(p.Name, name, StringComparison.Ordinal))
                 .Filter(bindingAttr)
                 .ToList();
 
