@@ -12,7 +12,7 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
 
         public When_creating_type_info_of_anonymous_type()
         {
-            var instance = new { };
+            var instance = new { Int32Value = 0, StringValue = "" };
             var type = instance.GetType();
             typeInfo = new TypeInfo(type);
         }
@@ -30,15 +30,33 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
         }
 
         [Fact]
-        public void Type_info_should_have_is_generic_false()
+        public void Type_info_should_have_is_generic_true()
         {
-            typeInfo.IsGenericType.ShouldBeFalse();
+            typeInfo.IsGenericType.ShouldBeTrue();
         }
 
         [Fact]
         public void Type_info_should_have_is_nested_false()
         {
             typeInfo.IsNested.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Type_info_should_have_two_properties()
+        {
+            typeInfo.Properties.Count.ShouldBe(2);
+        }
+
+        [Fact]
+        public void Type_info_should_contain_int_property()
+        {
+            typeInfo.Properties.ShouldContain("Int32Value");
+        }
+
+        [Fact]
+        public void Type_info_should_contain_string_property()
+        {
+            typeInfo.Properties.ShouldContain("StringValue");
         }
     }
 }

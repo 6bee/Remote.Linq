@@ -14,7 +14,7 @@ namespace Remote.Linq.Tests.TypeSystem.TypeResolver
         
         public When_resolving_anonymous_type()
         {
-            var instance = new { };
+            var instance = new { Int32Value = 0, StringValue = "" };
 
             actualType = instance.GetType();
 
@@ -24,7 +24,7 @@ namespace Remote.Linq.Tests.TypeSystem.TypeResolver
         }
 
         [Fact]
-        public void Type_should_be_expected_type()
+        public void Resolved_type_should_be_actual_type()
         {
             resolvedType.ShouldBe(actualType);
         }

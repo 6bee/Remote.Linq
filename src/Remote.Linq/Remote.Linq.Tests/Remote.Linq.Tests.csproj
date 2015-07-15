@@ -122,6 +122,7 @@
     <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_generic_type.cs" />
     <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_array_type_of_generic_type.cs" />
     <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_array_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_unknown_anonymous_type.cs" />
     <Compile Include="TypeSystem\TypeResolver\When_resolving_generic_type.cs" />
     <Compile Include="TypeSystem\TypeResolver\When_resolving_anonymous_type.cs" />
     <Compile Include="TypeSystem\TypeResolver\When_resolving_type.cs" />
