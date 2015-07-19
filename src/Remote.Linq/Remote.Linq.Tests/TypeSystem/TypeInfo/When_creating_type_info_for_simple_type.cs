@@ -6,7 +6,7 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
     using Xunit;
     using Xunit.Should;
 
-    public class When_creating_type_info
+    public class When_creating_type_info_for_simple_type
     {
         class A
         {
@@ -16,19 +16,19 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
         private readonly TypeInfo typeInfo;
 
 
-        public When_creating_type_info()
+        public When_creating_type_info_for_simple_type()
         {
             typeInfo = new TypeInfo(typeof(A));
         }
 
         [Fact]
-        public void Type_info_should_have_is_array_true()
+        public void Type_info_should_have_is_array_false()
         {
             typeInfo.IsArray.ShouldBeFalse();
         }
 
         [Fact]
-        public void Type_info_should_have_is_generic_true()
+        public void Type_info_should_have_is_generic_false()
         {
             typeInfo.IsGenericType.ShouldBeFalse();
         }
@@ -40,7 +40,7 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
         }
 
         [Fact]
-        public void Type_info_name_should_have_array_brackets()
+        public void Type_info_name_should_be_class_name()
         {
             typeInfo.Name.ShouldBe("A");
         }

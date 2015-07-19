@@ -27,7 +27,7 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
         }
 
         [Fact]
-        public void Type_info_should_have_is_array_true()
+        public void Type_info_should_have_is_array_false()
         {
             typeInfo.IsArray.ShouldBeFalse();
         }
