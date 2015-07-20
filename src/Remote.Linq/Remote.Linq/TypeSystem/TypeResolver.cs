@@ -87,7 +87,7 @@ namespace Remote.Linq.TypeSystem
             }
 
 #if NET
-            if (ReferenceEquals(null, type) && typeInfo.IsAnonymousType)
+            if (ReferenceEquals(null, type))
             {
                 type = EmitType(typeInfo);
             }
@@ -118,7 +118,7 @@ namespace Remote.Linq.TypeSystem
         }
 
 #if NET
-        private static Type EmitType(TypeInfo typeInfo)
+        protected virtual Type EmitType(TypeInfo typeInfo)
         {
             var type = new Emit.TypeEmitter().EmitType(typeInfo);
             return type;
@@ -134,10 +134,10 @@ namespace Remote.Linq.TypeSystem
                     type = type.GetElementType();
                 }
 
-                if (type.IsAnonymousType() || typeInfo.IsAnonymousType)
+                if (typeInfo.IsAnonymousType || type.IsAnonymousType())
                 {
                     var properties = type.GetProperties().Select(x => x.Name).ToList();
-                    var propertyNames = typeInfo.Properties;
+                    var propertyNames = typeInfo.Properties.Select(x => x.Name).ToList();
 
                     var match = 
                         type.IsAnonymousType() && 

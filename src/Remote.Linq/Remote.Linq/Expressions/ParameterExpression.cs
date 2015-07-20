@@ -17,7 +17,7 @@ namespace Remote.Linq.Expressions
         internal ParameterExpression(string parameterName, Type type)
         {
             ParameterName = parameterName;
-            ParameterType = new TypeInfo(type);
+            ParameterType = new TypeInfo(type, includePropertyInfos: false);
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Parameter; } }

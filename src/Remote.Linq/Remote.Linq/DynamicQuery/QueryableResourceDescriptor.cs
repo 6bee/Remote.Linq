@@ -15,7 +15,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public QueryableResourceDescriptor(Type type)
-            : this(new TypeInfo(type))
+            : this(new TypeInfo(type, includePropertyInfos: false))
         {
         }
 

@@ -9,7 +9,7 @@ namespace Remote.Linq.TypeSystem
     using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]
-    [DataContract(Name = "Method")]
+    [DataContract(Name = "Method", IsReference = true)]
     public class MethodInfo : MethodBaseInfo
     {
         public MethodInfo()
@@ -17,14 +17,14 @@ namespace Remote.Linq.TypeSystem
         }
 
         public MethodInfo(System.Reflection.MethodInfo methodInfo)
-            : base(methodInfo)
+            : base(methodInfo, TypeInfo.CreateReferenceTracker())
         {
             _method = methodInfo;
         }
 
         // TODO: replace binding flags by bool flags
         public MethodInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes)
-            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes)
+            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes, TypeInfo.CreateReferenceTracker())
         {
         }
 
@@ -121,7 +121,7 @@ namespace Remote.Linq.TypeSystem
             string returnType = null;
             try
             {
-                returnType = new TypeInfo(Method.ReturnType).ToString();
+                returnType = new TypeInfo(Method.ReturnType, includePropertyInfos: false).ToString();
             }
             catch
             {

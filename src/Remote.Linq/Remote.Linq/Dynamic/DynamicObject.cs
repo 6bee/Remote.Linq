@@ -61,7 +61,7 @@ namespace Remote.Linq.Dynamic
         /// </summary>
         /// <param name="type">The type to be set</param>
         public DynamicObject(Type type)
-            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type))
+            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, includePropertyInfos: false))
         {
         }
 

@@ -6,7 +6,7 @@ namespace Remote.Linq.TypeSystem
     using System.Runtime.Serialization;
 
     [Serializable]
-    [DataContract(Name = "Field")]
+    [DataContract(Name = "Field", IsReference = true)]
     public sealed class FieldInfo : MemberInfo
     {
         public FieldInfo()
@@ -14,13 +14,13 @@ namespace Remote.Linq.TypeSystem
         }
 
         public FieldInfo(System.Reflection.FieldInfo fieldInfo)
-            : base(fieldInfo)
+            : base(fieldInfo, TypeInfo.CreateReferenceTracker())
         {
             _field = fieldInfo;
         }
 
         public FieldInfo(string fieldName, Type declaringType)
-            : this(fieldName, new TypeInfo(declaringType))
+            : this(fieldName, TypeInfo.Create(TypeInfo.CreateReferenceTracker(), declaringType, includePropertyInfos: false))
         {
         }
 

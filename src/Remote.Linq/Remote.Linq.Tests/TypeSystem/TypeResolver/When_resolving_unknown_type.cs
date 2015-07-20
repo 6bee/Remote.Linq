@@ -7,21 +7,24 @@ namespace Remote.Linq.Tests.TypeSystem.TypeResolver
     using Xunit;
     using Xunit.Should;
 
-    public class When_resolving_unknown_anonymous_type
+    public class When_resolving_unknown_type
     {
-        private readonly Type actualType;
+        class A
+        {
+            public int Int32Value { get; set; }
+
+            public string StringValue { get; set; }
+        }
+
         private readonly Type emitedType;
 
-        public When_resolving_unknown_anonymous_type()
+        public When_resolving_unknown_type()
         {
-            var instance = new { Int32Value= 0, StringValue = "" };
-
-            var actualType = instance.GetType();
-
-            var typeInfo = new TypeInfo(actualType);
+            var typeInfo = new TypeInfo(typeof(A));
 
             typeInfo.Name = "UnknowTestClass";
             typeInfo.Namespace = "Unkown.Test.Namespace";
+            typeInfo.DeclaringType = null;
 
             emitedType = TypeResolver.Instance.ResolveType(typeInfo);
         }
@@ -29,7 +32,7 @@ namespace Remote.Linq.Tests.TypeSystem.TypeResolver
         [Fact]
         public void Type_should_be_different_from_actual_type()
         {
-            emitedType.ShouldNotBe(actualType);
+            emitedType.ShouldNotBe(typeof(A));
         }
 
         [Fact]
@@ -37,29 +40,25 @@ namespace Remote.Linq.Tests.TypeSystem.TypeResolver
         {
             emitedType.ShouldNotBeNull();
 
-            emitedType.Namespace.ShouldBe("<In Memory Module>");
-
             emitedType.Assembly.GetName().Name.ShouldBe("Remote.Linq.TypeSystem.Emit.Types");
 
             emitedType.Assembly.IsDynamic.ShouldBeTrue();
         }
 
         [Fact]
-        public void Emited_type_should_be_generic_type()
+        public void Type_name_should_be_as_defined()
         {
-            emitedType.IsGenericType.ShouldBeTrue();
+            emitedType.Namespace.ShouldBe("Unkown.Test.Namespace");
+
+            emitedType.Name.ShouldBe("UnknowTestClass");
+
+            emitedType.FullName.ShouldBe("Unkown.Test.Namespace.UnknowTestClass");
         }
 
         [Fact]
-        public void Emited_type_should_closed_generic_type()
+        public void Emited_type_should_be_non_generic_type()
         {
-            emitedType.IsGenericTypeDefinition.ShouldBeFalse();
-        }
-
-        [Fact]
-        public void Emited_type_should_have_two_generic_arguments()
-        {
-            emitedType.GetGenericArguments().Length.ShouldBe(2);
+            emitedType.IsGenericType.ShouldBeFalse();
         }
 
         [Fact]
@@ -69,12 +68,20 @@ namespace Remote.Linq.Tests.TypeSystem.TypeResolver
         }
 
         [Fact]
-        public void All_properties_should_be_readonly()
+        public void All_properties_should_be_readable()
         {
             foreach (var p in emitedType.GetProperties())
             {
                 p.CanRead.ShouldBeTrue();
-                p.CanWrite.ShouldBeFalse();
+            }
+        }
+
+        [Fact]
+        public void All_properties_should_be_writable()
+        {
+            foreach (var p in emitedType.GetProperties())
+            {
+                p.CanWrite.ShouldBeTrue();
             }
         }
 

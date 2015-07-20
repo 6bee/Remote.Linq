@@ -10,7 +10,7 @@ namespace Remote.Linq.TypeSystem
     using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]
-    [DataContract(Name = "MethodBase")]
+    [DataContract(Name = "MethodBase", IsReference = true)]
     [KnownType(typeof(ConstructorInfo)), XmlInclude(typeof(ConstructorInfo))]
     [KnownType(typeof(MethodInfo)), XmlInclude(typeof(MethodInfo))]
     public abstract class MethodBaseInfo : MemberInfo
@@ -19,8 +19,8 @@ namespace Remote.Linq.TypeSystem
         {
         }
 
-        protected MethodBaseInfo(System.Reflection.MethodBase methodInfo)
-            : base(methodInfo)
+        protected MethodBaseInfo(System.Reflection.MethodBase methodInfo, Dictionary<Type, TypeInfo> referenceTracker)
+            : base(methodInfo, referenceTracker)
         {
             var bindingFlags = methodInfo.IsStatic ? BindingFlags.Static : BindingFlags.Instance;
             bindingFlags |= methodInfo.IsPublic ? BindingFlags.Public : BindingFlags.NonPublic;
@@ -29,20 +29,22 @@ namespace Remote.Linq.TypeSystem
             var genericArguments = methodInfo.IsGenericMethod ? methodInfo.GetGenericArguments() : null;
             GenericArgumentTypes = ReferenceEquals(null, genericArguments) || genericArguments.Length == 0
                 ? null
-                : genericArguments.Select(x => new TypeInfo(x)).ToList();
+                : genericArguments.Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos: false)).ToList();
 
             var parameters = methodInfo.GetParameters();
             ParameterTypes = parameters.Length == 0
                 ? null
-                : parameters.Select(x => new TypeInfo(x.ParameterType)).ToList();
+                : parameters.Select(x => TypeInfo.Create(referenceTracker, x.ParameterType, includePropertyInfos: false)).ToList();
         }
 
         // TODO: replace binding flags by bool flags
-        protected MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes)
+        protected MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, Dictionary<Type, TypeInfo> referenceTracker)
             : this(
-            name, new TypeInfo(declaringType), bindingFlags,
-            ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => new TypeInfo(x)),
-            ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => new TypeInfo(x)))
+            name, 
+            TypeInfo.Create(referenceTracker, declaringType, includePropertyInfos: false), 
+            bindingFlags,
+            ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos: false)),
+            ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos: false)))
         {
         }
 

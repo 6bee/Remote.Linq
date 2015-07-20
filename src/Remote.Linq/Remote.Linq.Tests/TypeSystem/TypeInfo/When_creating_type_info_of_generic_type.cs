@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Tests.TypeSystem.TypeInfo
 {
+    using System.Linq;
     using Remote.Linq.TypeSystem;
     using Xunit;
     using Xunit.Should;
@@ -10,12 +11,12 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
     {
         class A<T>
         {
-
+            public int Int32Value { get; set; }
         }
 
         class B
         {
-
+            public string StringValue { get; set; }
         }
 
         private readonly TypeInfo typeInfo;
@@ -48,6 +49,24 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
         public void Type_info_name_should_have_array_brackets()
         {
             typeInfo.Name.ShouldBe("A`1");
+        }
+
+        [Fact]
+        public void Type_info_should_contain_property()
+        {
+            typeInfo.Properties.Single().Name.ShouldBe("Int32Value");
+        }
+
+        [Fact]
+        public void Type_info_should_contain_generic_argument_type()
+        {
+            typeInfo.GenericArguments.Single().Name.ShouldBe("B");
+        }
+
+        [Fact]
+        public void Generic_argument_type_should_contain_property()
+        {
+            typeInfo.GenericArguments.Single().Properties.Single().Name.ShouldBe("StringValue");
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Remote.Linq.Expressions
         }
 
         internal NewArrayExpression(Type type, IEnumerable<Expression> expressions)
-            : this(new TypeInfo(type), expressions)
+            : this(new TypeInfo(type, includePropertyInfos: false), expressions)
         {
         }
 

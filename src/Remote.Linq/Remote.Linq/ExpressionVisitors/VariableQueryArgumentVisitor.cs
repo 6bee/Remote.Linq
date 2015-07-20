@@ -160,7 +160,8 @@ namespace Remote.Linq.ExpressionVisitors
                             var instanceType = instanceExpression.Type;
                             if (instanceType.IsGenericType && instanceType.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                             {
-                                var valuePropertyInfo = new PropertyInfo("Value", instanceType);
+                                var valueType = instanceType.GenericArguments.Single();
+                                var valuePropertyInfo = new PropertyInfo("Value", valueType, instanceType);
 
                                 var newMemberExpression = new MemberExpression(instanceExpression, valuePropertyInfo);
                                 return newMemberExpression;

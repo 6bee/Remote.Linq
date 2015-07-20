@@ -32,7 +32,7 @@ namespace Remote.Linq.Expressions
                 }
             }
 
-            Type = new TypeInfo(type);
+            Type = new TypeInfo(type, includePropertyInfos: false);
             Value = value;
         }
 

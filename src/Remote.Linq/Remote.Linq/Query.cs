@@ -25,7 +25,7 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="type">The type to be queried</param>
         public Query(Type type, IEnumerable<LambdaExpression> filterExpressions = null, IEnumerable<SortExpression> sortExpressions = null, int? skip = null, int? take = null)
-            : this(new TypeInfo(type), filterExpressions, sortExpressions, skip, take)
+            : this(new TypeInfo(type, includePropertyInfos: false), filterExpressions, sortExpressions, skip, take)
         {
         }
 

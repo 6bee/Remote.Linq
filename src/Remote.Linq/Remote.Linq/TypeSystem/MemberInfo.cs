@@ -3,11 +3,12 @@
 namespace Remote.Linq.TypeSystem
 {
     using System;
+    using System.Collections.Generic;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
     [Serializable]
-    [DataContract(Name = "Member")]
+    [DataContract(Name = "Member", IsReference = true)]
     [KnownType(typeof(ConstructorInfo)), XmlInclude(typeof(ConstructorInfo))]
     [KnownType(typeof(FieldInfo)), XmlInclude(typeof(FieldInfo))]
     [KnownType(typeof(MethodInfo)), XmlInclude(typeof(MethodInfo))]
@@ -18,7 +19,7 @@ namespace Remote.Linq.TypeSystem
         {
         }
 
-        protected MemberInfo(System.Reflection.MemberInfo memberInfo)
+        protected MemberInfo(System.Reflection.MemberInfo memberInfo, Dictionary<Type, TypeInfo> referenceTracker)
         {
             if (ReferenceEquals(null, memberInfo))
             {
@@ -26,7 +27,7 @@ namespace Remote.Linq.TypeSystem
             }
 
             Name = memberInfo.Name;
-            DeclaringType = new TypeInfo(memberInfo.DeclaringType);
+            DeclaringType = TypeInfo.Create(referenceTracker, memberInfo.DeclaringType, includePropertyInfos: false);
         }
 
         protected MemberInfo(string name, TypeInfo declaringType)
@@ -47,10 +48,10 @@ namespace Remote.Linq.TypeSystem
 
         public abstract MemberTypes MemberType { get; }
 
-        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Order = 1, EmitDefaultValue = false)]
         public string Name { get; set; }
 
-        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Order = 2, EmitDefaultValue = false)]
         public TypeInfo DeclaringType { get; set; }
 
         public override string ToString()

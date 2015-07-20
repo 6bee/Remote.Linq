@@ -8,7 +8,7 @@ namespace Remote.Linq.TypeSystem
     using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]
-    [DataContract(Name = "Constructor")]
+    [DataContract(Name = "Constructor", IsReference = true)]
     public class ConstructorInfo : MethodBaseInfo
     {
         public ConstructorInfo()
@@ -16,14 +16,14 @@ namespace Remote.Linq.TypeSystem
         }
 
         public ConstructorInfo(System.Reflection.ConstructorInfo constructorInfo)
-            : base(constructorInfo)
+            : base(constructorInfo, TypeInfo.CreateReferenceTracker())
         {
             _constructor = constructorInfo;
         }
 
         // TODO: replace binding flags by bool flags
         public ConstructorInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes)
-            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes)
+            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes, TypeInfo.CreateReferenceTracker())
         {
         }
 

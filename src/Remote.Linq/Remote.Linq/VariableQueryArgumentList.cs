@@ -30,13 +30,9 @@ namespace Remote.Linq
             {
                 var collectionType = values.GetType();
                 elementType = TypeHelper.GetElementType(collectionType);
-                //if (collectionType == elementType)
-                //{
-                //    throw new Exception(string.Format("Unable to retrieve element type from collection type {0}", collectionType.FullName))
-                //}
             }
 
-            ElementType = new TypeInfo(elementType);
+            ElementType = new TypeInfo(elementType, includePropertyInfos: false);
 
             Values = values.Cast<object>().ToList();
         }
@@ -52,11 +48,7 @@ namespace Remote.Linq
             {
                 var collectionType = values.GetType();
                 var type = TypeHelper.GetElementType(collectionType);
-                elementType = new TypeInfo(type);
-                //if (collectionType == elementType)
-                //{
-                //    throw new Exception(string.Format("Unable to retrieve element type from collection type {0}", collectionType.FullName))
-                //}
+                elementType = new TypeInfo(type, includePropertyInfos: false);
             }
 
             ElementType = elementType;

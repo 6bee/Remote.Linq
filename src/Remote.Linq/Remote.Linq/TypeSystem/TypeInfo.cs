@@ -8,19 +8,26 @@ namespace Remote.Linq.TypeSystem
     using System.Runtime.Serialization;
 
     [Serializable]
-    [DataContract(Name = "Type")]
+    [DataContract(Name = "Type", IsReference = true)]
     public class TypeInfo
     {
         public TypeInfo()
         {
         }
 
-        public TypeInfo(Type type)
+        public TypeInfo(Type type, bool includePropertyInfos = true)
+            : this(type, includePropertyInfos, TypeInfo.CreateReferenceTracker())
+        {
+        }
+
+        private TypeInfo(Type type, bool includePropertyInfos, Dictionary<Type, TypeInfo> referenceTracker)
         {
             if (ReferenceEquals(null, type))
             {
                 throw new ArgumentNullException("type");
             }
+
+            referenceTracker.Add(type, this);
 
             _type = type;
 
@@ -40,23 +47,45 @@ namespace Remote.Linq.TypeSystem
 
             if (type.IsNested && !type.IsGenericParameter)
             {
-                DeclaringType = new TypeInfo(type.DeclaringType);
+                DeclaringType = TypeInfo.Create(referenceTracker, type.DeclaringType, includePropertyInfos: false);
             }
 
             if (type.IsGenericType())
             {
-                GenericArguments = type.GetGenericArguments().Select(x => new TypeInfo(x)).ToList();
+                GenericArguments = type
+                    .GetGenericArguments()
+                    .Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos))
+                    .ToList();
             }
 
             IsAnonymousType = type.IsAnonymousType();
 
-            if (IsAnonymousType)
+            if (IsAnonymousType || includePropertyInfos)
             {
-                Properties = type.GetProperties().Select(x => x.Name).ToList();
+                Properties = type
+                    .GetProperties()
+                    .Select(x => new PropertyInfo(x.Name, TypeInfo.Create(referenceTracker, x.PropertyType, includePropertyInfos), this))
+                    .ToList();
             }
         }
 
-        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        internal static Dictionary<Type, TypeInfo> CreateReferenceTracker()
+        {
+            return new Dictionary<Type, TypeInfo>(ObjectReferenceEqualityComparer<Type>.Instance);
+        }
+
+        internal static TypeInfo Create(Dictionary<Type, TypeInfo> referenceTracker, Type type, bool includePropertyInfos = true)
+        {
+            TypeInfo typeInfo;
+            if (!referenceTracker.TryGetValue(type, out typeInfo))
+            {
+                typeInfo = new TypeInfo(type, includePropertyInfos, referenceTracker);
+            }
+
+            return typeInfo;
+        }
+
+        [DataMember(Order = 1, EmitDefaultValue = false)]
         public string Name { get; set; }
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
@@ -72,7 +101,7 @@ namespace Remote.Linq.TypeSystem
         public bool IsAnonymousType { get; set; }
 
         [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
-        public List<string> Properties { get; set; }
+        public List<PropertyInfo> Properties { get; set; }
 
         public bool IsNested { get { return !ReferenceEquals(null, DeclaringType); } }
 

@@ -31,7 +31,7 @@ namespace Remote.Linq
                 }
             }
 
-            Type = new TypeInfo(type);
+            Type = new TypeInfo(type, includePropertyInfos: false);
 
             Value = value;
         }
@@ -40,14 +40,9 @@ namespace Remote.Linq
         {
             if (ReferenceEquals(null, type))
             {
-                if (ReferenceEquals(null, value))
-                {
-                    type = new TypeInfo(typeof(object));
-                }
-                else
-                {
-                    type = new TypeInfo(value.GetType());
-                }
+                var valueType = ReferenceEquals(null, value) ? typeof(object) : value.GetType();
+                
+                type = new TypeInfo(valueType, includePropertyInfos: false);
             }
 
             Type = type;
@@ -68,10 +63,5 @@ namespace Remote.Linq
                 Value ?? "null", 
                 Value is string || Value is char ? "'" : null);
         }
-
-        //internal static VariableQueryArgument CreateFromGeneric<T>(VariableQueryArgument<T> queryArgument)
-        //{
-        //    return new VariableQueryArgument(queryArgument.Value, typeof(T));
-        //}
     }
 }

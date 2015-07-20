@@ -3,6 +3,7 @@
 namespace Remote.Linq.Tests.TypeSystem.TypeInfo
 {
     using Remote.Linq.TypeSystem;
+    using System.Linq;
     using Xunit;
     using Xunit.Should;
 
@@ -50,13 +51,13 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
         [Fact]
         public void Type_info_should_contain_int_property()
         {
-            typeInfo.Properties.ShouldContain("Int32Value");
+            typeInfo.Properties.Select(x => x.Name).ShouldContain("Int32Value");
         }
 
         [Fact]
         public void Type_info_should_contain_string_property()
         {
-            typeInfo.Properties.ShouldContain("StringValue");
+            typeInfo.Properties.Select(x => x.Name).ShouldContain("StringValue");
         }
     }
 }

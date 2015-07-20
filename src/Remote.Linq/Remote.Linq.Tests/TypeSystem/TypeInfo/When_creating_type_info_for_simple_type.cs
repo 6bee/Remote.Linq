@@ -3,6 +3,7 @@
 namespace Remote.Linq.Tests.TypeSystem.TypeInfo
 {
     using Remote.Linq.TypeSystem;
+    using System.Linq;
     using Xunit;
     using Xunit.Should;
 
@@ -10,7 +11,9 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
     {
         class A
         {
-
+            public int Int32Value { get; set; }
+            
+            public string StringValue { get; set; }
         }
 
         private readonly TypeInfo typeInfo;
@@ -43,6 +46,24 @@ namespace Remote.Linq.Tests.TypeSystem.TypeInfo
         public void Type_info_name_should_be_class_name()
         {
             typeInfo.Name.ShouldBe("A");
+        }
+
+        [Fact]
+        public void Type_info_should_have_two_properties()
+        {
+            typeInfo.Properties.Count.ShouldBe(2);
+        }
+
+        [Fact]
+        public void Type_info_should_contain_int_property()
+        {
+            typeInfo.Properties.Select(x => x.Name).ShouldContain("Int32Value");
+        }
+
+        [Fact]
+        public void Type_info_should_contain_string_property()
+        {
+            typeInfo.Properties.Select(x => x.Name).ShouldContain("StringValue");
         }
     }
 }
