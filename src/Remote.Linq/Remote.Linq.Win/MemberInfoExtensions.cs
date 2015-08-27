@@ -3,7 +3,7 @@
 namespace Remote.Linq
 {
     using System;
-    using MemberTypes = Remote.Linq.TypeSystem.MemberTypes;
+    using MemberTypes = Aqua.TypeSystem.MemberTypes;
 
     internal static class MemberInfoExtensions
     {

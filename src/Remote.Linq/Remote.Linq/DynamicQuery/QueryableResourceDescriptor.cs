@@ -2,7 +2,7 @@
 
 namespace Remote.Linq.DynamicQuery
 {
-    using Remote.Linq.TypeSystem;
+    using Aqua.TypeSystem;
     using System;
     using System.Runtime.Serialization;
 

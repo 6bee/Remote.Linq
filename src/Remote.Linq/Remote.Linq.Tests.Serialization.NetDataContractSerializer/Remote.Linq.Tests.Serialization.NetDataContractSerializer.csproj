@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aqua, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\aqua-core.1.0.0\lib\net45\Aqua.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,9 +49,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Remote.Linq.Tests\Serialization\Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs">
-      <Link>Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs</Link>
-    </Compile>
     <Compile Include="..\Remote.Linq.Tests\Serialization\ExpressionHelper.cs">
       <Link>ExpressionHelper.cs</Link>
     </Compile>

@@ -2,9 +2,10 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
+    using Aqua;
+    using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
-    using Remote.Linq.TypeSystem;
     using System;
     using System.Linq;
 

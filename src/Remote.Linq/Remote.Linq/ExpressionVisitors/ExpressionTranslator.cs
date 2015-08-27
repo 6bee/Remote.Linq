@@ -2,8 +2,9 @@
 
 namespace Remote.Linq
 {
+    using Aqua;
+    using Aqua.TypeSystem;
     using Remote.Linq.ExpressionVisitors;
-    using Remote.Linq.TypeSystem;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -357,21 +358,21 @@ namespace Remote.Linq
             private new RLinq.MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
             {
                 var e = Visit(assignment.Expression).Unwrap();
-                var m = TypeSystem.MemberInfo.Create(assignment.Member);
+                var m = Aqua.TypeSystem.MemberInfo.Create(assignment.Member);
                 return new RLinq.MemberAssignment(m, e);
             }
 
             private new RLinq.MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding binding)
             {
                 var bindings = VisitBindingList(binding.Bindings);
-                var m = TypeSystem.MemberInfo.Create(binding.Member);
+                var m = Aqua.TypeSystem.MemberInfo.Create(binding.Member);
                 return new RLinq.MemberMemberBinding(m, bindings);
             }
 
             private new RLinq.MemberListBinding VisitMemberListBinding(MemberListBinding binding)
             {
                 var initializers = VisitElementInitializerList(binding.Initializers);
-                var m = TypeSystem.MemberInfo.Create(binding.Member);
+                var m = Aqua.TypeSystem.MemberInfo.Create(binding.Member);
                 return new RLinq.MemberListBinding(m, initializers);
             }
 

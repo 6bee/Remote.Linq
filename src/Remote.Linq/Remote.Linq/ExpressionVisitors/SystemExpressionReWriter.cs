@@ -2,15 +2,17 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
-    using Remote.Linq.Dynamic;
+    using Aqua;
+    using Aqua.TypeSystem;
+    using Aqua.Dynamic;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
     using System.Linq.Expressions;
     using BindingFlags = System.Reflection.BindingFlags;
-    using MemberTypes = Remote.Linq.TypeSystem.MemberTypes;
-    using TypeHelper = Remote.Linq.TypeSystem.TypeHelper;
+    using MemberTypes = Aqua.TypeSystem.MemberTypes;
+    using TypeHelper = Aqua.TypeSystem.TypeHelper;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class SystemExpressionReWriter

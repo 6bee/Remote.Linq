@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aqua, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\aqua-core.1.0.0\lib\net45\Aqua.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,64 +54,10 @@
     <Compile Include="DynamicQuery\RemoteQueryable\When_using_include_on_subtype.cs" />
     <Compile Include="DynamicQuery\RemoteQueryable\When_using_include_reference.cs" />
     <Compile Include="DynamicQuery\RemoteQueryable\When_using_include_collection.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\CustomMapper\When_mapping_reducing_property_set_for_seriable_type.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\CustomMapper\When_mapping_reducing_property_set.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\CustomMapper\When_mapping_int_as_string_and_long_as_long.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_dynamic_objects_to_list_of_known_types.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_known_types.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_null.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_custom_value_type.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_custom_reference_type.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_nullable_guids.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_strings.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_guids.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_dictionary.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_type_requiring_ctor_and_property_setter.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_different_target_type.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_anonymous_type.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_based_on_typeinfo.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_dynamic_object_to_type_with_different_property_types.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_different_property_types_unassignable.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_different_property_types_assignable.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_missing_properties.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_additional_properies.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_private_properties.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_private_properties.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_properties_ordered_differently.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_private_property_setters.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_private_property_setter.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_missing_properties.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_additional_properties.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_abstract_properties_with_type_information.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_abstract_properties_in_absence_of_type_information.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_abstract_properties.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_indexer.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_enum.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_dictionary_property.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_guid_properties.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_converting_to_datetime_object.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_nullable_guid.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_guid.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_guid_properties.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_enum_property.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_indexer.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_tree_with_circular_references.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_dictionary_property.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_custom_value_type.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_custom_type.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_a_keyvaluepair.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_based_on_datetime_object.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_using_collection_initializer.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_typeinfo.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_type.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_created_using_parameterless_constructor.cs" />
-    <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_invalid_constructor_parameters.cs" />
     <Compile Include="IEnumerableAsyncExtensions\When_using_async_with_non_async_queriables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteQueryable\When_running_cross_join_query.cs" />
     <Compile Include="RunnableInDebugOnlyAttribute.cs" />
-    <Compile Include="Serialization\Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs" />
     <Compile Include="Serialization\ExpressionHelper.cs" />
     <Compile Include="Serialization\Expressions\When_using_complex_expression_with_local_lambda.cs" />
     <Compile Include="Serialization\Expressions\When_using_const_bool_expression.cs" />
@@ -119,20 +69,6 @@
     <Compile Include="Serialization\VariableQueryArgument\When_using_local_variable_query_argument.cs" />
     <Compile Include="Serialization\VariableQueryArgument\When_using_local_variable_query_string_argument_list.cs" />
     <Compile Include="Serialization\VariableQueryArgument\When_using_local_variable_query_argument_list.cs" />
-    <Compile Include="TypeSystem\Emit\TypeEmitter\When_emitting_type.cs" />
-    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_anonymous_type.cs" />
-    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_simple_type.cs" />
-    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_circular_type_graph.cs" />
-    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_generic_type.cs" />
-    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_array_type_of_generic_type.cs" />
-    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_array_type.cs" />
-    <Compile Include="TypeSystem\TypeResolver\When_resolving_unknown_type.cs" />
-    <Compile Include="TypeSystem\TypeResolver\When_resolving_unknown_anonymous_type.cs" />
-    <Compile Include="TypeSystem\TypeResolver\When_resolving_generic_type.cs" />
-    <Compile Include="TypeSystem\TypeResolver\When_resolving_anonymous_type.cs" />
-    <Compile Include="TypeSystem\TypeResolver\When_resolving_type.cs" />
-    <Compile Include="TypeSystem\TypeResolver\When_resolving_array_type_of_generic_type.cs" />
-    <Compile Include="TypeSystem\TypeResolver\When_resolving_array_type.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj">

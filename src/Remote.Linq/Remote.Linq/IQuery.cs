@@ -2,7 +2,7 @@
 
 namespace Remote.Linq
 {
-    using Remote.Linq.TypeSystem;
+    using Aqua.TypeSystem;
     using System.Collections.Generic;
 
     public interface IQuery

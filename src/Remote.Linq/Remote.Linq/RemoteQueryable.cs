@@ -2,9 +2,9 @@
 
 namespace Remote.Linq
 {
-    using Remote.Linq.Dynamic;
+    using Aqua.Dynamic;
     using Remote.Linq.DynamicQuery;
-    using Remote.Linq.TypeSystem;
+    using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
     using System.Linq;

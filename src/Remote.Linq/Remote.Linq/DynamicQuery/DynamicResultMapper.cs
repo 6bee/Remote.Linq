@@ -2,8 +2,8 @@
 
 namespace Remote.Linq.DynamicQuery
 {
-    using Remote.Linq.Dynamic;
-    using Remote.Linq.TypeSystem;
+    using Aqua.Dynamic;
+    using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
     using System.Reflection;

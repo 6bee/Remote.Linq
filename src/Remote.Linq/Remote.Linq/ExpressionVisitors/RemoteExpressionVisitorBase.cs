@@ -3,7 +3,7 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Remote.Linq.Expressions;
-    using Remote.Linq.TypeSystem;
+    using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;

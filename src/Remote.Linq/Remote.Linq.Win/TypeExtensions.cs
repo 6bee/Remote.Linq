@@ -7,7 +7,7 @@ namespace Remote.Linq
     using System.Linq;
     using System.Reflection;
     using BindingFlags = System.Reflection.BindingFlags;
-    using MemberTypes = Remote.Linq.TypeSystem.MemberTypes;
+    using MemberTypes = Aqua.TypeSystem.MemberTypes;
 
     internal static class TypeExtensions
     {

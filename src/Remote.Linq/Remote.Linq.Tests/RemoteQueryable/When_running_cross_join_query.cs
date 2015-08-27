@@ -3,7 +3,7 @@
 namespace Remote.Linq.Tests.RemoteQueryable
 {
     using Remote.Linq;
-    using Remote.Linq.Dynamic;
+    using Aqua.Dynamic;
     using Remote.Linq.Expressions;
     using System;
     using System.Linq;

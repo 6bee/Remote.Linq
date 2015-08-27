@@ -3,7 +3,7 @@
 namespace Remote.Linq.DynamicQuery
 {
     using Remote.Linq.ExpressionVisitors;
-    using Remote.Linq.TypeSystem;
+    using Aqua.TypeSystem;
     using System;
     using System.Linq;
     using Expression = System.Linq.Expressions.Expression;

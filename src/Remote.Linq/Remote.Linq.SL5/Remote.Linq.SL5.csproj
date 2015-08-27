@@ -51,6 +51,10 @@
     <DocumentationFile>bin\Release\Remote.Linq.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aqua, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\aqua-core.1.0.0\lib\sl5\Aqua.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="system" />
     <Reference Include="System.Runtime.Serialization" />
@@ -119,21 +123,6 @@
     </Compile>
     <Compile Include="..\Remote.Linq.WP\AsyncEnumerableExtensions.cs">
       <Link>AsyncEnumerableExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\Dynamic\DynamicObject.cs">
-      <Link>Dynamic\DynamicObject.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\Dynamic\DynamicObject.MetaObject.cs">
-      <Link>Dynamic\DynamicObject.MetaObject.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\Dynamic\DynamicObjectMapper.cs">
-      <Link>Dynamic\DynamicObjectMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq.Win\Dynamic\DynamicObjectMapper.NETCORE.cs">
-      <Link>Dynamic\DynamicObjectMapper.NETCORE.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\Dynamic\IDynamicObjectMapper.cs">
-      <Link>Dynamic\IDynamicObjectMapper.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\DynamicQuery\QueryableResourceDescriptor.cs">
       <Link>DynamicQuery\QueryableResourceDescriptor.cs</Link>
@@ -246,45 +235,6 @@
     <Compile Include="..\Remote.Linq\ExpressionVisitors\VariableQueryArgumentVisitor.cs">
       <Link>ExpressionVisitors\VariableQueryArgumentVisitor.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\FieldInfo.cs">
-      <Link>TypeSystem\FieldInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\ConstructorInfo.cs">
-      <Link>TypeSystem\ConstructorInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\MethodInfo.cs">
-      <Link>TypeSystem\MethodInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\MethodBaseInfo.cs">
-      <Link>TypeSystem\MethodBaseInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\PropertyInfo.cs">
-      <Link>TypeSystem\PropertyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\MemberTypes.cs">
-      <Link>TypeSystem\MemberTypes.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\MemberInfo.cs">
-      <Link>TypeSystem\MemberInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\TypeInfoExtensions.cs">
-      <Link>TypeSystem\TypeInfoExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\TypeInfo.cs">
-      <Link>TypeSystem\TypeInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\ITypeResolver.cs">
-      <Link>TypeSystem\ITypeResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\TypeResolver.cs">
-      <Link>TypeSystem\TypeResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\TypeResolver.NET.cs">
-      <Link>TypeSystem\TypeResolver.NET.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeSystem\TypeHelper.cs">
-      <Link>TypeSystem\TypeHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Remote.Linq\IOrderedQuery.cs">
       <Link>IOrderedQuery.cs</Link>
     </Compile>
@@ -297,14 +247,8 @@
     <Compile Include="..\Remote.Linq\IQuery`.cs">
       <Link>IQuery`.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\MemberInfoExtensions.cs">
-      <Link>MemberInfoExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\Remote.Linq\MethodInfos.cs">
       <Link>MethodInfos.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\ObjectReferenceEqualityComparer`.cs">
-      <Link>ObjectReferenceEqualityComparer`.cs</Link>
     </Compile>
     <Compile Include="..\Remote.Linq\ProviderRegistry.cs">
       <Link>ProviderRegistry.cs</Link>
@@ -321,15 +265,6 @@
     <Compile Include="..\Remote.Linq\QueryableExtensions.cs">
       <Link>QueryableExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Remote.Linq\TransparentCache.cs">
-      <Link>TransparentCache.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq\TypeExtensions.cs">
-      <Link>TypeExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Remote.Linq.NET35\TypeExtensions.NET35.cs">
-      <Link>TypeExtensions.NET35.cs</Link>
-    </Compile>
     <Compile Include="..\Remote.Linq\VariableQueryArgument.cs">
       <Link>VariableQueryArgument.cs</Link>
     </Compile>
@@ -345,6 +280,9 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

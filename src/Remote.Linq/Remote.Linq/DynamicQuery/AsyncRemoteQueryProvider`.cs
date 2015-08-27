@@ -2,7 +2,7 @@
 
 namespace Remote.Linq.DynamicQuery
 {
-    using Remote.Linq.TypeSystem;
+    using Aqua.TypeSystem;
     using System;
     using System.Linq;
     using System.Linq.Expressions;

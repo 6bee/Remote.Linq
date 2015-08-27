@@ -30,7 +30,7 @@ namespace Remote.Linq.Expressions
 
         #region Factory methods
 
-        public static MemberExpression MakeMemberAccess(Expression expression, Remote.Linq.TypeSystem.MemberInfo member)
+        public static MemberExpression MakeMemberAccess(Expression expression, Aqua.TypeSystem.MemberInfo member)
         {
             return new MemberExpression(expression, member);
         }
@@ -45,7 +45,7 @@ namespace Remote.Linq.Expressions
             return new MethodCallExpression(insatnce, methodInfo, arguments);
         }
 
-        public static MethodCallExpression MethodCall(Expression insatnce, Remote.Linq.TypeSystem.MethodInfo methodInfo, IEnumerable<Expression> arguments)
+        public static MethodCallExpression MethodCall(Expression insatnce, Aqua.TypeSystem.MethodInfo methodInfo, IEnumerable<Expression> arguments)
         {
             return new MethodCallExpression(insatnce, methodInfo, arguments);
         }
@@ -135,22 +135,22 @@ namespace Remote.Linq.Expressions
             return MemberInit(newExpression, (IEnumerable<MemberBinding>)bindings);
         }
 
-        public static MemberAssignment Bind(TypeSystem.MemberInfo member, Expression expression)
+        public static MemberAssignment Bind(Aqua.TypeSystem.MemberInfo member, Expression expression)
         {
             return new MemberAssignment(member, expression);
         }
 
-        public static MemberMemberBinding MemberBind(TypeSystem.MemberInfo member, IEnumerable<MemberBinding> bindings)
+        public static MemberMemberBinding MemberBind(Aqua.TypeSystem.MemberInfo member, IEnumerable<MemberBinding> bindings)
         {
             return new MemberMemberBinding(member, bindings);
         }
 
-        public static MemberListBinding ListBind(TypeSystem.MemberInfo member, IEnumerable<ElementInit> initializers)
+        public static MemberListBinding ListBind(Aqua.TypeSystem.MemberInfo member, IEnumerable<ElementInit> initializers)
         {
             return new MemberListBinding(member, initializers);
         }
 
-        public static ElementInit ElementInit(TypeSystem.MethodInfo addMethod, System.Collections.ObjectModel.ReadOnlyCollection<Expression> arguments)
+        public static ElementInit ElementInit(Aqua.TypeSystem.MethodInfo addMethod, System.Collections.ObjectModel.ReadOnlyCollection<Expression> arguments)
         {
             return new ElementInit(addMethod, arguments);
         }

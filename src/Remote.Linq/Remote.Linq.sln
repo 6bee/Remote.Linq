@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq", "Remote.Linq\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.NET35", "Remote.Linq.NET35\Remote.Linq.NET35.csproj", "{70B7C494-F1DD-4EF7-897E-CC556793407E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.SL4", "Remote.Linq.SL4\Remote.Linq.SL4.csproj", "{7A7940B6-BA23-48EA-9B99-932E7E19FA62}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.SL5", "Remote.Linq.SL5\Remote.Linq.SL5.csproj", "{BC07B68B-3462-4D2C-86F3-632FF5E1A7FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.QueryFunctions", "Remote.Linq.QueryFunctions\Remote.Linq.QueryFunctions.csproj", "{91CBF2BB-A03B-46B5-8258-32CDDB74E596}"
@@ -69,20 +67,6 @@ Global
 		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Release|x64.ActiveCfg = Release|Any CPU
 		{70B7C494-F1DD-4EF7-897E-CC556793407E}.Release|x86.ActiveCfg = Release|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Release|ARM.ActiveCfg = Release|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Release|x64.ActiveCfg = Release|Any CPU
-		{7A7940B6-BA23-48EA-9B99-932E7E19FA62}.Release|x86.ActiveCfg = Release|Any CPU
 		{BC07B68B-3462-4D2C-86F3-632FF5E1A7FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC07B68B-3462-4D2C-86F3-632FF5E1A7FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC07B68B-3462-4D2C-86F3-632FF5E1A7FB}.Debug|ARM.ActiveCfg = Debug|Any CPU

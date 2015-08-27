@@ -36,6 +36,10 @@
     <DocumentationFile>bin\Release\Remote.Linq.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aqua, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\aqua-core.1.0.0\lib\net45\Aqua.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -46,11 +50,6 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Dynamic\DynamicObject.cs" />
-    <Compile Include="Dynamic\IDynamicObjectMapper.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper.NET.cs" />
-    <Compile Include="Dynamic\DynamicObjectMapper.cs" />
-    <Compile Include="Dynamic\DynamicObject.MetaObject.cs" />
     <Compile Include="DynamicQuery\QueryableResourceDescriptor.cs" />
     <Compile Include="DynamicQuery\AsyncRemoteQueryable`.cs" />
     <Compile Include="DynamicQuery\AsyncRemoteQueryProvider`.cs" />
@@ -106,25 +105,6 @@
     <Compile Include="ExpressionVisitors\RemoteExpressionReWriter.cs" />
     <Compile Include="ExpressionVisitors\SystemExpressionReWriter.cs" />
     <Compile Include="ExpressionVisitors\VariableQueryArgumentVisitor.cs" />
-    <Compile Include="TypeSystem\Emit\TypeEmitter.Cache.cs" />
-    <Compile Include="TypeSystem\Emit\TypeEmitter.cs" />
-    <Compile Include="TypeSystem\FieldInfo.cs" />
-    <Compile Include="TypeSystem\ConstructorInfo.cs" />
-    <Compile Include="TypeSystem\MethodInfo.cs" />
-    <Compile Include="TypeSystem\MethodBaseInfo.cs" />
-    <Compile Include="TypeSystem\PropertyInfo.cs" />
-    <Compile Include="TypeSystem\MemberTypes.cs" />
-    <Compile Include="TypeSystem\MemberInfo.cs" />
-    <Compile Include="TypeSystem\TypeInfoExtensions.cs" />
-    <Compile Include="TypeSystem\TypeInfo.cs" />
-    <Compile Include="TypeSystem\TypeResolver.cs" />
-    <Compile Include="TypeSystem\TypeResolver.NET.cs" />
-    <Compile Include="TypeSystem\TypeHelper.cs" />
-    <Compile Include="TypeSystem\ITypeResolver.cs" />
-    <Compile Include="TypeExtensions.cs" />
-    <Compile Include="ObjectReferenceEqualityComparer`.cs" />
-    <Compile Include="TransparentCache.cs" />
-    <Compile Include="MemberInfoExtensions.cs" />
     <Compile Include="MethodInfos.cs" />
     <Compile Include="IAsyncRemoteQueryProvider.cs" />
     <Compile Include="IAsyncRemoteQueryable.cs" />
@@ -143,7 +123,9 @@
     <Compile Include="VariableQueryArgument.cs" />
     <Compile Include="VariableQueryArgument`.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

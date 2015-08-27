@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua;
     using Remote.Linq.DynamicQuery;
     using System.Collections.Generic;
     using System.Linq;
