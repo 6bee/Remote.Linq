@@ -2,10 +2,9 @@
 
 namespace Remote.Linq.EntityFramework
 {
-    using Remote.Linq.Dynamic;
+    using Aqua.Dynamic;
+    using Aqua.TypeSystem;
     using Remote.Linq.Expressions;
-    using Remote.Linq.ExpressionVisitors;
-    using Remote.Linq.TypeSystem;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -23,12 +22,12 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{}"/></param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Remote.Linq.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped result of the query execution</returns>
-        public static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
+        public static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
         {
-            return ExecuteWithEntityFramework(expression, dbContext.GetQueryableSet, typeResolver, mapper);
+            return ExecuteWithEntityFramework(expression, dbContext.GetQueryableSet, typeResolver, mapper, setTypeInformation);
         }
 
         /// <summary>
@@ -36,16 +35,16 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Remote.Linq.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped result of the query execution</returns>
-        private static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
+        private static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
         {
             var linqExpression = PrepareForExecutionWithEntityFramework(expression, queryableProvider, typeResolver);
 
             var queryResult = Remote.Linq.Expressions.ExpressionExtensions.Execute(linqExpression);
 
-            var dynamicObjects = Remote.Linq.Expressions.ExpressionExtensions.ConvertResultToDynamicObjects(queryResult, mapper);
+            var dynamicObjects = Remote.Linq.Expressions.ExpressionExtensions.ConvertResultToDynamicObjects(queryResult, mapper, setTypeInformation);
             return dynamicObjects;
         }
 
@@ -55,7 +54,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{}"/></param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Remote.Linq.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
         public static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFramework(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null)
         {
@@ -68,7 +67,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Remote.Linq.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
         private static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null)
         {
