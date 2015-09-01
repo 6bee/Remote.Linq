@@ -330,9 +330,9 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Aqua, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Aqua, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\aqua-core.1.0.0\lib\win\Aqua.dll</HintPath>
+      <HintPath>..\packages\aqua-core.2.0.0\lib\win\Aqua.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

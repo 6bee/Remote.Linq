@@ -84,13 +84,13 @@ namespace Remote.Linq.Expressions
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped result of the query execution</returns>
-        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
+        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
         {
             var linqExpression = PrepareForExecution(expression, queryableProvider, typeResolver);
 
             var queryResult = Execute(linqExpression);
 
-            var dynamicObjects = ConvertResultToDynamicObjects(queryResult, mapper);
+            var dynamicObjects = ConvertResultToDynamicObjects(queryResult, mapper, setTypeInformation);
             return dynamicObjects;
         }
 
@@ -100,14 +100,19 @@ namespace Remote.Linq.Expressions
         /// <param name="queryResult">The reult of the query execution</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped query result</returns>
-        public static IEnumerable<DynamicObject> ConvertResultToDynamicObjects(object queryResult, IDynamicObjectMapper mapper = null)
+        public static IEnumerable<DynamicObject> ConvertResultToDynamicObjects(object queryResult, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
         {
             if (ReferenceEquals(null, mapper))
             {
                 mapper = new DynamicObjectMapper();
             }
 
-            var dynamicObjects = mapper.MapCollection(queryResult, setTypeInformation: false);
+            if (ReferenceEquals(null, setTypeInformation))
+            {
+                setTypeInformation = t => !t.IsAnonymousType();
+            }
+
+            var dynamicObjects = mapper.MapCollection(queryResult, setTypeInformation);
             return dynamicObjects;
         }
 
