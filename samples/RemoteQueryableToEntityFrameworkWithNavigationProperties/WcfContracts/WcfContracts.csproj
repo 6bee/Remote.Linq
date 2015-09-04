@@ -30,8 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Remote.Linq">
-      <HintPath>..\packages\Remote.Linq.4.1.1\lib\net45\Remote.Linq.dll</HintPath>
+    <Reference Include="Aqua">
+      <HintPath>..\packages\aqua-core.2.0.0\lib\net45\Aqua.dll</HintPath>
+    </Reference>
+    <Reference Include="Remote.Linq, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Remote.Linq.5.1.0\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

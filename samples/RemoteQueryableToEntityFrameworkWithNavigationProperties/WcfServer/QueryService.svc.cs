@@ -2,7 +2,7 @@
 
 namespace WcfService
 {
-    using Remote.Linq.Dynamic;
+    using Aqua.Dynamic;
     using Remote.Linq.EntityFramework;
     using Remote.Linq.Expressions;
     using System;

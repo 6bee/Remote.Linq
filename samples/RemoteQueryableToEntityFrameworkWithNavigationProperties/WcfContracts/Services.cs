@@ -2,7 +2,7 @@
 
 namespace WcfContracts
 {
-    using Remote.Linq.Dynamic;
+    using Aqua.Dynamic;
     using Remote.Linq.Expressions;
     using System.Collections.Generic;
     using System.ServiceModel;

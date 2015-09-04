@@ -2,8 +2,8 @@
 
 namespace WcfClient
 {
+    using Aqua.Dynamic;
     using Remote.Linq;
-    using Remote.Linq.Dynamic;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;

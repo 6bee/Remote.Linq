@@ -11,6 +11,16 @@ namespace WcfService
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Product>()
+                .HasRequired(x => x.ProductCategory)
+                .WithMany()
+                .Map(m => m.MapKey("ProductCategoryId"));
+
+            modelBuilder.Entity<OrderItem>()
+                .HasRequired(x => x.Product)
+                .WithMany()
+                .Map(m => m.MapKey("ProductId"));
+
             modelBuilder.Entity<Market>()
                 .HasMany(x => x.Products)
                 .WithMany(x => x.Markets)
