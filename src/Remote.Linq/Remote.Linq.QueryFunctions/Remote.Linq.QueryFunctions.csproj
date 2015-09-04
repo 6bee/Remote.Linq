@@ -35,7 +35,7 @@
   <ItemGroup>
     <Reference Include="Aqua, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\aqua-core.2.0.0\lib\net35-client\Aqua.dll</HintPath>
+      <HintPath>..\packages\aqua-core.2.1.0\lib\net35-client\Aqua.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
