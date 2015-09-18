@@ -2,12 +2,12 @@
 
 namespace Server
 {
-    using Common;
     using System;
     using System.Linq;
     using System.Net.Http.Formatting;
     using System.Web.Http;
     using System.Web.Http.SelfHost;
+    using System.Web.Http.Validation;
 
     public class WebApiServer : IDisposable
     {
@@ -30,6 +30,8 @@ namespace Server
             var asm = typeof(Common.Model.ProductCategory).Assembly;
 
             var config = new HttpSelfHostConfiguration(string.Format("http://localhost:{0}", _port));
+            
+            config.Services.Replace(typeof(IBodyModelValidator), new CustomBodyModelValidator());
 
             var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().Single();
             jsonFormatter.SerializerSettings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
