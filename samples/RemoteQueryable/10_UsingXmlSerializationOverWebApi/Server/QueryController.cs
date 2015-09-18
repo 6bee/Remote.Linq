@@ -2,8 +2,8 @@
 
 namespace Server
 {
+    using Aqua.Dynamic;
     using Common.Model;
-    using Remote.Linq.Dynamic;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace Server
             throw new Exception(string.Format("No queryable resource available for type {0}", type));
         };
 
-        public IEnumerable<DynamicObject> Query([FromBody] Expression expression)
+        public IEnumerable<DynamicObject> Query(Expression expression)
         {
             try
             {
