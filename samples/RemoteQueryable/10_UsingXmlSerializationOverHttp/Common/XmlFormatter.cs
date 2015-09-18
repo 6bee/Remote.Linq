@@ -2,7 +2,7 @@
 
 namespace Common
 {
-    using Remote.Linq.TypeSystem;
+    using Aqua.TypeSystem;
     using System;
     using System.IO;
     using System.Xml.Serialization;
@@ -11,7 +11,7 @@ namespace Common
     {
         public static void Write(this Stream stream, object obj)
         {
-            var typeInfo = new TypeInfo(obj.GetType());
+            var typeInfo = new TypeInfo(obj.GetType(), false, false);
 
             WriteInternal(stream, typeInfo);
 

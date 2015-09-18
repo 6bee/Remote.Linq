@@ -36,8 +36,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Remote.Linq">
-      <HintPath>..\packages\Remote.Linq.4.1.1\lib\net45\Remote.Linq.dll</HintPath>
+    <Reference Include="Aqua">
+      <HintPath>..\packages\aqua-core.3.0.0-alpha003\lib\net45\Aqua.dll</HintPath>
+    </Reference>
+    <Reference Include="Remote.Linq, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Remote.Linq.5.3.0-beta002\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
