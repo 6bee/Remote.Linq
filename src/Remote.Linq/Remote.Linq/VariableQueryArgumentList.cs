@@ -32,7 +32,7 @@ namespace Remote.Linq
                 elementType = TypeHelper.GetElementType(collectionType);
             }
 
-            ElementType = new TypeInfo(elementType, includePropertyInfos: false);
+            ElementType = new TypeInfo(elementType, false, false);
 
             Values = values.Cast<object>().ToList();
         }
@@ -48,7 +48,7 @@ namespace Remote.Linq
             {
                 var collectionType = values.GetType();
                 var type = TypeHelper.GetElementType(collectionType);
-                elementType = new TypeInfo(type, includePropertyInfos: false);
+                elementType = new TypeInfo(type, false, false);
             }
 
             ElementType = elementType;

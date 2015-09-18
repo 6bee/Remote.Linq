@@ -19,7 +19,7 @@ namespace Remote.Linq.Expressions
         internal CollectionExpression(IEnumerable<ConstantExpression> list, Type elementType)
         {
             List = list.ToList();
-            ElementType = new TypeInfo(elementType, includePropertyInfos: false);
+            ElementType = new TypeInfo(elementType, false, false);
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Collection; } }

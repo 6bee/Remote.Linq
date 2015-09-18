@@ -31,7 +31,7 @@ namespace Remote.Linq
                 }
             }
 
-            Type = new TypeInfo(type, includePropertyInfos: false);
+            Type = new TypeInfo(type, false, false);
 
             Value = value;
         }
@@ -41,8 +41,8 @@ namespace Remote.Linq
             if (ReferenceEquals(null, type))
             {
                 var valueType = ReferenceEquals(null, value) ? typeof(object) : value.GetType();
-                
-                type = new TypeInfo(valueType, includePropertyInfos: false);
+
+                type = new TypeInfo(valueType, false, false);
             }
 
             Type = type;

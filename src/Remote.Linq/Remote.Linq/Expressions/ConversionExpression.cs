@@ -17,7 +17,7 @@ namespace Remote.Linq.Expressions
         internal ConversionExpression(Expression operand, Type type)
         {
             Operand = operand;
-            Type = new TypeInfo(type, includePropertyInfos: false);
+            Type = new TypeInfo(type, false, false);
         }
 
         public override ExpressionType NodeType { get { return ExpressionType.Conversion; } }
