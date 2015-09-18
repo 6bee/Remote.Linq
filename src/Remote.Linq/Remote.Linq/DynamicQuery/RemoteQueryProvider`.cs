@@ -41,7 +41,9 @@ namespace Remote.Linq.DynamicQuery
         {
             var rlinq = TranslateExpression(expression, _typeResolver);
             var dataRecords = _dataProvider(rlinq);
-            var result = _resultMapper.MapResult<TResult>(dataRecords);
+            var result = object.Equals(default(TSource), dataRecords)
+                ? default(TResult)
+                : _resultMapper.MapResult<TResult>(dataRecords);
             return result;
         }
 
