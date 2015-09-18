@@ -46,6 +46,23 @@
                 }
             }
 
+            if (expression.NodeType == ExpressionType.Call)
+            {
+                var methodCallExpression = (MethodCallExpression)expression;
+                var methodDeclaringType = methodCallExpression.Method.DeclaringType;
+                if (methodDeclaringType == typeof(System.Linq.Queryable) || methodDeclaringType == typeof(System.Linq.Enumerable))
+                {
+                    if (methodCallExpression.Arguments.Count > 0)
+                    {
+                        var argument = methodCallExpression.Arguments[0] as ConstantExpression;
+                        if (!ReferenceEquals(null, argument) && argument.Value is IRemoteQueryable)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
             return expression.NodeType != ExpressionType.Parameter
                 && expression.NodeType != ExpressionType.Lambda;
         }
