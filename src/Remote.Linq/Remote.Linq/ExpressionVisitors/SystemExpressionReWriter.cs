@@ -289,6 +289,31 @@ namespace Remote.Linq.ExpressionVisitors
 
                 return base.VisitMethodCall(m);
             }
+
+            protected override Expression VisitLambda(LambdaExpression lambda)
+            {
+                Expression body = Visit(lambda.Body);
+                if (body != lambda.Body)
+                {
+                    var type = lambda.Type;
+                    if (type.IsGenericType())
+                    {
+                        var genericTypeDefinition = type.GetGenericTypeDefinition();
+                        if (genericTypeDefinition == typeof(Func<,>))
+                        {
+                            var genericArguments = type.GetGenericArguments().ToArray();
+                            if (genericArguments[1] != body.Type)
+                            {
+                                type = typeof(Func<,>).MakeGenericType(genericArguments[0], body.Type);
+                            }
+                        }
+                    }
+
+                    return Expression.Lambda(type, body, lambda.Parameters);
+                }
+
+                return lambda;
+            }
         }
     }
 }
