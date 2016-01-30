@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Remote.Linq</id>
-    <version>5.3.0-beta003</version>
+    <version>5.3.0</version>
     <authors>Christof Senn</authors>
     <owners>Christof Senn</owners>
     <licenseUrl>http://remotelinq.codeplex.com/license</licenseUrl>
@@ -11,10 +11,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Remote Linq is a small and easy to use - yet very powerful - library to translate linq expression trees to strongly typed, serializable expression trees and vice versa. It provides functionality to send arbitrary linq queries to a remote service to be applied and executed against any enumerable or queryable data collection.</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
-    <copyright>Copyright Christof Senn 2013-2015</copyright>
+    <copyright>Copyright Christof Senn 2013-2016</copyright>
     <tags>LINQ expression-tree lambda dynamic remote remote-query multi-tier n-tier fluent-interface</tags>
     <dependencies>
-      <dependency id="aqua-core" version="[3.0.0-alpha003,)" />
+      <dependency id="aqua-core" version="[3.0.0,)" />
     </dependencies>
   </metadata>
   <files>  
