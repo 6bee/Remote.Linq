@@ -53,7 +53,7 @@
   <ItemGroup>
     <Reference Include="Aqua, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\aqua-core.3.0.0-alpha003\lib\sl5\Aqua.dll</HintPath>
+      <HintPath>..\packages\aqua-core.3.0.0\lib\sl5\Aqua.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="system" />
