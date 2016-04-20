@@ -13,8 +13,10 @@ Features:
 
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+```
 Get Latest Version from NuGet
 PM> Install-Package Remote.Linq
+```
 
-http://www.nuget.org/packages/Remote.Linq/ 
+https://www.nuget.org/packages/Remote.Linq/ 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
