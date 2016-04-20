@@ -1,0 +1,51 @@
+{
+  "name": "Remote.Linq",
+  "authors": [ "Christof Senn" ],
+  "version": "5.4.0-alpha-*",
+  "description": "Remote Linq is a small and easy to use - yet very powerful - library to translate linq expression trees to strongly typed, serializable expression trees and vice versa. It provides functionality to send arbitrary linq queries to a remote service to be applied and executed against any enumerable or queryable data collection.",
+  "licenseUrl": "https://raw.githubusercontent.com/6bee/Remote.Linq/master/license.txt",
+  "projectUrl": "https://github.com/6bee/Remote.Linq/wiki",
+  "iconUrl": "https://raw.githubusercontent.com/6bee/Remote.Linq/master/remotelinq-small.png",
+  "copyright": "Copyright Christof Senn 2013-2016",
+  "tags": [ "LINQ", "expression-tree", "lambda", "dynamic", "remote", "remote-query", "multi-tier", "n-tier", "fluent-interface" ],
+  "dependencies": {
+    "aqua-core": "4.0.0-alpha-011"
+  },
+  "frameworks": {
+    "dnx451": {
+      "compilationOptions": {
+        "define": [ "NET", "CORECLR" ]
+      }
+    },
+    "dnxcore50": {
+      "compilationOptions": {
+        "define": [ "CORECLR" ]
+      }
+    },
+    "net451": {
+      "compilationOptions": {
+        "define": [ "NET", "CORECLR" ]
+      }
+    },
+    "netcore50": {
+      "compilationOptions": {
+        "define": [ "CORECLR" ]
+      }
+    },
+    "net40-client": {
+      "compilationOptions": {
+        "define": [ "NET40", "NO_ASYNC_FEATURE" ]
+      }
+    },
+    "net35-client": {
+      "compilationOptions": {
+        "define": [ "NET35", "NO_ASYNC_FEATURE" ]
+      }
+    },
+    "sl5": {
+      "compilationOptions": {
+        "define": [ "SILVERLIGHT", "NO_ASYNC_FEATURE" ]
+      }
+    }
+  }
+}

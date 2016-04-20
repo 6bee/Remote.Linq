@@ -9,7 +9,6 @@ Features:
 * Translate linq expressions into serializable expression trees (remote linq expression) and vice versa. 
 * Build remote single-type query services (paging, sorting, filtering)
 * Build remote complex linq query services (arbitrary linq query including joins, groupings, aggregations, projections, etc.)
-* Use the remote linq DynamicObject type to transport arbitrary objetc graphs over the wire.
 
 
 ```

@@ -1,0 +1,1 @@
+dnu restore && dnu build src\Remote.Linq test\Remote.Linq.Tests && dnx -p test\Remote.Linq.Tests test && dotnet pack src\Remote.Linq --output artifacts --configuration Release --version-suffix 001
