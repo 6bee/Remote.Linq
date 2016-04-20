@@ -12,11 +12,11 @@ Features:
 * Use the remote linq DynamicObject type to transport arbitrary objetc graphs over the wire.
 
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ```
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 Get Latest Version from NuGet
 PM> Install-Package Remote.Linq
-```
 
 https://www.nuget.org/packages/Remote.Linq/ 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+```
