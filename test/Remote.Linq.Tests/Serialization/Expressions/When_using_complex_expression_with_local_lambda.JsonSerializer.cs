@@ -4,7 +4,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     partial class When_using_complex_expression_with_local_lambda
     {
-        private class JsonSerializer : When_using_complex_expression_with_local_lambda
+        public class JsonSerializer : When_using_complex_expression_with_local_lambda
         {
             public JsonSerializer()
                 : base(JsonSerializationHelper.Serialize)

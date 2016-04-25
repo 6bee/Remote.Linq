@@ -4,10 +4,10 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
 {
     partial class When_using_local_variable_query_string_argument
     {
-        private class DataContractSerializer : When_using_local_variable_query_string_argument
+        public class DataContractSerializer : When_using_local_variable_query_string_argument
         {
             public DataContractSerializer()
-                : base(DataContractSerializationHelper.Serialize)
+                : base(DataContractSerializationHelper.SerializeExpression)
             {
             }
         }

@@ -4,7 +4,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     partial class When_using_simple_projection_to_single_member
     {
-        private class JsonSerializer : When_using_simple_projection_to_single_member
+        public class JsonSerializer : When_using_simple_projection_to_single_member
         {
             public JsonSerializer()
                 : base(JsonSerializationHelper.Serialize)

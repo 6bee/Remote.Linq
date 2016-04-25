@@ -4,7 +4,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     partial class When_using_simple_bool_expression
     {
-        private class JsonSerializer : When_using_simple_bool_expression
+        public class JsonSerializer : When_using_simple_bool_expression
         {
             public JsonSerializer()
                 : base(JsonSerializationHelper.Serialize)

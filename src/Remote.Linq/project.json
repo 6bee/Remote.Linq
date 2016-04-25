@@ -9,12 +9,12 @@
   "copyright": "Copyright Christof Senn 2013-2016",
   "tags": [ "LINQ", "expression-tree", "lambda", "dynamic", "remote", "remote-query", "multi-tier", "n-tier", "fluent-interface" ],
   "dependencies": {
-    "aqua-core": "4.0.0-alpha-011"
+    "aqua-core": "4.0.0-alpha-012"
   },
   "frameworks": {
     "dnx451": {
       "compilationOptions": {
-        "define": [ "NET", "CORECLR" ]
+        "define": [ "NET" ]
       }
     },
     "dnxcore50": {
@@ -24,7 +24,7 @@
     },
     "net451": {
       "compilationOptions": {
-        "define": [ "NET", "CORECLR" ]
+        "define": [ "NET" ]
       }
     },
     "netcore50": {

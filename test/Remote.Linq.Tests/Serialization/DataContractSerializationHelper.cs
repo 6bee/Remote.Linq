@@ -2,12 +2,13 @@
 
 namespace Remote.Linq.Tests.Serialization
 {
+    using Remote.Linq.ExpressionVisitors;
     using System.IO;
     using System.Runtime.Serialization;
 
     public static class DataContractSerializationHelper
     {
-        public static T Serialize<T>(this T graph)
+        public static T Serialize<T>(T graph)
         {
             var serializer = new DataContractSerializer(typeof(T));
 
@@ -17,6 +18,14 @@ namespace Remote.Linq.Tests.Serialization
                 stream.Seek(0, SeekOrigin.Begin);
                 return (T)serializer.ReadObject(stream);
             }
+        }
+
+        public static T SerializeExpression<T>(T expression) where T : Remote.Linq.Expressions.Expression
+        {
+            var exp1 = expression.ReplaceGenericQueryArgumentsByNonGenericArguments();
+            var exp2 = Serialize(exp1);
+            var exp3 = exp2.ReplaceNonGenericQueryArgumentsByGenericArguments();
+            return exp3;
         }
     }
 }

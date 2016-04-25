@@ -6,7 +6,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
 {
     partial class When_using_local_variable_query_string_argument
     {
-        private class NetDataContractSerializer : When_using_local_variable_query_string_argument
+        public class NetDataContractSerializer : When_using_local_variable_query_string_argument
         {
             public NetDataContractSerializer()
                 : base(NetDataContractSerializationHelper.Serialize)

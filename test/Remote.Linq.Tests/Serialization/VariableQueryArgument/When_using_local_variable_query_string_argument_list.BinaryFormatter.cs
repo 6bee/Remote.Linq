@@ -6,13 +6,13 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
 {
     partial class When_using_local_variable_query_string_argument_list
     {
-		private class BinaryFormatter : When_using_local_variable_query_string_argument_list
-		{
+        public class BinaryFormatter : When_using_local_variable_query_string_argument_list
+        {
             public BinaryFormatter()
                 : base(BinarySerializationHelper.Serialize)
             {
             }
-		}
+        }
     }
 }
 

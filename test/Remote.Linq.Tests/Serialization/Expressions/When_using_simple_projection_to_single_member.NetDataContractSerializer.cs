@@ -6,7 +6,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     partial class When_using_simple_projection_to_single_member
     {
-        private class NetDataContractSerializer : When_using_simple_projection_to_single_member
+        public class NetDataContractSerializer : When_using_simple_projection_to_single_member
         {
             public NetDataContractSerializer()
                 : base(NetDataContractSerializationHelper.Serialize)

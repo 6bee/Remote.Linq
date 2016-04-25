@@ -40,8 +40,6 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_return_cross_product()
         {
-            var t = typeof(System.Linq.IQueryable<>);
-
             var queryableA = RemoteQueryable.Create<A>(x => x.Execute(queryableProvider: GetQueryableByType));
 
             var queryableB = RemoteQueryable.Create<B>(x => x.Execute(queryableProvider: GetQueryableByType));

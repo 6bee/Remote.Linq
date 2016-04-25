@@ -6,7 +6,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     partial class When_using_simple_bool_expression
     {
-        private class NetDataContractSerializer : When_using_simple_bool_expression
+        public class NetDataContractSerializer : When_using_simple_bool_expression
         {
             public NetDataContractSerializer()
                 : base(NetDataContractSerializationHelper.Serialize)

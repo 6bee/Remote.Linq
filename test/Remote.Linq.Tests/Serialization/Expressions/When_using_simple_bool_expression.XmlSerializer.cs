@@ -4,10 +4,10 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     partial class When_using_simple_bool_expression
     {
-        private class XmlSerializer : When_using_simple_bool_expression
+        public class XmlSerializer : When_using_simple_bool_expression
         {
             public XmlSerializer()
-                : base(XmlSerializationHelper.Serialize)
+                : base(XmlSerializationHelper.SerializeExpression)
             {
             }
         }

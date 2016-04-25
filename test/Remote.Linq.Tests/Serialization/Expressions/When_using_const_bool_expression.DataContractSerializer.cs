@@ -4,10 +4,10 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     partial class When_using_const_bool_expression
     {
-        private class DataContractSerializer : When_using_const_bool_expression
+        public class DataContractSerializer : When_using_const_bool_expression
         {
             public DataContractSerializer()
-                : base(DataContractSerializationHelper.Serialize)
+                : base(DataContractSerializationHelper.SerializeExpression)
             {
             }
         }

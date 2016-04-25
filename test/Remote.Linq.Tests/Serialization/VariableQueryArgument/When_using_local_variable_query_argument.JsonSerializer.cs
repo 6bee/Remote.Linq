@@ -4,7 +4,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
 {
     partial class When_using_local_variable_query_argument
     {
-        private class JsonSerializer : When_using_local_variable_query_argument
+        public class JsonSerializer : When_using_local_variable_query_argument
         {
             public JsonSerializer()
                 : base(JsonSerializationHelper.Serialize)

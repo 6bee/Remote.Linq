@@ -6,13 +6,13 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     partial class When_using_const_bool_expression
     {
-		private class BinaryFormatter : When_using_const_bool_expression
-		{
+        public class BinaryFormatter : When_using_const_bool_expression
+        {
             public BinaryFormatter()
                 : base(BinarySerializationHelper.Serialize)
             {
             }
-		}
+        }
     }
 }
 

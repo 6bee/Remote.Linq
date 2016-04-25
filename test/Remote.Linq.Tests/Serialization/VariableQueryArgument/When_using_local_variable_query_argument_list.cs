@@ -9,7 +9,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
 
     public abstract partial class When_using_local_variable_query_argument_list
     {
-        private class AType
+        public class AType
         {
             public int Number { get; set; }
         }
