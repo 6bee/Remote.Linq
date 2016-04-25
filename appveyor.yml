@@ -2,8 +2,8 @@ init:
   - git config --global core.autocrlf true
 branches:
   only:
-    #- master
-    - dnx
+    - master
+    #- dnx
 #build_script:
 #  - build.cmd --quiet verify
 #test:
