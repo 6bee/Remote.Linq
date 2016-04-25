@@ -1,0 +1,21 @@
+init:
+  - git config --global core.autocrlf true
+branches:
+  only:
+    #- master
+    - dnx
+#build_script:
+#  - build.cmd --quiet verify
+#test:
+#  assemblies:
+#    - '**\*.Tests.dll'
+version: 1.0.{build}
+cache: C:\Users\appveyor\.dnx\packages
+before_build:
+- cmd: dnu restore
+build_script:
+- cmd: dnu build src\Remote.Linq test\Remote.Linq.Tests
+test_script:
+- cmd: dnx -p test/Remote.Linq.Tests test
+build:
+  verbosity: normal

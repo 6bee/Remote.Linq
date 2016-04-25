@@ -1,0 +1,12 @@
+language: csharp
+mono:
+  - beta
+branches:
+  only:
+    #- master
+    - dnx
+sudo: false
+install: curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh
+  | sh && source ~/.dnx/dnvm/dnvm.sh && dnvm upgrade
+script:
+  dnu restore && dnu build src/Remote.Linq --framework dnxcore50 --framework dnx451 --framework netcore50 --framework net451 && dnu build test/Remote.Linq.Tests && dnx -p test/Remote.Linq.Tests test
