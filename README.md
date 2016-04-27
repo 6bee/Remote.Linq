@@ -14,13 +14,3 @@ Features:
 * Translate linq expressions into serializable expression trees (remote linq expression) and vice versa. 
 * Build remote single-type query services (paging, sorting, filtering)
 * Build remote complex linq query services (arbitrary linq query including joins, groupings, aggregations, projections, etc.)
-
-
-```
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-Get Latest Version from NuGet
-PM> Install-Package Remote.Linq
-
-https://www.nuget.org/packages/Remote.Linq/ 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-```
