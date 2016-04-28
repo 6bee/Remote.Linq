@@ -2,10 +2,10 @@
 
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using Common.DataContract;
 using Common.ServiceContract;
 using Remote.Linq;
+using Remote.Linq.ExpressionVisitors;
 
 namespace Client
 {
@@ -38,6 +38,7 @@ namespace Client
 
         private static void LinqQuery()
         {
+            Console.WriteLine();
             Console.WriteLine("QUERY PRODUCTS AND ORDERS THE LINQified WAY :)");
             Console.WriteLine("========================================================================");
             using (var serviceProxy = new ServiceProxy<IRemoteLinqDataService>("RemoteLinqDataService"))
@@ -47,7 +48,7 @@ namespace Client
                     .Where(p => p.Name == "Car");
                 var products = productQuery.ToList();
 
-                Console.WriteLine("For product 'Car' list orders having an order quantity bigger than one \nfor the corresponsing product:\n");
+                Console.WriteLine("List orders for product 'Car' having an order quantity bigger than one:\n");
                 foreach (var product in products)
                 {
                     Console.WriteLine("\t{0}", product);
@@ -66,13 +67,15 @@ namespace Client
                             Console.WriteLine("\t\t\t{0}", item);
                         }
                     }
-                    Console.WriteLine("\n\t************************************************************************");
+
+                    Console.WriteLine();
                 }
             }
         }
 
         private static void LinqQueryWithOpenType()
         {
+            Console.WriteLine();
             Console.WriteLine("QUERY AN OPEN TYPE DATA SERVICE THE LINQified WAY :)");
             Console.WriteLine("========================================================================");
             using (var serviceProxy = new ServiceProxy<IRemoteLinqDataService>("RemoteLinqDataService"))
@@ -85,13 +88,13 @@ namespace Client
 
                 var products = service.GetData(productQuery);
 
-                Console.WriteLine("For product 'Car' list orders having an order quantity bigger than one \nfor the corresponsing product:\n");
+                Console.WriteLine("List orders for product 'Car' having an order quantity bigger than one:\n");
                 foreach (Product product in products)
                 {
                     Console.WriteLine("\t{0}", product);
 
                     System.Linq.Expressions.Expression<Func<Order, bool>> orderFilterLinqExpression = order => order.Items.Where(i => i.ProductId == product.Id).Sum(i => i.Quantity) > 1;
-                    Remote.Linq.Expressions.LambdaExpression orderFilterRemoteExpression = orderFilterLinqExpression.ToRemoteLinqExpression();
+                    Remote.Linq.Expressions.LambdaExpression orderFilterRemoteExpression = orderFilterLinqExpression.ToRemoteLinqExpression().ReplaceGenericQueryArgumentsByNonGenericArguments();
                     var orderQuery = new Query(typeof(Order)).Where(orderFilterRemoteExpression) as Query;
 
                     var orders = service.GetData(orderQuery);
@@ -105,13 +108,15 @@ namespace Client
                             Console.WriteLine("\t\t\t{0}", item);
                         }
                     }
-                    Console.WriteLine("\n\t************************************************************************");
+
+                    Console.WriteLine();
                 }
             }
         }
 
         private static void TraditionalQuery()
         {
+            Console.WriteLine();
             Console.WriteLine("QUERY PRODUCTS AND ORDERS THE TRADITIONAL WAY");
             Console.WriteLine("========================================================================");
             using (var serviceProxy = new ServiceProxy<IDataService>("DataService"))
@@ -120,8 +125,8 @@ namespace Client
 
                 var products = service.GetProductsByName("Car");
 
-                Console.WriteLine("For product 'Car' list orders having an order quantity bigger than one \nfor the corresponsing product.\n");
-                Console.WriteLine("Please note that filtering based on number of order items is perfomed on the client.\n");
+                Console.WriteLine("List orders for product 'Car' having an order quantity bigger than one.\n");
+                Console.WriteLine("Note that filtering based on items count is performed on the client.\n");
                 foreach (var product in products)
                 {
                     Console.WriteLine("\t{0}", product);
@@ -139,7 +144,8 @@ namespace Client
                             Console.WriteLine("\t\t\t{0}", item);
                         }
                     }
-                    Console.WriteLine("\n\t************************************************************************");
+
+                    Console.WriteLine();
                 }
             }
         }
