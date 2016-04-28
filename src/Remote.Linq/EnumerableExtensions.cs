@@ -31,11 +31,11 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="queriable"></param>
         /// <returns></returns>
-        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery<TEntity> query)
+        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery<TEntity> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor = null)
         {
             return enumerable
                 .AsQueryable()
-                .ApplyQuery(query)
+                .ApplyQuery(query, expressionVisitor)
                 .AsEnumerable();
         }
 
@@ -44,11 +44,11 @@ namespace Remote.Linq
         /// </summary>
         /// <param name="queriable"></param>
         /// <returns></returns>
-        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery query)
+        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor = null)
         {
             return enumerable
                 .AsQueryable()
-                .ApplyQuery(query)
+                .ApplyQuery(query, expressionVisitor)
                 .AsEnumerable();
         }
     }

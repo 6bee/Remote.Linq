@@ -37,8 +37,8 @@ namespace Remote.Linq
         public Query(TypeInfo typeInfo, IEnumerable<LambdaExpression> filterExpressions = null, IEnumerable<SortExpression> sortExpressions = null, int? skip = null, int? take = null)
         {
             Type = typeInfo;
-            FilterExpressions = (filterExpressions ?? new LambdaExpression[0]).ToList();
-            SortExpressions = (sortExpressions ?? new SortExpression[0]).ToList();
+            FilterExpressions = (filterExpressions ?? Enumerable.Empty<LambdaExpression>()).ToList();
+            SortExpressions = (sortExpressions ?? Enumerable.Empty<SortExpression>()).ToList();
             SkipValue = skip;
             TakeValue = take;
         }

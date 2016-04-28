@@ -3,8 +3,8 @@
 namespace Remote.Linq
 {
     using Aqua.Dynamic;
-    using Remote.Linq.DynamicQuery;
     using Aqua.TypeSystem;
+    using DynamicQuery;
     using System;
     using System.Collections.Generic;
     using System.Linq;
