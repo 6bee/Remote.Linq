@@ -1,0 +1,7 @@
+init:
+  - git config --global core.autocrlf true
+before_build:
+  - cmd: nuget restore RemoteLinqDemo\RemoteLinqDemo.sln
+build_script:
+  - cmd: msbuild /p:Configuration=Release RemoteLinqDemo/RemoteLinqDemo.sln
+  - cmd: msbuild /p:Configuration=Release RemoteLinqDemo/RemoteLinqDemo.sln

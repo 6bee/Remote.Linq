@@ -1,0 +1,6 @@
+language: csharp
+install:
+  - nuget restore RemoteLinqDemo/RemoteLinqDemo.sln
+script:
+  - xbuild /p:Configuration=Release RemoteLinqDemo/RemoteLinqDemo.sln
+  - xbuild /p:Configuration=Release RemoteLinqDemo/RemoteLinqDemo.sln
