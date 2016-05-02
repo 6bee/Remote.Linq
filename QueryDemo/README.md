@@ -1,5 +1,3 @@
 # QueryDemo
 
-Compares Remote.Linq query to traditional WCF service. 
-
-Demonstrates simple query type.
+Demonstrates usage of the simple query type by comparing Remote.Linq query to traditional WCF service usage. 
