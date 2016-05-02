@@ -17,8 +17,9 @@ namespace Common.ServiceContract
         IEnumerable<Order> GetOrders(Query<Order> query);
 
         [OperationContract]
+        [ServiceKnownType(typeof(Query))]
         [ServiceKnownType(typeof(Product))]
         [ServiceKnownType(typeof(Order))]
-        IEnumerable<object> GetData(Query query);
+        IEnumerable<object> GetData(IQuery query);
     }
 }

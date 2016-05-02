@@ -84,7 +84,7 @@ namespace Client
 
                 System.Linq.Expressions.Expression<Func<Product, bool>> productFilterLinqExpression = product => product.Name == "Car";
                 Remote.Linq.Expressions.LambdaExpression productFilterRemoteExpression = productFilterLinqExpression.ToRemoteLinqExpression();
-                var productQuery = new Query(typeof(Product)).Where(productFilterRemoteExpression) as Query;
+                var productQuery = new Query(typeof(Product)).Where(productFilterRemoteExpression);
 
                 var products = service.GetData(productQuery);
 
@@ -95,7 +95,7 @@ namespace Client
 
                     System.Linq.Expressions.Expression<Func<Order, bool>> orderFilterLinqExpression = order => order.Items.Where(i => i.ProductId == product.Id).Sum(i => i.Quantity) > 1;
                     Remote.Linq.Expressions.LambdaExpression orderFilterRemoteExpression = orderFilterLinqExpression.ToRemoteLinqExpression().ReplaceGenericQueryArgumentsByNonGenericArguments();
-                    var orderQuery = new Query(typeof(Order)).Where(orderFilterRemoteExpression) as Query;
+                    var orderQuery = new Query(typeof(Order)).Where(orderFilterRemoteExpression);
 
                     var orders = service.GetData(orderQuery);
 

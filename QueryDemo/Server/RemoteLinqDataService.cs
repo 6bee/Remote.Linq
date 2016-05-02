@@ -28,7 +28,7 @@ namespace Server
             return result;
         }
 
-        public IEnumerable<object> GetData(Query query)
+        public IEnumerable<object> GetData(IQuery query)
         {
             var result = typeof(RemoteLinqDataService)
                 .GetMethod("OpenTypeQuery", BindingFlags.Instance | BindingFlags.NonPublic)
