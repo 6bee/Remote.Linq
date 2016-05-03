@@ -1,15 +1,16 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace WcfClient
+namespace Client
 {
+    using Aqua.Dynamic;
+    using Common.Model;
+    using Common.ServiceContracts;
     using Remote.Linq;
-    using Remote.Linq.Dynamic;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.ServiceModel;
-    using WcfContracts;
 
     public class RemoteRepository : IDisposable
     {
@@ -17,9 +18,9 @@ namespace WcfClient
 
         private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
 
-        public RemoteRepository(string address)
+        public RemoteRepository(string uri)
         {
-            var binding = new BasicHttpBinding()
+            var binding = new NetNamedPipeBinding()
             {
                 CloseTimeout = TimeSpan.FromMinutes(10),
                 ReceiveTimeout = TimeSpan.FromMinutes(10),
@@ -27,8 +28,8 @@ namespace WcfClient
                 MaxReceivedMessageSize = 640000L
             };
 
-            _channelFactory = new ChannelFactory<IQueryService>(binding, address);
-            
+            _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
+
             _dataProvider = expression =>
                 {
                     IQueryService channel = null;
@@ -58,9 +59,9 @@ namespace WcfClient
         }
 
         public IQueryable<ProductCategory> ProductCategories { get { return RemoteQueryable.Create<ProductCategory>(_dataProvider); } }
-        
+
         public IQueryable<Product> Products { get { return RemoteQueryable.Create<Product>(_dataProvider); } }
-        
+
         public IQueryable<OrderItem> OrderItems { get { return RemoteQueryable.Create<OrderItem>(_dataProvider); } }
 
         public void Dispose()

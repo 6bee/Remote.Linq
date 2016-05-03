@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. 
 
-namespace WcfService
+namespace Server
 {
-    using Remote.Linq.Dynamic;
+    using Aqua.Dynamic;
+    using Common.ServiceContracts;
     using Remote.Linq.Expressions;
     using System.Collections.Generic;
-    using WcfContracts;
-    
+
     public class QueryService : IQueryService
     {
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)

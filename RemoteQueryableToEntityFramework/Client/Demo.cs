@@ -1,28 +1,24 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace WcfClient
+namespace Client
 {
     using Remote.Linq;
     using System;
     using System.Diagnostics;
     using System.Linq;
-    using System.Threading.Tasks;
 
-    class Program
+    public class Demo
     {
-        static void Main(string[] args)
-        {
-            Run();
+        private readonly string _url;
 
-            Console.WriteLine();
-            Console.WriteLine("Press <ENTER> to terminate.");
-            Console.WriteLine();
-            Console.ReadLine();
+        public Demo(string url)
+        {
+            _url = url;
         }
 
-        private static void Run()
+        public void Run()
         {
-            var repo = new RemoteRepository("http://localhost:50105/QueryService.svc");
+            var repo = new RemoteRepository(_url);
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
             foreach (var i in repo.Products)
@@ -56,6 +52,25 @@ namespace WcfClient
             }
 
 
+            Console.WriteLine("\nSELECT IDs:");
+            var productIdsQuery =
+                from p in repo.Products
+                orderby p.Price descending
+                select p.Id;
+            var productIds = productIdsQuery.ToList();
+            foreach (var id in productIdsQuery)
+            {
+                Console.WriteLine("  {0}", id);
+            }
+
+
+            Console.WriteLine("\nCOUNT:");
+            var productsQuery =
+                from p in repo.Products
+                select p;
+            Console.WriteLine("  Count = {0}", productsQuery.Count());
+
+
             Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
             var totalAmountByCategoryQuery =
                 from c in repo.ProductCategories
@@ -68,6 +83,7 @@ namespace WcfClient
                 {
                     Category = g.Key,
                     Amount = g.Sum(x => x.i.Quantity * x.p.Price),
+                    Amount2 = new { Amount = g.Sum(x => x.i.Quantity * x.p.Price) },
                 };
 
             var totalAmountByCategroyResult = totalAmountByCategoryQuery.ToDictionary(x => x.Category);
@@ -82,7 +98,7 @@ namespace WcfClient
             {
                 var first = totalAmountByCategoryQuery.First(x => false);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("  {0}", ex.Message);
                 Debug.WriteLine("  {0}", ex.Message);

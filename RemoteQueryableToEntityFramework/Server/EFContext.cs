@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. 
 
-namespace WcfService
+namespace Server
 {
+    using Common.Model;
     using System.Data.Entity;
-    using WcfContracts;
 
     public partial class EFContext : DbContext
     {

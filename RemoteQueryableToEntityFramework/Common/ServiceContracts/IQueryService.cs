@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. 
 
-namespace WcfContracts
+namespace Common.ServiceContracts
 {
-    using Remote.Linq.Dynamic;
+    using Aqua.Dynamic;
     using Remote.Linq.Expressions;
     using System.Collections.Generic;
     using System.ServiceModel;
