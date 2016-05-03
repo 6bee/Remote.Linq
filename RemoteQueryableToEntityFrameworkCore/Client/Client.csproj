@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E11DBE40-C81F-4AA2-AE2C-25769CCB06A2}</ProjectGuid>
+    <ProjectGuid>{A5134D96-7954-432E-AD97-3DD83B6E85AB}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Client</RootNamespace>
@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{762b4b92-8843-43f3-b641-34b2c6086134}</Project>
+      <Project>{D6420D9B-929B-4F1C-88D4-FF312CB0D2F0}</Project>
       <Name>WcfContracts</Name>
     </ProjectReference>
   </ItemGroup>
