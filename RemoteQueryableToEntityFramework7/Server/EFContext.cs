@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. 
 
-namespace WcfService
+namespace Server
 {
+    using Common.Model;
     using Microsoft.Data.Entity;
     using System;
     using System.Linq;
-    using WcfContracts;
 
     public class EFContext : DbContext
     {
@@ -28,10 +28,10 @@ namespace WcfService
             // optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=RemoteQueryableDemoDB_AUG2014;Trusted_Connection=True;");
 
             // Visual Studio 2013 | Use the LocalDb 11 instance created by Visual Studio
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\v11.0;Database=RemoteQueryableDemoDB_AUG2014;Trusted_Connection=True;");
+            //optionsBuilder.UseSqlServer(@"Server=(localdb)\v11.0;Database=RemoteQueryableDemoDB_AUG2014;Trusted_Connection=True;");
 
             // Visual Studio 2012 | Use the SQL Express instance created by Visual Studio
-            // optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=RemoteQueryableDemoDB_AUG2014;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=RemoteQueryableDemoDB_AUG2014;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
