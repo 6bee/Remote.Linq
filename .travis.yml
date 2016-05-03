@@ -1,5 +1,11 @@
 language: csharp
 install:
   - nuget restore QueryDemo/QueryDemo.sln
+  - nuget restore RemoteQueryableToEntityFramework/RemoteQueryableToEntityFramework.sln
+  - nuget restore RemoteQueryableToEntityFrameworkCore/RemoteQueryableToEntityFrameworkCore.sln
+  - nuget restore RemoteQueryableToNHibernate/RemoteQueryableToNHibernate.sln
 script:
   - xbuild /p:Configuration=Release QueryDemo/QueryDemo.sln
+  - xbuild /p:Configuration=Release RemoteQueryableToEntityFramework/RemoteQueryableToEntityFramework.sln
+  - xbuild /p:Configuration=Release RemoteQueryableToEntityFrameworkCore/RemoteQueryableToEntityFrameworkCore.sln
+  - xbuild /p:Configuration=Release RemoteQueryableToNHibernate/RemoteQueryableToNHibernate.sln

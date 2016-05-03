@@ -2,5 +2,11 @@ init:
   - git config --global core.autocrlf true
 before_build:
   - cmd: nuget restore QueryDemo\QueryDemo.sln
+  - cmd: nuget restore RemoteQueryableToEntityFramework\RemoteQueryableToEntityFramework.sln
+  - cmd: nuget restore RemoteQueryableToEntityFrameworkCore\RemoteQueryableToEntityFrameworkCore.sln
+  - cmd: nuget restore RemoteQueryableToNHibernate\RemoteQueryableToNHibernate.sln
 build_script:
   - cmd: msbuild /p:Configuration=Release QueryDemo/QueryDemo.sln
+  - cmd: msbuild /p:Configuration=Release RemoteQueryableToEntityFramework/RemoteQueryableToEntityFramework.sln
+  - cmd: msbuild /p:Configuration=Release RemoteQueryableToEntityFrameworkCore/RemoteQueryableToEntityFrameworkCore.sln
+  - cmd: msbuild /p:Configuration=Release RemoteQueryableToNHibernate/RemoteQueryableToNHibernate.sln
