@@ -116,15 +116,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Client\Client.csproj">
-      <Project>{a5134d96-7954-432e-ad97-3dd83b6e85ab}</Project>
+      <Project>{A5134D96-7954-432E-AD97-3DD83B6E85AB}</Project>
       <Name>Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{d6420d9b-929b-4f1c-88d4-ff312cb0d2f0}</Project>
+      <Project>{D6420D9B-929B-4F1C-88D4-FF312CB0D2F0}</Project>
       <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Server\Server.csproj">
-      <Project>{188702a6-12c5-4b7c-9bc4-2513c561da59}</Project>
+      <Project>{188702A6-12C5-4B7C-9BC4-2513C561DA59}</Project>
       <Name>Server</Name>
     </ProjectReference>
   </ItemGroup>
