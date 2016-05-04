@@ -28,7 +28,7 @@ namespace Common
                 stream.WriteByte(obj is Exception ? (byte)1 : (byte)0);
                 stream.Write(data, 0, data.Length);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Console.WriteLine("Exception: {0}", ex);
                 throw;
@@ -76,7 +76,7 @@ namespace Common
 
                 return (T)obj;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Console.WriteLine("Exception: {0}", ex);
                 throw;
