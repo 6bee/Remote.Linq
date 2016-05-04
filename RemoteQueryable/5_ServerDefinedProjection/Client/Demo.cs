@@ -3,7 +3,6 @@
 namespace Client
 {
     using System;
-    using System.Diagnostics;
     using System.Linq;
 
     public class Demo
@@ -100,7 +99,6 @@ namespace Client
             catch (Exception ex)
             {
                 Console.WriteLine("  {0}", ex.Message);
-                Debug.WriteLine("  {0}", ex.Message);
             }
         }
     }
