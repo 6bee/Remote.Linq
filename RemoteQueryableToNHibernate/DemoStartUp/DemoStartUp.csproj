@@ -56,7 +56,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
