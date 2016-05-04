@@ -44,9 +44,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Client\Client.csproj">
       <Project>{A5134D96-7954-432E-AD97-3DD83B6E85AB}</Project>
       <Name>Client</Name>
