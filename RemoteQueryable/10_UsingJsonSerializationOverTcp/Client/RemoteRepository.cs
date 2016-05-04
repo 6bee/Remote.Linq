@@ -2,10 +2,10 @@
 
 namespace Client
 {
+    using Aqua.Dynamic;
     using Common;
     using Common.Model;
     using Remote.Linq;
-    using Remote.Linq.Dynamic;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -40,7 +40,7 @@ namespace Client
 
                     return result;
                 }
-                catch (SocketException ex)
+                catch (SocketException)
                 {
                     //Console.WriteLine("SocketException: {0}", ex);
                     throw;

@@ -2,8 +2,8 @@
 
 namespace Common
 {
+    using Aqua.TypeSystem;
     using Newtonsoft.Json;
-    using Remote.Linq.TypeSystem;
     using System;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
