@@ -29,8 +29,8 @@ namespace Server
             // load common assembly into app domain
             var asm = typeof(Common.Model.ProductCategory).Assembly;
 
-            var config = new HttpSelfHostConfiguration(string.Format("http://localhost:{0}", _port));
-            
+            var config = new HttpSelfHostConfiguration($"http://localhost:{_port}");
+
             config.Services.Replace(typeof(IBodyModelValidator), new CustomBodyModelValidator());
 
             var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().Single();
