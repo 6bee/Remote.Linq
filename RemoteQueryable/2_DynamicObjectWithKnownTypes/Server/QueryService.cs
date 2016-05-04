@@ -2,9 +2,10 @@
 
 namespace Server
 {
+    using Aqua.Dynamic;
+    using Common;
     using Common.Model;
     using Common.ServiceContracts;
-    using Remote.Linq.Dynamic;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Server
 
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
         {
-            var mapper = new DynamicObjectMapper(knownTypes: new[] { typeof(OrderItem), typeof(Product), typeof(ProductCategory) });
+            var mapper = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
 
             return queryExpression.Execute(_queryableResourceProvider, mapper: mapper);
         }

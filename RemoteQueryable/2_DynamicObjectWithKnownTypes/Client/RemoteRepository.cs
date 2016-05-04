@@ -2,10 +2,11 @@
 
 namespace Client
 {
+    using Aqua.Dynamic;
+    using Common;
     using Common.Model;
     using Common.ServiceContracts;
     using Remote.Linq;
-    using Remote.Linq.Dynamic;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Client
 
         public RemoteRepository(string uri)
         {
-            _mapper = new DynamicObjectMapper(knownTypes: new[] { typeof(OrderItem), typeof(Product), typeof(ProductCategory) });
+            _mapper = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
 
             var binding = new NetNamedPipeBinding()
             {
