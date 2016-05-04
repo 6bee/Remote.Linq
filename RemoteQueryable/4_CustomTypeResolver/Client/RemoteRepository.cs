@@ -2,10 +2,9 @@
 
 namespace Client
 {
-    using Client.Model;
+    using Aqua.Dynamic;
     using Common.ServiceContracts;
     using Remote.Linq;
-    using Remote.Linq.Dynamic;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -58,11 +57,11 @@ namespace Client
                 };
         }
 
-        public IQueryable<ProductCategory> ProductCategories { get { return RemoteQueryable.Create<ProductCategory>(_dataProvider); } }
+        public IQueryable<Client.Model.ProductCategory> ProductCategories { get { return RemoteQueryable.Create<Client.Model.ProductCategory>(_dataProvider); } }
 
-        public IQueryable<Product> Products { get { return RemoteQueryable.Create<Product>(_dataProvider); } }
+        public IQueryable<Client.Model.Product> Products { get { return RemoteQueryable.Create<Client.Model.Product>(_dataProvider); } }
         
-        public IQueryable<OrderItem> OrderItems { get { return RemoteQueryable.Create<OrderItem>(_dataProvider); } }
+        public IQueryable<Client.Model.OrderItem> OrderItems { get { return RemoteQueryable.Create<Client.Model.OrderItem>(_dataProvider); } }
 
         public void Dispose()
         {

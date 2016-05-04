@@ -2,7 +2,7 @@
 
 namespace Server
 {
-    using Remote.Linq.TypeSystem;
+    using Aqua.TypeSystem;
     using System;
 
     public class CustomTypeResolver : TypeResolver

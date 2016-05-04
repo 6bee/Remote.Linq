@@ -2,28 +2,20 @@
 
 namespace Server
 {
+    using Aqua.Dynamic;
     using Common.ServiceContracts;
-    using Remote.Linq.Dynamic;
     using Remote.Linq.Expressions;
-    using System;
     using System.Collections.Generic;
 
     public class QueryService : IQueryService
     {
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
         {
-            try
-            {
-                var dataStore = InMemoryDataStore.Instance;
+            var dataStore = InMemoryDataStore.Instance;
 
-                return queryExpression.Execute(
-                    queryableProvider: type => dataStore.GetSet(type),
-                    typeResolver: new CustomTypeResolver());
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return queryExpression.Execute(
+                queryableProvider: type => dataStore.GetSet(type),
+                typeResolver: new CustomTypeResolver());
         }
     }
 }
