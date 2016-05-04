@@ -2,7 +2,7 @@
 
 namespace Common
 {
-    using Remote.Linq.TypeSystem;
+    using Aqua.TypeSystem;
     using System;
     using System.IO;
     using System.Xml.Serialization;
@@ -11,7 +11,7 @@ namespace Common
     {
         public static void Write(this Stream stream, object obj)
         {
-            var typeInfo = new TypeInfo(obj.GetType());
+            var typeInfo = new TypeInfo(obj.GetType(), false, false);
             WriteInternal(stream, typeInfo);
 
             WriteInternal(stream, obj);
@@ -39,7 +39,7 @@ namespace Common
                 stream.WriteByte(obj is Exception ? (byte)1 : (byte)0);
                 stream.Write(data, 0, data.Length);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Console.WriteLine("Exception: {0}", ex);
                 throw;
@@ -102,7 +102,7 @@ namespace Common
 
                 return (T)obj;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Console.WriteLine("Exception: {0}", ex);
                 throw;
