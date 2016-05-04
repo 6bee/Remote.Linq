@@ -22,7 +22,7 @@ namespace Client
             var repo = new RemoteRepository(_url);
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
-            foreach (var i in repo.Products)
+            foreach (var i in await repo.Products.ToArrayAsync())
             {
                 Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
             }

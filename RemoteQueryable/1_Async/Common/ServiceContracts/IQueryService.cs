@@ -2,7 +2,7 @@
 
 namespace Common.ServiceContracts
 {
-    using Remote.Linq.Dynamic;
+    using Aqua.Dynamic;
     using Remote.Linq.Expressions;
     using System.Collections.Generic;
     using System.ServiceModel;
