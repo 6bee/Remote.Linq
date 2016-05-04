@@ -2,11 +2,11 @@
 
 namespace Client
 {
+    using Aqua.Dynamic;
     using Common;
     using Common.Model;
     using Common.ServiceContracts;
     using Remote.Linq;
-    using Remote.Linq.Dynamic;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
