@@ -14,22 +14,16 @@ namespace Server
         private readonly HttpListener _server;
 
         public HttpServer(int port)
-            : this("127.0.0.1", port)
         {
-        }
-
-        public HttpServer(string ip, int port)
-        {
-            var ipAddress = IPAddress.Parse(ip);
             _server = new HttpListener();
-            _server.Prefixes.Add(string.Format("http://{0}:{1}/queryservice/", ip, port));
+            _server.Prefixes.Add($"http://+:{port}/queryservice/");
         }
 
         public void Open()
         {
             _server.Start();
 
-            Task.Run(() =>
+            Task.Run(async () => 
             {
                 try
                 {
@@ -44,17 +38,17 @@ namespace Server
                             var inStream = client.Request.InputStream;
                             var outStream = client.Response.OutputStream;
                             {
-                                var queryExpression = inStream.Read<Expression>();
+                                var queryExpression = await inStream.ReadAsync<Expression>();
 
                                 try
                                 {
                                     var queryService = new QueryService();
                                     var result = queryService.ExecuteQuery(queryExpression);
-                                    outStream.Write(result);
+                                    await outStream.WriteAsync(result);
                                 }
                                 catch (Exception ex)
                                 {
-                                    outStream.Write(ex);
+                                    await outStream.WriteAsync(ex);
                                 }
 
                                 inStream.Close();
@@ -65,7 +59,7 @@ namespace Server
                         }
                     }
                 }
-                catch (SocketException ex)
+                catch (SocketException)
                 {
                     //Console.WriteLine("SocketException: {0}", ex);
                 }

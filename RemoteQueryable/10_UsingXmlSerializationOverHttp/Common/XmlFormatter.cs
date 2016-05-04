@@ -5,20 +5,21 @@ namespace Common
     using Aqua.TypeSystem;
     using System;
     using System.IO;
+    using System.Threading.Tasks;
     using System.Xml.Serialization;
 
     public static class XmlFormatter
     {
-        public static void Write(this Stream stream, object obj)
+        public static async Task WriteAsync(this Stream stream, object obj)
         {
             var typeInfo = new TypeInfo(obj.GetType(), false, false);
 
-            WriteInternal(stream, typeInfo);
+            await WriteInternalAsync(stream, typeInfo);
 
-            WriteInternal(stream, obj);
+            await WriteInternalAsync(stream, obj);
         }
 
-        private static void WriteInternal(this Stream stream, object obj)
+        private static async Task WriteInternalAsync(this Stream stream, object obj)
         {
             try
             {
@@ -36,33 +37,33 @@ namespace Common
                 var size = data.LongLength;
                 var sizeData = BitConverter.GetBytes(size);
 
-                stream.Write(sizeData, 0, sizeData.Length);
+                await stream.WriteAsync(sizeData, 0, sizeData.Length);
                 stream.WriteByte(obj is Exception ? (byte)1 : (byte)0);
-                stream.Write(data, 0, data.Length);
+                await stream.WriteAsync(data, 0, data.Length);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Console.WriteLine("Exception: {0}", ex);
                 throw;
             }
         }
 
-        public static T Read<T>(this Stream stream)
+        public static async Task<T> ReadAsync<T>(this Stream stream)
         {
-            var typeInfo = ReadInternal<TypeInfo>(stream);
+            var typeInfo = await ReadInternalAsync<TypeInfo>(stream);
             var type = typeInfo.Type;
 
-            var obj = ReadInternal<T>(stream, type);
+            var obj = await ReadInternalAsync<T>(stream, type);
             return obj;
         }
 
-        public static T ReadInternal<T>(this Stream stream, Type type = null)
+        public static async Task<T> ReadInternalAsync<T>(this Stream stream, Type type = null)
         {
             try
             {
                 var bytes = new byte[256];
 
-                stream.Read(bytes, 0, 8);
+                await stream.ReadAsync(bytes, 0, 8);
                 var size = BitConverter.ToInt64(bytes, 0);
 
                 var isException = stream.ReadByte() != 0;
@@ -77,7 +78,7 @@ namespace Common
                             ? (int)(size - count)
                             : bytes.Length;
 
-                        int i = stream.Read(bytes, 0, length);
+                        int i = await stream.ReadAsync(bytes, 0, length);
                         count += i;
 
                         dataStream.Write(bytes, 0, i);
@@ -103,7 +104,7 @@ namespace Common
 
                 return (T)obj;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Console.WriteLine("Exception: {0}", ex);
                 throw;

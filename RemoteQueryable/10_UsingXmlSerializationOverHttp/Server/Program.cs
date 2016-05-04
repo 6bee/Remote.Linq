@@ -8,7 +8,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            using (var serviceHost = new HttpServer("127.0.0.1", 8088))
+            using (var serviceHost = new HttpServer(8089))
             {
                 serviceHost.Open();
 

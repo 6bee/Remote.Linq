@@ -2,9 +2,10 @@
 
 namespace Client
 {
+    using Remote.Linq;
     using System;
-    using System.Diagnostics;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public class Demo
     {
@@ -15,12 +16,12 @@ namespace Client
             _url = url;
         }
 
-        public void Run()
+        public async Task RunAsync()
         {
             var repo = new RemoteRepository(_url);
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
-            foreach (var i in repo.Products)
+            foreach (var i in await repo.Products.ToListAsync())
             {
                 Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
             }
@@ -32,7 +33,7 @@ namespace Client
                 from c in repo.ProductCategories
                 from p in repo.Products
                 select new { Category = "#" + c.Name + suffix("-"), p.Name };
-            var crossJoinResult = crossJoinQuery.ToList();
+            var crossJoinResult = await crossJoinQuery.ToListAsync();
             foreach (var i in crossJoinResult)
             {
                 Console.WriteLine("  {0}", i);
@@ -44,7 +45,7 @@ namespace Client
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
                 select new { c.Name, P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
-            var innerJoinResult = innerJoinQuery.ToList();
+            var innerJoinResult = await innerJoinQuery.ToListAsync();
             foreach (var i in innerJoinResult)
             {
                 Console.WriteLine("  {0}", i);
@@ -56,7 +57,7 @@ namespace Client
                 from p in repo.Products
                 orderby p.Price descending
                 select p.Id;
-            var productIds = productIdsQuery.ToList();
+            var productIds = await productIdsQuery.ToListAsync();
             foreach (var id in productIdsQuery)
             {
                 Console.WriteLine("  {0}", id);
@@ -67,7 +68,7 @@ namespace Client
             var productsQuery =
                 from p in repo.Products
                 select p;
-            Console.WriteLine("  Count = {0}", productsQuery.Count());
+            Console.WriteLine("  Count = {0}", await productsQuery.CountAsync());
 
 
             Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
@@ -84,7 +85,7 @@ namespace Client
                     Amount = g.Sum(x => x.i.Quantity * x.p.Price),
                 };
 
-            var totalAmountByCategroyResult = totalAmountByCategoryQuery.ToDictionary(x => x.Category);
+            var totalAmountByCategroyResult = await totalAmountByCategoryQuery.ToDictionaryAsync(x => x.Category);
             foreach (var i in totalAmountByCategroyResult)
             {
                 Console.WriteLine("  {0}", i);
@@ -94,12 +95,11 @@ namespace Client
             Console.WriteLine("\nINVALID OPERATION:");
             try
             {
-                var first = totalAmountByCategoryQuery.First(x => false);
+                var first = await totalAmountByCategoryQuery.FirstAsync(x => false);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("  {0}", ex.Message);
-                Debug.WriteLine("  {0}", ex.Message);
             }
         }
     }

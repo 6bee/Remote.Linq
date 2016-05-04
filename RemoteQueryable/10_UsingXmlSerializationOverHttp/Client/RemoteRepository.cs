@@ -29,7 +29,7 @@ namespace Client
                     using (var requestStream = new MemoryStream())
                     using (var responseStream = new MemoryStream())
                     {
-                        requestStream.Write(expression);
+                        await requestStream.WriteAsync(expression);
                         requestStream.Position = 0;
 
                         var request = new StreamContent(requestStream);
@@ -39,7 +39,7 @@ namespace Client
                             await response.Content.CopyToAsync(responseStream);
                             responseStream.Position = 0;
 
-                            var result = responseStream.Read<IEnumerable<DynamicObject>>();
+                            var result = await responseStream.ReadAsync<IEnumerable<DynamicObject>>();
                             return result;
                         }
                     }

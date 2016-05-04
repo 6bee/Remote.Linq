@@ -12,7 +12,7 @@ namespace Client
             Console.WriteLine("then press <ENTER> to start the client.");
             Console.ReadLine();
 
-            new Demo("http://localhost:8088/queryservice").Run();
+            new Demo("http://localhost:8089/queryservice").RunAsync().Wait();
 
             Console.WriteLine();
             Console.WriteLine("Press <ENTER> to terminate.");

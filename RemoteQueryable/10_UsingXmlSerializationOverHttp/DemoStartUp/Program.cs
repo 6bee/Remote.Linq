@@ -10,7 +10,7 @@ namespace DemoStartUp
         static void Main(string[] args)
         {
             const string host = "localhost";
-            const int port = 8088;
+            const int port = 8089;
 
             Console.WriteLine("Starting HTTP service...");
 
@@ -24,8 +24,8 @@ namespace DemoStartUp
                 Console.WriteLine("-------------------------------------------------");
 
 
-                var url = string.Format("http://{0}:{1}/queryservice/", host, port);
-                new Client.Demo(url).Run();
+                var url = $"http://{host}:{port}/queryservice/";
+                new Client.Demo(url).RunAsync().Wait();
 
 
                 Console.WriteLine();
