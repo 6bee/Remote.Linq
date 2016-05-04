@@ -1,11 +1,39 @@
 language: csharp
 install:
   - nuget restore QueryDemo/QueryDemo.sln
+  - nuget restore RemoteQueryable/0_Basic/RemoteQueryable_Basic.sln
+  - nuget restore RemoteQueryable/1_Async/RemoteQueryable_Async.sln
+  - nuget restore RemoteQueryable/2_DynamicObjectWithKnownTypes/RemoteQueryable_DynamicObjectWithKnownTypes.sln
+  - nuget restore RemoteQueryable/3_KnownTypesAsObjects/RemoteQueryable_KnownTypesAsObjects.sln
+  - nuget restore RemoteQueryable/4_CustomTypeResolver/RemoteQueryable_CustomTypeResolver.sln
+  - nuget restore RemoteQueryable/5_ServerDefinedProjection/RemoteQueryable_ServerDefinedProjection.sln
+  - nuget restore RemoteQueryable/6_Compression/RemoteQueryable_Compression.sln
+  - nuget restore RemoteQueryable/7_Inheritance/RemoteQueryable_Inheritance.sln
+  - nuget restore RemoteQueryable/10_UsingBinarySerializationOverTcp/RemoteQueryable_UsingBinarySerializationOverTcp.sln
+  - nuget restore RemoteQueryable/10_UsingJsonSerializationOverTcp/RemoteQueryable_UsingJsonSerializationOverTcp.sln
+  - nuget restore RemoteQueryable/10_UsingJsonSerializationOverWebApi/RemoteQueryable_UsingJsonSerializationOverWebApi.sln
+  - nuget restore RemoteQueryable/10_UsingXmlSerializationOverHttp/RemoteQueryable_UsingXmlSerializationOverHttp.sln
+  - nuget restore RemoteQueryable/10_UsingXmlSerializationOverTcp/RemoteQueryable_UsingXmlSerializationOverTcp.sln
+  - nuget restore RemoteQueryable/10_UsingXmlSerializationOverWebApi/RemoteQueryable_UsingXmlSerializationOverWebApi.sln
   - nuget restore RemoteQueryableToEntityFramework/RemoteQueryableToEntityFramework.sln
   - nuget restore RemoteQueryableToEntityFrameworkCore/RemoteQueryableToEntityFrameworkCore.sln
   - nuget restore RemoteQueryableToNHibernate/RemoteQueryableToNHibernate.sln
 script:
   - xbuild /p:Configuration=Release QueryDemo/QueryDemo.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/0_Basic/RemoteQueryable_Basic.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/1_Async/RemoteQueryable_Async.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/2_DynamicObjectWithKnownTypes/RemoteQueryable_DynamicObjectWithKnownTypes.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/3_KnownTypesAsObjects/RemoteQueryable_KnownTypesAsObjects.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/4_CustomTypeResolver/RemoteQueryable_CustomTypeResolver.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/5_ServerDefinedProjection/RemoteQueryable_ServerDefinedProjection.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/6_Compression/RemoteQueryable_Compression.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/7_Inheritance/RemoteQueryable_Inheritance.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/10_UsingBinarySerializationOverTcp/RemoteQueryable_UsingBinarySerializationOverTcp.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/10_UsingJsonSerializationOverTcp/RemoteQueryable_UsingJsonSerializationOverTcp.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/10_UsingJsonSerializationOverWebApi/RemoteQueryable_UsingJsonSerializationOverWebApi.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/10_UsingXmlSerializationOverHttp/RemoteQueryable_UsingXmlSerializationOverHttp.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/10_UsingXmlSerializationOverTcp/RemoteQueryable_UsingXmlSerializationOverTcp.sln
+  - xbuild /p:Configuration=Release RemoteQueryable/10_UsingXmlSerializationOverWebApi/RemoteQueryable_UsingXmlSerializationOverWebApi.sln
   - xbuild /p:Configuration=Release RemoteQueryableToEntityFramework/RemoteQueryableToEntityFramework.sln
   - xbuild /p:Configuration=Release RemoteQueryableToEntityFrameworkCore/RemoteQueryableToEntityFrameworkCore.sln
   - xbuild /p:Configuration=Release RemoteQueryableToNHibernate/RemoteQueryableToNHibernate.sln
