@@ -3,11 +3,8 @@
 namespace Client
 {
     using Common.Model;
-    using Remote.Linq;
     using System;
-    using System.Diagnostics;
     using System.Linq;
-    using System.Threading.Tasks;
 
     public class Demo
     {
