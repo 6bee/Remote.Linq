@@ -12,7 +12,7 @@
     "aqua-core": "4.0.0-alpha-012"
   },
   "frameworks": {
-    "dnx451": {
+    "dnx45": {
       "compilationOptions": {
         "define": [ "NET" ]
       }
@@ -22,7 +22,7 @@
         "define": [ "CORECLR" ]
       }
     },
-    "net451": {
+    "net45": {
       "compilationOptions": {
         "define": [ "NET" ]
       }
