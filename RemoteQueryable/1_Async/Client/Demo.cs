@@ -4,7 +4,6 @@ namespace Client
 {
     using Remote.Linq;
     using System;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -101,7 +100,6 @@ namespace Client
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine("  {0}", ex.Message);
-                Debug.WriteLine("  {0}", ex.Message);
             }
         }
     }
