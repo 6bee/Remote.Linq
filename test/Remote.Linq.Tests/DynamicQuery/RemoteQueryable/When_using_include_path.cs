@@ -2,15 +2,15 @@
 
 namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 {
-    using Remote.Linq;
     using Aqua.Dynamic;
+    using Remote.Linq;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
+    using Shouldly;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Xunit.Fluent;
 
     public class When_using_include_path
     {

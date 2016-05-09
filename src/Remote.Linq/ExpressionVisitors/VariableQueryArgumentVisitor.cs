@@ -6,8 +6,8 @@ namespace Remote.Linq.ExpressionVisitors
     using Aqua.TypeSystem.Extensions;
     using Remote.Linq.Expressions;
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using MemberTypes = Aqua.TypeSystem.MemberTypes;
     using PropertyInfo = Aqua.TypeSystem.PropertyInfo;

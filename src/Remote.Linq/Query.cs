@@ -2,7 +2,6 @@
 
 namespace Remote.Linq
 {
-    using Aqua;
     using Aqua.TypeSystem;
     using Remote.Linq.Expressions;
     using System;

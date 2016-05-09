@@ -3,12 +3,11 @@
 namespace Remote.Linq.Tests.RemoteQueryable
 {
     using Remote.Linq;
-    using Aqua.Dynamic;
     using Remote.Linq.Expressions;
+    using Shouldly;
     using System;
     using System.Linq;
     using Xunit;
-    using Xunit.Fluent;
 
     public class When_running_cross_join_query
     {

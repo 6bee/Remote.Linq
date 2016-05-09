@@ -2,10 +2,10 @@
 
 namespace Remote.Linq.Tests.IEnumerableAsyncExtensions
 {
+    using Shouldly;
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
-    using Xunit.Fluent;
 
     public class When_using_async_with_non_async_queriables
     {
