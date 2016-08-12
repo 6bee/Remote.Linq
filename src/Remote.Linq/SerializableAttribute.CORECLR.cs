@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if CORECLR || WINRT || SILVERLIGHT
+#if NETSTANDARD || CORECLR || WINRT
 
 namespace Remote.Linq
 {

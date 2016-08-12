@@ -1,14 +1,9 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if !NET35
-
 namespace Remote.Linq.DynamicQuery
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem;
-    using System;
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Threading.Tasks;
 
     internal sealed class AsyncDynamicResultMapper : IAsyncQueryResultMapper<IEnumerable<DynamicObject>>
@@ -26,5 +21,3 @@ namespace Remote.Linq.DynamicQuery
         }
     }
 }
-
-#endif

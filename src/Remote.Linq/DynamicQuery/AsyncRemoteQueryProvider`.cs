@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if !NET35
-
 namespace Remote.Linq.DynamicQuery
 {
     using Aqua.TypeSystem;
@@ -73,18 +71,6 @@ namespace Remote.Linq.DynamicQuery
         {
             throw new NotImplementedException();
         }
-
-#if NO_ASYNC_FEATURE
-        public Task<TResult> ExecuteAsync<TResult>(Expression expression)
-        {
-            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver);
-
-            var dataRecordsTask = _dataProvider(rlinq);
-
-            var result = dataRecordsTask.ContinueWith(t => _resultMapper.MapResultAsync<TResult>(t.Result).Result);
-            return result;
-        }
-#else
         public async Task<TResult> ExecuteAsync<TResult>(Expression expression)
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver);
@@ -95,8 +81,5 @@ namespace Remote.Linq.DynamicQuery
 
             return result;
         }
-#endif
     }
 }
-
-#endif

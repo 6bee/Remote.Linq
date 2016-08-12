@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if !NO_ASYNC_FEATURE
-
 namespace Remote.Linq
 {
     using System;
@@ -461,5 +459,3 @@ namespace Remote.Linq
         }
     }
 }
-
-#endif

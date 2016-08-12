@@ -2,14 +2,15 @@
   "version": "1.0.0-*",
   "description": "Tests for Remote.Linq",
   "copyright": "Copyright Christof Senn 2013-2016",
+  "testRunner": "xunit",
   "dependencies": {
     "Remote.Linq": { "target": "project" },
-    "Shouldly": "2.7.0",
-    "xunit": "2.2.0-*",
-    "xunit.runner.dnx": "2.1.0-*"
+    "Shouldly": "2.8.0",
+    "xunit": "2.2.0-beta2-build3300",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029"
   },
   "frameworks": {
-    "dnx451": {
+    "net451": {
       "frameworkAssemblies": {
         "System.ObjectModel": "4.0.0.0",
         "System.Text.RegularExpressions": "4.0.0.0"
@@ -19,24 +20,24 @@
         "System.Xml.XmlSerializer": "4.0.0.0",
         "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
       },
-      "compilationOptions": {
-        "define": [ "NET" ]
-      }
+        "buildOptions": {
+            "define": [ "NET" ]
+        }
     },
-    "dnxcore50": {
+    "netcoreapp1.0": {
       "dependencies": {
-        "System.Runtime.Serialization.Primitives": "4.0.11-beta-23225",
-        "System.Runtime.Serialization.Xml": "4.1.0-beta-23516",
-        "System.Xml.XmlSerializer": "4.0.11-beta-23409",
-        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
-        "runtime.any.System.Private.DataContractSerialization": "4.1.0-beta-23516"
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0"
+        },
+        "System.Runtime.Serialization.Primitives": "4.1.1",
+        "System.Runtime.Serialization.Xml": "4.1.1",
+        "System.Xml.XmlSerializer": "4.0.11",
+        "Microsoft.Extensions.PlatformAbstractions": "1.0.0"
       },
-      "compilationOptions": {
+      "buildOptions": {
         "define": [ "CORECLR" ]
       }
     }
-  },
-  "commands": {
-    "test": "xunit.runner.dnx"
   }
 }
