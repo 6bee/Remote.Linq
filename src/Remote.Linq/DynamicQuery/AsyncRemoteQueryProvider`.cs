@@ -48,9 +48,15 @@ namespace Remote.Linq.DynamicQuery
             {
                 var dataRecords = task.Result;
 
-                var mappingTask = _resultMapper.MapResultAsync<TResult>(dataRecords);
-
-                result = mappingTask.Result;
+                if (object.Equals(default(TSource), dataRecords))
+                {
+                    result = default(TResult);
+                }
+                else
+                {
+                    var mappingTask = _resultMapper.MapResultAsync<TResult>(dataRecords);
+                    result = mappingTask.Result;
+                }
             }
             catch (AggregateException ex)
             {
