@@ -3,19 +3,12 @@ init:
 branches:
   only:
     - master
-    #- dnx
-#build_script:
-#  - build.cmd --quiet verify
-#test:
-#  assemblies:
-#    - '**\*.Tests.dll'
 version: 1.0.{build}
-#ache: C:\Users\appveyor\.dnx\packages
 before_build:
-- cmd: dnu restore
+- cmd: dotnet restore
 build_script:
-- cmd: dnu build src\Remote.Linq test\Remote.Linq.Tests
+- cmd: dotnet build .\src\Remote.Linq\ .\test\Remote.Linq.Tests\
 test_script:
-- cmd: dnx -p test/Remote.Linq.Tests test
+- cmd: dotnet test .\test\Remote.Linq.Tests\
 build:
   verbosity: normal
