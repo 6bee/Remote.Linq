@@ -18,7 +18,7 @@
     "warningsAsErrors": true
   },
   "dependencies": {
-    "aqua-core": "4.0.0-alpha-029"
+    "aqua-core": "4.0.0-alpha-*"
   },
   "frameworks": {
     "net451": {

@@ -35,11 +35,9 @@ namespace Remote.Linq.ExpressionVisitors
 
         private sealed class AnonymousTypesReplacer : ExpressionVisitorBase
         {
-            private static readonly NewExpression NewDynamicObjectExpression = Expression.New(typeof(DynamicObject));
-            private static readonly System.Reflection.ConstructorInfo _keyValuePairContructorInfo = typeof(KeyValuePair<string, object>).GetConstructor(new[] { typeof(string), typeof(object) });
-            private static readonly System.Reflection.ConstructorInfo _dynamicObjectContructorInfo = typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<KeyValuePair<string, object>>) });
-            private static readonly System.Reflection.MethodInfo DynamicObjectAddMethod = typeof(DynamicObject).GetMethod("Add");
-            private static readonly System.Reflection.MethodInfo DynamicObjectGetMethod = typeof(DynamicObject).GetMethod("Get");
+            private static readonly System.Reflection.ConstructorInfo _dynamicPropertyContructorInfo = typeof(Property).GetConstructor(new[] { typeof(string), typeof(object) });
+            private static readonly System.Reflection.ConstructorInfo _dynamicObjectContructorInfo = typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<Property>) });
+            private static readonly System.Reflection.MethodInfo _dynamicObjectGetMethod = typeof(DynamicObject).GetMethod("Get");
 
             private readonly Dictionary<ParameterExpression, ParameterExpression> _parameterMap = new Dictionary<ParameterExpression, ParameterExpression>();
 
@@ -70,7 +68,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var instance = Visit(m.Expression);
                     if (instance.Type == typeof(DynamicObject))
                     {
-                        var method = DynamicObjectGetMethod;
+                        var method = _dynamicObjectGetMethod;
                         var memberAccessCallExpression = Expression.Call(instance, method, Expression.Constant(name));
                         var type = ReplaceAnonymousType(m.Type);
                         if (type == typeof(object))
@@ -142,7 +140,7 @@ namespace Remote.Linq.ExpressionVisitors
                         {
                             var arg = a.Type == typeof(object) ? a : Expression.Convert(a, typeof(object));
                             return (Expression)Expression.New(
-                                _keyValuePairContructorInfo,
+                                _dynamicPropertyContructorInfo,
                                 Expression.Constant(GetMemberName(newExpression.Members[i])),
                                 arg);
                         });
@@ -151,7 +149,7 @@ namespace Remote.Linq.ExpressionVisitors
                     {
                         throw new NotImplementedException("unecpected case");
                     }
-                    var argsExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arguments);
+                    var argsExpression = Expression.NewArrayInit(_dynamicPropertyContructorInfo.DeclaringType, arguments);
                     var x = Expression.New(_dynamicObjectContructorInfo, argsExpression);
                     return x;
                 }
