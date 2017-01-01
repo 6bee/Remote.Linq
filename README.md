@@ -1,6 +1,6 @@
 # Remote.Linq
 
-| branch | package | AppVeyor | Travis |
+| branch | package | AppVeyor | Travis CI |
 | --- | --- | --- | --- |
 | `master` | [![NuGet Badge](https://buildstats.info/nuget/Remote.Linq?includePreReleases=true)](http://www.nuget.org/packages/Remote.Linq) [![MyGet Pre Release](http://img.shields.io/myget/aqua/vpre/Remote.Linq.svg?style=flat-square&label=myget)](https://www.myget.org/feed/aqua/package/nuget/Remote.Linq) | [![Build status](https://ci.appveyor.com/api/projects/status/64kw6dsuvfwyrdtl?svg=true)](https://ci.appveyor.com/project/6bee/remote-linq) | [![Travis build Status](https://travis-ci.org/6bee/Remote.Linq.svg?branch=master)](https://travis-ci.org/6bee/Remote.Linq?branch=master) |
 
