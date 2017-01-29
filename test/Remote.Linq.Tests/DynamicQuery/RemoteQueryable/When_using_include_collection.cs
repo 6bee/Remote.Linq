@@ -28,7 +28,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
         public When_using_include_collection()
         {
-            Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
+            Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
             {
                 expression = exp;
                 return new DynamicObject[0];
