@@ -140,5 +140,20 @@ namespace Remote.Linq
                 })
                 .Single();
         }
+
+        internal static class GroupingFactory
+        {
+            internal static readonly MethodInfo MapMany = typeof(GroupingFactory)
+                .GetMethod("InternalMapMany", BindingFlags.Static | BindingFlags.NonPublic);
+
+            internal static readonly MethodInfo MapOne = typeof(GroupingFactory)
+                .GetMethod("InternalMapOne", BindingFlags.Static | BindingFlags.NonPublic);
+
+            private static IEnumerable<Grouping<TKey, TElement>> InternalMapMany<TKey, TElement>(IEnumerable<IGrouping<TKey, TElement>> list)
+                => list.Select(InternalMapOne).ToArray();
+
+            private static Grouping<TKey, TElement> InternalMapOne<TKey, TElement>(IGrouping<TKey, TElement> grouping)
+                => new Grouping<TKey, TElement> { Key = grouping.Key, Elements = grouping.ToArray() };
+        }
     }
 }

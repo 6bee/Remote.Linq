@@ -62,7 +62,7 @@ namespace Remote.Linq.Expressions
                         var elementType = TypeHelper.GetElementType(queryableType);
                         queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { queryable });
                     }
-                    catch (System.Reflection.TargetInvocationException ex)
+                    catch (TargetInvocationException ex)
                     {
                         throw ex.InnerException;
                     }
@@ -84,16 +84,36 @@ namespace Remote.Linq.Expressions
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped result of the query execution</returns>
-        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
+        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, Func<object,object> resultPorjector = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
         {
             var linqExpression = PrepareForExecution(expression, queryableProvider, typeResolver);
 
             var queryResult = Execute(linqExpression);
 
-            var dynamicObjects = ConvertResultToDynamicObjects(queryResult, mapper, setTypeInformation);
+            var projectedResult = (resultPorjector ?? ProjectResult)(queryResult);
+
+            var dynamicObjects = ConvertResultToDynamicObjects(projectedResult, mapper, setTypeInformation);
             return dynamicObjects;
         }
 
+        public static object ProjectResult(object obj)
+        {
+            var type = obj.GetType();
+
+            Type[] genericTypeArguments;
+            if (type.Implements(typeof(IGrouping<,>), out genericTypeArguments))
+            {
+                return MethodInfos.GroupingFactory.MapOne.MakeGenericMethod(genericTypeArguments).Invoke(null, new[] { obj });
+            }
+
+            if (type.Implements(typeof(IEnumerable<>).MakeGenericType(typeof(IGrouping<,>)), out genericTypeArguments))
+            {
+                return MethodInfos.GroupingFactory.MapMany.MakeGenericMethod(genericTypeArguments).Invoke(null, new[] { obj });
+            }
+
+            return obj;
+        }
+        
         /// <summary>
         /// Converts the query result into a collection of <see cref="DynamicObject"/>
         /// </summary>

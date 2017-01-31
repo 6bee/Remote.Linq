@@ -29,8 +29,6 @@ namespace Remote.Linq.Expressions
     {
         public abstract ExpressionType NodeType { get; }
 
-        #region Factory methods
-
         public static MemberExpression MakeMemberAccess(Expression expression, Aqua.TypeSystem.MemberInfo member)
         {
             return new MemberExpression(expression, member);
@@ -166,7 +164,5 @@ namespace Remote.Linq.Expressions
         {
             return new ElementInit(methodName, declaringType, bindingFlags, genericArguments, parameterTypes, arguments);
         }
-
-        #endregion Factory methods
     }
 }
