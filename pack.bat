@@ -1,1 +1,1 @@
-dotnet restore && dotnet build src\Remote.Linq test\Remote.Linq.Tests && dotnet test test\Remote.Linq.Tests && dotnet pack src\Remote.Linq --output artifacts --configuration Release --version-suffix 005
+dotnet restore && dotnet build src\Remote.Linq test\Remote.Linq.Tests && dotnet test test\Remote.Linq.Tests && dotnet pack src\Remote.Linq --output artifacts --configuration Debug --version-suffix 006
