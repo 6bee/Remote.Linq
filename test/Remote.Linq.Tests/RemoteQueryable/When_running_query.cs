@@ -43,6 +43,15 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_return_products_grouped_by_id()
+        {
+            var result = _productQueriable.GroupBy(p => p.Id).ToList();
+
+            result.Count().ShouldBe(5);
+            result.ForEach(g => g.Count().ShouldBe(1));
+        }
+
+        [Fact]
         public void Should_return_products_grouped_by_category()
         {
             var result = (
