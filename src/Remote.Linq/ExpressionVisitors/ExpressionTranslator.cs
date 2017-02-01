@@ -843,7 +843,7 @@ namespace Remote.Linq
                             collectionType.GetInterfaces().Any(x => x.IsGenericType() && x.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
                         {
                             var sourceElementType = delegateTypes[0];
-                            var elementType = collectionType.GetGenericArguments().First();
+                            var elementType = TypeHelper.GetElementType(collectionType);
                             var delegateType = typeof(Func<,>).MakeGenericType(sourceElementType, typeof(IEnumerable<>).MakeGenericType(elementType));
                             var lambda2 = Expression.Lambda(delegateType, lambda.Body, lambda.Parameters.ToArray());
                             lambda = lambda2;

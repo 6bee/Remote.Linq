@@ -32,9 +32,9 @@ namespace Remote.Linq.Tests.RemoteQueryable.TestData
 
             _dataSets[typeof(OrderItem)] = new[]
             {
-                new OrderItem { Id = 100, ProductId = 10, Quantity = 2 },
-                new OrderItem { Id = 101, ProductId = 11, Quantity = 3 },
-                new OrderItem { Id = 102, ProductId = 14, Quantity = 4 },
+                new OrderItem { Id = 1000, OrderId = 100, ProductId = 10, Quantity = 2 },
+                new OrderItem { Id = 1001, OrderId = 101, ProductId = 11, Quantity = 3 },
+                new OrderItem { Id = 1002, OrderId = 101, ProductId = 14, Quantity = 4 },
             };
         }
 
