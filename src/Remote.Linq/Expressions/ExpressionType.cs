@@ -22,6 +22,7 @@ namespace Remote.Linq.Expressions
         NewArray,
         Parameter,
         Sort,
+        TypeIs,
         Unary,
     }
 }

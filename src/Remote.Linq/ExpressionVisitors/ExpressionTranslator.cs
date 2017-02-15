@@ -317,6 +317,12 @@ namespace Remote.Linq
                 return new RLinq.BinaryExpression(left, right, TranslateBinaryOperator(b.NodeType), b.IsLiftedToNull, b.Method, conversion).Wrap();
             }
 
+            protected override Expression VisitTypeIs(TypeBinaryExpression b)
+            {
+                var expression = Visit(b.Expression).Unwrap();
+                return new RLinq.TypeBinaryExpression(expression, b.TypeOperand).Wrap();
+            }
+
             protected override Expression VisitMemberAccess(MemberExpression m)
             {
                 var instance = Visit(m.Expression).Unwrap();
@@ -469,6 +475,11 @@ namespace Remote.Linq
                 if (u.NodeType == ExpressionType.Quote && operand != null)
                 {
                     return new RLinq.UnaryExpression(operand, RLinq.UnaryOperator.Quote).Wrap();
+                }
+
+                if (u.NodeType == ExpressionType.TypeAs && operand != null)
+                {
+                    return new RLinq.UnaryExpression(operand, RLinq.UnaryOperator.TypeAs).Wrap();
                 }
 
                 throw CreateNotSupportedException(u);
@@ -632,6 +643,9 @@ namespace Remote.Linq
                     case RLinq.ExpressionType.MemberInit:
                         return VisitMemberInit((RLinq.MemberInitExpression)expression);
 
+                    case RLinq.ExpressionType.TypeIs:
+                        return VisitTypeIs((RLinq.TypeBinaryExpression)expression);
+
                     default:
                         throw new Exception(string.Format("Unknown expression note type: '{0}'", expression.NodeType));
                 }
@@ -788,6 +802,9 @@ namespace Remote.Linq
 
                     case RLinq.UnaryOperator.Quote:
                         return Expression.MakeUnary(ExpressionType.Quote, exp, null);
+
+                    case RLinq.UnaryOperator.TypeAs:
+                        return Expression.MakeUnary(ExpressionType.TypeAs, exp, exp.Type);
 
                     default:
                         throw new Exception(string.Format("Unknown unary operation: '{0}'", unaryExpression.Operator));
@@ -966,6 +983,13 @@ namespace Remote.Linq
                 {
                     return Expression.MakeBinary(type, p1, p2);
                 }
+            }
+
+            private Expression VisitTypeIs(RLinq.TypeBinaryExpression typeBinaryExpression)
+            {
+                var expression = Visit(typeBinaryExpression.Expression);
+                var type = _typeResolver.ResolveType(typeBinaryExpression.TypeOperand);
+                return Expression.TypeIs(expression, type);
             }
 
             private Expression VisitLambda(RLinq.LambdaExpression lambdaExpression)

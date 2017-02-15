@@ -69,6 +69,9 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.MemberInit:
                     return VisitMemberInit((MemberInitExpression)expression);
 
+                case ExpressionType.TypeIs:
+                    return VisitTypeIs((TypeBinaryExpression)expression);
+
                 default:
                     throw new Exception(string.Format("Unknown expression type: '{0}'", expression.NodeType));
             }
@@ -302,6 +305,19 @@ namespace Remote.Linq.ExpressionVisitors
             if (!ReferenceEquals(leftOperand, expression.LeftOperand) || !ReferenceEquals(rightOperand, expression.RightOperand) || !ReferenceEquals(conversion, expression.Conversion))
             {
                 return new BinaryExpression(leftOperand, rightOperand, expression.Operator, expression.IsLiftedToNull, expression.Method, conversion);
+            }
+
+            return expression;
+        }
+
+        protected virtual Expression VisitTypeIs(TypeBinaryExpression expression)
+        {
+            var exp = Visit(expression.Expression);
+
+            if (!ReferenceEquals(exp, expression.Expression))
+            {
+                var type = _typeResolver.ResolveType(expression.TypeOperand);
+                return new TypeBinaryExpression(exp, type);
             }
 
             return expression;

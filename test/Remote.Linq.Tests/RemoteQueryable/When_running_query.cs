@@ -31,6 +31,22 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_return_all_product_using_typeis_filter()
+        {
+            var result = _productQueriable.Where(p => p is TestData.Product).ToList();
+
+            result.Count().ShouldBe(5);
+        }
+
+        [Fact]
+        public void Should_return_all_product_using_typeas_projection()
+        {
+            var result = _productQueriable.Select(p => p as TestData.Product).ToList();
+
+            result.Count().ShouldBe(5);
+        }
+
+        [Fact]
         public void Should_return_products_filtered_by_category()
         {
             var result = (

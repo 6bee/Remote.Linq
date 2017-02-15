@@ -99,6 +99,11 @@ namespace Remote.Linq.Expressions
             return new SortExpression(operand, sortDirection);
         }
 
+        public static TypeBinaryExpression TypeIs(Expression expression, Type type)
+        {
+            return new TypeBinaryExpression(expression, type);
+        }
+
         public static LambdaExpression Lambda(Expression expression, IEnumerable<ParameterExpression> parameters)
         {
             return new LambdaExpression(expression, parameters);

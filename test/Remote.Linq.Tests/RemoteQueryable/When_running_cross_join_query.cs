@@ -13,12 +13,10 @@ namespace Remote.Linq.Tests.RemoteQueryable
     {
         class A
         {
-
         }
 
         class B
         {
-
         }
 
         public static IQueryable GetQueryableByType(Type type)
