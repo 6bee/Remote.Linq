@@ -4,15 +4,19 @@ namespace Remote.Linq.Expressions
 {
     using Aqua;
     using System;
+    using NodeType = System.Linq.Expressions.ExpressionType;
 
     [Serializable]
     public enum UnaryOperator
     {
-        Negate,
-        Not,
-        IsNull,
-        IsNotNull,
-        Quote,
-        TypeAs,
+        ArrayLength = NodeType.ArrayLength,
+        Convert = NodeType.Convert,
+        ConvertChecked = NodeType.ConvertChecked,
+        Negate = NodeType.Negate,
+        NegateChecked = NodeType.NegateChecked,
+        Not = NodeType.Not,
+        Quote = NodeType.Quote,
+        TypeAs = NodeType.TypeAs,
+        UnaryPlus = NodeType.UnaryPlus,
     }
 }

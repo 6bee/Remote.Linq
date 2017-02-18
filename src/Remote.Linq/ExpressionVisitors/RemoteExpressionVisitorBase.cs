@@ -30,28 +30,22 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.Binary:
                     return VisitBinary((BinaryExpression)expression);
 
-                case ExpressionType.Collection:
-                    return VisitCollection((CollectionExpression)expression);
-
                 case ExpressionType.Conditional:
                     return VisitConditional((ConditionalExpression)expression);
 
                 case ExpressionType.Constant:
                     return VisitConstant((ConstantExpression)expression);
 
-                case ExpressionType.Conversion:
-                    return VisitConversion((ConversionExpression)expression);
-
                 case ExpressionType.Parameter:
                     return VisitParameter((ParameterExpression)expression);
 
-                case ExpressionType.Member:
+                case ExpressionType.MemberAccess:
                     return VisitMemberAccess((MemberExpression)expression);
 
                 case ExpressionType.Unary:
                     return VisitUnary((UnaryExpression)expression);
 
-                case ExpressionType.MethodCall:
+                case ExpressionType.Call:
                     return VisitMethodCall((MethodCallExpression)expression);
 
                 case ExpressionType.Lambda:
@@ -277,7 +271,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(expressions, newArrayExpression.Expressions))
             {
-                return new NewArrayExpression(newArrayExpression.Type, expressions);
+                return new NewArrayExpression(newArrayExpression.NewArrayType, newArrayExpression.Type, expressions);
             }
 
             return newArrayExpression;
@@ -304,7 +298,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(leftOperand, expression.LeftOperand) || !ReferenceEquals(rightOperand, expression.RightOperand) || !ReferenceEquals(conversion, expression.Conversion))
             {
-                return new BinaryExpression(leftOperand, rightOperand, expression.Operator, expression.IsLiftedToNull, expression.Method, conversion);
+                return new BinaryExpression(expression.BinaryOperator, leftOperand, rightOperand, expression.IsLiftedToNull, expression.Method, conversion);
             }
 
             return expression;
@@ -318,23 +312,6 @@ namespace Remote.Linq.ExpressionVisitors
             {
                 var type = _typeResolver.ResolveType(expression.TypeOperand);
                 return new TypeBinaryExpression(exp, type);
-            }
-
-            return expression;
-        }
-
-        protected virtual Expression VisitCollection(CollectionExpression expression)
-        {
-            var items =
-                from i in expression.List
-                select new { Old = i, New = VisitConstant(i) };
-
-            items = items.ToList();
-
-            if (items.Any(i => !ReferenceEquals(i.Old, i.New)))
-            {
-                var elementType = _typeResolver.ResolveType(expression.ElementType);
-                return new CollectionExpression(items.Select(i => i.New), elementType);
             }
 
             return expression;
@@ -356,19 +333,6 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual ConstantExpression VisitConstant(ConstantExpression expression)
         {
-            return expression;
-        }
-
-        protected virtual Expression VisitConversion(ConversionExpression expression)
-        {
-            var operand = Visit(expression.Operand);
-
-            if (!ReferenceEquals(operand, expression.Operand))
-            {
-                var type = _typeResolver.ResolveType(expression.Type);
-                return new ConversionExpression(operand, type);
-            }
-
             return expression;
         }
 
@@ -395,7 +359,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(operand, expression.Operand))
             {
-                return new UnaryExpression(operand, expression.Operator);
+                return new UnaryExpression(expression.UnaryOperator, operand);
             }
 
             return expression;

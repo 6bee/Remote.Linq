@@ -2,7 +2,7 @@
   "authors": [ "Christof Senn" ],
   "version": "5.4.0-alpha-*",
   "description": "Remote Linq is a small and easy to use - yet very powerful - library to translate linq expression trees to strongly typed, serializable expression trees and vice versa. It provides functionality to send arbitrary linq queries to a remote service to be applied and executed against any enumerable or queryable data collection.",
-  "copyright": "Copyright Christof Senn 2013-2016",
+  "copyright": "Copyright Christof Senn 2013-2017",
   "packOptions": {
     "repository": {
       "type": "git",

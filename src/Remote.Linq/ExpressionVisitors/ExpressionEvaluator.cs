@@ -101,14 +101,13 @@
 
             private Expression Evaluate(Expression expression)
             {
-                if (expression.NodeType == ExpressionType.Constant)
+                switch (expression.NodeType)
                 {
-                    return expression;
-                }
-
-                if (expression.NodeType == ExpressionType.Quote)
-                {
-                    return expression;
+                    case ExpressionType.Constant:
+                    case ExpressionType.Quote:
+                    case ExpressionType.Convert:
+                    case ExpressionType.ConvertChecked:
+                        return expression;
                 }
 
                 var lambda = Expression.Lambda(expression);

@@ -9,19 +9,16 @@ namespace Remote.Linq.Expressions
     public enum ExpressionType
     {
         Binary,
-        Collection,
         Conditional,
         Constant,
-        Conversion,
         Lambda,
         ListInit,
-        Member,
+        MemberAccess,
         MemberInit,
-        MethodCall,
+        Call,
         New,
         NewArray,
         Parameter,
-        Sort,
         TypeIs,
         Unary,
     }

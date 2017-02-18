@@ -21,7 +21,7 @@ namespace Remote.Linq.Expressions
             IfFalse = ifFalse;
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.Conditional; } }
+        public override ExpressionType NodeType => ExpressionType.Conditional;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public Expression Test { get; set; }

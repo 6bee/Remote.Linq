@@ -20,8 +20,6 @@ namespace Remote.Linq.Expressions
             SortDirection = sortDirection;
         }
 
-        public ExpressionType NodeType { get { return ExpressionType.Sort; } }
-
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public LambdaExpression Operand { get; set; }
 
@@ -30,7 +28,7 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("OrderBy ({0}) {1}", Operand, SortDirection);
+            return $"OrderBy ({Operand}) {SortDirection}";
         }
     }
 }

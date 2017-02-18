@@ -22,7 +22,7 @@ namespace Remote.Linq.Expressions
             Bindings = bindings.ToList();
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.MemberInit; } }
+        public override ExpressionType NodeType => ExpressionType.MemberInit;
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
         public NewExpression NewExpression { get; set; }

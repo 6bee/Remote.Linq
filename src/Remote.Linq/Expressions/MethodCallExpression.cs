@@ -35,7 +35,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.MethodCall; } }
+        public override ExpressionType NodeType => ExpressionType.Call;
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
         public Expression Instance { get; set; }
@@ -51,7 +51,6 @@ namespace Remote.Linq.Expressions
             return string.Format("{0}.{1}({2})",
                 Instance == null ? Method.DeclaringType.ToString() : Instance.ToString(),
                 Method.Name,
-                // ParameterTypes == null ? null : string.Join(", ", ParameterTypes)
                 ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments.Select(a => a.ToString()).ToArray()));
         }
     }

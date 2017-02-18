@@ -22,7 +22,7 @@ namespace Remote.Linq.Expressions
             Parameters = parameters.ToList();
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.Lambda; } }
+        public override ExpressionType NodeType => ExpressionType.Lambda;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public Expression Expression { get; set; }
@@ -32,7 +32,9 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("({0}) => {1}", string.Join(",", Parameters.Select(p => p.ToString()).ToArray()), Expression);
+            var parameters = Parameters;
+            var parameterString = parameters == null ? null : string.Join(",", parameters.Select(p => p.ToString()).ToArray());
+            return $"{(parameters.Count == 1 ? null : "(")}{parameterString}{(parameters.Count == 1 ? null : ")")} => {Expression}";
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace Remote.Linq.Expressions
 {
     using Aqua;
+    using Aqua.TypeSystem;
     using System;
     using System.Runtime.Serialization;
 
@@ -14,23 +15,41 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal UnaryExpression(Expression operand, UnaryOperator @operator)
+        internal UnaryExpression(UnaryOperator unaryOperator, Expression operand)
         {
+            UnaryOperator = unaryOperator;
             Operand = operand;
-            Operator = @operator;
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.Unary; } }
+        internal UnaryExpression(UnaryOperator unaryOperator, Expression operand, TypeInfo type, MethodInfo method)
+            : this(unaryOperator, operand)
+        {
+            Type = type;
+            Method = method;
+        }
+
+        internal UnaryExpression(UnaryOperator unaryOperator, Expression operand, Type type, System.Reflection.MethodInfo method)
+            : this(unaryOperator, operand, ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), ReferenceEquals(null, method) ? null : new MethodInfo(method))
+        {
+        }
+
+        public override ExpressionType NodeType => ExpressionType.Unary;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
-        public UnaryOperator Operator { get; set; }
+        public UnaryOperator UnaryOperator { get; set; }
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
         public Expression Operand { get; set; }
 
+        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+        public TypeInfo Type { get; set; }
+
+        [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
+        public MethodInfo Method { get; set; }
+
         public override string ToString()
         {
-            return string.Format("{1} ({0})", Operand, Operator);
+            return $"{UnaryOperator}({Operand})";
         }
     }
 }

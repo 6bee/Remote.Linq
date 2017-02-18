@@ -19,7 +19,7 @@ namespace Remote.Linq
         }
 
         public VariableQueryArgument(T value)
-        {   
+        {
             Value = value;
         }
 
@@ -28,9 +28,8 @@ namespace Remote.Linq
 
         public override string ToString()
         {
-            return string.Format("{0}<{1}>({3}{2}{3})", 
-                GetType().Name,
-                typeof(T).Name,
+            return string.Format("{0}({2}{1}{2})", 
+                new Aqua.TypeSystem.TypeInfo(typeof(VariableQueryArgument<T>)),
                 (object)Value ?? "null", 
                 Value is string || Value is char ? "'" : null);
         }

@@ -15,36 +15,36 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal BinaryExpression(Expression leftOperand, Expression rightOperand, BinaryOperator @operator)
+        internal BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand)
         {
+            BinaryOperator = binaryOperator;
             LeftOperand = leftOperand;
             RightOperand = rightOperand;
-            Operator = @operator;
         }
 
-        internal BinaryExpression(Expression leftOperand, Expression rightOperand, BinaryOperator @operator, bool liftToNull, System.Reflection.MethodInfo method, LambdaExpression conversion = null)
-            : this(leftOperand, rightOperand, @operator, liftToNull, ReferenceEquals(null, method) ? null : new MethodInfo(method), conversion)
-        {
-        }
-
-        internal BinaryExpression(Expression leftOperand, Expression rightOperand, BinaryOperator @operator, bool liftToNull, MethodInfo method, LambdaExpression conversion = null)
-            : this(leftOperand, rightOperand, @operator)
+        internal BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, MethodInfo method, LambdaExpression conversion = null)
+            : this(binaryOperator, leftOperand, rightOperand)
         {
             IsLiftedToNull = liftToNull;
             Method = method;
             Conversion = conversion;
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.Binary; } }
+        internal BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, System.Reflection.MethodInfo method, LambdaExpression conversion = null)
+            : this(binaryOperator, leftOperand, rightOperand, liftToNull, ReferenceEquals(null, method) ? null : new MethodInfo(method), conversion)
+        {
+        }
 
-        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public Expression LeftOperand { get; set; }
+        public override ExpressionType NodeType => ExpressionType.Binary;
+
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
+        public BinaryOperator BinaryOperator { get; set; }
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public Expression RightOperand { get; set; }
+        public Expression LeftOperand { get; set; }
 
-        [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = true)]
-        public BinaryOperator Operator { get; set; }
+        [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
+        public Expression RightOperand { get; set; }
 
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public bool IsLiftedToNull { get; set; }
@@ -57,7 +57,7 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("({0}) {1} ({2})", LeftOperand, Operator, RightOperand);
+            return $"({LeftOperand} {BinaryOperator} {RightOperand})";
         }
     }
 }

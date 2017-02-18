@@ -12,10 +12,8 @@ namespace Remote.Linq.Expressions
     [Serializable]
     [DataContract]
     [KnownType(typeof(BinaryExpression)), XmlInclude(typeof(BinaryExpression))]
-    [KnownType(typeof(CollectionExpression)), XmlInclude(typeof(CollectionExpression))]
     [KnownType(typeof(ConditionalExpression)), XmlInclude(typeof(ConditionalExpression))]
     [KnownType(typeof(ConstantExpression)), XmlInclude(typeof(ConstantExpression))]
-    [KnownType(typeof(ConversionExpression)), XmlInclude(typeof(ConversionExpression))]
     [KnownType(typeof(LambdaExpression)), XmlInclude(typeof(LambdaExpression))]
     [KnownType(typeof(ListInitExpression)), XmlInclude(typeof(ListInitExpression))]
     [KnownType(typeof(MemberExpression)), XmlInclude(typeof(MemberExpression))]
@@ -64,37 +62,27 @@ namespace Remote.Linq.Expressions
             return new ConstantExpression(value, type);
         }
 
-        public static ConversionExpression Convert(Expression operand, Type type)
-        {
-            return new ConversionExpression(operand, type);
-        }
-
         public static ParameterExpression Parameter(string parameterName, Type type)
         {
             return new ParameterExpression(parameterName, type);
         }
 
-        public static BinaryExpression Binary(Expression leftOperand, Expression rightOperand, BinaryOperator @operator)
+        public static BinaryExpression MakeBinary(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand)
         {
-            return new BinaryExpression(leftOperand, rightOperand, @operator);
+            return new BinaryExpression(binaryOperator, leftOperand, rightOperand);
         }
 
-        public static BinaryExpression Binary(Expression leftOperand, Expression rightOperand, BinaryOperator @operator, bool liftToNull, System.Reflection.MethodInfo method, LambdaExpression conversion = null)
+        public static BinaryExpression MakeBinary(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, System.Reflection.MethodInfo method, LambdaExpression conversion = null)
         {
-            return new BinaryExpression(leftOperand, rightOperand, @operator, liftToNull, method, conversion);
+            return new BinaryExpression(binaryOperator, leftOperand, rightOperand, liftToNull, method, conversion);
         }
 
-        public static UnaryExpression Unary(Expression operand, UnaryOperator @operator)
+        public static UnaryExpression MakeUnary(UnaryOperator unaryOperator, Expression operand, Type type = null, System.Reflection.MethodInfo method = null)
         {
-            return new UnaryExpression(operand, @operator);
+            return new UnaryExpression(unaryOperator, operand, type, method);
         }
 
-        public static CollectionExpression Collection(IEnumerable<ConstantExpression> list, Type elementType)
-        {
-            return new CollectionExpression(list, elementType);
-        }
-
-        public static SortExpression Sort(LambdaExpression operand, SortDirection sortDirection)
+        internal static SortExpression Sort(LambdaExpression operand, SortDirection sortDirection)
         {
             return new SortExpression(operand, sortDirection);
         }

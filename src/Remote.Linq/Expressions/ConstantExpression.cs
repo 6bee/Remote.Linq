@@ -37,7 +37,7 @@ namespace Remote.Linq.Expressions
             Value = value;
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.Constant; } }
+        public override ExpressionType NodeType => ExpressionType.Constant;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public TypeInfo Type { get; set; }

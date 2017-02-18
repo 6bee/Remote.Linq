@@ -24,7 +24,7 @@ namespace Remote.Linq.Expressions
             Bindings = bindings.ToList();
         }
 
-        public override MemberBindingType BindingType { get { return MemberBindingType.MemberBinding; } }
+        public override MemberBindingType BindingType => MemberBindingType.MemberBinding;
 
         [DataMember(Order = 1)]
         public List<MemberBinding> Bindings { get; set; }

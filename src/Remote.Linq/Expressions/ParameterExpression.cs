@@ -21,7 +21,7 @@ namespace Remote.Linq.Expressions
             ParameterType = new TypeInfo(type, false, false);
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.Parameter; } }
+        public override ExpressionType NodeType => ExpressionType.Parameter;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public string ParameterName { get; set; }
@@ -31,7 +31,7 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", ParameterType, ParameterName);
+            return ParameterName;
         }
     }
 }

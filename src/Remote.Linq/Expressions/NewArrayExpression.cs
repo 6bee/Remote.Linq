@@ -17,28 +17,34 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal NewArrayExpression(TypeInfo typeInfo, IEnumerable<Expression> expressions)
+        internal NewArrayExpression(NewArrayType newArrayType, TypeInfo typeInfo, IEnumerable<Expression> expressions)
         {
+            NewArrayType = newArrayType;
             Type = typeInfo;
             Expressions = expressions.ToList();
         }
 
-        internal NewArrayExpression(Type type, IEnumerable<Expression> expressions)
-            : this(new TypeInfo(type, false, false), expressions)
+        internal NewArrayExpression(NewArrayType newArrayType, Type type, IEnumerable<Expression> expressions)
+            : this(newArrayType, new TypeInfo(type, false, false), expressions)
         {
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.NewArray; } }
+        public override ExpressionType NodeType => ExpressionType.NewArray;
 
-        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
+        public NewArrayType NewArrayType { get; set; }
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo Type { get; set; }
+
+        [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
         public List<Expression> Expressions { get; set; }
 
         public override string ToString()
         {
-            return string.Format("New [] {{ {0} }}", Expressions.Select(x => x.ToString()).ToArray());
+            return NewArrayType == NewArrayType.NewArrayBounds
+                ? $"New [lenght]"
+                : $"New [] {{ {string.Join(", ", Expressions.Select(x => x.ToString()).ToArray())} }}";
         }
     }
 }

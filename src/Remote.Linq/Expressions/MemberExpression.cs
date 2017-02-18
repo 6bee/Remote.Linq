@@ -26,7 +26,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.Member; } }
+        public override ExpressionType NodeType => ExpressionType.MemberAccess;
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
         public Expression Expression { get; set; }
@@ -36,9 +36,7 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("{0}->{1}",
-                ReferenceEquals(null, Expression) ? null : Expression.ToString(),
-                Member);
+            return $"{Expression}.{Member?.Name}";
         }
     }
 }

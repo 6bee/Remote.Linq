@@ -35,7 +35,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public override ExpressionType NodeType { get { return ExpressionType.New; } }
+        public override ExpressionType NodeType => ExpressionType.New;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public ConstructorInfo Constructor { get; set; }
@@ -48,7 +48,9 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("New {0}({1})", Constructor.DeclaringType, ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments.Select(x => x.ToString()).ToArray()));
+            return string.Format("New {0}({1})", 
+                Constructor.DeclaringType, 
+                ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments.Select(x => x.ToString()).ToArray()));
         }
     }
 }
