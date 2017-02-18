@@ -58,11 +58,13 @@ namespace Client
                 };
         }
 
-        public IQueryable<ProductCategory> ProductCategories { get { return RemoteQueryable.Create<ProductCategory>(_dataProvider); } }
+        public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Create<ProductCategory>(_dataProvider);
 
-        public IQueryable<Product> Products { get { return RemoteQueryable.Create<Product>(_dataProvider); } }
+        public IQueryable<Product> Products => RemoteQueryable.Create<Product>(_dataProvider);
 
-        public IQueryable<OrderItem> OrderItems { get { return RemoteQueryable.Create<OrderItem>(_dataProvider); } }
+        public IQueryable<OrderItem> OrderItems => RemoteQueryable.Create<OrderItem>(_dataProvider);
+
+        public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Create<ProductGroup>(_dataProvider);
 
         public void Dispose()
         {

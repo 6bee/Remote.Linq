@@ -5,6 +5,7 @@ namespace Server
     using Aqua.Dynamic;
     using Common.ServiceContracts;
     using Remote.Linq.Expressions;
+    using Remote.Linq.EntityFramework;
     using System.Collections.Generic;
 
     public class QueryService : IQueryService
@@ -13,7 +14,7 @@ namespace Server
         {
             using (var efContext = new EFContext())
             {
-                var result = queryExpression.Execute(queryableProvider: type => efContext.Set(type));
+                var result = queryExpression.ExecuteWithEntityFramework(efContext);
                 return result;
             }
         }

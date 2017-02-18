@@ -4,6 +4,7 @@ namespace Client
 {
     using Remote.Linq;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
 
@@ -22,6 +23,14 @@ namespace Client
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
             foreach (var i in repo.Products)
+            {
+                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+            }
+
+
+            Console.WriteLine("\nGET PRODUCTS FILTERED BY ID:");
+            var idSelection = new List<int>() { 1, 11, 111 };
+            foreach (var i in repo.Products.Where(p => idSelection.Contains(p.Id) || p.Id % 3 == 0))
             {
                 Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
             }
@@ -70,29 +79,41 @@ namespace Client
             Console.WriteLine("  Count = {0}", productsQuery.Count());
 
 
-            //Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
-            //var totalAmountByCategoryQuery =
-            //    from c in repo.ProductCategories
-            //    join p in repo.Products
-            //        on c.Id equals p.ProductCategoryId
-            //    join i in repo.OrderItems
-            //        on p.Id equals i.ProductId
-            //    group new { c, p, i } by c.Name into g
-            //    select new
-            //    {
-            //        Category = g.Key,
-            //        Amount = g.Sum(x => x.i.Quantity * x.p.Price),
-            //        Amount2 = new { Amount = g.Sum(x => x.i.Quantity * x.p.Price) },
-            //    };
+            Console.WriteLine("\nGET PRODUCT GROUPS:");
+            foreach (var g in repo.ProductCategories.Include(c => c.Products))
+            {
+                Console.WriteLine("  {0} | {1}", g.Id, g.Name);
 
-            //var totalAmountByCategroyResult = totalAmountByCategoryQuery.ToDictionary(x => x.Category);
-            //foreach (var i in totalAmountByCategroyResult)
-            //{
-            //    Console.WriteLine("  {0}", i);
-            //}
+                foreach (var p in g.Products)
+                {
+                    Console.WriteLine("    | * {0}", p.Name);
+                }
+            }
 
 
-            Console.WriteLine("\nINVALID OPERATION:");
+            Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
+            var totalAmountByCategoryQuery =
+                from c in repo.ProductCategories
+                join p in repo.Products
+                    on c.Id equals p.ProductCategoryId
+                join i in repo.OrderItems
+                    on p.Id equals i.ProductId
+                group new { c, p, i } by c.Name into g
+                select new
+                {
+                    Category = g.Key,
+                    Amount = g.Sum(x => x.i.Quantity * x.p.Price),
+                    Amount2 = new { Amount = g.Sum(x => x.i.Quantity * x.p.Price) },
+                };
+
+            var totalAmountByCategroyResult = totalAmountByCategoryQuery.ToDictionary(x => x.Category);
+            foreach (var i in totalAmountByCategroyResult)
+            {
+                Console.WriteLine("  {0}", i);
+            }
+
+
+            Console.WriteLine("\nEXPECTED INVALID OPERATION:");
             try
             {
                 var first = innerJoinQuery.First(x => false);

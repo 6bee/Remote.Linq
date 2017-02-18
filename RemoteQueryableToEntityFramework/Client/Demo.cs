@@ -2,7 +2,9 @@
 
 namespace Client
 {
+    using Remote.Linq;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     public class Demo
@@ -20,6 +22,14 @@ namespace Client
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
             foreach (var i in repo.Products)
+            {
+                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+            }
+
+
+            Console.WriteLine("\nGET PRODUCTS FILTERED BY ID:");
+            var idSelection = new List<int>() { 1, 11, 111 };
+            foreach (var i in repo.Products.Where(p => idSelection.Contains(p.Id) || p.Id % 3 == 0))
             {
                 Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
             }
@@ -91,7 +101,19 @@ namespace Client
             }
 
 
-            Console.WriteLine("\nINVALID OPERATION:");
+            Console.WriteLine("\nGET PRODUCT GROUPS:");
+            foreach (var g in repo.ProductCategories.Include(c => c.Products))
+            {
+                Console.WriteLine("  {0} | {1}", g.Id, g.Name);
+
+                foreach (var p in g.Products)
+                {
+                    Console.WriteLine("    | * {0}", p.Name);
+                }
+            }
+
+
+            Console.WriteLine("\nEXPECTED INVALID OPERATION:");
             try
             {
                 var first = totalAmountByCategoryQuery.First(x => false);
