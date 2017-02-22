@@ -1,13 +1,11 @@
+image: Visual Studio 2015
 init:
   - git config --global core.autocrlf true
-branches:
-  only:
-    - master
 version: 1.0.{build}
 before_build:
 - cmd: dotnet restore
 build_script:
-- cmd: dotnet build .\src\Remote.Linq\ .\test\Remote.Linq.Tests\
+- cmd: dotnet build .\src\Remote.Linq\ .\src\Remote.Linq.Newtonsoft.Json\ .\test\Remote.Linq.Tests\
 test_script:
 - cmd: dotnet test .\test\Remote.Linq.Tests\
 build:

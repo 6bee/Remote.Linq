@@ -5,6 +5,7 @@
   "testRunner": "xunit",
   "dependencies": {
     "Remote.Linq": { "target": "project" },
+    "Remote.Linq.Newtonsoft.Json": { "target": "project" },
     "Shouldly": "2.8.0",
     "xunit": "2.2.0-beta2-build3300",
     "dotnet-test-xunit": "2.2.0-preview2-build1029"

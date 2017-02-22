@@ -2,17 +2,17 @@
 
 namespace Remote.Linq.Expressions
 {
-    using Aqua;
     using Aqua.TypeSystem;
+    using Remote.Linq.DynamicQuery;
     using System;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
     [Serializable]
     [DataContract]
-    [KnownType(typeof(Remote.Linq.DynamicQuery.QueryableResourceDescriptor)), XmlInclude(typeof(Remote.Linq.DynamicQuery.QueryableResourceDescriptor))]
-    [KnownType(typeof(Remote.Linq.VariableQueryArgument)), XmlInclude(typeof(Remote.Linq.VariableQueryArgument))]
-    [KnownType(typeof(Remote.Linq.VariableQueryArgumentList)), XmlInclude(typeof(Remote.Linq.VariableQueryArgumentList))]
+    [KnownType(typeof(QueryableResourceDescriptor)), XmlInclude(typeof(QueryableResourceDescriptor))]
+    [KnownType(typeof(VariableQueryArgument)), XmlInclude(typeof(VariableQueryArgument))]
+    [KnownType(typeof(VariableQueryArgumentList)), XmlInclude(typeof(VariableQueryArgumentList))]
     public sealed class ConstantExpression : Expression
     {
         public ConstantExpression()

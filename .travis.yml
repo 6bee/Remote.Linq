@@ -40,4 +40,5 @@ before_script:
 script: 
   - dotnet restore
   - dotnet build ./src/Remote.Linq -c $CONFIGURATION -f netstandard1.6
+  - dotnet build ./src/Remote.Linq.Newtonsoft.Json -c $CONFIGURATION -f netstandard1.6
   - dotnet test ./test/Remote.Linq.Tests -c $CONFIGURATION -f netcoreapp1.0

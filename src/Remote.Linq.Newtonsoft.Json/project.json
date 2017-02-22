@@ -1,0 +1,32 @@
+{
+  "authors": [ "Christof Senn" ],
+  "version": "5.4.0-alpha-*",
+  "description": "Provides Json.NET serialization settings for Remote.Linq types.",
+  "copyright": "Copyright Christof Senn 2017",
+  "packOptions": {
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/6bee/Remote.Linq.git"
+    },
+    "owners": [ "Christof Senn" ],
+    "projectUrl": "https://github.com/6bee/Remote.Linq",
+    "iconUrl": "https://raw.githubusercontent.com/6bee/Remote.Linq/master/remotelinq-small.png",
+    "licenseUrl": "https://raw.githubusercontent.com/6bee/Remote.Linq/master/license.txt",
+    "tags": [ "remote-linq", "json-net", "newtonsoft-json" ]
+  },
+  "buildOptions": {
+    "warningsAsErrors": true
+  },
+  "dependencies": {
+    "Remote.Linq": { "target": "project" },
+    "aqua-core": "4.0.0-alpha-*",
+    "aqua-core-newtonsoft-json": "4.0.0-alpha-*",
+    "Newtonsoft.Json": "9.0.1"
+  },
+  "frameworks": {
+    "net451": {
+    },
+    "netstandard1.6": {
+    }
+  }
+}
