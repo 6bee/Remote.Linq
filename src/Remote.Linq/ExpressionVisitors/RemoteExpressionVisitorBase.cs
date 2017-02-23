@@ -6,7 +6,6 @@ namespace Remote.Linq.ExpressionVisitors
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
 
     public abstract class RemoteExpressionVisitorBase
@@ -393,7 +392,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(exp, expression.Expression) || parameters.Any(i => !ReferenceEquals(i.Old, i.New)))
             {
-                return new LambdaExpression(exp, parameters.Select(i => i.New));
+                return new LambdaExpression(expression.Type, exp, parameters.Select(i => i.New));
             }
 
             return expression;

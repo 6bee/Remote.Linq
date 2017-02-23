@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Expressions
 {
-    using Aqua;
     using System;
     using System.Collections.Generic;
     using System.Reflection;
@@ -100,6 +99,16 @@ namespace Remote.Linq.Expressions
         public static LambdaExpression Lambda(Expression expression, params ParameterExpression[] parameters)
         {
             return Lambda(expression, (IEnumerable<ParameterExpression>)parameters);
+        }
+
+        public static LambdaExpression Lambda(Type lambdaType, Expression expression, params ParameterExpression[] parameters)
+        {
+            return Lambda(lambdaType, expression, (IEnumerable<ParameterExpression>)parameters);
+        }
+
+        public static LambdaExpression Lambda(Type lambdaType, Expression expression, IEnumerable<ParameterExpression> parameters)
+        {
+            return new LambdaExpression(lambdaType, expression, parameters);
         }
 
         public static NewExpression New(ConstructorInfo constructor, IEnumerable<Expression> arguments)

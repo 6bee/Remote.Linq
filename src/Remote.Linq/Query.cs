@@ -14,8 +14,9 @@ namespace Remote.Linq
     [DataContract]
     public class Query : IQuery, IOrderedQuery
     {
-        #region Constructor
-
+        /// <summary>
+        /// Creates a new query instance.
+        /// </summary>
         public Query()
         {
         }
@@ -42,16 +43,15 @@ namespace Remote.Linq
             TakeValue = take;
         }
 
-        #endregion Constructor
-
-        #region Properties
-
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public TypeInfo Type { get; set; }
 
-        public bool HasFilters { get { return FilterExpressions.Count > 0; } }
-        public bool HasSorting { get { return SortExpressions.Count > 0; } }
-        public bool HasPaging { get { return TakeValue.HasValue; } }
+
+        public bool HasFilters => FilterExpressions.Count > 0;
+
+        public bool HasSorting => SortExpressions.Count > 0;
+
+        public bool HasPaging => TakeValue.HasValue;
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
         public List<LambdaExpression> FilterExpressions { get; set; }
@@ -64,12 +64,6 @@ namespace Remote.Linq
 
         [DataMember(Name = "Take", Order = 5, IsRequired = false, EmitDefaultValue = false)]
         public int? TakeValue { get; set; }
-
-        #endregion Properties
-
-        #region Methods
-
-        #region Linq Methods
 
         /// <summary>
         /// Filters a sequence of values based on a predicate.
@@ -187,10 +181,6 @@ namespace Remote.Linq
             return query;
         }
 
-        #endregion Linq Methods
-
-        #region Conversion methods
-
         /// <summary>
         /// Creates a non-generic version of the specified query instance. 
         /// </summary>
@@ -206,8 +196,6 @@ namespace Remote.Linq
             var instance = new Query(typeof(T), query.FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
             return instance;
         }
-
-        #endregion Conversion methods
 
         public override string ToString()
         {
@@ -256,7 +244,5 @@ namespace Remote.Linq
             var queryParameters = sb.ToString();
             return queryParameters;
         }
-
-        #endregion Methods
     }
 }

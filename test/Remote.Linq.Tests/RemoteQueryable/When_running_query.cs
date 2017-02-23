@@ -105,5 +105,68 @@ namespace Remote.Linq.Tests.RemoteQueryable
             orders.Count().ShouldBe(1);
             orders.ElementAt(0).Count().ShouldBe(2);
         }
+
+        [Fact]
+        public void Should_return_orders_joined_with_chars_array()
+        {
+            char[] array = { 'h', 'e', 'l', 'l', 'o' };
+            var joinLocalVariable = (
+                from i in _orderItemQueriable
+                from s in array
+                select new { i, s }
+                ).ToList();
+
+            joinLocalVariable.Count.ShouldBe(15);
+        }
+
+        [Fact]
+        public void Should_return_orders_joined_with_chars_new_array_init()
+        {
+            var joinNewArrayInit = (
+                from i in _orderItemQueriable
+                from s in new[] { 'h', 'e', 'l', 'l', 'o' }
+                select new { i, s }
+                ).ToList();
+
+            joinNewArrayInit.Count.ShouldBe(15);
+        }
+
+        [Fact]
+        public void Should_return_orders_joined_with_string()
+        {
+            var hello = "hello";
+            var joinLocalVariable = (
+                from i in _orderItemQueriable
+                from s in hello
+                select new { i, s }
+                ).ToList();
+
+            joinLocalVariable.Count.ShouldBe(15);
+        }
+
+        [Fact]
+        public void Should_return_orders_joined_with_const_string()
+        {
+            var joinConst = (
+                from i in _orderItemQueriable
+                from s in "hello"
+                select new { i, s }
+                ).ToList();
+
+            joinConst.Count.ShouldBe(15);
+        }
+
+        [Fact]
+        public void Should_return_orders_joined_with_const_string2()
+        {
+            const string hello = "hello";
+            var joinConst = (
+                from i in _orderItemQueriable
+                from s in hello
+                select new { i, s }
+                ).ToList();
+
+            joinConst.Count.ShouldBe(15);
+        }
     }
 }

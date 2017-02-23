@@ -2,7 +2,7 @@
 
 namespace Remote.Linq.Expressions
 {
-    using Aqua;
+    using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,6 +22,17 @@ namespace Remote.Linq.Expressions
             Parameters = parameters.ToList();
         }
 
+        internal LambdaExpression(TypeInfo type, Expression expression, IEnumerable<ParameterExpression> parameters)
+            : this(expression, parameters)
+        {
+            Type = type;
+        }
+
+        internal LambdaExpression(Type type, Expression expression, IEnumerable<ParameterExpression> parameters)
+            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), expression, parameters)
+        {
+        }
+
         public override ExpressionType NodeType => ExpressionType.Lambda;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
@@ -29,6 +40,9 @@ namespace Remote.Linq.Expressions
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
         public List<ParameterExpression> Parameters { get; set; }
+
+        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+        public TypeInfo Type { get; set; }
 
         public override string ToString()
         {
