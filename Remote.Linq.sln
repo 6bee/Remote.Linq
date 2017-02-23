@@ -1,22 +1,17 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26114.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0BC2CB05-0651-45C9-A601-630C1FC7EDBE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C0DCE22E-09EB-4152-93FD-A54582B2C4BC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{454E4ECC-C779-4AC6-B768-A7D9AFD37244}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq", "src\Remote.Linq\Remote.Linq.csproj", "{2E2B1850-C328-47C3-BED5-313F6E9DBB01}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Remote.Linq", "src\Remote.Linq\Remote.Linq.xproj", "{2E2B1850-C328-47C3-BED5-313F6E9DBB01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.Tests", "test\Remote.Linq.Tests\Remote.Linq.Tests.csproj", "{85AE4778-A174-4C29-90D2-D245A21B299C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Remote.Linq.Tests", "test\Remote.Linq.Tests\Remote.Linq.Tests.xproj", "{85AE4778-A174-4C29-90D2-D245A21B299C}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Remote.Linq.Newtonsoft.Json", "src\Remote.Linq.Newtonsoft.Json\Remote.Linq.Newtonsoft.Json.xproj", "{FF322E8D-1D21-4F75-ACB7-F5B5B7B3F649}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.Newtonsoft.Json", "src\Remote.Linq.Newtonsoft.Json\Remote.Linq.Newtonsoft.Json.csproj", "{FF322E8D-1D21-4F75-ACB7-F5B5B7B3F649}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
