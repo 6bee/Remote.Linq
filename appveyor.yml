@@ -1,14 +1,21 @@
+image: Visual Studio 2017 RC
+
 init:
   - git config --global core.autocrlf true
-branches:
-  only:
-    - master
+
 version: 1.0.{build}
+
 before_build:
-- cmd: dotnet restore
+  - dotnet --info
+  - dotnet restore
+
 build_script:
-- cmd: dotnet build .\src\Remote.Linq\ .\test\Remote.Linq.Tests\
+  - dotnet build src\Remote.Linq 
+  - dotnet build src\Remote.Linq.Newtonsoft.Json
+  - dotnet build test\Remote.Linq.Tests
+
 test_script:
-- cmd: dotnet test .\test\Remote.Linq.Tests\
+  dotnet test test\Remote.Linq.Tests\Remote.Linq.Tests.csproj
+
 build:
   verbosity: normal

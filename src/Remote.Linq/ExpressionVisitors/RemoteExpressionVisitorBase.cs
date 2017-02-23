@@ -359,7 +359,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(operand, expression.Operand))
             {
-                return new UnaryExpression(expression.UnaryOperator, operand);
+                return new UnaryExpression(expression.UnaryOperator, operand, expression.Type, expression.Method);
             }
 
             return expression;
