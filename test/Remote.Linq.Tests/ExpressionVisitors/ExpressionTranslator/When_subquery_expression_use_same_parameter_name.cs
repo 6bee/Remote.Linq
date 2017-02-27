@@ -3,6 +3,7 @@
 namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
 {
     using Remote.Linq;
+    using Remote.Linq.Expressions;
     using Shouldly;
     using System;
     using System.Linq;
@@ -11,51 +12,25 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
 
     public class When_subquery_expression_use_same_parameter_name
     {
-        class A
+        interface IValue
+        {
+            int Value { get; }
+        }
+
+        class A : IValue
         {
             public int Value { get; set; }
         }
 
-        class B
+        class B : IValue
         {
             public int Value { get; set; }
-        }
-
-        [Fact]
-        public void Result_should_be_equal_for_translated_expression()
-        {
-            var dates1 = new[]
-            {
-                new DateTime(1999,1,31),
-                new DateTime(1999,1,15),
-                new DateTime(2000,1,31),
-                new DateTime(2000,1,15),
-            }.AsQueryable();
-
-            var dates2 = new[]
-            {
-                new DateTime(1995,1,27),
-                new DateTime(1996,2,28),
-                new DateTime(1997,3,29),
-                new DateTime(1998,4,30),
-                new DateTime(1999,5,31),
-            }.AsQueryable();
-            
-            Expression<Func<DateTime, bool>> subfilter = x => x.Day == 31;
-            Expression<Func<DateTime, bool>> outerfilter = x => dates2.Where(subfilter).Where(d => d.Year == x.Year).Any();
-            var result1 = dates1.Where(outerfilter).ToArray();
-
-            var remoteLinqExpression = outerfilter.ToRemoteLinqExpression();
-            var systemlinqExpression = remoteLinqExpression.ToLinqExpression<DateTime, bool>();
-            var result2 = dates1.Where(systemlinqExpression).ToArray();
-
-            result1.ShouldMatch(result2);
         }
 
         [Fact]
         public void Parameter_expression_should_be_resolved_by_instance_rather_then_by_name()
         {
-            var list1 = new[]
+            IQueryable<A> localQueryable1 = new[]
             {
                 new A { Value = 1 },
                 new A { Value = 2 },
@@ -63,7 +38,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
                 new A { Value = 4 },
             }.AsQueryable();
 
-            var list2 = new[]
+            IQueryable<B> localQueryable2 = new[]
             {
                 new B { Value = 1 },
                 new B { Value = 2 },
@@ -71,21 +46,26 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
                 new B { Value = 4 },
             }.AsQueryable();
 
-            Expression<Func<B, bool>> subfilter = x => x.Value % 2 == 0;
-            Expression<Func<A, bool>> outerfilter = x => list2.Where(subfilter).Where(d => d.Value == x.Value).Any();
-            var result1 = list1.Where(outerfilter).ToArray();
+            Func<Type, IQueryable> queryableProvider = t =>
+            {
+                if (t == typeof(A)) return localQueryable1;
+                if (t == typeof(B)) return localQueryable2;
+                return null;
+            };
 
-            var remoteLinqExpression = outerfilter.ToRemoteLinqExpression();
-            var systemlinqExpression = remoteLinqExpression.ToLinqExpression<A, bool>();
-            var result2 = list1.Where(systemlinqExpression).ToArray();
+            IQueryable<A> remoteQueryable1 = RemoteQueryable.Create<A>(x => x.Execute(queryableProvider: queryableProvider));
+            IQueryable<B> remoteQueryable2 = RemoteQueryable.Create<B>(x => x.Execute(queryableProvider: queryableProvider));
+            
+            A[] localResult = BuildQuery(localQueryable1, localQueryable2).ToArray();
+            A[] remoteResult = BuildQuery(remoteQueryable1, remoteQueryable2).ToArray();
 
-            result1.ShouldMatch(result2);
+            remoteResult.SequenceEqual(localResult).ShouldBeTrue();
         }
 
         [Fact]
         public void Parameter_expression_should_be_resolved_by_instance_rather_then_by_name2()
         {
-            var list1 = new[]
+            IQueryable<A> localQueryable = new[]
             {
                 new A { Value = 1 },
                 new A { Value = 2 },
@@ -93,23 +73,26 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
                 new A { Value = 4 },
             }.AsQueryable();
 
-            var list2 = new[]
-            {
-                new A { Value = 1 },
-                new A { Value = 2 },
-                new A { Value = 3 },
-                new A { Value = 4 },
-            }.AsQueryable();
+            IQueryable<A> remoteQueryable = 
+                RemoteQueryable.Create<A>(x => x.Execute(queryableProvider: t => localQueryable));
 
-            Expression<Func<A, bool>> subfilter = x => x.Value % 2 == 0;
-            Expression<Func<A, bool>> outerfilter = x => list2.Where(subfilter).Where(d => d.Value == x.Value).Any();
-            var result1 = list1.Where(outerfilter).ToArray();
+            A[] localResult = BuildQuery(localQueryable, localQueryable).ToArray();
+            A[] remoteResult = BuildQuery(remoteQueryable, remoteQueryable).ToArray();
 
-            var remoteLinqExpression = outerfilter.ToRemoteLinqExpression();
-            var systemlinqExpression = remoteLinqExpression.ToLinqExpression<A, bool>();
-            var result2 = list1.Where(systemlinqExpression).ToArray();
+            remoteResult.SequenceEqual(localResult).ShouldBeTrue();
+        }
 
-            result1.ShouldMatch(result2);
+        private static IQueryable<T1> BuildQuery<T1,T2>(IQueryable<T1> queriable1, IQueryable<T2> queriable2)
+            where T1: IValue
+            where T2: IValue
+        {
+            Expression<Func<T2, bool>> subfilter = 
+                x => x.Value % 2 == 0;
+
+            Expression<Func<T1, bool>> outerfilter = 
+                x => queriable2.Where(subfilter).Where(d => d.Value == x.Value).Any();
+
+            return queriable1.Where(outerfilter);
         }
     }
 }
