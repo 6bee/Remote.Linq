@@ -81,7 +81,7 @@ public interface IQueryService
 
 public class QueryService : IQueryService
 {
-    // anything that has a linq provider e.g. entity framework, nhibernate, ...
+    // any linq provider e.g. entity framework, nhibernate, ...
     private IDataProvider _datastore = new ObjectRelationalMapper();
 
     // you need to be able to retrieve an IQueryable by type
