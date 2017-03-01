@@ -3,7 +3,7 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -64,7 +64,9 @@ namespace Remote.Linq.ExpressionVisitors
             protected override Expression VisitMemberAccess(MemberExpression expression)
             {
                 var member = expression.Member;
-                if (member.MemberType == MemberTypes.Property && member.DeclaringType.IsGenericType && member.DeclaringType.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                if (member.MemberType == MemberTypes.Property && 
+                    member.DeclaringType.IsGenericType && 
+                    member.DeclaringType.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                 {
                     var instanceExpression = (ConstantExpression)Visit(expression.Expression);
 
@@ -93,7 +95,7 @@ namespace Remote.Linq.ExpressionVisitors
         protected class NonGenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
             private static readonly System.Reflection.MethodInfo CreateVariableQueryArgumentListMethodInfo = 
-                typeof(NonGenericVariableQueryArgumentVisitor).GetMethod("CreateVariableQueryArgumentList", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+                typeof(NonGenericVariableQueryArgumentVisitor).GetMethod(nameof(CreateVariableQueryArgumentList), System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 
             internal Expression ReplaceNonGenericQueryArgumentsByGenericArguments(Expression expression)
             {

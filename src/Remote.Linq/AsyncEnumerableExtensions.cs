@@ -17,6 +17,7 @@ namespace Remote.Linq
             var enumerator = await ExecuteAsync(source);
             return enumerator.ToList();
         }
+
         public static async Task<T[]> ToArrayAsync<T>(this IQueryable<T> source)
         {
             var enumerator = await ExecuteAsync(source);

@@ -15,12 +15,6 @@ namespace Remote.Linq
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="resource"></param>
-        /// <param name="dataProvider"></param>
-        /// <param name="typeResolver"></param>
-        /// <param name="mapper"></param>
-        /// <returns></returns>
         public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
         {
             return RemoteQueryable.Create<T>(dataProvider, typeResolver, mapper);
@@ -29,8 +23,6 @@ namespace Remote.Linq
         /// <summary>
         /// Applies this query instance to an enumerable
         /// </summary>
-        /// <param name="queriable"></param>
-        /// <returns></returns>
         public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery<TEntity> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor = null)
         {
             return enumerable
@@ -42,8 +34,6 @@ namespace Remote.Linq
         /// <summary>
         /// Applies this query instance to an enumerable
         /// </summary>
-        /// <param name="queriable"></param>
-        /// <returns></returns>
         public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor = null)
         {
             return enumerable
