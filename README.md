@@ -15,6 +15,10 @@ Building a LINQ interface for custom services is made a breeze by using Remote L
 * Build remote single-type query services (paging, sorting, filtering)
 * Build remote complex linq query services (arbitrary linq query including joins, groupings, aggregations, projections, etc.)
 
+### Scope:
+In contrast to re-linq, this project enables serialization and deserialization of expression trees and apply linq expressions to other linq providers e.g linq-to-object, linq-to-entity, etc. 
+This is typically used to store and reload or simply transfer expressions to a service where it’s applied against a data source for querying. 
+The API makes it super easy to implement a custom service allowing linq queries defined on a client to be executed on a server. 
 
 ## Sample
 
