@@ -26,7 +26,7 @@ The API makes it super easy to implement a custom service allowing LINQ queries 
 
 ### Client
 
-Implement repository class setting-up server connection and providing the queryable data sets (`IQueryable<>`)
+Implement repository class, setting-up server connection and providing the queryable data sets (`IQueryable<>`)
 ```C#
 public class RemoteRepository
 {
@@ -38,7 +38,7 @@ public class RemoteRepository
             {
                 // setup service connectivity
                 IQueryService service = CreateServerConection(uri);
-                // send expression to service to get back results
+                // send expression to service and get back results
                 IEnumerable<DynamicObject> result = service.ExecuteQuery(expression);
                 return result;
             };
