@@ -20,11 +20,19 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
         class A : IValue
         {
             public int Value { get; set; }
+
+            public override bool Equals(object obj) => Value == (obj as A)?.Value;
+
+            public override int GetHashCode() => Value;
         }
 
         class B : IValue
         {
             public int Value { get; set; }
+
+            public override bool Equals(object obj) => Value == (obj as B)?.Value;
+
+            public override int GetHashCode() => Value;
         }
 
         [Fact]

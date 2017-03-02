@@ -4,8 +4,8 @@ namespace Remote.Linq
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
-    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class JsonSerializerSettingsExtensions
@@ -16,7 +16,7 @@ namespace Remote.Linq
         /// </summary>
         public static JsonSerializerSettings ConfigureAqua(this JsonSerializerSettings jsonSerializerSettings)
         {
-            var valid = new List<TypeNameHandling> { TypeNameHandling.All, TypeNameHandling.Auto, TypeNameHandling.Objects };
+            var valid = new[] { TypeNameHandling.All, TypeNameHandling.Auto, TypeNameHandling.Objects };
             if (!valid.Contains(jsonSerializerSettings.TypeNameHandling))
             {
                 jsonSerializerSettings.TypeNameHandling = TypeNameHandling.Auto;

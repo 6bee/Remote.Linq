@@ -1,10 +1,13 @@
 ﻿namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.TypeSystem.Extensions;
+    using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Linq.Expressions;
+    using System.Reflection;
 
     /// <summary>  
     /// Enables the partial evalutation of queries.  
@@ -43,13 +46,29 @@
                 {
                     return false;
                 }
+
+                if (typeof(IRemoteQueryable).IsAssignableFrom(type))
+                {
+                    return false;
+                }
+
+                var value = ((ConstantExpression)expression).Value;
+                if (type.GetProperties().Any(p => typeof(IQueryable).IsAssignableFrom(p.PropertyType) && p.GetValue(value) is IRemoteQueryable))
+                {
+                    return false;
+                }
+
+                if (type.GetFields().Any(f => typeof(IQueryable).IsAssignableFrom(f.FieldType) && f.GetValue(value) is IRemoteQueryable))
+                {
+                    return false;
+                }
             }
 
             if (expression.NodeType == ExpressionType.Call)
             {
                 var methodCallExpression = (MethodCallExpression)expression;
                 var methodDeclaringType = methodCallExpression.Method.DeclaringType;
-                if (methodDeclaringType == typeof(System.Linq.Queryable) || methodDeclaringType == typeof(System.Linq.Enumerable))
+                if (methodDeclaringType == typeof(Queryable) || methodDeclaringType == typeof(Enumerable))
                 {
                     if (methodCallExpression.Arguments.Count > 0)
                     {

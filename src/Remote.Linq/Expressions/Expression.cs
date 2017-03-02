@@ -36,12 +36,20 @@ namespace Remote.Linq.Expressions
             return new MemberExpression(expression, member);
         }
 
+        [Obsolete("Method renamed to Call. This method will be removed in a future version.", true)]
         public static MethodCallExpression MethodCall(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
+            => Call(insatnce, methodInfo, arguments);
+
+        public static MethodCallExpression Call(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
         {
             return new MethodCallExpression(insatnce, methodInfo, arguments);
         }
 
+        [Obsolete("Method renamed to Call. This method will be removed in a future version.", true)]
         public static MethodCallExpression MethodCall(Expression insatnce, Aqua.TypeSystem.MethodInfo methodInfo, IEnumerable<Expression> arguments)
+            => Call(insatnce, methodInfo, arguments);
+
+        public static MethodCallExpression Call(Expression insatnce, Aqua.TypeSystem.MethodInfo methodInfo, IEnumerable<Expression> arguments)
         {
             return new MethodCallExpression(insatnce, methodInfo, arguments);
         }
@@ -61,9 +69,13 @@ namespace Remote.Linq.Expressions
             return new ConstantExpression(value, type);
         }
 
+        [Obsolete("Parameter list changed order. This method will be removed in a future version.", true)]
         public static ParameterExpression Parameter(string parameterName, Type type)
+            => Parameter(type, parameterName);
+
+        public static ParameterExpression Parameter(Type parameterType, string parameterName)
         {
-            return new ParameterExpression(parameterName, type);
+            return new ParameterExpression(parameterType, parameterName);
         }
 
         public static BinaryExpression MakeBinary(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand)

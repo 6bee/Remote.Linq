@@ -10,6 +10,7 @@ namespace Remote.Linq.Expressions
 
     [Serializable]
     [DataContract]
+    [KnownType(typeof(ConstantQueryArgument)), XmlInclude(typeof(ConstantQueryArgument))]
     [KnownType(typeof(QueryableResourceDescriptor)), XmlInclude(typeof(QueryableResourceDescriptor))]
     [KnownType(typeof(VariableQueryArgument)), XmlInclude(typeof(VariableQueryArgument))]
     [KnownType(typeof(VariableQueryArgumentList)), XmlInclude(typeof(VariableQueryArgumentList))]

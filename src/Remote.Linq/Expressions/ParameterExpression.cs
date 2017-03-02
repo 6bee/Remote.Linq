@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Expressions
 {
-    using Aqua;
     using Aqua.TypeSystem;
     using System;
     using System.Runtime.Serialization;
@@ -15,10 +14,21 @@ namespace Remote.Linq.Expressions
         {
         }
 
+        [Obsolete("Parameter list changed order. This constructor will be removed in a future version.", true)]
         internal ParameterExpression(string parameterName, Type type)
+            : this(type, parameterName)
         {
+        }
+
+        internal ParameterExpression(TypeInfo parameterType, string parameterName)
+        {
+            ParameterType = parameterType;
             ParameterName = parameterName;
-            ParameterType = new TypeInfo(type, false, false);
+        }
+
+        internal ParameterExpression(Type parameterType, string parameterName)
+            : this(new TypeInfo(parameterType, false, false), parameterName)
+        {
         }
 
         public override ExpressionType NodeType => ExpressionType.Parameter;
