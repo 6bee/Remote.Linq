@@ -3,6 +3,7 @@
 namespace Remote.Linq.JsonConverters
 {
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using Remote.Linq.Expressions;
     using System;
     using System.Reflection;
@@ -15,18 +16,15 @@ namespace Remote.Linq.JsonConverters
         
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            // this method doesn't get invoked for deserialization for some reason...!?
-            throw new NotImplementedException();
+            if (reader.TokenType == JsonToken.Null)
+            {
+                return null;
+            }
 
-            //if (reader.TokenType == JsonToken.Null)
-            //{
-            //    return null;
-            //}
-
-            //var jObject = JObject.Load(reader);
-            //var target = new ConstantExpression();
-            //serializer.Populate(jObject.CreateReader(), target);
-            //return target;
+            var jObject = JObject.Load(reader);
+            var target = new ConstantExpression();
+            serializer.Populate(jObject.CreateReader(), target);
+            return target;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
