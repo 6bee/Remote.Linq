@@ -37,6 +37,7 @@
                 case ExpressionType.ArrayLength:
                 case ExpressionType.Quote:
                 case ExpressionType.TypeAs:
+                case ExpressionType.UnaryPlus:
                     return VisitUnary((UnaryExpression)exp);
 
                 case ExpressionType.Add:
@@ -62,6 +63,7 @@
                 case ExpressionType.RightShift:
                 case ExpressionType.LeftShift:
                 case ExpressionType.ExclusiveOr:
+                case ExpressionType.Power:
                     return VisitBinary((BinaryExpression)exp);
 
                 case ExpressionType.TypeIs:

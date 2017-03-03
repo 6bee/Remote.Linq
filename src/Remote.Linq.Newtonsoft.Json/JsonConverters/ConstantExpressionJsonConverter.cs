@@ -3,26 +3,68 @@
 namespace Remote.Linq.JsonConverters
 {
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using Remote.Linq.Expressions;
     using System;
+    using System.Reflection;
+    using System.Runtime.Serialization.Formatters;
 
     public class ConstantExpressionJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(ConstantExpression);
-        }
-
+            => objectType == typeof(ConstantExpression);
+        
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
+            // this method doesn't get invoked for deserialization for some reason...!?
             throw new NotImplementedException();
+
+            //if (reader.TokenType == JsonToken.Null)
+            //{
+            //    return null;
+            //}
+
+            //var jObject = JObject.Load(reader);
+            //var target = new ConstantExpression();
+            //serializer.Populate(jObject.CreateReader(), target);
+            //return target;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var jToken = JValue.FromObject(value);
-            serializer.Serialize(writer, jToken, typeof(ConstantExpression));
+            if (serializer.ReferenceResolver.IsReferenced(null, value))
+            {
+                var reference = serializer.ReferenceResolver.GetReference(null, value);
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("$ref");
+                writer.WriteValue(reference);
+                writer.WriteEndObject();
+            }
+            else
+            {
+                writer.WriteStartObject();
+
+                var reference = serializer.ReferenceResolver.GetReference(null, value);
+                writer.WritePropertyName("$id");
+                writer.WriteValue(reference);
+                
+                writer.WritePropertyName("$type");
+                var type = value.GetType().GetTypeInfo();
+                var typeString = serializer.TypeNameAssemblyFormat == FormatterAssemblyStyle.Full
+                    ? type.AssemblyQualifiedName
+                    : $"{type}, {type.Assembly.GetName().Name}";
+                writer.WriteValue(typeString);
+
+                var constantExpression = (ConstantExpression)value;
+
+                writer.WritePropertyName(nameof(constantExpression.Type));
+                serializer.Serialize(writer, constantExpression.Type);
+
+                writer.WritePropertyName(nameof(constantExpression.Value));
+                serializer.Serialize(writer, constantExpression.Value, typeof(object));
+
+                writer.WriteEndObject();
+            }
         }
     }
 }

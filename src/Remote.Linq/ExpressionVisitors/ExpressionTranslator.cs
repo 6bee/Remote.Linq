@@ -3,6 +3,7 @@
 namespace Remote.Linq
 {
     using Aqua.TypeSystem;
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
@@ -16,33 +17,6 @@ namespace Remote.Linq
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionTranslator
     {
-        private sealed class ParameterCache
-        {
-            private readonly Dictionary<object, ParameterExpression> _cache = new Dictionary<object, ParameterExpression>();
-
-            // note: the central parameter repository is required since parameters within an expression tree must be represented by the same parameter expression insatnce
-            public ParameterExpression GetParameterExpression(Type type, string name = "$")
-            {
-                lock (_cache)
-                {
-                    var key = new { type, name };
-                    ParameterExpression exp;
-                    if (!_cache.TryGetValue(key, out exp))
-                    {
-                        exp = Expression.Parameter(type, name);
-                        _cache.Add(key, exp);
-                    }
-
-                    return exp;
-                }
-            }
-
-            public IEnumerable<ParameterExpression> GetAllParameters()
-            {
-                return _cache.Values.ToList();
-            }
-        }
-
         /// <summary>
         /// Translates a given expression into a remote linq expression
         /// </summary>
@@ -76,7 +50,7 @@ namespace Remote.Linq
         /// </summary>
         public static Expression ToLinqExpression(this RLinq.Expression expression, ITypeResolver typeResolver)
         {
-            var exp = new RemoteExpressionToLinqExpressionTranslator(new ParameterCache(), typeResolver).ToExpression(expression);
+            var exp = new RemoteExpressionToLinqExpressionTranslator(typeResolver).ToExpression(expression);
             return exp;
         }
 
@@ -105,8 +79,7 @@ namespace Remote.Linq
         /// </summary>
         public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression, ITypeResolver typeResolver)
         {
-            var parameterCache = new ParameterCache();
-            var lambdaExpression = new RemoteExpressionToLinqExpressionTranslator(parameterCache, typeResolver).ToExpression(expression);
+            var lambdaExpression = new RemoteExpressionToLinqExpressionTranslator(typeResolver).ToExpression(expression);
             return (LambdaExpression)lambdaExpression;
         }
 
@@ -154,7 +127,7 @@ namespace Remote.Linq
             }
         }
 
-        private static bool KeepMarkerFuncitons(Expression expression)
+        private static bool KeepMarkerFunctions(Expression expression)
         {
             if (!ExpressionEvaluator.CanBeEvaluatedLocally(expression))
             {
@@ -176,9 +149,12 @@ namespace Remote.Linq
 
         private sealed class LinqExpressionToRemoteExpressionTranslator : ExpressionVisitorBase
         {
+            private readonly Dictionary<ParameterExpression, RLinq.ParameterExpression> _parameterExpressionCache =
+                new Dictionary<ParameterExpression, RLinq.ParameterExpression>(Aqua.ReferenceEqualityComparer<ParameterExpression>.Default);
+
             public RLinq.Expression ToRemoteExpression(Expression expression)
             {
-                var partialEvalExpression = expression.PartialEval(KeepMarkerFuncitons);
+                var partialEvalExpression = expression.PartialEval(KeepMarkerFunctions);
                 if (partialEvalExpression == null)
                 {
                     throw CreateNotSupportedException(expression);
@@ -190,7 +166,7 @@ namespace Remote.Linq
 
             public RLinq.LambdaExpression ToRemoteExpression(LambdaExpression expression)
             {
-                var partialEvalExpression = expression.PartialEval(KeepMarkerFuncitons) as LambdaExpression;
+                var partialEvalExpression = expression.PartialEval(KeepMarkerFunctions) as LambdaExpression;
                 if (partialEvalExpression == null)
                 {
                     throw CreateNotSupportedException(expression);
@@ -199,7 +175,7 @@ namespace Remote.Linq
                 var constExpression = Visit(partialEvalExpression.Body);
                 var parameters =
                     from p in partialEvalExpression.Parameters
-                    select new RLinq.ParameterExpression(p.Name, p.Type);
+                    select (RLinq.ParameterExpression)VisitParameter(p).Unwrap();
                 return new RLinq.LambdaExpression(constExpression.Unwrap(), parameters);
             }
 
@@ -259,12 +235,52 @@ namespace Remote.Linq
 
             protected override Expression VisitConstant(ConstantExpression c)
             {
-                return new RLinq.ConstantExpression(c.Value, c.Type).Wrap();
+                var exp = new RLinq.ConstantExpression(c.Value, c.Type);
+                if (exp.Type?.IsAnonymousType ?? false)
+                {
+                    var constantQueryArgument = new ConstantQueryArgument(c.Type);
+
+                    foreach (var property in exp.Type.Type.GetProperties())
+                    {
+                        var value = property.GetValue(c.Value);
+                        if (typeof(Expression).IsAssignableFrom(property.PropertyType))
+                        {
+                            value = Visit((Expression)value).Unwrap();
+                        }
+
+                        constantQueryArgument.Add(property.Name, value);
+                    }
+
+                    foreach (var field in exp.Type.Type.GetFields())
+                    {
+                        var value = field.GetValue(c.Value);
+                        if (typeof(Expression).IsAssignableFrom(field.FieldType))
+                        {
+                            value = Visit((Expression)value).Unwrap();
+                        }
+
+                        constantQueryArgument.Add(field.Name, value);
+                    }
+                    
+                    exp = new RLinq.ConstantExpression(constantQueryArgument);
+                }
+
+                return exp.Wrap();
             }
 
             protected override Expression VisitParameter(ParameterExpression p)
             {
-                return new RLinq.ParameterExpression(p.Name, p.Type).Wrap();
+                RLinq.ParameterExpression exp;
+                lock (_parameterExpressionCache)
+                {
+                    if (!_parameterExpressionCache.TryGetValue(p, out exp))
+                    {
+                        exp = new RLinq.ParameterExpression(p.Type, p.Name, _parameterExpressionCache.Count + 1);
+                        _parameterExpressionCache.Add(p, exp);
+                    }
+                }
+
+                return exp.Wrap();
             }
 
             protected override Expression VisitBinary(BinaryExpression b)
@@ -392,14 +408,15 @@ namespace Remote.Linq
             }
         }
 
-        private sealed class RemoteExpressionToLinqExpressionTranslator
+        private sealed class RemoteExpressionToLinqExpressionTranslator : Aqua.Dynamic.IIsKnownTypeProvider, IEqualityComparer<RLinq.ParameterExpression>
         {
-            private readonly ParameterCache _parameterCache;
+            private readonly Dictionary<RLinq.ParameterExpression, ParameterExpression> _parameterExpressionCache;
+
             private readonly ITypeResolver _typeResolver;
 
-            public RemoteExpressionToLinqExpressionTranslator(ParameterCache parameterCache, ITypeResolver typeResolver)
+            public RemoteExpressionToLinqExpressionTranslator(ITypeResolver typeResolver)
             {
-                _parameterCache = parameterCache;
+                _parameterExpressionCache = new Dictionary<RLinq.ParameterExpression, ParameterExpression>(this);
                 _typeResolver = typeResolver ?? TypeResolver.Instance;
             }
 
@@ -599,8 +616,18 @@ namespace Remote.Linq
 
             private ParameterExpression VisitParameter(RLinq.ParameterExpression parameterExpression)
             {
-                var parameterType = _typeResolver.ResolveType(parameterExpression.ParameterType);
-                return _parameterCache.GetParameterExpression(parameterType, parameterExpression.ParameterName);
+                ParameterExpression exp;
+                lock (_parameterExpressionCache)
+                {
+                    if (!_parameterExpressionCache.TryGetValue(parameterExpression, out exp))
+                    {
+                        var type = _typeResolver.ResolveType(parameterExpression.ParameterType);
+                        exp = Expression.Parameter(type, parameterExpression.ParameterName);
+                        _parameterExpressionCache.Add(parameterExpression, exp);
+                    }
+                }
+
+                return exp;
             }
 
             private Expression VisitUnary(RLinq.UnaryExpression unaryExpression)
@@ -639,8 +666,31 @@ namespace Remote.Linq
 
             private Expression VisitConstant(RLinq.ConstantExpression constantValueExpression)
             {
+                var value = constantValueExpression.Value;
                 var type = _typeResolver.ResolveType(constantValueExpression.Type);
-                return Expression.Constant(constantValueExpression.Value, type);
+
+                var oldConstantQueryArgument = value as ConstantQueryArgument;
+                if (oldConstantQueryArgument?.Type?.IsAnonymousType ?? false)
+                {
+                    var newConstantQueryArgument = new ConstantQueryArgument(oldConstantQueryArgument.Type);
+                    foreach(var property in oldConstantQueryArgument.Properties)
+                    {
+                        var propertyValue = property.Value;
+                        var expressionValue = propertyValue as RLinq.Expression;
+                        if (!ReferenceEquals(null, expressionValue))
+                        {
+                            propertyValue = Visit(expressionValue);
+                        }
+
+                        newConstantQueryArgument.Add(property.Name, propertyValue);
+                    }
+
+                    var mapper = new Aqua.Dynamic.DynamicObjectMapper(typeResolver: _typeResolver, isKnownTypeProvider: this);
+                    value = mapper.Map(newConstantQueryArgument);
+                    type = value.GetType(); 
+                }
+
+                return Expression.Constant(value, type);
             }
 
             private Expression VisitBinary(RLinq.BinaryExpression binaryExpression)
@@ -676,6 +726,33 @@ namespace Remote.Linq
                     var delegateType = _typeResolver.ResolveType(lambdaExpression.Type);
                     return Expression.Lambda(delegateType, body, parameters.ToArray());
                 }
+            }
+
+            bool Aqua.Dynamic.IIsKnownTypeProvider.IsKnownType(Type type) => true;
+
+            bool IEqualityComparer<RLinq.ParameterExpression>.Equals(RLinq.ParameterExpression x, RLinq.ParameterExpression y)
+            {
+                if (ReferenceEquals(x,y))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(null, x))
+                {
+                    if (ReferenceEquals(null, y))
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                return x.InstanceId == y.InstanceId;
+            }
+
+            int IEqualityComparer<RLinq.ParameterExpression>.GetHashCode(RLinq.ParameterExpression obj)
+            {
+                return obj?.InstanceId ?? 0;
             }
         }
     }

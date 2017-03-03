@@ -13,10 +13,11 @@ namespace Remote.Linq.ExpressionVisitors
     using FieldInfo = Aqua.TypeSystem.FieldInfo;
     using PropertyInfo = Aqua.TypeSystem.PropertyInfo;
     using MethodInfo = Aqua.TypeSystem.MethodInfo;
+    using Aqua.Dynamic;
 
     public class QueryableResourceVisitor
     {
-        internal T ReplaceResourceDescriptorsByQueryable<T>(T expression, Func<Type, System.Linq.IQueryable> provider, ITypeResolver typeResolver) where T : Expression
+        internal T ReplaceResourceDescriptorsByQueryable<T>(T expression, Func<Type, IQueryable> provider, ITypeResolver typeResolver) where T : Expression
         {
             return (T)new ResourceDescriptorVisitor(provider, typeResolver).ReplaceResourceDescriptorsByQueryable(expression);
         }
@@ -28,9 +29,9 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class ResourceDescriptorVisitor : RemoteExpressionVisitorBase
         {
-            private readonly Func<Type, System.Linq.IQueryable> _provider;
+            private readonly Func<Type, IQueryable> _provider;
 
-            internal protected ResourceDescriptorVisitor(Func<Type, System.Linq.IQueryable> provider, ITypeResolver typeResolver)
+            internal protected ResourceDescriptorVisitor(Func<Type, IQueryable> provider, ITypeResolver typeResolver)
                 : base(typeResolver)
             {
                 _provider = provider;
@@ -52,6 +53,24 @@ namespace Remote.Linq.ExpressionVisitors
                     return Expression.Constant(queryable);
                 }
 
+                if (type == typeof(ConstantQueryArgument) && !ReferenceEquals(null, expression.Value))
+                {
+                    var newConstantQueryArgument = new ConstantQueryArgument((ConstantQueryArgument)expression.Value);
+                    var properties = newConstantQueryArgument.Properties ?? Enumerable.Empty<Property>();
+                    foreach (var property in properties)
+                    {
+                        var queryableResourceDescriptor = property.Value as QueryableResourceDescriptor;
+                        if (!ReferenceEquals(null, queryableResourceDescriptor))
+                        {
+                            var queryableType = _typeResolver.ResolveType(queryableResourceDescriptor.Type);
+                            var queryable = _provider(queryableType);
+                            property.Value = queryable;
+                        }
+                    }
+
+                    return Expression.Constant(newConstantQueryArgument);
+                }
+
                 return base.VisitConstant(expression);
             }
         }
@@ -70,18 +89,35 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
-                if (expression.Value is IQueryable)
+                var queryable = expression.Value as IQueryable;
+                if (!ReferenceEquals(null, queryable))
                 {
-                    var queryable = (IQueryable)expression.Value;
                     var elementType = queryable.ElementType;
                     var queryableResourceDescriptor = new QueryableResourceDescriptor(elementType);
 
                     return Expression.Constant(queryableResourceDescriptor);
                 }
-                else
+
+                var constantQueryArgument = expression.Value as ConstantQueryArgument;
+                if (!ReferenceEquals(null, constantQueryArgument))
                 {
-                    return base.VisitConstant(expression);
+                    var newConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument);
+                    var properties = newConstantQueryArgument.Properties ?? Enumerable.Empty<Property>();
+                    foreach (var property in properties)
+                    {
+                        var value = property.Value as IQueryable;
+                        if (!ReferenceEquals(null, value))
+                        {
+                            var elementType = value.ElementType;
+                            var queryableResourceDescriptor = new QueryableResourceDescriptor(elementType);
+                            property.Value = queryableResourceDescriptor;
+                        }
+                    }
+
+                    return Expression.Constant(newConstantQueryArgument);
                 }
+
+                return base.VisitConstant(expression);
             }
 
             protected override Expression VisitMemberAccess(MemberExpression expression)

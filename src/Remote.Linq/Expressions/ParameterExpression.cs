@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Expressions
 {
-    using Aqua;
     using Aqua.TypeSystem;
     using System;
     using System.Runtime.Serialization;
@@ -15,10 +14,16 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal ParameterExpression(string parameterName, Type type)
+        internal ParameterExpression(TypeInfo parameterType, string parameterName, int instanceId)
         {
+            ParameterType = parameterType;
             ParameterName = parameterName;
-            ParameterType = new TypeInfo(type, false, false);
+            InstanceId = instanceId;
+        }
+
+        internal ParameterExpression(Type parameterType, string parameterName, int instanceId)
+            : this(new TypeInfo(parameterType, false, false), parameterName, instanceId)
+        {
         }
 
         public override ExpressionType NodeType => ExpressionType.Parameter;
@@ -28,6 +33,12 @@ namespace Remote.Linq.Expressions
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
         public TypeInfo ParameterType { get; set; }
+
+        /// <summary>
+        /// InstanceId is used to denote a specific instance of <see cref="System.Linq.Expressions.ParameterExpression"/> within an expression tree
+        /// </summary>
+        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+        public int InstanceId { get; set; }
 
         public override string ToString()
         {

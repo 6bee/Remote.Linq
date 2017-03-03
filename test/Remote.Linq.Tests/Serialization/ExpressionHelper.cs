@@ -14,6 +14,9 @@ namespace Remote.Linq.Tests.Serialization
             Assert.Equal(expression1String, expression2String);
         }
 
+        /// <summary>
+        /// Best effort comparison using Expression.ToString()
+        /// </summary>
         public static void EqualsExpression<T>(this T expression1, T expression2) where T : System.Linq.Expressions.Expression
         {
             var expression1String = expression1.ToString();

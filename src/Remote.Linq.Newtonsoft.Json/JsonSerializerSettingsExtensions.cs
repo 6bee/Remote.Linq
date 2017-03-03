@@ -2,29 +2,31 @@
 
 namespace Remote.Linq
 {
+    using Aqua;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
-    using System.Collections.Generic;
+    using Remote.Linq.JsonConverters;
     using System.ComponentModel;
+    using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class JsonSerializerSettingsExtensions
     {
         /// <summary>
-        /// Sets the <see cref="AquaContractResolver"/> in <see cref="JsonSerializerSettings"/>, 
+        /// Sets the <see cref="RemoteLinqContractResolver"/> in <see cref="JsonSerializerSettings"/>, 
         /// decorating a previousely set <see cref="IContractResolver"/> if required.
         /// </summary>
-        public static JsonSerializerSettings ConfigureAqua(this JsonSerializerSettings jsonSerializerSettings)
+        public static JsonSerializerSettings ConfigureRemoteLinq(this JsonSerializerSettings jsonSerializerSettings)
         {
-            var valid = new List<TypeNameHandling> { TypeNameHandling.All, TypeNameHandling.Auto, TypeNameHandling.Objects };
-            if (!valid.Contains(jsonSerializerSettings.TypeNameHandling))
-            {
-                jsonSerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
-            }
+            jsonSerializerSettings = jsonSerializerSettings.ConfigureAqua();
 
-            jsonSerializerSettings.ContractResolver = jsonSerializerSettings.ContractResolver?.GetType() == typeof(DefaultContractResolver)
-                ? new RemoteLinqContractResolver()
-                : new RemoteLinqContractResolver(jsonSerializerSettings.ContractResolver);
+            jsonSerializerSettings.ReferenceResolverProvider = 
+                () => new ReferenceResolver();
+
+            jsonSerializerSettings.ContractResolver = 
+                jsonSerializerSettings.ContractResolver?.GetType() == typeof(DefaultContractResolver)
+                    ? new RemoteLinqContractResolver()
+                    : new RemoteLinqContractResolver(jsonSerializerSettings.ContractResolver);
 
             return jsonSerializerSettings;
         }
