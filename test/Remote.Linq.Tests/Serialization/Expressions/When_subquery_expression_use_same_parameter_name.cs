@@ -1,17 +1,28 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
+namespace Remote.Linq.Tests.Serialization.Expressions
 {
+    using Aqua.Dynamic;
     using Remote.Linq;
     using Remote.Linq.Expressions;
     using Shouldly;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using Xunit;
+    using Expression = Remote.Linq.Expressions.Expression;
 
-    public class When_subquery_expression_use_same_parameter_name
+    public abstract partial class When_subquery_expression_use_same_parameter_name
     {
+        //public class NoSerialization : When_subquery_expression_use_same_parameter_name
+        //{
+        //    public NoSerialization()
+        //        : base(x => x)
+        //    {
+        //    }
+        //}
+
         interface IValue
         {
             int Value { get; }
@@ -33,6 +44,13 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
             public override bool Equals(object obj) => Value == (obj as B)?.Value;
 
             public override int GetHashCode() => Value;
+        }
+
+        private readonly Func<Expression, Func<Type, IQueryable>, IEnumerable<DynamicObject>> _execute;
+
+        public When_subquery_expression_use_same_parameter_name(Func<Expression, Expression> serialize)
+        {
+            _execute = (expression, queryableProvider) => serialize(expression).Execute(queryableProvider: queryableProvider);
         }
 
         [Fact]
@@ -61,8 +79,8 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
                 return null;
             };
 
-            IQueryable<A> remoteQueryable1 = RemoteQueryable.Create<A>(x => x.Execute(queryableProvider: queryableProvider));
-            IQueryable<B> remoteQueryable2 = RemoteQueryable.Create<B>(x => x.Execute(queryableProvider: queryableProvider));
+            IQueryable<A> remoteQueryable1 = CreateRemoteQueryable<A>(queryableProvider);
+            IQueryable<B> remoteQueryable2 = CreateRemoteQueryable<B>(queryableProvider);
             
             A[] localResult = BuildQuery(localQueryable1, localQueryable2).ToArray();
             A[] remoteResult = BuildQuery(remoteQueryable1, remoteQueryable2).ToArray();
@@ -81,14 +99,16 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
                 new A { Value = 4 },
             }.AsQueryable();
 
-            IQueryable<A> remoteQueryable = 
-                RemoteQueryable.Create<A>(x => x.Execute(queryableProvider: t => localQueryable));
+            IQueryable<A> remoteQueryable = CreateRemoteQueryable<A>(t => localQueryable);
 
             A[] localResult = BuildQuery(localQueryable, localQueryable).ToArray();
             A[] remoteResult = BuildQuery(remoteQueryable, remoteQueryable).ToArray();
 
             remoteResult.SequenceEqual(localResult).ShouldBeTrue();
         }
+
+        private IQueryable<T> CreateRemoteQueryable<T>(Func<Type, IQueryable> queryableProvider)
+            => RemoteQueryable.Create<T>(x => _execute(x, queryableProvider));
 
         private static IQueryable<T1> BuildQuery<T1,T2>(IQueryable<T1> queriable1, IQueryable<T2> queriable2)
             where T1: IValue

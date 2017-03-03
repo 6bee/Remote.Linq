@@ -14,20 +14,15 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        [Obsolete("Parameter list changed order. This constructor will be removed in a future version.", true)]
-        internal ParameterExpression(string parameterName, Type type)
-            : this(type, parameterName)
-        {
-        }
-
-        internal ParameterExpression(TypeInfo parameterType, string parameterName)
+        internal ParameterExpression(TypeInfo parameterType, string parameterName, int instanceId)
         {
             ParameterType = parameterType;
             ParameterName = parameterName;
+            InstanceId = instanceId;
         }
 
-        internal ParameterExpression(Type parameterType, string parameterName)
-            : this(new TypeInfo(parameterType, false, false), parameterName)
+        internal ParameterExpression(Type parameterType, string parameterName, int instanceId)
+            : this(new TypeInfo(parameterType, false, false), parameterName, instanceId)
         {
         }
 
@@ -38,6 +33,12 @@ namespace Remote.Linq.Expressions
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
         public TypeInfo ParameterType { get; set; }
+
+        /// <summary>
+        /// InstanceId is used to denote a specific instance of <see cref="System.Linq.Expressions.ParameterExpression"/> within an expression tree
+        /// </summary>
+        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+        public int InstanceId { get; set; }
 
         public override string ToString()
         {

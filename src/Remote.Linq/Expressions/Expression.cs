@@ -71,11 +71,11 @@ namespace Remote.Linq.Expressions
 
         [Obsolete("Parameter list changed order. This method will be removed in a future version.", true)]
         public static ParameterExpression Parameter(string parameterName, Type type)
-            => Parameter(type, parameterName);
+            => Parameter(type, parameterName, 0);
 
-        public static ParameterExpression Parameter(Type parameterType, string parameterName)
+        public static ParameterExpression Parameter(Type parameterType, string parameterName, int instanceId)
         {
-            return new ParameterExpression(parameterType, parameterName);
+            return new ParameterExpression(parameterType, parameterName, instanceId);
         }
 
         public static BinaryExpression MakeBinary(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand)

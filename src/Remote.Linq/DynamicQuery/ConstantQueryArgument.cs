@@ -28,5 +28,10 @@ namespace Remote.Linq.DynamicQuery
             : base(type)
         {
         }
+
+        internal ConstantQueryArgument(ConstantQueryArgument constantQueryArgument)
+            : base(constantQueryArgument, true)
+        {
+        }
     }
 }

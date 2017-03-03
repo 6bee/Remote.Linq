@@ -275,7 +275,7 @@ namespace Remote.Linq
                 {
                     if (!_parameterExpressionCache.TryGetValue(p, out exp))
                     {
-                        exp = new RLinq.ParameterExpression(p.Type, p.Name);
+                        exp = new RLinq.ParameterExpression(p.Type, p.Name, _parameterExpressionCache.Count + 1);
                         _parameterExpressionCache.Add(p, exp);
                     }
                 }
@@ -408,15 +408,15 @@ namespace Remote.Linq
             }
         }
 
-        private sealed class RemoteExpressionToLinqExpressionTranslator : Aqua.Dynamic.IIsKnownTypeProvider
+        private sealed class RemoteExpressionToLinqExpressionTranslator : Aqua.Dynamic.IIsKnownTypeProvider, IEqualityComparer<RLinq.ParameterExpression>
         {
-            private readonly Dictionary<RLinq.ParameterExpression, ParameterExpression> _parameterExpressionCache =
-                new Dictionary<RLinq.ParameterExpression, ParameterExpression>(Aqua.ReferenceEqualityComparer<RLinq.ParameterExpression>.Default);
+            private readonly Dictionary<RLinq.ParameterExpression, ParameterExpression> _parameterExpressionCache;
 
             private readonly ITypeResolver _typeResolver;
 
             public RemoteExpressionToLinqExpressionTranslator(ITypeResolver typeResolver)
             {
+                _parameterExpressionCache = new Dictionary<RLinq.ParameterExpression, ParameterExpression>(this);
                 _typeResolver = typeResolver ?? TypeResolver.Instance;
             }
 
@@ -729,6 +729,31 @@ namespace Remote.Linq
             }
 
             bool Aqua.Dynamic.IIsKnownTypeProvider.IsKnownType(Type type) => true;
+
+            bool IEqualityComparer<RLinq.ParameterExpression>.Equals(RLinq.ParameterExpression x, RLinq.ParameterExpression y)
+            {
+                if (ReferenceEquals(x,y))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(null, x))
+                {
+                    if (ReferenceEquals(null, y))
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                return x.InstanceId == y.InstanceId;
+            }
+
+            int IEqualityComparer<RLinq.ParameterExpression>.GetHashCode(RLinq.ParameterExpression obj)
+            {
+                return obj?.InstanceId ?? 0;
+            }
         }
     }
 }
