@@ -15,7 +15,7 @@ namespace Remote.Linq.JsonConverters
         
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            // this mehods doesn't get invoked for deserialization for some reason...?
+            // this method doesn't get invoked for deserialization for some reason...!?
             throw new NotImplementedException();
 
             //if (reader.TokenType == JsonToken.Null)
