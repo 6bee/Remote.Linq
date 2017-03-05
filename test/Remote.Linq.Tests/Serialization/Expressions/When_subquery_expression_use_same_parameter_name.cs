@@ -15,13 +15,13 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
     public abstract partial class When_subquery_expression_use_same_parameter_name
     {
-        //public class NoSerialization : When_subquery_expression_use_same_parameter_name
-        //{
-        //    public NoSerialization()
-        //        : base(x => x)
-        //    {
-        //    }
-        //}
+        public class NoSerialization : When_subquery_expression_use_same_parameter_name
+        {
+            public NoSerialization()
+                : base(x => x)
+            {
+            }
+        }
 
         interface IValue
         {
