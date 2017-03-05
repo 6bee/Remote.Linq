@@ -5,9 +5,7 @@ namespace Remote.Linq
     using Aqua;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
-    using Remote.Linq.JsonConverters;
     using System.ComponentModel;
-    using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class JsonSerializerSettingsExtensions
@@ -20,8 +18,7 @@ namespace Remote.Linq
         {
             jsonSerializerSettings = jsonSerializerSettings.ConfigureAqua();
 
-            jsonSerializerSettings.ReferenceResolverProvider = 
-                () => new ReferenceResolver();
+            //jsonSerializerSettings.ReferenceResolverProvider = () => new ReferenceResolver();
 
             jsonSerializerSettings.ContractResolver = 
                 jsonSerializerSettings.ContractResolver?.GetType() == typeof(DefaultContractResolver)

@@ -9,11 +9,11 @@ namespace Remote.Linq.JsonConverters
     using System.Reflection;
     using System.Runtime.Serialization.Formatters;
 
-    public class ConstantExpressionJsonConverter : JsonConverter
+    internal class ConstantExpressionJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
             => objectType == typeof(ConstantExpression);
-        
+
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null)
@@ -45,7 +45,7 @@ namespace Remote.Linq.JsonConverters
                 var reference = serializer.ReferenceResolver.GetReference(null, value);
                 writer.WritePropertyName("$id");
                 writer.WriteValue(reference);
-                
+
                 writer.WritePropertyName("$type");
                 var type = value.GetType().GetTypeInfo();
                 var typeString = serializer.TypeNameAssemblyFormat == FormatterAssemblyStyle.Full

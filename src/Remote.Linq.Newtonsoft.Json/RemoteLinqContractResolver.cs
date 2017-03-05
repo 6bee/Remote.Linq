@@ -4,12 +4,9 @@ namespace Remote.Linq
 {
     using Aqua;
     using Newtonsoft.Json.Serialization;
-    using Remote.Linq.JsonConverters;
-    using System;
-    using System.Reflection;
-    using Newtonsoft.Json;
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
-    using System.Runtime.Serialization;
+    using System;
 
     public class RemoteLinqContractResolver : DefaultContractResolver
     {
@@ -34,7 +31,9 @@ namespace Remote.Linq
 
         private static bool IsTypeHandled(Type type)
         {
-            return type == typeof(ConstantExpression);
+            return type == typeof(ConstantExpression)
+                || type == typeof(VariableQueryArgument)
+                || type == typeof(VariableQueryArgumentList);
         }
 
         protected override JsonObjectContract CreateObjectContract(Type objectType)
@@ -43,38 +42,28 @@ namespace Remote.Linq
 
             if (objectType == typeof(ConstantExpression))
             {
-                // workaround: since ConstantExpressionJsonConverter.ReadJson() 
-                //             doesn't seem to get called
-                contract.OnDeserializedCallbacks.Add(SerializationCallback);
+                contract.OnDeserializedCallbacks.Add(InstanceTypeConverter.ConstantExpressionSerializationCallback);
+            }
+            else if (objectType == typeof(VariableQueryArgument))
+            {
+                contract.OnDeserializedCallbacks.Add(InstanceTypeConverter.VariableQueryArgumentSerializationCallback);
+            }
+            else if (objectType == typeof(VariableQueryArgumentList))
+            {
+                contract.OnDeserializedCallbacks.Add(InstanceTypeConverter.VariableQueryArgumentListSerializationCallback);
             }
 
             return contract;
         }
 
-        protected override JsonConverter ResolveContractConverter(Type objectType)
-        {
-            if (objectType == typeof(ConstantExpression))
-            {
-                return new ConstantExpressionJsonConverter();
-            }
+        //protected override JsonConverter ResolveContractConverter(Type objectType)
+        //{
+        //    if (objectType == typeof(ConstantExpression))
+        //    {
+        //        return new ConstantExpressionJsonConverter();
+        //    }
 
-            return base.ResolveContractConverter(objectType);
-        }
-
-        private static void SerializationCallback(object o, StreamingContext context)
-        {
-            var constantExpression = o as ConstantExpression;
-            if (!ReferenceEquals(null, constantExpression))
-            {
-                var typeName = constantExpression?.Type?.FullName;
-                if (constantExpression.Value is long)
-                {
-                    if (string.Equals(typeName, typeof(int).FullName))
-                    {
-                        constantExpression.Value = (int)(long)constantExpression.Value;
-                    }
-                }
-            }
-        }
+        //    return base.ResolveContractConverter(objectType);
+        //}
     }
 }
