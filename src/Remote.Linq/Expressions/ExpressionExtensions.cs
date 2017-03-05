@@ -37,9 +37,27 @@ namespace Remote.Linq.Expressions
             {
                 var excption = ex.InnerException;
 
-                if (excption is InvalidOperationException && string.Equals(excption.Message, "Sequence contains no elements", StringComparison.Ordinal))
+                if (excption is InvalidOperationException)
                 {
-                    return new DynamicObject[0];
+                    if (string.Equals(excption.Message, "Sequence contains no elements", StringComparison.Ordinal))
+                    {
+                        return new DynamicObject[0];
+                    }
+
+                    if (string.Equals(excption.Message, "Sequence contains no matching element", StringComparison.Ordinal))
+                    {
+                        return new DynamicObject[0];
+                    }
+
+                    if (string.Equals(excption.Message, "Sequence contains more than one element", StringComparison.Ordinal))
+                    {
+                        return new DynamicObject[2];
+                    }
+
+                    if (string.Equals(excption.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
+                    {
+                        return new DynamicObject[2];
+                    }
                 }
 
                 throw excption;

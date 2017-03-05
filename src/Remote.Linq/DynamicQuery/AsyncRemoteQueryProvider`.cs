@@ -54,7 +54,7 @@ namespace Remote.Linq.DynamicQuery
                 }
                 else
                 {
-                    var mappingTask = _resultMapper.MapResultAsync<TResult>(dataRecords);
+                    var mappingTask = _resultMapper.MapResultAsync<TResult>(dataRecords, expression);
                     result = mappingTask.Result;
                 }
             }
@@ -83,7 +83,7 @@ namespace Remote.Linq.DynamicQuery
 
             var dataRecords = await _dataProvider(rlinq);
             
-            var result = await _resultMapper.MapResultAsync<TResult>(dataRecords);
+            var result = await _resultMapper.MapResultAsync<TResult>(dataRecords, expression);
 
             return result;
         }

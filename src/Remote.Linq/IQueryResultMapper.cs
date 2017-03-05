@@ -2,8 +2,10 @@
 
 namespace Remote.Linq
 {
+    using System.Linq.Expressions;
+
     public interface IQueryResultMapper<TSource>
     {
-        TResult MapResult<TResult>(TSource source);
+        TResult MapResult<TResult>(TSource source, Expression expression);
     }
 }

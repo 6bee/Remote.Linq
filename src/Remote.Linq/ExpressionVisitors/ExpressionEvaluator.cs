@@ -131,7 +131,16 @@
 
                 var lambda = Expression.Lambda(expression);
                 var func = lambda.Compile();
-                var value = func.DynamicInvoke(null);
+                object value;
+
+                try
+                {
+                    value = func.DynamicInvoke(null);
+                }
+                catch(TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
 
                 var queryArgument = Activator.CreateInstance(typeof(VariableQueryArgument<>).MakeGenericType(expression.Type), new[] { value });
                 var propertyExpression = Expression.Property(Expression.Constant(queryArgument), "Value");

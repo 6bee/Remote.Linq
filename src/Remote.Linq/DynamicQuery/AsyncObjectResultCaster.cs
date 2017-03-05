@@ -2,11 +2,12 @@
 
 namespace Remote.Linq.DynamicQuery
 {
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
 
     internal sealed class AsyncObjectResultCaster : IAsyncQueryResultMapper<object>
     {
-        public async Task<TResult> MapResultAsync<TResult>(object source)
+        public async Task<TResult> MapResultAsync<TResult>(object source, Expression expression)
         {
             return await Task.FromResult((TResult)source);
         }

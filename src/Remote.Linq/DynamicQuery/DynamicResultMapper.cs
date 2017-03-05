@@ -6,6 +6,7 @@ namespace Remote.Linq.DynamicQuery
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     internal sealed class DynamicResultMapper : IQueryResultMapper<IEnumerable<DynamicObject>>
@@ -17,12 +18,12 @@ namespace Remote.Linq.DynamicQuery
             _mapper = mapper;
         }
 
-        public TResult MapResult<TResult>(IEnumerable<DynamicObject> source)
+        public TResult MapResult<TResult>(IEnumerable<DynamicObject> source, Expression expression)
         {
-            return MapToType<TResult>(source, _mapper);
+            return MapToType<TResult>(source, _mapper, expression);
         }
 
-        internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords, IDynamicObjectMapper mapper)
+        internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords, IDynamicObjectMapper mapper, Expression expression)
         {
             var elementType = TypeHelper.GetElementType(typeof(T));
 
@@ -47,7 +48,17 @@ namespace Remote.Linq.DynamicQuery
             {
                 try
                 {
-                    var single = MethodInfos.Enumerable.Single.MakeGenericMethod(elementType).Invoke(null, new object[] { result });
+                    object single;
+                    if ((expression as MethodCallExpression)?.Arguments.Count == 2)
+                    {
+                        var predicate = GetTruePredicate(elementType);
+                        single = MethodInfos.Enumerable.SingleWithFilter.MakeGenericMethod(elementType).Invoke(null, new object[] { result, predicate });
+                    }
+                    else
+                    {
+                        single = MethodInfos.Enumerable.Single.MakeGenericMethod(elementType).Invoke(null, new object[] { result });
+                    }
+
                     return (T)single;
                 }
                 catch (TargetInvocationException ex)
@@ -58,5 +69,8 @@ namespace Remote.Linq.DynamicQuery
 
             throw new Exception(string.Format("Failed to cast result of type '{0}' to '{1}'", result.GetType(), typeof(T)));
         }
+
+        private static object GetTruePredicate(Type t)
+            => Expression.Lambda(Expression.Constant(true), Expression.Parameter(t)).Compile();
     }
 }

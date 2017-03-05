@@ -29,29 +29,23 @@ namespace Remote.Linq
             internal static readonly MethodInfo Contains = typeof(System.Linq.Enumerable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Single(m => m.Name == "Contains" && m.GetParameters().Length == 2);
-            
+
             internal static readonly MethodInfo Single = typeof(System.Linq.Enumerable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(x => x.Name == "Single")
-                .Where(x =>
-                {
-                    var parameters = x.GetParameters();
-                    return parameters.Length == 1
-                        && parameters[0].ParameterType.IsGenericType()
-                        && parameters[0].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>);
-                })
+                .Where(x => x.GetParameters().Length == 1)
+                .Single();
+
+            internal static readonly MethodInfo SingleWithFilter = typeof(System.Linq.Enumerable)
+                .GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Where(x => x.Name == "Single")
+                .Where(x => x.GetParameters().Length == 2)
                 .Single();
 
             internal static readonly MethodInfo SingleOrDefault = typeof(System.Linq.Enumerable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(x => x.Name == "SingleOrDefault")
-                .Where(x =>
-                {
-                    var parameters = x.GetParameters();
-                    return parameters.Length == 1
-                        && parameters[0].ParameterType.IsGenericType()
-                        && parameters[0].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>);
-                })
+                .Where(x => x.GetParameters().Length == 1)
                 .Single();
         }
 
@@ -144,10 +138,10 @@ namespace Remote.Linq
         internal static class GroupingFactory
         {
             internal static readonly MethodInfo MapMany = typeof(GroupingFactory)
-                .GetMethod("InternalMapMany", BindingFlags.Static | BindingFlags.NonPublic);
+                .GetMethod(nameof(InternalMapMany), BindingFlags.Static | BindingFlags.NonPublic);
 
             internal static readonly MethodInfo MapOne = typeof(GroupingFactory)
-                .GetMethod("InternalMapOne", BindingFlags.Static | BindingFlags.NonPublic);
+                .GetMethod(nameof(InternalMapOne), BindingFlags.Static | BindingFlags.NonPublic);
 
             private static IEnumerable<Grouping<TKey, TElement>> InternalMapMany<TKey, TElement>(IEnumerable<IGrouping<TKey, TElement>> list)
                 => list.Select(InternalMapOne).ToArray();
