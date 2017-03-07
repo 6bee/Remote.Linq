@@ -6,8 +6,7 @@
     <Copyright>Copyright Christof Senn 2013-2017</Copyright>
     <VersionPrefix>5.4.0-alpha</VersionPrefix>
     <Authors>Christof Senn</Authors>
-    <TargetFrameworks>net451;netstandard1.6</TargetFrameworks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TargetFrameworks>net451;netstandard1.3;netstandard1.6</TargetFrameworks>
     <AssemblyName>Remote.Linq</AssemblyName>
     <PackageId>Remote.Linq</PackageId>
     <PackageTags>LINQ;expression-tree;lambda;dynamic;remote;remote-query;multi-tier;n-tier;fluent-interface</PackageTags>
@@ -24,7 +23,8 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,6 +38,10 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net451' ">
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">

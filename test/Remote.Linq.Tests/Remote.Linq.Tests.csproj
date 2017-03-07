@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for Remote.Linq</Description>
-    <Copyright>Copyright Christof Senn 2013-2016</Copyright>
+    <Copyright>Copyright Christof Senn 2013-2017</Copyright>
     <TargetFrameworks>net451;netcoreapp1.0</TargetFrameworks>
     <AssemblyName>Remote.Linq.Tests</AssemblyName>
     <PackageId>Remote.Linq.Tests</PackageId>
@@ -16,6 +16,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,9 +26,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170222-09" />
+    <PackageReference Include="xunit" Version="2.2.0-beta5-build3474" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
     <PackageReference Include="Shouldly" Version="2.8.2" />
-    <PackageReference Include="xunit" Version="2.2.0-beta5-build3474" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">

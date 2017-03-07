@@ -5,8 +5,7 @@
     <Copyright>Copyright Christof Senn 2017</Copyright>
     <VersionPrefix>5.4.0-alpha</VersionPrefix>
     <Authors>Christof Senn</Authors>
-    <TargetFrameworks>net451;netstandard1.6</TargetFrameworks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TargetFrameworks>net451;netstandard1.3;netstandard1.6</TargetFrameworks>
     <AssemblyName>Remote.Linq.Newtonsoft.Json</AssemblyName>
     <PackageId>Remote.Linq.Newtonsoft.Json</PackageId>
     <PackageTags>remote-linq;json-net;newtonsoft-json</PackageTags>
@@ -23,6 +22,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
