@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.DynamicQuery
 {
-    using Aqua.Dynamic;
     using System;
     using System.Linq;
     using System.Linq.Expressions;
@@ -14,17 +13,15 @@ namespace Remote.Linq.DynamicQuery
         protected readonly IRemoteQueryProvider _provider;
 
         internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider)
+            : this(elemntType, provider, null)
         {
-            _elemntType = elemntType;
-            _provider = provider;
-            _expression = Expression.Constant(this);
         }
 
         internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression expression)
         {
             _elemntType = elemntType;
             _provider = provider;
-            _expression = expression;
+            _expression = expression ?? Expression.Constant(this);
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -32,10 +29,10 @@ namespace Remote.Linq.DynamicQuery
             return (_provider.Execute<System.Collections.IEnumerable>(_expression)).GetEnumerator();
         }
 
-        Type IQueryable.ElementType { get { return _elemntType; } }
+        Type IQueryable.ElementType => _elemntType;
 
-        Expression IQueryable.Expression { get { return _expression; } }
+        Expression IQueryable.Expression => _expression;
 
-        IQueryProvider IQueryable.Provider { get { return _provider; } }
+        IQueryProvider IQueryable.Provider => _provider;
     }
 }

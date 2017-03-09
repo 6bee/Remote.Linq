@@ -56,32 +56,35 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         [Fact]
         public void Expression_should_be_include_method_call()
         {
-            ((MethodCallExpression)expression).Method.Name.ShouldBe("Include");
+            expression.ShouldBeOfType<MethodCallExpression>().Method.Name.ShouldBe("Include");
         }
 
         [Fact]
         public void Expression_should_have_two_arguments()
         {
-            ((MethodCallExpression)expression).Arguments.Count.ShouldBe(2);
+            expression.ShouldBeOfType<MethodCallExpression>().Arguments.Count.ShouldBe(2);
         }
 
         [Fact]
         public void First_argument_should_be_constant_expression_with_resource_descriptor()
         {
-            var arg = ((MethodCallExpression)expression).Arguments[0];
-            
+            var arg = expression.ShouldBeOfType<MethodCallExpression>().Arguments[0];
+
             arg.NodeType.ShouldBe(ExpressionType.Constant);
-            ((ConstantExpression)arg).Value.ShouldBeOfType<QueryableResourceDescriptor>();
-            ((QueryableResourceDescriptor)((ConstantExpression)arg).Value).Type.Type.ShouldBe(typeof(Parent));
+            arg.ShouldBeOfType<ConstantExpression>()
+                .Value.ShouldBeOfType<QueryableResourceDescriptor>()
+                .Type.Type.ShouldBe(typeof(Parent));
         }
 
         [Fact]
         public void Second_argument_should_be_constant_expression_with_navigation_property_name()
         {
-            var arg = ((MethodCallExpression)expression).Arguments[1];
+            var arg = expression.ShouldBeOfType<MethodCallExpression>().Arguments[1];
 
             arg.NodeType.ShouldBe(ExpressionType.Constant);
-            ((ConstantExpression)arg).Value.ShouldBe("Children");
+
+            arg.ShouldBeOfType<ConstantExpression>()
+                .Value.ShouldBe("Children");
         }
      }
 }

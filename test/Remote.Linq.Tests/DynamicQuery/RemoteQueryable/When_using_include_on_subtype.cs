@@ -3,13 +3,13 @@
 namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 {
     using Aqua.Dynamic;
+    using Aqua.TypeSystem;
     using Remote.Linq;
     using Remote.Linq.Expressions;
     using Shouldly;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using Xunit;
 
     public class When_using_include_on_subtype
@@ -57,32 +57,34 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         [Fact]
         public void Expression_should_be_include_method_call()
         {
-            ((MethodCallExpression)expression).Method.Name.ShouldBe("Include");
+            expression.ShouldBeOfType<MethodCallExpression>().Method.Name.ShouldBe("Include");
         }
 
         [Fact]
         public void Expression_should_have_two_arguments()
         {
-            ((MethodCallExpression)expression).Arguments.Count.ShouldBe(2);
+            expression.ShouldBeOfType<MethodCallExpression>().Arguments.Count.ShouldBe(2);
         }
 
         [Fact]
         public void First_argument_should_be_method_call_expression_returning_a_queryable()
         {
-            var arg = ((MethodCallExpression)expression).Arguments[0];
+            var arg = expression.ShouldBeOfType<MethodCallExpression>().Arguments[0];
             
             arg.NodeType.ShouldBe(ExpressionType.Call);
-            var method = (MethodInfo)((MethodCallExpression)arg).Method;
-            method.ReturnType.ShouldBe(typeof(IQueryable<Child>));
+            arg.ShouldBeOfType<MethodCallExpression>()
+                .Method.ShouldBeOfType<MethodInfo>()
+                .Method.ReturnType.ShouldBe(typeof(IQueryable<Child>));
         }
 
         [Fact]
         public void Second_argument_should_be_constant_expression_with_navigation_property_name()
         {
-            var arg = ((MethodCallExpression)expression).Arguments[1];
+            var arg = expression.ShouldBeOfType<MethodCallExpression>().Arguments[1];
 
             arg.NodeType.ShouldBe(ExpressionType.Constant);
-            ((ConstantExpression)arg).Value.ShouldBe("Parent");
+            arg.ShouldBeOfType<ConstantExpression>()
+                .Value.ShouldBe("Parent");
         }
      }
 }
