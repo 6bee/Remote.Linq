@@ -2,7 +2,9 @@
 
 namespace Remote.Linq
 {
+    using Aqua.Dynamic;
     using Aqua.TypeSystem;
+    using Aqua.TypeSystem.Extensions;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
     using System;
@@ -147,10 +149,83 @@ namespace Remote.Linq
             return true;
         }
 
+        private sealed class ConstantValueMapper : DynamicObjectMapper
+        {
+            private static readonly Func<Type, bool> _isNativeType = new[]
+                {
+                    typeof(string),
+                    typeof(int),
+                    typeof(uint),
+                    typeof(byte),
+                    typeof(sbyte),
+                    typeof(short),
+                    typeof(ushort),
+                    typeof(long),
+                    typeof(ulong),
+                    typeof(float),
+                    typeof(double),
+                    typeof(decimal),
+                    typeof(char),
+                    typeof(bool),
+                    typeof(Guid),
+                    typeof(DateTime),
+                    typeof(TimeSpan),
+                    typeof(DateTimeOffset),
+                    typeof(System.Numerics.BigInteger),
+                    typeof(System.Numerics.Complex),
+
+                    typeof(ConstantQueryArgument),
+                    typeof(VariableQueryArgument),
+                    typeof(VariableQueryArgumentList),
+                    typeof(QueryableResourceDescriptor),
+                }
+                .SelectMany(x => x.IsValueType() ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
+                .ToDictionary(x => x, x => (object)null).ContainsKey;
+
+            private sealed class IsKnownTypeProvider : IIsKnownTypeProvider
+            {
+                public bool IsKnownType(Type type) => !TypeNeedsWrapping(type);
+            }
+
+            public ConstantValueMapper(ITypeResolver typeResolver = null)
+                : base(isKnownTypeProvider: new IsKnownTypeProvider(), typeResolver: typeResolver)
+            {
+            }
+
+            public static bool TypeNeedsWrapping(Type type)
+            {
+                if (_isNativeType(type))
+                {
+                    return false;
+                }
+
+                if (type.IsGenericType())
+                {
+                    var genericTypeDefinition = type.GetGenericTypeDefinition();
+                    if (genericTypeDefinition == typeof(VariableQueryArgument<>))
+                    {
+                        return false;
+                    }
+                }
+
+                if (typeof(Expression).IsAssignableFrom(type) ||
+                    typeof(IQueryable).IsAssignableFrom(type))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+
         private sealed class LinqExpressionToRemoteExpressionTranslator : ExpressionVisitorBase
         {
             private readonly Dictionary<ParameterExpression, RLinq.ParameterExpression> _parameterExpressionCache =
                 new Dictionary<ParameterExpression, RLinq.ParameterExpression>(Aqua.ReferenceEqualityComparer<ParameterExpression>.Default);
+
+            private readonly Dictionary<object, ConstantQueryArgument> _constantQueryArgumentCache =
+                new Dictionary<object, ConstantQueryArgument>(Aqua.ReferenceEqualityComparer<object>.Default);
 
             public RLinq.Expression ToRemoteExpression(Expression expression)
             {
@@ -235,34 +310,35 @@ namespace Remote.Linq
 
             protected override Expression VisitConstant(ConstantExpression c)
             {
-                var exp = new RLinq.ConstantExpression(c.Value, c.Type);
-                if (exp.Type?.IsAnonymousType ?? false)
+                RLinq.ConstantExpression exp;
+                if (!ReferenceEquals(null, c.Value) && ConstantValueMapper.TypeNeedsWrapping(c.Type))
                 {
-                    var constantQueryArgument = new ConstantQueryArgument(c.Type);
-
-                    foreach (var property in exp.Type.Type.GetProperties())
+                    ConstantQueryArgument constantQueryArgument;
+                    if (!_constantQueryArgumentCache.TryGetValue(c.Value, out constantQueryArgument))
                     {
-                        var value = property.GetValue(c.Value);
-                        if (typeof(Expression).IsAssignableFrom(property.PropertyType))
-                        {
-                            value = Visit((Expression)value).Unwrap();
-                        }
+                        constantQueryArgument = new ConstantQueryArgument(c.Type);
 
-                        constantQueryArgument.Add(property.Name, value);
+                        _constantQueryArgumentCache.Add(c.Value, constantQueryArgument);
+
+                        var dynamicObject = new ConstantValueMapper().MapObject(c.Value);
+                        foreach (var property in dynamicObject.Properties)
+                        {
+                            var propertyValue = property.Value;
+                            var expressionValue = propertyValue as Expression;
+                            if (!ReferenceEquals(null, expressionValue))
+                            {
+                                propertyValue = Visit(expressionValue).Unwrap();
+                            }
+
+                            constantQueryArgument.Add(property.Name, propertyValue);
+                        }
                     }
 
-                    foreach (var field in exp.Type.Type.GetFields())
-                    {
-                        var value = field.GetValue(c.Value);
-                        if (typeof(Expression).IsAssignableFrom(field.FieldType))
-                        {
-                            value = Visit((Expression)value).Unwrap();
-                        }
-
-                        constantQueryArgument.Add(field.Name, value);
-                    }
-                    
                     exp = new RLinq.ConstantExpression(constantQueryArgument);
+                }
+                else
+                {
+                    exp = new RLinq.ConstantExpression(c.Value, c.Type);
                 }
 
                 return exp.Wrap();
@@ -408,7 +484,7 @@ namespace Remote.Linq
             }
         }
 
-        private sealed class RemoteExpressionToLinqExpressionTranslator : Aqua.Dynamic.IIsKnownTypeProvider, IEqualityComparer<RLinq.ParameterExpression>
+        private sealed class RemoteExpressionToLinqExpressionTranslator : IEqualityComparer<RLinq.ParameterExpression>
         {
             private readonly Dictionary<RLinq.ParameterExpression, ParameterExpression> _parameterExpressionCache;
 
@@ -670,10 +746,10 @@ namespace Remote.Linq
                 var type = _typeResolver.ResolveType(constantValueExpression.Type);
 
                 var oldConstantQueryArgument = value as ConstantQueryArgument;
-                if (oldConstantQueryArgument?.Type?.IsAnonymousType ?? false)
+                if (!ReferenceEquals(null, oldConstantQueryArgument?.Type))
                 {
                     var newConstantQueryArgument = new ConstantQueryArgument(oldConstantQueryArgument.Type);
-                    foreach(var property in oldConstantQueryArgument.Properties)
+                    foreach (var property in oldConstantQueryArgument.Properties)
                     {
                         var propertyValue = property.Value;
                         var expressionValue = propertyValue as RLinq.Expression;
@@ -685,11 +761,10 @@ namespace Remote.Linq
                         newConstantQueryArgument.Add(property.Name, propertyValue);
                     }
 
-                    var mapper = new Aqua.Dynamic.DynamicObjectMapper(typeResolver: _typeResolver, isKnownTypeProvider: this);
+                    var mapper = new ConstantValueMapper(typeResolver: _typeResolver);
                     value = mapper.Map(newConstantQueryArgument);
-                    type = value.GetType(); 
+                    type = _typeResolver.ResolveType(newConstantQueryArgument.Type);
                 }
-
                 return Expression.Constant(value, type);
             }
 
@@ -727,8 +802,6 @@ namespace Remote.Linq
                     return Expression.Lambda(delegateType, body, parameters.ToArray());
                 }
             }
-
-            bool Aqua.Dynamic.IIsKnownTypeProvider.IsKnownType(Type type) => true;
 
             bool IEqualityComparer<RLinq.ParameterExpression>.Equals(RLinq.ParameterExpression x, RLinq.ParameterExpression y)
             {
