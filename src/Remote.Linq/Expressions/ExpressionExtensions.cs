@@ -71,7 +71,7 @@ namespace Remote.Linq.Expressions
             else
             {
                 var queryableType = queryable.GetType();
-                var isQueryable = queryableType.IsGenericType() && queryableType.GetInterfaces().Any(x => x.IsGenericType() && x.GetGenericTypeDefinition() == typeof(IQueryable<>));
+                var isQueryable = queryableType.Implements(typeof(IQueryable<>));
                 if (isQueryable)
                 {
                     // force query execution
