@@ -1,5 +1,9 @@
 language: generic  
 
+branches:
+  except:
+  - experimental
+
 addons:  
   apt:
     packages:
