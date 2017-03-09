@@ -148,7 +148,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_return_orders_joined_with_chars_array()
+        public void Should_return_orders_joined_with_chars_array_closure()
         {
             char[] array = { 'h', 'e', 'l', 'l', 'o' };
             var joinLocalVariable = (
@@ -161,7 +161,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_return_orders_joined_with_chars_new_array_init()
+        public void Should_return_orders_joined_with_chars_new_array_inline()
         {
             var joinNewArrayInit = (
                 from i in _orderItemQueriable
@@ -173,7 +173,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_return_orders_joined_with_string()
+        public void Should_return_orders_joined_with_string_variable_closure()
         {
             var hello = "hello";
             var joinLocalVariable = (
@@ -186,7 +186,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_return_orders_joined_with_const_string()
+        public void Should_return_orders_joined_with_const_string_inline()
         {
             var joinConst = (
                 from i in _orderItemQueriable
@@ -198,7 +198,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_return_orders_joined_with_const_string2()
+        public void Should_return_orders_joined_with_const_string_closure()
         {
             const string hello = "hello";
             var joinConst = (
@@ -211,7 +211,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_query_categories_filterd_using_constant_array_variable()
+        public void Should_query_categories_filterd_using_local_array_inline()
         {
             System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
                 c => new[] { "Vehicles" }.Contains(c.Name);
@@ -225,25 +225,66 @@ namespace Remote.Linq.Tests.RemoteQueryable
                     mc.Arguments[1]),
                 lambdaNewArrayInit.Parameters);
 
+            _categoryQueriable.Where(c => new[] { "Vehicles" }.Contains(c.Name)).Single().Name.ShouldBe("Vehicles");
             _categoryQueriable.Where(lambdaNewArrayInit).Single().Name.ShouldBe("Vehicles");
             _categoryQueriable.Where(lambdaConst).Single().Name.ShouldBe("Vehicles");
         }
 
         [Fact]
-        public void Should_query_products_filterd_using_local_variables()
+        public void Should_query_categories_filterd_using_local_list_inline()
+        {
+            System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
+                c => new List<string> { "Vehicles" }.Contains(c.Name);
+
+            var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
+
+            var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+                System.Linq.Expressions.Expression.Call(
+                    System.Linq.Expressions.Expression.Constant(new List<string> { "Vehicles" }),
+                    mc.Method,
+                    mc.Arguments[0]),
+                lambdaNewArrayInit.Parameters);
+
+            _categoryQueriable.Where(c => new List<string> { "Vehicles" }.Contains(c.Name)).Single().Name.ShouldBe("Vehicles");
+            _categoryQueriable.Where(lambdaNewArrayInit).Single().Name.ShouldBe("Vehicles");
+            _categoryQueriable.Where(lambdaConst).Single().Name.ShouldBe("Vehicles");
+        }
+
+        [Fact]
+        public void Should_query_categories_filterd_using_local_list_inline_with_enumerable_method()
+        {
+            System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
+                c => Enumerable.Contains(new List<string> { "Vehicles" }, c.Name);
+
+            var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
+
+            var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+                System.Linq.Expressions.Expression.Call(
+                    mc.Method,
+                    System.Linq.Expressions.Expression.Constant(new List<string> { "Vehicles" }),
+                    mc.Arguments[1]),
+                lambdaNewArrayInit.Parameters);
+
+            _categoryQueriable.Where(c => Enumerable.Contains(new List<string> { "Vehicles" }, c.Name)).Single().Name.ShouldBe("Vehicles");
+            _categoryQueriable.Where(lambdaNewArrayInit).Single().Name.ShouldBe("Vehicles");
+            _categoryQueriable.Where(lambdaConst).Single().Name.ShouldBe("Vehicles");
+        }
+
+        [Fact]
+        public void Should_query_products_filterd_using_local_variables_closure_inline_mix()
         {
             IEnumerable<int?> listOfIds = new List<int?>() { null, 1, 11, 111 };
             int oneId = 10;
             var query =
                 from p in _productQueriable
-                where listOfIds.Contains(p.Id) || p.Id % 3 == 0 || p.Id == oneId
+                where listOfIds.Contains(p.Id) || new List<string> { "Truck", "Bicycle" }.Contains(p.Name) || p.Id % 3 == 0 || p.Id == oneId
                 select p;
             var result = query.ToArray();
-            result.Count().ShouldBe(3);
+            result.Count().ShouldBe(4);
         }
 
         [Fact]
-        public void Should_query_products_filterd_using_const_integer()
+        public void Should_query_products_filterd_using_const_integer_closure()
         {
             const int oneId = 10;
             var query =
@@ -255,7 +296,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_query_products_filterd_using_anonymous_argument()
+        public void Should_query_products_filterd_using_anonymous_argument_closure()
         {
             var arg = new { Id = 10.0 };
             var query =
