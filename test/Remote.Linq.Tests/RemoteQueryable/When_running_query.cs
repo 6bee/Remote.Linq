@@ -211,6 +211,25 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_query_categories_filterd_using_constant_array_variable()
+        {
+            System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
+                c => new[] { "Vehicles" }.Contains(c.Name);
+
+            var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
+
+            var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+                System.Linq.Expressions.Expression.Call(
+                    mc.Method,
+                    System.Linq.Expressions.Expression.Constant(new[] { "Vehicles" }),
+                    mc.Arguments[1]),
+                lambdaNewArrayInit.Parameters);
+
+            _categoryQueriable.Where(lambdaNewArrayInit).Single().Name.ShouldBe("Vehicles");
+            _categoryQueriable.Where(lambdaConst).Single().Name.ShouldBe("Vehicles");
+        }
+
+        [Fact]
         public void Should_query_products_filterd_using_local_variables()
         {
             IEnumerable<int?> listOfIds = new List<int?>() { null, 1, 11, 111 };
