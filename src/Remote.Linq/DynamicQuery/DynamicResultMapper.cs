@@ -29,7 +29,7 @@ namespace Remote.Linq.DynamicQuery
 
             if (ReferenceEquals(null, mapper))
             {
-                mapper = new DynamicObjectMapper();
+                mapper = new DynamicQueryResultMapper();
             }
 
             var result = mapper.Map(dataRecords, elementType);

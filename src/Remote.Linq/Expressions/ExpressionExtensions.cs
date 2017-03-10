@@ -5,6 +5,7 @@ namespace Remote.Linq.Expressions
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
@@ -108,29 +109,11 @@ namespace Remote.Linq.Expressions
 
             var queryResult = Execute(linqExpression);
 
-            var projectedResult = (resultPorjector ?? ProjectResult)(queryResult);
+            var projectedResult = ReferenceEquals(null, resultPorjector) ? queryResult : resultPorjector(queryResult);
 
             var dynamicObjects = ConvertResultToDynamicObjects(projectedResult, mapper, setTypeInformation);
             return dynamicObjects;
-        }
-
-        public static object ProjectResult(object obj)
-        {
-            var type = obj.GetType();
-
-            Type[] genericTypeArguments;
-            if (type.Implements(typeof(IGrouping<,>), out genericTypeArguments))
-            {
-                return MethodInfos.GroupingFactory.MapOne.MakeGenericMethod(genericTypeArguments).Invoke(null, new[] { obj });
-            }
-
-            if (type.Implements(typeof(IEnumerable<>).MakeGenericType(typeof(IGrouping<,>)), out genericTypeArguments))
-            {
-                return MethodInfos.GroupingFactory.MapMany.MakeGenericMethod(genericTypeArguments).Invoke(null, new[] { obj });
-            }
-
-            return obj;
-        }
+         }
         
         /// <summary>
         /// Converts the query result into a collection of <see cref="DynamicObject"/>
@@ -142,7 +125,7 @@ namespace Remote.Linq.Expressions
         {
             if (ReferenceEquals(null, mapper))
             {
-                mapper = new DynamicObjectMapper();
+                mapper = new DynamicQueryResultMapper();
             }
 
             if (ReferenceEquals(null, setTypeInformation))
