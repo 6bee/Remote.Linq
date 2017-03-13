@@ -248,6 +248,26 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_query_categories_filterd_using_empty_local_array_inline()
+        {
+            System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
+                c => new string[0].Contains(c.Name);
+
+            var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
+
+            var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+                System.Linq.Expressions.Expression.Call(
+                    mc.Method,
+                    System.Linq.Expressions.Expression.Constant(new string[0]),
+                    mc.Arguments[1]),
+                lambdaNewArrayInit.Parameters);
+
+            _categoryQueryable.Where(c => new string[0].Contains(c.Name)).ToList().ShouldBeEmpty();
+            _categoryQueryable.Where(lambdaNewArrayInit).ToList().ShouldBeEmpty();
+            _categoryQueryable.Where(lambdaConst).ToList().ShouldBeEmpty();
+        }
+
+        [Fact]
         public void Should_query_categories_filterd_using_local_list_inline()
         {
             System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
@@ -268,6 +288,26 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_query_categories_filterd_using_empty_local_list_inline()
+        {
+            System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
+                c => new List<string>().Contains(c.Name);
+
+            var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
+
+            var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+                System.Linq.Expressions.Expression.Call(
+                    System.Linq.Expressions.Expression.Constant(new List<string>()),
+                    mc.Method,
+                    mc.Arguments[0]),
+                lambdaNewArrayInit.Parameters);
+
+            _categoryQueryable.Where(c => new List<string>().Contains(c.Name)).ToList().ShouldBeEmpty();
+            _categoryQueryable.Where(lambdaNewArrayInit).ToList().ShouldBeEmpty();
+            _categoryQueryable.Where(lambdaConst).ToList().ShouldBeEmpty();
+        }
+
+        [Fact]
         public void Should_query_categories_filterd_using_local_list_inline_with_enumerable_method()
         {
             System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
@@ -285,6 +325,26 @@ namespace Remote.Linq.Tests.RemoteQueryable
             _categoryQueryable.Where(c => Enumerable.Contains(new List<string> { "Vehicles" }, c.Name)).Single().Name.ShouldBe("Vehicles");
             _categoryQueryable.Where(lambdaNewArrayInit).Single().Name.ShouldBe("Vehicles");
             _categoryQueryable.Where(lambdaConst).Single().Name.ShouldBe("Vehicles");
+        }
+
+        [Fact]
+        public void Should_query_categories_filterd_using_empty_local_list_inline_with_enumerable_method()
+        {
+            System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
+                c => Enumerable.Contains(new List<string>(), c.Name);
+
+            var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
+
+            var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+                System.Linq.Expressions.Expression.Call(
+                    mc.Method,
+                    System.Linq.Expressions.Expression.Constant(new List<string>()),
+                    mc.Arguments[1]),
+                lambdaNewArrayInit.Parameters);
+
+            _categoryQueryable.Where(c => Enumerable.Contains(new List<string>(), c.Name)).ToList().ShouldBeEmpty();
+            _categoryQueryable.Where(lambdaNewArrayInit).ToList().ShouldBeEmpty();
+            _categoryQueryable.Where(lambdaConst).ToList().ShouldBeEmpty();
         }
 
         [Fact]
