@@ -63,29 +63,32 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitMemberAccess(MemberExpression expression)
             {
-                var member = expression.Member;
-                if (member.MemberType == MemberTypes.Property && 
-                    member.DeclaringType.IsGenericType && 
-                    member.DeclaringType.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                if (expression.Expression.NodeType == ExpressionType.Constant)
                 {
-                    var instanceExpression = (ConstantExpression)Visit(expression.Expression);
+                    var member = expression.Member;
+                    if (member.MemberType == MemberTypes.Property &&
+                        member.DeclaringType.IsGenericType &&
+                        member.DeclaringType.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                    {
+                        var instanceExpression = (ConstantExpression)Visit(expression.Expression);
 
-                    PropertyInfo propertyInfo;
-                    if (instanceExpression.Value is VariableQueryArgument)
-                    {
-                        propertyInfo = QueryArgumentValuePropertyInfo;
-                    }
-                    else if (instanceExpression.Value is VariableQueryArgumentList)
-                    {
-                        propertyInfo = QueryArgumentValueListPropertyInfo;
-                    }
-                    else
-                    {
-                        throw new Exception(string.Format("Unexpected instance expression: {0}", instanceExpression));
-                    }
+                        PropertyInfo propertyInfo;
+                        if (instanceExpression.Value is VariableQueryArgument)
+                        {
+                            propertyInfo = QueryArgumentValuePropertyInfo;
+                        }
+                        else if (instanceExpression.Value is VariableQueryArgumentList)
+                        {
+                            propertyInfo = QueryArgumentValueListPropertyInfo;
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format("Unexpected instance expression: {0}", instanceExpression));
+                        }
 
-                    var newMemberExpression = new MemberExpression(instanceExpression, propertyInfo);
-                    return newMemberExpression;
+                        var newMemberExpression = new MemberExpression(instanceExpression, propertyInfo);
+                        return newMemberExpression;
+                    }
                 }
 
                 return base.VisitMemberAccess(expression);

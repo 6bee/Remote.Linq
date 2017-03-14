@@ -19,5 +19,11 @@ namespace Remote.Linq.Tests
             isMatch.ShouldBeTrue(() => $"NO MATCH - {typeof(T)}: \n{t1}\n{t2}");
             return t1;
         }
+
+        public static T With<T>(this T t, Action<T> assertion)
+        {
+            assertion(t);
+            return t;
+        }
     }
 }

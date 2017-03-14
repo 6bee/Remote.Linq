@@ -81,8 +81,15 @@
                 }
             }
 
-            return expression.NodeType != ExpressionType.Parameter
-                && expression.NodeType != ExpressionType.Lambda;
+            switch (expression.NodeType)
+            {
+                case ExpressionType.Parameter:
+                case ExpressionType.Lambda:
+                case ExpressionType.New:
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>  
@@ -142,9 +149,11 @@
                     throw ex.InnerException;
                 }
 
-                var queryArgument = Activator.CreateInstance(typeof(VariableQueryArgument<>).MakeGenericType(expression.Type), new[] { value });
-                var propertyExpression = Expression.Property(Expression.Constant(queryArgument), "Value");
-                return propertyExpression;
+                return Expression.Property(
+                    Expression.New(
+                        typeof(VariableQueryArgument<>).MakeGenericType(expression.Type).GetConstructor(new[] { expression.Type }),
+                        Expression.Constant(value, expression.Type)),
+                    nameof(VariableQueryArgument<object>.Value));
             }
         }
 

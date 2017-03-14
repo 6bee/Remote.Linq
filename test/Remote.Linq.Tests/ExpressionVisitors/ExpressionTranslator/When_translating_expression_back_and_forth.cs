@@ -6,6 +6,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
     using Remote.Linq.DynamicQuery;
     using Shouldly;
     using System;
+    using System.Linq;
     using System.Linq.Expressions;
     using Xunit;
 
@@ -95,8 +96,9 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
             BackAndForth(expression)
                 .Item2
                 .Body.ShouldBeAssignableTo<MemberExpression>()
-                .Expression.ShouldBeOfType<ConstantExpression>()
-                .Value.ShouldBeOfType<VariableQueryArgument<double>>()
+                .Expression.ShouldBeOfType<NewExpression>()
+                .With(exp => exp.Type.ShouldBe(typeof(VariableQueryArgument<double>)))
+                .Arguments.Single().ShouldBeOfType<ConstantExpression>()
                 .Value.ShouldBe(Math.E);
         }
 

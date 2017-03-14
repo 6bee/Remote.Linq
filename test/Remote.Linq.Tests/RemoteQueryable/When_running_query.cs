@@ -397,6 +397,46 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_return_projection_to_anonymous_type_from_inline_constant()
+        {
+            _productQueryable.Select(x => new { Value = 123 }).ShouldAllBe(x => x.Value == 123);
+        }
+
+        [Fact]
+        public void Should_return_projection_to_anonymous_type_with_int_from_int_variable_closure()
+        {
+            var i = 123;
+            _productQueryable.Select(x => new { Value = i }).ShouldAllBe(x => x.Value == 123);
+        }
+
+        [Fact]
+        public void Should_return_projection_to_anonymous_type_from_const_int_closure()
+        {
+            const int i = 123;
+            _productQueryable.Select(x => new { Value = i }).ShouldAllBe(x => x.Value == 123);
+        }
+
+        [Fact]
+        public void Should_return_projection_to_int_from_inline_constant()
+        {
+            _productQueryable.Select(x => 123).ShouldAllBe(x => x == 123);
+        }
+
+        [Fact]
+        public void Should_return_projection_to_int_from_int_variable_closure()
+        {
+            var i = 123;
+            _productQueryable.Select(x => i).ShouldAllBe(x => x == 123);
+        }
+
+        [Fact]
+        public void Should_return_projection_to_int_from_const_int_closure()
+        {
+            const int i = 123;
+            _productQueryable.Select(x => i).ShouldAllBe(x => x == 123);
+        }
+
+        [Fact]
         public void Should_throw_on_query_first_on_empty_sequence()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => { _productQueryable.Where(x => false).First(); });
