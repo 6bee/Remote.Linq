@@ -30,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.0.0-alpha-*" />
-    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.0.0-alpha-*" />
+    <PackageReference Include="aqua-core" Version="4.0.0-alpha-050" />
+    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.0.0-alpha-050" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
 
