@@ -558,31 +558,31 @@ namespace Remote.Linq
             private NewExpression VisitNew(RLinq.NewExpression newExpression)
             {
                 var constructor = newExpression.Constructor.ResolveConstructor(_typeResolver);
-                if (newExpression.Arguments != null)
+                if (ReferenceEquals(null, newExpression.Arguments))
                 {
-                    var arguments =
-                        from a in newExpression.Arguments
-                        select Visit(a);
-                    if (ReferenceEquals(null, newExpression.Members))
+                    if (newExpression.Members?.Any() ?? false)
                     {
-                        return Expression.New(constructor, arguments);
+                        var members = newExpression.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
+                        return Expression.New(constructor, new Expression[0], members);
                     }
                     else
                     {
-                        var members = newExpression.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
-                        return Expression.New(constructor, arguments, members);
+                        return Expression.New(constructor);
                     }
                 }
                 else
                 {
-                    if (ReferenceEquals(null, newExpression.Members))
+                    var arguments =
+                        from a in newExpression.Arguments
+                        select Visit(a);
+                    if (newExpression.Members?.Any() ?? false)
                     {
-                        return Expression.New(constructor);
+                        var members = newExpression.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
+                        return Expression.New(constructor, arguments, members);
                     }
                     else
                     {
-                        var members = newExpression.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
-                        return Expression.New(constructor, new Expression[0], members);
+                        return Expression.New(constructor, arguments);
                     }
                 }
             }
@@ -743,7 +743,7 @@ namespace Remote.Linq
             private Expression VisitConstant(RLinq.ConstantExpression constantValueExpression)
             {
                 var value = constantValueExpression.Value;
-                var type = _typeResolver.ResolveType(constantValueExpression.Type);
+                Type type;
 
                 var oldConstantQueryArgument = value as ConstantQueryArgument;
                 if (!ReferenceEquals(null, oldConstantQueryArgument?.Type))
@@ -765,6 +765,11 @@ namespace Remote.Linq
                     value = mapper.Map(newConstantQueryArgument);
                     type = _typeResolver.ResolveType(newConstantQueryArgument.Type);
                 }
+                else
+                {
+                    type = _typeResolver.ResolveType(constantValueExpression.Type);
+                }
+
                 return Expression.Constant(value, type);
             }
 
