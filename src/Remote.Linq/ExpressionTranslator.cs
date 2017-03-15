@@ -36,7 +36,8 @@ namespace Remote.Linq
         /// <returns></returns>
         public static RLinq.LambdaExpression ToRemoteLinqExpression(this LambdaExpression expression)
         {
-            return new LinqExpressionToRemoteExpressionTranslator().ToRemoteExpression(expression);
+            var lambdaExpression = new LinqExpressionToRemoteExpressionTranslator().ToRemoteExpression(expression);
+            return (RLinq.LambdaExpression)lambdaExpression;
         }
 
         /// <summary>
@@ -237,21 +238,6 @@ namespace Remote.Linq
 
                 var constExpression = Visit(partialEvalExpression);
                 return constExpression.Unwrap();
-            }
-
-            public RLinq.LambdaExpression ToRemoteExpression(LambdaExpression expression)
-            {
-                var partialEvalExpression = expression.PartialEval(KeepMarkerFunctions) as LambdaExpression;
-                if (partialEvalExpression == null)
-                {
-                    throw CreateNotSupportedException(expression);
-                }
-
-                var constExpression = Visit(partialEvalExpression.Body);
-                var parameters =
-                    from p in partialEvalExpression.Parameters
-                    select (RLinq.ParameterExpression)VisitParameter(p).Unwrap();
-                return new RLinq.LambdaExpression(constExpression.Unwrap(), parameters);
             }
 
             protected override Expression Visit(Expression exp)
