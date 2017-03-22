@@ -3,6 +3,7 @@
 namespace Remote.Linq.Tests.Serialization
 {
     using Remote.Linq.ExpressionVisitors;
+    using System;
     using System.IO;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
@@ -10,8 +11,11 @@ namespace Remote.Linq.Tests.Serialization
     public static class XmlSerializationHelper
     {
         public static T Serialize<T>(this T graph)
+            => Serialize(graph, null);
+
+        public static T Serialize<T>(this T graph, Type[] extraTypes)
         {
-            var serializer = new XmlSerializer(typeof(T));
+            var serializer = new XmlSerializer(typeof(T), extraTypes);
 
             using (var stream = new MemoryStream())
             {

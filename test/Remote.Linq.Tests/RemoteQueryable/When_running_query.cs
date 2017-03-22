@@ -4,7 +4,6 @@ namespace Remote.Linq.Tests.RemoteQueryable
 {
     using Aqua.Dynamic;
     using Remote.Linq;
-    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using Remote.Linq.Tests.RemoteQueryable.TestData;
     using Remote.Linq.Tests.Serialization;
@@ -23,7 +22,9 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
         public class With_data_contract_serializer : When_running_query
         {
-            public With_data_contract_serializer() : base(DataContractSerializationHelper.Serialize) { }
+            private static readonly Type[] _knownTypes = new[] { typeof(DateTimeOffset) };
+
+            public With_data_contract_serializer() : base(x => DataContractSerializationHelper.Serialize(x, _knownTypes)) { }
         }
 
         public class With_json_serializer : When_running_query
@@ -33,19 +34,21 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
         public class With_xml_serializer : When_running_query
         {
-            public With_xml_serializer() : base(XmlSerializationHelper.Serialize) { }
+            private static readonly Type[] _extraTypes = new[] { typeof(DateTimeOffset), typeof(TimeSpan) };
+
+            public With_xml_serializer() : base(x => XmlSerializationHelper.Serialize(x, _extraTypes)) { }
         }
 
 #if NET
-        public class With_net_data_contract_serializer : When_running_query
-        {
-            public With_net_data_contract_serializer() : base(NetDataContractSerializationHelper.Serialize) { }
-        }
+                public class With_net_data_contract_serializer : When_running_query
+                {
+                    public With_net_data_contract_serializer() : base(NetDataContractSerializationHelper.Serialize) { }
+                }
 
-        public class With_binary_formatter : When_running_query
-        {
-            public With_binary_formatter() : base(BinarySerializationHelper.Serialize) { }
-        }
+                public class With_binary_formatter : When_running_query
+                {
+                    public With_binary_formatter() : base(BinarySerializationHelper.Serialize) { }
+                }
 #endif
 
         private readonly IQueryable<Category> _categoryQueryable;
@@ -434,6 +437,27 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             const int i = 123;
             _productQueryable.Select(x => i).ShouldAllBe(x => x == 123);
+        }
+
+        [Fact]
+        public void Should_return_projection_to_Date_from_Date_variable_closure()
+        {
+            var date = DateTime.Now;
+            _productQueryable.Select(x => date).ShouldAllBe(x => x == date);
+        }
+
+        [Fact]
+        public void Should_return_projection_to_TimeSpan_from_TimeSpan_variable_closure()
+        {
+            var span = new TimeSpan();
+            _productQueryable.Select(x => span).ShouldAllBe(x => x == span);
+        }
+
+        [Fact]
+        public void Should_return_projection_to_DateTimeOffset_from_DateTimeOffset_variable_closure()
+        {
+            var offset = new DateTimeOffset();
+            _productQueryable.Select(x => offset).ShouldAllBe(x => x == offset);
         }
 
         [Fact]

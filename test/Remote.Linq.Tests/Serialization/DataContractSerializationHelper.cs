@@ -3,14 +3,18 @@
 namespace Remote.Linq.Tests.Serialization
 {
     using Remote.Linq.ExpressionVisitors;
+    using System;
     using System.IO;
     using System.Runtime.Serialization;
 
     public static class DataContractSerializationHelper
     {
         public static T Serialize<T>(T graph)
+            => Serialize(graph, null);
+
+        public static T Serialize<T>(T graph, Type[] knownTypes)
         {
-            var serializer = new DataContractSerializer(typeof(T));
+            var serializer = new DataContractSerializer(typeof(T), knownTypes);
 
             using (var stream = new MemoryStream())
             {
