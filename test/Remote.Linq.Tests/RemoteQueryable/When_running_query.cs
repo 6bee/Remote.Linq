@@ -5,12 +5,13 @@ namespace Remote.Linq.Tests.RemoteQueryable
     using Aqua.Dynamic;
     using Remote.Linq;
     using Remote.Linq.Expressions;
-    using Remote.Linq.Tests.RemoteQueryable.TestData;
+    using Remote.Linq.Tests.RemoteQueryable.QueryTestData;
     using Remote.Linq.Tests.Serialization;
     using Shouldly;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Xunit;
 
     public abstract class When_running_query
@@ -22,9 +23,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
         public class With_data_contract_serializer : When_running_query
         {
-            private static readonly Type[] _knownTypes = new[] { typeof(DateTimeOffset) };
-
-            public With_data_contract_serializer() : base(x => DataContractSerializationHelper.Serialize(x, _knownTypes)) { }
+            public With_data_contract_serializer() : base(DataContractSerializationHelper.Serialize) { }
         }
 
         public class With_json_serializer : When_running_query
@@ -34,22 +33,34 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
         public class With_xml_serializer : When_running_query
         {
-            private static readonly Type[] _extraTypes = new[] { typeof(DateTimeOffset), typeof(TimeSpan) };
-
-            public With_xml_serializer() : base(x => XmlSerializationHelper.Serialize(x, _extraTypes)) { }
+            public With_xml_serializer() : base(XmlSerializationHelper.Serialize) { }
         }
 
 #if NET
-                public class With_net_data_contract_serializer : When_running_query
-                {
-                    public With_net_data_contract_serializer() : base(NetDataContractSerializationHelper.Serialize) { }
-                }
+        public class With_net_data_contract_serializer : When_running_query
+        {
+            public With_net_data_contract_serializer() : base(NetDataContractSerializationHelper.Serialize) { }
+        }
 
-                public class With_binary_formatter : When_running_query
-                {
-                    public With_binary_formatter() : base(BinarySerializationHelper.Serialize) { }
-                }
+        public class With_binary_formatter : When_running_query
+        {
+            public With_binary_formatter() : base(BinarySerializationHelper.Serialize) { }
+        }
 #endif
+
+        public class Item<T>
+        {
+            public Item()
+            {
+            }
+
+            public Item(T value)
+            {
+                Value = value;
+            }
+
+            public T Value { get; set; }
+        }
 
         private readonly IQueryable<Category> _categoryQueryable;
         private readonly IQueryable<Product> _productQueryable;
@@ -452,12 +463,37 @@ namespace Remote.Linq.Tests.RemoteQueryable
             var span = new TimeSpan();
             _productQueryable.Select(x => span).ShouldAllBe(x => x == span);
         }
-
-        [Fact]
-        public void Should_return_projection_to_DateTimeOffset_from_DateTimeOffset_variable_closure()
+        
+        [Theory]
+        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        //[MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
+        public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
         {
-            var offset = new DateTimeOffset();
-            _productQueryable.Select(x => offset).ShouldAllBe(x => x == offset);
+            GetType().GetTypeInfo().GetMethods()
+                .Single(m => m.Name == nameof(Should_query_primitive_value_injected_as_variable_closure) && m.IsGenericMethod)
+                .MakeGenericMethod(type)
+                .Invoke(this, new[] { value });
+        }
+
+        public void Should_query_primitive_value_injected_as_variable_closure<T>(T value)
+        {
+            _productQueryable.Select(x => value).ShouldAllBe(x => Equals(x, value), $"type: {typeof(T).FullName}, value: {value}");
+        }
+
+        [Theory]
+        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        //[MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
+        public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure(Type type, object value)
+        {
+            GetType().GetTypeInfo().GetMethods()
+                .Single(m => m.Name == nameof(Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure) && m.IsGenericMethod)
+                .MakeGenericMethod(type)
+                .Invoke(this, new[] { value });
+        }
+
+        public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure<T>(T value)
+        {
+            _productQueryable.Select(x => new { Value = value }).ShouldAllBe(x => Equals(x.Value, value), $"type: {typeof(T).FullName}, value: {value}");
         }
 
         [Fact]

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Tests.RemoteQueryable.TestData
+namespace Remote.Linq.Tests.RemoteQueryable.QueryTestData
 {
     using System;
     using System.Collections;
