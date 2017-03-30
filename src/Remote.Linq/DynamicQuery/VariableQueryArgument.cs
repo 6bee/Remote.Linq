@@ -6,12 +6,16 @@ namespace Remote.Linq.DynamicQuery
     using Aqua.TypeSystem;
     using System;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// This type is used to distinguish variable query arguments from constant query arguments
     /// </summary>
     [Serializable]
     [DataContract]
+    [KnownType(typeof(DateTimeOffset)), XmlInclude(typeof(DateTimeOffset))]
+    [KnownType(typeof(System.Numerics.BigInteger)), XmlInclude(typeof(System.Numerics.BigInteger))]
+    [KnownType(typeof(System.Numerics.Complex)), XmlInclude(typeof(System.Numerics.Complex))]
     public sealed class VariableQueryArgument
     {
         public VariableQueryArgument()
