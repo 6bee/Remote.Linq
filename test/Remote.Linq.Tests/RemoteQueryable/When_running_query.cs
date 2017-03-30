@@ -409,60 +409,6 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             _productQueryable.Any(x => true).ShouldBeTrue();
         }
-
-        [Fact]
-        public void Should_return_projection_to_anonymous_type_from_inline_constant()
-        {
-            _productQueryable.Select(x => new { Value = 123 }).ShouldAllBe(x => x.Value == 123);
-        }
-
-        [Fact]
-        public void Should_return_projection_to_anonymous_type_with_int_from_int_variable_closure()
-        {
-            var i = 123;
-            _productQueryable.Select(x => new { Value = i }).ShouldAllBe(x => x.Value == 123);
-        }
-
-        [Fact]
-        public void Should_return_projection_to_anonymous_type_from_const_int_closure()
-        {
-            const int i = 123;
-            _productQueryable.Select(x => new { Value = i }).ShouldAllBe(x => x.Value == 123);
-        }
-
-        [Fact]
-        public void Should_return_projection_to_int_from_inline_constant()
-        {
-            _productQueryable.Select(x => 123).ShouldAllBe(x => x == 123);
-        }
-
-        [Fact]
-        public void Should_return_projection_to_int_from_int_variable_closure()
-        {
-            var i = 123;
-            _productQueryable.Select(x => i).ShouldAllBe(x => x == 123);
-        }
-
-        [Fact]
-        public void Should_return_projection_to_int_from_const_int_closure()
-        {
-            const int i = 123;
-            _productQueryable.Select(x => i).ShouldAllBe(x => x == 123);
-        }
-
-        [Fact]
-        public void Should_return_projection_to_Date_from_Date_variable_closure()
-        {
-            var date = DateTime.Now;
-            _productQueryable.Select(x => date).ShouldAllBe(x => x == date);
-        }
-
-        [Fact]
-        public void Should_return_projection_to_TimeSpan_from_TimeSpan_variable_closure()
-        {
-            var span = new TimeSpan();
-            _productQueryable.Select(x => span).ShouldAllBe(x => x == span);
-        }
         
         [Theory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
