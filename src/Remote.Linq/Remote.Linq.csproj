@@ -28,7 +28,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.0.0-alpha-056" />
+    <PackageReference Include="aqua-core" Version="4.0.0-alpha-057" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
