@@ -2,11 +2,20 @@
 
 namespace Remote.Linq.Tests.RemoteQueryable.QueryTestData
 {
+    public enum CategoryType
+    {
+        Undefined,
+        Food,
+        NonFood,
+    }
+
     public class Category
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        public CategoryType CategoryType { get; set; }
     }
 
     public class Product

@@ -47,21 +47,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             public With_binary_formatter() : base(BinarySerializationHelper.Serialize) { }
         }
 #endif
-
-        public class Item<T>
-        {
-            public Item()
-            {
-            }
-
-            public Item(T value)
-            {
-                Value = value;
-            }
-
-            public T Value { get; set; }
-        }
-
+        
         private readonly IQueryable<Category> _categoryQueryable;
         private readonly IQueryable<Product> _productQueryable;
         private readonly IQueryable<OrderItem> _orderItemQueryable;
@@ -394,6 +380,29 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 from p in _productQueryable
                 where p.Id == arg.Id
                 select p;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_categories_filterd_using_inline_enum()
+        {
+            var query =
+                from c in _categoryQueryable
+                where c.CategoryType == CategoryType.NonFood
+                select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_categories_filterd_using_enum_closure()
+        {
+            var categoryType = CategoryType.NonFood;
+            var query =
+                from c in _categoryQueryable
+                where c.CategoryType == categoryType
+                select c;
             var result = query.ToArray();
             result.Count().ShouldBe(1);
         }
