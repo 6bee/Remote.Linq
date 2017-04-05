@@ -27,7 +27,7 @@ namespace Remote.Linq.Tests.RemoteQueryable.QueryTestData
                 new Product { Id = 11, Name = "Pear", Price = 1.15m, CategoryId = 1 },
                 new Product { Id = 12, Name = "Car", Price = 33999m, CategoryId = 2 },
                 new Product { Id = 13, Name = "Pineapple", Price = 2.99m, CategoryId = 1 },
-                new Product { Id = 14, Name = "Bicycle", Price = 149.95m, CategoryId = 2 },
+                new Product { Id = 14, Name = "Bicycle", Price = 149.95m, CategoryId = 2, PruductTags = PruductTags.BestPrice | PruductTags.TopSelling },
             };
 
             _dataSets[typeof(OrderItem)] = new[]

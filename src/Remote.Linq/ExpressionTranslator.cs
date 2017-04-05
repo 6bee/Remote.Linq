@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua;
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
@@ -152,7 +153,7 @@ namespace Remote.Linq
 
         private sealed class ConstantValueMapper : DynamicObjectMapper
         {
-            private static readonly Func<Type, bool> _isNativeType = new[]
+            private static readonly Func<Type, bool> _isPrimitiveType = new[]
                 {
                     typeof(string),
                     typeof(int),
@@ -174,43 +175,55 @@ namespace Remote.Linq
                     typeof(DateTimeOffset),
                     typeof(System.Numerics.BigInteger),
                     typeof(System.Numerics.Complex),
+                }
+                .SelectMany(x => x.IsValueType() ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
+                .ToDictionary(x => x, x => (object)null)
+                .ContainsKey;
 
+            private static readonly Type[] _knownTypes = new[]
+                {
                     typeof(ConstantQueryArgument),
                     typeof(VariableQueryArgument),
                     typeof(VariableQueryArgumentList),
                     typeof(QueryableResourceDescriptor),
-                }
-                .SelectMany(x => x.IsValueType() ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
-                .ToDictionary(x => x, x => (object)null).ContainsKey;
+                    typeof(VariableQueryArgument<>),
+                    typeof(Expression),
+                    typeof(IQueryable),
+                };                                      
+
+            private static readonly Func<Type, bool> _isKnownType = t => _knownTypes.Any(x => x.IsAssignableFrom(t));
 
             private sealed class IsKnownTypeProvider : IIsKnownTypeProvider
             {
-                public bool IsKnownType(Type type) => !TypeNeedsWrapping(type);
+                private readonly bool _includePrimitiveType;
+
+                public IsKnownTypeProvider(bool includePrimitiveType)
+                {
+                    _includePrimitiveType = includePrimitiveType;
+                }
+
+                public bool IsKnownType(Type type) => !TypeNeedsWrapping(type, _includePrimitiveType);
             }
 
-            public ConstantValueMapper(ITypeResolver typeResolver = null)
-                : base(isKnownTypeProvider: new IsKnownTypeProvider(), typeResolver: typeResolver)
+            private ConstantValueMapper(ITypeResolver typeResolver, IIsKnownTypeProvider isKnownTypeProvider)
+                : base(typeResolver: typeResolver, isKnownTypeProvider: isKnownTypeProvider)
             {
             }
 
-            public static bool TypeNeedsWrapping(Type type)
+            public static ConstantValueMapper ForSubstitution()
+                => new ConstantValueMapper(null, new IsKnownTypeProvider(true));
+
+            public static ConstantValueMapper ForReconstruction(ITypeResolver typeResolver)
+                => new ConstantValueMapper(typeResolver, new IsKnownTypeProvider(false));
+
+            public static bool TypeNeedsWrapping(Type type, bool includePrimitiveType = true)
             {
-                if (_isNativeType(type))
+                if (includePrimitiveType && _isPrimitiveType(type))
                 {
                     return false;
                 }
 
-                if (type.IsGenericType())
-                {
-                    var genericTypeDefinition = type.GetGenericTypeDefinition();
-                    if (genericTypeDefinition == typeof(VariableQueryArgument<>))
-                    {
-                        return false;
-                    }
-                }
-
-                if (typeof(Expression).IsAssignableFrom(type) ||
-                    typeof(IQueryable).IsAssignableFrom(type))
+                if (_isKnownType(type.IsGenericType() ? type.GetGenericTypeDefinition() : type))
                 {
                     return false;
                 }
@@ -223,10 +236,10 @@ namespace Remote.Linq
         private sealed class LinqExpressionToRemoteExpressionTranslator : ExpressionVisitorBase
         {
             private readonly Dictionary<ParameterExpression, RLinq.ParameterExpression> _parameterExpressionCache =
-                new Dictionary<ParameterExpression, RLinq.ParameterExpression>(Aqua.ReferenceEqualityComparer<ParameterExpression>.Default);
+                new Dictionary<ParameterExpression, RLinq.ParameterExpression>(ReferenceEqualityComparer<ParameterExpression>.Default);
 
             private readonly Dictionary<object, ConstantQueryArgument> _constantQueryArgumentCache =
-                new Dictionary<object, ConstantQueryArgument>(Aqua.ReferenceEqualityComparer<object>.Default);
+                new Dictionary<object, ConstantQueryArgument>(ReferenceEqualityComparer<object>.Default);
 
             public RLinq.Expression ToRemoteExpression(Expression expression)
             {
@@ -306,7 +319,7 @@ namespace Remote.Linq
 
                         _constantQueryArgumentCache.Add(c.Value, constantQueryArgument);
 
-                        var dynamicObject = new ConstantValueMapper().MapObject(c.Value);
+                        var dynamicObject = ConstantValueMapper.ForSubstitution().MapObject(c.Value);
                         foreach (var property in dynamicObject.Properties)
                         {
                             var propertyValue = property.Value;
@@ -747,9 +760,9 @@ namespace Remote.Linq
                         newConstantQueryArgument.Add(property.Name, propertyValue);
                     }
 
-                    var mapper = new ConstantValueMapper(typeResolver: _typeResolver);
-                    value = mapper.Map(newConstantQueryArgument);
                     type = _typeResolver.ResolveType(newConstantQueryArgument.Type);
+                    var mapper = ConstantValueMapper.ForReconstruction(_typeResolver);
+                    value = mapper.Map(newConstantQueryArgument, type);
                 }
                 else
                 {

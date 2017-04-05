@@ -398,6 +398,17 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_query_product_categories_filterd_using_inline_enum_equals()
+        {
+            var query =
+                from c in _categoryQueryable
+                where c.CategoryType.Equals(CategoryType.NonFood)
+                select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
         public void Should_query_product_categories_filterd_using_enum_closure()
         {
             var categoryType = CategoryType.NonFood;
@@ -405,6 +416,29 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 from c in _categoryQueryable
                 where c.CategoryType == categoryType
                 select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_filterd_using_inline_enum_flags()
+        {
+            var query =
+                from p in _productQueryable
+                where p.PruductTags.HasFlag(PruductTags.BestPrice)
+                select p;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_filterd_using_inline_enum_flags_closure()
+        {
+            var flag = PruductTags.BestPrice;
+            var query =
+                from p in _productQueryable
+                where p.PruductTags.HasFlag(flag)
+                select p;
             var result = query.ToArray();
             result.Count().ShouldBe(1);
         }
