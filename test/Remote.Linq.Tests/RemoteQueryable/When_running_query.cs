@@ -3,6 +3,8 @@
 namespace Remote.Linq.Tests.RemoteQueryable
 {
     using Aqua.Dynamic;
+    using Aqua.Extensions;
+    using Aqua.TypeSystem;
     using Remote.Linq;
     using Remote.Linq.Expressions;
     using Remote.Linq.Tests.RemoteQueryable.QueryTestData;
@@ -418,10 +420,9 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             _productQueryable.Any(x => true).ShouldBeTrue();
         }
-        
+
         [Theory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
-        //[MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
         {
             GetType().GetTypeInfo().GetMethods()
@@ -436,8 +437,22 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Theory]
+        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
+        public void Should_query_primitive_value_array_injected_as_variable_closure(Type type, object value)
+        {
+            GetType().GetTypeInfo().GetMethods()
+                .Single(m => m.Name == nameof(Should_query_primitive_value_array_injected_as_variable_closure) && m.IsGenericMethod)
+                .MakeGenericMethod(TypeHelper.GetElementType(type))
+                .Invoke(this, new[] { value });
+        }
+
+        public void Should_query_primitive_value_array_injected_as_variable_closure<T>(T[] array)
+        {
+            _productQueryable.Select(x => array).ShouldAllBe(x => x.CollectionEquals(array), $"element type: {typeof(T).FullName}, array: {array}");
+        }
+
+        [Theory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
-        //[MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure(Type type, object value)
         {
             GetType().GetTypeInfo().GetMethods()
@@ -449,6 +464,21 @@ namespace Remote.Linq.Tests.RemoteQueryable
         public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure<T>(T value)
         {
             _productQueryable.Select(x => new { Value = value }).ShouldAllBe(x => Equals(x.Value, value), $"type: {typeof(T).FullName}, value: {value}");
+        }
+
+        [Theory]
+        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
+        public void Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure(Type type, object value)
+        {
+            GetType().GetTypeInfo().GetMethods()
+                .Single(m => m.Name == nameof(Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure) && m.IsGenericMethod)
+                .MakeGenericMethod(TypeHelper.GetElementType(type))
+                .Invoke(this, new[] { value });
+        }
+
+        public void Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure<T>(T[] array)
+        {
+            _productQueryable.Select(x => new { Array = array }).ShouldAllBe(x => x.Array.CollectionEquals(array), $"element type: {typeof(T).FullName}, array: {array}");
         }
 
         [Fact]
