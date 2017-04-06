@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.TypeSystem;
+    using Aqua.TypeSystem.Extensions;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
@@ -36,8 +37,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
-                var type = expression.Type;
-                if (type.IsGenericType && type.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                if (IsGenericVariableQueryArgument(expression))
                 {
                     var valueProperty = expression.Value.GetType().GetProperty("Value");
                     var value = valueProperty.GetValue(expression.Value);
@@ -59,6 +59,14 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 return base.VisitConstant(expression);
+            }
+
+            private static bool IsGenericVariableQueryArgument(ConstantExpression expression)
+            {
+                var type = expression.Type?.Type ?? expression.Value?.GetType();
+                return !ReferenceEquals(null, type)
+                    && type.IsGenericType()
+                    && type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>);
             }
 
             protected override Expression VisitMemberAccess(MemberExpression expression)

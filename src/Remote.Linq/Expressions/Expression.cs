@@ -70,6 +70,11 @@ namespace Remote.Linq.Expressions
             return new ConstantExpression(value, type);
         }
 
+        public static ConstantExpression Constant(object value, Aqua.TypeSystem.TypeInfo type)
+        {
+            return new ConstantExpression(value, type);
+        }
+
         [Obsolete("Parameter list changed order. This method will be removed in a future version.", true)]
         public static ParameterExpression Parameter(string parameterName, Type type)
             => Parameter(type, parameterName, 0);

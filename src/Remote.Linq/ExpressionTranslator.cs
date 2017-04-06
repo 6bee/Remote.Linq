@@ -312,14 +312,15 @@ namespace Remote.Linq
                 RLinq.ConstantExpression exp;
                 if (!ReferenceEquals(null, c.Value) && ConstantValueMapper.TypeNeedsWrapping(c.Type))
                 {
+                    var key = new { c.Value, c.Type };
                     ConstantQueryArgument constantQueryArgument;
-                    if (!_constantQueryArgumentCache.TryGetValue(c.Value, out constantQueryArgument))
+                    if (!_constantQueryArgumentCache.TryGetValue(key, out constantQueryArgument))
                     {
-                        constantQueryArgument = new ConstantQueryArgument(c.Type);
-
-                        _constantQueryArgumentCache.Add(c.Value, constantQueryArgument);
-
                         var dynamicObject = ConstantValueMapper.ForSubstitution().MapObject(c.Value);
+                        constantQueryArgument = new ConstantQueryArgument(dynamicObject.Type);
+
+                        _constantQueryArgumentCache.Add(key, constantQueryArgument);
+
                         foreach (var property in dynamicObject.Properties)
                         {
                             var propertyValue = property.Value;
@@ -333,7 +334,14 @@ namespace Remote.Linq
                         }
                     }
 
-                    exp = new RLinq.ConstantExpression(constantQueryArgument);
+                    if (c.Value?.GetType() == c.Type)
+                    {
+                        exp = new RLinq.ConstantExpression(constantQueryArgument, constantQueryArgument.Type);
+                    }
+                    else
+                    {
+                        exp = new RLinq.ConstantExpression(constantQueryArgument, c.Type);
+                    }
                 }
                 else
                 {
@@ -742,7 +750,7 @@ namespace Remote.Linq
             private Expression VisitConstant(RLinq.ConstantExpression constantValueExpression)
             {
                 var value = constantValueExpression.Value;
-                Type type;
+                var type = constantValueExpression.Type.ResolveType(_typeResolver);
 
                 var oldConstantQueryArgument = value as ConstantQueryArgument;
                 if (!ReferenceEquals(null, oldConstantQueryArgument?.Type))
@@ -760,13 +768,13 @@ namespace Remote.Linq
                         newConstantQueryArgument.Add(property.Name, propertyValue);
                     }
 
-                    type = _typeResolver.ResolveType(newConstantQueryArgument.Type);
-                    var mapper = ConstantValueMapper.ForReconstruction(_typeResolver);
-                    value = mapper.Map(newConstantQueryArgument, type);
-                }
-                else
-                {
-                    type = _typeResolver.ResolveType(constantValueExpression.Type);
+                    var argumentType = newConstantQueryArgument.Type.ResolveType(_typeResolver);
+                    value = ConstantValueMapper.ForReconstruction(_typeResolver).Map(newConstantQueryArgument, argumentType);
+
+                    if (ReferenceEquals(null, type) || !type.IsAssignableFrom(argumentType))
+                    {
+                        type = argumentType;
+                    }
                 }
 
                 return Expression.Constant(value, type);

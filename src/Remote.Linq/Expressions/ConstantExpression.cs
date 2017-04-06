@@ -38,6 +38,12 @@ namespace Remote.Linq.Expressions
             Value = value;
         }
 
+        internal ConstantExpression(object value, TypeInfo type)
+        {
+            Type = type;
+            Value = value;
+        }
+
         public override ExpressionType NodeType => ExpressionType.Constant;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]

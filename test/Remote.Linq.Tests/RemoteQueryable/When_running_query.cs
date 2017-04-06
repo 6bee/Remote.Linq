@@ -350,6 +350,27 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_query_products_filterd_using_enum_inline()
+        {
+            // p => p.PruductTags.HasFlag(Convert(BestPrice))
+            System.Linq.Expressions.Expression<Func<Product, bool>> lambdaConvertEnum =
+                p => p.PruductTags.HasFlag(PruductTags.TopSelling);
+
+            var mc = (System.Linq.Expressions.MethodCallExpression)lambdaConvertEnum.Body;
+
+            // p => p.PruductTags.HasFlag(Const(BestPrice))
+            var lambdaConstEnum = System.Linq.Expressions.Expression.Lambda<Func<Product, bool>>(
+                System.Linq.Expressions.Expression.Call(
+                    mc.Object,
+                    mc.Method,
+                    System.Linq.Expressions.Expression.Constant(PruductTags.BestPrice, typeof(Enum))),
+                lambdaConvertEnum.Parameters);
+
+            _productQueryable.Where(lambdaConvertEnum).ToList().Count().ShouldBe(1);
+            _productQueryable.Where(lambdaConstEnum).ToList().Count().ShouldBe(1);
+        }
+
+        [Fact]
         public void Should_query_products_filterd_using_local_variables_closure_inline_mix()
         {
             IEnumerable<int?> listOfIds = new List<int?>() { null, 1, 11, 111 };

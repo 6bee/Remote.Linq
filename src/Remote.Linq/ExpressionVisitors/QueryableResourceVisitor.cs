@@ -114,7 +114,7 @@ namespace Remote.Linq.ExpressionVisitors
                         }
                     }
 
-                    return Expression.Constant(newConstantQueryArgument);
+                    return Expression.Constant(newConstantQueryArgument, expression.Type);
                 }
 
                 return base.VisitConstant(expression);
