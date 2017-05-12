@@ -18,19 +18,19 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal NewExpression(ConstructorInfo constructor, IEnumerable<Expression> arguments, IEnumerable<MemberInfo> members = null)
+        public NewExpression(ConstructorInfo constructor, IEnumerable<Expression> arguments, IEnumerable<MemberInfo> members = null)
         {
             Constructor = constructor;
             Arguments = ReferenceEquals(null, arguments) || !arguments.Any() ? null : arguments.ToList();
             Members = ReferenceEquals(null, members) || !members.Any() ? null : members.ToList();
         }
 
-        internal NewExpression(System.Reflection.ConstructorInfo constructor, IEnumerable<Expression> arguments = null, IEnumerable<System.Reflection.MemberInfo> members = null)
+        public NewExpression(System.Reflection.ConstructorInfo constructor, IEnumerable<Expression> arguments = null, IEnumerable<System.Reflection.MemberInfo> members = null)
             : this(new ConstructorInfo(constructor), arguments, ReferenceEquals(null, members) ? null : members.Select(x => MemberInfo.Create(x)))
         {
         }
 
-        internal NewExpression(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments = null, IEnumerable<System.Reflection.MemberInfo> members = null)
+        public NewExpression(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments = null, IEnumerable<System.Reflection.MemberInfo> members = null)
             : this(new ConstructorInfo(name, declaringType, bindingFlags, genericArguments, parameterTypes), arguments)
         {
         }

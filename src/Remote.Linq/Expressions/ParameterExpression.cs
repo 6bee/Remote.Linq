@@ -14,14 +14,14 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal ParameterExpression(TypeInfo parameterType, string parameterName, int instanceId)
+        public ParameterExpression(TypeInfo parameterType, string parameterName, int instanceId)
         {
             ParameterType = parameterType;
             ParameterName = parameterName;
             InstanceId = instanceId;
         }
 
-        internal ParameterExpression(Type parameterType, string parameterName, int instanceId)
+        public ParameterExpression(Type parameterType, string parameterName, int instanceId)
             : this(new TypeInfo(parameterType, false, false), parameterName, instanceId)
         {
         }

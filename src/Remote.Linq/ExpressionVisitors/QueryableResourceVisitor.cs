@@ -50,7 +50,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var queryableResourceDescriptor = (QueryableResourceDescriptor)expression.Value;
                     var queryableType = _typeResolver.ResolveType(queryableResourceDescriptor.Type);
                     var queryable = _provider(queryableType);
-                    return Expression.Constant(queryable);
+                    return new ConstantExpression(queryable);
                 }
 
                 if (type == typeof(ConstantQueryArgument) && !ReferenceEquals(null, expression.Value))
@@ -68,7 +68,7 @@ namespace Remote.Linq.ExpressionVisitors
                         }
                     }
 
-                    return Expression.Constant(newConstantQueryArgument);
+                    return new ConstantExpression(newConstantQueryArgument);
                 }
 
                 return base.VisitConstant(expression);
@@ -95,7 +95,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var elementType = queryable.ElementType;
                     var queryableResourceDescriptor = new QueryableResourceDescriptor(elementType);
 
-                    return Expression.Constant(queryableResourceDescriptor);
+                    return new ConstantExpression(queryableResourceDescriptor);
                 }
 
                 var constantQueryArgument = expression.Value as ConstantQueryArgument;
@@ -114,7 +114,7 @@ namespace Remote.Linq.ExpressionVisitors
                         }
                     }
 
-                    return Expression.Constant(newConstantQueryArgument, expression.Type);
+                    return new ConstantExpression(newConstantQueryArgument, expression.Type);
                 }
 
                 return base.VisitConstant(expression);
@@ -148,7 +148,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var elementType = type.GetGenericArguments().Single();
                     var queryableResourceDescriptor = new QueryableResourceDescriptor(elementType);
 
-                    return Expression.Constant(queryableResourceDescriptor);
+                    return new ConstantExpression(queryableResourceDescriptor);
                 }
 
                 return base.VisitMemberAccess(expression);

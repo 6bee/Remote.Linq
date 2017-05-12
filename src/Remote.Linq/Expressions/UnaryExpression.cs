@@ -15,20 +15,20 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal UnaryExpression(UnaryOperator unaryOperator, Expression operand)
+        public UnaryExpression(UnaryOperator unaryOperator, Expression operand)
         {
             UnaryOperator = unaryOperator;
             Operand = operand;
         }
 
-        internal UnaryExpression(UnaryOperator unaryOperator, Expression operand, TypeInfo type, MethodInfo method)
+        public UnaryExpression(UnaryOperator unaryOperator, Expression operand, TypeInfo type, MethodInfo method)
             : this(unaryOperator, operand)
         {
             Type = type;
             Method = method;
         }
 
-        internal UnaryExpression(UnaryOperator unaryOperator, Expression operand, Type type, System.Reflection.MethodInfo method)
+        public UnaryExpression(UnaryOperator unaryOperator, Expression operand, Type type, System.Reflection.MethodInfo method)
             : this(unaryOperator, operand, ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), ReferenceEquals(null, method) ? null : new MethodInfo(method))
         {
         }

@@ -55,7 +55,7 @@ namespace Remote.Linq.ExpressionVisitors
                         queryArgument = new VariableQueryArgumentList(collection, elementType);
                     }
 
-                    return Expression.Constant(queryArgument);
+                    return new ConstantExpression(queryArgument);
                 }
 
                 return base.VisitConstant(expression);
@@ -121,7 +121,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var type = nonGenericQueryArgument.Type.Type;
                     var value = nonGenericQueryArgument.Value;
                     var queryArgument = Activator.CreateInstance(typeof(VariableQueryArgument<>).MakeGenericType(type), new[] { value });
-                    return Expression.Constant(queryArgument);
+                    return new ConstantExpression(queryArgument);
                 }
 
                 var nonGenericQueryArgumentList = expression.Value as VariableQueryArgumentList;
@@ -131,7 +131,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var values = nonGenericQueryArgumentList.Values;
                     var methodInfo = CreateVariableQueryArgumentListMethodInfo.MakeGenericMethod(elementType);
                     var queryArgument = methodInfo.Invoke(null, new object[] { values });
-                    return Expression.Constant(queryArgument);
+                    return new ConstantExpression(queryArgument);
                 }
 
                 return base.VisitConstant(expression);

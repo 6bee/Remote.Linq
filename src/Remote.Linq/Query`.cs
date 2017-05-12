@@ -85,7 +85,7 @@ namespace Remote.Linq
         public IOrderedQuery<T> OrderBy<TKey>(Expression<Func<T, TKey>> keySelector)
         {
             var expression = _expressionTranslator(keySelector);
-            var sortExpression = Expressions.Expression.Sort(expression, Expressions.SortDirection.Ascending);
+            var sortExpression = new Expressions.SortExpression(expression, Expressions.SortDirection.Ascending);
 
             var query = new Query<T>(_dataProvider, _expressionTranslator, FilterExpressions, new[] { sortExpression }, SkipValue, TakeValue);
             return query;
@@ -100,7 +100,7 @@ namespace Remote.Linq
         public IOrderedQuery<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector)
         {
             var expression = _expressionTranslator(keySelector);
-            var sortExpression = Expressions.Expression.Sort(expression, Expressions.SortDirection.Descending);
+            var sortExpression = new Expressions.SortExpression(expression, Expressions.SortDirection.Descending);
 
             var query = new Query<T>(_dataProvider, _expressionTranslator, FilterExpressions, new[] { sortExpression }, SkipValue, TakeValue);
             return query;
@@ -120,7 +120,7 @@ namespace Remote.Linq
             }
 
             var expression = _expressionTranslator(keySelector);
-            var sortExpression = Expressions.Expression.Sort(expression, Expressions.SortDirection.Ascending);
+            var sortExpression = new Expressions.SortExpression(expression, Expressions.SortDirection.Ascending);
 
             var sortExpressions = SortExpressions.ToList();
             sortExpressions.Add(sortExpression);
@@ -143,7 +143,7 @@ namespace Remote.Linq
             }
 
             var expression = _expressionTranslator(keySelector);
-            var sortExpression = Expressions.Expression.Sort(expression, Expressions.SortDirection.Descending);
+            var sortExpression = new Expressions.SortExpression(expression, Expressions.SortDirection.Descending);
 
             var sortExpressions = SortExpressions.ToList();
             sortExpressions.Add(sortExpression);

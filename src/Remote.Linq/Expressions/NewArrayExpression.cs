@@ -17,14 +17,14 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal NewArrayExpression(NewArrayType newArrayType, TypeInfo typeInfo, IEnumerable<Expression> expressions)
+        public NewArrayExpression(NewArrayType newArrayType, TypeInfo typeInfo, IEnumerable<Expression> expressions)
         {
             NewArrayType = newArrayType;
             Type = typeInfo;
             Expressions = expressions.ToList();
         }
 
-        internal NewArrayExpression(NewArrayType newArrayType, Type type, IEnumerable<Expression> expressions)
+        public NewArrayExpression(NewArrayType newArrayType, Type type, IEnumerable<Expression> expressions)
             : this(newArrayType, new TypeInfo(type, false, false), expressions)
         {
         }
