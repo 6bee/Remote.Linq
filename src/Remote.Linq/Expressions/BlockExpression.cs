@@ -42,7 +42,7 @@ namespace Remote.Linq.Expressions
         public override string ToString()
         {
             var expressions = Expressions;
-            return string.Format(". Block {{0}}",
+            return string.Format(".Block {{0}}",
                 ReferenceEquals(null, expressions) ? null : string.Format("; ", expressions));
         }
     }
