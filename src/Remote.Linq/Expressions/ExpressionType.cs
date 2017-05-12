@@ -21,5 +21,6 @@ namespace Remote.Linq.Expressions
         Parameter,
         TypeIs,
         Unary,
+        Block,
     }
 }

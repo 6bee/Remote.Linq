@@ -46,5 +46,7 @@ namespace Remote.Linq.Expressions
 
         // Array Indexing Operations
         ArrayIndex = NodeType.ArrayIndex,
+
+        Assign = NodeType.Assign,
     }
 }

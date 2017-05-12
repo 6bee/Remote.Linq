@@ -484,6 +484,27 @@ namespace Remote.Linq
                 var elementType = TypeHelper.GetElementType(na.Type);
                 return new RLinq.NewArrayExpression(newArrayType, elementType, rlinqExpressions).Wrap();
             }
+            
+            protected override Expression VisitBlock(BlockExpression node)
+            {
+                var expressions = VisitExpressionList(node.Expressions);
+                var rlinqExpressions = 
+                    from exp in expressions
+                    select exp.Unwrap();
+
+                IEnumerable<RLinq.ParameterExpression> rlinqVariables = null;
+                if (!ReferenceEquals(null, node.Variables))
+                {
+                    var nodeVariables = node.Variables.Cast<Expression>().ToList().AsReadOnly();
+                    IEnumerable<Expression> variables = VisitExpressionList(nodeVariables);
+                    rlinqVariables =
+                        from exp in variables
+                        select (RLinq.ParameterExpression)exp.Unwrap();
+                }
+                
+                var type = node.Type == node.Result.Type ? null : node.Type;
+                return new RLinq.BlockExpression(type, rlinqVariables, rlinqExpressions).Wrap();
+            }
 
             private static NotSupportedException CreateNotSupportedException(Expression expression)
             {
@@ -520,6 +541,9 @@ namespace Remote.Linq
                 {
                     case RLinq.ExpressionType.Binary:
                         return VisitBinary((RLinq.BinaryExpression)expression);
+
+                    case RLinq.ExpressionType.Block:
+                        return VisitBlock((RLinq.BlockExpression)expression);
 
                     case RLinq.ExpressionType.Conditional:
                         return VisitConditional((RLinq.ConditionalExpression)expression);
@@ -616,6 +640,23 @@ namespace Remote.Linq
                 var n = VisitNew(expression.NewExpression);
                 var bindings = VisitBindingList(expression.Bindings);
                 return Expression.MemberInit(n, bindings);
+            }
+
+            private Expression VisitBlock(RLinq.BlockExpression node)
+            {
+                var type = node.Type.ResolveType(_typeResolver);
+
+                var variables =
+                    from i in node.Variables ?? Enumerable.Empty<RLinq.ParameterExpression>()
+                    select (ParameterExpression)Visit(i);
+
+                var expressions =
+                    from i in node.Expressions ?? Enumerable.Empty<RLinq.Expression>()
+                    select Visit(i);
+
+                return ReferenceEquals(null, type)
+                    ? Expression.Block(variables, expressions)
+                    : Expression.Block(type, variables, expressions);
             }
 
             private IEnumerable<MemberBinding> VisitBindingList(IEnumerable<RLinq.MemberBinding> original)

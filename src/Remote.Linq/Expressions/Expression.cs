@@ -11,6 +11,7 @@ namespace Remote.Linq.Expressions
     [Serializable]
     [DataContract]
     [KnownType(typeof(BinaryExpression)), XmlInclude(typeof(BinaryExpression))]
+    [KnownType(typeof(BlockExpression)), XmlInclude(typeof(BlockExpression))]
     [KnownType(typeof(ConditionalExpression)), XmlInclude(typeof(ConditionalExpression))]
     [KnownType(typeof(ConstantExpression)), XmlInclude(typeof(ConstantExpression))]
     [KnownType(typeof(LambdaExpression)), XmlInclude(typeof(LambdaExpression))]

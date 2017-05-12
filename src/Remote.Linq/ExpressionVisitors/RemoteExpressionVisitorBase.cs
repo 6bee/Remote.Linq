@@ -29,6 +29,9 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.Binary:
                     return VisitBinary((BinaryExpression)expression);
 
+                case ExpressionType.Block:
+                    return VisitBlock((BlockExpression)expression);
+
                 case ExpressionType.Conditional:
                     return VisitConditional((ConditionalExpression)expression);
 
@@ -217,24 +220,24 @@ namespace Remote.Linq.ExpressionVisitors
             return initializer;
         }
 
-        protected virtual List<Expression> VisitExpressionList(List<Expression> original)
+        protected virtual List<T> VisitExpressionList<T>(List<T> original) where T: Expression
         {
             if (ReferenceEquals(null, original))
             {
                 return null;
             }
 
-            List<Expression> list = null;
+            List<T> list = null;
             for (int i = 0, n = original.Count; i < n; i++)
             {
-                Expression p = Visit(original[i]);
+                T p = (T)Visit(original[i]);
                 if (list != null)
                 {
                     list.Add(p);
                 }
                 else if (p != original[i])
                 {
-                    list = new List<Expression>(n);
+                    list = new List<T>(n);
                     for (int j = 0; j < i; j++)
                     {
                         list.Add(original[j]);
@@ -283,7 +286,6 @@ namespace Remote.Linq.ExpressionVisitors
             if (!ReferenceEquals(newExpression, listInitExpression.NewExpression))
             {
                 return new ListInitExpression(newExpression, listInitExpression.Initializers);
-
             }
 
             return listInitExpression;
@@ -301,6 +303,19 @@ namespace Remote.Linq.ExpressionVisitors
             }
 
             return expression;
+        }
+
+        protected virtual Expression VisitBlock(BlockExpression node)
+        {
+            var variables = VisitExpressionList(node.Variables);
+            var expressions = VisitExpressionList(node.Expressions);
+            
+            if (!ReferenceEquals(variables, node.Variables) || !ReferenceEquals(expressions, node.Expressions))
+            {
+                return new BlockExpression(node.Type, variables, expressions);
+            }
+
+            return node;
         }
 
         protected virtual Expression VisitTypeIs(TypeBinaryExpression expression)

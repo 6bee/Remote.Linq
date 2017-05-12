@@ -42,6 +42,7 @@
 
                 case ExpressionType.Add:
                 case ExpressionType.AddChecked:
+                case ExpressionType.Assign:
                 case ExpressionType.Subtract:
                 case ExpressionType.SubtractChecked:
                 case ExpressionType.Multiply:
@@ -65,6 +66,9 @@
                 case ExpressionType.ExclusiveOr:
                 case ExpressionType.Power:
                     return VisitBinary((BinaryExpression)exp);
+
+                case ExpressionType.Block:
+                    return VisitBlock((BlockExpression)exp);
 
                 case ExpressionType.TypeIs:
                     return VisitTypeIs((TypeBinaryExpression)exp);
@@ -225,19 +229,19 @@
             return m;
         }
 
-        protected virtual ReadOnlyCollection<Expression> VisitExpressionList(ReadOnlyCollection<Expression> original)
+        protected virtual ReadOnlyCollection<T> VisitExpressionList<T>(ReadOnlyCollection<T> original) where T : Expression
         {
-            List<Expression> list = null;
+            List<T> list = null;
             for (int i = 0, n = original.Count; i < n; i++)
             {
-                Expression p = Visit(original[i]);
+                T p = (T)Visit(original[i]);
                 if (list != null)
                 {
                     list.Add(p);
                 }
                 else if (p != original[i])
                 {
-                    list = new List<Expression>(n);
+                    list = new List<T>(n);
                     for (int j = 0; j < i; j++)
                     {
                         list.Add(original[j]);
@@ -429,6 +433,18 @@
             }
 
             return iv;
+        }
+
+        protected virtual Expression VisitBlock(BlockExpression node)
+        {
+            IEnumerable<Expression> expressions = VisitExpressionList(node.Expressions);
+            IEnumerable<ParameterExpression> variables = VisitExpressionList(node.Variables);
+            if (expressions != node.Expressions || variables != node.Variables)
+            {
+                return Expression.Block(node.Type, variables, expressions);
+            }
+
+            return node;
         }
     }
 }

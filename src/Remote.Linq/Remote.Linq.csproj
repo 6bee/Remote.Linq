@@ -28,7 +28,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.0.0-alpha-057" />
+    <PackageReference Include="aqua-core" Version="4.0.0-alpha-059" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
