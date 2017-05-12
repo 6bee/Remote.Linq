@@ -16,7 +16,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal ListInitExpression(NewExpression n, IEnumerable<ElementInit> initializers)
+        public ListInitExpression(NewExpression n, IEnumerable<ElementInit> initializers)
         {
             NewExpression = n;
             Initializers = initializers.ToList();

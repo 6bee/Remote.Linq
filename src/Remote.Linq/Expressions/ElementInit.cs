@@ -18,18 +18,18 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal ElementInit(MethodInfo addMethod, IEnumerable<Expression> arguments)
+        public ElementInit(MethodInfo addMethod, IEnumerable<Expression> arguments)
         {
             AddMethod = addMethod;
             Arguments = arguments.ToList();
         }
 
-        internal ElementInit(System.Reflection.MethodInfo addMethod, IEnumerable<Expression> arguments)
+        public ElementInit(System.Reflection.MethodInfo addMethod, IEnumerable<Expression> arguments)
             : this(new MethodInfo(addMethod), arguments)
         {
         }
 
-        internal ElementInit(string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
+        public ElementInit(string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
             : this(new MethodInfo(methodName, declaringType, bindingFlags, genericArguments, parameterTypes), arguments)
         {
         }

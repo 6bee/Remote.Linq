@@ -16,12 +16,12 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal BlockExpression(Type type, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> expressions)
+        public BlockExpression(Type type, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> expressions)
             : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), variables, expressions)
         {
         }
 
-        internal BlockExpression(TypeInfo type, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> expressions)
+        public BlockExpression(TypeInfo type, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> expressions)
         {
             Type = type;
             Variables = variables?.Any() ?? false ? variables.ToList() : null;

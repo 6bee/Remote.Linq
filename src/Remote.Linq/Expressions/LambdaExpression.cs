@@ -16,19 +16,19 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal LambdaExpression(Expression expression, IEnumerable<ParameterExpression> parameters)
+        public LambdaExpression(Expression expression, IEnumerable<ParameterExpression> parameters)
         {
             Expression = expression;
             Parameters = parameters.ToList();
         }
 
-        internal LambdaExpression(TypeInfo type, Expression expression, IEnumerable<ParameterExpression> parameters)
+        public LambdaExpression(TypeInfo type, Expression expression, IEnumerable<ParameterExpression> parameters)
             : this(expression, parameters)
         {
             Type = type;
         }
 
-        internal LambdaExpression(Type type, Expression expression, IEnumerable<ParameterExpression> parameters)
+        public LambdaExpression(Type type, Expression expression, IEnumerable<ParameterExpression> parameters)
             : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), expression, parameters)
         {
         }

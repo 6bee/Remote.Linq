@@ -15,13 +15,13 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal MemberExpression(Expression expression, MemberInfo member)
+        public MemberExpression(Expression expression, MemberInfo member)
         {
             Expression = expression;
             Member = member;
         }
 
-        internal MemberExpression(Expression expression, System.Reflection.MemberInfo member)
+        public MemberExpression(Expression expression, System.Reflection.MemberInfo member)
             : this(expression, MemberInfo.Create(member))
         {
         }

@@ -20,7 +20,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal ConstantExpression(object value, Type type = null)
+        public ConstantExpression(object value, Type type = null)
         {
             if (ReferenceEquals(null, type))
             {
@@ -38,7 +38,7 @@ namespace Remote.Linq.Expressions
             Value = value;
         }
 
-        internal ConstantExpression(object value, TypeInfo type)
+        public ConstantExpression(object value, TypeInfo type)
         {
             Type = type;
             Value = value;

@@ -80,7 +80,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (n != init.NewExpression || bindings != init.Bindings)
             {
-                return Expression.MemberInit(n, bindings);
+                return new MemberInitExpression(n, bindings);
             }
 
             return init;
@@ -144,7 +144,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (e != assignment.Expression)
             {
-                return Expression.Bind(assignment.Member, e);
+                return new MemberAssignment(assignment.Member, e);
             }
 
             return assignment;
@@ -156,7 +156,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (bindings != binding.Bindings)
             {
-                return Expression.MemberBind(binding.Member, bindings);
+                return new MemberMemberBinding(binding.Member, bindings);
             }
 
             return binding;
@@ -168,7 +168,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(initializers, binding.Initializers))
             {
-                return Expression.ListBind(binding.Member, initializers);
+                return new MemberListBinding(binding.Member, initializers);
             }
 
             return binding;
@@ -214,7 +214,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(arguments, initializer.Arguments))
             {
-                return Expression.ElementInit(initializer.AddMethod.Method, arguments);
+                return new ElementInit(initializer.AddMethod.Method, arguments);
             }
 
             return initializer;

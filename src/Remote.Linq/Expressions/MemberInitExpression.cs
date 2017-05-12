@@ -16,7 +16,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal MemberInitExpression(NewExpression newExpression, IEnumerable<MemberBinding> bindings)
+        public MemberInitExpression(NewExpression newExpression, IEnumerable<MemberBinding> bindings)
         {
             NewExpression = newExpression;
             Bindings = bindings.ToList();

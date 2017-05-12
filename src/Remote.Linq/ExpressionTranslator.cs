@@ -104,7 +104,7 @@ namespace Remote.Linq
 
         private static RLinq.ConstantExpression Wrap(this Expression expression)
         {
-            return ReferenceEquals(null, expression) ? null : RLinq.Expression.Constant(expression);
+            return ReferenceEquals(null, expression) ? null : new RLinq.ConstantExpression(expression);
         }
 
         private static RLinq.Expression Unwrap(this Expression expression)
@@ -391,7 +391,7 @@ namespace Remote.Linq
             {
                 var n = VisitNew(init.NewExpression);
                 var bindings = VisitBindingList(init.Bindings);
-                return RLinq.Expression.MemberInit(n, bindings).Wrap();
+                return new RLinq.MemberInitExpression(n, bindings).Wrap();
             }
 
             private new IEnumerable<RLinq.MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> original)

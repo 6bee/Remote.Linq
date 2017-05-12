@@ -14,7 +14,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal SortExpression(LambdaExpression operand, SortDirection sortDirection)
+        public SortExpression(LambdaExpression operand, SortDirection sortDirection)
         {
             Operand = operand;
             SortDirection = sortDirection;

@@ -15,14 +15,14 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand)
+        public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand)
         {
             BinaryOperator = binaryOperator;
             LeftOperand = leftOperand;
             RightOperand = rightOperand;
         }
 
-        internal BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, MethodInfo method, LambdaExpression conversion = null)
+        public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, MethodInfo method, LambdaExpression conversion = null)
             : this(binaryOperator, leftOperand, rightOperand)
         {
             IsLiftedToNull = liftToNull;
@@ -30,7 +30,7 @@ namespace Remote.Linq.Expressions
             Conversion = conversion;
         }
 
-        internal BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, System.Reflection.MethodInfo method, LambdaExpression conversion = null)
+        public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, System.Reflection.MethodInfo method, LambdaExpression conversion = null)
             : this(binaryOperator, leftOperand, rightOperand, liftToNull, ReferenceEquals(null, method) ? null : new MethodInfo(method), conversion)
         {
         }

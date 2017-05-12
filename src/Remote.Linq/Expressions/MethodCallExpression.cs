@@ -18,19 +18,19 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal MethodCallExpression(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
+        public MethodCallExpression(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
         {
             Instance = insatnce;
             Method = methodInfo;
             Arguments = arguments.ToList();
         }
 
-        internal MethodCallExpression(Expression insatnce, System.Reflection.MethodInfo methodInfo, IEnumerable<Expression> arguments)
+        public MethodCallExpression(Expression insatnce, System.Reflection.MethodInfo methodInfo, IEnumerable<Expression> arguments)
             : this(insatnce, new MethodInfo(methodInfo), arguments)
         {
         }
 
-        internal MethodCallExpression(Expression insatnce, string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
+        public MethodCallExpression(Expression insatnce, string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
             : this(insatnce, new MethodInfo(methodName, declaringType, bindingFlags, genericArguments, parameterTypes), arguments)
         {
         }

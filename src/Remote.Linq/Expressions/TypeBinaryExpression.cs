@@ -15,7 +15,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal TypeBinaryExpression(Expression expression, Type type)
+        public TypeBinaryExpression(Expression expression, Type type)
         {
             Expression = expression;
             TypeOperand = new TypeInfo(type, false, false);

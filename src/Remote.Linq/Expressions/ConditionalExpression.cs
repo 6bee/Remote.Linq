@@ -14,7 +14,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        internal ConditionalExpression(Expression test, Expression ifTrue, Expression ifFalse)
+        public ConditionalExpression(Expression test, Expression ifTrue, Expression ifFalse)
         {
             Test = test;
             IfTrue = ifTrue;
