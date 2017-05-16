@@ -216,6 +216,28 @@ namespace Remote.Linq
             public static ConstantValueMapper ForReconstruction(ITypeResolver typeResolver)
                 => new ConstantValueMapper(typeResolver, new IsKnownTypeProvider(false));
 
+            protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
+            {
+                if (IsEnumerableQuery(obj))
+                {
+                    obj = Enumerate(obj);
+                }
+
+                return base.MapToDynamicObjectGraph(obj, setTypeInformation);
+            }
+
+            private static bool IsEnumerableQuery(object obj)
+            {
+                var type = obj?.GetType();
+                return (type?.IsGenericType() ?? false) 
+                    && type.GetGenericTypeDefinition() == typeof(EnumerableQuery<>);
+            }
+
+            private static object Enumerate(object obj)
+                => MethodInfos.Enumerable.ToArray
+                    .MakeGenericMethod(((IQueryable)obj).ElementType)
+                    .Invoke(null, new[] { obj });
+
             public static bool TypeNeedsWrapping(Type type, bool includePrimitiveType = true)
             {
                 if (includePrimitiveType && _isPrimitiveType(type))
@@ -223,7 +245,17 @@ namespace Remote.Linq
                     return false;
                 }
 
-                if (_isKnownType(type.IsGenericType() ? type.GetGenericTypeDefinition() : type))
+                if (type.IsGenericType())
+                {
+                    type = type.GetGenericTypeDefinition();
+                }
+
+                if (type == typeof(EnumerableQuery<>))
+                {
+                    return true;
+                }
+
+                if (_isKnownType(type))
                 {
                     return false;
                 }

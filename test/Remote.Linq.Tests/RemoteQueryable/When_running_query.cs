@@ -384,6 +384,31 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_query_products_filterd_using_local_variables_closure_inline_mix_with_EnumerableQuery()
+        {
+            IEnumerable<int?> listOfIds = new List<int?>() { null, 1, 11, 111 }.AsQueryable(); // <=== EnumerableQuery
+            int oneId = 10;
+            var query =
+                from p in _productQueryable
+                where listOfIds.Contains(p.Id) || new List<string> { "Truck", "Bicycle" }.Contains(p.Name) || p.Id % 3 == 0 || p.Id == oneId
+                select p;
+            var result = query.ToArray();
+            result.Count().ShouldBe(4);
+        }
+
+        [Fact]
+        public void Should_join_remote_query_with_EnumerableQuery()
+        {
+            IEnumerable<int?> factors = new List<int?>() { null, 1, 2, 3 }.AsQueryable(); // <=== EnumerableQuery
+            var query =
+                from p in _productQueryable.Select(x => x.Price)
+                from f in factors
+                select p * (f ?? 0);
+            var result = query.ToArray();
+            result.Count().ShouldBe(5 * 4);
+        }
+
+        [Fact]
         public void Should_query_products_filterd_using_const_integer_closure()
         {
             const int oneId = 10;
