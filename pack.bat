@@ -5,5 +5,5 @@ clean ^
   && dotnet build src\Remote.Linq.Newtonsoft.Json ^
   && dotnet build test\Remote.Linq.Tests ^
   && dotnet test test\Remote.Linq.Tests\Remote.Linq.Tests.csproj ^
-  && dotnet pack src\Remote.Linq --output "..\..\artifacts" --configuration Debug --include-symbols --version-suffix 027 ^
-  && dotnet pack src\Remote.Linq.Newtonsoft.Json --output "..\..\artifacts" --configuration Debug --include-symbols --version-suffix 027
+  && dotnet pack src\Remote.Linq --output "..\..\artifacts" --configuration Debug --include-symbols --version-suffix 001 ^
+  && dotnet pack src\Remote.Linq.Newtonsoft.Json --output "..\..\artifacts" --configuration Debug --include-symbols --version-suffix 001
