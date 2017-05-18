@@ -107,9 +107,30 @@
                 case ExpressionType.ListInit:
                     return VisitListInit((ListInitExpression)exp);
 
+                case ExpressionType.Goto:
+                    return VisitGoto((GotoExpression) exp);
+
+                case ExpressionType.Label:
+                    return VisitLabel((LabelExpression) exp);
+
                 default:
                     throw new Exception(string.Format("Unhandled expression type: '{0}'", exp.NodeType));
             }
+        }
+
+        protected virtual Expression VisitLabel(LabelExpression l)
+        {
+            return l;
+        }
+
+        protected virtual Expression VisitGoto(GotoExpression g)
+        {
+            Expression value = Visit(g.Value);
+            if (value != g.Value)
+            {
+                return Expression.MakeGoto(g.Kind,g.Target,value,g.Type);
+            }
+            return g;
         }
 
         protected virtual MemberBinding VisitMemberBinding(MemberBinding binding)
