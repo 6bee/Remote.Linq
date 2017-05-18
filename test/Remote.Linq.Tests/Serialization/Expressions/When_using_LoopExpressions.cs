@@ -106,7 +106,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 
         [Fact]
-        public void Expression_block_result_should_be_equal()
+        public void Expression_result_should_be_equal()
         {
             var argument = 10;
             
