@@ -68,9 +68,35 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.TypeIs:
                     return VisitTypeIs((TypeBinaryExpression)expression);
 
+                case ExpressionType.Goto:
+                    return VisitGoto((GotoExpression)expression);
+
+                case ExpressionType.Label:
+                    return VisitLabel((LabelExpression)expression);
+
                 default:
                     throw new Exception(string.Format("Unknown expression type: '{0}'", expression.NodeType));
             }
+        }
+
+        private Expression VisitLabel(LabelExpression labelExpression)
+        {
+            Expression expression = Visit(labelExpression.Expression);
+            if (!ReferenceEquals(expression, labelExpression.Expression))
+            {
+                return new LabelExpression(labelExpression.LabelTarget,expression);
+            }
+            return labelExpression;
+        }
+
+        protected virtual Expression VisitGoto(GotoExpression gotoExpression)
+        {
+            Expression expression = Visit(gotoExpression.Expression);
+            if (!ReferenceEquals(expression, gotoExpression.Expression))
+            {
+                return new GotoExpression(gotoExpression.Kind,expression,gotoExpression.Target,gotoExpression.Type);
+            }
+            return gotoExpression;
         }
 
         protected virtual Expression VisitMemberInit(MemberInitExpression init)

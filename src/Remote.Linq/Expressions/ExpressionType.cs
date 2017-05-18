@@ -22,5 +22,7 @@ namespace Remote.Linq.Expressions
         TypeIs,
         Unary,
         Block,
+        Goto,
+        Label,
     }
 }
