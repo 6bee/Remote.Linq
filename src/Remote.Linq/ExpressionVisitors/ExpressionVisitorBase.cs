@@ -221,7 +221,20 @@
         {
             Expression test = Visit(c.Test);
             Expression ifTrue = Visit(c.IfTrue);
-            Expression ifFalse = Visit(c.IfFalse);
+            Expression ifFalse = c.IfFalse;
+
+            if (ifFalse is DefaultExpression || ifFalse.Type == typeof(void))
+            {
+                if (test != c.Test || ifTrue != c.IfTrue)
+                {
+                    return Expression.IfThen(test, ifTrue);
+                }
+            }
+            else
+            {
+                ifFalse = Visit(ifFalse);
+            }
+
             if (test != c.Test || ifTrue != c.IfTrue || ifFalse != c.IfFalse)
             {
                 return Expression.Condition(test, ifTrue, ifFalse);
