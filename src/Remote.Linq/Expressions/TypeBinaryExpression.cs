@@ -16,9 +16,14 @@ namespace Remote.Linq.Expressions
         }
 
         public TypeBinaryExpression(Expression expression, Type type)
+            : this(expression, ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false))
+        {
+        }
+
+        public TypeBinaryExpression(Expression expression, TypeInfo type)
         {
             Expression = expression;
-            TypeOperand = new TypeInfo(type, false, false);
+            TypeOperand = type;
         }
 
         public override ExpressionType NodeType => ExpressionType.TypeIs;

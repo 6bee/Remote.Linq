@@ -83,12 +83,14 @@
 
             switch (expression.NodeType)
             {
-                case ExpressionType.Parameter:
+                case ExpressionType.Block:
+                case ExpressionType.Default:
                 case ExpressionType.Label:
                 case ExpressionType.Goto:
-                case ExpressionType.Block:
                 case ExpressionType.Lambda:
+                case ExpressionType.Loop:
                 case ExpressionType.New:
+                case ExpressionType.Parameter:
                     return false;
             }
 
@@ -130,21 +132,22 @@
 
             private Expression Evaluate(Expression expression)
             {
-                if (expression.Type == typeof(void))
-                {
-                    return expression;
-                }
                 switch (expression.NodeType)
                 {
                     case ExpressionType.Constant:
-                    case ExpressionType.Quote:
                     case ExpressionType.Convert:
                     case ExpressionType.ConvertChecked:
+                    case ExpressionType.Quote:
                         return expression;
                 }
 
+                if (expression.NodeType == ExpressionType.Call && expression.Type == typeof(void))
+                {
+                    return expression;
+                }
+
                 var lambda = Expression.Lambda(expression);
-                Delegate func = lambda.Compile();
+                var func = lambda.Compile();
                 object value;
 
                 try
