@@ -153,6 +153,9 @@ namespace Remote.Linq
 
         private sealed class ConstantValueMapper : DynamicObjectMapper
         {
+            private static readonly System.Reflection.MethodInfo _createEnumerableQueryProxyMethod =
+                typeof(ConstantValueMapper).GetMethod(nameof(CreateEnumerableQueryProxy), BindingFlags.Static | BindingFlags.NonPublic);
+
             private static readonly Func<Type, bool> _isPrimitiveType = new[]
                 {
                     typeof(string),
@@ -180,7 +183,7 @@ namespace Remote.Linq
                 .ToDictionary(x => x, x => (object)null)
                 .ContainsKey;
 
-            private static readonly Type[] _knownTypes = new[]
+            private static readonly Type[] _unmappedTypes = new[]
                 {
                     typeof(ConstantQueryArgument),
                     typeof(VariableQueryArgument),
@@ -189,9 +192,13 @@ namespace Remote.Linq
                     typeof(VariableQueryArgument<>),
                     typeof(Expression),
                     typeof(IQueryable),
-                };                                      
+                };
 
-            private static readonly Func<Type, bool> _isKnownType = t => _knownTypes.Any(x => x.IsAssignableFrom(t));
+            private static readonly Type[] _excludeFromUnmappedTypes = new[]
+                {
+                    typeof(EnumerableQuery<>),
+                    typeof(EnumerableQueryProxy<>),
+                };
 
             private sealed class IsKnownTypeProvider : IIsKnownTypeProvider
             {
@@ -220,7 +227,7 @@ namespace Remote.Linq
             {
                 if (IsEnumerableQuery(obj))
                 {
-                    obj = Enumerate(obj);
+                    obj = MapEnumerableQuery(obj);
                 }
 
                 return base.MapToDynamicObjectGraph(obj, setTypeInformation);
@@ -233,10 +240,13 @@ namespace Remote.Linq
                     && type.GetGenericTypeDefinition() == typeof(EnumerableQuery<>);
             }
 
-            private static object Enumerate(object obj)
-                => MethodInfos.Enumerable.ToArray
+            private object MapEnumerableQuery(object obj)
+                => _createEnumerableQueryProxyMethod
                     .MakeGenericMethod(((IQueryable)obj).ElementType)
                     .Invoke(null, new[] { obj });
+
+            private static IQueryable<T> CreateEnumerableQueryProxy<T>(IQueryable<T> queryable)
+                => new EnumerableQueryProxy<T>(queryable);
 
             public static bool TypeNeedsWrapping(Type type, bool includePrimitiveType = true)
             {
@@ -244,23 +254,20 @@ namespace Remote.Linq
                 {
                     return false;
                 }
-
-                if (type.IsGenericType())
-                {
-                    type = type.GetGenericTypeDefinition();
-                }
-
-                if (type == typeof(EnumerableQuery<>))
-                {
-                    return true;
-                }
-
-                if (_isKnownType(type))
+                
+                if (IsUnmappedType(type))
                 {
                     return false;
                 }
 
                 return true;
+            }
+
+            private static bool IsUnmappedType(Type type)
+            {
+                var t = type.IsGenericType() ? type.GetGenericTypeDefinition() : type;
+                return _unmappedTypes.Any(x => x.IsAssignableFrom(t))
+                    && !_excludeFromUnmappedTypes.Any(x => x.IsAssignableFrom(t));
             }
         }
 
@@ -342,7 +349,7 @@ namespace Remote.Linq
             protected override Expression VisitConstant(ConstantExpression c)
             {
                 RLinq.ConstantExpression exp;
-                if (!ReferenceEquals(null, c.Value) && ConstantValueMapper.TypeNeedsWrapping(c.Type))
+                if (!ReferenceEquals(null, c.Value) && ConstantValueMapper.TypeNeedsWrapping(c.Value.GetType()))
                 {
                     var key = new { c.Value, c.Type };
                     ConstantQueryArgument constantQueryArgument;
