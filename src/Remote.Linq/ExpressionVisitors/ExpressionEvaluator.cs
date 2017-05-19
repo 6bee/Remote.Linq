@@ -84,6 +84,9 @@
             switch (expression.NodeType)
             {
                 case ExpressionType.Parameter:
+                case ExpressionType.Label:
+                case ExpressionType.Goto:
+                case ExpressionType.Block:
                 case ExpressionType.Lambda:
                 case ExpressionType.New:
                     return false;
@@ -137,7 +140,7 @@
                 }
 
                 var lambda = Expression.Lambda(expression);
-                var func = lambda.Compile();
+                Delegate func = lambda.Compile();
                 object value;
 
                 try

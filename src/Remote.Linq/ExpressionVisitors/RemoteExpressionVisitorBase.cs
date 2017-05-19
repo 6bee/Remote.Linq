@@ -74,9 +74,17 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.Label:
                     return VisitLabel((LabelExpression)expression);
 
+                case ExpressionType.Default:
+                    return VisitDefault((DefaultExpression)expression);
+
                 default:
                     throw new Exception(string.Format("Unknown expression type: '{0}'", expression.NodeType));
             }
+        }
+
+        protected virtual Expression VisitDefault(DefaultExpression defaultExpression)
+        {
+            return defaultExpression;
         }
 
         private Expression VisitLabel(LabelExpression labelExpression)
