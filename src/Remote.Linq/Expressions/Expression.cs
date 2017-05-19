@@ -24,6 +24,9 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(ParameterExpression)), XmlInclude(typeof(ParameterExpression))]
     [KnownType(typeof(TypeBinaryExpression)), XmlInclude(typeof(TypeBinaryExpression))]
     [KnownType(typeof(UnaryExpression)), XmlInclude(typeof(UnaryExpression))]
+    [KnownType(typeof(GotoExpression)), XmlInclude(typeof(GotoExpression))]
+    [KnownType(typeof(LabelExpression)), XmlInclude(typeof(LabelExpression))]
+    [KnownType(typeof(DefaultExpression)), XmlInclude(typeof(DefaultExpression))]
     public abstract partial class Expression
     {
         public abstract ExpressionType NodeType { get; }

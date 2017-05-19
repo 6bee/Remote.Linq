@@ -24,5 +24,6 @@ namespace Remote.Linq.Expressions
         Block,
         Goto,
         Label,
+        Default,
     }
 }

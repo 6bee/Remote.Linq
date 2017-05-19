@@ -278,13 +278,11 @@ namespace Remote.Linq
 
             public RLinq.Expression ToRemoteExpression(Expression expression)
             {
-                //TODO: Partial eval destroys labels
                 var partialEvalExpression = expression.PartialEval(KeepMarkerFunctions);
                 if (partialEvalExpression == null)
                 {
                     throw CreateNotSupportedException(expression);
                 }
-
                 var constExpression = Visit(partialEvalExpression);
                 return constExpression.Unwrap();
             }
@@ -304,6 +302,11 @@ namespace Remote.Linq
                     default:
                         return base.Visit(exp);
                 }
+            }
+
+            protected override Expression VisitDefault(DefaultExpression d)
+            {
+                return new RLinq.DefaultExpression(d.Type).Wrap();
             }
 
             protected override Expression VisitListInit(ListInitExpression init)
@@ -663,9 +666,17 @@ namespace Remote.Linq
                     case RLinq.ExpressionType.Goto:
                         return VisitGoto((RLinq.GotoExpression)expression);
 
+                    case RLinq.ExpressionType.Default:
+                        return VisitDefault((RLinq.DefaultExpression)expression);
+
                     default:
                         throw new Exception(string.Format("Unknown expression note type: '{0}'", expression.NodeType));
                 }
+            }
+
+            private Expression VisitDefault(RLinq.DefaultExpression expression)
+            {
+                return Expression.Default(_typeResolver.ResolveType(expression.Type));
             }
 
             private Expression VisitGoto(RLinq.GotoExpression gotoExpression)

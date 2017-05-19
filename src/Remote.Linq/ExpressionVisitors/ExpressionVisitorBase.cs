@@ -113,9 +113,17 @@
                 case ExpressionType.Label:
                     return VisitLabel((LabelExpression) exp);
 
+                case ExpressionType.Default:
+                    return VisitDefault((DefaultExpression) exp);
+
                 default:
                     throw new Exception(string.Format("Unhandled expression type: '{0}'", exp.NodeType));
             }
+        }
+
+        protected virtual Expression VisitDefault(DefaultExpression d)
+        {
+            return d;
         }
 
         protected virtual Expression VisitLabel(LabelExpression l)
