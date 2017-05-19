@@ -10,13 +10,6 @@ namespace Remote.Linq.ExpressionVisitors
 
     public abstract class RemoteExpressionVisitorBase
     {
-        protected readonly ITypeResolver _typeResolver;
-
-        protected RemoteExpressionVisitorBase(ITypeResolver typeResolver = null)
-        {
-            _typeResolver = typeResolver ?? TypeResolver.Instance;
-        }
-
         protected virtual Expression Visit(Expression expression)
         {
             if (ReferenceEquals(null, expression))
@@ -32,41 +25,17 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.Block:
                     return VisitBlock((BlockExpression)expression);
 
+                case ExpressionType.Call:
+                    return VisitMethodCall((MethodCallExpression)expression);
+
                 case ExpressionType.Conditional:
                     return VisitConditional((ConditionalExpression)expression);
 
                 case ExpressionType.Constant:
                     return VisitConstant((ConstantExpression)expression);
 
-                case ExpressionType.Parameter:
-                    return VisitParameter((ParameterExpression)expression);
-
-                case ExpressionType.MemberAccess:
-                    return VisitMemberAccess((MemberExpression)expression);
-
-                case ExpressionType.Unary:
-                    return VisitUnary((UnaryExpression)expression);
-
-                case ExpressionType.Call:
-                    return VisitMethodCall((MethodCallExpression)expression);
-
-                case ExpressionType.Lambda:
-                    return VisitLambda((LambdaExpression)expression);
-
-                case ExpressionType.ListInit:
-                    return VisitListInit((ListInitExpression)expression);
-
-                case ExpressionType.New:
-                    return VisitNew((NewExpression)expression);
-
-                case ExpressionType.NewArray:
-                    return VisitNewArray((NewArrayExpression)expression);
-
-                case ExpressionType.MemberInit:
-                    return VisitMemberInit((MemberInitExpression)expression);
-
-                case ExpressionType.TypeIs:
-                    return VisitTypeIs((TypeBinaryExpression)expression);
+                case ExpressionType.Default:
+                    return VisitDefault((DefaultExpression)expression);
 
                 case ExpressionType.Goto:
                     return VisitGoto((GotoExpression)expression);
@@ -74,50 +43,52 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.Label:
                     return VisitLabel((LabelExpression)expression);
 
-                case ExpressionType.Default:
-                    return VisitDefault((DefaultExpression)expression);
+                case ExpressionType.Lambda:
+                    return VisitLambda((LambdaExpression)expression);
+
+                case ExpressionType.ListInit:
+                    return VisitListInit((ListInitExpression)expression);
+
+                case ExpressionType.Loop:
+                    return VisitLoop((LoopExpression)expression);
+
+                case ExpressionType.MemberAccess:
+                    return VisitMemberAccess((MemberExpression)expression);
+
+                case ExpressionType.MemberInit:
+                    return VisitMemberInit((MemberInitExpression)expression);
+
+                case ExpressionType.New:
+                    return VisitNew((NewExpression)expression);
+
+                case ExpressionType.NewArray:
+                    return VisitNewArray((NewArrayExpression)expression);
+
+                case ExpressionType.Parameter:
+                    return VisitParameter((ParameterExpression)expression);
+
+                case ExpressionType.TypeIs:
+                    return VisitTypeIs((TypeBinaryExpression)expression);
+
+                case ExpressionType.Unary:
+                    return VisitUnary((UnaryExpression)expression);
 
                 default:
                     throw new Exception(string.Format("Unknown expression type: '{0}'", expression.NodeType));
             }
         }
 
-        protected virtual Expression VisitDefault(DefaultExpression defaultExpression)
+        protected virtual Expression VisitMemberInit(MemberInitExpression node)
         {
-            return defaultExpression;
-        }
+            NewExpression n = VisitNew(node.NewExpression);
+            IEnumerable<MemberBinding> bindings = VisitBindingList(node.Bindings);
 
-        private Expression VisitLabel(LabelExpression labelExpression)
-        {
-            Expression expression = Visit(labelExpression.Expression);
-            if (!ReferenceEquals(expression, labelExpression.Expression))
-            {
-                return new LabelExpression(labelExpression.LabelTarget,expression);
-            }
-            return labelExpression;
-        }
-
-        protected virtual Expression VisitGoto(GotoExpression gotoExpression)
-        {
-            Expression expression = Visit(gotoExpression.Expression);
-            if (!ReferenceEquals(expression, gotoExpression.Expression))
-            {
-                return new GotoExpression(gotoExpression.Kind,expression,gotoExpression.Target,gotoExpression.Type);
-            }
-            return gotoExpression;
-        }
-
-        protected virtual Expression VisitMemberInit(MemberInitExpression init)
-        {
-            NewExpression n = VisitNew(init.NewExpression);
-            IEnumerable<MemberBinding> bindings = VisitBindingList(init.Bindings);
-
-            if (n != init.NewExpression || bindings != init.Bindings)
+            if (n != node.NewExpression || bindings != node.Bindings)
             {
                 return new MemberInitExpression(n, bindings);
             }
 
-            return init;
+            return node;
         }
 
         protected virtual List<MemberBinding> VisitBindingList(List<MemberBinding> original)
@@ -289,54 +260,54 @@ namespace Remote.Linq.ExpressionVisitors
             return original;
         }
 
-        protected virtual NewExpression VisitNew(NewExpression newExpression)
+        protected virtual NewExpression VisitNew(NewExpression node)
         {
-            var args = VisitExpressionList(newExpression.Arguments);
+            var args = VisitExpressionList(node.Arguments);
 
-            if (!ReferenceEquals(args, newExpression.Arguments))
+            if (!ReferenceEquals(args, node.Arguments))
             {
-                return new NewExpression(newExpression.Constructor, args, newExpression.Members);
+                return new NewExpression(node.Constructor, args, node.Members);
             }
 
-            return newExpression;
+            return node;
         }
 
-        private Expression VisitNewArray(NewArrayExpression newArrayExpression)
+        private Expression VisitNewArray(NewArrayExpression node)
         {
-            var expressions = VisitExpressionList(newArrayExpression.Expressions);
+            var expressions = VisitExpressionList(node.Expressions);
 
-            if (!ReferenceEquals(expressions, newArrayExpression.Expressions))
+            if (!ReferenceEquals(expressions, node.Expressions))
             {
-                return new NewArrayExpression(newArrayExpression.NewArrayType, newArrayExpression.Type, expressions);
+                return new NewArrayExpression(node.NewArrayType, node.Type, expressions);
             }
 
-            return newArrayExpression;
+            return node;
         }
 
-        protected virtual Expression VisitListInit(ListInitExpression listInitExpression)
+        protected virtual Expression VisitListInit(ListInitExpression node)
         {
-            var newExpression = VisitNew(listInitExpression.NewExpression);
+            var newExpression = VisitNew(node.NewExpression);
 
-            if (!ReferenceEquals(newExpression, listInitExpression.NewExpression))
+            if (!ReferenceEquals(newExpression, node.NewExpression))
             {
-                return new ListInitExpression(newExpression, listInitExpression.Initializers);
+                return new ListInitExpression(newExpression, node.Initializers);
             }
 
-            return listInitExpression;
+            return node;
         }
 
-        protected virtual Expression VisitBinary(BinaryExpression expression)
+        protected virtual Expression VisitBinary(BinaryExpression node)
         {
-            var leftOperand = Visit(expression.LeftOperand);
-            var rightOperand = Visit(expression.RightOperand);
-            var conversion = Visit(expression.Conversion) as LambdaExpression;
+            var leftOperand = Visit(node.LeftOperand);
+            var rightOperand = Visit(node.RightOperand);
+            var conversion = Visit(node.Conversion) as LambdaExpression;
 
-            if (!ReferenceEquals(leftOperand, expression.LeftOperand) || !ReferenceEquals(rightOperand, expression.RightOperand) || !ReferenceEquals(conversion, expression.Conversion))
+            if (!ReferenceEquals(leftOperand, node.LeftOperand) || !ReferenceEquals(rightOperand, node.RightOperand) || !ReferenceEquals(conversion, node.Conversion))
             {
-                return new BinaryExpression(expression.BinaryOperator, leftOperand, rightOperand, expression.IsLiftedToNull, expression.Method, conversion);
+                return new BinaryExpression(node.BinaryOperator, leftOperand, rightOperand, node.IsLiftedToNull, node.Method, conversion);
             }
 
-            return expression;
+            return node;
         }
 
         protected virtual Expression VisitBlock(BlockExpression node)
@@ -352,99 +323,139 @@ namespace Remote.Linq.ExpressionVisitors
             return node;
         }
 
-        protected virtual Expression VisitTypeIs(TypeBinaryExpression expression)
+        protected virtual Expression VisitTypeIs(TypeBinaryExpression node)
         {
-            var exp = Visit(expression.Expression);
+            var exp = Visit(node.Expression);
 
-            if (!ReferenceEquals(exp, expression.Expression))
+            if (!ReferenceEquals(exp, node.Expression))
             {
-                var type = _typeResolver.ResolveType(expression.TypeOperand);
-                return new TypeBinaryExpression(exp, type);
+                return new TypeBinaryExpression(exp, node.TypeOperand);
             }
 
-            return expression;
+            return node;
         }
 
-        protected virtual Expression VisitConditional(ConditionalExpression expression)
+        protected virtual Expression VisitConditional(ConditionalExpression node)
         {
-            var test = Visit(expression.Test);
-            var ifTrue = Visit(expression.IfTrue);
-            var ifFalse = Visit(expression.IfFalse);
+            var test = Visit(node.Test);
+            var ifTrue = Visit(node.IfTrue);
+            var ifFalse = Visit(node.IfFalse);
 
-            if (!ReferenceEquals(test, expression.Test) || !ReferenceEquals(ifTrue, expression.IfTrue) || !ReferenceEquals(ifFalse, expression.IfFalse))
+            if (!ReferenceEquals(test, node.Test) || !ReferenceEquals(ifTrue, node.IfTrue) || !ReferenceEquals(ifFalse, node.IfFalse))
             {
-                return new ConditionalExpression(test, ifTrue, ifFalse);
+                return new ConditionalExpression(test, ifTrue, ifFalse, node.Type);
             }
 
-            return expression;
+            return node;
         }
 
-        protected virtual ConstantExpression VisitConstant(ConstantExpression expression)
+        protected virtual ConstantExpression VisitConstant(ConstantExpression node)
         {
-            return expression;
+            return node;
         }
 
-        protected virtual ParameterExpression VisitParameter(ParameterExpression expression)
+        protected virtual ParameterExpression VisitParameter(ParameterExpression node)
         {
-            return expression;
+            return node;
         }
 
-        protected virtual Expression VisitMemberAccess(MemberExpression expression)
+        protected virtual Expression VisitMemberAccess(MemberExpression node)
         {
-            var instance = Visit(expression.Expression);
+            var instance = Visit(node.Expression);
 
-            if (!ReferenceEquals(instance, expression.Expression))
+            if (!ReferenceEquals(instance, node.Expression))
             {
-                return new MemberExpression(instance, expression.Member);
+                return new MemberExpression(instance, node.Member);
             }
 
-            return expression;
+            return node;
         }
 
-        protected virtual Expression VisitUnary(UnaryExpression expression)
+        protected virtual Expression VisitUnary(UnaryExpression node)
         {
-            var operand = Visit(expression.Operand);
+            var operand = Visit(node.Operand);
 
-            if (!ReferenceEquals(operand, expression.Operand))
+            if (!ReferenceEquals(operand, node.Operand))
             {
-                return new UnaryExpression(expression.UnaryOperator, operand, expression.Type, expression.Method);
+                return new UnaryExpression(node.UnaryOperator, operand, node.Type, node.Method);
             }
 
-            return expression;
+            return node;
         }
 
-        protected virtual Expression VisitMethodCall(MethodCallExpression expression)
+        protected virtual Expression VisitMethodCall(MethodCallExpression node)
         {
-            var instance = Visit(expression.Instance);
+            var instance = Visit(node.Instance);
             var argumements =
-                from i in expression.Arguments
+                from i in node.Arguments
                 select new { Old = i, New = Visit(i) };
 
             argumements = argumements.ToList();
 
-            if (!ReferenceEquals(instance, expression.Instance) || argumements.Any(i => !ReferenceEquals(i.Old, i.New)))
+            if (!ReferenceEquals(instance, node.Instance) || argumements.Any(i => !ReferenceEquals(i.Old, i.New)))
             {
-                return new MethodCallExpression(instance, expression.Method, argumements.Select(i => i.New));
+                return new MethodCallExpression(instance, node.Method, argumements.Select(i => i.New));
             }
 
-            return expression;
+            return node;
         }
 
-        protected virtual Expression VisitLambda(LambdaExpression expression)
+        protected virtual Expression VisitLambda(LambdaExpression node)
         {
-            var exp = Visit(expression.Expression);
+            var exp = Visit(node.Expression);
             var parameters =
-                from i in expression.Parameters
+                from i in node.Parameters
                 select new { Old = i, New = VisitParameter(i) };
 
             parameters = parameters.ToList();
 
-            if (!ReferenceEquals(exp, expression.Expression) || parameters.Any(i => !ReferenceEquals(i.Old, i.New)))
+            if (!ReferenceEquals(exp, node.Expression) || parameters.Any(i => !ReferenceEquals(i.Old, i.New)))
             {
-                return new LambdaExpression(expression.Type, exp, parameters.Select(i => i.New));
+                return new LambdaExpression(node.Type, exp, parameters.Select(i => i.New));
             }
 
-            return expression;
+            return node;
+        }
+
+        protected virtual Expression VisitDefault(DefaultExpression node)
+        {
+            return node;
+        }
+
+        protected virtual Expression VisitGoto(GotoExpression node)
+        {
+            var value = Visit(node.Value);
+
+            if (!ReferenceEquals(value, node.Value))
+            {
+                return new GotoExpression(node.Kind, node.Target, node.Type, node.Value);
+            }
+
+            return node;
+        }
+
+        protected virtual Expression VisitLabel(LabelExpression node)
+        {
+            var defaultValue = Visit(node.DefaultValue);
+
+            if (!ReferenceEquals(defaultValue, node.DefaultValue))
+            {
+                return new LabelExpression(node.Target, defaultValue);
+            }
+
+            return node;
+        }
+
+        protected virtual LoopExpression VisitLoop(LoopExpression node)
+        {
+            var body = Visit(node.Body);
+
+            if (!ReferenceEquals(body, node.Body))
+            {
+                return new LoopExpression(body, node.BreakLabel, node.ContinueLabel);
+            }
+
+            return node;
         }
     }
 }

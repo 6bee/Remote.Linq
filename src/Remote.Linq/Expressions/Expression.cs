@@ -14,8 +14,12 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(BlockExpression)), XmlInclude(typeof(BlockExpression))]
     [KnownType(typeof(ConditionalExpression)), XmlInclude(typeof(ConditionalExpression))]
     [KnownType(typeof(ConstantExpression)), XmlInclude(typeof(ConstantExpression))]
+    [KnownType(typeof(DefaultExpression)), XmlInclude(typeof(DefaultExpression))]
+    [KnownType(typeof(GotoExpression)), XmlInclude(typeof(GotoExpression))]
+    [KnownType(typeof(LabelExpression)), XmlInclude(typeof(LabelExpression))]
     [KnownType(typeof(LambdaExpression)), XmlInclude(typeof(LambdaExpression))]
     [KnownType(typeof(ListInitExpression)), XmlInclude(typeof(ListInitExpression))]
+    [KnownType(typeof(LoopExpression)), XmlInclude(typeof(LoopExpression))]
     [KnownType(typeof(MemberExpression)), XmlInclude(typeof(MemberExpression))]
     [KnownType(typeof(MemberInitExpression)), XmlInclude(typeof(MemberInitExpression))]
     [KnownType(typeof(MethodCallExpression)), XmlInclude(typeof(MethodCallExpression))]
@@ -66,7 +70,7 @@ namespace Remote.Linq.Expressions
         [Obsolete("Use actual constructor instead", false)]
         public static ConditionalExpression Conditional(Expression test, Expression ifTrue, Expression ifFalse)
         {
-            return new ConditionalExpression(test, ifTrue, ifFalse);
+            return new ConditionalExpression(test, ifTrue, ifFalse, default(Aqua.TypeSystem.TypeInfo));
         }
 
         [Obsolete("Use actual constructor instead", false)]

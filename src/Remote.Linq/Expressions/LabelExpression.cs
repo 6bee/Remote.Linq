@@ -1,34 +1,33 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Runtime.Serialization;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Expressions
 {
+    using Aqua.TypeSystem;
+    using System;
+    using System.Runtime.Serialization;
+
     [Serializable]
     [DataContract]
     public sealed class LabelExpression : Expression
     {
-        [DataMember(Order = 1,IsRequired = true,EmitDefaultValue = false)]
-        public LabelTarget LabelTarget { get; set; }
-        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public Expression Expression { get; set; }
-
-        public override ExpressionType NodeType => ExpressionType.Label;
-        
         public LabelExpression()
         {
-            
         }
 
-        public LabelExpression(LabelTarget labelTarget, Expression expression)
+        public LabelExpression(LabelTarget target, Expression defaultValue)
         {
-            LabelTarget = labelTarget;
-            Expression = expression;
+            Target = target;
+            DefaultValue = defaultValue;
         }
 
-        public override string ToString()
-        {
-            return $".Label {LabelTarget} {Expression}";
-        }
+        public override ExpressionType NodeType => ExpressionType.Label;
+
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public LabelTarget Target { get; set; }
+
+        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
+        public Expression DefaultValue { get; set; }
+
+        public override string ToString() => $".Label {Target} {DefaultValue}";
     }
 }

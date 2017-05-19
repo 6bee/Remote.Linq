@@ -18,5 +18,10 @@ namespace Remote.Linq.Expressions
         Quote = NodeType.Quote,
         TypeAs = NodeType.TypeAs,
         UnaryPlus = NodeType.UnaryPlus,
+
+        PreDecrementAssign = NodeType.PreDecrementAssign,
+        PreIncrementAssign = NodeType.PreIncrementAssign,
+        PostDecrementAssign = NodeType.PostDecrementAssign,
+        PostIncrementAssign = NodeType.PostIncrementAssign,
     }
 }

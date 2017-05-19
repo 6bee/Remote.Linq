@@ -47,6 +47,21 @@ namespace Remote.Linq.Expressions
         // Array Indexing Operations
         ArrayIndex = NodeType.ArrayIndex,
 
+        // Assignment Operations
+        AddAssign = NodeType.AddAssign,
+        AddAssignChecked = NodeType.AddAssignChecked,
+        AndAssign = NodeType.AndAssign,
         Assign = NodeType.Assign,
+        DivideAssign = NodeType.DivideAssign,
+        ExclusiveOrAssign = NodeType.ExclusiveOrAssign,
+        LeftShiftAssign = NodeType.LeftShiftAssign,
+        ModuloAssign = NodeType.ModuloAssign,
+        MultiplyAssign = NodeType.MultiplyAssign,
+        MultiplyAssignChecked = NodeType.MultiplyAssignChecked,
+        OrAssign = NodeType.OrAssign,
+        PowerAssign = NodeType.PowerAssign,
+        RightShiftAssign = NodeType.RightShiftAssign,
+        SubtractAssign = NodeType.SubtractAssign,
+        SubtractAssignChecked = NodeType.SubtractAssignChecked,
     }
 }

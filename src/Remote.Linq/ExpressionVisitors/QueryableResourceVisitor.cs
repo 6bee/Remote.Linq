@@ -29,12 +29,13 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class ResourceDescriptorVisitor : RemoteExpressionVisitorBase
         {
+            protected readonly ITypeResolver _typeResolver;
             private readonly Func<Type, IQueryable> _provider;
 
             internal protected ResourceDescriptorVisitor(Func<Type, IQueryable> provider, ITypeResolver typeResolver)
-                : base(typeResolver)
             {
                 _provider = provider;
+                _typeResolver = typeResolver ?? TypeResolver.Instance;
             }
 
             internal Expression ReplaceResourceDescriptorsByQueryable(Expression expression)
@@ -44,11 +45,11 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
-                var type = _typeResolver.ResolveType(expression.Type);
+                var type = expression.Type.ResolveType(_typeResolver);
                 if (type == typeof(QueryableResourceDescriptor) && !ReferenceEquals(null, expression.Value))
                 {
                     var queryableResourceDescriptor = (QueryableResourceDescriptor)expression.Value;
-                    var queryableType = _typeResolver.ResolveType(queryableResourceDescriptor.Type);
+                    var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
                     var queryable = _provider(queryableType);
                     return new ConstantExpression(queryable);
                 }
@@ -62,7 +63,7 @@ namespace Remote.Linq.ExpressionVisitors
                         var queryableResourceDescriptor = property.Value as QueryableResourceDescriptor;
                         if (!ReferenceEquals(null, queryableResourceDescriptor))
                         {
-                            var queryableType = _typeResolver.ResolveType(queryableResourceDescriptor.Type);
+                            var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
                             var queryable = _provider(queryableType);
                             property.Value = queryable;
                         }
@@ -77,9 +78,11 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class QueryableVisitor : RemoteExpressionVisitorBase
         {
+            protected readonly ITypeResolver _typeResolver;
+
             internal protected QueryableVisitor(ITypeResolver typeResolver)
-                : base(typeResolver)
             {
+                _typeResolver = typeResolver ?? TypeResolver.Instance;
             }
 
             internal Expression ReplaceQueryablesByResourceDescriptors(Expression expression)
