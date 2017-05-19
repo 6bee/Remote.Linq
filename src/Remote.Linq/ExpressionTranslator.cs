@@ -909,6 +909,10 @@ namespace Remote.Linq
                 var test = Visit(expression.Test);
                 var ifTrue = Visit(expression.IfTrue);
                 var ifFalse = Visit(expression.IfFalse);
+                if (ifFalse is DefaultExpression && ifFalse.Type == typeof(void))
+                {
+                    return Expression.IfThen(test,ifTrue);
+                }
                 return Expression.Condition(test, ifTrue, ifFalse);
             }
 

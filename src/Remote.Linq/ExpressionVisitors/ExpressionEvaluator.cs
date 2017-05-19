@@ -130,6 +130,10 @@
 
             private Expression Evaluate(Expression expression)
             {
+                if (expression.Type == typeof(void))
+                {
+                    return expression;
+                }
                 switch (expression.NodeType)
                 {
                     case ExpressionType.Constant:
