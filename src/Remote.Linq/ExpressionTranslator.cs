@@ -488,7 +488,7 @@ namespace Remote.Linq
                 var test = Visit(node.Test).Unwrap();
                 var ifTrue = Visit(node.IfTrue).Unwrap();
                 var ifFalse = Visit(node.IfFalse).Unwrap();
-                return new RLinq.ConditionalExpression(test, ifTrue, ifFalse, node.Type).Wrap();
+                return new RLinq.ConditionalExpression(test, ifTrue, ifFalse).Wrap();
             }
 
             protected override Expression VisitNewArray(NewArrayExpression node)
@@ -864,8 +864,13 @@ namespace Remote.Linq
                 var test = Visit(expression.Test);
                 var ifTrue = Visit(expression.IfTrue);
                 var ifFalse = Visit(expression.IfFalse);
-                var type = expression.Type.ResolveType(_typeResolver);
-                return Expression.Condition(test, ifTrue, ifFalse, type);
+
+                if (ifFalse is DefaultExpression && ifFalse.Type == typeof(void))
+                {
+                    return Expression.IfThen(test, ifTrue);
+                }
+
+                return Expression.Condition(test, ifTrue, ifFalse);
             }
 
             private Expression VisitConstant(RLinq.ConstantExpression constantValueExpression)

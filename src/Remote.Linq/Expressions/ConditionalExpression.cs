@@ -15,17 +15,11 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public ConditionalExpression(Expression test, Expression ifTrue, Expression ifFalse, Type type)
-            : this(test, ifTrue, ifFalse, ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false))
-        {
-        }
-
-        public ConditionalExpression(Expression test, Expression ifTrue, Expression ifFalse, TypeInfo type)
+        public ConditionalExpression(Expression test, Expression ifTrue, Expression ifFalse)
         {
             Test = test;
             IfTrue = ifTrue;
             IfFalse = ifFalse;
-            Type = type;
         }
 
         public override ExpressionType NodeType => ExpressionType.Conditional;
@@ -38,9 +32,6 @@ namespace Remote.Linq.Expressions
 
         [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
         public Expression IfFalse { get; set; }
-
-        [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
 
         public override string ToString()
             => $"IF {Test} THEN {IfTrue} ELSE {IfFalse}";

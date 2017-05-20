@@ -70,7 +70,7 @@ namespace Remote.Linq.Expressions
         [Obsolete("Use actual constructor instead", false)]
         public static ConditionalExpression Conditional(Expression test, Expression ifTrue, Expression ifFalse)
         {
-            return new ConditionalExpression(test, ifTrue, ifFalse, default(Aqua.TypeSystem.TypeInfo));
+            return new ConditionalExpression(test, ifTrue, ifFalse);
         }
 
         [Obsolete("Use actual constructor instead", false)]
