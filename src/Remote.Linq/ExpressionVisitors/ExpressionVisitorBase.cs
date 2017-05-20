@@ -179,9 +179,17 @@
             Expression test = Visit(node.Test);
             Expression ifTrue = Visit(node.IfTrue);
             Expression ifFalse = Visit(node.IfFalse);
+
             if (test != node.Test || ifTrue != node.IfTrue || ifFalse != node.IfFalse)
             {
-                return Expression.Condition(test, ifTrue, ifFalse, node.Type);
+                if (ifFalse is DefaultExpression || ifFalse.Type == typeof(void))
+                {
+                    return Expression.IfThen(test, ifTrue);
+                }
+                else
+                {
+                    return Expression.Condition(test, ifTrue, ifFalse);
+                }
             }
 
             return node;

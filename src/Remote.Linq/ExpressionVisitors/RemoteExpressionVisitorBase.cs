@@ -343,7 +343,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(test, node.Test) || !ReferenceEquals(ifTrue, node.IfTrue) || !ReferenceEquals(ifFalse, node.IfFalse))
             {
-                return new ConditionalExpression(test, ifTrue, ifFalse, node.Type);
+                return new ConditionalExpression(test, ifTrue, ifFalse);
             }
 
             return node;
