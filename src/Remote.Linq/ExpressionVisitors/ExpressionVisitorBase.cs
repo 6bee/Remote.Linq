@@ -107,9 +107,38 @@
                 case ExpressionType.ListInit:
                     return VisitListInit((ListInitExpression)exp);
 
+                case ExpressionType.Goto:
+                    return VisitGoto((GotoExpression) exp);
+
+                case ExpressionType.Label:
+                    return VisitLabel((LabelExpression) exp);
+
+                case ExpressionType.Default:
+                    return VisitDefault((DefaultExpression) exp);
+
                 default:
                     throw new Exception(string.Format("Unhandled expression type: '{0}'", exp.NodeType));
             }
+        }
+
+        protected virtual Expression VisitDefault(DefaultExpression d)
+        {
+            return d;
+        }
+
+        protected virtual Expression VisitLabel(LabelExpression l)
+        {
+            return l;
+        }
+
+        protected virtual Expression VisitGoto(GotoExpression g)
+        {
+            Expression value = Visit(g.Value);
+            if (value != g.Value)
+            {
+                return Expression.MakeGoto(g.Kind,g.Target,value,g.Type);
+            }
+            return g;
         }
 
         protected virtual MemberBinding VisitMemberBinding(MemberBinding binding)
@@ -192,7 +221,20 @@
         {
             Expression test = Visit(c.Test);
             Expression ifTrue = Visit(c.IfTrue);
-            Expression ifFalse = Visit(c.IfFalse);
+            Expression ifFalse = c.IfFalse;
+
+            if (ifFalse is DefaultExpression || ifFalse.Type == typeof(void))
+            {
+                if (test != c.Test || ifTrue != c.IfTrue)
+                {
+                    return Expression.IfThen(test, ifTrue);
+                }
+            }
+            else
+            {
+                ifFalse = Visit(ifFalse);
+            }
+
             if (test != c.Test || ifTrue != c.IfTrue || ifFalse != c.IfFalse)
             {
                 return Expression.Condition(test, ifTrue, ifFalse);
