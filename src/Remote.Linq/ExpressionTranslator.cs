@@ -153,9 +153,6 @@ namespace Remote.Linq
 
         private sealed class ConstantValueMapper : DynamicObjectMapper
         {
-            private static readonly System.Reflection.MethodInfo _createEnumerableQueryProxyMethod =
-                typeof(ConstantValueMapper).GetMethod(nameof(CreateEnumerableQueryProxy), BindingFlags.Static | BindingFlags.NonPublic);
-
             private static readonly Func<Type, bool> _isPrimitiveType = new[]
                 {
                     typeof(string),
