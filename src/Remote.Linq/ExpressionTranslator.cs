@@ -153,9 +153,6 @@ namespace Remote.Linq
 
         private sealed class ConstantValueMapper : DynamicObjectMapper
         {
-            private static readonly System.Reflection.MethodInfo _createEnumerableQueryProxyMethod =
-                typeof(ConstantValueMapper).GetMethod(nameof(CreateEnumerableQueryProxy), BindingFlags.Static | BindingFlags.NonPublic);
-
             private static readonly Func<Type, bool> _isPrimitiveType = new[]
                 {
                     typeof(string),
@@ -197,7 +194,6 @@ namespace Remote.Linq
             private static readonly Type[] _excludeFromUnmappedTypes = new[]
                 {
                     typeof(EnumerableQuery<>),
-                    typeof(EnumerableQueryProxy<>),
                 };
             
             private sealed class IsKnownTypeProvider : IIsKnownTypeProvider
@@ -222,32 +218,7 @@ namespace Remote.Linq
 
             public static ConstantValueMapper ForReconstruction(ITypeResolver typeResolver)
                 => new ConstantValueMapper(typeResolver, new IsKnownTypeProvider(false));
-
-            protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
-            {
-                if (IsEnumerableQuery(obj))
-                {
-                    obj = MapEnumerableQuery(obj);
-                }
-
-                return base.MapToDynamicObjectGraph(obj, setTypeInformation);
-            }
-
-            private static bool IsEnumerableQuery(object obj)
-            {
-                var type = obj?.GetType();
-                return (type?.IsGenericType() ?? false) 
-                    && type.GetGenericTypeDefinition() == typeof(EnumerableQuery<>);
-            }
             
-            private object MapEnumerableQuery(object obj)
-                => _createEnumerableQueryProxyMethod
-                    .MakeGenericMethod(((IQueryable)obj).ElementType)
-                    .Invoke(null, new[] { obj });
-
-            private static IQueryable<T> CreateEnumerableQueryProxy<T>(IQueryable<T> queryable)
-                => new EnumerableQueryProxy<T>(queryable);
-
             public static bool TypeNeedsWrapping(Type type, bool includePrimitiveType = true)
             {
                 if (includePrimitiveType && _isPrimitiveType(type))
@@ -349,7 +320,6 @@ namespace Remote.Linq
             protected override Expression VisitConstant(ConstantExpression c)
             {
                 RLinq.ConstantExpression exp;
-                //if (!ReferenceEquals(null, c.Value) && ConstantValueMapper.TypeNeedsWrapping(c.Type))
                 if (!ReferenceEquals(null, c.Value) && ConstantValueMapper.TypeNeedsWrapping(c.Value.GetType()))
                 {
                     var key = new { c.Value, c.Type };

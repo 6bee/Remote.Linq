@@ -186,7 +186,7 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 var type = queryable.GetType();
-                if (type.IsGenericType() && typeof(EnumerableQueryProxy<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+                if (type.IsGenericType() && typeof(EnumerableQuery<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
                 {
                     return null;
                 }
