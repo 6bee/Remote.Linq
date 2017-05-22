@@ -26,5 +26,6 @@ namespace Remote.Linq.Expressions
         Label,
         Loop,
         Goto,
+        Try
     }
 }

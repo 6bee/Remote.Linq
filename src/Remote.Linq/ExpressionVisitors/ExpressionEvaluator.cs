@@ -91,6 +91,7 @@
                 case ExpressionType.Loop:
                 case ExpressionType.New:
                 case ExpressionType.Parameter:
+                case ExpressionType.Throw:
                     return false;
             }
 

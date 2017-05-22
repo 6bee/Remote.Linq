@@ -70,12 +70,46 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.TypeIs:
                     return VisitTypeIs((TypeBinaryExpression)expression);
 
+                case ExpressionType.Try:
+                    return VisitTry((TryExpression)expression);
+
                 case ExpressionType.Unary:
                     return VisitUnary((UnaryExpression)expression);
 
                 default:
                     throw new Exception(string.Format("Unknown expression type: '{0}'", expression.NodeType));
             }
+        }
+
+        protected virtual Expression VisitTry(TryExpression tryExpression)
+        {
+            Expression @finally = Visit(tryExpression.Finally);
+            Expression body = Visit(tryExpression.Body);
+            Expression fault = Visit(tryExpression.Fault);
+            List<CatchBlock> handlers = (tryExpression.Handlers??Enumerable.Empty<CatchBlock>()).Select(VisitCatchBlock).ToList();
+            if
+            (
+                @finally != tryExpression.Finally ||
+                body != tryExpression.Body ||
+                fault != tryExpression.Fault ||
+                handlers.SequenceEqual(tryExpression.Handlers) == false
+            )
+            {
+                return new TryExpression(tryExpression.Type, body, fault, @finally, handlers);
+            }
+            return tryExpression;
+        }
+
+        protected virtual CatchBlock VisitCatchBlock(CatchBlock catchBlock)
+        {
+            Expression body = Visit(catchBlock.Body);
+            ParameterExpression variable = VisitParameter(catchBlock.Variable);
+            Expression filter = Visit(catchBlock.Filter);
+            if (body != catchBlock.Body || variable != catchBlock.Variable || filter != catchBlock.Filter)
+            {
+                return new CatchBlock(catchBlock.Test,variable,body,filter);
+            }
+            return catchBlock;
         }
 
         protected virtual Expression VisitMemberInit(MemberInitExpression node)

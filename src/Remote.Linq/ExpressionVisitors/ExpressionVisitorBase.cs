@@ -1,8 +1,11 @@
-﻿namespace Remote.Linq.ExpressionVisitors
+﻿
+
+namespace Remote.Linq.ExpressionVisitors
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Linq.Expressions;
 
     /// <summary>
@@ -90,12 +93,46 @@
                 case ExpressionType.Parameter:
                     return VisitParameter((ParameterExpression)expression);
 
+                case ExpressionType.Try:
+                    return VisitTry((TryExpression)expression);
+
                 case ExpressionType.TypeIs:
                     return VisitTypeIs((TypeBinaryExpression)expression);
 
                 default:
                     throw new Exception(string.Format("Unhandled expression type: '{0}'", expression.NodeType));
             }
+        }
+
+        protected virtual Expression VisitTry(TryExpression tryExpression)
+        {
+            Expression body = Visit(tryExpression.Body);
+            Expression fault = Visit(tryExpression.Fault);
+            Expression @finally = Visit(tryExpression.Finally);
+            List<CatchBlock> handlers = tryExpression.Handlers.Select(VisitCatch).ToList();
+            if 
+            (
+                body != tryExpression.Body || 
+                fault != tryExpression.Fault || 
+                @finally != tryExpression.Finally ||
+                handlers.SequenceEqual(tryExpression.Handlers) == false
+            )
+            {
+                return Expression.MakeTry(tryExpression.Type, body, @finally, fault, handlers);
+            }
+            return tryExpression;
+        }
+
+        protected CatchBlock VisitCatch(CatchBlock catchBlock)
+        {
+            Expression body = Visit(catchBlock.Body);
+            Expression filter = Visit(catchBlock.Filter);
+            ParameterExpression variable = (ParameterExpression) VisitParameter(catchBlock.Variable);
+            if (body != catchBlock.Body || filter != catchBlock.Filter || variable != catchBlock.Variable)
+            {
+                return Expression.MakeCatchBlock(catchBlock.Test, variable, body, filter);
+            }
+            return catchBlock;
         }
 
         protected virtual MemberBinding VisitMemberBinding(MemberBinding binding)

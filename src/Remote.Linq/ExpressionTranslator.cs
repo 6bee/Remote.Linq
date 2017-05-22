@@ -309,6 +309,23 @@ namespace Remote.Linq
                 }
             }
 
+            protected override Expression VisitTry(TryExpression tryExpression)
+            {
+                RLinq.Expression body = Visit(tryExpression.Body).Unwrap();
+                RLinq.Expression fault = Visit(tryExpression.Fault).Unwrap();
+                RLinq.Expression @finally = Visit(tryExpression.Finally).Unwrap();
+                List<RLinq.CatchBlock> handlers = (tryExpression.Handlers?.Select(VisitCatch) ?? Enumerable.Empty<RLinq.CatchBlock>())?.ToList();
+                return new RLinq.TryExpression(tryExpression.Type, body, fault, @finally, handlers).Wrap();
+            }
+
+            private new RLinq.CatchBlock VisitCatch(CatchBlock catchBlock)
+            {
+                RLinq.Expression body = Visit(catchBlock.Body).Unwrap();
+                RLinq.Expression filter = Visit(catchBlock.Filter).Unwrap();
+                RLinq.ParameterExpression variable = Visit(catchBlock.Variable).Unwrap() as RLinq.ParameterExpression;
+                return new RLinq.CatchBlock(catchBlock.Test, variable, body, filter);
+            }
+
             protected override Expression VisitListInit(ListInitExpression node)
             {
                 var n = VisitNew(node.NewExpression);
@@ -679,12 +696,36 @@ namespace Remote.Linq
                     case RLinq.ExpressionType.Unary:
                         return VisitUnary((RLinq.UnaryExpression)expression);
 
+                    case RLinq.ExpressionType.Try:
+                        return VisitTry((RLinq.TryExpression)expression);
+
                     case RLinq.ExpressionType.TypeIs:
                         return VisitTypeIs((RLinq.TypeBinaryExpression)expression);
 
                     default:
                         throw new Exception(string.Format("Unknown expression note type: '{0}'", expression.NodeType));
                 }
+            }
+
+            private Expression VisitTry(RLinq.TryExpression tryExpression)
+            {
+                Expression body = Visit(tryExpression.Body);
+                Type type = ReferenceEquals(tryExpression.Type, null) ? null : _typeResolver.ResolveType(tryExpression.Type);
+                Expression fault = ReferenceEquals(tryExpression.Fault, null) ? null : Visit(tryExpression.Fault);
+                Expression @finally = ReferenceEquals(tryExpression.Finally, null) ? null : Visit(tryExpression.Finally);
+                IEnumerable<CatchBlock> handlers = tryExpression.Handlers?.Select(VisitCatchBlock) ?? Enumerable.Empty<CatchBlock>();
+
+                return Expression.MakeTry(type, body, @finally, fault,handlers);
+            }
+
+            private CatchBlock VisitCatchBlock(RLinq.CatchBlock catchBlock)
+            {
+                Type exceptionType = ReferenceEquals(catchBlock.Test, null) ? null : _typeResolver.ResolveType(catchBlock.Test);
+                ParameterExpression exceptionParameter = ReferenceEquals(catchBlock.Variable, null) ? null : VisitParameter(catchBlock.Variable);
+                Expression body = ReferenceEquals(catchBlock.Body, null) ? null : Visit(catchBlock.Body);
+                Expression filter = ReferenceEquals(catchBlock.Filter,null) ? null : Visit(catchBlock.Filter);
+
+                return Expression.MakeCatchBlock(exceptionType, exceptionParameter, body,filter);
             }
 
             private NewExpression VisitNew(RLinq.NewExpression newExpression)

@@ -23,5 +23,7 @@ namespace Remote.Linq.Expressions
         PreIncrementAssign = NodeType.PreIncrementAssign,
         PostDecrementAssign = NodeType.PostDecrementAssign,
         PostIncrementAssign = NodeType.PostIncrementAssign,
+
+        Throw = NodeType.Throw,
     }
 }

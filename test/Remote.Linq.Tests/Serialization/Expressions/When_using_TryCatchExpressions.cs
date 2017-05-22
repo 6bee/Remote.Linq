@@ -74,7 +74,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
                             Expression.IfThen
                             (
                                 Expression.Equal(Expression.Constant(true), shouldFail),
-                                Expression.Throw(Expression.Constant(new InvalidOperationException()))
+                                Expression.Throw(Expression.New(typeof(InvalidOperationException)))
                             ),
                             Expression.Assign(result, Expression.Constant(true))
                         ),

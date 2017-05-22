@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+using System.Reflection;
+
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using System;
@@ -74,10 +76,10 @@ namespace Remote.Linq.Tests.Serialization.Expressions
                             Expression.IfThen
                             (
                                 Expression.Equal(Expression.Constant(true), shouldFail),
-                                Expression.Throw(Expression.Constant(new InvalidOperationException("x")))
+                                Expression.Throw(Expression.New(typeof(InvalidOperationException).GetTypeInfo().GetConstructor(new[]{typeof(string)}),Expression.Constant("x")))
                             )
                         ),
-                        Expression.Throw(Expression.Constant(new InvalidOperationException("y")))
+                        Expression.Throw(Expression.New(typeof(InvalidOperationException).GetTypeInfo().GetConstructor(new[] { typeof(string) }), Expression.Constant("y")))
                     ),
                     Expression.Assign(result, Expression.Constant(true)),
                     result

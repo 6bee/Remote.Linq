@@ -26,7 +26,7 @@ namespace Remote.Linq.Expressions
             InstanceId = instanceId;
         }
 
-        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
+        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
         public string Name { get; set; }
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
