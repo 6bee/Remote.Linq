@@ -184,7 +184,7 @@ namespace Remote.Linq
                 .ToDictionary(x => x, x => (object)null)
                 .ContainsKey;
 
-            private static readonly Type[] _knownTypes = new[]
+            private static readonly Type[] _unmappedTypes = new[]
                 {
                     typeof(ConstantQueryArgument),
                     typeof(VariableQueryArgument),
@@ -193,9 +193,12 @@ namespace Remote.Linq
                     typeof(VariableQueryArgument<>),
                     typeof(Expression),
                     typeof(IQueryable),
-                };                                      
+                };
 
-            private static readonly Func<Type, bool> _isKnownType = t => _knownTypes.Any(x => x.IsAssignableFrom(t));
+            private static readonly Type[] _excludeFromUnmappedTypes = new[]
+                {
+                    typeof(EnumerableQuery<>),
+                };
 
             private sealed class IsKnownTypeProvider : IIsKnownTypeProvider
             {
@@ -220,51 +223,26 @@ namespace Remote.Linq
             public static ConstantValueMapper ForReconstruction(ITypeResolver typeResolver)
                 => new ConstantValueMapper(typeResolver, new IsKnownTypeProvider(false));
 
-            protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
-            {
-                if (IsEnumerableQuery(obj))
-                {
-                    obj = Enumerate(obj);
-                }
-
-                return base.MapToDynamicObjectGraph(obj, setTypeInformation);
-            }
-
-            private static bool IsEnumerableQuery(object obj)
-            {
-                var type = obj?.GetType();
-                return (type?.IsGenericType() ?? false) 
-                    && type.GetGenericTypeDefinition() == typeof(EnumerableQuery<>);
-            }
-
-            private static object Enumerate(object obj)
-                => MethodInfos.Enumerable.ToArray
-                    .MakeGenericMethod(((IQueryable)obj).ElementType)
-                    .Invoke(null, new[] { obj });
-
             public static bool TypeNeedsWrapping(Type type, bool includePrimitiveType = true)
             {
                 if (includePrimitiveType && _isPrimitiveType(type))
                 {
                     return false;
                 }
-
-                if (type.IsGenericType())
-                {
-                    type = type.GetGenericTypeDefinition();
-                }
-
-                if (type == typeof(EnumerableQuery<>))
-                {
-                    return true;
-                }
-
-                if (_isKnownType(type))
+                
+                if (IsUnmappedType(type))
                 {
                     return false;
                 }
 
                 return true;
+            }
+
+            private static bool IsUnmappedType(Type type)
+            {
+                var t = type.IsGenericType() ? type.GetGenericTypeDefinition() : type;
+                return _unmappedTypes.Any(x => x.IsAssignableFrom(t))
+                    && !_excludeFromUnmappedTypes.Any(x => x.IsAssignableFrom(t));
             }
         }
 
@@ -366,7 +344,7 @@ namespace Remote.Linq
             protected override Expression VisitConstant(ConstantExpression node)
             {
                 RLinq.ConstantExpression exp;
-                if (!ReferenceEquals(null, node.Value) && ConstantValueMapper.TypeNeedsWrapping(node.Type))
+                if (!ReferenceEquals(null, node.Value) && ConstantValueMapper.TypeNeedsWrapping(node.Value.GetType()))
                 {
                     var key = new { node.Value, node.Type };
                     ConstantQueryArgument constantQueryArgument;

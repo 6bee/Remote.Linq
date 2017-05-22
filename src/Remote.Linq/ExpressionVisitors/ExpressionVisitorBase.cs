@@ -1,6 +1,4 @@
-﻿
-
-namespace Remote.Linq.ExpressionVisitors
+﻿namespace Remote.Linq.ExpressionVisitors
 {
     using System;
     using System.Collections.Generic;
