@@ -14,6 +14,9 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(BlockExpression)), XmlInclude(typeof(BlockExpression))]
     [KnownType(typeof(ConditionalExpression)), XmlInclude(typeof(ConditionalExpression))]
     [KnownType(typeof(ConstantExpression)), XmlInclude(typeof(ConstantExpression))]
+    [KnownType(typeof(DefaultExpression)), XmlInclude(typeof(DefaultExpression))]
+    [KnownType(typeof(GotoExpression)), XmlInclude(typeof(GotoExpression))]
+    [KnownType(typeof(LabelExpression)), XmlInclude(typeof(LabelExpression))]
     [KnownType(typeof(LambdaExpression)), XmlInclude(typeof(LambdaExpression))]
     [KnownType(typeof(ListInitExpression)), XmlInclude(typeof(ListInitExpression))]
     [KnownType(typeof(LoopExpression)), XmlInclude(typeof(LoopExpression))]
@@ -23,12 +26,9 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(NewExpression)), XmlInclude(typeof(NewExpression))]
     [KnownType(typeof(NewArrayExpression)), XmlInclude(typeof(NewArrayExpression))]
     [KnownType(typeof(ParameterExpression)), XmlInclude(typeof(ParameterExpression))]
+    [KnownType(typeof(TryExpression)), XmlInclude(typeof(TryExpression))]
     [KnownType(typeof(TypeBinaryExpression)), XmlInclude(typeof(TypeBinaryExpression))]
     [KnownType(typeof(UnaryExpression)), XmlInclude(typeof(UnaryExpression))]
-    [KnownType(typeof(GotoExpression)), XmlInclude(typeof(GotoExpression))]
-    [KnownType(typeof(LabelExpression)), XmlInclude(typeof(LabelExpression))]
-    [KnownType(typeof(DefaultExpression)), XmlInclude(typeof(DefaultExpression))]
-    [KnownType(typeof(TryExpression)), XmlInclude(typeof(TryExpression))]
     public abstract partial class Expression
     {
         public abstract ExpressionType NodeType { get; }
