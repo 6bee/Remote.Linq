@@ -91,6 +91,9 @@
                 case ExpressionType.Parameter:
                     return VisitParameter((ParameterExpression)expression);
 
+                case ExpressionType.Switch:
+                    return VisitSwitch((SwitchExpression)expression);
+
                 case ExpressionType.Try:
                     return VisitTry((TryExpression)expression);
 
@@ -100,6 +103,35 @@
                 default:
                     throw new Exception(string.Format("Unhandled expression type: '{0}'", expression.NodeType));
             }
+        }
+
+        protected virtual Expression VisitSwitch(SwitchExpression switchExpression)
+        {
+            List<SwitchCase> cases = (switchExpression.Cases??Enumerable.Empty<SwitchCase>()).ToList();
+            List<SwitchCase> switchCases = cases.Select(VisitSwitchCase).ToList();
+            Expression body = Visit(switchExpression.DefaultBody);
+            Expression switchValue = Visit(switchExpression.SwitchValue);
+            if
+            (
+                body != switchExpression.DefaultBody ||
+                switchValue != switchExpression.SwitchValue ||
+                switchCases.SequenceEqual(cases) == false
+            )
+            {
+                return Expression.Switch(switchValue,body,switchExpression.Comparison,switchCases);
+            }
+            return switchExpression;
+        }
+
+        protected SwitchCase VisitSwitchCase(SwitchCase switchCase)
+        {
+            Expression body = Visit(switchCase.Body);
+            List<Expression> testValues = switchCase.TestValues.Select(Visit).ToList();
+            if (body != switchCase.Body || switchCase.TestValues.SequenceEqual(testValues) == false)
+            {
+                return Expression.SwitchCase(body, testValues);
+            }
+            return switchCase;
         }
 
         protected virtual Expression VisitTry(TryExpression tryExpression)
