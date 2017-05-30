@@ -67,6 +67,9 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.Parameter:
                     return VisitParameter((ParameterExpression)expression);
 
+                case ExpressionType.Switch:
+                    return VisitSwitch((SwitchExpression)expression);
+
                 case ExpressionType.TypeIs:
                     return VisitTypeIs((TypeBinaryExpression)expression);
 
@@ -79,6 +82,35 @@ namespace Remote.Linq.ExpressionVisitors
                 default:
                     throw new Exception(string.Format("Unknown expression type: '{0}'", expression.NodeType));
             }
+        }
+
+        protected virtual Expression VisitSwitch(SwitchExpression switchExpression)
+        {
+            Expression defaultExpression = Visit(switchExpression.DefaultExpression);
+            Expression switchValue = Visit(switchExpression.SwitchValue);
+            List<SwitchCase> cases = (switchExpression.Cases??Enumerable.Empty<SwitchCase>()).Select(VisitSwitchCase).ToList();
+            if
+            (
+                defaultExpression != switchExpression.DefaultExpression ||
+                switchValue != switchExpression.SwitchValue ||
+                cases.SequenceEqual(switchExpression.Cases) == false
+            )
+            {
+                return new SwitchExpression(switchValue,switchExpression.Comparison,defaultExpression,cases);
+            }
+            return switchExpression;
+        }
+
+        protected virtual SwitchCase VisitSwitchCase(SwitchCase switchCase)
+        {
+            Expression body = Visit(switchCase.Body);
+            List<Expression> testValues = (switchCase.TestValues??new List<Expression>());
+            List<Expression> newTestValues = testValues.Select(Visit).ToList();
+            if (body != switchCase.Body || testValues.SequenceEqual(newTestValues) == false)
+            {
+                return new SwitchCase(body,newTestValues);
+            }
+            return switchCase;
         }
 
         protected virtual Expression VisitTry(TryExpression tryExpression)

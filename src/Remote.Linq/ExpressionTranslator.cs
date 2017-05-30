@@ -287,6 +287,21 @@ namespace Remote.Linq
                 }
             }
 
+            protected override Expression VisitSwitch(SwitchExpression switchExpression)
+            {
+                RLinq.Expression defaultExpression = Visit(switchExpression.DefaultBody).Unwrap();
+                RLinq.Expression switchValue = Visit(switchExpression.SwitchValue).Unwrap();
+                List<RLinq.SwitchCase> cases = (switchExpression.Cases ?? Enumerable.Empty<SwitchCase>()).Select(VisitSwitchCase).ToList();
+                return new RLinq.SwitchExpression(switchValue,switchExpression.Comparison,defaultExpression,cases).Wrap();
+            }
+
+            private new RLinq.SwitchCase VisitSwitchCase(SwitchCase switchCase)
+            {
+                RLinq.Expression body = Visit(switchCase.Body).Unwrap();
+                List<RLinq.Expression> testValues = switchCase.TestValues.Select(Visit).Select(Unwrap).ToList();
+                return new RLinq.SwitchCase(body,testValues);
+            }
+
             protected override Expression VisitTry(TryExpression tryExpression)
             {
                 RLinq.Expression body = Visit(tryExpression.Body).Unwrap();
@@ -670,9 +685,9 @@ namespace Remote.Linq
 
                     case RLinq.ExpressionType.Parameter:
                         return VisitParameter((RLinq.ParameterExpression)expression);
-
-                    case RLinq.ExpressionType.Unary:
-                        return VisitUnary((RLinq.UnaryExpression)expression);
+                        
+                    case RLinq.ExpressionType.Switch:
+                        return VisitSwitch((RLinq.SwitchExpression)expression);
 
                     case RLinq.ExpressionType.Try:
                         return VisitTry((RLinq.TryExpression)expression);
@@ -680,9 +695,29 @@ namespace Remote.Linq
                     case RLinq.ExpressionType.TypeIs:
                         return VisitTypeIs((RLinq.TypeBinaryExpression)expression);
 
+                    case RLinq.ExpressionType.Unary:
+                        return VisitUnary((RLinq.UnaryExpression)expression);
+
                     default:
                         throw new Exception(string.Format("Unknown expression note type: '{0}'", expression.NodeType));
                 }
+            }
+
+            private Expression VisitSwitch(RLinq.SwitchExpression switchExpression)
+            {
+                Expression defaultExpression = Visit(switchExpression.DefaultExpression);
+                Expression switchValue = Visit(switchExpression.SwitchValue);
+                System.Reflection.MethodInfo compareMethod = switchExpression.Comparison.ResolveMethod(_typeResolver);
+                IEnumerable<SwitchCase> cases = switchExpression.Cases.Select(VisitSwitchCase);
+
+                return Expression.Switch(switchValue, defaultExpression, compareMethod, cases);
+            }
+
+            private SwitchCase VisitSwitchCase(RLinq.SwitchCase switchCase)
+            {
+                Expression body = Visit(switchCase.Body);
+                IEnumerable<RLinq.Expression> testCases = switchCase.TestValues??Enumerable.Empty<RLinq.Expression>();
+                return Expression.SwitchCase(body, testCases.Select(Visit));
             }
 
             private Expression VisitTry(RLinq.TryExpression tryExpression)
