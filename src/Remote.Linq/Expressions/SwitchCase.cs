@@ -20,10 +20,10 @@ namespace Remote.Linq.Expressions
             TestValues = testValues;
         }
 
-        [DataMember(Order = 1,IsRequired = true,EmitDefaultValue = false)]
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public Expression Body { get; set; }
+
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
         public List<Expression> TestValues { get; set; }
-
     }
 }

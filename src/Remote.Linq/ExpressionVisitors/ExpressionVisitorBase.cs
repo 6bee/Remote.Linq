@@ -111,19 +111,17 @@
             List<SwitchCase> switchCases = cases.Select(VisitSwitchCase).ToList();
             Expression body = Visit(switchExpression.DefaultBody);
             Expression switchValue = Visit(switchExpression.SwitchValue);
-            if
-            (
-                body != switchExpression.DefaultBody ||
+            if (body != switchExpression.DefaultBody ||
                 switchValue != switchExpression.SwitchValue ||
-                switchCases.SequenceEqual(cases) == false
-            )
+                switchCases.SequenceEqual(cases) == false)
             {
                 return Expression.Switch(switchValue,body,switchExpression.Comparison,switchCases);
             }
+
             return switchExpression;
         }
 
-        protected SwitchCase VisitSwitchCase(SwitchCase switchCase)
+        protected virtual SwitchCase VisitSwitchCase(SwitchCase switchCase)
         {
             Expression body = Visit(switchCase.Body);
             List<Expression> testValues = switchCase.TestValues.Select(Visit).ToList();
@@ -131,6 +129,7 @@
             {
                 return Expression.SwitchCase(body, testValues);
             }
+
             return switchCase;
         }
 
@@ -140,20 +139,18 @@
             Expression fault = Visit(tryExpression.Fault);
             Expression @finally = Visit(tryExpression.Finally);
             List<CatchBlock> handlers = tryExpression.Handlers.Select(VisitCatch).ToList();
-            if 
-            (
-                body != tryExpression.Body || 
+            if (body != tryExpression.Body || 
                 fault != tryExpression.Fault || 
                 @finally != tryExpression.Finally ||
-                handlers.SequenceEqual(tryExpression.Handlers) == false
-            )
+                handlers.SequenceEqual(tryExpression.Handlers) == false)
             {
                 return Expression.MakeTry(tryExpression.Type, body, @finally, fault, handlers);
             }
+
             return tryExpression;
         }
 
-        protected CatchBlock VisitCatch(CatchBlock catchBlock)
+        protected virtual CatchBlock VisitCatch(CatchBlock catchBlock)
         {
             Expression body = Visit(catchBlock.Body);
             Expression filter = Visit(catchBlock.Filter);
@@ -162,6 +159,7 @@
             {
                 return Expression.MakeCatchBlock(catchBlock.Test, variable, body, filter);
             }
+
             return catchBlock;
         }
 

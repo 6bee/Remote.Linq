@@ -685,7 +685,7 @@ namespace Remote.Linq
 
                     case RLinq.ExpressionType.Parameter:
                         return VisitParameter((RLinq.ParameterExpression)expression);
-                        
+
                     case RLinq.ExpressionType.Switch:
                         return VisitSwitch((RLinq.SwitchExpression)expression);
 

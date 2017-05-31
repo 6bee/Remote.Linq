@@ -24,21 +24,22 @@ namespace Remote.Linq.Expressions
             Cases = cases;
         }
 
-        public SwitchExpression(Expression switchValue, System.Reflection.MethodInfo comparison,Expression defaultExpression, List<SwitchCase> cases) :
-            this(switchValue, comparison == null ? null : new MethodInfo(comparison), defaultExpression, cases)
+        public SwitchExpression(Expression switchValue, System.Reflection.MethodInfo comparison, Expression defaultExpression, List<SwitchCase> cases)
+            : this(switchValue, comparison == null ? null : new MethodInfo(comparison), defaultExpression, cases)
         {
-            
         }
-        
 
         public override ExpressionType NodeType => ExpressionType.Switch;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public Expression SwitchValue { get; set; }
+
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
         public MethodInfo Comparison { get; set; }
+
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public Expression DefaultExpression { get; set; }
+
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public List<SwitchCase> Cases { get; set; }
     }
