@@ -42,7 +42,7 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("{0}({1})", AddMethod.Name, string.Join(", ", Arguments.Select(x => x.ToString()).ToArray()));
+            return string.Format("{0}({1})", AddMethod.Name, string.Join(", ", Arguments));
         }
     }
 }

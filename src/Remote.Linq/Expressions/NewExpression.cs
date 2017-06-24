@@ -50,7 +50,7 @@ namespace Remote.Linq.Expressions
         {
             return string.Format("New {0}({1})", 
                 Constructor.DeclaringType, 
-                ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments.Select(x => x.ToString()).ToArray()));
+                ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments));
         }
     }
 }

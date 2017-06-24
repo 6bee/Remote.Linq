@@ -44,7 +44,7 @@ namespace Remote.Linq.Expressions
         {
             return NewArrayType == NewArrayType.NewArrayBounds
                 ? $"New [lenght]"
-                : $"New [] {{ {string.Join(", ", Expressions.Select(x => x.ToString()).ToArray())} }}";
+                : $"New [] {{ {string.Join(", ", Expressions)} }}";
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Remote.Linq.Expressions
             return string.Format("{0}.{1}({2})",
                 Instance == null ? Method.DeclaringType.ToString() : Instance.ToString(),
                 Method.Name,
-                ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments.Select(a => a.ToString()).ToArray()));
+                ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments));
         }
     }
 }

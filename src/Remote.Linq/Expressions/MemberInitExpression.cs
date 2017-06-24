@@ -32,7 +32,7 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", NewExpression, string.Join(", ", Bindings.Select(b => b.ToString()).ToArray()));
+            return string.Format("{0} {1}", NewExpression, string.Join(", ", Bindings));
         }
     }
 }
