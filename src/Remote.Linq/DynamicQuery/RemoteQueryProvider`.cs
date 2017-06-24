@@ -54,7 +54,8 @@ namespace Remote.Linq.DynamicQuery
 
         internal static Expressions.Expression TranslateExpression(Expression expression, ITypeResolver typeResolver)
         {
-            var rlinq1 = expression.ToRemoteLinqExpression();
+            var slinq1 = expression.SimplifyIncorporationOfRemoteQueryables();
+            var rlinq1 = slinq1.ToRemoteLinqExpression();
             var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors(typeResolver);
             var rlinq3 = rlinq2.ReplaceGenericQueryArgumentsByNonGenericArguments();
             return rlinq3;

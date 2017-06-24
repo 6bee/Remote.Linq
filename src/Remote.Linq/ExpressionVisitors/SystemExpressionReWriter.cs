@@ -19,19 +19,19 @@ namespace Remote.Linq.ExpressionVisitors
     public static class SystemExpressionReWriter
     {
         internal static Expression ReplaceAnonymousTypes(this Expression expression)
-        {
-            return new AnonymousTypesReplacer().ReWrite(expression);
-        }
+            => new AnonymousTypesReplacer().ReWrite(expression);
 
         public static Expression ResolveDynamicPropertySelectors(this Expression expression, bool throwOnInvalidProperty = false)
-        {
-            return new DynamicPropertyResolver(throwOnInvalidProperty).ResolveDynamicPropertySelectors(expression);
-        }
+            => new DynamicPropertyResolver(throwOnInvalidProperty).ResolveDynamicPropertySelectors(expression);
 
         public static LambdaExpression ResolveDynamicPropertySelectors(this LambdaExpression expression, bool throwOnInvalidProperty = false)
-        {
-            return (LambdaExpression)ResolveDynamicPropertySelectors((Expression)expression, throwOnInvalidProperty);
-        }
+            => (LambdaExpression)ResolveDynamicPropertySelectors((Expression)expression, throwOnInvalidProperty);
+
+        /// <summary>
+        /// Replace complicated access to <see cref="IRemoteQueryable"/> by simple <see cref="ConstantExpression"/>
+        /// </summary>
+        public static Expression SimplifyIncorporationOfRemoteQueryables(this Expression expression)
+            => new RemoteQueryableVisitor().Simplify(expression);
 
         private sealed class AnonymousTypesReplacer : ExpressionVisitorBase
         {
@@ -260,11 +260,10 @@ namespace Remote.Linq.ExpressionVisitors
                             var exp = (ConstantExpression)expression;
                             propertyName = (string)exp.Value;
                         }
-                        else 
+                        else
                         {
-                            var lambda = Expression.Lambda(expression);
-                            var func = lambda.Compile();
-                            var value = func.DynamicInvoke(null);
+                            var lambda = Expression.Lambda<Func<object>>(expression);
+                            var value = lambda.Compile()();
                             propertyName = (string)value;
                         }
 
@@ -312,6 +311,26 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 return lambda;
+            }
+        }
+
+        private sealed class RemoteQueryableVisitor : ExpressionVisitorBase
+        {
+            public Expression Simplify(Expression expression) => Visit(expression);
+
+            protected override Expression VisitMemberAccess(MemberExpression node)
+            {
+                if (typeof(IQueryable).IsAssignableFrom(node.Type))
+                {
+                    var lambda = Expression.Lambda<Func<object>>(node);
+                    var value = lambda.Compile()();
+                    if (value is IRemoteQueryable)
+                    {
+                        return Expression.Constant(value, node.Type);
+                    }
+                }
+
+                return base.VisitMemberAccess(node);
             }
         }
     }

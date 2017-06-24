@@ -41,24 +41,24 @@
         {
             if (expression.NodeType == ExpressionType.Constant)
             {
+                var value = ((ConstantExpression)expression).Value;
+                if (value is IRemoteQueryable)
+                {
+                    return false;
+                }
+
                 var type = expression.Type;
                 if (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                 {
                     return false;
                 }
 
-                if (typeof(IRemoteQueryable).IsAssignableFrom(type))
+                if (type == typeof(VariableQueryArgument))
                 {
                     return false;
                 }
 
-                var value = ((ConstantExpression)expression).Value;
-                if (type.GetProperties().Any(p => typeof(IQueryable).IsAssignableFrom(p.PropertyType) && p.GetValue(value) is IRemoteQueryable))
-                {
-                    return false;
-                }
-
-                if (type.GetFields().Any(f => typeof(IQueryable).IsAssignableFrom(f.FieldType) && f.GetValue(value) is IRemoteQueryable))
+                if (type == typeof(VariableQueryArgumentList))
                 {
                     return false;
                 }
@@ -158,6 +158,11 @@
                 catch(TargetInvocationException ex)
                 {
                     throw ex.InnerException;
+                }
+
+                if(value is Expression)
+                {
+                    return Expression.Quote((Expression)value);
                 }
 
                 return Expression.Property(

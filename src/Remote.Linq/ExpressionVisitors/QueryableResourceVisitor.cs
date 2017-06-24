@@ -120,66 +120,6 @@ namespace Remote.Linq.ExpressionVisitors
                 return base.VisitConstant(expression);
             }
 
-            protected override Expression VisitMemberAccess(MemberExpression expression)
-            {
-                var member = expression.Member;
-                Type type;
-                Func<object, object> access;
-                switch (member.MemberType)
-                {
-                    case MemberTypes.Field:
-                        var field = ((FieldInfo)member).ResolveField(_typeResolver);
-                        type = field.FieldType;
-                        access = field.GetValue;
-                        break;
-
-                    case MemberTypes.Property:
-                        var property = ((PropertyInfo)member).ResolveProperty(_typeResolver);
-                        type = property.PropertyType;
-                        access = property.GetValue;
-                        break;
-
-                    case MemberTypes.Method:
-                        var method = ((MethodInfo)member).ResolveMethod(_typeResolver);
-                        type = method.ReturnType;
-                        access = x => method.Invoke(x, null);
-                        break;
-
-                    default:
-                        type = null;
-                        access = null;
-                        break;
-                }
-
-                if (!ReferenceEquals(null, type) && type.IsGenericType() && typeof(IQueryable<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
-                {
-                    if (ReferenceEquals(null, expression.Expression))
-                    {
-                        var elementType = type.GetGenericArguments().Single();
-                        var queryableResourceDescriptor = new QueryableResourceDescriptor(elementType);
-                        return new ConstantExpression(queryableResourceDescriptor);
-                    }
-                    else
-                    {
-                        // NOTE: Examine actual value to make sure it's an `IQueryable` 
-                        //       to be treated as queryable resource rather than an `EnumerableQuery<>`.
-                        //       For `EnumerableQuery<>` we ship the enumeration as part of the expression.
-                        var exp = expression.Expression.ToLinqExpression();
-                        var lambda = System.Linq.Expressions.Expression.Lambda<Func<object>>(exp);
-                        var instance = lambda.Compile()();
-                        var value = access(instance);
-                        var queryable = AsQueryableOrNull(value);
-                        if (!ReferenceEquals(null, queryable))
-                        {
-                            var queryableResourceDescriptor = new QueryableResourceDescriptor(queryable.ElementType);
-                            return new ConstantExpression(queryableResourceDescriptor);
-                        }
-                    }
-                }
-
-                return base.VisitMemberAccess(expression);
-            }
-
             private static IQueryable AsQueryableOrNull(object value)
             {
                 var queryable = value as IQueryable;

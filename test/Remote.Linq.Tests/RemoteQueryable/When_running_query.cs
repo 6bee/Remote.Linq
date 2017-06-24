@@ -14,6 +14,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
     using Xunit;
 
     public abstract class When_running_query
@@ -53,12 +54,16 @@ namespace Remote.Linq.Tests.RemoteQueryable
         private readonly IQueryable<Category> _categoryQueryable;
         private readonly IQueryable<Product> _productQueryable;
         private readonly IQueryable<OrderItem> _orderItemQueryable;
+        private int _roundtripCount = 0;
 
         protected When_running_query(Func<Expression, Expression> serialize)
         {
             Store dataStore = new Store();
-            Func<Expression, IEnumerable<DynamicObject>> execute =
-                (expression) => serialize(expression).Execute(queryableProvider: dataStore.Get);
+            Func<Expression, IEnumerable<DynamicObject>> execute = expression =>
+                {
+                    Interlocked.Increment(ref _roundtripCount);
+                    return serialize(expression).Execute(queryableProvider: dataStore.Get);
+                };
 
             _categoryQueryable = RemoteQueryable.Create<Category>(execute);
             _productQueryable = RemoteQueryable.Create<Product>(execute);
@@ -524,6 +529,64 @@ namespace Remote.Linq.Tests.RemoteQueryable
         public void Should_return_true_for_querying_any_with_filter()
         {
             _productQueryable.Any(x => true).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Nested_query_should_not_cause_multiple_roundtrips()
+        {
+            var result = _productQueryable.Where(p => _categoryQueryable.Any() && p.Id >= 1).ToList();
+            result.Count.ShouldBe(5);
+            _roundtripCount.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Nested_query_using_local_remote_queryables_should_not_cause_multiple_roundtrips()
+        {
+            var count = 0;
+            Func<Expression, IEnumerable<DynamicObject>> execute = exp =>
+            {
+                Interlocked.Increment(ref count);
+                var dataprovider = new Dictionary<Type, System.Collections.IEnumerable>()
+                {
+                    { typeof(Category), new[] { new Category() } },
+                    { typeof(Product), new[] { new Product { Id = 0 }, new Product { Id = 1 }, new Product { Id = 2 } } }
+                };
+                return exp.Execute(t => dataprovider[t].AsQueryable());
+            };
+            var categoryQueryable = RemoteQueryable.Create<Category>(execute);
+            var productQueryable = RemoteQueryable.Create<Product>(execute);
+
+            var result = productQueryable.Where(p => categoryQueryable.Any() && p.Id >= 1).ToList();
+            result.Count.ShouldBe(2);
+            count.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Nested_query_with_predicate_should_not_cause_multiple_roundtrips()
+        {
+            _productQueryable
+                .Where(p => _categoryQueryable
+                    .Where(c => c.Name == "always false")
+                    .Any(c => c.Id == p.CategoryId)
+                )
+                .ToList()
+                .ShouldBeEmpty();
+
+            _roundtripCount.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Nested_query_using_local_predicate_should_not_cause_multiple_roundtrips()
+        {
+            System.Linq.Expressions.Expression<Func<Category, bool>> predicate =
+                c => c.Name == "always false";
+
+            _productQueryable
+                .Where(p => _categoryQueryable.Any(predicate))
+                .ToList()
+                .ShouldBeEmpty();
+
+            _roundtripCount.ShouldBe(1);
         }
 
         [Theory]
