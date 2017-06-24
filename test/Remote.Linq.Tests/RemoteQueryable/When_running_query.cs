@@ -589,6 +589,17 @@ namespace Remote.Linq.Tests.RemoteQueryable
             _roundtripCount.ShouldBe(1);
         }
 
+        [Fact]
+        public void Should_support_combination_of_take_amd_select_many()
+        {
+            var result = (
+               from p in _productQueryable.Take(1)
+               from c in _categoryQueryable.Take(1)
+               select new { p, c }).ToList();
+
+            result.Count().ShouldBe(1);
+        }
+
         [Theory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
