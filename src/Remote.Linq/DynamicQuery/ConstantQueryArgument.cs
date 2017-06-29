@@ -13,6 +13,7 @@ namespace Remote.Linq.DynamicQuery
     /// </summary>
     [Serializable]
     [DataContract]
+    [KnownType(typeof(DynamicObject))]
     public sealed class ConstantQueryArgument : DynamicObject
     {
         public ConstantQueryArgument()

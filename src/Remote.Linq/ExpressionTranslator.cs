@@ -61,12 +61,20 @@ namespace Remote.Linq
         /// <summary>
         /// Translates a given query expression into a lambda expression
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
         public static Expression<Func<T, TResult>> ToLinqExpression<T, TResult>(this RLinq.LambdaExpression expression)
         {
             var exp = expression.ToLinqExpression();
             var lambdaExpression = Expression.Lambda<Func<T, TResult>>(exp.Body, exp.Parameters);
+            return lambdaExpression;
+        }
+
+        /// <summary>
+        /// Translates a given query expression into a lambda expression
+        /// </summary>
+        public static Expression<Func<TResult>> ToLinqExpression<TResult>(this RLinq.LambdaExpression expression)
+        {
+            var exp = expression.ToLinqExpression();
+            var lambdaExpression = Expression.Lambda<Func<TResult>>(exp.Body, exp.Parameters);
             return lambdaExpression;
         }
 

@@ -11,6 +11,36 @@ namespace Remote.Linq.Tests
 
     public static class TestData
     {
+        public enum TestEnum
+        {
+            Foo,
+            Bar,
+        }
+
+        public static IEnumerable<object[]> Types => new Type[]
+            {
+                typeof(byte),
+                typeof(int),
+                typeof(ulong),
+                typeof(string),
+                typeof(DateTime),
+                typeof(TestEnum),
+                new { Text = "", Timestamp = default(DateTime?)}.GetType()
+            }
+            .SelectMany(x => new[]
+            {
+                x,
+                x.IsClass() ? x : typeof(Nullable<>).MakeGenericType(x),
+            })
+            .SelectMany(x => new[]
+            {
+                x,
+                typeof(List<>).MakeGenericType(x),
+                x.MakeArrayType(),
+            })
+            .Distinct()
+            .Select(x => new Type[] { x });
+
         public static IEnumerable<object[]> PrimitiveValues => new object[]
             {
                 $"Test values treated as native types in {nameof(DynamicObjectMapper)}",
@@ -50,6 +80,8 @@ namespace Remote.Linq.Tests
                 default(Guid),
                 Guid.NewGuid(),
                 DateTime.Now,
+                TestEnum.Foo,
+                TestEnum.Bar,
                 // NOTE: TimeSpan doesn't work with XmlSerializer 
                 //new TimeSpan(),
                 //default(TimeSpan),
