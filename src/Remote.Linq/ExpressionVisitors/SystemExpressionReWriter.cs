@@ -316,21 +316,68 @@ namespace Remote.Linq.ExpressionVisitors
 
         private sealed class RemoteQueryableVisitor : ExpressionVisitorBase
         {
+            private class ParameterScope : IDisposable
+            {
+                private readonly ParameterScope _parent;
+                private readonly RemoteQueryableVisitor _visitor;
+                private int _count;
+
+                internal ParameterScope(RemoteQueryableVisitor visitor)
+                    : this(visitor, null)
+                {
+                }
+
+                private ParameterScope(RemoteQueryableVisitor visitor, ParameterScope parent)
+                {
+                    _parent = parent;
+                    _count = parent?._count ?? 0;
+
+                    _visitor = visitor;
+                    _visitor._parameterScope = this;
+                }
+
+                internal void Increment() => _count++;
+
+                void IDisposable.Dispose() => _visitor._parameterScope = _parent;
+
+                internal bool HasParameters => _count > 0;
+
+                internal IDisposable NewScope() => new ParameterScope(_visitor, this);
+            }
+
+            private ParameterScope _parameterScope;
+
+            public RemoteQueryableVisitor()
+            {
+                _parameterScope = new ParameterScope(this);
+            }
+
             public Expression Simplify(Expression expression) => Visit(expression);
 
             protected override Expression VisitMemberAccess(MemberExpression node)
             {
-                if (typeof(IQueryable).IsAssignableFrom(node.Type))
+                using (_parameterScope.NewScope())
                 {
-                    var lambda = Expression.Lambda<Func<object>>(node);
-                    var value = lambda.Compile()();
-                    if (value is IRemoteQueryable)
-                    {
-                        return Expression.Constant(value, node.Type);
-                    }
-                }
+                    node = (MemberExpression)base.VisitMemberAccess(node);
 
-                return base.VisitMemberAccess(node);
+                    if (!_parameterScope.HasParameters && typeof(IQueryable).IsAssignableFrom(node.Type))
+                    {
+                        var lambda = Expression.Lambda<Func<object>>(node);
+                        var value = lambda.Compile()();
+                        if (value is IRemoteQueryable)
+                        {
+                            return Expression.Constant(value, node.Type);
+                        }
+                    }
+
+                    return node;
+                }
+            }
+
+            protected override Expression VisitParameter(ParameterExpression node)
+            {
+                _parameterScope.Increment();
+                return base.VisitParameter(node);
             }
         }
     }

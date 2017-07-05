@@ -590,7 +590,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_support_combination_of_take_amd_select_many()
+        public void Should_support_combination_of_take_and_select_many()
         {
             var result = (
                from p in _productQueryable.Take(1)
@@ -598,6 +598,15 @@ namespace Remote.Linq.Tests.RemoteQueryable
                select new { p, c }).ToList();
 
             result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_not_try_evaluate_a_subexpression_to_find_queryables_if_it_accesses_any_parameter()
+        {
+            _productQueryable
+                .Select(p => new { ids = _productQueryable.Select(pp => pp.Id) })
+                .Select(a => a.ids.Count())
+                .ToList();
         }
 
         [Theory]
