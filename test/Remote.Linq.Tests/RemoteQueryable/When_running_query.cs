@@ -53,6 +53,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         
         private readonly IQueryable<Category> _categoryQueryable;
         private readonly IQueryable<Product> _productQueryable;
+        private readonly IQueryable<Order> _orderQueryable;
         private readonly IQueryable<OrderItem> _orderItemQueryable;
         private int _roundtripCount = 0;
 
@@ -67,6 +68,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
             _categoryQueryable = RemoteQueryable.Create<Category>(execute);
             _productQueryable = RemoteQueryable.Create<Product>(execute);
+            _orderQueryable = RemoteQueryable.Create<Order>(execute);
             _orderItemQueryable = RemoteQueryable.Create<OrderItem>(execute);
         }
 
@@ -607,6 +609,24 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 .Select(p => new { ids = _productQueryable.Select(pp => pp.Id) })
                 .Select(a => a.ids.Count())
                 .ToList();
+        }
+
+        [Fact]
+        public void Should_allow_filtering_on_null_property_within_nested_query()
+        {
+            var result = _productQueryable
+                .Where(p => 
+                    _orderQueryable.Any(o => 
+                        _orderItemQueryable.Any(i => 
+                            o.Items.Contains(i) && o.ShippingAddress != null && i.ProductId == p.Id)))
+                .Select(x => x.Id)
+                .ToList();
+
+            result.Count.ShouldBe(2);
+            result.ShouldContain(11);
+            result.ShouldContain(14);
+
+            _roundtripCount.ShouldBe(1);
         }
 
         [Theory]

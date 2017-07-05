@@ -36,6 +36,34 @@ namespace Remote.Linq.Tests.RemoteQueryable.QueryTestData
                 new OrderItem { Id = 1001, OrderId = 101, ProductId = 11, Quantity = 3 },
                 new OrderItem { Id = 1002, OrderId = 101, ProductId = 14, Quantity = 4 },
             };
+
+            _dataSets[typeof(Order)] = new[]
+            {
+                new Order
+                {
+                    Id = 100,
+                    Items = _dataSets[typeof(OrderItem)].OfType<OrderItem>().Where(x => x.OrderId == 100).ToList(),
+                    ShippingAddress = null,
+                },
+                new Order
+                {
+                    Id = 101,
+                    Items = _dataSets[typeof(OrderItem)].OfType<OrderItem>().Where(x => x.OrderId == 101).ToList(),
+                    ShippingAddress = new Address
+                    {
+                        Street = "Pennsylvania Ave",
+                        StreetNumber = "1600",
+                        City = "Washington, DC",
+                        ZipCode = "20500",
+                    },
+                },
+            };
+
+            _dataSets[typeof(Address)] = _dataSets[typeof(Order)]
+                .OfType<Order>()
+                .Select(x => x.ShippingAddress)
+                .Distinct()
+                .ToArray();
         }
 
         public IQueryable<T> Get<T>() => ((IEnumerable<T>)_dataSets[typeof(T)]).AsQueryable();
