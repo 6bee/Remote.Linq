@@ -1,6 +1,6 @@
 @echo off
 set configuration=Debug
-set version-suffix="001"
+set version-suffix="002"
 clean ^
   && dotnet restore ^
   && dotnet build src\Remote.Linq --configuration %configuration% ^
