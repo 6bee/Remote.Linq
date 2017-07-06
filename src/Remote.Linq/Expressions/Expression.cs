@@ -16,6 +16,7 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(ConstantExpression)), XmlInclude(typeof(ConstantExpression))]
     [KnownType(typeof(DefaultExpression)), XmlInclude(typeof(DefaultExpression))]
     [KnownType(typeof(GotoExpression)), XmlInclude(typeof(GotoExpression))]
+    [KnownType(typeof(InvokeExpression)), XmlInclude(typeof(InvokeExpression))]
     [KnownType(typeof(LabelExpression)), XmlInclude(typeof(LabelExpression))]
     [KnownType(typeof(LambdaExpression)), XmlInclude(typeof(LambdaExpression))]
     [KnownType(typeof(ListInitExpression)), XmlInclude(typeof(ListInitExpression))]

@@ -541,7 +541,17 @@ namespace Remote.Linq
                 var elementType = TypeHelper.GetElementType(node.Type);
                 return new RLinq.NewArrayExpression(newArrayType, elementType, rlinqExpressions).Wrap();
             }
-            
+
+            protected override Expression VisitInvocation(InvocationExpression node)
+            {
+                var expression = Visit(node.Expression).Unwrap();
+                var arguments = VisitExpressionList(node.Arguments);
+                var rlinqArguments =
+                    from i in arguments
+                    select i.Unwrap();
+                return new RLinq.InvokeExpression(expression, rlinqArguments).Wrap();
+            }
+
             protected override Expression VisitBlock(BlockExpression node)
             {
                 var expressions = VisitExpressionList(node.Expressions);
@@ -663,6 +673,9 @@ namespace Remote.Linq
 
                     case RLinq.ExpressionType.Default:
                         return VisitDefault((RLinq.DefaultExpression)expression);
+
+                    case RLinq.ExpressionType.Invoke:
+                        return VisitInvoke((RLinq.InvokeExpression)expression);
 
                     case RLinq.ExpressionType.Goto:
                         return VisitGoto((RLinq.GotoExpression)expression);
@@ -803,6 +816,15 @@ namespace Remote.Linq
                 var n = VisitNew(expression.NewExpression);
                 var bindings = VisitBindingList(expression.Bindings);
                 return Expression.MemberInit(n, bindings);
+            }
+
+            private Expression VisitInvoke(RLinq.InvokeExpression node)
+            {
+                var expression = Visit(node.Expression);
+                var arguments =
+                    from i in node.Arguments ?? Enumerable.Empty<RLinq.Expression>()
+                    select Visit(i);
+                return Expression.Invoke(expression, arguments);
             }
 
             private Expression VisitBlock(RLinq.BlockExpression node)

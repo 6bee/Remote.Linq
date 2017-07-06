@@ -27,6 +27,7 @@ namespace Remote.Linq.Expressions
         Loop,
         Goto,
         Try,
-        Switch
+        Switch,
+        Invoke,
     }
 }

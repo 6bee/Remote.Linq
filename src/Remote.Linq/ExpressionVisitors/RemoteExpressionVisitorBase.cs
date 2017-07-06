@@ -40,6 +40,9 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.Goto:
                     return VisitGoto((GotoExpression)expression);
 
+                case ExpressionType.Invoke:
+                    return VisitInvoke((InvokeExpression)expression);
+
                 case ExpressionType.Label:
                     return VisitLabel((LabelExpression)expression);
 
@@ -371,6 +374,19 @@ namespace Remote.Linq.ExpressionVisitors
             if (!ReferenceEquals(leftOperand, node.LeftOperand) || !ReferenceEquals(rightOperand, node.RightOperand) || !ReferenceEquals(conversion, node.Conversion))
             {
                 return new BinaryExpression(node.BinaryOperator, leftOperand, rightOperand, node.IsLiftedToNull, node.Method, conversion);
+            }
+
+            return node;
+        }
+
+        protected virtual Expression VisitInvoke(InvokeExpression node)
+        {
+            var expression = Visit(node.Expression);
+            var arguments = VisitExpressionList(node.Arguments);
+
+            if (!ReferenceEquals(expression, node.Expression) || !ReferenceEquals(arguments, node.Arguments))
+            {
+                return new InvokeExpression(expression, arguments);
             }
 
             return node;

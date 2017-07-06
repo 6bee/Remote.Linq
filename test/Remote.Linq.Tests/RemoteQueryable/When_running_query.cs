@@ -629,6 +629,17 @@ namespace Remote.Linq.Tests.RemoteQueryable
             _roundtripCount.ShouldBe(1);
         }
 
+        [Fact]
+        public void Should_allow_filtering_using_invokeexpression()
+        {
+            System.Linq.Expressions.Expression<Func<Category, bool>> expression = c => c.Name == "hello";
+            var parameter = System.Linq.Expressions.Expression.Parameter(typeof(Category), "c");
+
+            _categoryQueryable.Where(
+                System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+                    System.Linq.Expressions.Expression.Invoke(expression, parameter), parameter)).ToList();
+        }
+
         [Theory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
