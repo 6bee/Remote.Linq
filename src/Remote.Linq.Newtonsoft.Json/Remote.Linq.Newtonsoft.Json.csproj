@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Provides Json.NET serialization settings for Remote.Linq types.</Description>
     <Copyright>Copyright Christof Senn 2017</Copyright>
-    <VersionPrefix>5.5.0-beta</VersionPrefix>
+    <VersionPrefix>5.5.0</VersionPrefix>
     <Authors>Christof Senn</Authors>
     <TargetFrameworks>net451;netstandard1.3;netstandard1.6</TargetFrameworks>
     <AssemblyName>Remote.Linq.Newtonsoft.Json</AssemblyName>
@@ -30,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.1.0-beta-005" />
-    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.1.0-beta-005" />
+    <PackageReference Include="aqua-core" Version="4.1.0" />
+    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
 
