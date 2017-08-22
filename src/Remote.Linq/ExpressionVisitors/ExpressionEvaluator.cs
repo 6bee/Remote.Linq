@@ -160,9 +160,10 @@
                     throw ex.InnerException;
                 }
 
-                if(value is Expression)
+                var valueAsExpression = value as Expression;
+                if (!ReferenceEquals(null, valueAsExpression))
                 {
-                    return Expression.Quote((Expression)value);
+                    return valueAsExpression;
                 }
 
                 return Expression.Property(

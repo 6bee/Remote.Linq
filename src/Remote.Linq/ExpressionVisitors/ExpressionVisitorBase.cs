@@ -427,13 +427,17 @@
             IEnumerable<Expression> args = VisitExpressionList(node.Arguments);
             if (args != node.Arguments)
             {
-                if (node.Members != null)
+                if (node.Constructor == null)
                 {
-                    return Expression.New(node.Constructor, args, node.Members);
+                    return Expression.New(node.Type);
+                }
+                else if (node.Members == null)
+                {
+                    return Expression.New(node.Constructor, args);
                 }
                 else
                 {
-                    return Expression.New(node.Constructor, args);
+                    return Expression.New(node.Constructor, args, node.Members);
                 }
             }
 

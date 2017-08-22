@@ -335,7 +335,9 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(args, node.Arguments))
             {
-                return new NewExpression(node.Constructor, args, node.Members);
+                return ReferenceEquals(null, node.Constructor)
+                    ? new NewExpression(node.Type)
+                    : new NewExpression(node.Constructor, args, node.Members);
             }
 
             return node;

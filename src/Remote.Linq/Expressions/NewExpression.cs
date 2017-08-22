@@ -18,7 +18,18 @@ namespace Remote.Linq.Expressions
         {
         }
 
+        public NewExpression(TypeInfo type)
+        {
+            Type = type;
+        }
+
+        public NewExpression(Type type)
+            : this(new TypeInfo(type))
+        {
+        }
+
         public NewExpression(ConstructorInfo constructor, IEnumerable<Expression> arguments, IEnumerable<MemberInfo> members = null)
+            : this (constructor.DeclaringType)
         {
             Constructor = constructor;
             Arguments = ReferenceEquals(null, arguments) || !arguments.Any() ? null : arguments.ToList();
@@ -46,10 +57,13 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 3, EmitDefaultValue = true, IsRequired = false)]
         public List<MemberInfo> Members { get; set; }
 
+        [DataMember(Order = 4, EmitDefaultValue = true, IsRequired = false)]
+        public TypeInfo Type { get; set; }
+
         public override string ToString()
         {
             return string.Format("New {0}({1})", 
-                Constructor.DeclaringType, 
+                Constructor?.DeclaringType ?? Type, 
                 ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments));
         }
     }

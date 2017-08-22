@@ -360,8 +360,10 @@ namespace Remote.Linq
                         from arg in node.Arguments
                         select Visit(arg).Unwrap();
                 }
-
-                return new RLinq.NewExpression(node.Constructor, arguments, node.Members);
+                
+                return ReferenceEquals(null, node.Constructor)
+                    ? new RLinq.NewExpression(node.Type)
+                    : new RLinq.NewExpression(node.Constructor, arguments, node.Members);
             }
 
             protected override Expression VisitConstant(ConstantExpression node)
@@ -764,6 +766,12 @@ namespace Remote.Linq
 
             private NewExpression VisitNew(RLinq.NewExpression newExpression)
             {
+                if (ReferenceEquals(null, newExpression.Constructor))
+                {
+                    var type = newExpression.Type.ResolveType(_typeResolver);
+                    return Expression.New(type);
+                }
+
                 var constructor = newExpression.Constructor.ResolveConstructor(_typeResolver);
                 if (ReferenceEquals(null, newExpression.Arguments))
                 {

@@ -699,6 +699,14 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             _productQueryable.Select(x => new { Array = array }).ShouldAllBe(x => x.Array.CollectionEquals(array), $"element type: {typeof(T).FullName}, array: {array}");
         }
+        
+        [Fact]
+        public void Should_query_value_created_using_default_constructor()
+        {
+            _productQueryable
+                .Select(x => new DateTime())
+                .ShouldAllBe(x => Equals(x, new DateTime()));
+        }
 
         [Fact]
         public void Should_throw_on_query_first_on_empty_sequence()
