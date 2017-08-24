@@ -4,6 +4,7 @@ namespace Remote.Linq.DynamicQuery
 {
     using System;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
     using DynamicObject = Aqua.Dynamic.DynamicObject;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
@@ -14,6 +15,7 @@ namespace Remote.Linq.DynamicQuery
     [Serializable]
     [DataContract]
     [KnownType(typeof(DynamicObject))]
+    [XmlInclude(typeof(TimeSpan))]
     public sealed class ConstantQueryArgument : DynamicObject
     {
         public ConstantQueryArgument()

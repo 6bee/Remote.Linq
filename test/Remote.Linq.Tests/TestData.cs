@@ -79,12 +79,13 @@ namespace Remote.Linq.Tests
                 new Guid(),
                 default(Guid),
                 Guid.NewGuid(),
+                new DateTime(),
                 DateTime.Now,
                 TestEnum.Foo,
                 TestEnum.Bar,
                 // NOTE: TimeSpan doesn't work with XmlSerializer 
-                //new TimeSpan(),
-                //default(TimeSpan),
+                new TimeSpan(),
+                default(TimeSpan),
                 //new TimeSpan(long.MaxValue),
                 // NOTE: DateTimeOffset doesn't work with json.net (when assigned to an object property) since DateTimeOffset gets confused with DateTime
                 //default(DateTimeOffset),

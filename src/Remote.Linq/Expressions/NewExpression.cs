@@ -48,7 +48,7 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType => ExpressionType.New;
 
-        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Order = 1, EmitDefaultValue = true, IsRequired = false)]
         public ConstructorInfo Constructor { get; set; }
 
         [DataMember(Order = 2, EmitDefaultValue = true, IsRequired = false)]

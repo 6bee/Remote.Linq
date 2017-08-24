@@ -644,13 +644,13 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
         {
-            GetType().GetTypeInfo().GetMethods()
-                .Single(m => m.Name == nameof(Should_query_primitive_value_injected_as_variable_closure) && m.IsGenericMethod)
-                .MakeGenericMethod(type)
-                .Invoke(this, new[] { value });
+            RunTestMethod(
+                nameof(TestMethodFor_Should_query_primitive_value_injected_as_variable_closure),
+                type,
+                value);
         }
 
-        public void Should_query_primitive_value_injected_as_variable_closure<T>(T value)
+        protected void TestMethodFor_Should_query_primitive_value_injected_as_variable_closure<T>(T value)
         {
             _productQueryable.Select(x => value).ShouldAllBe(x => Equals(x, value), $"type: {typeof(T).FullName}, value: {value}");
         }
@@ -659,13 +659,13 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_array_injected_as_variable_closure(Type type, object value)
         {
-            GetType().GetTypeInfo().GetMethods()
-                .Single(m => m.Name == nameof(Should_query_primitive_value_array_injected_as_variable_closure) && m.IsGenericMethod)
-                .MakeGenericMethod(TypeHelper.GetElementType(type))
-                .Invoke(this, new[] { value });
+            RunTestMethod(
+                nameof(TestMethodFor_Should_query_primitive_value_array_injected_as_variable_closure),
+                TypeHelper.GetElementType(type),
+                value);
         }
 
-        public void Should_query_primitive_value_array_injected_as_variable_closure<T>(T[] array)
+        protected void TestMethodFor_Should_query_primitive_value_array_injected_as_variable_closure<T>(T[] array)
         {
             _productQueryable.Select(x => array).ShouldAllBe(x => x.CollectionEquals(array), $"element type: {typeof(T).FullName}, array: {array}");
         }
@@ -674,13 +674,13 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure(Type type, object value)
         {
-            GetType().GetTypeInfo().GetMethods()
-                .Single(m => m.Name == nameof(Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure) && m.IsGenericMethod)
-                .MakeGenericMethod(type)
-                .Invoke(this, new[] { value });
+            RunTestMethod(
+                nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure),
+                type,
+                value);
         }
 
-        public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure<T>(T value)
+        protected void TestMethodFor_Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure<T>(T value)
         {
             _productQueryable.Select(x => new { Value = value }).ShouldAllBe(x => Equals(x.Value, value), $"type: {typeof(T).FullName}, value: {value}");
         }
@@ -689,20 +689,30 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure(Type type, object value)
         {
-            GetType().GetTypeInfo().GetMethods()
-                .Single(m => m.Name == nameof(Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure) && m.IsGenericMethod)
-                .MakeGenericMethod(TypeHelper.GetElementType(type))
-                .Invoke(this, new[] { value });
+            RunTestMethod(
+                nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure),
+                TypeHelper.GetElementType(type),
+                value);
         }
 
-        public void Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure<T>(T[] array)
+        protected void TestMethodFor_Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure<T>(T[] array)
         {
             _productQueryable.Select(x => new { Array = array }).ShouldAllBe(x => x.Array.CollectionEquals(array), $"element type: {typeof(T).FullName}, array: {array}");
         }
         
-        [Fact]
+        private void RunTestMethod(string methodName, Type genericType, object argument)
+        {
+            GetType()
+                .GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .MakeGenericMethod(genericType)
+                .Invoke(this, new[] { argument });
+        }
+
+        [SkippableFact]
         public void Should_query_value_created_using_default_constructor()
         {
+            Skip.If(this.TestIs<With_xml_serializer>(), "Not supported by XmlSerializer (circuar reference)");
+
             _productQueryable
                 .Select(x => new DateTime())
                 .ShouldAllBe(x => Equals(x, new DateTime()));
