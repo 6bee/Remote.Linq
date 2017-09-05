@@ -17,7 +17,7 @@ namespace Remote.Linq
         /// </summary>
         public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
         {
-            return RemoteQueryable.Create<T>(dataProvider, typeResolver, mapper);
+            return RemoteQueryable.Factory.Create<T>(dataProvider, typeResolver, mapper);
         }
 
         /// <summary>

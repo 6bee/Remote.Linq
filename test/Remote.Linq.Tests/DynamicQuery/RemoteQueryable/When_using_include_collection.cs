@@ -34,7 +34,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
                 return new DynamicObject[0];
             };
 
-            var queryable = RemoteQueryable.Create<Parent>(dataProvider);
+            var queryable = RemoteQueryable.Factory.Create<Parent>(dataProvider);
 
             queryable
                 .Include(x => x.Children)
