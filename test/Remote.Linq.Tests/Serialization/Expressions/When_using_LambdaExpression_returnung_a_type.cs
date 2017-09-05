@@ -19,7 +19,9 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
+#endif
 
+#if NET && !NETCOREAPP2
         public class NetDataContractSerializer : When_using_LambdaExpression_returnung_a_type
         {
             public NetDataContractSerializer()

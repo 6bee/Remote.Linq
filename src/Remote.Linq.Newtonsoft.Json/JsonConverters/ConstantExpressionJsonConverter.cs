@@ -48,7 +48,7 @@ namespace Remote.Linq.JsonConverters
 
                 writer.WritePropertyName("$type");
                 var type = value.GetType().GetTypeInfo();
-                var typeString = serializer.TypeNameAssemblyFormat == FormatterAssemblyStyle.Full
+                var typeString = serializer.TypeNameAssemblyFormatHandling == TypeNameAssemblyFormatHandling.Full
                     ? type.AssemblyQualifiedName
                     : $"{type}, {type.Assembly.GetName().Name}";
                 writer.WriteValue(typeString);

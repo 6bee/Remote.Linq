@@ -3,9 +3,9 @@
   <PropertyGroup>
     <Description>Provides Json.NET serialization settings for Remote.Linq types.</Description>
     <Copyright>Copyright Christof Senn 2017</Copyright>
-    <VersionPrefix>5.5.1</VersionPrefix>
+    <VersionPrefix>5.6.0-alpha</VersionPrefix>
     <Authors>Christof Senn</Authors>
-    <TargetFrameworks>net451;netstandard1.3;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net451;netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
     <AssemblyName>Remote.Linq.Newtonsoft.Json</AssemblyName>
     <PackageId>Remote.Linq.Newtonsoft.Json</PackageId>
     <PackageTags>remote-linq;json-net;newtonsoft-json</PackageTags>
@@ -30,9 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.1.0" />
-    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="aqua-core" Version="4.2.0-alpha-001" />
+    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.2.0-alpha-001" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NET
+#if NET && !NETCOREAPP2
 
 namespace Remote.Linq.Tests.Serialization.Expressions
 {

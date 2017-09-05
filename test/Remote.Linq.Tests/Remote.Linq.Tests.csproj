@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Tests for Remote.Linq</Description>
     <Copyright>Copyright Christof Senn 2013-2017</Copyright>
-    <TargetFrameworks>net462;netcoreapp1.0</TargetFrameworks>
+    <TargetFrameworks>net462;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
     <AssemblyName>Remote.Linq.Tests</AssemblyName>
     <PackageId>Remote.Linq.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -48,6 +48,10 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
     <DefineConstants>$(DefineConstants);CORECLR</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
+    <DefineConstants>$(DefineConstants);NET;NETCOREAPP2</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
