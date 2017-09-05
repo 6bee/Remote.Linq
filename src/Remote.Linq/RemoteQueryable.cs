@@ -8,7 +8,7 @@ namespace Remote.Linq
     using System.Collections.Generic;
     using System.Linq;
 
-    public static partial class RemoteQueryable
+    public static class RemoteQueryable
     {
         /// <summary>
         /// Provides factory methods for creating <see cref="IQueryable{T}"/> 

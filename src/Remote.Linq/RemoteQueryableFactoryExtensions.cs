@@ -11,7 +11,7 @@ namespace Remote.Linq
     using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static partial class RemoteQueryableFactoryExtensions
+    public static class RemoteQueryableFactoryExtensions
     {
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
