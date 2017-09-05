@@ -103,9 +103,9 @@ namespace Remote.Linq.Expressions
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped result of the query execution</returns>
-        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, Func<object,object> resultPorjector = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
+        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, Func<object,object> resultPorjector = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
         {
-            var linqExpression = PrepareForExecution(expression, queryableProvider, typeResolver);
+            var linqExpression = PrepareForExecution(expression, queryableProvider, typeResolver, canBeEvaluatedLocally);
 
             var queryResult = Execute(linqExpression);
 
@@ -145,7 +145,7 @@ namespace Remote.Linq.Expressions
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
-        public static System.Linq.Expressions.Expression PrepareForExecution(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null)
+        public static System.Linq.Expressions.Expression PrepareForExecution(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
         {
             var expression1 = expression.ReplaceNonGenericQueryArgumentsByGenericArguments();
 
@@ -153,7 +153,7 @@ namespace Remote.Linq.Expressions
 
             var linqExpression = queryableExpression.ToLinqExpression(typeResolver);
 
-            var locallyEvaluatedExpression = linqExpression.PartialEval();
+            var locallyEvaluatedExpression = linqExpression.PartialEval(canBeEvaluatedLocally);
             return locallyEvaluatedExpression;
         }
     }

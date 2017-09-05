@@ -23,21 +23,17 @@ namespace Remote.Linq
         /// <summary>
         /// Translates a given expression into a remote linq expression
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public static RLinq.Expression ToRemoteLinqExpression(this Expression expression)
+        public static RLinq.Expression ToRemoteLinqExpression(this Expression expression, Func<Expression, bool> canBeEvaluatedLocally = null)
         {
-            return new LinqExpressionToRemoteExpressionTranslator().ToRemoteExpression(expression);
+            return new LinqExpressionToRemoteExpressionTranslator(canBeEvaluatedLocally).ToRemoteExpression(expression);
         }
 
         /// <summary>
         /// Translates a given lambda expression into a remote linq expression
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public static RLinq.LambdaExpression ToRemoteLinqExpression(this LambdaExpression expression)
+        public static RLinq.LambdaExpression ToRemoteLinqExpression(this LambdaExpression expression, Func<Expression, bool> canBeEvaluatedLocally = null)
         {
-            var lambdaExpression = new LinqExpressionToRemoteExpressionTranslator().ToRemoteExpression(expression);
+            var lambdaExpression = new LinqExpressionToRemoteExpressionTranslator(canBeEvaluatedLocally).ToRemoteExpression(expression);
             return (RLinq.LambdaExpression)lambdaExpression;
         }
 
@@ -145,11 +141,6 @@ namespace Remote.Linq
 
         private static bool KeepMarkerFunctions(Expression expression)
         {
-            if (!ExpressionEvaluator.CanBeEvaluatedLocally(expression))
-            {
-                return false;
-            }
-
             var methodCallExpression = expression as MethodCallExpression;
             if (!ReferenceEquals(null, methodCallExpression))
             {
@@ -266,9 +257,18 @@ namespace Remote.Linq
             private readonly Dictionary<object, ConstantQueryArgument> _constantQueryArgumentCache =
                 new Dictionary<object, ConstantQueryArgument>(ReferenceEqualityComparer<object>.Default);
 
+            private readonly Func<Expression, bool> _canBeEvaluatedLocally;
+
+            public LinqExpressionToRemoteExpressionTranslator(Func<Expression, bool> canBeEvaluatedLocally)
+            {
+                _canBeEvaluatedLocally = canBeEvaluatedLocally == null
+                    ? KeepMarkerFunctions
+                    : new Func<Expression, bool>(exp => canBeEvaluatedLocally(exp) && KeepMarkerFunctions(exp));
+            }
+
             public RLinq.Expression ToRemoteExpression(Expression expression)
             {
-                var partialEvalExpression = expression.PartialEval(KeepMarkerFunctions);
+                var partialEvalExpression = expression.PartialEval(_canBeEvaluatedLocally);
                 if (partialEvalExpression == null)
                 {
                     throw CreateNotSupportedException(expression);

@@ -13,8 +13,9 @@ namespace Remote.Linq.DynamicQuery
         private readonly Func<Expressions.Expression, Task<TSource>> _dataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly ITypeResolver _typeResolver;
+        private readonly Func<Expression, bool> _canBeEvaluatedLocally;
 
-        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<TSource>> dataProvider, ITypeResolver typeResolver, IAsyncQueryResultMapper<TSource> resutMapper)
+        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<TSource>> dataProvider, ITypeResolver typeResolver, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool> canBeEvaluatedLocally)
         {
             if (ReferenceEquals(null, dataProvider))
             {
@@ -24,6 +25,7 @@ namespace Remote.Linq.DynamicQuery
             _dataProvider = dataProvider;
             _resultMapper = resutMapper;
             _typeResolver = typeResolver;
+            _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
@@ -39,7 +41,7 @@ namespace Remote.Linq.DynamicQuery
 
         public TResult Execute<TResult>(Expression expression)
         {
-            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver);
+            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver, _canBeEvaluatedLocally);
 
             var task = _dataProvider(rlinq);
 
@@ -77,9 +79,10 @@ namespace Remote.Linq.DynamicQuery
         {
             throw new NotImplementedException();
         }
+
         public async Task<TResult> ExecuteAsync<TResult>(Expression expression)
         {
-            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver);
+            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver, _canBeEvaluatedLocally);
 
             var dataRecords = await _dataProvider(rlinq);
             

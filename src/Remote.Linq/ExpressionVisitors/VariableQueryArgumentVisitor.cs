@@ -71,7 +71,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitMemberAccess(MemberExpression expression)
             {
-                if (expression.Expression.NodeType == ExpressionType.Constant)
+                if (expression.Expression?.NodeType == ExpressionType.Constant)
                 {
                     var member = expression.Member;
                     if (member.MemberType == MemberTypes.Property &&

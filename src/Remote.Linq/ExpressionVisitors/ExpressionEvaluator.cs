@@ -20,24 +20,14 @@
         /// Performs evaluation & replacement of independent sub-trees  
         /// </summary>  
         /// <param name="expression">The root of the expression tree.</param>  
-        /// <param name="fnCanBeEvaluated">A function that decides whether a given expression node can be part of the local function.</param>  
+        /// <param name="canBeEvaluatedLocally">A function that decides whether a given expression node can be evaluated locally, assumes true if no function defined</param>  
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>  
-        public static Expression PartialEval(this Expression expression, Func<Expression, bool> fnCanBeEvaluated)
+        public static Expression PartialEval(this Expression expression, Func<Expression, bool> canBeEvaluatedLocally = null)
         {
-            return new SubtreeEvaluator(new Nominator(fnCanBeEvaluated).Nominate(expression)).Eval(expression);
+            return new SubtreeEvaluator(new Nominator(canBeEvaluatedLocally).Nominate(expression)).Eval(expression);
         }
 
-        /// <summary>  
-        /// Performs evaluation & replacement of independent sub-trees  
-        /// </summary>  
-        /// <param name="expression">The root of the expression tree.</param>  
-        /// <returns>A new tree with sub-trees evaluated and replaced.</returns>  
-        public static Expression PartialEval(this Expression expression)
-        {
-            return PartialEval(expression, CanBeEvaluatedLocally);
-        }
-
-        internal static bool CanBeEvaluatedLocally(Expression expression)
+        private static bool CanBeEvaluatedLocally(Expression expression)
         {
             if (expression.NodeType == ExpressionType.Constant)
             {
@@ -186,7 +176,9 @@
 
             internal Nominator(Func<Expression, bool> fnCanBeEvaluated)
             {
-                _fnCanBeEvaluated = fnCanBeEvaluated;
+                _fnCanBeEvaluated = fnCanBeEvaluated == null
+                    ? CanBeEvaluatedLocally
+                    : new Func<Expression, bool>(exp => fnCanBeEvaluated(exp) && CanBeEvaluatedLocally(exp));
             }
 
             internal HashSet<Expression> Nominate(Expression expression)

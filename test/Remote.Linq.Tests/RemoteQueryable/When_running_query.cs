@@ -40,14 +40,16 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
 #if NET
-        public class With_net_data_contract_serializer : When_running_query
-        {
-            public With_net_data_contract_serializer() : base(NetDataContractSerializationHelper.Serialize) { }
-        }
-
         public class With_binary_formatter : When_running_query
         {
             public With_binary_formatter() : base(BinarySerializationHelper.Serialize) { }
+        }
+#endif
+
+#if NET && !NETCOREAPP2
+        public class With_net_data_contract_serializer : When_running_query
+        {
+            public With_net_data_contract_serializer() : base(NetDataContractSerializationHelper.Serialize) { }
         }
 #endif
         
@@ -66,10 +68,26 @@ namespace Remote.Linq.Tests.RemoteQueryable
                     return serialize(expression).Execute(queryableProvider: dataStore.Get);
                 };
 
-            _categoryQueryable = RemoteQueryable.Create<Category>(execute);
-            _productQueryable = RemoteQueryable.Create<Product>(execute);
-            _orderQueryable = RemoteQueryable.Create<Order>(execute);
-            _orderItemQueryable = RemoteQueryable.Create<OrderItem>(execute);
+            _categoryQueryable = RemoteQueryable.Create<Category>(execute, canBeEvaluatedLocally: CanBeEvaluated);
+            _productQueryable = RemoteQueryable.Create<Product>(execute, canBeEvaluatedLocally: CanBeEvaluated);
+            _orderQueryable = RemoteQueryable.Create<Order>(execute, canBeEvaluatedLocally: CanBeEvaluated);
+            _orderItemQueryable = RemoteQueryable.Create<OrderItem>(execute, canBeEvaluatedLocally: CanBeEvaluated);
+        }
+
+        private static bool CanBeEvaluated(System.Linq.Expressions.Expression expression)
+        {
+            var dbFunctionsProperty = typeof(Db).GetProperty(nameof(Db.Functions), BindingFlags.Static | BindingFlags.Public);
+
+            if (expression.NodeType == System.Linq.Expressions.ExpressionType.MemberAccess)
+            {
+                var member = ((System.Linq.Expressions.MemberExpression)expression).Member;
+                if (member == dbFunctionsProperty)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         [Fact]
@@ -716,6 +734,14 @@ namespace Remote.Linq.Tests.RemoteQueryable
             _productQueryable
                 .Select(x => new DateTime())
                 .ShouldAllBe(x => Equals(x, new DateTime()));
+        }
+
+        [Fact]
+        public void Should_not_evaluate_DB_functions_prematurely()
+        {
+            var result = _productQueryable.Where(p => Db.Functions.Like(p.Name, "%")).ToList();
+
+            result.Count().ShouldBe(5);
         }
 
         [Fact]
