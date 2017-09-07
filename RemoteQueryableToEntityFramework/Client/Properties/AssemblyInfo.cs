@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WcfClient")]
+[assembly: AssemblyTitle("Client")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("WcfClient")]
+[assembly: AssemblyProduct("Client")]
 [assembly: AssemblyCompany("Christof Senn")]
-[assembly: AssemblyCopyright("Copyright © Christof Senn 2013-2014")]
+[assembly: AssemblyCopyright("Copyright © Christof Senn 2013-2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

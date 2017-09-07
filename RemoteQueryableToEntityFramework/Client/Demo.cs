@@ -4,7 +4,6 @@ namespace Client
 {
     using Remote.Linq;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
     public class Demo
@@ -20,107 +19,49 @@ namespace Client
         {
             var repo = new RemoteRepository(_url);
 
-            Console.WriteLine("\nGET ALL PRODUCTS:");
-            foreach (var i in repo.Products)
+            Console.WriteLine("\nGET MARKETS WITH PRODUCTS:");
+            var marketsQuery = repo.Products.SelectMany(x => x.Markets).Include(x => x.Products);
+            var exp = marketsQuery.Expression;
+            foreach (var market in marketsQuery)
             {
-                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
-            }
+                Console.WriteLine("  {0}", market.Name);
 
-
-            Console.WriteLine("\nGET PRODUCTS FILTERED BY ID:");
-            var idSelection = new List<int>() { 1, 11, 111 };
-            foreach (var i in repo.Products.Where(p => idSelection.Contains(p.Id) || p.Id % 3 == 0))
-            {
-                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
-            }
-
-
-            Console.WriteLine("\nCROSS JOIN:");
-            Func<object, string> sufix = (x) => x + "ending";
-            var crossJoinQuery =
-                from c in repo.ProductCategories
-                from p in repo.Products
-                select new { Category = "#" + c.Name + sufix("-"), p.Name };
-            var crossJoinResult = crossJoinQuery.ToList();
-            foreach (var i in crossJoinResult)
-            {
-                Console.WriteLine("  {0}", i);
-            }
-
-
-            Console.WriteLine("\nINNER JOIN:");
-            var innerJoinQuery =
-                from c in repo.ProductCategories
-                join p in repo.Products on c.Id equals p.ProductCategoryId
-                select new { c.Name, P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
-            var innerJoinResult = innerJoinQuery.ToList();
-            foreach (var i in innerJoinResult)
-            {
-                Console.WriteLine("  {0}", i);
-            }
-
-
-            Console.WriteLine("\nSELECT IDs:");
-            var productIdsQuery =
-                from p in repo.Products
-                orderby p.Price descending
-                select p.Id;
-            var productIds = productIdsQuery.ToList();
-            foreach (var id in productIdsQuery)
-            {
-                Console.WriteLine("  {0}", id);
-            }
-
-
-            Console.WriteLine("\nCOUNT:");
-            var productsQuery =
-                from p in repo.Products
-                select p;
-            Console.WriteLine("  Count = {0}", productsQuery.Count());
-
-
-            Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
-            var totalAmountByCategoryQuery =
-                from c in repo.ProductCategories
-                join p in repo.Products
-                    on c.Id equals p.ProductCategoryId
-                join i in repo.OrderItems
-                    on p.Id equals i.ProductId
-                group new { c, p, i } by c.Name into g
-                select new
+                if (market.Products != null)
                 {
-                    Category = g.Key,
-                    Amount = g.Sum(x => x.i.Quantity * x.p.Price),
-                    Amount2 = new { Amount = g.Sum(x => x.i.Quantity * x.p.Price) },
-                };
-
-            var totalAmountByCategroyResult = totalAmountByCategoryQuery.ToDictionary(x => x.Category);
-            foreach (var i in totalAmountByCategroyResult)
-            {
-                Console.WriteLine("  {0}", i);
-            }
-
-
-            Console.WriteLine("\nGET PRODUCT GROUPS:");
-            foreach (var g in repo.ProductCategories.Include(c => c.Products))
-            {
-                Console.WriteLine("  {0} | {1}", g.Id, g.Name);
-
-                foreach (var p in g.Products)
-                {
-                    Console.WriteLine("    | * {0}", p.Name);
+                    foreach (var product in market.Products)
+                    {
+                        Console.WriteLine("    {0}", product.Name);
+                    }
                 }
             }
 
 
-            Console.WriteLine("\nEXPECTED INVALID OPERATION:");
-            try
+            Console.WriteLine("\nGET ALL PRODUCTS AND THEIR MARKETS:");
+            foreach (var i in repo.Products.Include(x => x.Markets))
             {
-                var first = totalAmountByCategoryQuery.First(x => false);
+                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+
+                foreach (var m in i.Markets)
+                {
+                    Console.WriteLine("         {0}", m.Name);
+                }
             }
-            catch (Exception ex)
+
+
+            Console.WriteLine("\nGET ALL PRODUCTS HAVING MARKETS DEFINED:");
+            var query = repo.Products.Where(p => p.Markets.Any());
+            foreach (var i in query)
             {
-                Console.WriteLine("  {0}", ex.Message);
+                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+            }
+
+
+            Console.WriteLine("\nGET ALL PRODUCTS HAVING MARKETS DEFINED (INCLUDING MARKETS):");
+            query = query.Include(p => p.Markets);
+            foreach (var i in query)
+            {
+                var markets = i.Markets.Select(x => x.Name);
+                Console.WriteLine("  {0} | {1} | {2:C} | {3}", i.Id, i.Name, i.Price, string.Join("; ", markets));
             }
         }
     }
