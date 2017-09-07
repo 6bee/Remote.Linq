@@ -33,6 +33,7 @@ namespace Client
                     };
 
                     var formatter = new JsonMediaTypeFormatter();
+                    formatter.SerializerSettings = formatter.SerializerSettings.ConfigureRemoteLinq();
                     formatter.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
 
                     var response = await client.PostAsync("api/query", new Common.Model.Query { Expression = expression }, formatter);
@@ -57,10 +58,10 @@ namespace Client
             };
         }
 
-        public IQueryable<ProductCategory> ProductCategories { get { return AsyncRemoteQueryable.Create<ProductCategory>(_dataProvider); } }
+        public IQueryable<ProductCategory> ProductCategories => AsyncRemoteQueryable.Create<ProductCategory>(_dataProvider);
         
-        public IQueryable<Product> Products { get { return AsyncRemoteQueryable.Create<Product>(_dataProvider); } }
+        public IQueryable<Product> Products => AsyncRemoteQueryable.Create<Product>(_dataProvider);
         
-        public IQueryable<OrderItem> OrderItems { get { return AsyncRemoteQueryable.Create<OrderItem>(_dataProvider); } }
+        public IQueryable<OrderItem> OrderItems => AsyncRemoteQueryable.Create<OrderItem>(_dataProvider);
     }
 }
