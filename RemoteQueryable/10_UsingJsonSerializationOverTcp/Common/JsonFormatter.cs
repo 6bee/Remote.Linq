@@ -3,6 +3,7 @@
 namespace Common
 {
     using Aqua.TypeSystem;
+    using Remote.Linq;
     using Newtonsoft.Json;
     using System;
     using System.IO;
@@ -10,7 +11,7 @@ namespace Common
 
     public static class JsonFormatter
     {
-        private readonly static JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        private readonly static JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }.ConfigureRemoteLinq();
 
         public static void Write(this Stream stream, object obj)
         {

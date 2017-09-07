@@ -38,10 +38,10 @@ namespace Server
             };
         }
 
-        public static InMemoryDataStore Instance { get { return _instance; } }
+        public static InMemoryDataStore Instance => _instance;
 
-        public IEnumerable<ProductCategory> ProductCategories { get { return _productCategories; } }
-        public IEnumerable<Product> Products { get { return _products; } }
-        public IEnumerable<OrderItem> OrderItems { get { return _orderItems; } }
+        public IEnumerable<ProductCategory> ProductCategories => _productCategories;
+        public IEnumerable<Product> Products => _products;
+        public IEnumerable<OrderItem> OrderItems => _orderItems;
     }
 }
