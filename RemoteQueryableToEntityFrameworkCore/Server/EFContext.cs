@@ -26,8 +26,7 @@ namespace Server
         {
             base.OnConfiguring(optionsBuilder);
 
-            //optionsBuilder.UseSqlServer(@"Server=.;Database=RemoteQueryableDemoDB_AUG2014;Trusted_Connection=True;");
-            optionsBuilder.UseSqlServer(@"Server=.;Database=RemoteQueryableDemoDB_AUG2014;User Id=demo;Password=demo;");
+            optionsBuilder.UseSqlServer(@"Server=.;Database=RemoteQueryableDemoDB_AUG2017;User Id=Demo;Password=demo(!)Password;");
         }
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
