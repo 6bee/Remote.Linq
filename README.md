@@ -47,11 +47,11 @@ public class RemoteRepository
             };
     }
 
-    public IQueryable<Blog> Blogs => RemoteQueryable.Factory.Create<Blog>(_dataProvider);
+    public IQueryable<Blog> Blogs => RemoteQueryable.Factory.CreateQueryable<Blog>(_dataProvider);
    
-    public IQueryable<Post> Posts => RemoteQueryable.Factory.Create<Post>(_dataProvider);
+    public IQueryable<Post> Posts => RemoteQueryable.Factory.CreateQueryable<Post>(_dataProvider);
    
-    public IQueryable<User> Users => RemoteQueryable.Factory.Create<User>(_dataProvider);
+    public IQueryable<User> Users => RemoteQueryable.Factory.CreateQueryable<User>(_dataProvider);
 }
 ```
 
