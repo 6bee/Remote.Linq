@@ -68,10 +68,10 @@ namespace Remote.Linq.Tests.RemoteQueryable
                     return serialize(expression).Execute(queryableProvider: dataStore.Get);
                 };
 
-            _categoryQueryable = RemoteQueryable.Factory.Create<Category>(execute, canBeEvaluatedLocally: CanBeEvaluated);
-            _productQueryable = RemoteQueryable.Factory.Create<Product>(execute, canBeEvaluatedLocally: CanBeEvaluated);
-            _orderQueryable = RemoteQueryable.Factory.Create<Order>(execute, canBeEvaluatedLocally: CanBeEvaluated);
-            _orderItemQueryable = RemoteQueryable.Factory.Create<OrderItem>(execute, canBeEvaluatedLocally: CanBeEvaluated);
+            _categoryQueryable = RemoteQueryable.Factory.CreateQueryable<Category>(execute, canBeEvaluatedLocally: CanBeEvaluated);
+            _productQueryable = RemoteQueryable.Factory.CreateQueryable<Product>(execute, canBeEvaluatedLocally: CanBeEvaluated);
+            _orderQueryable = RemoteQueryable.Factory.CreateQueryable<Order>(execute, canBeEvaluatedLocally: CanBeEvaluated);
+            _orderItemQueryable = RemoteQueryable.Factory.CreateQueryable<OrderItem>(execute, canBeEvaluatedLocally: CanBeEvaluated);
         }
 
         private static bool CanBeEvaluated(System.Linq.Expressions.Expression expression)
@@ -573,8 +573,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 };
                 return exp.Execute(t => dataprovider[t].AsQueryable());
             };
-            var categoryQueryable = RemoteQueryable.Factory.Create<Category>(execute);
-            var productQueryable = RemoteQueryable.Factory.Create<Product>(execute);
+            var categoryQueryable = RemoteQueryable.Factory.CreateQueryable<Category>(execute);
+            var productQueryable = RemoteQueryable.Factory.CreateQueryable<Product>(execute);
 
             var result = productQueryable.Where(p => categoryQueryable.Any() && p.Id >= 1).ToList();
             result.Count.ShouldBe(2);

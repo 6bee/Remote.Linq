@@ -108,7 +108,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 
         private IQueryable<T> CreateRemoteQueryable<T>(Func<Type, IQueryable> queryableProvider)
-            => RemoteQueryable.Factory.Create<T>(x => _execute(x, queryableProvider));
+            => RemoteQueryable.Factory.CreateQueryable<T>(x => _execute(x, queryableProvider));
 
         private static IQueryable<T1> BuildQuery<T1,T2>(IQueryable<T1> queriable1, IQueryable<T2> queriable2)
             where T1: IValue

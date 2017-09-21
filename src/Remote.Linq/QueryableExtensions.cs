@@ -26,7 +26,7 @@ namespace Remote.Linq
         /// <param name="mapper"></param>
         /// <returns></returns>
         public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
-            => RemoteQueryable.Factory.Create<T>(dataProvider, typeResolver, mapper);
+            => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeResolver, mapper);
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
@@ -38,7 +38,7 @@ namespace Remote.Linq
         /// <param name="mapper"></param>
         /// <returns></returns>
         public static IQueryable AsQueryable<T>(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
-            => RemoteQueryable.Factory.Create(resource.ElementType, dataProvider, typeResolver, mapper);
+            => RemoteQueryable.Factory.CreateQueryable(resource.ElementType, dataProvider, typeResolver, mapper);
 
         private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression, MethodInfo methodInfo)
         {
