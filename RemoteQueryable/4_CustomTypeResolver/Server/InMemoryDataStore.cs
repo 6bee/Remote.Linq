@@ -2,7 +2,7 @@
 
 namespace Server
 {
-    using Server.Model;
+    using Server.ServerModel;
     using System;
     using System.Linq;
 

@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="remote.linq" Version="5.5.1" />
+    <PackageReference Include="Remote.Linq" Version="5.6.0" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.4.0" />
   </ItemGroup>
 </Project>

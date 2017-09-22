@@ -65,13 +65,9 @@ namespace Server
         }
 
         public static long GetNextProductId()
-        {
-            return Interlocked.Increment(ref _productCount);
-        }
+            => Interlocked.Increment(ref _productCount);
 
         public static long GetNextOrderId()
-        {
-            return Interlocked.Increment(ref _orderCount) + 1000;
-        }
+            => Interlocked.Increment(ref _orderCount) + 1000;
     }
 }

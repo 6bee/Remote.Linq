@@ -58,10 +58,10 @@ namespace Client
             };
         }
 
-        public IQueryable<ProductCategory> ProductCategories => AsyncRemoteQueryable.Create<ProductCategory>(_dataProvider);
+        public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateAsyncQueryable<ProductCategory>(_dataProvider);
         
-        public IQueryable<Product> Products => AsyncRemoteQueryable.Create<Product>(_dataProvider);
+        public IQueryable<Product> Products => RemoteQueryable.Factory.CreateAsyncQueryable<Product>(_dataProvider);
         
-        public IQueryable<OrderItem> OrderItems => AsyncRemoteQueryable.Create<OrderItem>(_dataProvider);
+        public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateAsyncQueryable<OrderItem>(_dataProvider);
     }
 }

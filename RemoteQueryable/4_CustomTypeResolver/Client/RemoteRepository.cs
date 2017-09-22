@@ -57,11 +57,11 @@ namespace Client
                 };
         }
 
-        public IQueryable<Client.Model.ProductCategory> ProductCategories { get { return RemoteQueryable.Create<Client.Model.ProductCategory>(_dataProvider); } }
+        public IQueryable<ClientModel.ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ClientModel.ProductCategory>(_dataProvider);
 
-        public IQueryable<Client.Model.Product> Products { get { return RemoteQueryable.Create<Client.Model.Product>(_dataProvider); } }
+        public IQueryable<ClientModel.Product> Products => RemoteQueryable.Factory.CreateQueryable<ClientModel.Product>(_dataProvider);
         
-        public IQueryable<Client.Model.OrderItem> OrderItems { get { return RemoteQueryable.Create<Client.Model.OrderItem>(_dataProvider); } }
+        public IQueryable<ClientModel.OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<ClientModel.OrderItem>(_dataProvider);
 
         public void Dispose()
         {

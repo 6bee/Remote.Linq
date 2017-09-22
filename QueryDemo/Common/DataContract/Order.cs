@@ -13,20 +13,11 @@ namespace Common.DataContract
         public long Id { get; set; }
 
         [DataMember]
-        public IList<OrderItem> Items
-        {
-            get { return _items ?? (_items = new List<OrderItem>()); }
-        }
-        private IList<OrderItem> _items;
+        public IList<OrderItem> Items { get; set; } = new List<OrderItem>();
 
-        public decimal TotalAmount
-        {
-            get { return Items.Sum(i => i.TotalAmount); }
-        }
+        public decimal TotalAmount => Items.Sum(i => i.TotalAmount);
 
         public override string ToString()
-        {
-            return string.Format("Order: {0} Item{2}  Total {1:C}", Items.Count, TotalAmount, Items.Count > 1 ? "s" : null);
-        }
+            => string.Format("Order: {0} Item{2}  Total {1:C}", Items.Count, TotalAmount, Items.Count > 1 ? "s" : null);
     }
 }

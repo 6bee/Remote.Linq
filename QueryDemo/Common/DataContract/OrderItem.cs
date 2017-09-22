@@ -16,14 +16,9 @@ namespace Common.DataContract
         [DataMember]
         public decimal UnitPrice { get; set; }
 
-        public decimal TotalAmount
-        {
-            get { return Quantity * UnitPrice; }
-        }
+        public decimal TotalAmount => Quantity * UnitPrice;
 
         public override string ToString()
-        {
-            return string.Format("Prod #{0}: {1} * {2:C} = {3:C}", ProductId, Quantity, UnitPrice, TotalAmount);
-        }
+            => string.Format("Prod #{0}: {1} * {2:C} = {3:C}", ProductId, Quantity, UnitPrice, TotalAmount);
     }
 }

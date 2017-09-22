@@ -18,12 +18,10 @@ namespace Client
             _channel = _channelFactory.CreateChannel();
         }
 
-        public T Channel { get { return _channel; } }
+        public T Channel => _channel;
 
         public IQuery<Entity> CreateQuery<Entity>(Func<T, Func<Query<Entity>, IEnumerable<Entity>>> serviceMethod)
-        {
-            return new Query<Entity>(serviceMethod(Channel));
-        }
+            => new Query<Entity>(serviceMethod(Channel));
 
         public void Dispose()
         {
@@ -32,6 +30,7 @@ namespace Client
                 ((IClientChannel)_channel).Close();
             }
             catch { }
+
             try
             {
                 _channelFactory.Close();

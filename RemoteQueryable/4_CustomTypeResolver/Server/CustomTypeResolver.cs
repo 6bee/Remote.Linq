@@ -9,18 +9,18 @@ namespace Server
     {
         public override Type ResolveType(TypeInfo typeInfo)
         {
-            if (typeInfo.Namespace == "Client.Model")
+            if (typeInfo.Namespace == "Client.ClientModel")
             {
                 switch (typeInfo.Name)
                 {
                     case "OrderItem":
-                        return typeof(Server.Model.OrderItem);
+                        return typeof(ServerModel.OrderItem);
 
                     case "Product":
-                        return typeof(Server.Model.Product);
+                        return typeof(ServerModel.Product);
 
                     case "ProductCategory":
-                        return typeof(Server.Model.ProductCategory);
+                        return typeof(ServerModel.ProductCategory);
                 }
             }
 

@@ -63,11 +63,11 @@ namespace Client
                 };
         }
 
-        public IQueryable<ProductCategory> ProductCategories { get { return RemoteQueryable.Create<ProductCategory>(_dataProvider, mapper: _mapper); } }
+        public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ProductCategory>(_dataProvider, mapper: _mapper);
 
-        public IQueryable<Product> Products { get { return RemoteQueryable.Create<Product>(_dataProvider, mapper: _mapper); } }
+        public IQueryable<Product> Products => RemoteQueryable.Factory.CreateQueryable<Product>(_dataProvider, mapper: _mapper);
 
-        public IQueryable<OrderItem> OrderItems { get { return RemoteQueryable.Create<OrderItem>(_dataProvider, mapper: _mapper); } }
+        public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<OrderItem>(_dataProvider, mapper: _mapper);
 
         public void Dispose()
         {

@@ -58,7 +58,7 @@ namespace Client
                 };
         }
 
-        public IQueryable<Entity> Entities { get { return RemoteQueryable.Create<Entity>(_dataProvider); } }
+        public IQueryable<Entity> Entities => RemoteQueryable.Factory.CreateQueryable<Entity>(_dataProvider);
 
         public void Dispose()
         {

@@ -63,7 +63,7 @@ namespace Server
                         }
                     }
                 }
-                catch (SocketException ex)
+                catch (SocketException)
                 {
                     //Console.WriteLine("SocketException: {0}", ex);
                 }
