@@ -1,40 +1,30 @@
 init:
   - git config --global core.autocrlf true
+install:  
+  # .NET Core CLI  
+  - ps: $env:DOTNET_INSTALL_DIR = "$pwd\.dotnetcli"
+  - ps: mkdir $env:DOTNET_INSTALL_DIR -Force | Out-Null
+  - ps: Invoke-WebRequest -Uri "https://raw.githubusercontent.com/dotnet/cli/v2.0.0/scripts/obtain/dotnet-install.ps1" -OutFile "dotnet-install.ps1"
+  - ps: .\dotnet-install.ps1 -Version "2.0.0" -InstallDir "$env:DOTNET_INSTALL_DIR"
+  - ps: $env:Path = "$env:DOTNET_INSTALL_DIR;$env:Path"
 before_build:
-  - cmd: nuget restore QueryDemo\QueryDemo.sln
-  - cmd: nuget restore RemoteQueryable\0_Basic\RemoteQueryable_Basic.sln
-  - cmd: nuget restore RemoteQueryable\1_Async\RemoteQueryable_Async.sln
-  - cmd: nuget restore RemoteQueryable\2_DynamicObjectWithKnownTypes\RemoteQueryable_DynamicObjectWithKnownTypes.sln
-  - cmd: nuget restore RemoteQueryable\3_KnownTypesAsObjects\RemoteQueryable_KnownTypesAsObjects.sln
-  - cmd: nuget restore RemoteQueryable\4_CustomTypeResolver\RemoteQueryable_CustomTypeResolver.sln
-  - cmd: nuget restore RemoteQueryable\5_ServerDefinedProjection\RemoteQueryable_ServerDefinedProjection.sln
-  - cmd: nuget restore RemoteQueryable\6_Compression\RemoteQueryable_Compression.sln
-  - cmd: nuget restore RemoteQueryable\7_Inheritance\RemoteQueryable_Inheritance.sln
-  - cmd: nuget restore RemoteQueryable\10_UsingBinarySerializationOverTcp\RemoteQueryable_UsingBinarySerializationOverTcp.sln
-  - cmd: nuget restore RemoteQueryable\10_UsingJsonSerializationOverTcp\RemoteQueryable_UsingJsonSerializationOverTcp.sln
-  - cmd: nuget restore RemoteQueryable\10_UsingJsonSerializationOverWebApi\RemoteQueryable_UsingJsonSerializationOverWebApi.sln
-  - cmd: nuget restore RemoteQueryable\10_UsingXmlSerializationOverHttp\RemoteQueryable_UsingXmlSerializationOverHttp.sln
-  - cmd: nuget restore RemoteQueryable\10_UsingXmlSerializationOverTcp\RemoteQueryable_UsingXmlSerializationOverTcp.sln
-  - cmd: nuget restore RemoteQueryable\10_UsingXmlSerializationOverWebApi\RemoteQueryable_UsingXmlSerializationOverWebApi.sln
-  - cmd: nuget restore RemoteQueryableToEntityFramework\RemoteQueryableToEntityFramework.sln
-  - cmd: nuget restore RemoteQueryableToEntityFrameworkCore\RemoteQueryableToEntityFrameworkCore.sln
-  - cmd: nuget restore RemoteQueryableToNHibernate\RemoteQueryableToNHibernate.sln
+  - cmd: dotnet --info
 build_script:
-  - cmd: msbuild /p:Configuration=Release QueryDemo\QueryDemo.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\0_Basic\RemoteQueryable_Basic.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\1_Async\RemoteQueryable_Async.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\2_DynamicObjectWithKnownTypes\RemoteQueryable_DynamicObjectWithKnownTypes.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\3_KnownTypesAsObjects\RemoteQueryable_KnownTypesAsObjects.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\4_CustomTypeResolver\RemoteQueryable_CustomTypeResolver.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\5_ServerDefinedProjection\RemoteQueryable_ServerDefinedProjection.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\6_Compression\RemoteQueryable_Compression.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\7_Inheritance\RemoteQueryable_Inheritance.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\10_UsingBinarySerializationOverTcp\RemoteQueryable_UsingBinarySerializationOverTcp.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\10_UsingJsonSerializationOverTcp\RemoteQueryable_UsingJsonSerializationOverTcp.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\10_UsingJsonSerializationOverWebApi\RemoteQueryable_UsingJsonSerializationOverWebApi.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\10_UsingXmlSerializationOverHttp\RemoteQueryable_UsingXmlSerializationOverHttp.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\10_UsingXmlSerializationOverTcp\RemoteQueryable_UsingXmlSerializationOverTcp.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryable\10_UsingXmlSerializationOverWebApi\RemoteQueryable_UsingXmlSerializationOverWebApi.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryableToEntityFramework\RemoteQueryableToEntityFramework.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryableToEntityFrameworkCore\RemoteQueryableToEntityFrameworkCore.sln
-  - cmd: msbuild /p:Configuration=Release RemoteQueryableToNHibernate\RemoteQueryableToNHibernate.sln
+  - cmd: dotnet build QueryDemo\QueryDemo.sln
+  - cmd: dotnet build RemoteQueryable\0_Basic\RemoteQueryable_Basic.sln
+  - cmd: dotnet build RemoteQueryable\1_Async\RemoteQueryable_Async.sln
+  - cmd: dotnet build RemoteQueryable\2_DynamicObjectWithKnownTypes\RemoteQueryable_DynamicObjectWithKnownTypes.sln
+  - cmd: dotnet build RemoteQueryable\3_KnownTypesAsObjects\RemoteQueryable_KnownTypesAsObjects.sln
+  - cmd: dotnet build RemoteQueryable\4_CustomTypeResolver\RemoteQueryable_CustomTypeResolver.sln
+  - cmd: dotnet build RemoteQueryable\5_ServerDefinedProjection\RemoteQueryable_ServerDefinedProjection.sln
+  - cmd: dotnet build RemoteQueryable\6_Compression\RemoteQueryable_Compression.sln
+  - cmd: dotnet build RemoteQueryable\7_Inheritance\RemoteQueryable_Inheritance.sln
+  - cmd: dotnet build RemoteQueryable\10_UsingBinarySerializationOverTcp\RemoteQueryable_UsingBinarySerializationOverTcp.sln
+  - cmd: dotnet build RemoteQueryable\10_UsingJsonSerializationOverTcp\RemoteQueryable_UsingJsonSerializationOverTcp.sln
+  - cmd: dotnet build RemoteQueryable\10_UsingJsonSerializationOverWebApi\RemoteQueryable_UsingJsonSerializationOverWebApi.sln
+  - cmd: dotnet build RemoteQueryable\10_UsingXmlSerializationOverHttp\RemoteQueryable_UsingXmlSerializationOverHttp.sln
+  - cmd: dotnet build RemoteQueryable\10_UsingXmlSerializationOverTcp\RemoteQueryable_UsingXmlSerializationOverTcp.sln
+  - cmd: dotnet build RemoteQueryable\10_UsingXmlSerializationOverWebApi\RemoteQueryable_UsingXmlSerializationOverWebApi.sln
+  - cmd: dotnet build RemoteQueryableToEntityFramework\RemoteQueryableToEntityFramework.sln
+  - cmd: dotnet build RemoteQueryableToEntityFrameworkCore\RemoteQueryableToEntityFrameworkCore.sln
+  - cmd: dotnet build RemoteQueryableToNHibernate\RemoteQueryableToNHibernate.sln
