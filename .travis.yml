@@ -18,21 +18,21 @@ install:
 before_script:  
   - dotnet --info
 script:
-  - dotnet build ./QueryDemo/QueryDemo.sln
-  - dotnet build ./RemoteQueryable/0_Basic/RemoteQueryable_Basic.sln
-  - dotnet build ./RemoteQueryable/1_Async/RemoteQueryable_Async.sln
-  - dotnet build ./RemoteQueryable/2_DynamicObjectWithKnownTypes/RemoteQueryable_DynamicObjectWithKnownTypes.sln
-  - dotnet build ./RemoteQueryable/3_KnownTypesAsObjects/RemoteQueryable_KnownTypesAsObjects.sln
-  - dotnet build ./RemoteQueryable/4_CustomTypeResolver/RemoteQueryable_CustomTypeResolver.sln
-  - dotnet build ./RemoteQueryable/5_ServerDefinedProjection/RemoteQueryable_ServerDefinedProjection.sln
-  - dotnet build ./RemoteQueryable/6_Compression/RemoteQueryable_Compression.sln
-  - dotnet build ./RemoteQueryable/7_Inheritance/RemoteQueryable_Inheritance.sln
+  #WCF- dotnet build ./QueryDemo/QueryDemo.sln
+  #WCF- dotnet build ./RemoteQueryable/0_Basic/RemoteQueryable_Basic.sln
+  #WCF- dotnet build ./RemoteQueryable/1_Async/RemoteQueryable_Async.sln
+  #WCF- dotnet build ./RemoteQueryable/2_DynamicObjectWithKnownTypes/RemoteQueryable_DynamicObjectWithKnownTypes.sln
+  #WCF- dotnet build ./RemoteQueryable/3_KnownTypesAsObjects/RemoteQueryable_KnownTypesAsObjects.sln
+  #WCF- dotnet build ./RemoteQueryable/4_CustomTypeResolver/RemoteQueryable_CustomTypeResolver.sln
+  #WCF- dotnet build ./RemoteQueryable/5_ServerDefinedProjection/RemoteQueryable_ServerDefinedProjection.sln
+  #WCF- dotnet build ./RemoteQueryable/6_Compression/RemoteQueryable_Compression.sln
+  #WCF- dotnet build ./RemoteQueryable/7_Inheritance/RemoteQueryable_Inheritance.sln
   - dotnet build ./RemoteQueryable/10_UsingBinarySerializationOverTcp/RemoteQueryable_UsingBinarySerializationOverTcp.sln
   - dotnet build ./RemoteQueryable/10_UsingJsonSerializationOverTcp/RemoteQueryable_UsingJsonSerializationOverTcp.sln
-  - dotnet build ./RemoteQueryable/10_UsingJsonSerializationOverWebApi/RemoteQueryable_UsingJsonSerializationOverWebApi.sln
+  #WebAPI- dotnet build ./RemoteQueryable/10_UsingJsonSerializationOverWebApi/RemoteQueryable_UsingJsonSerializationOverWebApi.sln
   - dotnet build ./RemoteQueryable/10_UsingXmlSerializationOverHttp/RemoteQueryable_UsingXmlSerializationOverHttp.sln
   - dotnet build ./RemoteQueryable/10_UsingXmlSerializationOverTcp/RemoteQueryable_UsingXmlSerializationOverTcp.sln
-  - dotnet build ./RemoteQueryable/10_UsingXmlSerializationOverWebApi/RemoteQueryable_UsingXmlSerializationOverWebApi.sln
-  - dotnet build ./RemoteQueryableToEntityFramework/RemoteQueryableToEntityFramework.sln
-  - dotnet build ./RemoteQueryableToEntityFrameworkCore/RemoteQueryableToEntityFrameworkCore.sln
-  - dotnet build ./RemoteQueryableToNHibernate/RemoteQueryableToNHibernate.sln
+  #WebAPI- dotnet build ./RemoteQueryable/10_UsingXmlSerializationOverWebApi/RemoteQueryable_UsingXmlSerializationOverWebApi.sln
+  #WCF- dotnet build ./RemoteQueryableToEntityFramework/RemoteQueryableToEntityFramework.sln
+  #WCF- dotnet build ./RemoteQueryableToEntityFrameworkCore/RemoteQueryableToEntityFrameworkCore.sln
+  #WCF- dotnet build ./RemoteQueryableToNHibernate/RemoteQueryableToNHibernate.sln
