@@ -56,6 +56,11 @@
 
             if (expression.NodeType == ExpressionType.Call)
             {
+                if (expression.Type == typeof(void))
+                {
+                    return false;
+                }
+
                 var methodCallExpression = (MethodCallExpression)expression;
                 var methodDeclaringType = methodCallExpression.Method.DeclaringType;
                 if (methodDeclaringType == typeof(Queryable) || methodDeclaringType == typeof(Enumerable))
@@ -74,6 +79,8 @@
             switch (expression.NodeType)
             {
                 case ExpressionType.Block:
+                case ExpressionType.Convert:
+                case ExpressionType.ConvertChecked:
                 case ExpressionType.Default:
                 case ExpressionType.Label:
                 case ExpressionType.Goto:
@@ -81,6 +88,7 @@
                 case ExpressionType.Loop:
                 case ExpressionType.New:
                 case ExpressionType.Parameter:
+                case ExpressionType.Quote:
                 case ExpressionType.Throw:
                     return false;
             }
@@ -126,15 +134,7 @@
                 switch (expression.NodeType)
                 {
                     case ExpressionType.Constant:
-                    case ExpressionType.Convert:
-                    case ExpressionType.ConvertChecked:
-                    case ExpressionType.Quote:
                         return expression;
-                }
-
-                if (expression.NodeType == ExpressionType.Call && expression.Type == typeof(void))
-                {
-                    return expression;
                 }
 
                 var lambda = Expression.Lambda(expression);

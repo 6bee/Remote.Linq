@@ -396,6 +396,30 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_query_category_filterd_using_local_int_variable()
+        {
+            int id = 1;
+            var query =
+                from x in _categoryQueryable
+                where x.Id == id
+                select x;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_category_filterd_using_local_short_variable()
+        {
+            short id = 1; // potetial issue: the test doesn't seem to cover the ciscumstance of the unknown id variable/arg type (inline type)
+            var query =
+                from x in _categoryQueryable
+                where x.Id == id
+                select x;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
         public void Should_query_products_filterd_using_local_variables_closure_inline_mix()
         {
             IEnumerable<int?> listOfIds = new List<int?>() { null, 1, 11, 111 };
