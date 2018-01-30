@@ -40,7 +40,7 @@ public class RemoteRepository
         _dataProvider = expression =>
             {
                 // setup service connectivity
-                IQueryService service = CreateServerConection(uri);
+                IQueryService service = CreateServerConnection(uri);
                 // send expression to service and get back results
                 IEnumerable<DynamicObject> result = service.ExecuteQuery(expression);
                 return result;
