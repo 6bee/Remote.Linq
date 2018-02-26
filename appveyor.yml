@@ -15,11 +15,17 @@ before_build:
 
 build_script:
   - dotnet build src\Remote.Linq 
+  - dotnet build src\Remote.Linq.EntityFramework
+  - dotnet build src\Remote.Linq.EntityFrameworkCore
   - dotnet build src\Remote.Linq.Newtonsoft.Json
   - dotnet build test\Remote.Linq.Tests
+  - dotnet build test\Remote.Linq.EntityFramework.Tests
+  - dotnet build test\Remote.Linq.EntityFrameworkCore.Tests
 
 test_script:
-  dotnet test test\Remote.Linq.Tests\Remote.Linq.Tests.csproj
+  - dotnet test test\Remote.Linq.Tests\Remote.Linq.Tests.csproj
+  - dotnet test test\Remote.Linq.EntityFramework.Tests\Remote.Linq.EntityFramework.Tests.csproj
+  - dotnet test test\Remote.Linq.EntityFrameworkCore.Tests\Remote.Linq.EntityFrameworkCore.Tests.csproj
 
 build:
   verbosity: normal

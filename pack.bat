@@ -3,9 +3,14 @@ set configuration=Release
 set version-suffix=""
 clean ^
   && dotnet restore ^
-  && dotnet build src\Remote.Linq --configuration %configuration% ^
-  && dotnet build src\Remote.Linq.Newtonsoft.Json --configuration %configuration% ^
-  && dotnet build test\Remote.Linq.Tests --configuration %configuration% ^
-  && dotnet test test\Remote.Linq.Tests\Remote.Linq.Tests.csproj --configuration %configuration% ^
-  && dotnet pack src\Remote.Linq --output "..\..\artifacts" --configuration %configuration% --include-symbols --version-suffix "%version-suffix%" ^
-  && dotnet pack src\Remote.Linq.Newtonsoft.Json --output "..\..\artifacts" --configuration %configuration% --include-symbols --version-suffix "%version-suffix%"
+  && dotnet build src\Remote.Linq                     --configuration %configuration% ^
+  && dotnet build src\Remote.Linq.EntityFramework     --configuration %configuration% ^
+  && dotnet build src\Remote.Linq.EntityFrameworkCore --configuration %configuration% ^
+  && dotnet build src\Remote.Linq.Newtonsoft.Json     --configuration %configuration% ^
+  && dotnet test test\Remote.Linq.Tests                     --configuration %configuration% ^
+  && dotnet test test\Remote.Linq.EntityFrameworkCore.Tests --configuration %configuration% ^
+  && dotnet test test\Remote.Linq.EntityFramework.Tests     --configuration %configuration% ^
+  && dotnet pack src\Remote.Linq                      --configuration %configuration% --include-symbols --version-suffix "%version-suffix%" --output "..\..\artifacts" ^
+  && dotnet pack src\Remote.Linq.Newtonsoft.Json      --configuration %configuration% --include-symbols --version-suffix "%version-suffix%" --output "..\..\artifacts" ^
+  && dotnet pack src\Remote.Linq.EntityFramework      --configuration %configuration% --include-symbols --version-suffix "%version-suffix%" --output "..\..\artifacts" ^
+  && dotnet pack src\Remote.Linq.EntityFrameworkCore  --configuration %configuration% --include-symbols --version-suffix "%version-suffix%" --output "..\..\artifacts"
