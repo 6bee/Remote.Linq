@@ -9,11 +9,11 @@
     <AssemblyName>Remote.Linq.EntityFrameworkCore</AssemblyName>
     <PackageId>Remote.Linq.EntityFrameworkCore</PackageId>
     <PackageTags>LINQ,expression-tree,lambda,dynamic,remote,remote-query,multi-tier,n-tier,fluent-interface,entity-framework-core,entity-framework,ef-core,ef</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/6bee/Remote.Linq.EntityFrameworkCore/master/remotelinq-small.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/6bee/Remote.Linq.EntityFrameworkCore</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/6bee/Remote.Linq.EntityFrameworkCore/master/license.txt</PackageLicenseUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/6bee/Remote.Linq/master/remotelinq-small.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/6bee/Remote.Linq</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/6bee/Remote.Linq/master/license.txt</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/6bee/Remote.Linq.EntityFrameworkCore.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/6bee/Remote.Linq.git</RepositoryUrl>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
