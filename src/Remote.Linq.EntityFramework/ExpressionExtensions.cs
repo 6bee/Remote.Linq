@@ -7,9 +7,11 @@ namespace Remote.Linq.EntityFramework
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Data.Entity;
     using System.Linq;
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionExtensions
     {
         private static readonly System.Reflection.MethodInfo DbContextSetMethod = typeof(DbContext).GetMethods()
