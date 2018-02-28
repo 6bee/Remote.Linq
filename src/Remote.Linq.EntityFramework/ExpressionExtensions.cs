@@ -14,9 +14,6 @@ namespace Remote.Linq.EntityFramework
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionExtensions
     {
-        private static readonly System.Reflection.MethodInfo DbContextSetMethod = typeof(DbContext).GetMethods()
-                .Single(x => x.Name == "Set" && x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 0);
-
         /// <summary>
         /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects
         /// </summary>
@@ -26,9 +23,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped result of the query execution</returns>
         public static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
-        {
-            return ExecuteWithEntityFramework(expression, dbContext.GetQueryableSet, typeResolver, mapper, setTypeInformation);
-        }
+            => new EntityFrameworkExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation).Execute(expression);
 
         /// <summary>
         /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects
@@ -39,14 +34,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped result of the query execution</returns>
         public static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
-        {
-            var linqExpression = PrepareForExecutionWithEntityFramework(expression, queryableProvider, typeResolver);
-
-            var queryResult = Remote.Linq.Expressions.ExpressionExtensions.Execute(linqExpression);
-
-            var dynamicObjects = Remote.Linq.Expressions.ExpressionExtensions.ConvertResultToDynamicObjects(queryResult, mapper, setTypeInformation);
-            return dynamicObjects;
-        }
+            => new EntityFrameworkExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation).Execute(expression);
 
         /// <summary>
         /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/> 
@@ -56,10 +44,9 @@ namespace Remote.Linq.EntityFramework
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{}"/></param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
+        [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.EntityFramework.EntityFrameworkExpressionExecutor instead.", false)]
         public static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFramework(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null)
-        {
-            return PrepareForExecutionWithEntityFramework(expression, dbContext.GetQueryableSet, typeResolver);
-        }
+            => new EntityFrameworkExpressionExecutor(dbContext, typeResolver).PrepareForExecutionWithEntityFramework(expression);
 
         /// <summary>
         /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/> 
@@ -71,26 +58,8 @@ namespace Remote.Linq.EntityFramework
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
+        [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.EntityFramework.EntityFrameworkExpressionExecutor instead.", false)]
         public static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null)
-        {
-            var expression1 = expression.ReplaceIncludeMethodCall();
-
-            var linqExpression1 = expression1.PrepareForExecution(queryableProvider, typeResolver);
-
-            var linqExpression2 = linqExpression1.ReplaceParameterizedConstructorCallsForVariableQueryArguments();
-
-            return linqExpression2;
-        }
-
-        /// <summary>
-        /// Returns the generic <see cref="DbSet{T}"/> for the type specified
-        /// </summary>
-        /// <returns>Returns an instance of type <see cref="DbSet{T}"/></returns>
-        private static IQueryable GetQueryableSet(this DbContext dbContext, Type type)
-        {
-            var method = DbContextSetMethod.MakeGenericMethod(type);
-            var set = method.Invoke(dbContext, new object[0]);
-            return (IQueryable)set;
-        }
+            => new EntityFrameworkExpressionExecutor(queryableProvider, typeResolver).PrepareForExecutionWithEntityFramework(expression);
     }
 }

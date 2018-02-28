@@ -11,88 +11,39 @@ namespace Remote.Linq.Expressions
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionExtensions
     {
+        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
+            => new ExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation).Execute(expression);
+
         /// <summary>
         /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result
         /// </summary>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified</returns>
+        [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.Expressions.ExpressionExecutor instead.", false)]
         public static object Execute(this System.Linq.Expressions.Expression expression)
+            => new ExpressionExecutor(null).Execute(expression);
+
+        private sealed class LocalExpressionExecutor : ExpressionExecutor
         {
-            var lambdaExpression = expression as System.Linq.Expressions.LambdaExpression;
-            if (lambdaExpression == null)
+            private readonly Func<object, object> _resultProjector;
+
+            public LocalExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver, IDynamicObjectMapper mapper, Func<Type, bool> setTypeInformation, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally, Func<object, object> resultProjector)
+                : base(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally)
             {
-                lambdaExpression = System.Linq.Expressions.Expression.Lambda(expression);
+                _resultProjector = resultProjector ?? (x => x);
             }
 
-            object queryable;
-            try
+            protected internal override object Execute(System.Linq.Expressions.Expression expression)
             {
-                queryable = lambdaExpression.Compile().DynamicInvoke();
+                var result = base.Execute(expression);
+                return _resultProjector(result);
             }
-            catch (TargetInvocationException ex)
-            {
-                var excption = ex.InnerException;
-
-                if (excption is InvalidOperationException)
-                {
-                    if (string.Equals(excption.Message, "Sequence contains no elements", StringComparison.Ordinal))
-                    {
-                        return new DynamicObject[0];
-                    }
-
-                    if (string.Equals(excption.Message, "Sequence contains no matching element", StringComparison.Ordinal))
-                    {
-                        return new DynamicObject[0];
-                    }
-
-                    if (string.Equals(excption.Message, "Sequence contains more than one element", StringComparison.Ordinal))
-                    {
-                        return new DynamicObject[2];
-                    }
-
-                    if (string.Equals(excption.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
-                    {
-                        return new DynamicObject[2];
-                    }
-                }
-
-                throw excption;
-            }
-
-            object queryResult;
-            if (ReferenceEquals(null, queryable))
-            {
-                queryResult = null;
-            }
-            else
-            {
-                var queryableType = queryable.GetType();
-                var isQueryable = queryableType.Implements(typeof(IQueryable<>));
-                if (isQueryable)
-                {
-                    // force query execution
-                    try
-                    {
-                        var elementType = TypeHelper.GetElementType(queryableType);
-                        queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { queryable });
-                    }
-                    catch (TargetInvocationException ex)
-                    {
-                        throw ex.InnerException;
-                    }
-                }
-                else
-                {
-                    queryResult = queryable;
-                }
-            }
-
-            return queryResult;
         }
 
         /// <summary>
@@ -103,17 +54,9 @@ namespace Remote.Linq.Expressions
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped result of the query execution</returns>
-        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, Func<object,object> resultPorjector = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
-        {
-            var linqExpression = PrepareForExecution(expression, queryableProvider, typeResolver, canBeEvaluatedLocally);
-
-            var queryResult = Execute(linqExpression);
-
-            var projectedResult = ReferenceEquals(null, resultPorjector) ? queryResult : resultPorjector(queryResult);
-
-            var dynamicObjects = ConvertResultToDynamicObjects(projectedResult, mapper, setTypeInformation);
-            return dynamicObjects;
-         }
+        [Obsolete("This method is being removed in a future version. In order to define custom result projection, inherit from Remote.Linq.Expressions.ExpressionExecutor instead.", false)]
+        public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver, Func<object,object> resultProjector, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
+            => new LocalExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally, resultProjector).Execute(expression);
         
         /// <summary>
         /// Converts the query result into a collection of <see cref="DynamicObject"/>
@@ -121,21 +64,9 @@ namespace Remote.Linq.Expressions
         /// <param name="queryResult">The reult of the query execution</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         /// <returns>The mapped query result</returns>
+        [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.Expressions.ExpressionExecutor instead.", false)]
         public static IEnumerable<DynamicObject> ConvertResultToDynamicObjects(object queryResult, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
-        {
-            if (ReferenceEquals(null, mapper))
-            {
-                mapper = new DynamicQueryResultMapper();
-            }
-
-            if (ReferenceEquals(null, setTypeInformation))
-            {
-                setTypeInformation = t => !t.IsAnonymousType();
-            }
-
-            var dynamicObjects = mapper.MapCollection(queryResult, setTypeInformation);
-            return dynamicObjects;
-        }
+            => new ExpressionExecutor(null, null, mapper, setTypeInformation).ConvertResultToDynamicObjects(queryResult);
 
         /// <summary>
         /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/> 
@@ -145,16 +76,8 @@ namespace Remote.Linq.Expressions
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
+        [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.Expressions.ExpressionExecutor instead.", false)]
         public static System.Linq.Expressions.Expression PrepareForExecution(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
-        {
-            var expression1 = expression.ReplaceNonGenericQueryArgumentsByGenericArguments();
-
-            var queryableExpression = expression1.ReplaceResourceDescriptorsByQueryable(typeResolver, queryableProvider);
-
-            var linqExpression = queryableExpression.ToLinqExpression(typeResolver);
-
-            var locallyEvaluatedExpression = linqExpression.PartialEval(canBeEvaluatedLocally);
-            return locallyEvaluatedExpression;
-        }
+            => new ExpressionExecutor(queryableProvider, typeResolver, canBeEvaluatedLocally: canBeEvaluatedLocally).PrepareForExecution(expression);
     }
 }
