@@ -12,7 +12,7 @@ namespace Remote.Linq.EntityFramework
     public class EntityFrameworkExpressionExecutor : ExpressionExecutor
     {
         private static readonly System.Reflection.MethodInfo DbContextSetMethod = typeof(DbContext).GetMethods()
-                .Single(x => x.Name == "Set" && x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 0);
+            .Single(x => x.Name == "Set" && x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 0);
 
         public EntityFrameworkExpressionExecutor(DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             : this(GetQueryableSetProvider(dbContext), typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally)
@@ -24,6 +24,16 @@ namespace Remote.Linq.EntityFramework
         {
         }
 
+        protected override Expression Prepare(Expression expression)
+            => base.Prepare(expression).ReplaceIncludeMethodCall();
+
+        protected override System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression)
+            => base.Prepare(expression).ReplaceParameterizedConstructorCallsForVariableQueryArguments();
+
+        // temporary implementation for compatibility with previous versions
+        internal System.Linq.Expressions.Expression PrepareForExecution(Expression expression)
+            => Prepare(Transform(Prepare(expression)));
+
         /// <summary>
         /// Returns the generic <see cref="DbSet{T}"/> for the type specified
         /// </summary>
@@ -34,16 +44,5 @@ namespace Remote.Linq.EntityFramework
             var set = method.Invoke(dbContext, new object[0]);
             return (IQueryable)set;
         };
-
-        protected override System.Linq.Expressions.Expression PrepareForExecution(Expression expression)
-        {
-            var expression1 = expression.ReplaceIncludeMethodCall();
-            var linqExpression1 = base.PrepareForExecution(expression1);
-            var linqExpression2 = linqExpression1.ReplaceParameterizedConstructorCallsForVariableQueryArguments();
-            return linqExpression2;
-        }
-
-        internal System.Linq.Expressions.Expression PrepareForExecutionWithEntityFramework(Expression expression)
-            => PrepareForExecution(expression);
     }
 }

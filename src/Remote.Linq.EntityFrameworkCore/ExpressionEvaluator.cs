@@ -3,7 +3,6 @@
 namespace Remote.Linq.EntityFrameworkCore
 {
     using Microsoft.EntityFrameworkCore;
-    using System;
     using System.Linq.Expressions;
 
     public static class ExpressionEvaluator
@@ -18,13 +17,6 @@ namespace Remote.Linq.EntityFrameworkCore
 #endif
 
             return true;
-        }
-
-        internal static Func<Expression, bool> And(this Func<Expression, bool> func1, Func<Expression, bool> func2)
-        {
-            if (func1 == null) return func2;
-            if (func2 == null) return func1;
-            return expression => func1(expression) && func2(expression);
         }
     }
 }

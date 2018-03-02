@@ -26,15 +26,12 @@ namespace Remote.Linq.EntityFrameworkCore
         {
         }
 
-        protected override System.Linq.Expressions.Expression PrepareForExecution(Expression expression)
-        {
-            var expression1 = expression.ReplaceIncludeMethodCall();
-            var linqExpression = base.PrepareForExecution(expression1);
-            return linqExpression;
-        }
+        protected override Expression Prepare(Expression expression)
+            => base.Prepare(expression).ReplaceIncludeMethodCall();
 
-        internal System.Linq.Expressions.Expression PrepareForExecutionWithEntityFrameworkCore(Expression expression)
-            => PrepareForExecution(expression);
+        // temporary implementation for compatibility with previous versions
+        internal System.Linq.Expressions.Expression PrepareForExecution(Expression expression)
+            => Prepare(Transform(Prepare(expression)));
 
         /// <summary>
         /// Returns the generic <see cref="DbSet{T}"/> for the type specified
