@@ -70,7 +70,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
         }
 
         [Fact]
-        public void Should_apply_custom_custom_strategies_and_return_expected_result()
+        public void Should_apply_all_custom_strategies_and_return_expected_result()
         {
             new Exec().Execute(Exec.Step0_Expression).ShouldBeSameAs(Exec.Step7_Result);
         }
