@@ -4,7 +4,7 @@
     <Summary>Simply LINQ your remote resources...</Summary>
     <Description>Remote Linq is a small and easy to use - yet very powerful - library to translate linq expression trees to strongly typed, serializable expression trees and vice versa. It provides functionality to send arbitrary linq queries to a remote service to be applied and executed against any enumerable or queryable data source.</Description>
     <Copyright>Copyright Christof Senn 2013-2018</Copyright>
-    <VersionPrefix>5.6.1</VersionPrefix>
+    <VersionPrefix>5.7.0</VersionPrefix>
     <Authors>Christof Senn</Authors>
     <TargetFrameworks>net451;netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
     <AssemblyName>Remote.Linq</AssemblyName>
