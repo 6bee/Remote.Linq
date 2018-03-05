@@ -1,54 +1,47 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
+namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
 {
-    using Shouldly;
-    using Xunit;
-    using Remote.Linq.Expressions;
-    using System.Collections.Generic;
     using Aqua.Dynamic;
+    using Remote.Linq.Expressions;
+    using Shouldly;
     using System;
+    using System.Collections.Generic;
+    using Xunit;
 
-    public class When_inheriting_from_expression_executor
+    public class When_using_expression_execution_context
     {
         [Fact]
         public void Should_apply_all_custom_strategies_and_return_expected_result()
         {
-            var executor = new TestExpressionExecutor();
+            var context = new TestExpressionExecutionContext(
+                new ExpressionExecutor(null),
+                TestExpressionExecutionContext.Step0_Expression);
 
-            executor
-                .Execute(TestExpressionExecutor.Step0_Expression)
-                .ShouldBeSameAs(TestExpressionExecutor.Step7_Result);
+            context
+                .Execute()
+                .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
 
-            executor.AssertAllMethodsInvokedExacltyOnce();
+            context.AssertAllMethodsInvokedExacltyOnce();
         }
 
         [Fact]
-        public void Should_execute_test_expression_using_default_executor()
-        {
-            TestExpressionExecutor.Step0_Expression
-                .Execute(null)
-                .ShouldHaveSingleItem()
-                .Values
-                .ShouldHaveSingleItem()
-                .ShouldBe("step0");
-        }
-
-        [Fact]
-        public void Should_apply_remote_expression_preparation_executor()
+        public void Should_apply_remote_expression_preparation_decorator()
         {
             var customExpression1 = new ConstantExpression("exp1");
             var customExpression2 = new ConstantExpression("exp2");
 
             var callCounter = new int[3];
 
-            var executor = new TestExpressionExecutor();
+            var context = new TestExpressionExecutionContext(
+                new ExpressionExecutor(null),
+                TestExpressionExecutionContext.Step0_Expression);
 
-            executor
+            context
                 .With(x =>
                 {
                     callCounter[0]++;
-                    x.ShouldBeSameAs(TestExpressionExecutor.Step1_Expression);
+                    x.ShouldBeSameAs(TestExpressionExecutionContext.Step1_Expression);
                     return customExpression1;
                 })
                 .With(x =>
@@ -61,23 +54,25 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
                 {
                     callCounter[2]++;
                     x.ShouldBeSameAs(customExpression2);
-                    return TestExpressionExecutor.Step1_Expression;
+                    return TestExpressionExecutionContext.Step1_Expression;
                 })
-                .Execute(TestExpressionExecutor.Step0_Expression)
-                .ShouldBeSameAs(TestExpressionExecutor.Step7_Result);
+                .Execute()
+                .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
 
-            executor.AssertAllMethodsInvokedExacltyOnce();
+            context.AssertAllMethodsInvokedExacltyOnce();
             callCounter.ShouldAllBe(x => x == 1);
         }
 
         [Fact]
-        public void Should_replace_expression_transformation_executor()
+        public void Should_replace_expression_transformation_decorator()
         {
             var callCounter = new int[1];
 
-            var executor = new TestExpressionExecutor();
+            var context = new TestExpressionExecutionContext(
+                new ExpressionExecutor(null),
+                TestExpressionExecutionContext.Step0_Expression);
 
-            executor
+            context
                 .With(new Func<Expression, System.Linq.Expressions.Expression>(x =>
                 {
                     throw new Exception("should have been replaced by next strategy");
@@ -89,31 +84,33 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
                 .With((Expression x) =>
                 {
                     callCounter[0]++;
-                    x.ShouldBeSameAs(TestExpressionExecutor.Step1_Expression);
-                    return TestExpressionExecutor.Step2_Expression;
+                    x.ShouldBeSameAs(TestExpressionExecutionContext.Step1_Expression);
+                    return TestExpressionExecutionContext.Step2_Expression;
                 })
-                .Execute(TestExpressionExecutor.Step0_Expression)
-                .ShouldBeSameAs(TestExpressionExecutor.Step7_Result);
+                .Execute()
+                .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
 
-            executor.AssertAllMethodsInvokedExacltyOnce(skip: 1);
+            context.AssertAllMethodsInvokedExacltyOnce(skip: 1);
             callCounter.ShouldAllBe(x => x == 1);
         }
 
         [Fact]
-        public void Should_apply_system_expression_preparation_executor()
+        public void Should_apply_system_expression_preparation_decorator()
         {
             var customExpression1 = System.Linq.Expressions.Expression.Constant("exp1");
             var customExpression2 = System.Linq.Expressions.Expression.Constant("exp2");
 
             var callCounter = new int[3];
 
-            var executor = new TestExpressionExecutor();
+            var context = new TestExpressionExecutionContext(
+                new ExpressionExecutor(null),
+                TestExpressionExecutionContext.Step0_Expression);
 
-            executor
+            context
                 .With((System.Linq.Expressions.Expression x) =>
                 {
                     callCounter[0]++;
-                    x.ShouldBeSameAs(TestExpressionExecutor.Step3_Expression);
+                    x.ShouldBeSameAs(TestExpressionExecutionContext.Step3_Expression);
                     return customExpression1;
                 })
                 .With((System.Linq.Expressions.Expression x) =>
@@ -126,23 +123,25 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
                 {
                     callCounter[2]++;
                     x.ShouldBeSameAs(customExpression2);
-                    return TestExpressionExecutor.Step3_Expression;
+                    return TestExpressionExecutionContext.Step3_Expression;
                 })
-                .Execute(TestExpressionExecutor.Step0_Expression)
-                .ShouldBeSameAs(TestExpressionExecutor.Step7_Result);
+                .Execute()
+                .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
 
-            executor.AssertAllMethodsInvokedExacltyOnce();
+            context.AssertAllMethodsInvokedExacltyOnce();
             callCounter.ShouldAllBe(x => x == 1);
         }
 
         [Fact]
-        public void Should_replace_expression_execution_executor()
+        public void Should_replace_expression_execution_decorator()
         {
             var callCounter = new int[1];
 
-            var executor = new TestExpressionExecutor();
+            var context = new TestExpressionExecutionContext(
+                new ExpressionExecutor(null),
+                TestExpressionExecutionContext.Step0_Expression);
 
-            executor
+            context
                 .With(new Func<System.Linq.Expressions.Expression, object>(x =>
                 {
                     throw new Exception("should have been replaced by next strategy");
@@ -154,31 +153,33 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
                 .With((System.Linq.Expressions.Expression x) =>
                 {
                     callCounter[0]++;
-                    x.ShouldBeSameAs(TestExpressionExecutor.Step3_Expression);
-                    return TestExpressionExecutor.Step4_Result;
+                    x.ShouldBeSameAs(TestExpressionExecutionContext.Step3_Expression);
+                    return TestExpressionExecutionContext.Step4_Result;
                 })
-                .Execute(TestExpressionExecutor.Step0_Expression)
-                .ShouldBeSameAs(TestExpressionExecutor.Step7_Result);
+                .Execute()
+                .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
 
-            executor.AssertAllMethodsInvokedExacltyOnce(skip: 3);
+            context.AssertAllMethodsInvokedExacltyOnce(skip: 3);
             callCounter.ShouldAllBe(x => x == 1);
         }
 
         [Fact]
-        public void Should_apply_raw_result_processing_executor()
+        public void Should_apply_raw_result_processing_decorator()
         {
             var customResult1 = "result1";
             var customResult2 = "result2";
 
             var callCounter = new int[3];
 
-            var executor = new TestExpressionExecutor();
+            var context = new TestExpressionExecutionContext(
+                new ExpressionExecutor(null),
+                TestExpressionExecutionContext.Step0_Expression);
 
-            executor
+            context
                 .With((object x) =>
                 {
                     callCounter[0]++;
-                    x.ShouldBeSameAs(TestExpressionExecutor.Step5_Result);
+                    x.ShouldBeSameAs(TestExpressionExecutionContext.Step5_Result);
                     return customResult1;
                 })
                 .With((object x) =>
@@ -191,23 +192,25 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
                 {
                     callCounter[2]++;
                     x.ShouldBeSameAs(customResult2);
-                    return TestExpressionExecutor.Step5_Result;
+                    return TestExpressionExecutionContext.Step5_Result;
                 })
-                .Execute(TestExpressionExecutor.Step0_Expression)
-                .ShouldBeSameAs(TestExpressionExecutor.Step7_Result);
+                .Execute()
+                .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
 
-            executor.AssertAllMethodsInvokedExacltyOnce();
+            context.AssertAllMethodsInvokedExacltyOnce();
             callCounter.ShouldAllBe(x => x == 1);
         }
 
         [Fact]
-        public void Should_replace_result_to_dynamic_object_projection_executor()
+        public void Should_replace_result_to_dynamic_object_projection_decorator()
         {
             var callCounter = new int[1];
 
-            var executor = new TestExpressionExecutor();
+            var context = new TestExpressionExecutionContext(
+                new ExpressionExecutor(null),
+                TestExpressionExecutionContext.Step0_Expression);
 
-            executor
+            context
                 .With(new Func<object, IEnumerable<DynamicObject>>(x =>
                 {
                     throw new Exception("should have been replaced by next strategy");
@@ -219,31 +222,33 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
                 .With((object x) =>
                 {
                     callCounter[0]++;
-                    x.ShouldBeSameAs(TestExpressionExecutor.Step5_Result);
-                    return TestExpressionExecutor.Step6_Result;
+                    x.ShouldBeSameAs(TestExpressionExecutionContext.Step5_Result);
+                    return TestExpressionExecutionContext.Step6_Result;
                 })
-                .Execute(TestExpressionExecutor.Step0_Expression)
-                .ShouldBeSameAs(TestExpressionExecutor.Step7_Result);
+                .Execute()
+                .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
 
-            executor.AssertAllMethodsInvokedExacltyOnce(skip: 5);
+            context.AssertAllMethodsInvokedExacltyOnce(skip: 5);
             callCounter.ShouldAllBe(x => x == 1);
         }
 
         [Fact]
-        public void Should_apply_dynamic_object_result_processing_executor()
+        public void Should_apply_dynamic_object_result_processing_decorator()
         {
             var customResult1 = new[] { new DynamicObject("result1") };
             var customResult2 = new[] { new DynamicObject("result2") };
 
             var callCounter = new int[3];
 
-            var executor = new TestExpressionExecutor();
+            var context = new TestExpressionExecutionContext(
+                new ExpressionExecutor(null),
+                TestExpressionExecutionContext.Step0_Expression);
 
-            executor
+            context
                 .With((IEnumerable<DynamicObject> x) =>
                 {
                     callCounter[0]++;
-                    x.ShouldBeSameAs(TestExpressionExecutor.Step7_Result);
+                    x.ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
                     return customResult1;
                 })
                 .With((IEnumerable<DynamicObject> x) =>
@@ -256,12 +261,12 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
                 {
                     callCounter[2]++;
                     x.ShouldBeSameAs(customResult2);
-                    return TestExpressionExecutor.Step7_Result;
+                    return TestExpressionExecutionContext.Step7_Result;
                 })
-                .Execute(TestExpressionExecutor.Step0_Expression)
-                .ShouldBeSameAs(TestExpressionExecutor.Step7_Result);
+                .Execute()
+                .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
 
-            executor.AssertAllMethodsInvokedExacltyOnce();
+            context.AssertAllMethodsInvokedExacltyOnce();
             callCounter.ShouldAllBe(x => x == 1);
         }
     }
