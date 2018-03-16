@@ -1,0 +1,10 @@
+﻿<Project>
+  <PropertyGroup>
+    <Copyright>Copyright Christof Senn 2013-2018</Copyright>
+    <VersionPrefix>5.7.0</VersionPrefix>
+    <Authors>Christof Senn</Authors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

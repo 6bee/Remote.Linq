@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <Description>Provides Json.NET serialization settings for Remote.Linq types.</Description>
-    <Copyright>Copyright Christof Senn 2017-2018</Copyright>
-    <VersionPrefix>5.7.0</VersionPrefix>
-    <Authors>Christof Senn</Authors>
     <TargetFrameworks>net451;netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
     <AssemblyName>Remote.Linq.Newtonsoft.Json</AssemblyName>
     <PackageId>Remote.Linq.Newtonsoft.Json</PackageId>
@@ -22,7 +19,6 @@
     <GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

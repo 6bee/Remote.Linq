@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <Description>Remote linq extensions for entity framework core. Use this package to apply eager-loading (i.e. using Include-expressions) to EF Core queries or make use of DB functions.</Description>
-    <Copyright>Copyright Christof Senn 2016-2018</Copyright>
-    <VersionPrefix>5.7.0</VersionPrefix>
-    <Authors>Christof Senn</Authors>
     <TargetFrameworks>netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
     <AssemblyName>Remote.Linq.EntityFrameworkCore</AssemblyName>
     <PackageId>Remote.Linq.EntityFrameworkCore</PackageId>
@@ -22,7 +19,6 @@
     <GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 

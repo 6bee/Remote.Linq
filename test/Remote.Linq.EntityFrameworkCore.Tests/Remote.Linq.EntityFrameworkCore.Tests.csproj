@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for Remote.Linq.EntityFrameworkCore</Description>
-    <Copyright>Copyright Christof Senn 2016-2018</Copyright>
     <TargetFrameworks>net462;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

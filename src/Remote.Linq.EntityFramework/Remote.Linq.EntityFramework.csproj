@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <Description>Remote linq extensions for entity framework. Use this package to apply eager-loading (i.e. using Include-expressions) to EF queries.</Description>
-    <Copyright>Copyright Christof Senn 2016-2018</Copyright>
-    <VersionPrefix>5.7.0</VersionPrefix>
-    <Authors>Christof Senn</Authors>
     <TargetFrameworks>net451</TargetFrameworks>
     <AssemblyName>Remote.Linq.EntityFramework</AssemblyName>
     <PackageId>Remote.Linq.EntityFramework</PackageId>
@@ -22,7 +19,6 @@
     <GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
