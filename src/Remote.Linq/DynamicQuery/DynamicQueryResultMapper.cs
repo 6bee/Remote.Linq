@@ -4,10 +4,10 @@ namespace Remote.Linq.DynamicQuery
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem.Extensions;
+    using System;
     using System.Collections;
     using System.Linq;
     using System.Reflection;
-    using System;
 
     public class DynamicQueryResultMapper : DynamicObjectMapper
     {
@@ -47,7 +47,7 @@ namespace Remote.Linq.DynamicQuery
                 remoteLinqGroup = new Grouping<TKey, TElement>
                 {
                     Key = group.Key,
-                    Elements = group.ToArray()
+                    Elements = group.ToArray(),
                 };
             }
 

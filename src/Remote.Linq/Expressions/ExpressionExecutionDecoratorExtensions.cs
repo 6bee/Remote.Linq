@@ -52,7 +52,6 @@ namespace Remote.Linq.Expressions
         public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
             => new ExpressionExecutorWithDynamicObjectResultProcessor(decorator, transform);
 
-
         /// <summary>
         /// Decorate with custom strategy
         /// </summary>
@@ -94,7 +93,6 @@ namespace Remote.Linq.Expressions
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
             => new ExpressionExecutorWithDynamicObjectResultProcessor(executor, transform);
-
 
         private sealed class ExpressionExecutorWithRemoteExpressionTransformer : ExpressionExecutionDecorator
         {

@@ -11,7 +11,8 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
     public class When_deserializing_json_with_constant_expression
     {
-        private static readonly string json = string.Format(@"
+        private static readonly string Json = string.Format(
+            @"
             {{
               ""$id"": ""1"",
               ""$type"": ""Remote.Linq.Expressions.ConstantExpression, Remote.Linq"",
@@ -32,13 +33,13 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             nameof(When_deserializing_json_with_constant_expression),
             typeof(When_deserializing_json_with_constant_expression).Namespace);
 
-        ConstantExpression expression;
+        private ConstantExpression expression;
 
         public When_deserializing_json_with_constant_expression()
         {
             var serializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
 
-            expression = (ConstantExpression)JsonConvert.DeserializeObject(json, serializerSettings);
+            expression = (ConstantExpression)JsonConvert.DeserializeObject(Json, serializerSettings);
         }
 
         [Fact]

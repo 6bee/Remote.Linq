@@ -29,9 +29,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
-        {
-            return new AsyncRemoteQueryable<TElement>(this, expression);
-        }
+            => new AsyncRemoteQueryable<TElement>(this, expression);
 
         public IQueryable CreateQuery(Expression expression)
         {
@@ -85,7 +83,7 @@ namespace Remote.Linq.DynamicQuery
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver, _canBeEvaluatedLocally);
 
             var dataRecords = await _dataProvider(rlinq);
-            
+
             var result = await _resultMapper.MapResultAsync<TResult>(dataRecords, expression);
 
             return result;

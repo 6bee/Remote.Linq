@@ -21,6 +21,8 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/></param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
+        /// <param name="setTypeInformation">Function to define whether to add type information</param>
+        /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database</param>
         /// <returns>A new instance <see cref="ExpressionExecutionContext" /></returns>
         public static ExpressionExecutionContext EntityFrameworkCoreExecutor(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new ExpressionExecutionContext(new EntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally), expression);
@@ -32,6 +34,8 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s</param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
+        /// <param name="setTypeInformation">Function to define whether to add type information</param>
+        /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database</param>
         /// <returns>A new instance <see cref="ExpressionExecutionContext" /></returns>
         public static ExpressionExecutionContext EntityFrameworkCoreExecutor(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new ExpressionExecutionContext(new EntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally), expression);
@@ -43,6 +47,8 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/></param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
+        /// <param name="setTypeInformation">Function to define whether to add type information</param>
+        /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database</param>
         /// <returns>The mapped result of the query execution</returns>
         public static IEnumerable<DynamicObject> ExecuteWithEntityFrameworkCore(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new EntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).Execute(expression);
@@ -54,32 +60,26 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s</param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
+        /// <param name="setTypeInformation">Function to define whether to add type information</param>
+        /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database</param>
         /// <returns>The mapped result of the query execution</returns>
         public static IEnumerable<DynamicObject> ExecuteWithEntityFrameworkCore(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new EntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).Execute(expression);
 
         /// <summary>
-        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/> 
+        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/>
         /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself.
         /// </summary>
-        /// <param name="expression">The <see cref="Expression"/> to be executed</param>
-        /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{}"/></param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
         [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.EntityFrameworkCore.EntityFrameworkCoreExpressionExecutor or use expression.EntityFrameworkCoreExecutor(..).With(customstrategy).Execute() instead.", false)]
         public static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFrameworkCore(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new EntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, canBeEvaluatedLocally: canBeEvaluatedLocally).PrepareForExecution(expression);
 
         /// <summary>
-        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/> 
-        /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself. <para/> 
+        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/>
+        /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself. <para/>
         /// Please note that Inlude operation has no effect if using non-generic method <see cref="IQueryable" /> <see cref="DbContext" />.Get(<see cref="Type" />) as queryableProvider.
         /// Better use generic version instead.
         /// </summary>
-        /// <param name="expression">The <see cref="Expression"/> to be executed</param>
-        /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
         [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.EntityFrameworkCore.EntityFrameworkCoreExpressionExecutor or use expression.EntityFrameworkCoreExecutor(..).With(customstrategy).Execute() instead.", false)]
         public static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFrameworkCore(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new EntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, canBeEvaluatedLocally: canBeEvaluatedLocally).PrepareForExecution(expression);

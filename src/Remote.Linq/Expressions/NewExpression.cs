@@ -29,7 +29,7 @@ namespace Remote.Linq.Expressions
         }
 
         public NewExpression(ConstructorInfo constructor, IEnumerable<Expression> arguments, IEnumerable<MemberInfo> members = null)
-            : this (constructor.DeclaringType)
+            : this(constructor.DeclaringType)
         {
             Constructor = constructor;
             Arguments = ReferenceEquals(null, arguments) || !arguments.Any() ? null : arguments.ToList();
@@ -62,8 +62,9 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("New {0}({1})", 
-                Constructor?.DeclaringType ?? Type, 
+            return string.Format(
+                "New {0}({1})",
+                Constructor?.DeclaringType ?? Type,
                 ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments));
         }
     }

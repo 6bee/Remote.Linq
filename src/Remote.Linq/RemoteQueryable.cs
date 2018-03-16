@@ -11,7 +11,7 @@ namespace Remote.Linq
     public static class RemoteQueryable
     {
         /// <summary>
-        /// Provides factory methods for creating <see cref="IQueryable{T}"/> 
+        /// Gets a factory for creating <see cref="IQueryable{T}"/>
         /// (or <see cref="IQueryable"/> respectively) suited for remote execution.
         /// </summary>
         public static RemoteQueryableFactory Factory { get; } = new RemoteQueryableFactory();

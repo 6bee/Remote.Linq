@@ -14,17 +14,17 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
     public class When_using_include_on_subtype
     {
-        class Child
+        private class Child
         {
             public Parent Parent { get; set; }
         }
 
-        class Parent
+        private class Parent
         {
             public IEnumerable<Child> Children { get; set; }
         }
 
-        Expression expression;
+        private Expression expression;
 
         public When_using_include_on_subtype()
         {
@@ -70,7 +70,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         public void First_argument_should_be_method_call_expression_returning_a_queryable()
         {
             var arg = expression.ShouldBeOfType<MethodCallExpression>().Arguments[0];
-            
+
             arg.NodeType.ShouldBe(ExpressionType.Call);
             arg.ShouldBeOfType<MethodCallExpression>()
                 .Method.ShouldBeOfType<MethodInfo>()

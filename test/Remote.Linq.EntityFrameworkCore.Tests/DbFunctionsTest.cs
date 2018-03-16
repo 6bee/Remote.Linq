@@ -10,15 +10,8 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
     using Shouldly;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using Xunit;
-
-    [DebuggerDisplay("{Name}")]
-    public class Item
-    {
-        public string Name { get; set; }
-    }
 
     public class DbFunctionsTest
     {
@@ -27,7 +20,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         {
             var source = Enumerable.Range(0, 100).Select(i => new Item { Name = i.ToString().PadLeft(2, '0') }).AsQueryable();
 
-            Func<Expression, IEnumerable<DynamicObject>> execute = 
+            Func<Expression, IEnumerable<DynamicObject>> execute =
                 expression => expression.ExecuteWithEntityFrameworkCore(t => source);
 
             var queryable = RemoteQueryable.Factory.CreateEntityFrameworkCoreQueryable<Item>(execute);

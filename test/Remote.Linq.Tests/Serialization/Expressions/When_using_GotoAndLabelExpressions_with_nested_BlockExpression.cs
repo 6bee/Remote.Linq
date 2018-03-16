@@ -1,13 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System.IO;
-
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using System;
+    using System.IO;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Xunit;    
+    using Xunit;
     using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
     public abstract class When_using_GotoAndLabelExpressions_with_nested_BlockExpression
@@ -71,25 +70,18 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
             LabelTarget returnLabel = Expression.Label(typeof(long));
 
-            var expression = Expression.Lambda<Func<StreamWriter, long>>
-            (
-                Expression.Block
-                (
+            var expression = Expression.Lambda<Func<StreamWriter, long>>(
+                Expression.Block(
                     new[] { position },
-                    Expression.IfThen
-                    (
+                    Expression.IfThen(
                         Expression.ReferenceEqual(Expression.Constant("SomeText"), Expression.Constant(null, typeof(string))),
-                        Expression.Block
-                        (
+                        Expression.Block(
                             Expression.Call(typeof(Console).GetMethod(nameof(Console.WriteLine), new[] { typeof(string) }), Expression.Constant("Text is null")),
-                            Expression.Return(returnLabel, Expression.Constant(0L), typeof(long))
-                        )
-                    ),
+                            Expression.Return(returnLabel, Expression.Constant(0L), typeof(long)))),
                     Expression.Assign(position, positionProperty),
                     Expression.Call(writer, typeof(TextWriter).GetMethod(nameof(TextWriter.WriteLine), new[] { typeof(string) }), Expression.Constant("SomeText")),
                     Expression.Return(returnLabel, Expression.Subtract(positionProperty, position), typeof(long)),
-                    Expression.Label(returnLabel, Expression.Default(typeof(long)))
-                ), writer);
+                    Expression.Label(returnLabel, Expression.Default(typeof(long)))), writer);
 
             _originalExpression = expression;
 
@@ -102,7 +94,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public void Expression_result_should_be_equal()
         {
             var argument = StreamWriter.Null;
-
 
             long long1 = _originalExpression.Compile()(argument);
 

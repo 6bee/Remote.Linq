@@ -9,14 +9,14 @@ namespace Remote.Linq
     using System.Reflection;
     using BindingFlags = System.Reflection.BindingFlags;
     using MethodInfo = System.Reflection.MethodInfo;
-    
+
     internal static class MethodInfos
     {
         internal static class Enumerable
         {
             internal static readonly MethodInfo Cast = typeof(System.Linq.Enumerable)
                 .GetMethod("Cast", BindingFlags.Public | BindingFlags.Static);
-            
+
             internal static readonly MethodInfo OfType = typeof(System.Linq.Enumerable)
                 .GetMethod("OfType", BindingFlags.Public | BindingFlags.Static);
 
@@ -25,7 +25,7 @@ namespace Remote.Linq
 
             internal static readonly MethodInfo ToList = typeof(System.Linq.Enumerable)
                 .GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
-            
+
             internal static readonly MethodInfo Contains = typeof(System.Linq.Enumerable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Single(m => m.Name == "Contains" && m.GetParameters().Length == 2);
@@ -97,13 +97,33 @@ namespace Remote.Linq
                 .Single(i =>
                 {
                     var parameters = i.GetParameters();
-                    if (parameters.Length != 2) return false;
+                    if (parameters.Length != 2)
+                    {
+                        return false;
+                    }
+
                     var expressionParamType = parameters[1].ParameterType;
-                    if (!expressionParamType.IsGenericType()) return false;
+                    if (!expressionParamType.IsGenericType())
+                    {
+                        return false;
+                    }
+
                     var genericArguments = expressionParamType.GetGenericArguments().ToArray();
-                    if (genericArguments.Count() != 1) return false;
-                    if (!genericArguments.Single().IsGenericType()) return false;
-                    if (genericArguments.Single().GetGenericArguments().Count() != 2) return false;
+                    if (genericArguments.Count() != 1)
+                    {
+                        return false;
+                    }
+
+                    if (!genericArguments.Single().IsGenericType())
+                    {
+                        return false;
+                    }
+
+                    if (genericArguments.Single().GetGenericArguments().Count() != 2)
+                    {
+                        return false;
+                    }
+
                     return true;
                 });
         }
@@ -117,7 +137,7 @@ namespace Remote.Linq
                 .GetMethod("EndsWith", new[] { typeof(string) });
 
             internal static readonly MethodInfo Contains = typeof(string)
-                .GetMethod("Contains", new[] { typeof(string) });            
+                .GetMethod("Contains", new[] { typeof(string) });
         }
 
         internal static class QueryFuntion

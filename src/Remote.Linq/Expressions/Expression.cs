@@ -34,7 +34,7 @@ namespace Remote.Linq.Expressions
     public abstract partial class Expression
     {
         public abstract ExpressionType NodeType { get; }
-        
+
         [Obsolete("Use actual constructor instead", false)]
         public static MemberExpression MakeMemberAccess(Expression expression, Aqua.TypeSystem.MemberInfo member)
         {
@@ -215,7 +215,7 @@ namespace Remote.Linq.Expressions
             return new ElementInit(addMethod, arguments);
         }
 
-        // TODO: replace binding flags by bool flags    
+        // TODO: replace binding flags by bool flags
         [Obsolete("Use actual constructor instead", false)]
         internal static ElementInit ElementInit(string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
         {

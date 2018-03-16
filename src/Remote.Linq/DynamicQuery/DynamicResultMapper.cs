@@ -19,9 +19,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public TResult MapResult<TResult>(IEnumerable<DynamicObject> source, Expression expression)
-        {
-            return MapToType<TResult>(source, _mapper, expression);
-        }
+            => MapToType<TResult>(source, _mapper, expression);
 
         internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords, IDynamicObjectMapper mapper, Expression expression)
         {

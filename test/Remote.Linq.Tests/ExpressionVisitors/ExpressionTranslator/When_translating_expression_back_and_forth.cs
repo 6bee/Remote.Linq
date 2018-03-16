@@ -12,11 +12,14 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
 
     public class When_translating_expression_back_and_forth
     {
-        class A
+        private class A
         {
             public long Id { get; set; }
+
             public string Name { get; set; }
+
             public bool Flag { get; set; }
+
             public int? Count { get; set; }
         }
 
@@ -53,12 +56,12 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
         [Fact]
         public void Should_preserve_nullable_bool_const_comparison_in_lambda()
         {
-            Expression<Func<A, bool?>> expr = 
+            Expression<Func<A, bool?>> expr =
                 p => (bool?)p.Name.EndsWith("x");
 
             var lambda = (LambdaExpression)expr;
 
-            var predicate = 
+            var predicate =
                 Expression.Lambda<Func<A, bool>>(
                     Expression.Equal(
                         lambda.Body,
@@ -102,17 +105,10 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
                 .Value.ShouldBe(Math.E);
         }
 
-
         private static Tuple<T, T> BackAndForth<T>(T expression) where T : Expression
         {
-            //Console.WriteLine($">original: {expression}");
-
             var remoteExpression = expression.ToRemoteLinqExpression();
-            //Console.WriteLine($">remote:   {remoteExpression}");
-
             var linqExpression = remoteExpression.ToLinqExpression();
-            //Console.WriteLine($">linq:     {linqExpression}");
-
             return Tuple.Create(expression, (T)linqExpression);
         }
     }

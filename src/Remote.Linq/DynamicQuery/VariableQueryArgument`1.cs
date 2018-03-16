@@ -28,9 +28,10 @@ namespace Remote.Linq.DynamicQuery
 
         public override string ToString()
         {
-            return string.Format("{0}({2}{1}{2})", 
+            return string.Format(
+                "{0}({2}{1}{2})",
                 new Aqua.TypeSystem.TypeInfo(typeof(VariableQueryArgument<T>)),
-                (object)Value ?? "null", 
+                (object)Value ?? "null",
                 Value is string || Value is char ? "'" : null);
         }
     }

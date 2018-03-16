@@ -8,12 +8,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
         }
 
-        public bool Like(string matchExpression, string pattern) => true;
+        public bool Like(string matchExpression, string pattern)
+            => true;
     }
-
-    public static class Db
-    {
-        public static DbFunctions Functions { get; } = new DbFunctions();
-    }
-
 }

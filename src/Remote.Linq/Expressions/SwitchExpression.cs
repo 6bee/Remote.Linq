@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using Aqua.TypeSystem;
-
 namespace Remote.Linq.Expressions
 {
+    using Aqua.TypeSystem;
     using System;
-    using System.Runtime.Serialization;
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
 
     [Serializable]
     [DataContract]

@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System.Reflection;
-
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using System;
     using System.Linq.Expressions;
-    using Xunit;    
+    using System.Reflection;
+    using Xunit;
     using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
     public abstract class When_using_TryFinallyExpressions
@@ -66,31 +65,21 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             ParameterExpression shouldFail = Expression.Parameter(typeof(bool));
             ParameterExpression result = Expression.Variable(typeof(bool));
 
-            var expression = Expression.Lambda<Func<bool, bool>>
-            (
-                Expression.Block
-                (
+            var expression = Expression.Lambda<Func<bool, bool>>(
+                Expression.Block(
                     new[] { result },
-                    Expression.TryFinally
-                    (
-                        Expression.Block
-                        (
-                            Expression.IfThen
-                            (
+                    Expression.TryFinally(
+                        Expression.Block(
+                            Expression.IfThen(
                                 Expression.Equal(Expression.Constant(true), shouldFail),
-                                Expression.Throw(Expression.New(typeof(InvalidOperationException).GetTypeInfo().GetConstructor(new[]{typeof(string)}),Expression.Constant("x")))
-                            )
-                        ),
-                        Expression.Throw(Expression.New(typeof(InvalidOperationException).GetTypeInfo().GetConstructor(new[] { typeof(string) }), Expression.Constant("y")))
-                    ),
+                                Expression.Throw(Expression.New(typeof(InvalidOperationException).GetTypeInfo().GetConstructor(new[] { typeof(string) }), Expression.Constant("x"))))),
+                        Expression.Throw(Expression.New(typeof(InvalidOperationException).GetTypeInfo().GetConstructor(new[] { typeof(string) }), Expression.Constant("y")))),
                     Expression.Assign(result, Expression.Constant(true)),
-                    result
-                ),
-                shouldFail
-            );
+                    result),
+                shouldFail);
 
             _originalExpression = expression;
-            
+
             _remoteExpression = expression.ToRemoteLinqExpression();
 
             _serializedRemoteExpression = serialize(_remoteExpression);

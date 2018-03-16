@@ -1,4 +1,6 @@
-﻿namespace Remote.Linq.ExpressionVisitors
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.TypeSystem.Extensions;
     using Remote.Linq.DynamicQuery;
@@ -9,19 +11,19 @@
     using System.Linq.Expressions;
     using System.Reflection;
 
-    /// <summary>  
-    /// Enables the partial evalutation of queries.  
-    /// From http://msdn.microsoft.com/en-us/library/bb546158.aspx  
-    /// </summary>  
+    /// <summary>
+    /// Enables the partial evalutation of queries.
+    /// From http://msdn.microsoft.com/en-us/library/bb546158.aspx
+    /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionEvaluator
     {
-        /// <summary>  
-        /// Performs evaluation & replacement of independent sub-trees  
-        /// </summary>  
-        /// <param name="expression">The root of the expression tree.</param>  
-        /// <param name="canBeEvaluatedLocally">A function that decides whether a given expression node can be evaluated locally, assumes true if no function defined</param>  
-        /// <returns>A new tree with sub-trees evaluated and replaced.</returns>  
+        /// <summary>
+        /// Performs evaluation and replacement of independent sub-trees
+        /// </summary>
+        /// <param name="expression">The root of the expression tree.</param>
+        /// <param name="canBeEvaluatedLocally">A function that decides whether a given expression node can be evaluated locally, assumes true if no function defined</param>
+        /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
         public static Expression PartialEval(this Expression expression, Func<Expression, bool> canBeEvaluatedLocally = null)
         {
             return new SubtreeEvaluator(new Nominator(canBeEvaluatedLocally).Nominate(expression)).Eval(expression);
@@ -96,9 +98,9 @@
             return true;
         }
 
-        /// <summary>  
-        /// Evaluates & replaces sub-trees when first candidate is reached (top-down)  
-        /// </summary>  
+        /// <summary>
+        /// Evaluates and replaces sub-trees when first candidate is reached (top-down)
+        /// </summary>
         private sealed class SubtreeEvaluator : ExpressionVisitorBase
         {
             private readonly HashSet<Expression> _candidates;
@@ -145,7 +147,7 @@
                 {
                     value = func.DynamicInvoke(null);
                 }
-                catch(TargetInvocationException ex)
+                catch (TargetInvocationException ex)
                 {
                     throw ex.InnerException;
                 }
@@ -164,10 +166,10 @@
             }
         }
 
-        /// <summary>  
-        /// Performs bottom-up analysis to determine which nodes can possibly  
-        /// be part of an evaluated sub-tree.  
-        /// </summary>  
+        /// <summary>
+        /// Performs bottom-up analysis to determine which nodes can possibly
+        /// be part of an evaluated sub-tree.
+        /// </summary>
         private sealed class Nominator : ExpressionVisitorBase
         {
             private Func<Expression, bool> _fnCanBeEvaluated;
@@ -194,9 +196,9 @@
                 {
                     bool saveCannotBeEvaluated = _cannotBeEvaluated;
                     _cannotBeEvaluated = false;
-                    
+
                     base.Visit(expression);
-                    
+
                     if (!_cannotBeEvaluated)
                     {
                         if (_fnCanBeEvaluated(expression))
@@ -208,7 +210,7 @@
                             _cannotBeEvaluated = true;
                         }
                     }
-                    
+
                     _cannotBeEvaluated |= saveCannotBeEvaluated;
                 }
 

@@ -4,54 +4,45 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using System;
     using System.Linq.Expressions;
-    using Xunit;    
+    using Xunit;
     using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
     public abstract class When_using_TryCatchExpressions
     {
+#pragma warning disable SA1502 // Element should not be on a single line
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+
 #if NET
         public class BinaryFormatter : When_using_TryCatchExpressions
         {
-            public BinaryFormatter()
-                : base(BinarySerializationHelper.Serialize)
-            {
-            }
+            public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
 #endif
 
 #if NET && !NETCOREAPP2
         public class NetDataContractSerializer : When_using_TryCatchExpressions
         {
-            public NetDataContractSerializer()
-                : base(NetDataContractSerializationHelper.Serialize)
-            {
-            }
+            public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
         }
 #endif
 
         public class DataContractSerializer : When_using_TryCatchExpressions
         {
-            public DataContractSerializer()
-                : base(DataContractSerializationHelper.SerializeExpression)
-            {
-            }
+            public DataContractSerializer() : base(DataContractSerializationHelper.SerializeExpression) { }
         }
 
         public class JsonSerializer : When_using_TryCatchExpressions
         {
-            public JsonSerializer()
-                : base(JsonSerializationHelper.Serialize)
-            {
-            }
+            public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
         }
 
         public class XmlSerializer : When_using_TryCatchExpressions
         {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
+            public XmlSerializer() : base(XmlSerializationHelper.SerializeExpression) { }
         }
+
+        #pragma warning restore SA1128 // Put constructor initializers on their own line
+#pragma warning restore SA1502 // Element should not be on a single line
 
         private Expression<Func<bool, bool>> _originalExpression;
 
@@ -64,32 +55,20 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             ParameterExpression shouldFail = Expression.Parameter(typeof(bool));
             ParameterExpression result = Expression.Variable(typeof(bool));
 
-            var expression = Expression.Lambda<Func<bool, bool>>
-            (
-                Expression.Block
-                (
+            var expression = Expression.Lambda<Func<bool, bool>>(
+                Expression.Block(
                     new[] { result },
-                    Expression.TryCatch
-                    (
-                        Expression.Block
-                        (
-                            Expression.IfThen
-                            (
+                    Expression.TryCatch(
+                        Expression.Block(
+                            Expression.IfThen(
                                 Expression.Equal(Expression.Constant(true), shouldFail),
-                                Expression.Throw(Expression.New(typeof(InvalidOperationException)))
-                            ),
-                            Expression.Assign(result, Expression.Constant(true))
-                        ),
-                        Expression.Catch
-                        (
+                                Expression.Throw(Expression.New(typeof(InvalidOperationException)))),
+                            Expression.Assign(result, Expression.Constant(true))),
+                        Expression.Catch(
                             typeof(InvalidOperationException),
-                            Expression.Assign(result, Expression.Constant(false))
-                        )
-                    ),
-                    result
-                ),
-                shouldFail
-            );
+                            Expression.Assign(result, Expression.Constant(false)))),
+                    result),
+                shouldFail);
 
             _originalExpression = expression;
 
@@ -103,7 +82,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         {
             bool fail = true;
             bool success = false;
-            
+
             bool boolFail1 = _originalExpression.Compile()(fail);
             bool boolSuccess1 = _originalExpression.Compile()(success);
 

@@ -22,7 +22,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             System.Linq.Expressions.Expression<Func<AType, string>> expression = x => x.Value;
 
             _remoteExpression = expression.ToRemoteLinqExpression();
-            
+
             _serializedRemoteExpression = serialize(_remoteExpression);
         }
 

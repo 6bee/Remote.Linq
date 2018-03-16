@@ -23,12 +23,12 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 
-        interface IValue
+        private interface IValue
         {
             int Value { get; }
         }
 
-        class A : IValue
+        private class A : IValue
         {
             public int Value { get; set; }
 
@@ -37,7 +37,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             public override int GetHashCode() => Value;
         }
 
-        class B : IValue
+        private class B : IValue
         {
             public int Value { get; set; }
 
@@ -74,14 +74,22 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
             Func<Type, IQueryable> queryableProvider = t =>
             {
-                if (t == typeof(A)) return localQueryable1;
-                if (t == typeof(B)) return localQueryable2;
+                if (t == typeof(A))
+                {
+                    return localQueryable1;
+                }
+
+                if (t == typeof(B))
+                {
+                    return localQueryable2;
+                }
+
                 return null;
             };
 
             IQueryable<A> remoteQueryable1 = CreateRemoteQueryable<A>(queryableProvider);
             IQueryable<B> remoteQueryable2 = CreateRemoteQueryable<B>(queryableProvider);
-            
+
             A[] localResult = BuildQuery(localQueryable1, localQueryable2).ToArray();
             A[] remoteResult = BuildQuery(remoteQueryable1, remoteQueryable2).ToArray();
 
@@ -110,14 +118,14 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         private IQueryable<T> CreateRemoteQueryable<T>(Func<Type, IQueryable> queryableProvider)
             => RemoteQueryable.Factory.CreateQueryable<T>(x => _execute(x, queryableProvider));
 
-        private static IQueryable<T1> BuildQuery<T1,T2>(IQueryable<T1> queriable1, IQueryable<T2> queriable2)
-            where T1: IValue
-            where T2: IValue
+        private static IQueryable<T1> BuildQuery<T1, T2>(IQueryable<T1> queriable1, IQueryable<T2> queriable2)
+            where T1 : IValue
+            where T2 : IValue
         {
-            Expression<Func<T2, bool>> subfilter = 
+            Expression<Func<T2, bool>> subfilter =
                 x => x.Value % 2 == 0;
 
-            Expression<Func<T1, bool>> outerfilter = 
+            Expression<Func<T1, bool>> outerfilter =
                 x => queriable2.Where(subfilter).Where(d => d.Value == x.Value).Any();
 
             return queriable1.Where(outerfilter);

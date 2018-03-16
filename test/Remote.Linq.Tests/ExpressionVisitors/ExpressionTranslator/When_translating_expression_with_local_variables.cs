@@ -9,7 +9,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
 
     public class When_translating_expression_with_local_variables
     {
-        class A
+        private class A
         {
             public short Property { get; set; }
         }
@@ -33,7 +33,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
             int parameter = 1;
 
             Expression<Func<A, bool>> expr = x => x.Property == parameter;
-            
+
             var remoteExpr = expr.ToRemoteLinqExpression();
 
             var stringRepresentation = remoteExpr.ToString();

@@ -2,8 +2,10 @@
 
 namespace Remote.Linq
 {
+    using System.Linq;
+
     /// <summary>
-    /// Provides factory methods for creating <see cref="IQueryable{T}"/> 
+    /// Provides factory methods for creating <see cref="IQueryable{T}"/>
     /// (or <see cref="IQueryable"/> respectively) suited for remote execution.
     /// The methods on this class are accessed via Remote.Linq.RemoteQueryable.Factory.
     /// </summary>

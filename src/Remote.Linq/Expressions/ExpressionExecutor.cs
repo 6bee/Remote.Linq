@@ -22,11 +22,8 @@ namespace Remote.Linq.Expressions
         private readonly Func<System.Linq.Expressions.Expression, bool> _canBeEvaluatedLocally;
 
         /// <summary>
-        /// Creates a new instance of <see cref="ExpressionExecutor"/>
+        /// Initializes a new instance of the <see cref="ExpressionExecutor"/> class.
         /// </summary>
-        /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
-        /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
         public ExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
         {
             _queryableProvider = queryableProvider;
@@ -35,7 +32,6 @@ namespace Remote.Linq.Expressions
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
-
 
         /// <summary>
         /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects
@@ -53,10 +49,9 @@ namespace Remote.Linq.Expressions
             var processedDynamicObjects = ProcessResult(dynamicObjects);
             return processedDynamicObjects;
         }
-        
 
         /// <summary>
-        /// Prepares the <see cref="Expression"/> befor being transformed<para/> 
+        /// Prepares the <see cref="Expression"/> befor being transformed<para/>
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/></param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/></returns>
@@ -195,26 +190,25 @@ namespace Remote.Linq.Expressions
         protected virtual IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult)
             => queryResult;
 
-
-        Expression IExpressionExecutionDecorator.Prepare(Expression expression) 
+        Expression IExpressionExecutionDecorator.Prepare(Expression expression)
             => Prepare(expression);
 
-        System.Linq.Expressions.Expression IExpressionExecutionDecorator.Transform(Expression expression) 
+        System.Linq.Expressions.Expression IExpressionExecutionDecorator.Transform(Expression expression)
             => Transform(expression);
 
-        System.Linq.Expressions.Expression IExpressionExecutionDecorator.Prepare(System.Linq.Expressions.Expression expression) 
+        System.Linq.Expressions.Expression IExpressionExecutionDecorator.Prepare(System.Linq.Expressions.Expression expression)
             => Prepare(expression);
 
-        object IExpressionExecutionDecorator.Execute(System.Linq.Expressions.Expression expression) 
+        object IExpressionExecutionDecorator.Execute(System.Linq.Expressions.Expression expression)
             => Execute(expression);
 
-        object IExpressionExecutionDecorator.ProcessResult(object queryResult) 
+        object IExpressionExecutionDecorator.ProcessResult(object queryResult)
             => ProcessResult(queryResult);
 
-        IEnumerable<DynamicObject> IExpressionExecutionDecorator.ConvertResult(object queryResult) 
+        IEnumerable<DynamicObject> IExpressionExecutionDecorator.ConvertResult(object queryResult)
             => ConvertResult(queryResult);
 
-        IEnumerable<DynamicObject> IExpressionExecutionDecorator.ProcessResult(IEnumerable<DynamicObject> queryResult) 
+        IEnumerable<DynamicObject> IExpressionExecutionDecorator.ProcessResult(IEnumerable<DynamicObject> queryResult)
             => ProcessResult(queryResult);
     }
 }

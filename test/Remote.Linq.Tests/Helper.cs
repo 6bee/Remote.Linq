@@ -12,7 +12,7 @@ namespace Remote.Linq.Tests
             ShouldMatch(tuple.Item1, tuple.Item2);
             return tuple;
         }
-        
+
         public static T ShouldMatch<T>(this T t1, T t2)
         {
             var isMatch = string.Equals(t1.ToString(), t2.ToString());

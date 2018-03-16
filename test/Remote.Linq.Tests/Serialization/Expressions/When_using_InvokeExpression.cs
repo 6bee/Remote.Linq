@@ -5,7 +5,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
     using System;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Xunit;    
+    using Xunit;
     using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
     public abstract class When_using_InvokeExpression
@@ -59,13 +59,13 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         private RemoteLambdaExpression _remoteExpression;
 
         private RemoteLambdaExpression _serializedRemoteExpression;
-        
+
         protected When_using_InvokeExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
         {
             Expression<Func<decimal, bool>> exp = x => x <= 0m;
 
             var parameter = Expression.Parameter(typeof(decimal), "x");
-            
+
             var expression = Expression.Lambda<Func<decimal, bool>>(
                 Expression.Invoke(exp, parameter), parameter);
 
@@ -83,7 +83,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
             bool result1 = _originalExpression.Compile()(argument);
 
-            bool result2 = _remoteExpression.ToLinqExpression<decimal,bool>().Compile()(argument);
+            bool result2 = _remoteExpression.ToLinqExpression<decimal, bool>().Compile()(argument);
 
             bool result3 = _serializedRemoteExpression.ToLinqExpression<decimal, bool>().Compile()(argument);
 

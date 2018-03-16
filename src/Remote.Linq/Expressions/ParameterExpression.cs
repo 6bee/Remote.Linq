@@ -35,7 +35,8 @@ namespace Remote.Linq.Expressions
         public TypeInfo ParameterType { get; set; }
 
         /// <summary>
-        /// InstanceId is used to denote a specific instance of <see cref="System.Linq.Expressions.ParameterExpression"/> within an expression tree
+        /// Gets or sets an instance id,
+        /// which is used to denote a specific instance of <see cref="System.Linq.Expressions.ParameterExpression"/> within an expression tree
         /// </summary>
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public int InstanceId { get; set; }

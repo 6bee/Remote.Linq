@@ -55,15 +55,5 @@ namespace Remote.Linq
 
             return contract;
         }
-
-        //protected override JsonConverter ResolveContractConverter(Type objectType)
-        //{
-        //    if (objectType == typeof(ConstantExpression))
-        //    {
-        //        return new ConstantExpressionJsonConverter();
-        //    }
-
-        //    return base.ResolveContractConverter(objectType);
-        //}
     }
 }

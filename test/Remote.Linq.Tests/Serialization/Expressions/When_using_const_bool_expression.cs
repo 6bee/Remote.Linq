@@ -17,7 +17,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             System.Linq.Expressions.Expression<Func<bool, bool>> expression = x => false;
 
             _remoteExpression = expression.ToRemoteLinqExpression();
-            
+
             _serializedRemoteExpression = serialize(_remoteExpression);
         }
 

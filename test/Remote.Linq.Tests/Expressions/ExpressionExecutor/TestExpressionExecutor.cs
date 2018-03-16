@@ -10,14 +10,14 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
 
     public class TestExpressionExecutor : ExpressionExecutor
     {
-        public readonly static Expression Step0_Expression = new ConstantExpression("step0");
-        public readonly static Expression Step1_Expression = new ConstantExpression("step1");
-        public readonly static System.Linq.Expressions.Expression Step2_Expression = System.Linq.Expressions.Expression.Constant("step2");
-        public readonly static System.Linq.Expressions.Expression Step3_Expression = System.Linq.Expressions.Expression.Constant("step3");
-        public readonly static object Step4_Result = "step4";
-        public readonly static object Step5_Result = "step5";
-        public readonly static IEnumerable<DynamicObject> Step6_Result = new[] { new DynamicObject("step6") };
-        public readonly static IEnumerable<DynamicObject> Step7_Result = new[] { new DynamicObject("step7") };
+        public static readonly Expression Step0_Expression = new ConstantExpression("step0");
+        public static readonly Expression Step1_Expression = new ConstantExpression("step1");
+        public static readonly System.Linq.Expressions.Expression Step2_Expression = System.Linq.Expressions.Expression.Constant("step2");
+        public static readonly System.Linq.Expressions.Expression Step3_Expression = System.Linq.Expressions.Expression.Constant("step3");
+        public static readonly object Step4_Result = "step4";
+        public static readonly object Step5_Result = "step5";
+        public static readonly IEnumerable<DynamicObject> Step6_Result = new[] { new DynamicObject("step6") };
+        public static readonly IEnumerable<DynamicObject> Step7_Result = new[] { new DynamicObject("step7") };
 
         private readonly int[] _callCounters = new int[7];
 
@@ -31,21 +31,23 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
             var expectedCounters = (
                 from c in _callCounters.Select((x, i) => new { Count = x, Index = i })
                 where !skip.Contains(c.Index)
-                select c
-                ).ToArray();
+                select c)
+                .ToArray();
 
             expectedCounters.Count().ShouldBe(_callCounters.Count() - skip.Length);
-            expectedCounters.ShouldAllBe(x => x.Count == 1, 
+            expectedCounters.ShouldAllBe(
+                x => x.Count == 1,
                 $"processor of {nameof(TestExpressionExecutor)} should be called since they are decorated rather then replaced by custom strategy");
 
             var unexpectedCounters = (
                 from c in _callCounters.Select((x, i) => new { Count = x, Index = i })
                 where skip.Contains(c.Index)
-                select c
-                ).ToArray();
+                select c)
+                .ToArray();
 
             unexpectedCounters.Count().ShouldBe(skip.Length);
-            unexpectedCounters.ShouldAllBe(x => x.Count == 0, 
+            unexpectedCounters.ShouldAllBe(
+                x => x.Count == 0,
                 $"processor of {nameof(TestExpressionExecutor)} should be called since they are replaced rather then decorated with custom strategy");
         }
 

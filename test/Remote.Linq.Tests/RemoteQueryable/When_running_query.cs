@@ -19,6 +19,9 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
     public abstract class When_running_query
     {
+#pragma warning disable SA1502 // Element should not be on a single line
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+
         public class With_no_serialization : When_running_query
         {
             public With_no_serialization() : base(x => x) { }
@@ -52,7 +55,10 @@ namespace Remote.Linq.Tests.RemoteQueryable
             public With_net_data_contract_serializer() : base(NetDataContractSerializationHelper.Serialize) { }
         }
 #endif
-        
+
+#pragma warning restore SA1128 // Put constructor initializers on their own line
+#pragma warning restore SA1502 // Element should not be on a single line
+
         private readonly IQueryable<Category> _categoryQueryable;
         private readonly IQueryable<Product> _productQueryable;
         private readonly IQueryable<Order> _orderQueryable;
@@ -156,9 +162,9 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 group p by p.CategoryId into g
                 select new
                 {
-                    Group = g
-                }
-                ).ToList();
+                    Group = g,
+                })
+                .ToList();
 
             result.Count().ShouldBe(2);
             result.ElementAt(0).Group.Count().ShouldBe(3);
@@ -184,8 +190,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 join p in _productQueryable on i.ProductId equals p.Id
                 group new { i, p } by i.OrderId into g
                 where g.Select(_ => _.p.CategoryId).Distinct().Count() > 1
-                select g
-                ).ToList();
+                select g)
+                .ToList();
 
             orders.Count().ShouldBe(1);
             orders.ElementAt(0).Count().ShouldBe(2);
@@ -198,8 +204,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
             var joinLocalVariable = (
                 from i in _orderItemQueryable
                 from s in array
-                select new { i, s }
-                ).ToList();
+                select new { i, s })
+                .ToList();
 
             joinLocalVariable.Count.ShouldBe(15);
         }
@@ -210,8 +216,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
             var joinNewArrayInit = (
                 from i in _orderItemQueryable
                 from s in new[] { 'h', 'e', 'l', 'l', 'o' }
-                select new { i, s }
-                ).ToList();
+                select new { i, s })
+                .ToList();
 
             joinNewArrayInit.Count.ShouldBe(15);
         }
@@ -223,8 +229,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
             var joinLocalVariable = (
                 from i in _orderItemQueryable
                 from s in hello
-                select new { i, s }
-                ).ToList();
+                select new { i, s })
+                .ToList();
 
             joinLocalVariable.Count.ShouldBe(15);
         }
@@ -235,8 +241,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
             var joinConst = (
                 from i in _orderItemQueryable
                 from s in "hello"
-                select new { i, s }
-                ).ToList();
+                select new { i, s })
+                .ToList();
 
             joinConst.Count.ShouldBe(15);
         }
@@ -248,8 +254,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
             var joinConst = (
                 from i in _orderItemQueryable
                 from s in hello
-                select new { i, s }
-                ).ToList();
+                select new { i, s })
+                .ToList();
 
             joinConst.Count.ShouldBe(15);
         }
@@ -446,6 +452,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         private static IQueryable<int?> __listOfIds = new List<int?>() { null, 1, 11, 111 }.AsQueryable(); // <=== EnumerableQuery
+
         [Fact]
         public void Should_query_products_filterd_using_local_variables_closure_inline_mix_with_EnumerableQuery2()
         {
@@ -471,6 +478,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         private static IQueryable<int?> __factors = new List<int?>() { null, 1, 2, 3 }.AsQueryable(); // <=== EnumerableQuery
+
         [Fact]
         public void Should_join_remote_query_with_EnumerableQuery2()
         {
@@ -593,7 +601,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 var dataprovider = new Dictionary<Type, System.Collections.IEnumerable>()
                 {
                     { typeof(Category), new[] { new Category() } },
-                    { typeof(Product), new[] { new Product { Id = 0 }, new Product { Id = 1 }, new Product { Id = 2 } } }
+                    { typeof(Product), new[] { new Product { Id = 0 }, new Product { Id = 1 }, new Product { Id = 2 } } },
                 };
                 return exp.Execute(t => dataprovider[t].AsQueryable());
             };
@@ -611,8 +619,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             _productQueryable
                 .Where(p => _categoryQueryable
                     .Where(c => c.Name == "always false")
-                    .Any(c => c.Id == p.CategoryId)
-                )
+                    .Any(c => c.Id == p.CategoryId))
                 .ToList()
                 .ShouldBeEmpty();
 
@@ -657,9 +664,9 @@ namespace Remote.Linq.Tests.RemoteQueryable
         public void Should_allow_filtering_on_null_property_within_nested_query()
         {
             var result = _productQueryable
-                .Where(p => 
-                    _orderQueryable.Any(o => 
-                        _orderItemQueryable.Any(i => 
+                .Where(p =>
+                    _orderQueryable.Any(o =>
+                        _orderItemQueryable.Any(i =>
                             o.Items.Contains(i) && o.ShippingAddress != null && i.ProductId == p.Id)))
                 .Select(x => x.Id)
                 .ToList();
@@ -741,7 +748,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             _productQueryable.Select(x => new { Array = array }).ShouldAllBe(x => x.Array.CollectionEquals(array), $"element type: {typeof(T).FullName}, array: {array}");
         }
-        
+
         private void RunTestMethod(string methodName, Type genericType, object argument)
         {
             GetType()
@@ -756,8 +763,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
             Skip.If(this.TestIs<With_xml_serializer>(), "Not supported by XmlSerializer (circuar reference)");
 
             _productQueryable
-                .Select(x => new DateTime())
-                .ShouldAllBe(x => Equals(x, new DateTime()));
+                .Select(x => default(DateTime))
+                .ShouldAllBe(x => Equals(x, default(DateTime)));
         }
 
         [Fact]

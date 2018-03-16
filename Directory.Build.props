@@ -5,6 +5,14 @@
     <Authors>Christof Senn</Authors>
   </PropertyGroup>
   <PropertyGroup>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)StyleNoDoc.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 </Project>

@@ -28,7 +28,6 @@ namespace Remote.Linq
         public static IQueryable<T> Create<T>(Func<Expressions.Expression, Task<IEnumerable<DynamicObject>>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => RemoteQueryable.Factory.CreateAsyncQueryable<T>(dataProvider, typeResolver, mapper, canBeEvaluatedLocally);
 
-
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
         /// </summary>
@@ -43,7 +42,6 @@ namespace Remote.Linq
         [Obsolete("Please use Remote.Linq.RemoteQueryable.Factory.CreateAsyncQueryable<T>() instead.", false)]
         public static IQueryable<T> Create<T>(Func<Expressions.Expression, Task<object>> dataProvider, ITypeResolver typeResolver = null, IAsyncQueryResultMapper<object> resultMapper = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => RemoteQueryable.Factory.CreateAsyncQueryable<T>(dataProvider, typeResolver, resultMapper, canBeEvaluatedLocally);
-
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified

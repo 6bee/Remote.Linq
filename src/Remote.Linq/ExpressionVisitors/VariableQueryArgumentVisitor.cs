@@ -105,7 +105,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class NonGenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
-            private static readonly System.Reflection.MethodInfo CreateVariableQueryArgumentListMethodInfo = 
+            private static readonly System.Reflection.MethodInfo CreateVariableQueryArgumentListMethodInfo =
                 typeof(NonGenericVariableQueryArgumentVisitor).GetMethod(nameof(CreateVariableQueryArgumentList), System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 
             internal Expression ReplaceNonGenericQueryArgumentsByGenericArguments(Expression expression)

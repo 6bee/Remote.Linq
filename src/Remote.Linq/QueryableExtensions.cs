@@ -20,23 +20,12 @@ namespace Remote.Linq
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="dataProvider"></param>
-        /// <param name="typeResolver"></param>
-        /// <param name="mapper"></param>
-        /// <returns></returns>
         public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
             => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeResolver, mapper);
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="resource"></param>
-        /// <param name="dataProvider"></param>
-        /// <param name="typeResolver"></param>
-        /// <param name="mapper"></param>
-        /// <returns></returns>
         public static IQueryable AsQueryable<T>(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
             => RemoteQueryable.Factory.CreateQueryable(resource.ElementType, dataProvider, typeResolver, mapper);
 
@@ -78,8 +67,6 @@ namespace Remote.Linq
         /// <summary>
         /// Applies this query instance to a queryable
         /// </summary>
-        /// <param name="queriable"></param>
-        /// <returns></returns>
         public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, IQuery<TEntity> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor)
         {
             var visitor = expressionVisitor ?? _defaultExpressionVisitor;
@@ -92,8 +79,6 @@ namespace Remote.Linq
         /// <summary>
         /// Applies this query instance to a queryable
         /// </summary>
-        /// <param name="queriable"></param>
-        /// <returns></returns>
         public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor)
         {
             var q = Query<TEntity>.CreateFromNonGeneric(query);

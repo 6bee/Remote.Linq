@@ -20,7 +20,7 @@ namespace Remote.Linq.Tests.Serialization
                 return (T)serializer.Deserialize(stream);
             }
         }
-        
+
         public static T SerializeExpression<T>(T expression) where T : Remote.Linq.Expressions.Expression
         {
             var exp1 = expression.ReplaceGenericQueryArgumentsByNonGenericArguments();

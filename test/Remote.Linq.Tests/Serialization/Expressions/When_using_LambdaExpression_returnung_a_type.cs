@@ -2,11 +2,11 @@
 
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
+    using Remote.Linq.ExpressionVisitors;
+    using Shouldly;
     using System;
     using System.Linq.Expressions;
-    using Shouldly;
     using Xunit;
-    using Remote.Linq.ExpressionVisitors;
     using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
     public abstract class When_using_LambdaExpression_returnung_a_type
@@ -73,15 +73,15 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             resurectedExpression.Compile()().ShouldBe(type);
         }
 
-        //[Theory]
-        //[MemberData(nameof(TestData.Types), MemberType = typeof(TestData))]
-        //public void Should_support_lambda_returning_type(Type type)
-        //{
-        //    Expression<Func<Type>> transform = () => type;
-        //    var expression = transform.ToRemoteLinqExpression();
-        //    var serialized = _serialize(expression);
-        //    var resurectedExpression = serialized.ToLinqExpression<Type>();
-        //    resurectedExpression.Compile()().ShouldBe(type);
-        //}
+        // [Theory]
+        // [MemberData(nameof(TestData.Types), MemberType = typeof(TestData))]
+        // public void Should_support_lambda_returning_type(Type type)
+        // {
+        //     Expression<Func<Type>> transform = () => type;
+        //     var expression = transform.ToRemoteLinqExpression();
+        //     var serialized = _serialize(expression);
+        //     var resurectedExpression = serialized.ToLinqExpression<Type>();
+        //     resurectedExpression.Compile()().ShouldBe(type);
+        // }
     }
 }

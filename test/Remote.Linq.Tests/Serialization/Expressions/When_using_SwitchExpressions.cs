@@ -4,53 +4,45 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using System;
     using System.Linq.Expressions;
-    using Xunit;    
+    using Xunit;
     using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
     public abstract class When_using_SwitchExpressions
     {
+#pragma warning disable SA1502 // Element should not be on a single line
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+
 #if NET
         public class BinaryFormatter : When_using_SwitchExpressions
         {
-            public BinaryFormatter(): base(BinarySerializationHelper.Serialize)
-            {
-            }
+            public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
 #endif
 
 #if NET && !NETCOREAPP2
         public class NetDataContractSerializer : When_using_SwitchExpressions
         {
-            public NetDataContractSerializer()
-                : base(NetDataContractSerializationHelper.Serialize)
-            {
-            }
+            public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
         }
 #endif
 
         public class DataContractSerializer : When_using_SwitchExpressions
         {
-            public DataContractSerializer()
-                : base(DataContractSerializationHelper.SerializeExpression)
-            {
-            }
+            public DataContractSerializer() : base(DataContractSerializationHelper.SerializeExpression) { }
         }
 
         public class JsonSerializer : When_using_SwitchExpressions
         {
-            public JsonSerializer()
-                : base(JsonSerializationHelper.Serialize)
-            {
-            }
+            public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
         }
 
         public class XmlSerializer : When_using_SwitchExpressions
         {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
+            public XmlSerializer() : base(XmlSerializationHelper.SerializeExpression) { }
         }
+
+#pragma warning restore SA1128 // Put constructor initializers on their own line
+#pragma warning restore SA1502 // Element should not be on a single line
 
         private Expression<Func<int, int>> _originalExpression;
 
@@ -63,36 +55,26 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             ParameterExpression switchOver = Expression.Parameter(typeof(int));
             ParameterExpression result = Expression.Variable(typeof(int));
 
-            var expression = Expression.Lambda<Func<int, int>>
-            (
-                Expression.Block
-                (
+            var expression = Expression.Lambda<Func<int, int>>(
+                Expression.Block(
                     new[] { result },
                     Expression.Assign(result, Expression.Constant(0)),
-                    Expression.Switch
-                    (
+                    Expression.Switch(
                         switchOver,
                         Expression.Assign(result, Expression.Constant(-1)),
-                        Expression.SwitchCase
-                        (
+                        Expression.SwitchCase(
                             Expression.Assign(result, Expression.Constant(1)),
                             Expression.Constant(0),
-                            Expression.Constant(2)
-                        ),
-                        Expression.SwitchCase
-                        (
+                            Expression.Constant(2)),
+                        Expression.SwitchCase(
                             Expression.Assign(result, Expression.Constant(2)),
                             Expression.Constant(1),
-                            Expression.Constant(3)
-                        )
-                    ),
-                    result
-                ),
-                switchOver
-            );
+                            Expression.Constant(3))),
+                    result),
+                switchOver);
 
             _originalExpression = expression;
-            
+
             _remoteExpression = expression.ToRemoteLinqExpression();
 
             _serializedRemoteExpression = serialize(_remoteExpression);
@@ -102,14 +84,14 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public void Expression_result_should_be_default()
         {
             int minusOne = -1;
-            int maxValue = Int32.MaxValue;
+            int maxValue = int.MaxValue;
 
             int intNegativeDefault1 = _originalExpression.Compile()(minusOne);
             int intMaxDefault1 = _originalExpression.Compile()(maxValue);
-            
+
             int intNegativeDefault2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(minusOne);
             int intMaxDefault2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(maxValue);
-            
+
             int intNegativeDefault3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(minusOne);
             int intMaxDefault3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(maxValue);
 
@@ -130,10 +112,10 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
             int intZeroEven1 = _originalExpression.Compile()(zero);
             int intTwoEven1 = _originalExpression.Compile()(two);
-            
+
             int intZeroEven2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(zero);
             int intTwoEven2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(two);
-            
+
             int intZeroEven3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(zero);
             int intTwoEven3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(two);
 
@@ -154,10 +136,10 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
             int intOneOdd1 = _originalExpression.Compile()(one);
             int intThreeOdd1 = _originalExpression.Compile()(three);
-            
+
             int intOneOdd2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(one);
             int intThreeOdd2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(three);
-            
+
             int intOneOdd3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(one);
             int intThreeOdd3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(three);
 

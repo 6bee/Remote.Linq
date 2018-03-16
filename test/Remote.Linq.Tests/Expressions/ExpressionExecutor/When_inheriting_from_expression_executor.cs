@@ -2,12 +2,12 @@
 
 namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
 {
-    using Shouldly;
-    using Xunit;
-    using Remote.Linq.Expressions;
-    using System.Collections.Generic;
     using Aqua.Dynamic;
+    using Remote.Linq.Expressions;
+    using Shouldly;
     using System;
+    using System.Collections.Generic;
+    using Xunit;
 
     public class When_inheriting_from_expression_executor
     {

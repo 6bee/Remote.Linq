@@ -28,9 +28,9 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
         {
             var customExpression1 = new ConstantExpression("exp1");
             var customExpression2 = new ConstantExpression("exp2");
-            
+
             var callCounter = new int[3];
-            
+
             var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
 
             decorator
@@ -63,7 +63,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
         public void Should_replace_expression_transformation_decorator()
         {
             var callCounter = new int[1];
-            
+
             var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
 
             decorator
@@ -93,7 +93,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
         {
             var customExpression1 = System.Linq.Expressions.Expression.Constant("exp1");
             var customExpression2 = System.Linq.Expressions.Expression.Constant("exp2");
-            
+
             var callCounter = new int[3];
 
             var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
@@ -158,7 +158,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
         {
             var customResult1 = "result1";
             var customResult2 = "result2";
-            
+
             var callCounter = new int[3];
 
             var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
@@ -223,7 +223,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
         {
             var customResult1 = new[] { new DynamicObject("result1") };
             var customResult2 = new[] { new DynamicObject("result2") };
-            
+
             var callCounter = new int[3];
 
             var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));

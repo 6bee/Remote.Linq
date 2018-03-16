@@ -2,8 +2,8 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
-    using Remote.Linq.Expressions;
     using Aqua.TypeSystem;
+    using Remote.Linq.Expressions;
     using System;
     using System.ComponentModel;
 

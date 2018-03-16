@@ -25,8 +25,16 @@ namespace Remote.Linq
         /// </summary>
         public static Func<T, bool> And<T>(this Func<T, bool> predicate1, Func<T, bool> predicate2)
         {
-            if (predicate1 == null) return predicate2;
-            if (predicate2 == null) return predicate1;
+            if (predicate1 == null)
+            {
+                return predicate2;
+            }
+
+            if (predicate2 == null)
+            {
+                return predicate1;
+            }
+
             return x => predicate1(x) && predicate2(x);
         }
 
@@ -35,8 +43,16 @@ namespace Remote.Linq
         /// </summary>
         public static Func<T, bool> Or<T>(this Func<T, bool> predicate1, Func<T, bool> predicate2)
         {
-            if (predicate1 == null) return predicate2;
-            if (predicate2 == null) return predicate1;
+            if (predicate1 == null)
+            {
+                return predicate2;
+            }
+
+            if (predicate2 == null)
+            {
+                return predicate1;
+            }
+
             return x => predicate1(x) || predicate2(x);
         }
 
@@ -248,7 +264,7 @@ namespace Remote.Linq
                 {
                     return false;
                 }
-                
+
                 if (IsUnmappedType(type))
                 {
                     return false;
@@ -264,7 +280,6 @@ namespace Remote.Linq
                     && !_excludeFromUnmappedTypes.Any(x => x.IsAssignableFrom(t));
             }
         }
-
 
         private sealed class LinqExpressionToRemoteExpressionTranslator : ExpressionVisitorBase
         {
@@ -320,14 +335,14 @@ namespace Remote.Linq
                 RLinq.Expression defaultExpression = Visit(switchExpression.DefaultBody).Unwrap();
                 RLinq.Expression switchValue = Visit(switchExpression.SwitchValue).Unwrap();
                 List<RLinq.SwitchCase> cases = (switchExpression.Cases ?? Enumerable.Empty<SwitchCase>()).Select(VisitSwitchCase).ToList();
-                return new RLinq.SwitchExpression(switchValue,switchExpression.Comparison,defaultExpression,cases).Wrap();
+                return new RLinq.SwitchExpression(switchValue, switchExpression.Comparison, defaultExpression, cases).Wrap();
             }
 
             private new RLinq.SwitchCase VisitSwitchCase(SwitchCase switchCase)
             {
                 RLinq.Expression body = Visit(switchCase.Body).Unwrap();
                 List<RLinq.Expression> testValues = switchCase.TestValues.Select(Visit).Select(Unwrap).ToList();
-                return new RLinq.SwitchCase(body,testValues);
+                return new RLinq.SwitchCase(body, testValues);
             }
 
             protected override Expression VisitTry(TryExpression tryExpression)
@@ -380,7 +395,7 @@ namespace Remote.Linq
                         from arg in node.Arguments
                         select Visit(arg).Unwrap();
                 }
-                
+
                 return ReferenceEquals(null, node.Constructor)
                     ? new RLinq.NewExpression(node.Type)
                     : new RLinq.NewExpression(node.Constructor, arguments, node.Members);
@@ -577,7 +592,7 @@ namespace Remote.Linq
             protected override Expression VisitBlock(BlockExpression node)
             {
                 var expressions = VisitExpressionList(node.Expressions);
-                var rlinqExpressions = 
+                var rlinqExpressions =
                     from exp in expressions
                     select exp.Unwrap();
 
@@ -590,7 +605,7 @@ namespace Remote.Linq
                         from exp in variables
                         select (RLinq.ParameterExpression)exp.Unwrap();
                 }
-                
+
                 var type = node.Type == node.Result.Type ? null : node.Type;
                 return new RLinq.BlockExpression(type, rlinqVariables, rlinqExpressions).Wrap();
             }
@@ -759,7 +774,7 @@ namespace Remote.Linq
             private SwitchCase VisitSwitchCase(RLinq.SwitchCase switchCase)
             {
                 Expression body = Visit(switchCase.Body);
-                IEnumerable<RLinq.Expression> testCases = switchCase.TestValues??Enumerable.Empty<RLinq.Expression>();
+                IEnumerable<RLinq.Expression> testCases = switchCase.TestValues ?? Enumerable.Empty<RLinq.Expression>();
                 return Expression.SwitchCase(body, testCases.Select(Visit));
             }
 
@@ -771,7 +786,7 @@ namespace Remote.Linq
                 Expression @finally = ReferenceEquals(tryExpression.Finally, null) ? null : Visit(tryExpression.Finally);
                 IEnumerable<CatchBlock> handlers = tryExpression.Handlers?.Select(VisitCatchBlock) ?? Enumerable.Empty<CatchBlock>();
 
-                return Expression.MakeTry(type, body, @finally, fault,handlers);
+                return Expression.MakeTry(type, body, @finally, fault, handlers);
             }
 
             private CatchBlock VisitCatchBlock(RLinq.CatchBlock catchBlock)
@@ -779,9 +794,9 @@ namespace Remote.Linq
                 Type exceptionType = ReferenceEquals(catchBlock.Test, null) ? null : _typeResolver.ResolveType(catchBlock.Test);
                 ParameterExpression exceptionParameter = ReferenceEquals(catchBlock.Variable, null) ? null : VisitParameter(catchBlock.Variable);
                 Expression body = ReferenceEquals(catchBlock.Body, null) ? null : Visit(catchBlock.Body);
-                Expression filter = ReferenceEquals(catchBlock.Filter,null) ? null : Visit(catchBlock.Filter);
+                Expression filter = ReferenceEquals(catchBlock.Filter, null) ? null : Visit(catchBlock.Filter);
 
-                return Expression.MakeCatchBlock(exceptionType, exceptionParameter, body,filter);
+                return Expression.MakeCatchBlock(exceptionType, exceptionParameter, body, filter);
             }
 
             private NewExpression VisitNew(RLinq.NewExpression newExpression)
@@ -988,7 +1003,7 @@ namespace Remote.Linq
                 var instance = Visit(methodCallExpression.Instance);
                 var arguments = methodCallExpression.Arguments
                     .Select(x => Visit(x))
-                    .ToArray();                
+                    .ToArray();
                 var methodInfo = methodCallExpression.Method.ResolveMethod(_typeResolver);
                 return Expression.Call(instance, methodInfo, arguments);
             }

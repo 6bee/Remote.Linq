@@ -7,8 +7,6 @@ namespace Remote.Linq.DynamicQuery
     internal sealed class ObjectResultCaster : IQueryResultMapper<object>
     {
         public TResult MapResult<TResult>(object source, Expression expression)
-        {
-            return (TResult)source;
-        }
+            => (TResult)source;
     }
 }

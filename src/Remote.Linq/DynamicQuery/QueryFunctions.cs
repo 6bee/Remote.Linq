@@ -9,9 +9,6 @@ namespace Remote.Linq.DynamicQuery
     public static class QueryFunctions
     {
         public static IQueryable<T> Include<T>(IQueryable<T> queryable, string path)
-        {
-            return queryable;
-        }
+            => queryable;
     }
 }
-

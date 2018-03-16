@@ -12,12 +12,10 @@ namespace Remote.Linq.EntityFramework
     internal static class SystemExpressionReWriter
     {
         /// <summary>
-        /// Replaces parameterized constructor calls for <see cref="VariableQueryArgument{1}"/> with type initializer
+        /// Replaces parameterized constructor calls for <see cref="VariableQueryArgument{T}"/> with type initializer
         /// </summary>
         internal static Expression ReplaceParameterizedConstructorCallsForVariableQueryArguments(this Expression expression)
-        {
-            return new ReWriter().Run(expression);
-        }
+            => new ReWriter().Run(expression);
 
         private sealed class ReWriter : ExpressionVisitorBase
         {
@@ -52,13 +50,14 @@ namespace Remote.Linq.EntityFramework
                     node.Arguments.Any())
                 {
                     var valueArgument = node.Arguments.First();
+
                     // Note: optional second type argument is omitted since it would not be supported by EF anyway
                     return Expression.MemberInit(
                         Expression.New(type),
                         Expression.Bind(type.GetProperty(nameof(VariableQueryArgument.Value)), valueArgument));
                 }
 
-                return base.VisitNew(node);
+                return VisitNew(node);
             }
         }
     }

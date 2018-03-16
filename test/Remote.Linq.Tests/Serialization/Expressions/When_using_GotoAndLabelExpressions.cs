@@ -1,60 +1,50 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System.IO;
-
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using System;
+    using System.IO;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Xunit;    
+    using Xunit;
     using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
     public abstract class When_using_GotoAndLabelExpressions
     {
+#pragma warning disable SA1502 // Element should not be on a single line
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+
 #if NET
         public class BinaryFormatter : When_using_GotoAndLabelExpressions
         {
-            public BinaryFormatter()
-                : base(BinarySerializationHelper.Serialize)
-            {
-            }
+            public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
 #endif
 
 #if NET && !NETCOREAPP2
         public class NetDataContractSerializer : When_using_GotoAndLabelExpressions
         {
-            public NetDataContractSerializer()
-                : base(NetDataContractSerializationHelper.Serialize)
-            {
-            }
+            public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
         }
 #endif
 
         public class DataContractSerializer : When_using_GotoAndLabelExpressions
         {
-            public DataContractSerializer()
-                : base(DataContractSerializationHelper.SerializeExpression)
-            {
-            }
+            public DataContractSerializer() : base(DataContractSerializationHelper.SerializeExpression) { }
         }
 
         public class JsonSerializer : When_using_GotoAndLabelExpressions
         {
-            public JsonSerializer()
-                : base(JsonSerializationHelper.Serialize)
-            {
-            }
+            public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
         }
 
         public class XmlSerializer : When_using_GotoAndLabelExpressions
         {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
+            public XmlSerializer() : base(XmlSerializationHelper.SerializeExpression) { }
         }
+
+#pragma warning restore SA1128 // Put constructor initializers on their own line
+#pragma warning restore SA1502 // Element should not be on a single line
 
         private Expression<Func<StreamWriter, long>> _originalExpression;
 
@@ -71,16 +61,13 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
             LabelTarget returnLabel = Expression.Label(typeof(long));
 
-            var expression = Expression.Lambda<Func<StreamWriter, long>>
-            (
-                Expression.Block
-                (
+            var expression = Expression.Lambda<Func<StreamWriter, long>>(
+                Expression.Block(
                     new[] { position },
                     Expression.Assign(position, positionProperty),
                     Expression.Call(writer, typeof(TextWriter).GetMethod(nameof(TextWriter.WriteLine), new[] { typeof(string) }), Expression.Constant("SomeText")),
                     Expression.Return(returnLabel, Expression.Subtract(positionProperty, position), typeof(long)),
-                    Expression.Label(returnLabel, Expression.Default(typeof(long)))
-                ), writer);
+                    Expression.Label(returnLabel, Expression.Default(typeof(long)))), writer);
 
             _originalExpression = expression;
 
@@ -93,7 +80,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public void Expression_result_should_be_equal()
         {
             var argument = StreamWriter.Null;
-            
+
             long long1 = _originalExpression.Compile()(argument);
 
             long long2 = _remoteExpression.ToLinqExpression<StreamWriter, long>().Compile()(argument);

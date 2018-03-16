@@ -52,7 +52,6 @@ namespace Remote.Linq.Expressions
         public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
             => new ExpressionExecutionContextWithDynamicObjectResultProcessor(context, transform);
 
-
         private sealed class ExpressionExecutionContextWithRemoteExpressionTransformer : ExpressionExecutionContext
         {
             private readonly Func<Expression, Expression> _transform;

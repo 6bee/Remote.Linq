@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
+    using Aqua.Dynamic;
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
     using Remote.Linq.DynamicQuery;
@@ -9,11 +10,6 @@ namespace Remote.Linq.ExpressionVisitors
     using System;
     using System.Linq;
     using System.Reflection;
-    using MemberTypes = Aqua.TypeSystem.MemberTypes;
-    using FieldInfo = Aqua.TypeSystem.FieldInfo;
-    using PropertyInfo = Aqua.TypeSystem.PropertyInfo;
-    using MethodInfo = Aqua.TypeSystem.MethodInfo;
-    using Aqua.Dynamic;
 
     public class QueryableResourceVisitor
     {
@@ -29,7 +25,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class ResourceDescriptorVisitor : RemoteExpressionVisitorBase
         {
-            protected readonly ITypeResolver _typeResolver;
+            private readonly ITypeResolver _typeResolver;
             private readonly Func<Type, IQueryable> _provider;
 
             internal protected ResourceDescriptorVisitor(Func<Type, IQueryable> provider, ITypeResolver typeResolver)
@@ -78,7 +74,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class QueryableVisitor : RemoteExpressionVisitorBase
         {
-            protected readonly ITypeResolver _typeResolver;
+            private readonly ITypeResolver _typeResolver;
 
             internal protected QueryableVisitor(ITypeResolver typeResolver)
             {

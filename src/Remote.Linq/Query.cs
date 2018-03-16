@@ -15,25 +15,23 @@ namespace Remote.Linq
     public class Query : IQuery, IOrderedQuery
     {
         /// <summary>
-        /// Creates a new query instance.
+        /// Initializes a new instance of the <see cref="Query"/> class.
         /// </summary>
         public Query()
         {
         }
 
         /// <summary>
-        /// Creates a new query instance.
+        /// Initializes a new instance of the <see cref="Query"/> class.
         /// </summary>
-        /// <param name="type">The type to be queried</param>
         public Query(Type type, IEnumerable<LambdaExpression> filterExpressions = null, IEnumerable<SortExpression> sortExpressions = null, int? skip = null, int? take = null)
             : this(new TypeInfo(type, false, false), filterExpressions, sortExpressions, skip, take)
         {
         }
 
         /// <summary>
-        /// Creates a new query instance.
+        /// Initializes a new instance of the <see cref="Query"/> class.
         /// </summary>
-        /// <param name="typeInfo">The type to be queried</param>
         public Query(TypeInfo typeInfo, IEnumerable<LambdaExpression> filterExpressions = null, IEnumerable<SortExpression> sortExpressions = null, int? skip = null, int? take = null)
         {
             Type = typeInfo;
@@ -45,7 +43,6 @@ namespace Remote.Linq
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public TypeInfo Type { get; set; }
-
 
         public bool HasFilters => FilterExpressions.Count > 0;
 
@@ -82,9 +79,6 @@ namespace Remote.Linq
         /// <summary>
         /// Sorts the elements of a sequence in ascending order according to a key.
         /// </summary>
-        /// <typeparam name="TKey">The type of the key returned by the function that is represented by keySelector.</typeparam>
-        /// <param name="lambdaExpression">A function to extract a key from an element.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
         public IOrderedQuery OrderBy(SortExpression sortExpression)
         {
             if (sortExpression.SortDirection != SortDirection.Ascending)
@@ -99,9 +93,6 @@ namespace Remote.Linq
         /// <summary>
         /// Sorts the elements of a sequence in descending order according to a key.
         /// </summary>
-        /// <typeparam name="TKey">The type of the key returned by the function that is represented by keySelector.</typeparam>
-        /// <param name="keySelector">A function to extract a key from an element.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
         public IOrderedQuery OrderByDescending(SortExpression sortExpression)
         {
             if (sortExpression.SortDirection != SortDirection.Descending)
@@ -124,6 +115,7 @@ namespace Remote.Linq
             {
                 throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
             }
+
             if (sortExpression.SortDirection != SortDirection.Ascending)
             {
                 throw new ArgumentException("Expected sort expresson to be ascending.");
@@ -147,6 +139,7 @@ namespace Remote.Linq
             {
                 throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
             }
+
             if (sortExpression.SortDirection != SortDirection.Descending)
             {
                 throw new ArgumentException("Expected sort expresson to be descending.");
@@ -182,7 +175,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Creates a non-generic version of the specified query instance. 
+        /// Creates a non-generic version of the specified query instance.
         /// </summary>
         /// <param name="query">The query instance to be converted into a non-generc query object.</param>
         /// <returns>A non-generic version of the specified query instance.</returns>

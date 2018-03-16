@@ -48,10 +48,13 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            return string.Format("{0}.{1}({2})",
-                Instance == null ? Method.DeclaringType.ToString() : Instance.ToString(),
-                Method.Name,
-                ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments));
+            var instance = Instance;
+            var arguments = Arguments;
+            return string.Format(
+                "{0}.{1}({2})",
+                instance == null ? Method?.DeclaringType?.ToString() : instance.ToString(),
+                Method?.Name,
+                ReferenceEquals(null, arguments) ? null : string.Join(", ", arguments));
         }
     }
 }

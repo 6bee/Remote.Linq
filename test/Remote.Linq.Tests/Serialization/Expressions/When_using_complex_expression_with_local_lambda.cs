@@ -19,7 +19,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             System.Linq.Expressions.Expression<Func<bool, bool>> expression = x => sufix("test").Length > 10;
 
             _remoteExpression = expression.ToRemoteLinqExpression();
-            
+
             _serializedRemoteExpression = serialize(_remoteExpression);
         }
 

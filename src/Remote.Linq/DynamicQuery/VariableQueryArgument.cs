@@ -63,9 +63,10 @@ namespace Remote.Linq.DynamicQuery
 
         public override string ToString()
         {
-            return string.Format("{0}({2}{1}{2})",
+            return string.Format(
+                "{0}({2}{1}{2})",
                 GetType().Name,
-                Value ?? "null", 
+                Value ?? "null",
                 Value is string || Value is char ? "'" : null);
         }
     }

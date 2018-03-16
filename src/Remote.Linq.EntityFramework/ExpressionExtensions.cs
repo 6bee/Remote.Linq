@@ -21,6 +21,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/></param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
+        /// <param name="setTypeInformation">Function to define whether to add type information</param>
         /// <returns>A new instance <see cref="ExpressionExecutionContext" /></returns>
         public static ExpressionExecutionContext EntityFrameworkExecutor(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
             => new ExpressionExecutionContext(new EntityFrameworkExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation), expression);
@@ -32,6 +33,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s</param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
+        /// <param name="setTypeInformation">Function to define whether to add type information</param>
         /// <returns>A new instance <see cref="ExpressionExecutionContext" /></returns>
         public static ExpressionExecutionContext EntityFrameworkExecutor(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
             => new ExpressionExecutionContext(new EntityFrameworkExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation), expression);
@@ -43,6 +45,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/></param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
+        /// <param name="setTypeInformation">Function to define whether to add type information</param>
         /// <returns>The mapped result of the query execution</returns>
         public static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
             => new EntityFrameworkExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation).Execute(expression);
@@ -54,16 +57,17 @@ namespace Remote.Linq.EntityFramework
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s</param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/></param>
+        /// <param name="setTypeInformation">Function to define whether to add type information</param>
         /// <returns>The mapped result of the query execution</returns>
         public static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
             => new EntityFrameworkExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation).Execute(expression);
 
         /// <summary>
-        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/> 
+        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/>
         /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself.
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed</param>
-        /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{}"/></param>
+        /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/></param>
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects</param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
         [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.EntityFramework.EntityFrameworkExpressionExecutor or use expression.EntityFrameworkExecutor(..).With(customstrategy).Execute() instead.", false)]
@@ -71,8 +75,8 @@ namespace Remote.Linq.EntityFramework
             => new EntityFrameworkExpressionExecutor(dbContext, typeResolver).PrepareForExecution(expression);
 
         /// <summary>
-        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/> 
-        /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself. <para/> 
+        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/>
+        /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself. <para/>
         /// Please note that Inlude operation has no effect if using non-generic method <see cref="IQueryable" /> <see cref="DbContext" />.Get(<see cref="Type" />) as queryableProvider.
         /// Better use generic version instead.
         /// </summary>

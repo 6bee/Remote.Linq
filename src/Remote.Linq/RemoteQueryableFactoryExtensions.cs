@@ -33,7 +33,6 @@ namespace Remote.Linq
             return factory.CreateQueryable<T, IEnumerable<DynamicObject>>(dataProvider, resultMapper, typeResolver, canBeEvaluatedLocally);
         }
 
-
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
         /// </summary>
@@ -61,7 +60,6 @@ namespace Remote.Linq
             return factory.CreateQueryable<T, object>(dataProvider, resultMapper ?? new ObjectResultCaster(), typeResolver, canBeEvaluatedLocally);
         }
 
-
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
         /// </summary>
@@ -83,7 +81,6 @@ namespace Remote.Linq
             return new Remote.Linq.DynamicQuery.RemoteQueryable<T>(queryProvider);
         }
 
-
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
         /// </summary>
@@ -102,7 +99,6 @@ namespace Remote.Linq
             var resultMapper = new AsyncDynamicResultMapper(mapper);
             return factory.CreateAsyncQueryable<T, IEnumerable<DynamicObject>>(dataProvider, resultMapper, typeResolver, canBeEvaluatedLocally);
         }
-
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
@@ -130,7 +126,6 @@ namespace Remote.Linq
 
             return factory.CreateAsyncQueryable<T, object>(dataProvider, resultMapper, typeResolver, canBeEvaluatedLocally);
         }
-
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified

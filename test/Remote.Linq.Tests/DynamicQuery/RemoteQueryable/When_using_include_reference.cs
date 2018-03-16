@@ -14,17 +14,17 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
     public class When_using_include_reference
     {
-        class Child
+        private class Child
         {
             public Parent Parent { get; set; }
         }
 
-        class Parent
+        private class Parent
         {
             public IEnumerable<Child> Children { get; set; }
         }
 
-        Expression expression;
+        private Expression expression;
 
         public When_using_include_reference()
         {

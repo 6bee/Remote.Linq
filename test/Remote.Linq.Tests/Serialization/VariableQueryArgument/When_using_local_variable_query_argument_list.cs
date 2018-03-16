@@ -20,7 +20,6 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
 
         protected When_using_local_variable_query_argument_list(Func<LambdaExpression, LambdaExpression> serialize)
         {
-            //var values = new int[] { 123, 456, 789 };
             var values = new List<int>() { 123, 456, 789 };
 
             System.Linq.Expressions.Expression<Func<AType, bool>> expression = x => values.Contains(x.Number);

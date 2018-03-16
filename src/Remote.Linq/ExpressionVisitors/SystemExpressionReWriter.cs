@@ -2,9 +2,9 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
+    using Aqua.Dynamic;
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
-    using Aqua.Dynamic;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -84,7 +84,11 @@ namespace Remote.Linq.ExpressionVisitors
                     else
                     {
                         var member = instance.Type.GetMember(name, m.Member.GetMemberType(), (BindingFlags)0xfffffff);
-                        if (member.Count() != 1) throw new Exception(string.Format("Failed to bind {2} {0} of type {1}", name, instance.Type, m.Member.GetMemberType().ToString().ToLower()));
+                        if (member.Count() != 1)
+                        {
+                            throw new Exception(string.Format("Failed to bind {2} {0} of type {1}", name, instance.Type, m.Member.GetMemberType().ToString().ToLower()));
+                        }
+
                         return Expression.MakeMemberAccess(instance, member.Single());
                     }
                 }
@@ -108,8 +112,10 @@ namespace Remote.Linq.ExpressionVisitors
                     {
                         parameter = Expression.Parameter(type, p.Name);
                     }
+
                     _parameterMap[p] = parameter;
                 }
+
                 return parameter;
             }
 
@@ -149,6 +155,7 @@ namespace Remote.Linq.ExpressionVisitors
                     {
                         throw new NotImplementedException("unecpected case");
                     }
+
                     var argsExpression = Expression.NewArrayInit(_dynamicPropertyContructorInfo.DeclaringType, arguments);
                     var x = Expression.New(_dynamicObjectContructorInfo, argsExpression);
                     return x;
@@ -166,6 +173,7 @@ namespace Remote.Linq.ExpressionVisitors
                 {
                     name = name.Substring(4, name.Length - 4);
                 }
+
                 return name;
             }
 
@@ -178,7 +186,6 @@ namespace Remote.Linq.ExpressionVisitors
                     select Expression.Parameter(ReplaceAnonymousType(p.Type), p.Name);
                 return Expression.Lambda(type, body, parameters);
             }
-
 
             private System.Reflection.MethodInfo ReplaceAnonymousType(System.Reflection.MethodInfo methodInfo)
             {
@@ -228,6 +235,7 @@ namespace Remote.Linq.ExpressionVisitors
                         return true;
                     }
                 }
+
                 return false;
             }
         }

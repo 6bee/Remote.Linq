@@ -22,16 +22,15 @@ namespace Remote.Linq
         private readonly Func<LambdaExpression, Expressions.LambdaExpression> _expressionTranslator;
 
         /// <summary>
-        /// Creates a new query instance
+        /// Initializes a new instance of the <see cref="Query{T}"/> class.
         /// </summary>
         public Query()
         {
         }
 
         /// <summary>
-        /// Creates a new query instance
+        /// Initializes a new instance of the <see cref="Query{T}"/> class.
         /// </summary>
-        /// <param name="dataProvider">A delegate to be invoked to retrieve the actual data</param>
         public Query(Func<Query<T>, IEnumerable<T>> dataProvider = null, Func<LambdaExpression, Expressions.LambdaExpression> expressionTranslator = null, IEnumerable<Expressions.LambdaExpression> filterExpressions = null, IEnumerable<Expressions.SortExpression> sortExpressions = null, int? skip = null, int? take = null)
         {
             _dataProvider = dataProvider;
@@ -80,7 +79,7 @@ namespace Remote.Linq
         /// Sorts the elements of a sequence in ascending order according to a key.
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by the function that is represented by keySelector.</typeparam>
-        /// <param name="lambdaExpression">A function to extract a key from an element.</param>
+        /// <param name="keySelector">A function to extract a key from an element.</param>
         /// <returns>A new query instance containing all specified query parameters</returns>
         public IOrderedQuery<T> OrderBy<TKey>(Expression<Func<T, TKey>> keySelector)
         {
@@ -180,7 +179,11 @@ namespace Remote.Linq
         /// <returns>The data retrieved from the data provider.</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            if (ReferenceEquals(null, _dataProvider)) throw new Exception("A query may only be enumerated if a data provider has been specified via constructor parameter.");
+            if (ReferenceEquals(null, _dataProvider))
+            {
+                throw new Exception("A query may only be enumerated if a data provider has been specified via constructor parameter.");
+            }
+
             return _dataProvider(this).GetEnumerator();
         }
 
@@ -190,12 +193,8 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Creates a generic version of the specified query instance. 
+        /// Creates a generic version of the specified query instance.
         /// </summary>
-        /// <param name="query">The query instance to be converted into a generc query object.</param>
-        /// <param name="dataProvider">A delegate to be invoked to retrieve the actual data</param>
-        /// <returns>A generic version of the specified query instance.</returns>
-        /// <exception cref="Exception">If the query's type does not match the generic type.</exception>
         public static Query<T> CreateFromNonGeneric(IQuery query, Func<Query<T>, IEnumerable<T>> dataProvider = null, Func<LambdaExpression, Expressions.LambdaExpression> expressionTranslator = null, ITypeResolver typeResolver = null)
         {
             if (ReferenceEquals(null, query))

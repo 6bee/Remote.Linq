@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Remote.Linq" Description=" " ToolsVersion="14.0">
+  <Include Path="MinimumRecommendedRules.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CS1701" Action="Info" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1127" Action="None" />
+    <Rule Id="SA1133" Action="None" />
+    <Rule Id="SA1201" Action="None" />
+    <Rule Id="SA1202" Action="None" />
+    <Rule Id="SA1204" Action="None" />
+    <Rule Id="SA1205" Action="None" />
+    <Rule Id="SA1306" Action="None" />
+    <Rule Id="SA1309" Action="None" />
+    <Rule Id="SA1310" Action="None" />
+    <Rule Id="SA1512" Action="None" />
+    <Rule Id="SA1602" Action="Info" />
+    <Rule Id="SA1611" Action="Info" />
+    <Rule Id="SA1615" Action="Info" />
+    <Rule Id="SA1618" Action="Info" />
+  </Rules>
+</RuleSet>

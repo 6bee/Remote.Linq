@@ -11,16 +11,14 @@ namespace Remote.Linq
     public static class JsonSerializerSettingsExtensions
     {
         /// <summary>
-        /// Sets the <see cref="RemoteLinqContractResolver"/> in <see cref="JsonSerializerSettings"/>, 
+        /// Sets the <see cref="RemoteLinqContractResolver"/> in <see cref="JsonSerializerSettings"/>,
         /// decorating a previousely set <see cref="IContractResolver"/> if required.
         /// </summary>
         public static JsonSerializerSettings ConfigureRemoteLinq(this JsonSerializerSettings jsonSerializerSettings)
         {
             jsonSerializerSettings = jsonSerializerSettings.ConfigureAqua();
 
-            //jsonSerializerSettings.ReferenceResolverProvider = () => new ReferenceResolver();
-
-            jsonSerializerSettings.ContractResolver = 
+            jsonSerializerSettings.ContractResolver =
                 jsonSerializerSettings.ContractResolver?.GetType() == typeof(DefaultContractResolver)
                     ? new RemoteLinqContractResolver()
                     : new RemoteLinqContractResolver(jsonSerializerSettings.ContractResolver);

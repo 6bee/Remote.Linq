@@ -294,14 +294,14 @@ namespace Remote.Linq
                 .SumAsync();
         }
 
-        public static async Task<Decimal> SumAsync<T>(this IQueryable<T> source, Expression<Func<T, Decimal>> selector)
+        public static async Task<decimal> SumAsync<T>(this IQueryable<T> source, Expression<Func<T, decimal>> selector)
         {
             return await source
                 .Select(selector)
                 .SumAsync();
         }
 
-        public static async Task<Decimal?> SumAsync<T>(this IQueryable<T> source, Expression<Func<T, Decimal?>> selector)
+        public static async Task<decimal?> SumAsync<T>(this IQueryable<T> source, Expression<Func<T, decimal?>> selector)
         {
             return await source
                 .Select(selector)
@@ -362,7 +362,7 @@ namespace Remote.Linq
             return enumerator.Average();
         }
 
-        public static async Task<Decimal?> AverageAsync(this IQueryable<Decimal?> source)
+        public static async Task<decimal?> AverageAsync(this IQueryable<decimal?> source)
         {
             var enumerator = await ExecuteAsync(source);
             return enumerator.Average();
@@ -424,14 +424,14 @@ namespace Remote.Linq
                 .AverageAsync();
         }
 
-        public static async Task<Decimal> AverageAsync<T>(this IQueryable<T> source, Expression<Func<T, Decimal>> selector)
+        public static async Task<decimal> AverageAsync<T>(this IQueryable<T> source, Expression<Func<T, decimal>> selector)
         {
             return await source
                 .Select(selector)
                 .AverageAsync();
         }
 
-        public static async Task<Decimal?> AverageAsync<T>(this IQueryable<T> source, Expression<Func<T, Decimal?>> selector)
+        public static async Task<decimal?> AverageAsync<T>(this IQueryable<T> source, Expression<Func<T, decimal?>> selector)
         {
             return await source
                 .Select(selector)
@@ -441,11 +441,13 @@ namespace Remote.Linq
         private static async Task<IEnumerable<T>> ExecuteAsync<T>(IQueryable<T> source)
         {
             IEnumerable<T> enumerable;
-            //if (source is IAsyncRemoteQueryable<T>)
-            //{
-            //    var asyncQueryable = (IAsyncRemoteQueryable<T>)source;
-            //    enumerable = await asyncQueryable.ExecuteAsync();
-            //}
+
+            // if (source is IAsyncRemoteQueryable<T>)
+            // {
+            //     var asyncQueryable = (IAsyncRemoteQueryable<T>)source;
+            //     enumerable = await asyncQueryable.ExecuteAsync();
+            // }
+
             if (source.Provider is IAsyncRemoteQueryProvider)
             {
                 var asyncQueryableProvider = (IAsyncRemoteQueryProvider)source.Provider;

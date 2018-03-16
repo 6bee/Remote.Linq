@@ -2,8 +2,8 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
-    using Remote.Linq.Expressions;
     using Aqua.TypeSystem;
+    using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -91,28 +91,27 @@ namespace Remote.Linq.ExpressionVisitors
         {
             Expression defaultExpression = Visit(switchExpression.DefaultExpression);
             Expression switchValue = Visit(switchExpression.SwitchValue);
-            List<SwitchCase> cases = (switchExpression.Cases??Enumerable.Empty<SwitchCase>()).Select(VisitSwitchCase).ToList();
-            if
-            (
-                defaultExpression != switchExpression.DefaultExpression ||
+            List<SwitchCase> cases = (switchExpression.Cases ?? Enumerable.Empty<SwitchCase>()).Select(VisitSwitchCase).ToList();
+            if (defaultExpression != switchExpression.DefaultExpression ||
                 switchValue != switchExpression.SwitchValue ||
-                cases.SequenceEqual(switchExpression.Cases) == false
-            )
+                cases.SequenceEqual(switchExpression.Cases) == false)
             {
-                return new SwitchExpression(switchValue,switchExpression.Comparison,defaultExpression,cases);
+                return new SwitchExpression(switchValue, switchExpression.Comparison, defaultExpression, cases);
             }
+
             return switchExpression;
         }
 
         protected virtual SwitchCase VisitSwitchCase(SwitchCase switchCase)
         {
             Expression body = Visit(switchCase.Body);
-            List<Expression> testValues = (switchCase.TestValues??new List<Expression>());
+            List<Expression> testValues = switchCase.TestValues ?? new List<Expression>();
             List<Expression> newTestValues = testValues.Select(Visit).ToList();
             if (body != switchCase.Body || testValues.SequenceEqual(newTestValues) == false)
             {
-                return new SwitchCase(body,newTestValues);
+                return new SwitchCase(body, newTestValues);
             }
+
             return switchCase;
         }
 
@@ -121,17 +120,15 @@ namespace Remote.Linq.ExpressionVisitors
             Expression @finally = Visit(tryExpression.Finally);
             Expression body = Visit(tryExpression.Body);
             Expression fault = Visit(tryExpression.Fault);
-            List<CatchBlock> handlers = (tryExpression.Handlers??Enumerable.Empty<CatchBlock>()).Select(VisitCatchBlock).ToList();
-            if
-            (
-                @finally != tryExpression.Finally ||
+            List<CatchBlock> handlers = (tryExpression.Handlers ?? Enumerable.Empty<CatchBlock>()).Select(VisitCatchBlock).ToList();
+            if (@finally != tryExpression.Finally ||
                 body != tryExpression.Body ||
                 fault != tryExpression.Fault ||
-                handlers.SequenceEqual(tryExpression.Handlers) == false
-            )
+                handlers.SequenceEqual(tryExpression.Handlers) == false)
             {
                 return new TryExpression(tryExpression.Type, body, fault, @finally, handlers);
             }
+
             return tryExpression;
         }
 
@@ -142,8 +139,9 @@ namespace Remote.Linq.ExpressionVisitors
             Expression filter = Visit(catchBlock.Filter);
             if (body != catchBlock.Body || variable != catchBlock.Variable || filter != catchBlock.Filter)
             {
-                return new CatchBlock(catchBlock.Test,variable,body,filter);
+                return new CatchBlock(catchBlock.Test, variable, body, filter);
             }
+
             return catchBlock;
         }
 
@@ -182,6 +180,7 @@ namespace Remote.Linq.ExpressionVisitors
                     {
                         list.Add(original[j]);
                     }
+
                     list.Add(b);
                 }
             }
@@ -270,6 +269,7 @@ namespace Remote.Linq.ExpressionVisitors
                     {
                         list.Add(original[j]);
                     }
+
                     list.Add(init);
                 }
             }
@@ -294,7 +294,7 @@ namespace Remote.Linq.ExpressionVisitors
             return initializer;
         }
 
-        protected virtual List<T> VisitExpressionList<T>(List<T> original) where T: Expression
+        protected virtual List<T> VisitExpressionList<T>(List<T> original) where T : Expression
         {
             if (ReferenceEquals(null, original))
             {
@@ -398,7 +398,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             var variables = VisitExpressionList(node.Variables);
             var expressions = VisitExpressionList(node.Expressions);
-            
+
             if (!ReferenceEquals(variables, node.Variables) || !ReferenceEquals(expressions, node.Expressions))
             {
                 return new BlockExpression(node.Type, variables, expressions);

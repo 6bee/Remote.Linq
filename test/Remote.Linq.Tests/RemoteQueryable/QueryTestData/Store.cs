@@ -9,11 +9,11 @@ namespace Remote.Linq.Tests.RemoteQueryable.QueryTestData
 
     public sealed class Store
     {
-        private readonly IDictionary<Type,IEnumerable> _dataSets;
+        private readonly IDictionary<Type, IEnumerable> _dataSets;
 
         public Store()
         {
-            _dataSets = new Dictionary<Type,IEnumerable>();
+            _dataSets = new Dictionary<Type, IEnumerable>();
 
             _dataSets[typeof(Category)] = new[]
             {

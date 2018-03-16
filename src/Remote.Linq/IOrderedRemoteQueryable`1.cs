@@ -4,10 +4,6 @@ namespace Remote.Linq
 {
     using System.Linq;
 
-    public interface IRemoteQueryable<T> : IRemoteQueryable, IQueryable<T>
-    {
-    }
-
     public interface IOrderedRemoteQueryable<T> : IRemoteQueryable<T>, IOrderedQueryable<T>, IOrderedRemoteQueryable
     {
     }

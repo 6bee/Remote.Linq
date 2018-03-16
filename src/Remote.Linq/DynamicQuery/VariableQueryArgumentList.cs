@@ -68,7 +68,8 @@ namespace Remote.Linq.DynamicQuery
             var elementType = ElementType;
             var values = Values;
 
-            return string.Format("{0}Of{1}[{2}]",
+            return string.Format(
+                "{0}Of{1}[{2}]",
                 GetType().Name,
                 ReferenceEquals(null, elementType) ? "?" : elementType.Name,
                 ReferenceEquals(null, values) ? 0 : values.Count);

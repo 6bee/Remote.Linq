@@ -1,4 +1,6 @@
-﻿namespace Remote.Linq.ExpressionVisitors
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+namespace Remote.Linq.ExpressionVisitors
 {
     using System;
     using System.Collections.Generic;
@@ -10,13 +12,13 @@
     /// From http://msdn.microsoft.com/en-us/library/bb882521.aspx
     /// </summary>
     /// <remarks>
-    /// In this expression tree visitor implementation, the Visit method, which should be called first, 
-    /// dispatches the expression it is passed to one of the more specialized visitor methods in the class, 
-    /// based on the type of the expression. The specialized visitor methods visit the sub-tree of the 
-    /// expression they are passed. If a sub-expression changes after it has been visited, for example by 
-    /// an overriding method in a derived class, the specialized visitor methods create a new expression 
-    /// that includes the changes in the sub-tree. Otherwise, they return the expression that they were passed. 
-    /// This recursive behavior enables a new expression tree to be built that either is the same as or a 
+    /// In this expression tree visitor implementation, the Visit method, which should be called first,
+    /// dispatches the expression it is passed to one of the more specialized visitor methods in the class,
+    /// based on the type of the expression. The specialized visitor methods visit the sub-tree of the
+    /// expression they are passed. If a sub-expression changes after it has been visited, for example by
+    /// an overriding method in a derived class, the specialized visitor methods create a new expression
+    /// that includes the changes in the sub-tree. Otherwise, they return the expression that they were passed.
+    /// This recursive behavior enables a new expression tree to be built that either is the same as or a
     /// modified version of the original expression that was passed to Visit.
     /// </remarks>
     public abstract class ExpressionVisitorBase
@@ -107,7 +109,7 @@
 
         protected virtual Expression VisitSwitch(SwitchExpression switchExpression)
         {
-            List<SwitchCase> cases = (switchExpression.Cases??Enumerable.Empty<SwitchCase>()).ToList();
+            List<SwitchCase> cases = (switchExpression.Cases ?? Enumerable.Empty<SwitchCase>()).ToList();
             List<SwitchCase> switchCases = cases.Select(VisitSwitchCase).ToList();
             Expression body = Visit(switchExpression.DefaultBody);
             Expression switchValue = Visit(switchExpression.SwitchValue);
@@ -115,7 +117,7 @@
                 switchValue != switchExpression.SwitchValue ||
                 switchCases.SequenceEqual(cases) == false)
             {
-                return Expression.Switch(switchValue,body,switchExpression.Comparison,switchCases);
+                return Expression.Switch(switchValue, body, switchExpression.Comparison, switchCases);
             }
 
             return switchExpression;
@@ -139,8 +141,8 @@
             Expression fault = Visit(tryExpression.Fault);
             Expression @finally = Visit(tryExpression.Finally);
             List<CatchBlock> handlers = tryExpression.Handlers.Select(VisitCatch).ToList();
-            if (body != tryExpression.Body || 
-                fault != tryExpression.Fault || 
+            if (body != tryExpression.Body ||
+                fault != tryExpression.Fault ||
                 @finally != tryExpression.Finally ||
                 handlers.SequenceEqual(tryExpression.Handlers) == false)
             {
@@ -154,7 +156,7 @@
         {
             Expression body = Visit(catchBlock.Body);
             Expression filter = Visit(catchBlock.Filter);
-            ParameterExpression variable = (ParameterExpression) VisitParameter(catchBlock.Variable);
+            ParameterExpression variable = (ParameterExpression)VisitParameter(catchBlock.Variable);
             if (body != catchBlock.Body || filter != catchBlock.Filter || variable != catchBlock.Variable)
             {
                 return Expression.MakeCatchBlock(catchBlock.Test, variable, body, filter);

@@ -1,0 +1,16 @@
+{
+  "settings": {
+    "orderingRules": {
+      "systemUsingDirectivesFirst": false
+    },
+    "documentationRules": {
+      "companyName": "Christof Senn",
+      "copyrightText": "Copyright (c) {companyName}. All rights reserved. See {licenseFile} in the project root for license information.",
+      "xmlHeader": false,
+      "variables": {
+        "licenseFile": "license.txt"
+      },
+      "fileNamingConvention": "metadata"
+    }
+  }
+}

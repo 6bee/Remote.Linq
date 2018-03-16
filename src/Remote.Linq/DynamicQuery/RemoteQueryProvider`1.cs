@@ -2,13 +2,13 @@
 
 namespace Remote.Linq.DynamicQuery
 {
-    using Remote.Linq.ExpressionVisitors;
     using Aqua.TypeSystem;
+    using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Linq;
     using Expression = System.Linq.Expressions.Expression;
 
-    internal sealed partial class RemoteQueryProvider<TSource> : IRemoteQueryProvider
+    internal sealed class RemoteQueryProvider<TSource> : IRemoteQueryProvider
     {
         private readonly Func<Expressions.Expression, TSource> _dataProvider;
         private readonly IQueryResultMapper<TSource> _resultMapper;

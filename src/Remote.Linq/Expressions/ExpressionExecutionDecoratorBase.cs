@@ -25,7 +25,6 @@ namespace Remote.Linq.Expressions
             _parent = parent ?? throw new ArgumentNullException(nameof(parent));
         }
 
-
         protected IEnumerable<DynamicObject> Execute(Expression expression)
         {
             var preparedRemoteExpression = Prepare(expression);
@@ -37,7 +36,6 @@ namespace Remote.Linq.Expressions
             var processedDynamicObjects = ProcessResult(dynamicObjects);
             return processedDynamicObjects;
         }
-
 
         protected virtual Expression Prepare(Expression expression)
             => _parent.Prepare(expression);
@@ -59,7 +57,6 @@ namespace Remote.Linq.Expressions
 
         protected virtual IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult)
             => _parent.ProcessResult(queryResult);
-
 
         Expression IExpressionExecutionDecorator.Prepare(Expression expression)
             => Prepare(expression);

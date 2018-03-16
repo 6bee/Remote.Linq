@@ -9,7 +9,7 @@ namespace Remote.Linq.Tests.IEnumerableAsyncExtensions
 
     public class When_using_async_with_non_async_queriables
     {
-        int[] array = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1001, 1002, 1004, -1, -2, -5 };
+        private int[] array = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1001, 1002, 1004, -1, -2, -5 };
 
         [Fact]
         public async Task Should_execute_synchronously()

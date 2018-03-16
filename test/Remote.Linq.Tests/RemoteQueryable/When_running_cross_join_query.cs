@@ -11,11 +11,11 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
     public class When_running_cross_join_query
     {
-        class A
+        private class A
         {
         }
 
-        class B
+        private class B
         {
         }
 
@@ -40,7 +40,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             var queryableA = RemoteQueryable.Factory.CreateQueryable<A>(x => x.Execute(queryableProvider: GetQueryableByType));
 
             var queryableB = RemoteQueryable.Factory.CreateQueryable<B>(x => x.Execute(queryableProvider: GetQueryableByType));
-            
+
             var query =
                 from a in queryableA
                 from b in queryableB

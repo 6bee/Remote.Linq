@@ -2,9 +2,9 @@
 
 namespace Remote.Linq.Expressions
 {
-    using System.Collections.Generic;
     using Aqua.TypeSystem;
     using System;
+    using System.Collections.Generic;
     using System.Runtime.Serialization;
 
     [Serializable]
@@ -18,10 +18,8 @@ namespace Remote.Linq.Expressions
         public TryExpression(Type type, Expression body, Expression fault, Expression @finally, List<CatchBlock> handlers)
             : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), body, fault, @finally, handlers)
         {
-            
         }
-        
-            
+
         public TryExpression(TypeInfo type, Expression body, Expression fault, Expression @finally, List<CatchBlock> handlers)
         {
             Type = type;
@@ -41,19 +39,17 @@ namespace Remote.Linq.Expressions
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public Expression Finally { get; set; }
-        
+
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public Expression Fault { get; set; }
-        
+
         [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo Type { get; set; }
 
         public override string ToString()
-        {
-            return $"try({Type}) {{{Body}}}" +
-                   (ReferenceEquals(Handlers, null) ? String.Empty : " " + String.Join("; ", Handlers)) +
-                   (ReferenceEquals(Finally, null) ? String.Empty : $" finally{{{Finally}}}") +
-                   (ReferenceEquals(Fault, null) ? String.Empty : $" faulted{{{Fault}}}");
-        }
+            => $"try({Type}) {{{Body}}}" +
+                (ReferenceEquals(Handlers, null) ? string.Empty : " " + string.Join("; ", Handlers)) +
+                (ReferenceEquals(Finally, null) ? string.Empty : $" finally{{{Finally}}}") +
+                (ReferenceEquals(Fault, null) ? string.Empty : $" faulted{{{Fault}}}");
     }
 }

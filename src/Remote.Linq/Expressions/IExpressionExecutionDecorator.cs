@@ -8,11 +8,17 @@ namespace Remote.Linq.Expressions
     internal interface IExpressionExecutionDecorator
     {
         Expression Prepare(Expression expression);
+
         System.Linq.Expressions.Expression Transform(Expression expression);
+
         System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression);
+
         object Execute(System.Linq.Expressions.Expression expression);
+
         object ProcessResult(object queryResult);
+
         IEnumerable<DynamicObject> ConvertResult(object queryResult);
+
         IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult);
     }
 }
