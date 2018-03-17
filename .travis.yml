@@ -17,25 +17,21 @@ addons:
 matrix:
   include:
     - os: linux
-      dist: trusty
-      sudo: required
-      env: FRAMEWORK_VERSION=1.0 CLI_VERSION=1.0.1 CONFIGURATION=Release
+      env: FRAMEWORK_VERSION=1.0 CLI_VERSION=1.1.5 CONFIGURATION=Release
     - os: linux
-      dist: trusty
-      sudo: required
-      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=2.0.0 CONFIGURATION=Debug
+      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=Latest CONFIGURATION=Release
     - os: linux
-      dist: trusty
-      sudo: required
-      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=2.0.0 CONFIGURATION=Release
+      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=2.1.4 CONFIGURATION=Debug
     - os: osx
-      env: FRAMEWORK_VERSION=1.0 CLI_VERSION=1.0.1 CONFIGURATION=Debug
+      env: FRAMEWORK_VERSION=1.0 CLI_VERSION=1.1.5 CONFIGURATION=Release
     - os: osx
-      env: FRAMEWORK_VERSION=1.0 CLI_VERSION=1.0.1 CONFIGURATION=Release
+      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=Latest CONFIGURATION=Release
+    - os: osx
+      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=2.1.4 CONFIGURATION=Debug
 
 install:  
   - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
-  - curl -sSL "https://raw.githubusercontent.com/dotnet/cli/v$CLI_VERSION/scripts/obtain/dotnet-install.sh" | bash /dev/stdin --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
+  - curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --channel 2.0 --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
   - export PATH="$DOTNET_INSTALL_DIR:$PATH" 
 
 before_script:  
