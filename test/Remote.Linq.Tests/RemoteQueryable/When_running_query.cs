@@ -42,14 +42,14 @@ namespace Remote.Linq.Tests.RemoteQueryable
             public With_xml_serializer() : base(XmlSerializationHelper.Serialize) { }
         }
 
-#if NET
+#if !NETCOREAPP1_0
         public class With_binary_formatter : When_running_query
         {
             public With_binary_formatter() : base(BinarySerializationHelper.Serialize) { }
         }
 #endif
 
-#if NET && !NETCOREAPP2
+#if NET
         public class With_net_data_contract_serializer : When_running_query
         {
             public With_net_data_contract_serializer() : base(NetDataContractSerializationHelper.Serialize) { }

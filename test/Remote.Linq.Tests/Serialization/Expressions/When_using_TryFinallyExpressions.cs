@@ -10,7 +10,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
     public abstract class When_using_TryFinallyExpressions
     {
-#if NET
+#if !NETCOREAPP1_0
         public class BinaryFormatter : When_using_TryFinallyExpressions
         {
             public BinaryFormatter()
@@ -20,7 +20,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif
 
-#if NET && !NETCOREAPP2
+#if NET
         public class NetDataContractSerializer : When_using_TryFinallyExpressions
         {
             public NetDataContractSerializer()

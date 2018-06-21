@@ -35,8 +35,8 @@ namespace Remote.Linq.Tests
             || type == typeof(T[])
             || type == typeof(T?[]);
 
-        public static bool CoreClr
-#if CORECLR
+        public static bool NetCoreApp1_0
+#if NETCOREAPP1_0
             => true;
 #else
             => false;

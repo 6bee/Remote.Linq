@@ -33,11 +33,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <DefineConstants>$(DefineConstants);CORECLR</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETCOREAPP1_0</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
-    <DefineConstants>$(DefineConstants);NET;NETCOREAPP2</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">

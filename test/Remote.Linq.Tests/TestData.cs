@@ -58,7 +58,7 @@ namespace Remote.Linq.Tests
                 uint.MaxValue,
                 long.MinValue,
                 long.MaxValue,
-#if NET // Newtonsoft.Json.JsonReaderException : JSON integer 18446744073709551615 is too large (small) for an Int64, fails on .net core while ok on .net full
+#if !NETCOREAPP1_0 // Newtonsoft.Json.JsonReaderException : JSON integer 18446744073709551615 is too large (small) for an Int64, fails on .net core while ok on .net full
                 ulong.MinValue,
                 ulong.MaxValue,
 #endif
