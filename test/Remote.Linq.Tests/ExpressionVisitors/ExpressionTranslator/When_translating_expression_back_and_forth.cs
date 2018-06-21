@@ -105,6 +105,36 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
                 .Value.ShouldBe(Math.E);
         }
 
+#if !NETCOREAPP1_0
+        [Fact]
+        public void Should_preserve_func_expression()
+        {
+            var func = new Func<int, int>(x => x);
+            var newFunc = BackAndForth<Expression<Func<int, int>>>(x => func(x)).Item2.Compile();
+            var r = newFunc(9);
+            r.ShouldBe(9);
+        }
+
+        [Fact]
+        public void Should_preserve_action_expression()
+        {
+            var action = new Action<int>(x => { });
+            var newAction = BackAndForth<Expression<Action<int>>>(x => action(x)).Item2.Compile();
+            newAction(9);
+        }
+
+        [Fact]
+        public void Should_preserve_method_expression()
+        {
+            BackAndForth<Expression<Func<int, int>>>(x => Method(x)).ShouldMatch();
+        }
+
+        private int Method(int i)
+        {
+            return i;
+        }
+#endif
+
         private static Tuple<T, T> BackAndForth<T>(T expression) where T : Expression
         {
             var remoteExpression = expression.ToRemoteLinqExpression();
