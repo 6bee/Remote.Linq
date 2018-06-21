@@ -428,7 +428,7 @@ namespace Remote.Linq
                         }
                     }
 
-                    if (node.Value?.GetType() == node.Type)
+                    if (node.Type == constantQueryArgument.Type.Type)
                     {
                         exp = new RLinq.ConstantExpression(constantQueryArgument, constantQueryArgument.Type);
                     }
@@ -1043,13 +1043,7 @@ namespace Remote.Linq
                         newConstantQueryArgument.Add(property.Name, propertyValue);
                     }
 
-                    var argumentType = newConstantQueryArgument.Type.ResolveType(_typeResolver);
-                    value = ConstantValueMapper.ForReconstruction(_typeResolver).Map(newConstantQueryArgument, argumentType);
-
-                    if (ReferenceEquals(null, type) || !type.IsAssignableFrom(argumentType))
-                    {
-                        type = argumentType;
-                    }
+                    value = ConstantValueMapper.ForReconstruction(_typeResolver).Map(newConstantQueryArgument, type);
                 }
 
                 return Expression.Constant(value, type);
