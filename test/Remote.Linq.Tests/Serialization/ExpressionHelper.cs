@@ -15,7 +15,7 @@ namespace Remote.Linq.Tests.Serialization
         }
 
         /// <summary>
-        /// Best effort comparison using Expression.ToString()
+        /// Best effort comparison using Expression.ToString().
         /// </summary>
         public static void EqualsExpression<T>(this T expression1, T expression2) where T : System.Linq.Expressions.Expression
         {

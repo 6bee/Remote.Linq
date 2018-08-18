@@ -4,7 +4,7 @@ namespace Remote.Linq
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
-    using ExpressionVisitors;
+    using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -18,13 +18,13 @@ namespace Remote.Linq
         private static readonly Func<Expressions.LambdaExpression, Expressions.LambdaExpression> _defaultExpressionVisitor = RemoteExpressionReWriter.ReplaceNonGenericQueryArgumentsByGenericArguments;
 
         /// <summary>
-        /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified
+        /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified.
         /// </summary>
         public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
             => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeResolver, mapper);
 
         /// <summary>
-        /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified
+        /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified.
         /// </summary>
         public static IQueryable AsQueryable<T>(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
             => RemoteQueryable.Factory.CreateQueryable(resource.ElementType, dataProvider, typeResolver, mapper);
@@ -65,7 +65,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Applies this query instance to a queryable
+        /// Applies this query instance to a queryable.
         /// </summary>
         public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, IQuery<TEntity> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor)
         {
@@ -77,7 +77,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Applies this query instance to a queryable
+        /// Applies this query instance to a queryable.
         /// </summary>
         public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor)
         {

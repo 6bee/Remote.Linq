@@ -11,85 +11,85 @@ namespace Remote.Linq.Expressions
     public static class ExpressionExecutionDecoratorExtensions
     {
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<Expression, Expression> transform)
             => new ExpressionExecutorWithRemoteExpressionTransformer(decorator, transform);
 
         /// <summary>
-        /// Replace expression transformtion logic with custom strategy
+        /// Replace expression transformtion logic with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<Expression, System.Linq.Expressions.Expression> transform)
             => new ExpressionExecutorWithExpressionTransformer(decorator, transform);
 
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transform)
             => new ExpressionExecutorWithSystemExpressionTransformer(decorator, transform);
 
         /// <summary>
-        /// Replace expression execution logic with custom strategy
+        /// Replace expression execution logic with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<System.Linq.Expressions.Expression, object> transform)
             => new ExpressionExecutorWithExpressionExecutor(decorator, transform);
 
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<object, object> transform)
             => new ExpressionExecutorWithObjectResultProcessor(decorator, transform);
 
         /// <summary>
-        /// Replace result transformation logic with custom strategy
+        /// Replace result transformation logic with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<object, IEnumerable<DynamicObject>> transform)
             => new ExpressionExecutorWithResultConverter(decorator, transform);
 
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
             => new ExpressionExecutorWithDynamicObjectResultProcessor(decorator, transform);
 
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<Expression, Expression> transform)
             => new ExpressionExecutorWithRemoteExpressionTransformer(executor, transform);
 
         /// <summary>
-        /// Replace expression transformtion logic with custom strategy
+        /// Replace expression transformtion logic with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<Expression, System.Linq.Expressions.Expression> transform)
             => new ExpressionExecutorWithExpressionTransformer(executor, transform);
 
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transform)
             => new ExpressionExecutorWithSystemExpressionTransformer(executor, transform);
 
         /// <summary>
-        /// Replace expression execution logic with custom strategy
+        /// Replace expression execution logic with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<System.Linq.Expressions.Expression, object> transform)
             => new ExpressionExecutorWithExpressionExecutor(executor, transform);
 
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<object, object> transform)
             => new ExpressionExecutorWithObjectResultProcessor(executor, transform);
 
         /// <summary>
-        /// Replace result transformation logic with custom strategy
+        /// Replace result transformation logic with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<object, IEnumerable<DynamicObject>> transform)
             => new ExpressionExecutorWithResultConverter(executor, transform);
 
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
             => new ExpressionExecutorWithDynamicObjectResultProcessor(executor, transform);

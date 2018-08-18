@@ -11,7 +11,7 @@ namespace Remote.Linq
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by the function represented by keySelector.</typeparam>
         /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery<T> ThenBy<TKey>(System.Linq.Expressions.Expression<Func<T, TKey>> keySelector);
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace Remote.Linq
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by the function represented by keySelector.</typeparam>
         /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery<T> ThenByDescending<TKey>(System.Linq.Expressions.Expression<Func<T, TKey>> keySelector);
     }
 }

@@ -28,7 +28,7 @@ namespace Remote.Linq.ExpressionVisitors
             => (LambdaExpression)ResolveDynamicPropertySelectors((Expression)expression, throwOnInvalidProperty);
 
         /// <summary>
-        /// Replace complicated access to <see cref="IRemoteQueryable"/> by simple <see cref="ConstantExpression"/>
+        /// Replace complicated access to <see cref="IRemoteQueryable"/> by simple <see cref="ConstantExpression"/>.
         /// </summary>
         public static Expression SimplifyIncorporationOfRemoteQueryables(this Expression expression)
             => new RemoteQueryableVisitor().Simplify(expression);

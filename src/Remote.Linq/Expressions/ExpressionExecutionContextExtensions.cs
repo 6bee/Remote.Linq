@@ -11,43 +11,43 @@ namespace Remote.Linq.Expressions
     public static class ExpressionExecutionContextExtensions
     {
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<Expression, Expression> transform)
             => new ExpressionExecutionContextWithRemoteExpressionTransformer(context, transform);
 
         /// <summary>
-        /// Replace expression transformtion logic with custom strategy
+        /// Replace expression transformtion logic with custom strategy.
         /// </summary>
         public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<Expression, System.Linq.Expressions.Expression> transform)
             => new ExpressionExecutionContextWithExpressionTransformer(context, transform);
 
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transform)
             => new ExpressionExecutionContextWithSystemExpressionTransformer(context, transform);
 
         /// <summary>
-        /// Replace expression execution logic with custom strategy
+        /// Replace expression execution logic with custom strategy.
         /// </summary>
         public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<System.Linq.Expressions.Expression, object> transform)
             => new ExpressionExecutionContextWithExpressionExecutor(context, transform);
 
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<object, object> transform)
             => new ExpressionExecutionContextWithObjectResultProcessor(context, transform);
 
         /// <summary>
-        /// Replace result transformation logic with custom strategy
+        /// Replace result transformation logic with custom strategy.
         /// </summary>
         public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<object, IEnumerable<DynamicObject>> transform)
             => new ExpressionExecutionContextWithResultConverter(context, transform);
 
         /// <summary>
-        /// Decorate with custom strategy
+        /// Decorate with custom strategy.
         /// </summary>
         public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
             => new ExpressionExecutionContextWithDynamicObjectResultProcessor(context, transform);

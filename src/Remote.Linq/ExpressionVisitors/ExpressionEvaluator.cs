@@ -13,16 +13,16 @@ namespace Remote.Linq.ExpressionVisitors
 
     /// <summary>
     /// Enables the partial evalutation of queries.
-    /// From http://msdn.microsoft.com/en-us/library/bb546158.aspx
+    /// From http://msdn.microsoft.com/en-us/library/bb546158.aspx.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionEvaluator
     {
         /// <summary>
-        /// Performs evaluation and replacement of independent sub-trees
+        /// Performs evaluation and replacement of independent sub-trees.
         /// </summary>
         /// <param name="expression">The root of the expression tree.</param>
-        /// <param name="canBeEvaluatedLocally">A function that decides whether a given expression node can be evaluated locally, assumes true if no function defined</param>
+        /// <param name="canBeEvaluatedLocally">A function that decides whether a given expression node can be evaluated locally, assumes true if no function defined.</param>
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
         public static Expression PartialEval(this Expression expression, Func<Expression, bool> canBeEvaluatedLocally = null)
         {
@@ -99,7 +99,7 @@ namespace Remote.Linq.ExpressionVisitors
         }
 
         /// <summary>
-        /// Evaluates and replaces sub-trees when first candidate is reached (top-down)
+        /// Evaluates and replaces sub-trees when first candidate is reached (top-down).
         /// </summary>
         private sealed class SubtreeEvaluator : ExpressionVisitorBase
         {

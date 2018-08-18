@@ -57,7 +57,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Translates a given expression into a remote linq expression
+        /// Translates a given expression into a remote linq expression.
         /// </summary>
         public static RLinq.Expression ToRemoteLinqExpression(this Expression expression, Func<Expression, bool> canBeEvaluatedLocally = null)
         {
@@ -65,7 +65,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Translates a given lambda expression into a remote linq expression
+        /// Translates a given lambda expression into a remote linq expression.
         /// </summary>
         public static RLinq.LambdaExpression ToRemoteLinqExpression(this LambdaExpression expression, Func<Expression, bool> canBeEvaluatedLocally = null)
         {
@@ -74,7 +74,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Translates a given query expression into an expression
+        /// Translates a given query expression into an expression.
         /// </summary>
         public static Expression ToLinqExpression(this RLinq.Expression expression)
         {
@@ -82,7 +82,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Translates a given query expression into an expression
+        /// Translates a given query expression into an expression.
         /// </summary>
         public static Expression ToLinqExpression(this RLinq.Expression expression, ITypeResolver typeResolver)
         {
@@ -91,7 +91,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Translates a given query expression into a lambda expression
+        /// Translates a given query expression into a lambda expression.
         /// </summary>
         public static Expression<Func<T, TResult>> ToLinqExpression<T, TResult>(this RLinq.LambdaExpression expression)
         {
@@ -101,7 +101,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Translates a given query expression into a lambda expression
+        /// Translates a given query expression into a lambda expression.
         /// </summary>
         public static Expression<Func<TResult>> ToLinqExpression<TResult>(this RLinq.LambdaExpression expression)
         {
@@ -111,7 +111,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Translates a given query expression into a lambda expression
+        /// Translates a given query expression into a lambda expression.
         /// </summary>
         public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression)
         {
@@ -119,7 +119,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Translates a given query expression into a lambda expression
+        /// Translates a given query expression into a lambda expression.
         /// </summary>
         public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression, ITypeResolver typeResolver)
         {

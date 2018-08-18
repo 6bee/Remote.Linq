@@ -34,9 +34,9 @@ namespace Remote.Linq.EntityFrameworkCore
             => Prepare(Transform(Prepare(expression)));
 
         /// <summary>
-        /// Returns the generic <see cref="DbSet{T}"/> for the type specified
+        /// Returns the generic <see cref="DbSet{T}"/> for the type specified.
         /// </summary>
-        /// <returns>Returns an instance of type <see cref="DbSet{T}"/></returns>
+        /// <returns>Returns an instance of type <see cref="DbSet{T}"/>.</returns>
         private static Func<Type, IQueryable> GetQueryableSetProvider(DbContext dbContext) => (Type type) =>
         {
             var method = DbContextSetMethod.MakeGenericMethod(type);

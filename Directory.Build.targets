@@ -3,7 +3,7 @@
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json">
       <Link>Stylecop.json</Link>
     </AdditionalFiles>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>

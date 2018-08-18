@@ -34,10 +34,10 @@ namespace Remote.Linq.Expressions
         }
 
         /// <summary>
-        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects
+        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
         /// </summary>
-        /// <param name="expression">The <see cref="Expression"/> to be executed</param>
-        /// <returns>The mapped result of the query execution</returns>
+        /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
+        /// <returns>The mapped result of the query execution.</returns>
         public IEnumerable<DynamicObject> Execute(Expression expression)
         {
             var preparedRemoteExpression = Prepare(expression);
@@ -51,10 +51,10 @@ namespace Remote.Linq.Expressions
         }
 
         /// <summary>
-        /// Prepares the <see cref="Expression"/> befor being transformed<para/>
+        /// Prepares the <see cref="Expression"/> befor being transformed.<para/>
         /// </summary>
-        /// <param name="expression">The <see cref="Expression"/></param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/></returns>
+        /// <param name="expression">The <see cref="Expression"/>.</param>
+        /// <returns>A <see cref="System.Linq.Expressions.Expression"/>.</returns>
         protected virtual Expression Prepare(Expression expression)
         {
             var expression1 = expression.ReplaceNonGenericQueryArgumentsByGenericArguments();
@@ -63,10 +63,10 @@ namespace Remote.Linq.Expressions
         }
 
         /// <summary>
-        /// Transforms the <see cref="Expression"/> to a <see cref="System.Linq.Expressions.Expression"/>
+        /// Transforms the <see cref="Expression"/> to a <see cref="System.Linq.Expressions.Expression"/>.
         /// </summary>
-        /// <param name="expression">The <see cref="Expression"/> to be transformed</param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/></returns>
+        /// <param name="expression">The <see cref="Expression"/> to be transformed.</param>
+        /// <returns>A <see cref="System.Linq.Expressions.Expression"/>.</returns>
         protected virtual System.Linq.Expressions.Expression Transform(Expression expression)
         {
             var linqExpression = expression.ToLinqExpression(_typeResolver);
@@ -77,7 +77,7 @@ namespace Remote.Linq.Expressions
         /// Prepares the query <see cref="System.Linq.Expressions.Expression"/> to be able to be executed.
         /// </summary>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> returned by the Transform method.</param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution</returns>
+        /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution.</returns>
         protected virtual System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression)
         {
             var locallyEvaluatedExpression = expression.PartialEval(_canBeEvaluatedLocally);
@@ -85,10 +85,10 @@ namespace Remote.Linq.Expressions
         }
 
         /// <summary>
-        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result
+        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
         /// </summary>
-        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed</param>
-        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified</returns>
+        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
+        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
         protected virtual object Execute(System.Linq.Expressions.Expression expression)
         {
             var lambdaExpression = expression as System.Linq.Expressions.LambdaExpression;
@@ -164,18 +164,18 @@ namespace Remote.Linq.Expressions
         }
 
         /// <summary>
-        /// If overriden in a derived transforms the collection of <see cref="DynamicObject"/>
+        /// If overriden in a derived transforms the collection of <see cref="DynamicObject"/>.
         /// </summary>
-        /// <param name="queryResult">The reult of the query execution</param>
-        /// <returns>Processed result</returns>
+        /// <param name="queryResult">The reult of the query execution.</param>
+        /// <returns>Processed result.</returns>
         protected virtual object ProcessResult(object queryResult)
             => queryResult;
 
         /// <summary>
-        /// Converts the query result into a collection of <see cref="DynamicObject"/>
+        /// Converts the query result into a collection of <see cref="DynamicObject"/>.
         /// </summary>
-        /// <param name="queryResult">The reult of the query execution</param>
-        /// <returns>The mapped query result</returns>
+        /// <param name="queryResult">The reult of the query execution.</param>
+        /// <returns>The mapped query result.</returns>
         protected virtual IEnumerable<DynamicObject> ConvertResult(object queryResult)
         {
             var dynamicObjects = _mapper.MapCollection(queryResult, _setTypeInformation);
@@ -183,10 +183,10 @@ namespace Remote.Linq.Expressions
         }
 
         /// <summary>
-        /// If overriden in a derived transforms the collection of <see cref="DynamicObject"/>
+        /// If overriden in a derived transforms the collection of <see cref="DynamicObject"/>.
         /// </summary>
-        /// <param name="queryResult">The reult of the query execution</param>
-        /// <returns>Processed result</returns>
+        /// <param name="queryResult">The reult of the query execution.</param>
+        /// <returns>Processed result.</returns>
         protected virtual IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult)
             => queryResult;
 

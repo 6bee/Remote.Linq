@@ -13,13 +13,13 @@ namespace Remote.Linq
     public static class EnumerableExtensions
     {
         /// <summary>
-        /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified
+        /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified.
         /// </summary>
         public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
             => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeResolver, mapper);
 
         /// <summary>
-        /// Applies this query instance to an enumerable
+        /// Applies this query instance to an enumerable.
         /// </summary>
         public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery<TEntity> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor = null)
             => enumerable
@@ -28,7 +28,7 @@ namespace Remote.Linq
                 .AsEnumerable();
 
         /// <summary>
-        /// Applies this query instance to an enumerable
+        /// Applies this query instance to an enumerable.
         /// </summary>
         public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor = null)
             => enumerable

@@ -43,14 +43,14 @@ namespace Remote.Linq
         /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
         /// </summary>
         /// <param name="count">The number of elements to skip before returning the remaining elements.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IQuery Skip(int count);
 
         /// <summary>
         /// Returns a specified number of contiguous elements from the start of a sequence.
         /// </summary>
         /// <param name="count">The number of elements to return.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IQuery Take(int count);
     }
 }

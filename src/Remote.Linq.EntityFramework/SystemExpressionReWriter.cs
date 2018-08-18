@@ -12,7 +12,7 @@ namespace Remote.Linq.EntityFramework
     internal static class SystemExpressionReWriter
     {
         /// <summary>
-        /// Replaces parameterized constructor calls for <see cref="VariableQueryArgument{T}"/> with type initializer
+        /// Replaces parameterized constructor calls for <see cref="VariableQueryArgument{T}"/> with type initializer.
         /// </summary>
         internal static Expression ReplaceParameterizedConstructorCallsForVariableQueryArguments(this Expression expression)
             => new ReWriter().Run(expression);

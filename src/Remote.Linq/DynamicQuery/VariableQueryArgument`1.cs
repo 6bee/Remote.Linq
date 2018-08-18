@@ -7,9 +7,9 @@ namespace Remote.Linq.DynamicQuery
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// This type is used to distinguish variable query arguments from constant query arguments
+    /// This type is used to distinguish variable query arguments from constant query arguments.
     /// </summary>
-    /// <typeparam name="T">Type of the query argument</typeparam>
+    /// <typeparam name="T">Type of the query argument.</typeparam>
     [Serializable]
     [DataContract]
     public sealed class VariableQueryArgument<T>

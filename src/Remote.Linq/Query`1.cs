@@ -3,7 +3,7 @@
 namespace Remote.Linq
 {
     using Aqua.TypeSystem;
-    using ExpressionVisitors;
+    using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -63,7 +63,7 @@ namespace Remote.Linq
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         public IQuery<T> Where(Expression<Func<T, bool>> predicate)
         {
             var filter = _expressionTranslator(predicate);
@@ -80,7 +80,7 @@ namespace Remote.Linq
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by the function that is represented by keySelector.</typeparam>
         /// <param name="keySelector">A function to extract a key from an element.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         public IOrderedQuery<T> OrderBy<TKey>(Expression<Func<T, TKey>> keySelector)
         {
             var expression = _expressionTranslator(keySelector);
@@ -95,7 +95,7 @@ namespace Remote.Linq
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by the function that is represented by keySelector.</typeparam>
         /// <param name="keySelector">A function to extract a key from an element.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         public IOrderedQuery<T> OrderByDescending<TKey>(Expression<Func<T, TKey>> keySelector)
         {
             var expression = _expressionTranslator(keySelector);
@@ -110,7 +110,7 @@ namespace Remote.Linq
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by the function represented by keySelector.</typeparam>
         /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery<T> IOrderedQuery<T>.ThenBy<TKey>(Expression<Func<T, TKey>> keySelector)
         {
             if (!SortExpressions.Any())
@@ -133,7 +133,7 @@ namespace Remote.Linq
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by the function represented by keySelector.</typeparam>
         /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery<T> IOrderedQuery<T>.ThenByDescending<TKey>(Expression<Func<T, TKey>> keySelector)
         {
             if (!SortExpressions.Any())
@@ -155,7 +155,7 @@ namespace Remote.Linq
         /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
         /// </summary>
         /// <param name="count">The number of elements to skip before returning the remaining elements.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         public IQuery<T> Skip(int count)
         {
             var query = new Query<T>(_dataProvider, _expressionTranslator, FilterExpressions, SortExpressions, count, TakeValue);
@@ -166,7 +166,7 @@ namespace Remote.Linq
         /// Returns a specified number of contiguous elements from the start of a sequence.
         /// </summary>
         /// <param name="count">The number of elements to return.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         public IQuery<T> Take(int count)
         {
             var query = new Query<T>(_dataProvider, _expressionTranslator, FilterExpressions, SortExpressions, SkipValue, count);
@@ -174,7 +174,7 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Enumerating the query actually invokes the data provider to retrieve data
+        /// Enumerating the query actually invokes the data provider to retrieve data.
         /// </summary>
         /// <returns>The data retrieved from the data provider.</returns>
         public IEnumerator<T> GetEnumerator()

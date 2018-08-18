@@ -22,23 +22,23 @@ namespace Remote.Linq.Expressions
             => CreateExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).Execute(expression);
 
         /// <summary>
-        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result
+        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
         /// </summary>
-        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed</param>
-        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified</returns>
+        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
+        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
         [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.Expressions.ExpressionExecutor or use expression.Executor(..).With(customstrategy).Execute() instead.", false)]
         public static object Execute(this System.Linq.Expressions.Expression expression)
             => ((IExpressionExecutionDecorator)new ExpressionExecutor(null)).Execute(expression);
 
         /// <summary>
-        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects
+        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
         /// </summary>
         [Obsolete("This method is being removed in a future version. In order to define custom result projection use expression.Executor(..).With(customstrategy).Execute() instead.", false)]
         public static IEnumerable<DynamicObject> Execute(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver, Func<object, object> resultProjector, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => Executor(expression, queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).With(resultProjector).Execute();
 
         /// <summary>
-        /// Converts the query result into a collection of <see cref="DynamicObject"/>
+        /// Converts the query result into a collection of <see cref="DynamicObject"/>.
         /// </summary>
         [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.Expressions.ExpressionExecutor or use expression.Executor(..).With(customstrategy).Execute() instead.", false)]
         public static IEnumerable<DynamicObject> ConvertResultToDynamicObjects(object queryResult, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)

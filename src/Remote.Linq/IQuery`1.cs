@@ -25,7 +25,7 @@ namespace Remote.Linq
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IQuery<T> Where(System.Linq.Expressions.Expression<Func<T, bool>> predicate);
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Remote.Linq
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by the function that is represented by keySelector.</typeparam>
         /// <param name="keySelector">A function to extract a key from an element.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery<T> OrderBy<TKey>(System.Linq.Expressions.Expression<Func<T, TKey>> keySelector);
 
         /// <summary>
@@ -41,21 +41,21 @@ namespace Remote.Linq
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by the function that is represented by keySelector.</typeparam>
         /// <param name="keySelector">A function to extract a key from an element.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery<T> OrderByDescending<TKey>(System.Linq.Expressions.Expression<Func<T, TKey>> keySelector);
 
         /// <summary>
         /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
         /// </summary>
         /// <param name="count">The number of elements to skip before returning the remaining elements.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IQuery<T> Skip(int count);
 
         /// <summary>
         /// Returns a specified number of contiguous elements from the start of a sequence.
         /// </summary>
         /// <param name="count">The number of elements to return.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IQuery<T> Take(int count);
     }
 }

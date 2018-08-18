@@ -66,7 +66,7 @@ namespace Remote.Linq
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <param name="predicate">A lambda expression to test each element for a condition.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         public IQuery Where(LambdaExpression predicate)
         {
             var filterExpressions = FilterExpressions.ToList();
@@ -108,7 +108,7 @@ namespace Remote.Linq
         /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
         /// </summary>
         /// <param name="sortExpression">A sort expression to extract a key from each element and define a sort direction.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery IOrderedQuery.ThenBy(SortExpression sortExpression)
         {
             if (!SortExpressions.Any())
@@ -132,7 +132,7 @@ namespace Remote.Linq
         /// Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
         /// </summary>
         /// <param name="sortExpression">A sort expression to extract a key from each element and define a sort direction.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery IOrderedQuery.ThenByDescending(SortExpression sortExpression)
         {
             if (!SortExpressions.Any())
@@ -156,7 +156,7 @@ namespace Remote.Linq
         /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
         /// </summary>
         /// <param name="count">The number of elements to skip before returning the remaining elements.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         public IQuery Skip(int count)
         {
             var query = new Query(Type, FilterExpressions, SortExpressions, count, TakeValue);
@@ -167,7 +167,7 @@ namespace Remote.Linq
         /// Returns a specified number of contiguous elements from the start of a sequence.
         /// </summary>
         /// <param name="count">The number of elements to return.</param>
-        /// <returns>A new query instance containing all specified query parameters</returns>
+        /// <returns>A new query instance containing all specified query parameters.</returns>
         public IQuery Take(int count)
         {
             var query = new Query(Type, FilterExpressions, SortExpressions, SkipValue, count);

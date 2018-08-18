@@ -9,7 +9,7 @@ namespace Remote.Linq.ExpressionVisitors
     using System.Linq.Expressions;
 
     /// <summary>
-    /// From http://msdn.microsoft.com/en-us/library/bb882521.aspx
+    /// From http://msdn.microsoft.com/en-us/library/bb882521.aspx.
     /// </summary>
     /// <remarks>
     /// In this expression tree visitor implementation, the Visit method, which should be called first,
