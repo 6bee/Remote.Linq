@@ -1,6 +1,6 @@
 @echo off
-set configuration=Release
-set version-suffix=""
+set configuration=Debug
+set version-suffix="beta-003"
 clean ^
   && dotnet restore ^
   && dotnet build src\Remote.Linq                     --configuration %configuration% ^
