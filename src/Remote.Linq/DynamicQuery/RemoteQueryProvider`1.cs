@@ -12,10 +12,10 @@ namespace Remote.Linq.DynamicQuery
     {
         private readonly Func<Expressions.Expression, TSource> _dataProvider;
         private readonly IQueryResultMapper<TSource> _resultMapper;
-        private readonly ITypeResolver _typeResolver;
+        private readonly IQueryableResourceDescriptorProvider _queryableResourceProvider;
         private readonly Func<Expression, bool> _canBeEvaluatedLocally;
 
-        internal RemoteQueryProvider(Func<Expressions.Expression, TSource> dataProvider, ITypeResolver typeResolver, IQueryResultMapper<TSource> resultMapper, Func<Expression, bool> canBeEvaluatedLocally)
+        internal RemoteQueryProvider(Func<Expressions.Expression, TSource> dataProvider, IQueryableResourceDescriptorProvider queryableResourceProvider, IQueryResultMapper<TSource> resultMapper, Func<Expression, bool> canBeEvaluatedLocally)
         {
             if (ReferenceEquals(null, dataProvider))
             {
@@ -24,14 +24,12 @@ namespace Remote.Linq.DynamicQuery
 
             _dataProvider = dataProvider;
             _resultMapper = resultMapper;
-            _typeResolver = typeResolver;
+            _queryableResourceProvider = queryableResourceProvider;
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
-        {
-            return new RemoteQueryable<TElement>(this, expression);
-        }
+            => new RemoteQueryable<TElement>(this, expression);
 
         public IQueryable CreateQuery(Expression expression)
         {
@@ -41,7 +39,7 @@ namespace Remote.Linq.DynamicQuery
 
         public TResult Execute<TResult>(Expression expression)
         {
-            var rlinq = TranslateExpression(expression, _typeResolver, _canBeEvaluatedLocally);
+            var rlinq = TranslateExpression(expression, _queryableResourceProvider, _canBeEvaluatedLocally);
             var dataRecords = _dataProvider(rlinq);
             var result = object.Equals(default(TSource), dataRecords)
                 ? default(TResult)
@@ -50,15 +48,13 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public object Execute(Expression expression)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
 
-        internal static Expressions.Expression TranslateExpression(Expression expression, ITypeResolver typeResolver, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally)
+        internal static Expressions.Expression TranslateExpression(Expression expression, IQueryableResourceDescriptorProvider queryableResourceProvider, Func<Expression, bool> canBeEvaluatedLocally)
         {
             var slinq1 = expression.SimplifyIncorporationOfRemoteQueryables();
             var rlinq1 = slinq1.ToRemoteLinqExpression(canBeEvaluatedLocally);
-            var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors(typeResolver);
+            var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors(queryableResourceProvider);
             var rlinq3 = rlinq2.ReplaceGenericQueryArgumentsByNonGenericArguments();
             return rlinq3;
         }

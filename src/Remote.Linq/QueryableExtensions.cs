@@ -3,7 +3,7 @@
 namespace Remote.Linq
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem;
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
@@ -20,14 +20,14 @@ namespace Remote.Linq
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified.
         /// </summary>
-        public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
-            => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeResolver, mapper);
+        public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, IQueryableResourceDescriptorProvider queryableResourceProvider = null, IDynamicObjectMapper mapper = null)
+            => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, queryableResourceProvider, mapper);
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified.
         /// </summary>
-        public static IQueryable AsQueryable<T>(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
-            => RemoteQueryable.Factory.CreateQueryable(resource.ElementType, dataProvider, typeResolver, mapper);
+        public static IQueryable AsQueryable<T>(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, IQueryableResourceDescriptorProvider queryableResourceProvider = null, IDynamicObjectMapper mapper = null)
+            => RemoteQueryable.Factory.CreateQueryable(resource.ElementType, dataProvider, queryableResourceProvider, mapper);
 
         private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression, MethodInfo methodInfo)
         {

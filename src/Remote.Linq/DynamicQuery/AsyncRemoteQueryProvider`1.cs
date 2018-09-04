@@ -12,10 +12,10 @@ namespace Remote.Linq.DynamicQuery
     {
         private readonly Func<Expressions.Expression, Task<TSource>> _dataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
-        private readonly ITypeResolver _typeResolver;
+        private readonly IQueryableResourceDescriptorProvider _queryableResourceProvider;
         private readonly Func<Expression, bool> _canBeEvaluatedLocally;
 
-        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<TSource>> dataProvider, ITypeResolver typeResolver, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool> canBeEvaluatedLocally)
+        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<TSource>> dataProvider, IQueryableResourceDescriptorProvider queryableResourceProvider, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool> canBeEvaluatedLocally)
         {
             if (ReferenceEquals(null, dataProvider))
             {
@@ -24,7 +24,7 @@ namespace Remote.Linq.DynamicQuery
 
             _dataProvider = dataProvider;
             _resultMapper = resutMapper;
-            _typeResolver = typeResolver;
+            _queryableResourceProvider = queryableResourceProvider;
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
 
@@ -39,7 +39,7 @@ namespace Remote.Linq.DynamicQuery
 
         public TResult Execute<TResult>(Expression expression)
         {
-            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver, _canBeEvaluatedLocally);
+            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _queryableResourceProvider, _canBeEvaluatedLocally);
 
             var task = _dataProvider(rlinq);
 
@@ -80,7 +80,7 @@ namespace Remote.Linq.DynamicQuery
 
         public async Task<TResult> ExecuteAsync<TResult>(Expression expression)
         {
-            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeResolver, _canBeEvaluatedLocally);
+            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _queryableResourceProvider, _canBeEvaluatedLocally);
 
             var dataRecords = await _dataProvider(rlinq);
 

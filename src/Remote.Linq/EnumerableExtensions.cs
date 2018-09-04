@@ -3,7 +3,7 @@
 namespace Remote.Linq
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem;
+    using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -15,8 +15,8 @@ namespace Remote.Linq
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified.
         /// </summary>
-        public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null)
-            => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeResolver, mapper);
+        public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, IQueryableResourceDescriptorProvider queryableResourceProvider = null, IDynamicObjectMapper mapper = null)
+            => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, queryableResourceProvider, mapper);
 
         /// <summary>
         /// Applies this query instance to an enumerable.

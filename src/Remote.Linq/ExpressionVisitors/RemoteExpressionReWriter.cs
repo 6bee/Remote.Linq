@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.TypeSystem;
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
     using System.ComponentModel;
@@ -11,23 +12,15 @@ namespace Remote.Linq.ExpressionVisitors
     public static class RemoteExpressionReWriter
     {
         public static T ReplaceResourceDescriptorsByQueryable<T>(this T expression, ITypeResolver typeResolver = null, Func<Type, System.Linq.IQueryable> provider = null) where T : Expression
-        {
-            return new QueryableResourceVisitor().ReplaceResourceDescriptorsByQueryable(expression, provider ?? ProviderRegistry.QueryableResourceProvider, typeResolver);
-        }
+            => new QueryableResourceVisitor().ReplaceResourceDescriptorsByQueryable(expression, provider ?? ProviderRegistry.QueryableResourceProvider, typeResolver);
 
         public static T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(this T expression) where T : Expression
-        {
-            return new VariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
-        }
+            => new VariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
 
-        public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeResolver typeResolver = null)
-        {
-            return new QueryableResourceVisitor().ReplaceQueryablesByResourceDescriptors(expression, typeResolver);
-        }
+        public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, IQueryableResourceDescriptorProvider queryableResourceProvider = null)
+            => new QueryableResourceVisitor().ReplaceQueryablesByResourceDescriptors(expression, queryableResourceProvider);
 
         public static T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(this T expression) where T : Expression
-        {
-            return new VariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
-        }
+            => new VariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
     }
 }
