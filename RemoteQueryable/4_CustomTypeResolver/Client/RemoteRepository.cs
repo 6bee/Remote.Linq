@@ -57,11 +57,17 @@ namespace Client
                 };
         }
 
-        public IQueryable<ClientModel.ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ClientModel.ProductCategory>(_dataProvider);
+        public IQueryable<ClientModel.ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ClientModel.ProductCategory>(_dataProvider,
+            typeInfoProvider: new QueryTypeMapper(),
+            mapper: new DynamicObjectMapper(typeResolver: new ResultTypeMapper()));
 
-        public IQueryable<ClientModel.Product> Products => RemoteQueryable.Factory.CreateQueryable<ClientModel.Product>(_dataProvider);
-        
-        public IQueryable<ClientModel.OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<ClientModel.OrderItem>(_dataProvider);
+        public IQueryable<ClientModel.Product> Products => RemoteQueryable.Factory.CreateQueryable<ClientModel.Product>(_dataProvider,
+            typeInfoProvider: new QueryTypeMapper(),
+            mapper: new DynamicObjectMapper(typeResolver: new ResultTypeMapper()));
+
+        public IQueryable<ClientModel.OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<ClientModel.OrderItem>(_dataProvider,
+            typeInfoProvider: new QueryTypeMapper(),
+            mapper: new DynamicObjectMapper(typeResolver: new ResultTypeMapper()));
 
         public void Dispose()
         {

@@ -13,9 +13,7 @@ namespace Server
         {
             var dataStore = InMemoryDataStore.Instance;
 
-            return queryExpression.Execute(
-                queryableProvider: type => dataStore.GetSet(type),
-                typeResolver: new CustomTypeResolver());
+            return queryExpression.Execute(queryableProvider: type => dataStore.GetSet(type));
         }
     }
 }
