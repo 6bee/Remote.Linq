@@ -61,11 +61,9 @@ namespace Remote.Linq.Expressions
         public TypeInfo Type { get; set; }
 
         public override string ToString()
-        {
-            return string.Format(
+            => string.Format(
                 "New {0}({1})",
                 Constructor?.DeclaringType ?? Type,
                 ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments));
-        }
     }
 }

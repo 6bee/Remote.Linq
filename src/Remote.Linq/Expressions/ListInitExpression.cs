@@ -31,8 +31,6 @@ namespace Remote.Linq.Expressions
         public List<ElementInit> Initializers { get; set; }
 
         public override string ToString()
-        {
-            return string.Format("{0} {{ {1} }}", NewExpression, string.Join(", ", Initializers));
-        }
+            => $"{NewExpression} {{ {string.Join(", ", Initializers)} }}";
     }
 }

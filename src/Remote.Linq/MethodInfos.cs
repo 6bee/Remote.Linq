@@ -15,36 +15,36 @@ namespace Remote.Linq
         internal static class Enumerable
         {
             internal static readonly MethodInfo Cast = typeof(System.Linq.Enumerable)
-                .GetMethod("Cast", BindingFlags.Public | BindingFlags.Static);
+                .GetMethod(nameof(System.Linq.Enumerable.Cast), BindingFlags.Public | BindingFlags.Static);
 
             internal static readonly MethodInfo OfType = typeof(System.Linq.Enumerable)
-                .GetMethod("OfType", BindingFlags.Public | BindingFlags.Static);
+                .GetMethod(nameof(System.Linq.Enumerable.OfType), BindingFlags.Public | BindingFlags.Static);
 
             internal static readonly MethodInfo ToArray = typeof(System.Linq.Enumerable)
-                .GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
+                .GetMethod(nameof(System.Linq.Enumerable.ToArray), BindingFlags.Public | BindingFlags.Static);
 
             internal static readonly MethodInfo ToList = typeof(System.Linq.Enumerable)
-                .GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
+                .GetMethod(nameof(System.Linq.Enumerable.ToList), BindingFlags.Public | BindingFlags.Static);
 
             internal static readonly MethodInfo Contains = typeof(System.Linq.Enumerable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .Single(m => m.Name == "Contains" && m.GetParameters().Length == 2);
+                .Single(m => m.Name == nameof(System.Linq.Enumerable.Contains) && m.GetParameters().Length == 2);
 
             internal static readonly MethodInfo Single = typeof(System.Linq.Enumerable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Where(x => x.Name == "Single")
+                .Where(x => x.Name == nameof(System.Linq.Enumerable.Single))
                 .Where(x => x.GetParameters().Length == 1)
                 .Single();
 
             internal static readonly MethodInfo SingleWithFilter = typeof(System.Linq.Enumerable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Where(x => x.Name == "Single")
+                .Where(x => x.Name == nameof(System.Linq.Enumerable.Single))
                 .Where(x => x.GetParameters().Length == 2)
                 .Single();
 
             internal static readonly MethodInfo SingleOrDefault = typeof(System.Linq.Enumerable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Where(x => x.Name == "SingleOrDefault")
+                .Where(x => x.Name == nameof(System.Linq.Enumerable.SingleOrDefault))
                 .Where(x => x.GetParameters().Length == 1)
                 .Single();
         }
@@ -54,7 +54,7 @@ namespace Remote.Linq
             internal static readonly MethodInfo Lambda = typeof(System.Linq.Expressions.Expression)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Single(m =>
-                    m.Name == "Lambda" &&
+                    m.Name == nameof(System.Linq.Expressions.Expression.Lambda) &&
                     m.IsGenericMethod &&
                     m.GetParameters().Length == 2 &&
                     m.GetParameters()[1].ParameterType == typeof(System.Linq.Expressions.ParameterExpression[]));
@@ -65,34 +65,34 @@ namespace Remote.Linq
             internal static readonly MethodInfo OrderBy = typeof(System.Linq.Queryable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Single(m =>
-                    m.Name == "OrderBy" &&
+                    m.Name == nameof(System.Linq.Queryable.OrderBy) &&
                     m.IsGenericMethod &&
                     m.GetParameters().Length == 2);
 
             internal static readonly MethodInfo OrderByDescending = typeof(System.Linq.Queryable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Single(m =>
-                    m.Name == "OrderByDescending" &&
+                    m.Name == nameof(System.Linq.Queryable.OrderByDescending) &&
                     m.IsGenericMethod &&
                     m.GetParameters().Length == 2);
 
             internal static readonly MethodInfo ThenBy = typeof(System.Linq.Queryable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Single(m =>
-                    m.Name == "ThenBy" &&
+                    m.Name == nameof(System.Linq.Queryable.ThenBy) &&
                     m.IsGenericMethod &&
                     m.GetParameters().Length == 2);
 
             internal static readonly MethodInfo ThenByDescending = typeof(System.Linq.Queryable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Single(m =>
-                    m.Name == "ThenByDescending" &&
+                    m.Name == nameof(System.Linq.Queryable.ThenByDescending) &&
                     m.IsGenericMethod &&
                     m.GetParameters().Length == 2);
 
             internal static readonly MethodInfo Select = typeof(System.Linq.Queryable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .Where(i => i.Name == "Select")
+                .Where(i => i.Name == nameof(System.Linq.Queryable.Select))
                 .Where(i => i.IsGenericMethod)
                 .Single(i =>
                 {
@@ -131,20 +131,20 @@ namespace Remote.Linq
         internal static class String
         {
             internal static readonly MethodInfo StartsWith = typeof(string)
-                .GetMethod("StartsWith", new[] { typeof(string) });
+                .GetMethod(nameof(string.StartsWith), new[] { typeof(string) });
 
             internal static readonly MethodInfo EndsWith = typeof(string)
-                .GetMethod("EndsWith", new[] { typeof(string) });
+                .GetMethod(nameof(string.EndsWith), new[] { typeof(string) });
 
             internal static readonly MethodInfo Contains = typeof(string)
-                .GetMethod("Contains", new[] { typeof(string) });
+                .GetMethod(nameof(string.Contains), new[] { typeof(string) });
         }
 
         internal static class QueryFuntion
         {
             internal static readonly MethodInfo Include = typeof(QueryFunctions)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .Where(x => x.Name == "Include")
+                .Where(x => x.Name == nameof(QueryFunctions.Include))
                 .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
                 .Where(x =>
                 {

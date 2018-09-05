@@ -16,14 +16,10 @@ namespace Remote.Linq.ExpressionVisitors
     public class VariableQueryArgumentVisitor
     {
         internal T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(T expression) where T : Expression
-        {
-            return (T)new NonGenericVariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
-        }
+            => (T)new NonGenericVariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
 
         internal T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(T expression) where T : Expression
-        {
-            return (T)new GenericVariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
-        }
+            => (T)new GenericVariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
 
         protected class GenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
@@ -31,9 +27,7 @@ namespace Remote.Linq.ExpressionVisitors
             private static readonly PropertyInfo QueryArgumentValueListPropertyInfo = new PropertyInfo(typeof(VariableQueryArgumentList).GetProperty("Values"));
 
             internal Expression ReplaceGenericQueryArgumentsByNonGenericArguments(Expression expression)
-            {
-                return Visit(expression);
-            }
+                => Visit(expression);
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
@@ -109,9 +103,7 @@ namespace Remote.Linq.ExpressionVisitors
                 typeof(NonGenericVariableQueryArgumentVisitor).GetMethod(nameof(CreateVariableQueryArgumentList), System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 
             internal Expression ReplaceNonGenericQueryArgumentsByGenericArguments(Expression expression)
-            {
-                return Visit(expression);
-            }
+                => Visit(expression);
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {

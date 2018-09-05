@@ -31,8 +31,6 @@ namespace Remote.Linq.Expressions
         public List<MemberBinding> Bindings { get; set; }
 
         public override string ToString()
-        {
-            return string.Format("{0} {1}", NewExpression, string.Join(", ", Bindings));
-        }
+            => $"{NewExpression} {string.Join(", ", Bindings)}";
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Expressions
 {
-    using Aqua;
     using Aqua.TypeSystem;
     using System;
     using System.Runtime.Serialization;
@@ -48,8 +47,6 @@ namespace Remote.Linq.Expressions
         public MethodInfo Method { get; set; }
 
         public override string ToString()
-        {
-            return $"{UnaryOperator}({Operand})";
-        }
+            => $"{UnaryOperator}({Operand})";
     }
 }

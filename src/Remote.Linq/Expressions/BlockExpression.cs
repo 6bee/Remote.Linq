@@ -44,7 +44,7 @@ namespace Remote.Linq.Expressions
             var expressions = Expressions;
             return string.Format(
                 ".Block {{0}}",
-                ReferenceEquals(null, expressions) ? null : string.Format("; ", expressions));
+                expressions is null ? null : string.Join("; ", expressions));
         }
     }
 }

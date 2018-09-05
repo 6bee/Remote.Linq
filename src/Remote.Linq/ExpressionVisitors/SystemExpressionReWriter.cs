@@ -3,7 +3,6 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
@@ -360,7 +359,8 @@ namespace Remote.Linq.ExpressionVisitors
                 _parameterScope = new ParameterScope(this);
             }
 
-            public Expression Simplify(Expression expression) => Visit(expression);
+            public Expression Simplify(Expression expression)
+                => Visit(expression);
 
             protected override Expression VisitMemberAccess(MemberExpression node)
             {

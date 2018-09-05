@@ -31,6 +31,7 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public LabelTarget ContinueLabel { get; set; }
 
-        public override string ToString() => $"loop(body:{Body}, break:{BreakLabel}, continue:{ContinueLabel})";
+        public override string ToString()
+            => $"loop(body:{Body}, break:{BreakLabel}, continue:{ContinueLabel})";
     }
 }

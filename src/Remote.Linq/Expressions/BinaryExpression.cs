@@ -56,8 +56,6 @@ namespace Remote.Linq.Expressions
         public LambdaExpression Conversion { get; set; }
 
         public override string ToString()
-        {
-            return $"({LeftOperand} {BinaryOperator} {RightOperand})";
-        }
+            => $"({LeftOperand} {BinaryOperator} {RightOperand})";
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
-    using Aqua.TypeSystem;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -434,14 +433,10 @@ namespace Remote.Linq.ExpressionVisitors
         }
 
         protected virtual ConstantExpression VisitConstant(ConstantExpression node)
-        {
-            return node;
-        }
+            => node;
 
         protected virtual ParameterExpression VisitParameter(ParameterExpression node)
-        {
-            return node;
-        }
+            => node;
 
         protected virtual Expression VisitMemberAccess(MemberExpression node)
         {
@@ -502,9 +497,7 @@ namespace Remote.Linq.ExpressionVisitors
         }
 
         protected virtual Expression VisitDefault(DefaultExpression node)
-        {
-            return node;
-        }
+            => node;
 
         protected virtual Expression VisitGoto(GotoExpression node)
         {

@@ -16,8 +16,10 @@ namespace Remote.Linq
 
         public TElement[] Elements { get; set; }
 
-        public IEnumerator<TElement> GetEnumerator() => ((IEnumerable<TElement>)Elements).GetEnumerator();
+        public IEnumerator<TElement> GetEnumerator()
+            => ((IEnumerable<TElement>)Elements).GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => Elements.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+            => Elements.GetEnumerator();
     }
 }

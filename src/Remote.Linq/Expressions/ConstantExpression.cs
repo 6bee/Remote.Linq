@@ -53,8 +53,6 @@ namespace Remote.Linq.Expressions
         public object Value { get; set; }
 
         public override string ToString()
-        {
-            return string.Format("{1}{0}{1}", Value ?? "null", Value is string || Value is char ? "'" : null);
-        }
+            => string.Format("{1}{0}{1}", Value ?? "null", Value is string || Value is char ? "'" : null);
     }
 }

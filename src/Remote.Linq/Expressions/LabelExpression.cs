@@ -28,6 +28,7 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
         public Expression DefaultValue { get; set; }
 
-        public override string ToString() => $".Label {Target} {DefaultValue}";
+        public override string ToString()
+            => $".Label {Target} {DefaultValue}";
     }
 }

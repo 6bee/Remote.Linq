@@ -41,6 +41,7 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public Expression Value { get; set; }
 
-        public override string ToString() => $".Goto {Kind} {Target} {Value}";
+        public override string ToString()
+            => $".Goto {Kind} {Target} {Value}";
     }
 }

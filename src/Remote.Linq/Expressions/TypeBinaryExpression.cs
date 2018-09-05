@@ -35,8 +35,6 @@ namespace Remote.Linq.Expressions
         public TypeInfo TypeOperand { get; set; }
 
         public override string ToString()
-        {
-            return $"{Expression} is {TypeOperand}";
-        }
+            => $"{Expression} is {TypeOperand}";
     }
 }

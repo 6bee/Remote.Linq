@@ -8,10 +8,6 @@ namespace Remote.Linq.DynamicQuery
 
     internal class RemoteQueryable : IRemoteQueryable, IOrderedRemoteQueryable
     {
-        private readonly Type _elemntType;
-        private readonly Expression _expression;
-        private readonly IRemoteQueryProvider _provider;
-
         internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider)
             : this(elemntType, provider, null)
         {
@@ -19,18 +15,18 @@ namespace Remote.Linq.DynamicQuery
 
         internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression expression)
         {
-            _elemntType = elemntType;
-            _provider = provider;
-            _expression = expression ?? Expression.Constant(this);
+            ElementType = elemntType;
+            Provider = provider;
+            Expression = expression ?? Expression.Constant(this);
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            => _provider.Execute<System.Collections.IEnumerable>(_expression).GetEnumerator();
+            => Provider.Execute<System.Collections.IEnumerable>(Expression).GetEnumerator();
 
-        public Type ElementType => _elemntType;
+        public Type ElementType { get; }
 
-        public Expression Expression => _expression;
+        public Expression Expression { get; }
 
-        public IQueryProvider Provider => _provider;
+        public IQueryProvider Provider { get; }
     }
 }

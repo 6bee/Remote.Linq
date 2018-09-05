@@ -42,8 +42,6 @@ namespace Remote.Linq.Expressions
         public int InstanceId { get; set; }
 
         public override string ToString()
-        {
-            return ParameterName ?? "_";
-        }
+            => ParameterName ?? "_";
     }
 }

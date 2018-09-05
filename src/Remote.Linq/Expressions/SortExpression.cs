@@ -27,8 +27,6 @@ namespace Remote.Linq.Expressions
         public SortDirection SortDirection { get; set; }
 
         public override string ToString()
-        {
-            return $"OrderBy ({Operand}) {SortDirection}";
-        }
+            => $"OrderBy ({Operand}) {SortDirection}";
     }
 }

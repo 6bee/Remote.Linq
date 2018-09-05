@@ -35,8 +35,6 @@ namespace Remote.Linq.Expressions
         public MemberInfo Member { get; set; }
 
         public override string ToString()
-        {
-            return $"{Expression}.{Member?.Name}";
-        }
+            => $"{Expression}.{Member?.Name}";
     }
 }
