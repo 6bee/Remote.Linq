@@ -59,17 +59,15 @@ namespace Remote.Linq
         /// <summary>
         /// Translates a given expression into a remote linq expression.
         /// </summary>
-        public static RLinq.Expression ToRemoteLinqExpression(this Expression expression, Func<Expression, bool> canBeEvaluatedLocally = null)
-        {
-            return new LinqExpressionToRemoteExpressionTranslator(canBeEvaluatedLocally).ToRemoteExpression(expression);
-        }
+        public static RLinq.Expression ToRemoteLinqExpression(this Expression expression, ITypeInfoProvider typeInfoProvider = null, Func<Expression, bool> canBeEvaluatedLocally = null)
+            => new LinqExpressionToRemoteExpressionTranslator(typeInfoProvider, canBeEvaluatedLocally).ToRemoteExpression(expression);
 
         /// <summary>
         /// Translates a given lambda expression into a remote linq expression.
         /// </summary>
-        public static RLinq.LambdaExpression ToRemoteLinqExpression(this LambdaExpression expression, Func<Expression, bool> canBeEvaluatedLocally = null)
+        public static RLinq.LambdaExpression ToRemoteLinqExpression(this LambdaExpression expression, ITypeInfoProvider typeInfoProvider = null, Func<Expression, bool> canBeEvaluatedLocally = null)
         {
-            var lambdaExpression = new LinqExpressionToRemoteExpressionTranslator(canBeEvaluatedLocally).ToRemoteExpression(expression);
+            var lambdaExpression = new LinqExpressionToRemoteExpressionTranslator(typeInfoProvider, canBeEvaluatedLocally).ToRemoteExpression(expression);
             return (RLinq.LambdaExpression)lambdaExpression;
         }
 
@@ -77,18 +75,13 @@ namespace Remote.Linq
         /// Translates a given query expression into an expression.
         /// </summary>
         public static Expression ToLinqExpression(this RLinq.Expression expression)
-        {
-            return ToLinqExpression(expression, null);
-        }
+            => ToLinqExpression(expression, null);
 
         /// <summary>
         /// Translates a given query expression into an expression.
         /// </summary>
         public static Expression ToLinqExpression(this RLinq.Expression expression, ITypeResolver typeResolver)
-        {
-            var exp = new RemoteExpressionToLinqExpressionTranslator(typeResolver).ToExpression(expression);
-            return exp;
-        }
+            => new RemoteExpressionToLinqExpressionTranslator(typeResolver).ToExpression(expression);
 
         /// <summary>
         /// Translates a given query expression into a lambda expression.
@@ -114,42 +107,40 @@ namespace Remote.Linq
         /// Translates a given query expression into a lambda expression.
         /// </summary>
         public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression)
-        {
-            return ToLinqExpression(expression, null);
-        }
+            => ToLinqExpression(expression, null);
 
         /// <summary>
         /// Translates a given query expression into a lambda expression.
         /// </summary>
         public static LambdaExpression ToLinqExpression(this RLinq.LambdaExpression expression, ITypeResolver typeResolver)
-        {
-            var lambdaExpression = new RemoteExpressionToLinqExpressionTranslator(typeResolver).ToExpression(expression);
-            return (LambdaExpression)lambdaExpression;
-        }
+            => (LambdaExpression)new RemoteExpressionToLinqExpressionTranslator(typeResolver).ToExpression(expression);
 
-        private static ExpressionType ToExpressionType(this RLinq.BinaryOperator binaryOperator) => (ExpressionType)(int)binaryOperator;
+        private static ExpressionType ToExpressionType(this RLinq.BinaryOperator binaryOperator)
+            => (ExpressionType)(int)binaryOperator;
 
-        private static ExpressionType ToExpressionType(this RLinq.UnaryOperator unaryOperator) => (ExpressionType)(int)unaryOperator;
+        private static ExpressionType ToExpressionType(this RLinq.UnaryOperator unaryOperator)
+            => (ExpressionType)(int)unaryOperator;
 
-        private static GotoExpressionKind ToGotoExpressionKind(this RLinq.GotoExpressionKind kind) => (GotoExpressionKind)(int)kind;
+        private static GotoExpressionKind ToGotoExpressionKind(this RLinq.GotoExpressionKind kind)
+            => (GotoExpressionKind)(int)kind;
 
-        private static RLinq.BinaryOperator ToBinaryOperator(this ExpressionType expressionType) => (RLinq.BinaryOperator)(int)expressionType;
+        private static RLinq.BinaryOperator ToBinaryOperator(this ExpressionType expressionType)
+            => (RLinq.BinaryOperator)(int)expressionType;
 
-        private static RLinq.UnaryOperator ToUnaryOperator(this ExpressionType expressionType) => (RLinq.UnaryOperator)(int)expressionType;
+        private static RLinq.UnaryOperator ToUnaryOperator(this ExpressionType expressionType)
+            => (RLinq.UnaryOperator)(int)expressionType;
 
-        private static RLinq.NewArrayType ToNewArrayType(this ExpressionType expressionType) => (RLinq.NewArrayType)(int)expressionType;
+        private static RLinq.NewArrayType ToNewArrayType(this ExpressionType expressionType)
+            => (RLinq.NewArrayType)(int)expressionType;
 
-        private static RLinq.GotoExpressionKind ToGotoExpressionKind(this GotoExpressionKind kind) => (RLinq.GotoExpressionKind)(int)kind;
+        private static RLinq.GotoExpressionKind ToGotoExpressionKind(this GotoExpressionKind kind)
+            => (RLinq.GotoExpressionKind)(int)kind;
 
         private static ConstantExpression Wrap(this RLinq.Expression expression)
-        {
-            return ReferenceEquals(null, expression) ? null : Expression.Constant(expression);
-        }
+            => ReferenceEquals(null, expression) ? null : Expression.Constant(expression);
 
         private static RLinq.ConstantExpression Wrap(this Expression expression)
-        {
-            return ReferenceEquals(null, expression) ? null : new RLinq.ConstantExpression(expression);
-        }
+            => ReferenceEquals(null, expression) ? null : new RLinq.ConstantExpression(expression);
 
         private static RLinq.Expression Unwrap(this Expression expression)
         {
@@ -247,16 +238,16 @@ namespace Remote.Linq
                 public bool IsKnownType(Type type) => !TypeNeedsWrapping(type, _includePrimitiveType);
             }
 
-            private ConstantValueMapper(ITypeResolver typeResolver, IIsKnownTypeProvider isKnownTypeProvider)
-                : base(typeResolver: typeResolver, isKnownTypeProvider: isKnownTypeProvider)
+            private ConstantValueMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
+                : base(typeResolver: typeResolver, typeInfoProvider: typeInfoProvider, isKnownTypeProvider: isKnownTypeProvider)
             {
             }
 
-            public static ConstantValueMapper ForSubstitution()
-                => new ConstantValueMapper(null, new IsKnownTypeProvider(true));
+            public static ConstantValueMapper ForSubstitution(ITypeInfoProvider typeInfoProvider)
+                => new ConstantValueMapper(null, typeInfoProvider, new IsKnownTypeProvider(true));
 
             public static ConstantValueMapper ForReconstruction(ITypeResolver typeResolver)
-                => new ConstantValueMapper(typeResolver, new IsKnownTypeProvider(false));
+                => new ConstantValueMapper(typeResolver, null, new IsKnownTypeProvider(false));
 
             public static bool TypeNeedsWrapping(Type type, bool includePrimitiveType = true)
             {
@@ -293,12 +284,14 @@ namespace Remote.Linq
                 new Dictionary<object, ConstantQueryArgument>(ReferenceEqualityComparer<object>.Default);
 
             private readonly Func<Expression, bool> _canBeEvaluatedLocally;
+            private readonly ITypeInfoProvider _typeInfoProvider;
 
-            public LinqExpressionToRemoteExpressionTranslator(Func<Expression, bool> canBeEvaluatedLocally)
+            public LinqExpressionToRemoteExpressionTranslator(ITypeInfoProvider typeInfoProvider, Func<Expression, bool> canBeEvaluatedLocally)
             {
                 _canBeEvaluatedLocally = canBeEvaluatedLocally == null
                     ? KeepMarkerFunctions
                     : new Func<Expression, bool>(exp => canBeEvaluatedLocally(exp) && KeepMarkerFunctions(exp));
+                _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
             }
 
             public RLinq.Expression ToRemoteExpression(Expression expression)
@@ -351,7 +344,7 @@ namespace Remote.Linq
                 RLinq.Expression fault = Visit(tryExpression.Fault).Unwrap();
                 RLinq.Expression @finally = Visit(tryExpression.Finally).Unwrap();
                 List<RLinq.CatchBlock> handlers = (tryExpression.Handlers?.Select(VisitCatch) ?? Enumerable.Empty<RLinq.CatchBlock>())?.ToList();
-                return new RLinq.TryExpression(tryExpression.Type, body, fault, @finally, handlers).Wrap();
+                return new RLinq.TryExpression(_typeInfoProvider.Get(tryExpression.Type), body, fault, @finally, handlers).Wrap();
             }
 
             private new RLinq.CatchBlock VisitCatch(CatchBlock catchBlock)
@@ -359,7 +352,7 @@ namespace Remote.Linq
                 RLinq.Expression body = Visit(catchBlock.Body).Unwrap();
                 RLinq.Expression filter = Visit(catchBlock.Filter).Unwrap();
                 RLinq.ParameterExpression variable = Visit(catchBlock.Variable).Unwrap() as RLinq.ParameterExpression;
-                return new RLinq.CatchBlock(catchBlock.Test, variable, body, filter);
+                return new RLinq.CatchBlock(_typeInfoProvider.Get(catchBlock.Test), variable, body, filter);
             }
 
             protected override Expression VisitListInit(ListInitExpression node)
@@ -383,7 +376,7 @@ namespace Remote.Linq
                 var rlinqArguments =
                     from i in arguments
                     select i.Unwrap();
-                return new RLinq.ElementInit(initializer.AddMethod, rlinqArguments);
+                return new RLinq.ElementInit(_typeInfoProvider.GetMethodInfo(initializer.AddMethod), rlinqArguments);
             }
 
             private new RLinq.NewExpression VisitNew(NewExpression node)
@@ -397,8 +390,8 @@ namespace Remote.Linq
                 }
 
                 return ReferenceEquals(null, node.Constructor)
-                    ? new RLinq.NewExpression(node.Type)
-                    : new RLinq.NewExpression(node.Constructor, arguments, node.Members);
+                    ? new RLinq.NewExpression(_typeInfoProvider.Get(node.Type))
+                    : new RLinq.NewExpression(_typeInfoProvider.GetConstructorInfo(node.Constructor), arguments, node.Members?.Select(_typeInfoProvider.GetMemberInfo));
             }
 
             protected override Expression VisitConstant(ConstantExpression node)
@@ -410,7 +403,7 @@ namespace Remote.Linq
                     ConstantQueryArgument constantQueryArgument;
                     if (!_constantQueryArgumentCache.TryGetValue(key, out constantQueryArgument))
                     {
-                        var dynamicObject = ConstantValueMapper.ForSubstitution().MapObject(node.Value);
+                        var dynamicObject = ConstantValueMapper.ForSubstitution(_typeInfoProvider).MapObject(node.Value);
                         constantQueryArgument = new ConstantQueryArgument(dynamicObject.Type);
 
                         _constantQueryArgumentCache.Add(key, constantQueryArgument);
@@ -434,12 +427,12 @@ namespace Remote.Linq
                     }
                     else
                     {
-                        exp = new RLinq.ConstantExpression(constantQueryArgument, node.Type);
+                        exp = new RLinq.ConstantExpression(constantQueryArgument, _typeInfoProvider.Get(node.Type));
                     }
                 }
                 else
                 {
-                    exp = new RLinq.ConstantExpression(node.Value, node.Type);
+                    exp = new RLinq.ConstantExpression(node.Value, _typeInfoProvider.Get(node.Type));
                 }
 
                 return exp.Wrap();
@@ -452,7 +445,7 @@ namespace Remote.Linq
                 {
                     if (!_parameterExpressionCache.TryGetValue(node, out exp))
                     {
-                        exp = new RLinq.ParameterExpression(node.Type, node.Name, _parameterExpressionCache.Count + 1);
+                        exp = new RLinq.ParameterExpression(_typeInfoProvider.Get(node.Type), node.Name, _parameterExpressionCache.Count + 1);
                         _parameterExpressionCache.Add(node, exp);
                     }
                 }
@@ -466,19 +459,19 @@ namespace Remote.Linq
                 var left = Visit(node.Left).Unwrap();
                 var right = Visit(node.Right).Unwrap();
                 var conversion = Visit(node.Conversion).Unwrap() as RLinq.LambdaExpression;
-                return new RLinq.BinaryExpression(binaryOperator, left, right, node.IsLiftedToNull, node.Method, conversion).Wrap();
+                return new RLinq.BinaryExpression(binaryOperator, left, right, node.IsLiftedToNull, _typeInfoProvider.GetMethodInfo(node.Method), conversion).Wrap();
             }
 
             protected override Expression VisitTypeIs(TypeBinaryExpression node)
             {
                 var expression = Visit(node.Expression).Unwrap();
-                return new RLinq.TypeBinaryExpression(expression, node.TypeOperand).Wrap();
+                return new RLinq.TypeBinaryExpression(expression, _typeInfoProvider.Get(node.TypeOperand)).Wrap();
             }
 
             protected override Expression VisitMemberAccess(MemberExpression node)
             {
                 var instance = Visit(node.Expression).Unwrap();
-                return new RLinq.MemberExpression(instance, node.Member).Wrap();
+                return new RLinq.MemberExpression(instance, _typeInfoProvider.GetMemberInfo(node.Member)).Wrap();
             }
 
             protected override Expression VisitMemberInit(MemberInitExpression node)
@@ -517,21 +510,21 @@ namespace Remote.Linq
             private new RLinq.MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
             {
                 var e = Visit(assignment.Expression).Unwrap();
-                var m = Aqua.TypeSystem.MemberInfo.Create(assignment.Member);
+                var m = _typeInfoProvider.GetMemberInfo(assignment.Member);
                 return new RLinq.MemberAssignment(m, e);
             }
 
             private new RLinq.MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding binding)
             {
                 var bindings = VisitBindingList(binding.Bindings);
-                var m = Aqua.TypeSystem.MemberInfo.Create(binding.Member);
+                var m = _typeInfoProvider.GetMemberInfo(binding.Member);
                 return new RLinq.MemberMemberBinding(m, bindings);
             }
 
             private new RLinq.MemberListBinding VisitMemberListBinding(MemberListBinding binding)
             {
                 var initializers = VisitElementInitializerList(binding.Initializers);
-                var m = Aqua.TypeSystem.MemberInfo.Create(binding.Member);
+                var m = _typeInfoProvider.GetMemberInfo(binding.Member);
                 return new RLinq.MemberListBinding(m, initializers);
             }
 
@@ -541,7 +534,7 @@ namespace Remote.Linq
                 var arguments =
                     from argument in node.Arguments
                     select Visit(argument).Unwrap();
-                return new RLinq.MethodCallExpression(instance, node.Method, arguments).Wrap();
+                return new RLinq.MethodCallExpression(instance, _typeInfoProvider.GetMethodInfo(node.Method), arguments).Wrap();
             }
 
             protected override Expression VisitLambda(LambdaExpression node)
@@ -550,14 +543,14 @@ namespace Remote.Linq
                 var parameters =
                     from p in node.Parameters
                     select (RLinq.ParameterExpression)VisitParameter(p).Unwrap();
-                return new RLinq.LambdaExpression(node.Type, body, parameters).Wrap();
+                return new RLinq.LambdaExpression(_typeInfoProvider.Get(node.Type), body, parameters).Wrap();
             }
 
             protected override Expression VisitUnary(UnaryExpression node)
             {
                 var unaryOperator = node.NodeType.ToUnaryOperator();
                 var operand = Visit(node.Operand).Unwrap();
-                return new RLinq.UnaryExpression(unaryOperator, operand, node.Type, node.Method).Wrap();
+                return new RLinq.UnaryExpression(unaryOperator, operand, _typeInfoProvider.Get(node.Type), _typeInfoProvider.GetMethodInfo(node.Method)).Wrap();
             }
 
             protected override Expression VisitConditional(ConditionalExpression node)
@@ -576,7 +569,7 @@ namespace Remote.Linq
                     from i in expressions
                     select i.Unwrap();
                 var elementType = TypeHelper.GetElementType(node.Type);
-                return new RLinq.NewArrayExpression(newArrayType, elementType, rlinqExpressions).Wrap();
+                return new RLinq.NewArrayExpression(newArrayType, _typeInfoProvider.Get(elementType), rlinqExpressions).Wrap();
             }
 
             protected override Expression VisitInvocation(InvocationExpression node)
@@ -607,12 +600,12 @@ namespace Remote.Linq
                 }
 
                 var type = node.Type == node.Result.Type ? null : node.Type;
-                return new RLinq.BlockExpression(type, rlinqVariables, rlinqExpressions).Wrap();
+                return new RLinq.BlockExpression(_typeInfoProvider.Get(type), rlinqVariables, rlinqExpressions).Wrap();
             }
 
             protected override Expression VisitDefault(DefaultExpression node)
             {
-                return new RLinq.DefaultExpression(node.Type).Wrap();
+                return new RLinq.DefaultExpression(_typeInfoProvider.Get(node.Type)).Wrap();
             }
 
             protected override Expression VisitLabel(LabelExpression node)
@@ -636,7 +629,7 @@ namespace Remote.Linq
                 var target = VisitTarget(node.Target);
                 var type = node.Target.Type == node.Type ? null : node.Type;
                 var value = Visit(node.Value).Unwrap();
-                return new RLinq.GotoExpression(kind, target, type, value).Wrap();
+                return new RLinq.GotoExpression(kind, target, _typeInfoProvider.Get(type), value).Wrap();
             }
 
             private RLinq.LabelTarget VisitTarget(LabelTarget labelTarget)
@@ -651,7 +644,7 @@ namespace Remote.Linq
                 {
                     if (!_labelTargetCache.TryGetValue(labelTarget, out target))
                     {
-                        target = new RLinq.LabelTarget(labelTarget.Name, labelTarget.Type, _labelTargetCache.Count + 1);
+                        target = new RLinq.LabelTarget(labelTarget.Name, _typeInfoProvider.Get(labelTarget.Type), _labelTargetCache.Count + 1);
                         _labelTargetCache.Add(labelTarget, target);
                     }
                 }

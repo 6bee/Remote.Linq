@@ -17,8 +17,8 @@ namespace Remote.Linq.ExpressionVisitors
         public static T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(this T expression) where T : Expression
             => new VariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
 
-        public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, IQueryableResourceDescriptorProvider queryableResourceProvider = null)
-            => new QueryableResourceVisitor().ReplaceQueryablesByResourceDescriptors(expression, queryableResourceProvider);
+        public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeInfoProvider typeInfoProvider = null)
+            => new QueryableResourceVisitor().ReplaceQueryablesByResourceDescriptors(expression, typeInfoProvider);
 
         public static T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(this T expression) where T : Expression
             => new VariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);

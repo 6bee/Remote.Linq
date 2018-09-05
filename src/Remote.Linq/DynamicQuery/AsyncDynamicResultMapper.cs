@@ -17,8 +17,6 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public Task<TResult> MapResultAsync<TResult>(IEnumerable<DynamicObject> source, Expression expression)
-        {
-            return Task.Factory.StartNew(() => DynamicResultMapper.MapToType<TResult>(source, _mapper, expression));
-        }
+            => Task.Factory.StartNew(() => DynamicResultMapper.MapToType<TResult>(source, _mapper, expression));
     }
 }
