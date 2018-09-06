@@ -12,6 +12,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
     using Shouldly;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -67,6 +68,10 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
         protected When_running_query(Func<Expression, Expression> serialize)
         {
+#if !NETCOREAPP1_0
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+#endif
             Store dataStore = new Store();
             Func<Expression, IEnumerable<DynamicObject>> execute = expression =>
                 {
