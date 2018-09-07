@@ -15,7 +15,7 @@ namespace Remote.Linq.Expressions
         }
 
         public DefaultExpression(Type type)
-            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false))
+            : this(type is null ? null : new TypeInfo(type, false, false))
         {
         }
 

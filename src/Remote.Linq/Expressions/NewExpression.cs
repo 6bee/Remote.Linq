@@ -32,12 +32,12 @@ namespace Remote.Linq.Expressions
             : this(constructor.DeclaringType)
         {
             Constructor = constructor;
-            Arguments = ReferenceEquals(null, arguments) || !arguments.Any() ? null : arguments.ToList();
-            Members = ReferenceEquals(null, members) || !members.Any() ? null : members.ToList();
+            Arguments = arguments is null || !arguments.Any() ? null : arguments.ToList();
+            Members = members is null || !members.Any() ? null : members.ToList();
         }
 
         public NewExpression(System.Reflection.ConstructorInfo constructor, IEnumerable<Expression> arguments = null, IEnumerable<System.Reflection.MemberInfo> members = null)
-            : this(new ConstructorInfo(constructor), arguments, ReferenceEquals(null, members) ? null : members.Select(x => MemberInfo.Create(x)))
+            : this(new ConstructorInfo(constructor), arguments, members is null ? null : members.Select(x => MemberInfo.Create(x)))
         {
         }
 
@@ -64,6 +64,6 @@ namespace Remote.Linq.Expressions
             => string.Format(
                 "New {0}({1})",
                 Constructor?.DeclaringType ?? Type,
-                ReferenceEquals(null, Arguments) ? null : string.Join(", ", Arguments));
+                Arguments is null ? null : string.Join(", ", Arguments));
     }
 }

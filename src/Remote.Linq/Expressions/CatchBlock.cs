@@ -15,7 +15,7 @@ namespace Remote.Linq.Expressions
         }
 
         public CatchBlock(Type test, ParameterExpression parameter, Expression body, Expression filter)
-            : this(ReferenceEquals(test, null) ? null : new TypeInfo(test, false, false), parameter, body, filter)
+            : this(test is null ? null : new TypeInfo(test, false, false), parameter, body, filter)
         {
         }
 
@@ -41,7 +41,7 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
         {
-            string filter = ReferenceEquals(Filter, null) ? string.Empty : $" when ({Filter})";
+            string filter = Filter is null ? string.Empty : $" when ({Filter})";
             return $"catch({Test} {Variable}){filter} {Body}";
         }
     }

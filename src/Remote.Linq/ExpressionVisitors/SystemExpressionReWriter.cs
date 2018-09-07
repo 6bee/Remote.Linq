@@ -274,12 +274,12 @@ namespace Remote.Linq.ExpressionVisitors
                             propertyName = (string)value;
                         }
 
-                        if (!ReferenceEquals(null, propertyName))
+                        if (!(propertyName is null))
                         {
                             var instance = Visit(m.Object);
                             var propertyInfo = m.Object.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
-                            if (!ReferenceEquals(null, propertyInfo))
+                            if (!(propertyInfo is null))
                             {
                                 return Expression.MakeMemberAccess(instance, propertyInfo);
                             }

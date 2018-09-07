@@ -133,7 +133,7 @@ namespace Remote.Linq.Expressions
             }
 
             object queryResult;
-            if (ReferenceEquals(null, queryable))
+            if (queryable is null)
             {
                 queryResult = null;
             }

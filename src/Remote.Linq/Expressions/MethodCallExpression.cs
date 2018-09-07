@@ -54,7 +54,7 @@ namespace Remote.Linq.Expressions
                 "{0}.{1}({2})",
                 instance == null ? Method?.DeclaringType?.ToString() : instance.ToString(),
                 Method?.Name,
-                ReferenceEquals(null, arguments) ? null : string.Join(", ", arguments));
+                arguments is null ? null : string.Join(", ", arguments));
         }
     }
 }

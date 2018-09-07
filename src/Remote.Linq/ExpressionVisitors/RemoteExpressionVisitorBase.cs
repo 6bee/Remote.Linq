@@ -11,7 +11,7 @@ namespace Remote.Linq.ExpressionVisitors
     {
         protected virtual Expression Visit(Expression expression)
         {
-            if (ReferenceEquals(null, expression))
+            if (expression is null)
             {
                 return null;
             }
@@ -159,7 +159,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual List<MemberBinding> VisitBindingList(List<MemberBinding> original)
         {
-            if (ReferenceEquals(null, original))
+            if (original is null)
             {
                 return null;
             }
@@ -248,7 +248,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual List<ElementInit> VisitElementInitializerList(List<ElementInit> original)
         {
-            if (ReferenceEquals(null, original))
+            if (original is null)
             {
                 return null;
             }
@@ -295,7 +295,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual List<T> VisitExpressionList<T>(List<T> original) where T : Expression
         {
-            if (ReferenceEquals(null, original))
+            if (original is null)
             {
                 return null;
             }
@@ -334,7 +334,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (!ReferenceEquals(args, node.Arguments))
             {
-                return ReferenceEquals(null, node.Constructor)
+                return node.Constructor is null
                     ? new NewExpression(node.Type)
                     : new NewExpression(node.Constructor, args, node.Members);
             }

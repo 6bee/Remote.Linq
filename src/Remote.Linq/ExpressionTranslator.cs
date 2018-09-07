@@ -137,14 +137,14 @@ namespace Remote.Linq
             => (RLinq.GotoExpressionKind)(int)kind;
 
         private static ConstantExpression Wrap(this RLinq.Expression expression)
-            => ReferenceEquals(null, expression) ? null : Expression.Constant(expression);
+            => expression is null ? null : Expression.Constant(expression);
 
         private static RLinq.ConstantExpression Wrap(this Expression expression)
-            => ReferenceEquals(null, expression) ? null : new RLinq.ConstantExpression(expression);
+            => expression is null ? null : new RLinq.ConstantExpression(expression);
 
         private static RLinq.Expression Unwrap(this Expression expression)
         {
-            if (!ReferenceEquals(null, expression) && expression.NodeType == ExpressionType.Constant && typeof(RLinq.Expression).IsAssignableFrom(expression.Type))
+            if (!(expression is null) && expression.NodeType == ExpressionType.Constant && typeof(RLinq.Expression).IsAssignableFrom(expression.Type))
             {
                 return (RLinq.Expression)((ConstantExpression)expression).Value;
             }
@@ -156,7 +156,7 @@ namespace Remote.Linq
 
         private static Expression Unwrap(this RLinq.Expression expression)
         {
-            if (!ReferenceEquals(null, expression) && expression.NodeType == RLinq.ExpressionType.Constant && ((RLinq.ConstantExpression)expression).Value is System.Linq.Expressions.Expression)
+            if (!(expression is null) && expression.NodeType == RLinq.ExpressionType.Constant && ((RLinq.ConstantExpression)expression).Value is System.Linq.Expressions.Expression)
             {
                 return (Expression)((RLinq.ConstantExpression)expression).Value;
             }
@@ -169,7 +169,7 @@ namespace Remote.Linq
         private static bool KeepMarkerFunctions(Expression expression)
         {
             var methodCallExpression = expression as MethodCallExpression;
-            if (!ReferenceEquals(null, methodCallExpression))
+            if (!(methodCallExpression is null))
             {
                 if (methodCallExpression.Method.IsGenericMethod &&
                     methodCallExpression.Method.GetGenericMethodDefinition() == MethodInfos.QueryFuntion.Include)
@@ -308,7 +308,7 @@ namespace Remote.Linq
 
             protected override Expression Visit(Expression expression)
             {
-                if (ReferenceEquals(null, expression))
+                if (expression is null)
                 {
                     return expression;
                 }
@@ -389,7 +389,7 @@ namespace Remote.Linq
                         select Visit(arg).Unwrap();
                 }
 
-                return ReferenceEquals(null, node.Constructor)
+                return node.Constructor is null
                     ? new RLinq.NewExpression(_typeInfoProvider.Get(node.Type))
                     : new RLinq.NewExpression(_typeInfoProvider.GetConstructorInfo(node.Constructor), arguments, node.Members?.Select(_typeInfoProvider.GetMemberInfo));
             }
@@ -397,7 +397,7 @@ namespace Remote.Linq
             protected override Expression VisitConstant(ConstantExpression node)
             {
                 RLinq.ConstantExpression exp;
-                if (!ReferenceEquals(null, node.Value) && ConstantValueMapper.TypeNeedsWrapping(node.Value.GetType()))
+                if (!(node.Value is null) && ConstantValueMapper.TypeNeedsWrapping(node.Value.GetType()))
                 {
                     var key = new { node.Value, node.Type };
                     ConstantQueryArgument constantQueryArgument;
@@ -412,7 +412,7 @@ namespace Remote.Linq
                         {
                             var propertyValue = property.Value;
                             var expressionValue = propertyValue as Expression;
-                            if (!ReferenceEquals(null, expressionValue))
+                            if (!(expressionValue is null))
                             {
                                 propertyValue = Visit(expressionValue).Unwrap();
                             }
@@ -590,7 +590,7 @@ namespace Remote.Linq
                     select exp.Unwrap();
 
                 IEnumerable<RLinq.ParameterExpression> rlinqVariables = null;
-                if (!ReferenceEquals(null, node.Variables))
+                if (!(node.Variables is null))
                 {
                     var nodeVariables = node.Variables.Cast<Expression>().ToList().AsReadOnly();
                     IEnumerable<Expression> variables = VisitExpressionList(nodeVariables);
@@ -611,7 +611,7 @@ namespace Remote.Linq
             protected override Expression VisitLabel(LabelExpression node)
             {
                 var target = VisitTarget(node.Target);
-                var defaultValue = ReferenceEquals(null, node.DefaultValue) ? null : Visit(node.DefaultValue).Unwrap();
+                var defaultValue = node.DefaultValue is null ? null : Visit(node.DefaultValue).Unwrap();
                 return new RLinq.LabelExpression(target, defaultValue).Wrap();
             }
 
@@ -634,7 +634,7 @@ namespace Remote.Linq
 
             private RLinq.LabelTarget VisitTarget(LabelTarget labelTarget)
             {
-                if (ReferenceEquals(null, labelTarget))
+                if (labelTarget is null)
                 {
                     return null;
                 }
@@ -679,7 +679,7 @@ namespace Remote.Linq
 
             private Expression Visit(RLinq.Expression expression)
             {
-                if (ReferenceEquals(null, expression))
+                if (expression is null)
                 {
                     return null;
                 }
@@ -774,9 +774,9 @@ namespace Remote.Linq
             private Expression VisitTry(RLinq.TryExpression tryExpression)
             {
                 Expression body = Visit(tryExpression.Body);
-                Type type = ReferenceEquals(tryExpression.Type, null) ? null : _typeResolver.ResolveType(tryExpression.Type);
-                Expression fault = ReferenceEquals(tryExpression.Fault, null) ? null : Visit(tryExpression.Fault);
-                Expression @finally = ReferenceEquals(tryExpression.Finally, null) ? null : Visit(tryExpression.Finally);
+                Type type = tryExpression.Type is null ? null : _typeResolver.ResolveType(tryExpression.Type);
+                Expression fault = tryExpression.Fault is null ? null : Visit(tryExpression.Fault);
+                Expression @finally = tryExpression.Finally is null ? null : Visit(tryExpression.Finally);
                 IEnumerable<CatchBlock> handlers = tryExpression.Handlers?.Select(VisitCatchBlock) ?? Enumerable.Empty<CatchBlock>();
 
                 return Expression.MakeTry(type, body, @finally, fault, handlers);
@@ -784,24 +784,24 @@ namespace Remote.Linq
 
             private CatchBlock VisitCatchBlock(RLinq.CatchBlock catchBlock)
             {
-                Type exceptionType = ReferenceEquals(catchBlock.Test, null) ? null : _typeResolver.ResolveType(catchBlock.Test);
-                ParameterExpression exceptionParameter = ReferenceEquals(catchBlock.Variable, null) ? null : VisitParameter(catchBlock.Variable);
-                Expression body = ReferenceEquals(catchBlock.Body, null) ? null : Visit(catchBlock.Body);
-                Expression filter = ReferenceEquals(catchBlock.Filter, null) ? null : Visit(catchBlock.Filter);
+                Type exceptionType = catchBlock.Test is null ? null : _typeResolver.ResolveType(catchBlock.Test);
+                ParameterExpression exceptionParameter = catchBlock.Variable is null ? null : VisitParameter(catchBlock.Variable);
+                Expression body = catchBlock.Body is null ? null : Visit(catchBlock.Body);
+                Expression filter = catchBlock.Filter is null ? null : Visit(catchBlock.Filter);
 
                 return Expression.MakeCatchBlock(exceptionType, exceptionParameter, body, filter);
             }
 
             private NewExpression VisitNew(RLinq.NewExpression newExpression)
             {
-                if (ReferenceEquals(null, newExpression.Constructor))
+                if (newExpression.Constructor is null)
                 {
                     var type = newExpression.Type.ResolveType(_typeResolver);
                     return Expression.New(type);
                 }
 
                 var constructor = newExpression.Constructor.ResolveConstructor(_typeResolver);
-                if (ReferenceEquals(null, newExpression.Arguments))
+                if (newExpression.Arguments is null)
                 {
                     if (newExpression.Members?.Any() ?? false)
                     {
@@ -875,7 +875,7 @@ namespace Remote.Linq
                     from i in node.Expressions ?? Enumerable.Empty<RLinq.Expression>()
                     select Visit(i);
 
-                return ReferenceEquals(null, type)
+                return type is null
                     ? Expression.Block(variables, expressions)
                     : Expression.Block(type, variables, expressions);
             }
@@ -979,7 +979,7 @@ namespace Remote.Linq
             {
                 var expressionType = unaryExpression.UnaryOperator.ToExpressionType();
                 var exp = Visit(unaryExpression.Operand);
-                var type = ReferenceEquals(null, unaryExpression.Type) ? null : _typeResolver.ResolveType(unaryExpression.Type);
+                var type = unaryExpression.Type is null ? null : _typeResolver.ResolveType(unaryExpression.Type);
                 var method = unaryExpression.Method?.ResolveMethod(_typeResolver);
                 return Expression.MakeUnary(expressionType, exp, type, method);
             }
@@ -1021,14 +1021,14 @@ namespace Remote.Linq
                 var type = constantValueExpression.Type.ResolveType(_typeResolver);
 
                 var oldConstantQueryArgument = value as ConstantQueryArgument;
-                if (!ReferenceEquals(null, oldConstantQueryArgument?.Type))
+                if (!(oldConstantQueryArgument?.Type is null))
                 {
                     var newConstantQueryArgument = new ConstantQueryArgument(oldConstantQueryArgument.Type);
                     foreach (var property in oldConstantQueryArgument.Properties)
                     {
                         var propertyValue = property.Value;
                         var expressionValue = propertyValue as RLinq.Expression;
-                        if (!ReferenceEquals(null, expressionValue))
+                        if (!(expressionValue is null))
                         {
                             propertyValue = Visit(expressionValue);
                         }
@@ -1048,7 +1048,7 @@ namespace Remote.Linq
                 var p2 = Visit(binaryExpression.RightOperand);
                 var conversion = Visit(binaryExpression.Conversion) as LambdaExpression;
                 var binaryType = binaryExpression.BinaryOperator.ToExpressionType();
-                var method = ReferenceEquals(null, binaryExpression.Method) ? null : binaryExpression.Method.ResolveMethod(_typeResolver);
+                var method = binaryExpression.Method is null ? null : binaryExpression.Method.ResolveMethod(_typeResolver);
                 return Expression.MakeBinary(binaryType, p1, p2, binaryExpression.IsLiftedToNull, method, conversion);
             }
 
@@ -1066,7 +1066,7 @@ namespace Remote.Linq
                     from p in lambdaExpression.Parameters
                     select VisitParameter(p);
 
-                if (ReferenceEquals(null, lambdaExpression.Type))
+                if (lambdaExpression.Type is null)
                 {
                     return Expression.Lambda(body, parameters.ToArray());
                 }
@@ -1109,7 +1109,7 @@ namespace Remote.Linq
 
             private LabelTarget VisitTarget(RLinq.LabelTarget labelTarget)
             {
-                if (ReferenceEquals(null, labelTarget))
+                if (labelTarget is null)
                 {
                     return null;
                 }
@@ -1135,9 +1135,9 @@ namespace Remote.Linq
                     return true;
                 }
 
-                if (ReferenceEquals(null, x))
+                if (x is null)
                 {
-                    if (ReferenceEquals(null, y))
+                    if (y is null)
                     {
                         return true;
                     }
@@ -1157,9 +1157,9 @@ namespace Remote.Linq
                     return true;
                 }
 
-                if (ReferenceEquals(null, x))
+                if (x is null)
                 {
-                    if (ReferenceEquals(null, y))
+                    if (y is null)
                     {
                         return true;
                     }

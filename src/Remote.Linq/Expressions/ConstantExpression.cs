@@ -22,9 +22,9 @@ namespace Remote.Linq.Expressions
 
         public ConstantExpression(object value, Type type = null)
         {
-            if (ReferenceEquals(null, type))
+            if (type is null)
             {
-                if (ReferenceEquals(null, value))
+                if (value is null)
                 {
                     type = typeof(object);
                 }

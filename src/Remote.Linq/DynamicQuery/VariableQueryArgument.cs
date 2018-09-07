@@ -24,9 +24,9 @@ namespace Remote.Linq.DynamicQuery
 
         public VariableQueryArgument(object value, Type type = null)
         {
-            if (ReferenceEquals(null, type))
+            if (type is null)
             {
-                if (ReferenceEquals(null, value))
+                if (value is null)
                 {
                     type = typeof(object);
                 }
@@ -43,9 +43,9 @@ namespace Remote.Linq.DynamicQuery
 
         public VariableQueryArgument(object value, TypeInfo type = null)
         {
-            if (ReferenceEquals(null, type))
+            if (type is null)
             {
-                var valueType = ReferenceEquals(null, value) ? typeof(object) : value.GetType();
+                var valueType = value is null ? typeof(object) : value.GetType();
 
                 type = new TypeInfo(valueType, false, false);
             }

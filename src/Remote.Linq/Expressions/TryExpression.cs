@@ -16,7 +16,7 @@ namespace Remote.Linq.Expressions
         }
 
         public TryExpression(Type type, Expression body, Expression fault, Expression @finally, List<CatchBlock> handlers)
-            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), body, fault, @finally, handlers)
+            : this(type is null ? null : new TypeInfo(type, false, false), body, fault, @finally, handlers)
         {
         }
 
@@ -48,8 +48,8 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
             => $"try({Type}) {{{Body}}}" +
-                (ReferenceEquals(Handlers, null) ? string.Empty : " " + string.Join("; ", Handlers)) +
-                (ReferenceEquals(Finally, null) ? string.Empty : $" finally{{{Finally}}}") +
-                (ReferenceEquals(Fault, null) ? string.Empty : $" faulted{{{Fault}}}");
+                (Handlers is null ? string.Empty : " " + string.Join("; ", Handlers)) +
+                (Finally is null ? string.Empty : $" finally{{{Finally}}}") +
+                (Fault is null ? string.Empty : $" faulted{{{Fault}}}");
     }
 }

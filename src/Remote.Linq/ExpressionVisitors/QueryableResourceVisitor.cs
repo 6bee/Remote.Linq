@@ -36,7 +36,7 @@ namespace Remote.Linq.ExpressionVisitors
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
                 var type = expression.Type.ResolveType(_typeResolver);
-                if (type == typeof(QueryableResourceDescriptor) && !ReferenceEquals(null, expression.Value))
+                if (type == typeof(QueryableResourceDescriptor) && !(expression.Value is null))
                 {
                     var queryableResourceDescriptor = (QueryableResourceDescriptor)expression.Value;
                     var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
@@ -44,14 +44,14 @@ namespace Remote.Linq.ExpressionVisitors
                     return new ConstantExpression(queryable);
                 }
 
-                if (type == typeof(ConstantQueryArgument) && !ReferenceEquals(null, expression.Value))
+                if (type == typeof(ConstantQueryArgument) && !(expression.Value is null))
                 {
                     var newConstantQueryArgument = new ConstantQueryArgument((ConstantQueryArgument)expression.Value);
                     var properties = newConstantQueryArgument.Properties ?? Enumerable.Empty<Property>();
                     foreach (var property in properties)
                     {
                         var queryableResourceDescriptor = property.Value as QueryableResourceDescriptor;
-                        if (!ReferenceEquals(null, queryableResourceDescriptor))
+                        if (!(queryableResourceDescriptor is null))
                         {
                             var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
                             var queryable = _provider(queryableType);
@@ -81,7 +81,7 @@ namespace Remote.Linq.ExpressionVisitors
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
                 var queryable = AsQueryableOrNull(expression.Value);
-                if (!ReferenceEquals(null, queryable))
+                if (!(queryable is null))
                 {
                     var typeInfo = _typeInfoProvider.Get(queryable.ElementType);
                     var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
@@ -89,14 +89,14 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 var constantQueryArgument = expression.Value as ConstantQueryArgument;
-                if (!ReferenceEquals(null, constantQueryArgument))
+                if (!(constantQueryArgument is null))
                 {
                     var newConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument);
                     var properties = newConstantQueryArgument.Properties ?? Enumerable.Empty<Property>();
                     foreach (var property in properties)
                     {
                         var value = AsQueryableOrNull(property.Value);
-                        if (!ReferenceEquals(null, value))
+                        if (!(value is null))
                         {
                             var typeInfo = _typeInfoProvider.Get(value.ElementType);
                             var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
@@ -113,7 +113,7 @@ namespace Remote.Linq.ExpressionVisitors
             private static IQueryable AsQueryableOrNull(object value)
             {
                 var queryable = value as IQueryable;
-                if (ReferenceEquals(null, queryable))
+                if (queryable is null)
                 {
                     return null;
                 }

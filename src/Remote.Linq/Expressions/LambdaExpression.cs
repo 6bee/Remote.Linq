@@ -29,7 +29,7 @@ namespace Remote.Linq.Expressions
         }
 
         public LambdaExpression(Type type, Expression expression, IEnumerable<ParameterExpression> parameters)
-            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), expression, parameters)
+            : this(type is null ? null : new TypeInfo(type, false, false), expression, parameters)
         {
         }
 

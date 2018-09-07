@@ -102,7 +102,7 @@ namespace Remote.Linq
             foreach (var sort in query.SortExpressions)
             {
                 var exp = expressionVisitor(sort.Operand).ToLinqExpression();
-                if (ReferenceEquals(orderedQueriable, null))
+                if (orderedQueriable is null)
                 {
                     switch (sort.SortDirection)
                     {
@@ -148,12 +148,12 @@ namespace Remote.Linq
 
         public static IQueryable<T> Include<T>(this IQueryable<T> queryable, string path)
         {
-            if (ReferenceEquals(null, queryable))
+            if (queryable is null)
             {
                 throw new ArgumentNullException(nameof(queryable));
             }
 
-            if (ReferenceEquals(null, path))
+            if (path is null)
             {
                 throw new ArgumentNullException(nameof(path));
             }
@@ -178,12 +178,12 @@ namespace Remote.Linq
 
         public static IQueryable<T> Include<T, TProperty>(this IQueryable<T> queryable, Expression<Func<T, TProperty>> path)
         {
-            if (ReferenceEquals(null, queryable))
+            if (queryable is null)
             {
                 throw new ArgumentNullException(nameof(queryable));
             }
 
-            if (ReferenceEquals(null, path))
+            if (path is null)
             {
                 throw new ArgumentNullException(nameof(path));
             }

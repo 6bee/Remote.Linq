@@ -15,7 +15,7 @@ namespace Remote.Linq.Expressions
         }
 
         public LabelTarget(string name, Type type = null, int instanceId = 0)
-            : this(name, ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), instanceId)
+            : this(name, type is null ? null : new TypeInfo(type, false, false), instanceId)
         {
         }
 

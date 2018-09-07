@@ -25,19 +25,19 @@ namespace Remote.Linq.ExpressionVisitors
     {
         protected virtual Expression Visit(Expression expression)
         {
-            if (ReferenceEquals(null, expression))
+            if (expression is null)
             {
                 return expression;
             }
 
             var unaryExpression = expression as UnaryExpression;
-            if (!ReferenceEquals(null, unaryExpression))
+            if (!(unaryExpression is null))
             {
                 return VisitUnary(unaryExpression);
             }
 
             var binaryExpression = expression as BinaryExpression;
-            if (!ReferenceEquals(null, binaryExpression))
+            if (!(binaryExpression is null))
             {
                 return VisitBinary(binaryExpression);
             }

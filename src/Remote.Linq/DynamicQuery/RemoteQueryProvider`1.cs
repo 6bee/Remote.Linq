@@ -17,12 +17,7 @@ namespace Remote.Linq.DynamicQuery
 
         internal RemoteQueryProvider(Func<Expressions.Expression, TSource> dataProvider, ITypeInfoProvider typeInfoProvider, IQueryResultMapper<TSource> resultMapper, Func<Expression, bool> canBeEvaluatedLocally)
         {
-            if (ReferenceEquals(null, dataProvider))
-            {
-                throw new ArgumentNullException(nameof(dataProvider));
-            }
-
-            _dataProvider = dataProvider;
+            _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
             _resultMapper = resultMapper;
             _typeInfoProvider = typeInfoProvider;
             _canBeEvaluatedLocally = canBeEvaluatedLocally;

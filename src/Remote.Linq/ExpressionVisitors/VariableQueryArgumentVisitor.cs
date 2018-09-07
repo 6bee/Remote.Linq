@@ -39,7 +39,7 @@ namespace Remote.Linq.ExpressionVisitors
                     object queryArgument;
 
                     var collection = value as System.Collections.IEnumerable;
-                    if (ReferenceEquals(null, collection) || value is string)
+                    if (collection is null || value is string)
                     {
                         queryArgument = new VariableQueryArgument(value, valueProperty.PropertyType);
                     }
@@ -58,7 +58,7 @@ namespace Remote.Linq.ExpressionVisitors
             private static bool IsGenericVariableQueryArgument(ConstantExpression expression)
             {
                 var type = expression.Type?.Type ?? expression.Value?.GetType();
-                return !ReferenceEquals(null, type)
+                return !(type is null)
                     && type.IsGenericType()
                     && type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>);
             }
@@ -108,7 +108,7 @@ namespace Remote.Linq.ExpressionVisitors
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
                 var nonGenericQueryArgument = expression.Value as VariableQueryArgument;
-                if (!ReferenceEquals(null, nonGenericQueryArgument))
+                if (!(nonGenericQueryArgument is null))
                 {
                     var type = nonGenericQueryArgument.Type.Type;
                     var value = nonGenericQueryArgument.Value;
@@ -117,7 +117,7 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 var nonGenericQueryArgumentList = expression.Value as VariableQueryArgumentList;
-                if (!ReferenceEquals(null, nonGenericQueryArgumentList))
+                if (!(nonGenericQueryArgumentList is null))
                 {
                     var elementType = nonGenericQueryArgumentList.ElementType.Type;
                     var values = nonGenericQueryArgumentList.Values;
@@ -143,7 +143,7 @@ namespace Remote.Linq.ExpressionVisitors
                     if (member.DeclaringType.FullName == typeof(VariableQueryArgument).FullName || member.DeclaringType.FullName == typeof(VariableQueryArgumentList).FullName)
                     {
                         var instanceExpression = Visit(expression.Expression) as ConstantExpression;
-                        if (!ReferenceEquals(null, instanceExpression))
+                        if (!(instanceExpression is null))
                         {
                             var instanceType = instanceExpression.Type;
                             if (instanceType.IsGenericType && instanceType.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))

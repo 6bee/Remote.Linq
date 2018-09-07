@@ -179,7 +179,7 @@ namespace Remote.Linq
         /// <returns>The data retrieved from the data provider.</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            if (ReferenceEquals(null, _dataProvider))
+            if (_dataProvider is null)
             {
                 throw new Exception("A query may only be enumerated if a data provider has been specified via constructor parameter.");
             }
@@ -197,7 +197,7 @@ namespace Remote.Linq
         /// </summary>
         public static Query<T> CreateFromNonGeneric(IQuery query, Func<Query<T>, IEnumerable<T>> dataProvider = null, Func<LambdaExpression, Expressions.LambdaExpression> expressionTranslator = null, ITypeResolver typeResolver = null)
         {
-            if (ReferenceEquals(null, query))
+            if (query is null)
             {
                 throw new ArgumentNullException(nameof(query));
             }
@@ -223,7 +223,7 @@ namespace Remote.Linq
             var sb = new StringBuilder();
 
             var filterExpressions = FilterExpressions;
-            if (!ReferenceEquals(null, filterExpressions))
+            if (!(filterExpressions is null))
             {
                 foreach (var expression in filterExpressions)
                 {
@@ -233,7 +233,7 @@ namespace Remote.Linq
             }
 
             var sortExpressions = SortExpressions;
-            if (!ReferenceEquals(null, sortExpressions))
+            if (!(sortExpressions is null))
             {
                 foreach (var expression in sortExpressions)
                 {

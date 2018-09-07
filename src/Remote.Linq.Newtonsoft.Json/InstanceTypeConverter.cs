@@ -13,10 +13,10 @@ namespace Remote.Linq
         public static void ConstantExpressionSerializationCallback(object o, StreamingContext context)
         {
             var constantExpression = o as ConstantExpression;
-            if (!ReferenceEquals(null, constantExpression?.Value))
+            if (!(constantExpression?.Value is null))
             {
                 var converter = PrimitiveValueInspector.GetConverter(constantExpression.Type);
-                if (!ReferenceEquals(null, converter))
+                if (!(converter is null))
                 {
                     constantExpression.Value = converter(constantExpression.Value);
                 }
@@ -26,10 +26,10 @@ namespace Remote.Linq
         public static void VariableQueryArgumentSerializationCallback(object o, StreamingContext context)
         {
             var variableQueryArgument = o as VariableQueryArgument;
-            if (!ReferenceEquals(null, variableQueryArgument?.Value))
+            if (!(variableQueryArgument?.Value is null))
             {
                 var converter = PrimitiveValueInspector.GetConverter(variableQueryArgument.Type);
-                if (!ReferenceEquals(null, converter))
+                if (!(converter is null))
                 {
                     variableQueryArgument.Value = converter(variableQueryArgument.Value);
                 }
@@ -39,10 +39,10 @@ namespace Remote.Linq
         public static void VariableQueryArgumentListSerializationCallback(object o, StreamingContext context)
         {
             var variableQueryArgumentList = o as VariableQueryArgumentList;
-            if (!ReferenceEquals(null, variableQueryArgumentList?.Values))
+            if (!(variableQueryArgumentList?.Values is null))
             {
                 var converter = PrimitiveValueInspector.GetConverter(variableQueryArgumentList.ElementType);
-                if (!ReferenceEquals(null, converter))
+                if (!(converter is null))
                 {
                     variableQueryArgumentList.Values = variableQueryArgumentList.Values.Select(converter).ToList();
                 }

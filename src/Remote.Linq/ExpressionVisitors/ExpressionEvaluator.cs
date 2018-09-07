@@ -68,7 +68,7 @@ namespace Remote.Linq.ExpressionVisitors
                     if (methodCallExpression.Arguments.Count > 0)
                     {
                         var argument = methodCallExpression.Arguments[0] as ConstantExpression;
-                        if (!ReferenceEquals(null, argument) && argument.Value is IRemoteQueryable)
+                        if (!(argument is null) && argument.Value is IRemoteQueryable)
                         {
                             return false;
                         }
@@ -151,7 +151,7 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 var valueAsExpression = value as Expression;
-                if (!ReferenceEquals(null, valueAsExpression))
+                if (!(valueAsExpression is null))
                 {
                     return valueAsExpression;
                 }

@@ -181,7 +181,7 @@ namespace Remote.Linq
         /// <returns>A non-generic version of the specified query instance.</returns>
         public static Query CreateFromGeneric<T>(IQuery<T> query)
         {
-            if (ReferenceEquals(null, query))
+            if (query is null)
             {
                 throw new ArgumentNullException(nameof(query));
             }
@@ -201,7 +201,7 @@ namespace Remote.Linq
             var sb = new StringBuilder();
 
             var filterExpressions = FilterExpressions;
-            if (!ReferenceEquals(null, filterExpressions))
+            if (!(filterExpressions is null))
             {
                 foreach (var expression in filterExpressions)
                 {
@@ -211,7 +211,7 @@ namespace Remote.Linq
             }
 
             var sortExpressions = SortExpressions;
-            if (!ReferenceEquals(null, sortExpressions))
+            if (!(sortExpressions is null))
             {
                 foreach (var expression in sortExpressions)
                 {

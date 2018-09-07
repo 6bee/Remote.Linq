@@ -22,12 +22,12 @@ namespace Remote.Linq.DynamicQuery
 
         public VariableQueryArgumentList(System.Collections.IEnumerable values, Type elementType = null)
         {
-            if (ReferenceEquals(null, values))
+            if (values is null)
             {
                 throw new ArgumentNullException(nameof(values));
             }
 
-            if (ReferenceEquals(null, elementType))
+            if (elementType is null)
             {
                 var collectionType = values.GetType();
                 elementType = TypeHelper.GetElementType(collectionType);
@@ -40,12 +40,12 @@ namespace Remote.Linq.DynamicQuery
 
         public VariableQueryArgumentList(System.Collections.IEnumerable values, TypeInfo elementType = null)
         {
-            if (ReferenceEquals(null, values))
+            if (values is null)
             {
                 throw new ArgumentNullException(nameof(values));
             }
 
-            if (ReferenceEquals(null, elementType))
+            if (elementType is null)
             {
                 var collectionType = values.GetType();
                 var type = TypeHelper.GetElementType(collectionType);
@@ -71,8 +71,8 @@ namespace Remote.Linq.DynamicQuery
             return string.Format(
                 "{0}Of{1}[{2}]",
                 GetType().Name,
-                ReferenceEquals(null, elementType) ? "?" : elementType.Name,
-                ReferenceEquals(null, values) ? 0 : values.Count);
+                elementType is null ? "?" : elementType.Name,
+                values is null ? 0 : values.Count);
         }
     }
 }

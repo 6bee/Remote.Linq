@@ -42,7 +42,7 @@ namespace Remote.Linq.DynamicQuery
         private DynamicObject MapGroupToDynamicObjectGraph<TKey, TElement>(IGrouping<TKey, TElement> group, Func<Type, bool> setTypeInformation)
         {
             var remoteLinqGroup = group as Grouping<TKey, TElement>;
-            if (ReferenceEquals(null, remoteLinqGroup))
+            if (remoteLinqGroup is null)
             {
                 remoteLinqGroup = new Grouping<TKey, TElement>
                 {

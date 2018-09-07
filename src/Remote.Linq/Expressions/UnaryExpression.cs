@@ -28,7 +28,7 @@ namespace Remote.Linq.Expressions
         }
 
         public UnaryExpression(UnaryOperator unaryOperator, Expression operand, Type type, System.Reflection.MethodInfo method)
-            : this(unaryOperator, operand, ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), ReferenceEquals(null, method) ? null : new MethodInfo(method))
+            : this(unaryOperator, operand, type is null ? null : new TypeInfo(type, false, false), method is null ? null : new MethodInfo(method))
         {
         }
 

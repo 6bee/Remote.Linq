@@ -38,7 +38,7 @@ namespace Remote.Linq
         /// </summary>
         public static IQueryable CreateQueryable(this RemoteQueryableFactory factory, Type elementType, Func<Expressions.Expression, object> dataProvider, ITypeInfoProvider typeInfoProvider = null, IQueryResultMapper<object> resultMapper = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
         {
-            if (ReferenceEquals(null, resultMapper))
+            if (resultMapper is null)
             {
                 resultMapper = new ObjectResultCaster();
             }
@@ -52,7 +52,7 @@ namespace Remote.Linq
         /// <typeparam name="T">Element type of the <see cref="IQueryable{T}"/>.</typeparam>
         public static IQueryable<T> CreateQueryable<T>(this RemoteQueryableFactory factory, Func<Expressions.Expression, object> dataProvider, ITypeInfoProvider typeInfoProvider = null, IQueryResultMapper<object> resultMapper = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
         {
-            if (ReferenceEquals(null, resultMapper))
+            if (resultMapper is null)
             {
                 resultMapper = new ObjectResultCaster();
             }
@@ -105,7 +105,7 @@ namespace Remote.Linq
         /// </summary>
         public static IQueryable CreateAsyncQueryable(this RemoteQueryableFactory factory, Type elementType, Func<Expressions.Expression, Task<object>> dataProvider, ITypeInfoProvider typeInfoProvider = null, IAsyncQueryResultMapper<object> resultMapper = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
         {
-            if (ReferenceEquals(null, resultMapper))
+            if (resultMapper is null)
             {
                 resultMapper = new AsyncObjectResultCaster();
             }
@@ -119,7 +119,7 @@ namespace Remote.Linq
         /// <typeparam name="T">Element type of the <see cref="IQueryable{T}"/>.</typeparam>
         public static IQueryable<T> CreateAsyncQueryable<T>(this RemoteQueryableFactory factory, Func<Expressions.Expression, Task<object>> dataProvider, ITypeInfoProvider typeInfoProvider = null, IAsyncQueryResultMapper<object> resultMapper = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
         {
-            if (ReferenceEquals(null, resultMapper))
+            if (resultMapper is null)
             {
                 resultMapper = new AsyncObjectResultCaster();
             }

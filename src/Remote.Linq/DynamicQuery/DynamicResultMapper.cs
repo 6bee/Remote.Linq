@@ -25,14 +25,14 @@ namespace Remote.Linq.DynamicQuery
         {
             var elementType = TypeHelper.GetElementType(typeof(T));
 
-            if (ReferenceEquals(null, mapper))
+            if (mapper is null)
             {
                 mapper = new DynamicQueryResultMapper();
             }
 
             var result = mapper.Map(dataRecords, elementType);
 
-            if (ReferenceEquals(null, result))
+            if (result is null)
             {
                 return default(T);
             }
