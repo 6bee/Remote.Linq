@@ -554,6 +554,96 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_query_product_categories_filterd_using_inline_nullable_enum()
+        {
+            var query =
+                from c in _categoryQueryable
+                where c.CategorySourceType == CategorySourceType.Internal
+                select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_categories_filterd_using_inline_nullable_enum_equals()
+        {
+            var query =
+                from c in _categoryQueryable
+                where c.CategorySourceType.Equals(CategorySourceType.Internal)
+                select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_categories_filterd_using_nullable_enum_closure()
+        {
+            var categoryType = CategorySourceType.Internal;
+            var query =
+                from c in _categoryQueryable
+                where c.CategorySourceType == categoryType
+                select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_categories_filterd_using_inline_nullable_enum_is_null()
+        {
+            var query =
+                from c in _categoryQueryable
+                where c.CategorySourceType == null
+                select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_categories_filterd_using_inline_nullable_enum_equals_is_null()
+        {
+            var query =
+                from c in _categoryQueryable
+                where c.CategorySourceType.Equals(null)
+                select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_categories_filterd_using_nullable_enum_is_null_closure()
+        {
+            CategorySourceType? categoryType = null;
+            var query =
+                from c in _categoryQueryable
+                where c.CategorySourceType == categoryType
+                select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_categories_filterd_using_inline_nullable_enum_reference_is_null()
+        {
+            var query =
+                from c in _categoryQueryable
+                where ReferenceEquals(null, c.CategorySourceType)
+                select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_query_product_categories_filterd_using_inline_nullable_enum_equals_reference_is_null()
+        {
+            var query =
+                from c in _categoryQueryable
+                where ReferenceEquals(null, c.CategorySourceType)
+                select c;
+            var result = query.ToArray();
+            result.Count().ShouldBe(1);
+        }
+
+        [Fact]
         public void Should_query_product_filterd_using_inline_enum_flags()
         {
             var query =

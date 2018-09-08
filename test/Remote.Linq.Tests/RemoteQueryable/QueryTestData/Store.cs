@@ -17,8 +17,8 @@ namespace Remote.Linq.Tests.RemoteQueryable.QueryTestData
 
             _dataSets[typeof(Category)] = new[]
             {
-                new Category { Id = 1, Name = "Fruits", CategoryType = CategoryType.Food },
-                new Category { Id = 2, Name = "Vehicles", CategoryType = CategoryType.NonFood },
+                new Category { Id = 1, Name = "Fruits", CategoryType = CategoryType.Food, CategorySourceType = CategorySourceType.Internal },
+                new Category { Id = 2, Name = "Vehicles", CategoryType = CategoryType.NonFood, CategorySourceType = null },
             };
 
             _dataSets[typeof(Product)] = new[]

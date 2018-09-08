@@ -8,7 +8,8 @@ namespace Remote.Linq.Tests.RemoteQueryable.QueryTestData
 
         public string Name { get; set; }
 
-        // TODO: add nullable enum property
         public CategoryType CategoryType { get; set; }
+
+        public CategorySourceType? CategorySourceType { get; set; }
     }
 }
