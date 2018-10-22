@@ -1,8 +1,14 @@
 ﻿<Project>
   <PropertyGroup>
     <Copyright>Copyright © Christof Senn 2013-2018</Copyright>
-    <VersionPrefix>5.8.0</VersionPrefix>
+    <VersionPrefix>5.8.1</VersionPrefix>
     <Authors>Christof Senn</Authors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>..\..\key.snk</AssemblyOriginatorKeyFile>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
   </PropertyGroup>
   <PropertyGroup>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)StyleNoDoc.ruleset</CodeAnalysisRuleSet>
