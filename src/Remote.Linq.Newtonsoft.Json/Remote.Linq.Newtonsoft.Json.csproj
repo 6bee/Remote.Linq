@@ -8,7 +8,7 @@
     <PackageTags>remote-linq;json-net;newtonsoft-json</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/6bee/Remote.Linq/master/remotelinq-small.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/6bee/Remote.Linq</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/6bee/Remote.Linq/master/license.txt</PackageLicenseUrl>
+    <PackageLicense>https://raw.githubusercontent.com/6bee/Remote.Linq/master/license.txt</PackageLicense>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/6bee/Remote.Linq.git</RepositoryUrl>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
