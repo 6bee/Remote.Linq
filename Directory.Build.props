@@ -1,7 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
     <Copyright>Copyright © Christof Senn 2013-2018</Copyright>
-    <VersionPrefix>5.8.1</VersionPrefix>
+    <VersionPrefix>5.8.2</VersionPrefix>
     <Authors>Christof Senn</Authors>
   </PropertyGroup>
   <PropertyGroup>
