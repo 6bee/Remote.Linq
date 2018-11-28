@@ -11,6 +11,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
     using Remote.Linq.Tests.Serialization;
     using Shouldly;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -107,6 +108,36 @@ namespace Remote.Linq.Tests.RemoteQueryable
             var result = _productQueryable.ToList();
 
             result.Count().ShouldBe(5);
+        }
+
+        [Fact]
+        public void Should_execute_as_untyped_queryable()
+        {
+            var count = 0;
+            var queryable = (IQueryable)_productQueryable;
+
+            foreach (object item in queryable)
+            {
+                item.ShouldBeOfType<Product>();
+                count++;
+            }
+
+            count.ShouldBe(5);
+        }
+
+        [Fact]
+        public void Should_execute_as_untyped_enumerable()
+        {
+            var count = 0;
+            var enumerable = (IEnumerable)_productQueryable;
+
+            foreach (object item in enumerable)
+            {
+                item.ShouldBeOfType<Product>();
+                count++;
+            }
+
+            count.ShouldBe(5);
         }
 
         [Fact]

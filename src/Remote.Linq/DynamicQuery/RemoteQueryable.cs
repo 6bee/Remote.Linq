@@ -3,6 +3,7 @@
 namespace Remote.Linq.DynamicQuery
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -21,7 +22,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            => Provider.Execute<System.Collections.IEnumerable>(Expression).GetEnumerator();
+            => Provider.Execute<IEnumerable<object>>(Expression).GetEnumerator();
 
         public Type ElementType { get; }
 
