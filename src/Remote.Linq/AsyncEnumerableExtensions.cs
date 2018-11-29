@@ -441,16 +441,8 @@ namespace Remote.Linq
         private static async Task<IEnumerable<T>> ExecuteAsync<T>(IQueryable<T> source)
         {
             IEnumerable<T> enumerable;
-
-            // if (source is IAsyncRemoteQueryable<T>)
-            // {
-            //     var asyncQueryable = (IAsyncRemoteQueryable<T>)source;
-            //     enumerable = await asyncQueryable.ExecuteAsync();
-            // }
-
-            if (source.Provider is IAsyncRemoteQueryProvider)
+            if (source.Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
             {
-                var asyncQueryableProvider = (IAsyncRemoteQueryProvider)source.Provider;
                 enumerable = await asyncQueryableProvider.ExecuteAsync<IEnumerable<T>>(source.Expression);
             }
             else

@@ -17,15 +17,7 @@ namespace Remote.Linq.DynamicQuery
                  .MakeGenericMethod(genericTypeArguments);
 
         protected override bool ShouldMapToDynamicObject(IEnumerable collection)
-        {
-            var type = collection.GetType();
-            if (type.Implements(typeof(IGrouping<,>)))
-            {
-                return true;
-            }
-
-            return false;
-        }
+            => collection.GetType().Implements(typeof(IGrouping<,>));
 
         protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
         {
@@ -41,15 +33,12 @@ namespace Remote.Linq.DynamicQuery
 
         private DynamicObject MapGroupToDynamicObjectGraph<TKey, TElement>(IGrouping<TKey, TElement> group, Func<Type, bool> setTypeInformation)
         {
-            var remoteLinqGroup = group as Grouping<TKey, TElement>;
-            if (remoteLinqGroup is null)
-            {
-                remoteLinqGroup = new Grouping<TKey, TElement>
+            var remoteLinqGroup = (group as Grouping<TKey, TElement>) ??
+                new Grouping<TKey, TElement>
                 {
                     Key = group.Key,
                     Elements = group.ToArray(),
                 };
-            }
 
             return base.MapToDynamicObjectGraph(remoteLinqGroup, setTypeInformation);
         }

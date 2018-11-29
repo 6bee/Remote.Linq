@@ -10,14 +10,14 @@ namespace Remote.Linq.DynamicQuery
 
     internal sealed partial class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
     {
-        private readonly Func<Expressions.Expression, Task<TSource>> _dataProvider;
+        private readonly Func<Expressions.Expression, Task<TSource>> _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly ITypeInfoProvider _typeInfoProvider;
         private readonly Func<Expression, bool> _canBeEvaluatedLocally;
 
-        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<TSource>> dataProvider, ITypeInfoProvider typeInfoProvider, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool> canBeEvaluatedLocally)
+        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<TSource>> asyncDataProvider, ITypeInfoProvider typeInfoProvider, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool> canBeEvaluatedLocally)
         {
-            _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
+            _asyncDataProvider = asyncDataProvider ?? throw new ArgumentNullException(nameof(asyncDataProvider));
             _resultMapper = resutMapper;
             _typeInfoProvider = typeInfoProvider;
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
@@ -36,7 +36,7 @@ namespace Remote.Linq.DynamicQuery
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
 
-            var task = _dataProvider(rlinq);
+            var task = _asyncDataProvider(rlinq);
 
             TResult result;
             try
@@ -77,7 +77,7 @@ namespace Remote.Linq.DynamicQuery
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
 
-            var dataRecords = await _dataProvider(rlinq);
+            var dataRecords = await _asyncDataProvider(rlinq);
 
             var result = await _resultMapper.MapResultAsync<TResult>(dataRecords, expression);
 
