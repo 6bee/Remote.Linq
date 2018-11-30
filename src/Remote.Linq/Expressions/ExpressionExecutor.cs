@@ -91,11 +91,9 @@ namespace Remote.Linq.Expressions
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
         protected virtual object Execute(System.Linq.Expressions.Expression expression)
         {
-            var lambdaExpression = expression as System.Linq.Expressions.LambdaExpression;
-            if (lambdaExpression == null)
-            {
-                lambdaExpression = System.Linq.Expressions.Expression.Lambda(expression);
-            }
+            var lambdaExpression =
+                (expression as System.Linq.Expressions.LambdaExpression) ??
+                System.Linq.Expressions.Expression.Lambda(expression);
 
             object queryable;
             try

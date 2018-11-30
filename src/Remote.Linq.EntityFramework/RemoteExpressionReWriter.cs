@@ -39,7 +39,7 @@ namespace Remote.Linq.EntityFramework
 
             protected override Expression VisitMethodCall(MethodCallExpression expression)
             {
-                if (expression.Instance == null &&
+                if (expression.Instance is null &&
                     expression.Method.Name == "Include" &&
                     expression.Method.DeclaringType.Type == typeof(Remote.Linq.DynamicQuery.QueryFunctions) &&
                     expression.Method.GenericArgumentTypes.Count == 1 &&

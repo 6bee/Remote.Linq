@@ -116,7 +116,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression Visit(Expression expression)
             {
-                if (expression == null)
+                if (expression is null)
                 {
                     return null;
                 }
@@ -176,7 +176,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             internal Nominator(Func<Expression, bool> fnCanBeEvaluated)
             {
-                _fnCanBeEvaluated = fnCanBeEvaluated == null
+                _fnCanBeEvaluated = fnCanBeEvaluated is null
                     ? CanBeEvaluatedLocally
                     : new Func<Expression, bool>(exp => fnCanBeEvaluated(exp) && CanBeEvaluatedLocally(exp));
             }

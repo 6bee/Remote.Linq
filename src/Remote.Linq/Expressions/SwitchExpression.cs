@@ -24,7 +24,7 @@ namespace Remote.Linq.Expressions
         }
 
         public SwitchExpression(Expression switchValue, System.Reflection.MethodInfo comparison, Expression defaultExpression, List<SwitchCase> cases)
-            : this(switchValue, comparison == null ? null : new MethodInfo(comparison), defaultExpression, cases)
+            : this(switchValue, comparison is null ? null : new MethodInfo(comparison), defaultExpression, cases)
         {
         }
 

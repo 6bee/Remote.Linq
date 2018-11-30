@@ -188,8 +188,7 @@ namespace Remote.Linq
                 throw new ArgumentNullException(nameof(path));
             }
 
-            string path1;
-            if (!TryParsePath(path.Body, out path1) || path1 == null)
+            if (!TryParsePath(path.Body, out string path1) || path1 is null)
             {
                 throw new ArgumentException("Invalid include path expression", nameof(path));
             }
@@ -215,7 +214,7 @@ namespace Remote.Linq
                     return false;
                 }
 
-                path = path1 == null ? name : $"{path1}.{name}";
+                path = path1 is null ? name : $"{path1}.{name}";
             }
             else if (methodCallExpression != null)
             {

@@ -47,7 +47,7 @@ namespace Remote.Linq.Expressions
         public override string ToString()
         {
             var parameters = Parameters;
-            var parameterString = parameters == null ? null : string.Join(",", parameters);
+            var parameterString = parameters is null ? null : string.Join(",", parameters);
             return $"{(parameters.Count == 1 ? null : "(")}{parameterString}{(parameters.Count == 1 ? null : ")")} => {Expression}";
         }
     }

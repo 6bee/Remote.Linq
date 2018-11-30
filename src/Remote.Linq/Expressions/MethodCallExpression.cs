@@ -52,7 +52,7 @@ namespace Remote.Linq.Expressions
             var arguments = Arguments;
             return string.Format(
                 "{0}.{1}({2})",
-                instance == null ? Method?.DeclaringType?.ToString() : instance.ToString(),
+                instance?.ToString() ?? Method?.DeclaringType?.ToString(),
                 Method?.Name,
                 arguments is null ? null : string.Join(", ", arguments));
         }

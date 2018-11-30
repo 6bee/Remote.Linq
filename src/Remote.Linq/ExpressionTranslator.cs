@@ -25,12 +25,12 @@ namespace Remote.Linq
         /// </summary>
         public static Func<T, bool> And<T>(this Func<T, bool> predicate1, Func<T, bool> predicate2)
         {
-            if (predicate1 == null)
+            if (predicate1 is null)
             {
                 return predicate2;
             }
 
-            if (predicate2 == null)
+            if (predicate2 is null)
             {
                 return predicate1;
             }
@@ -43,12 +43,12 @@ namespace Remote.Linq
         /// </summary>
         public static Func<T, bool> Or<T>(this Func<T, bool> predicate1, Func<T, bool> predicate2)
         {
-            if (predicate1 == null)
+            if (predicate1 is null)
             {
                 return predicate2;
             }
 
-            if (predicate2 == null)
+            if (predicate2 is null)
             {
                 return predicate1;
             }
@@ -288,7 +288,7 @@ namespace Remote.Linq
 
             public LinqExpressionToRemoteExpressionTranslator(ITypeInfoProvider typeInfoProvider, Func<Expression, bool> canBeEvaluatedLocally)
             {
-                _canBeEvaluatedLocally = canBeEvaluatedLocally == null
+                _canBeEvaluatedLocally = canBeEvaluatedLocally is null
                     ? KeepMarkerFunctions
                     : new Func<Expression, bool>(exp => canBeEvaluatedLocally(exp) && KeepMarkerFunctions(exp));
                 _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
@@ -297,7 +297,7 @@ namespace Remote.Linq
             public RLinq.Expression ToRemoteExpression(Expression expression)
             {
                 var partialEvalExpression = expression.PartialEval(_canBeEvaluatedLocally);
-                if (partialEvalExpression == null)
+                if (partialEvalExpression is null)
                 {
                     throw CreateNotSupportedException(expression);
                 }

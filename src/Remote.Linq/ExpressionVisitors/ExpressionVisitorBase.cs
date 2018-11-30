@@ -429,18 +429,17 @@ namespace Remote.Linq.ExpressionVisitors
             IEnumerable<Expression> args = VisitExpressionList(node.Arguments);
             if (args != node.Arguments)
             {
-                if (node.Constructor == null)
+                if (node.Constructor is null)
                 {
                     return Expression.New(node.Type);
                 }
-                else if (node.Members == null)
+
+                if (node.Members is null)
                 {
                     return Expression.New(node.Constructor, args);
                 }
-                else
-                {
-                    return Expression.New(node.Constructor, args, node.Members);
-                }
+
+                return Expression.New(node.Constructor, args, node.Members);
             }
 
             return node;
