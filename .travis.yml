@@ -17,11 +17,11 @@ addons:
 matrix:
   include:
     - os: linux
-      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=2.1.4 CONFIGURATION=Debug
+      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=2.2.100 CONFIGURATION=Debug
     - os: linux
       env: FRAMEWORK_VERSION=2.2 CLI_VERSION=Latest CONFIGURATION=Release
     - os: osx
-      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=2.1.4 CONFIGURATION=Debug
+      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=2.2.100 CONFIGURATION=Debug
     - os: osx
       env: FRAMEWORK_VERSION=2.2 CLI_VERSION=Latest CONFIGURATION=Release
 
