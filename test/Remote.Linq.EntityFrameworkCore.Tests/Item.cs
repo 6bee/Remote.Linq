@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if !NETCOREAPP1_0
 namespace Remote.Linq.EntityFrameworkCore.Tests
 {
     using System.Diagnostics;
@@ -11,4 +10,3 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         public string Name { get; set; }
     }
 }
-#endif

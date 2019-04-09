@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for Remote.Linq.EntityFrameworkCore</Description>
-    <TargetFrameworks>net462;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net462;netcoreapp2.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,10 +16,6 @@
     <PackageReference Include="Xunit.SkippableFact" Version="1.3.6" />
     <PackageReference Include="Shouldly" Version="3.0.0" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <DefineConstants>$(DefineConstants);NETCOREAPP1_0</DefineConstants>
-  </PropertyGroup>
 
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />

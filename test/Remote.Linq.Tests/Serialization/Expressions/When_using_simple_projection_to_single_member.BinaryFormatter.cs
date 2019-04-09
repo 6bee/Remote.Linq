@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if !NETCOREAPP1_0
-
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
     partial class When_using_simple_projection_to_single_member
@@ -15,5 +13,3 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
     }
 }
-
-#endif

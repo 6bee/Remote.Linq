@@ -105,7 +105,6 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
                 .Value.ShouldBe(Math.E);
         }
 
-#if !NETCOREAPP1_0
         [Fact]
         public void Should_preserve_func_expression()
         {
@@ -133,7 +132,6 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
         {
             return i;
         }
-#endif
 
         private static Tuple<T, T> BackAndForth<T>(T expression) where T : Expression
         {

@@ -44,12 +44,10 @@ namespace Remote.Linq.Tests.RemoteQueryable
             public With_xml_serializer() : base(XmlSerializationHelper.Serialize) { }
         }
 
-#if !NETCOREAPP1_0
         public class With_binary_formatter : When_running_query
         {
             public With_binary_formatter() : base(BinarySerializationHelper.Serialize) { }
         }
-#endif
 
 #if NET
         public class With_net_data_contract_serializer : When_running_query
@@ -69,10 +67,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
         protected When_running_query(Func<Expression, Expression> serialize)
         {
-#if !NETCOREAPP1_0
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-#endif
             Store dataStore = new Store();
             Func<Expression, IEnumerable<DynamicObject>> execute = expression =>
                 {

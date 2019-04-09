@@ -12,12 +12,10 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 #pragma warning disable SA1502 // Element should not be on a single line
 #pragma warning disable SA1128 // Put constructor initializers on their own line
 
-#if !NETCOREAPP1_0
         public class BinaryFormatter : When_using_SwitchExpressions
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
-#endif
 
 #if NET
         public class NetDataContractSerializer : When_using_SwitchExpressions

@@ -11,7 +11,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
     public abstract class When_using_GotoAndLabelExpressions_with_names
     {
-#if !NETCOREAPP1_0
         public class BinaryFormatter : When_using_GotoAndLabelExpressions_with_names
         {
             public BinaryFormatter()
@@ -19,7 +18,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif
 
 #if NET
         public class NetDataContractSerializer : When_using_GotoAndLabelExpressions_with_names
