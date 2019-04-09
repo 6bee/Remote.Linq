@@ -17,27 +17,22 @@ addons:
 matrix:
   include:
     - os: linux
-      env: FRAMEWORK_VERSION=1.0 CLI_VERSION=1.1.5 CONFIGURATION=Release
+      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=2.1.4 CONFIGURATION=Debug
     - os: linux
-      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=Latest CONFIGURATION=Release
-    - os: linux
-      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=2.1.4 CONFIGURATION=Debug
+      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=Latest CONFIGURATION=Release
     - os: osx
-      env: FRAMEWORK_VERSION=1.0 CLI_VERSION=1.1.5 CONFIGURATION=Release
+      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=2.1.4 CONFIGURATION=Debug
     - os: osx
-      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=Latest CONFIGURATION=Release
-    - os: osx
-      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=2.1.4 CONFIGURATION=Debug
+      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=Latest CONFIGURATION=Release
 
 install:  
   - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
-  - curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --channel 2.0 --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
+  - curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --channel 2.2 --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
   - export PATH="$DOTNET_INSTALL_DIR:$PATH" 
 
 before_script:  
   - if test "$TRAVIS_OS_NAME" == "osx"; then export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib; fi
   - dotnet --info
-  - if test "$FRAMEWORK_VERSION" == "1.0"; then dotnet restore; fi
 
 script: 
   - dotnet test ./test/Remote.Linq.Tests/Remote.Linq.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
