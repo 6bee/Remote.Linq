@@ -14,16 +14,14 @@ namespace Remote.Linq.EntityFrameworkCore
     {
         private static readonly System.Reflection.MethodInfo QueryableIncludeMethod = typeof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions)
             .GetTypeInfo()
-            .GetDeclaredMethods("Include")
+            .GetDeclaredMethods(nameof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.Include))
             .Single(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1);
 
         /// <summary>
         /// Replaces resource descriptors by queryable and replaces include method call with entity framework's include methods.
         /// </summary>
         internal static Expression ReplaceIncludeMethodCall(this Expression expression)
-        {
-            return new ElementReplacer().Run(expression);
-        }
+            => new ElementReplacer().Run(expression);
 
         private sealed class ElementReplacer : RemoteExpressionVisitorBase
         {
@@ -32,15 +30,12 @@ namespace Remote.Linq.EntityFrameworkCore
             }
 
             internal Expression Run(Expression expression)
-            {
-                var result = Visit(expression);
-                return result;
-            }
+                => Visit(expression);
 
             protected override Expression VisitMethodCall(MethodCallExpression expression)
             {
                 if (expression.Instance is null &&
-                    expression.Method.Name == "Include" &&
+                    string.Equals(expression.Method.Name, nameof(Remote.Linq.DynamicQuery.QueryFunctions.Include), System.StringComparison.Ordinal) &&
                     expression.Method.DeclaringType.Type == typeof(Remote.Linq.DynamicQuery.QueryFunctions) &&
                     expression.Method.GenericArgumentTypes.Count == 1 &&
                     expression.Arguments.Count == 2)

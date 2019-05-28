@@ -5,6 +5,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
     using Aqua.Dynamic;
     using Microsoft.EntityFrameworkCore;
     using Remote.Linq;
+    using Remote.Linq.EntityFrameworkCore.Tests.Model;
     using Remote.Linq.Expressions;
     using Shouldly;
     using System;
