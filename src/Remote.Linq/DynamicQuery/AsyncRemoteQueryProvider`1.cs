@@ -6,16 +6,17 @@ namespace Remote.Linq.DynamicQuery
     using System;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
 
     internal sealed partial class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
     {
-        private readonly Func<Expressions.Expression, Task<TSource>> _asyncDataProvider;
+        private readonly Func<Expressions.Expression, CancellationToken, Task<TSource>> _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly ITypeInfoProvider _typeInfoProvider;
         private readonly Func<Expression, bool> _canBeEvaluatedLocally;
 
-        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, Task<TSource>> asyncDataProvider, ITypeInfoProvider typeInfoProvider, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool> canBeEvaluatedLocally)
+        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, CancellationToken, Task<TSource>> asyncDataProvider, ITypeInfoProvider typeInfoProvider, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool> canBeEvaluatedLocally)
         {
             _asyncDataProvider = asyncDataProvider ?? throw new ArgumentNullException(nameof(asyncDataProvider));
             _resultMapper = resutMapper;
@@ -36,20 +37,20 @@ namespace Remote.Linq.DynamicQuery
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
 
-            var task = _asyncDataProvider(rlinq);
+            var task = _asyncDataProvider(rlinq, CancellationToken.None);
 
             TResult result;
             try
             {
                 var dataRecords = task.Result;
 
-                if (object.Equals(default(TSource), dataRecords))
+                if (Equals(default(TSource), dataRecords))
                 {
-                    result = default(TResult);
+                    result = default;
                 }
                 else
                 {
-                    var mappingTask = _resultMapper.MapResultAsync<TResult>(dataRecords, expression);
+                    var mappingTask = _resultMapper.MapResultAsync<TResult>(dataRecords, expression, CancellationToken.None);
                     result = mappingTask.Result;
                 }
             }
@@ -69,17 +70,15 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public object Execute(Expression expression)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
 
-        public async Task<TResult> ExecuteAsync<TResult>(Expression expression)
+        public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
 
-            var dataRecords = await _asyncDataProvider(rlinq);
+            var dataRecords = await _asyncDataProvider(rlinq, cancellationToken);
 
-            var result = await _resultMapper.MapResultAsync<TResult>(dataRecords, expression);
+            var result = await _resultMapper.MapResultAsync<TResult>(dataRecords, expression, cancellationToken);
 
             return result;
         }

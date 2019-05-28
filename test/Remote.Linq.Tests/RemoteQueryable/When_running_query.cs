@@ -900,42 +900,42 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_throw_on_query_first_on_empty_sequence()
         {
-            var ex = Assert.Throws<InvalidOperationException>(() => { _productQueryable.Where(x => false).First(); });
+            var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.Where(x => false).First());
             ex.Message.ShouldBe("Sequence contains no elements");
         }
 
         [Fact]
         public void Should_throw_on_query_first_with_filter_on_empty_sequence()
         {
-            var ex = Assert.Throws<InvalidOperationException>(() => { _productQueryable.First(x => false); });
+            var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.First(x => false));
             ex.Message.ShouldBe("Sequence contains no matching element");
         }
 
         [Fact]
         public void Should_throw_on_query_last_on_empty_sequence()
         {
-            var ex = Assert.Throws<InvalidOperationException>(() => { _productQueryable.Where(x => false).Last(); });
+            var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.Where(x => false).Last());
             ex.Message.ShouldBe("Sequence contains no elements");
         }
 
         [Fact]
         public void Should_throw_on_query_last_with_filter_on_empty_sequence()
         {
-            var ex = Assert.Throws<InvalidOperationException>(() => { _productQueryable.Last(x => false); });
+            var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.Last(x => false));
             ex.Message.ShouldBe("Sequence contains no matching element");
         }
 
         [Fact]
         public void Should_throw_on_query_single_if_more_than_one_element()
         {
-            var ex = Assert.Throws<InvalidOperationException>(delegate { _productQueryable.Single(); });
+            var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.Single());
             ex.Message.ShouldBe("Sequence contains more than one element");
         }
 
         [Fact]
         public void Should_throw_on_query_single_with_filter_if_more_than_one_element()
         {
-            var ex = Assert.Throws<InvalidOperationException>(delegate { _productQueryable.Single(x => x.Name.Length > 0); });
+            var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.Single(x => x.Name.Length > 0));
             ex.Message.ShouldBe("Sequence contains more than one matching element");
         }
     }

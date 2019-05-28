@@ -3,10 +3,11 @@
 namespace Remote.Linq
 {
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public interface IAsyncRemoteQueryable<T> : IAsyncRemoteQueryable, IRemoteQueryable<T>
     {
-        Task<IEnumerable<T>> ExecuteAsync();
+        Task<IEnumerable<T>> ExecuteAsync(CancellationToken cancellationToken = default);
     }
 }

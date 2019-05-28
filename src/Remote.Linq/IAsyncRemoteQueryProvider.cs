@@ -3,10 +3,11 @@
 namespace Remote.Linq
 {
     using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
 
     internal interface IAsyncRemoteQueryProvider : IRemoteQueryProvider
     {
-        Task<TResult> ExecuteAsync<TResult>(Expression expression);
+        Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken);
     }
 }

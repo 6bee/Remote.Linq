@@ -5,6 +5,7 @@ namespace Remote.Linq.DynamicQuery
     using Aqua.Dynamic;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
 
     internal sealed class AsyncDynamicResultMapper : IAsyncQueryResultMapper<IEnumerable<DynamicObject>>
@@ -16,7 +17,7 @@ namespace Remote.Linq.DynamicQuery
             _mapper = mapper;
         }
 
-        public Task<TResult> MapResultAsync<TResult>(IEnumerable<DynamicObject> source, Expression expression)
-            => Task.Run(() => DynamicResultMapper.MapToType<TResult>(source, _mapper, expression));
+        public Task<TResult> MapResultAsync<TResult>(IEnumerable<DynamicObject> source, Expression expression, CancellationToken cancellationToken)
+            => Task.Run(() => DynamicResultMapper.MapToType<TResult>(source, _mapper, expression), cancellationToken);
     }
 }

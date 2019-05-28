@@ -9,6 +9,7 @@ namespace Remote.Linq
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -132,6 +133,13 @@ namespace Remote.Linq
         /// </summary>
         /// <typeparam name="TSource">Data type served by the data provider.</typeparam>
         public static IQueryable CreateAsyncQueryable<TSource>(this RemoteQueryableFactory factory, Type elementType, Func<Expressions.Expression, Task<TSource>> dataProvider, IAsyncQueryResultMapper<TSource> resultMapper, ITypeInfoProvider typeInfoProvider = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
+            => factory.CreateAsyncQueryable<TSource>(elementType, (expression, cancellationToken) => dataProvider(expression), resultMapper, typeInfoProvider, canBeEvaluatedLocally);
+
+        /// <summary>
+        /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified.
+        /// </summary>
+        /// <typeparam name="TSource">Data type served by the data provider.</typeparam>
+        public static IQueryable CreateAsyncQueryable<TSource>(this RemoteQueryableFactory factory, Type elementType, Func<Expressions.Expression, CancellationToken, Task<TSource>> dataProvider, IAsyncQueryResultMapper<TSource> resultMapper, ITypeInfoProvider typeInfoProvider = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
         {
             var queryProvider = new AsyncRemoteQueryProvider<TSource>(dataProvider, typeInfoProvider, resultMapper, canBeEvaluatedLocally);
             return new Remote.Linq.DynamicQuery.RemoteQueryable(elementType, queryProvider);
@@ -143,6 +151,14 @@ namespace Remote.Linq
         /// <typeparam name="T">Element type of the <see cref="IQueryable{T}"/>.</typeparam>
         /// <typeparam name="TSource">Data type served by the data provider.</typeparam>
         public static IQueryable<T> CreateAsyncQueryable<T, TSource>(this RemoteQueryableFactory factory, Func<Expressions.Expression, Task<TSource>> dataProvider, IAsyncQueryResultMapper<TSource> resultMapper, ITypeInfoProvider typeInfoProvider = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
+            => factory.CreateAsyncQueryable<T, TSource>((expression, cancellationToken) => dataProvider(expression), resultMapper, typeInfoProvider, canBeEvaluatedLocally);
+
+        /// <summary>
+        /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified.
+        /// </summary>
+        /// <typeparam name="T">Element type of the <see cref="IQueryable{T}"/>.</typeparam>
+        /// <typeparam name="TSource">Data type served by the data provider.</typeparam>
+        public static IQueryable<T> CreateAsyncQueryable<T, TSource>(this RemoteQueryableFactory factory, Func<Expressions.Expression, CancellationToken, Task<TSource>> dataProvider, IAsyncQueryResultMapper<TSource> resultMapper, ITypeInfoProvider typeInfoProvider = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
         {
             var queryProvider = new AsyncRemoteQueryProvider<TSource>(dataProvider, typeInfoProvider, resultMapper, canBeEvaluatedLocally);
             return new Remote.Linq.DynamicQuery.AsyncRemoteQueryable<T>(queryProvider);

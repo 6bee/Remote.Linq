@@ -3,10 +3,11 @@
 namespace Remote.Linq
 {
     using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public interface IAsyncQueryResultMapper<TSource>
     {
-        Task<TResult> MapResultAsync<TResult>(TSource source, Expression expression);
+        Task<TResult> MapResultAsync<TResult>(TSource source, Expression expression, CancellationToken cancellationToken = default);
     }
 }

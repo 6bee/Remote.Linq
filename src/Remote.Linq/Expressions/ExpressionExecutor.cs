@@ -9,7 +9,6 @@ namespace Remote.Linq.Expressions
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
 
@@ -95,15 +94,14 @@ namespace Remote.Linq.Expressions
                 (expression as System.Linq.Expressions.LambdaExpression) ??
                 System.Linq.Expressions.Expression.Lambda(expression);
 
-            object queryable;
+            object queryResult;
             try
             {
-                queryable = lambdaExpression.Compile().DynamicInvoke();
+                queryResult = lambdaExpression.Compile().DynamicInvoke();
             }
             catch (TargetInvocationException ex)
             {
                 var excption = ex.InnerException;
-
                 if (excption is InvalidOperationException)
                 {
                     if (string.Equals(excption.Message, "Sequence contains no elements", StringComparison.Ordinal))
@@ -130,31 +128,18 @@ namespace Remote.Linq.Expressions
                 throw excption;
             }
 
-            object queryResult;
-            if (queryable is null)
+            var queryableType = queryResult.GetType();
+            if (queryableType.Implements(typeof(IQueryable<>)))
             {
-                queryResult = null;
-            }
-            else
-            {
-                var queryableType = queryable.GetType();
-                var isQueryable = queryableType.Implements(typeof(IQueryable<>));
-                if (isQueryable)
+                try
                 {
                     // force query execution
-                    try
-                    {
-                        var elementType = TypeHelper.GetElementType(queryableType);
-                        queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { queryable });
-                    }
-                    catch (TargetInvocationException ex)
-                    {
-                        throw ex.InnerException;
-                    }
+                    var elementType = TypeHelper.GetElementType(queryableType);
+                    queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { queryResult });
                 }
-                else
+                catch (TargetInvocationException ex)
                 {
-                    queryResult = queryable;
+                    throw ex.InnerException;
                 }
             }
 
@@ -175,10 +160,7 @@ namespace Remote.Linq.Expressions
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>The mapped query result.</returns>
         protected virtual IEnumerable<DynamicObject> ConvertResult(object queryResult)
-        {
-            var dynamicObjects = _mapper.MapCollection(queryResult, _setTypeInformation);
-            return dynamicObjects;
-        }
+            => _mapper.MapCollection(queryResult, _setTypeInformation);
 
         /// <summary>
         /// If overriden in a derived transforms the collection of <see cref="DynamicObject"/>.

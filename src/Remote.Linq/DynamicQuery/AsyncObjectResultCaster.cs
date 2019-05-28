@@ -3,13 +3,12 @@
 namespace Remote.Linq.DynamicQuery
 {
     using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
 
     internal sealed class AsyncObjectResultCaster : IAsyncQueryResultMapper<object>
     {
-        public async Task<TResult> MapResultAsync<TResult>(object source, Expression expression)
-        {
-            return await Task.FromResult((TResult)source);
-        }
+        public Task<TResult> MapResultAsync<TResult>(object source, Expression expression, CancellationToken cancellationToken)
+            => Task.FromResult((TResult)source);
     }
 }

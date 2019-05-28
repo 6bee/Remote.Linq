@@ -15,7 +15,7 @@ namespace Remote.Linq
             var constantExpression = o as ConstantExpression;
             if (!(constantExpression?.Value is null))
             {
-                var converter = PrimitiveValueInspector.GetConverter(constantExpression.Type);
+                var converter = NativeValueInspector.GetConverter(constantExpression.Type);
                 if (!(converter is null))
                 {
                     constantExpression.Value = converter(constantExpression.Value);
@@ -28,7 +28,7 @@ namespace Remote.Linq
             var variableQueryArgument = o as VariableQueryArgument;
             if (!(variableQueryArgument?.Value is null))
             {
-                var converter = PrimitiveValueInspector.GetConverter(variableQueryArgument.Type);
+                var converter = NativeValueInspector.GetConverter(variableQueryArgument.Type);
                 if (!(converter is null))
                 {
                     variableQueryArgument.Value = converter(variableQueryArgument.Value);
@@ -41,7 +41,7 @@ namespace Remote.Linq
             var variableQueryArgumentList = o as VariableQueryArgumentList;
             if (!(variableQueryArgumentList?.Values is null))
             {
-                var converter = PrimitiveValueInspector.GetConverter(variableQueryArgumentList.ElementType);
+                var converter = NativeValueInspector.GetConverter(variableQueryArgumentList.ElementType);
                 if (!(converter is null))
                 {
                     variableQueryArgumentList.Values = variableQueryArgumentList.Values.Select(converter).ToList();
