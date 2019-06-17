@@ -76,9 +76,9 @@ namespace Remote.Linq.DynamicQuery
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
 
-            var dataRecords = await _asyncDataProvider(rlinq, cancellationToken);
+            var dataRecords = await _asyncDataProvider(rlinq, cancellationToken).ConfigureAwait(false);
 
-            var result = await _resultMapper.MapResultAsync<TResult>(dataRecords, expression, cancellationToken);
+            var result = await _resultMapper.MapResultAsync<TResult>(dataRecords, expression, cancellationToken).ConfigureAwait(false);
 
             return result;
         }

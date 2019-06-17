@@ -41,7 +41,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         [Fact]
         public async Task Should_query_single_with_predicate_async()
         {
-            var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W"));
+            var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W")).ConfigureAwait(false);
             result.Key.ShouldBe("2");
         }
 
@@ -55,7 +55,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         [Fact]
         public async Task Should_throw_when_calling_single_or_default_with_predicate_on_query_with_multiple_results_async()
         {
-            var ex = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("O")));
+            var ex = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("O"))).ConfigureAwait(false);
             ex.Message.ShouldBe("Sequence contains more than one matching element");
         }
     }

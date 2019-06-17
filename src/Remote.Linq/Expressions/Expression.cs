@@ -215,7 +215,6 @@ namespace Remote.Linq.Expressions
             return new ElementInit(addMethod, arguments);
         }
 
-        // TODO: replace binding flags by bool flags
         [Obsolete("This method will be removed in future versions. Use actual constructor instead.", false)]
         internal static ElementInit ElementInit(string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
         {

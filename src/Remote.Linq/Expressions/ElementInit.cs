@@ -29,6 +29,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
+        // TODO: replace binding flags by bool flags
         public ElementInit(string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
             : this(new MethodInfo(methodName, declaringType, bindingFlags, genericArguments, parameterTypes), arguments)
         {

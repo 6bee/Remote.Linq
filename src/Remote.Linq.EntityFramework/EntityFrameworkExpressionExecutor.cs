@@ -60,7 +60,7 @@ namespace Remote.Linq.EntityFramework
             var preparedRemoteExpression = Prepare(expression);
             var linqExpression = Transform(preparedRemoteExpression);
             var preparedLinqExpression = PrepareAsyncQuery(linqExpression, cancellationToken);
-            var queryResult = await ExecuteAsync(preparedLinqExpression, cancellationToken);
+            var queryResult = await ExecuteAsync(preparedLinqExpression, cancellationToken).ConfigureAwait(false);
             var processedResult = ProcessResult(queryResult);
             var dynamicObjects = ConvertResult(processedResult);
             var processedDynamicObjects = ProcessResult(dynamicObjects);
@@ -97,7 +97,7 @@ namespace Remote.Linq.EntityFramework
 
                 if (queryResult is Task task)
                 {
-                    queryResult = await GetTaskResultAsync(task);
+                    queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
                 }
             }
             catch (TargetInvocationException ex)
@@ -138,7 +138,7 @@ namespace Remote.Linq.EntityFramework
                     // force query execution
                     var elementType = TypeHelper.GetElementType(queryableType);
                     var task = (Task)ToListAsync.MakeGenericMethod(elementType).Invoke(null, new[] { queryResult, cancellationToken });
-                    await task;
+                    await task.ConfigureAwait(false);
                     var result = TaskResultProperty(typeof(List<>).MakeGenericType(elementType)).GetValue(task);
                     queryResult = result;
                 }
@@ -174,7 +174,7 @@ namespace Remote.Linq.EntityFramework
 
         private static async Task<object> GetTaskResultAsync(Task task)
         {
-            await task;
+            await task.ConfigureAwait(false);
             return GetTaskResult(task);
         }
     }
