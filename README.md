@@ -157,13 +157,13 @@ Provides [Json.NET](https://github.com/JamesNK/Newtonsoft.Json) serialization se
 ### Sample
 
 ```C#
-public T Demo<T>(T expression) where T : Remote.Linq.Expressions.Expression
+public TExpression Demo<TExpression>(TExpression expression) where TExpression : Remote.Linq.Expressions.Expression
 {
   JsonSerializerSettings serializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
  
   string json = JsonConvert.SerializeObject(expression, serializerSettings);
  
-  T result = JsonConvert.DeserializeObject<T>(json, serializerSettings);
+  TExpression result = JsonConvert.DeserializeObject<TExpression>(json, serializerSettings);
  
   return result;
 }
