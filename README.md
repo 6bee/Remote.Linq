@@ -129,10 +129,10 @@ Query blogs including posts and owner
 ```C#
 using (var repository = new RemoteRepository())
 {
-  var blogs = repository.Blogs
-    .Include("Posts")
-    .Include("Owner")
-    .ToList();
+    var blogs = repository.Blogs
+        .Include("Posts")
+        .Include("Owner")
+        .ToList();
 }
 ```
 
@@ -143,10 +143,10 @@ Execute query on database via EF Core
 ```C#
 public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
 {
-  using (var dbContext = new DbContext())
-  {
-    return queryExpression.ExecuteWithEntityFrameworkCore(dbContext);
-  }
+    using (var dbContext = new DbContext())
+    {
+        return queryExpression.ExecuteWithEntityFrameworkCore(dbContext);
+    }
 }
 ```
 
@@ -158,14 +158,14 @@ Provides [Json.NET](https://github.com/JamesNK/Newtonsoft.Json) serialization se
 
 ```C#
 public TExpression Demo<TExpression>(TExpression expression)
-  where TExpression : Remote.Linq.Expressions.Expression
+    where TExpression : Remote.Linq.Expressions.Expression
 {
-  JsonSerializerSettings serializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
+    JsonSerializerSettings serializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
  
-  string json = JsonConvert.SerializeObject(expression, serializerSettings);
+    string json = JsonConvert.SerializeObject(expression, serializerSettings);
  
-  TExpression result = JsonConvert.DeserializeObject<TExpression>(json, serializerSettings);
+    TExpression result = JsonConvert.DeserializeObject<TExpression>(json, serializerSettings);
  
-  return result;
+    return result;
 }
 ```
