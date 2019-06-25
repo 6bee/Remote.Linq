@@ -29,9 +29,9 @@ In contrast to [re-linq](https://github.com/re-motion/Relinq), this project enab
 
 This is typically used to store and reload or simply transfer expressions to a service where it’s applied against a data source for querying. 
 
-The API makes it super easy to implement a custom service allowing LINQ queries defined on a client to be executed on a server. 
+Remote.Linq makes it super easy to implement a custom service allowing LINQ queries defined on a client to be executed on a server. 
 
-Write operations (insert/update/delete) have to be implemented by other means if needed. [InfoCarrier.Core](https://github.com/azabluda/InfoCarrier.Core) might be interesting for such scenario.
+Write operations (insert/update/delete) have to be implemented by other means if needed. [InfoCarrier.Core](https://github.com/azabluda/InfoCarrier.Core) might be interesting for such scenarios.
 
 ### Sample
 
