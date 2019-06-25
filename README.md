@@ -157,7 +157,8 @@ Provides [Json.NET](https://github.com/JamesNK/Newtonsoft.Json) serialization se
 ### Sample
 
 ```C#
-public TExpression Demo<TExpression>(TExpression expression) where TExpression : Remote.Linq.Expressions.Expression
+public TExpression Demo<TExpression>(TExpression expression)
+  where TExpression : Remote.Linq.Expressions.Expression
 {
   JsonSerializerSettings serializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
  
