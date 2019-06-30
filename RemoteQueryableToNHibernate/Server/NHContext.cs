@@ -5,7 +5,6 @@ namespace Server
     using FluentNHibernate.Cfg;
     using FluentNHibernate.Cfg.Db;
     using NHibernate;
-    using NHibernate.Linq;
     using System;
     using System.Linq;
 
@@ -23,28 +22,20 @@ namespace Server
         public IQueryable GetQueryable(Type type)
         {
             var method = typeof(NHContext).GetMethods()
-                .Single(x => x.Name == "GetQueryable" && x.IsGenericMethod)
+                .Single(x => x.Name == nameof(GetQueryable) && x.IsGenericMethod)
                 .MakeGenericMethod(type);
 
             return (IQueryable)method.Invoke(this, null);
         }
 
-        public IQueryable<T> GetQueryable<T>()
-        {
-            return _session.Query<T>();
-        }
+        public IQueryable<T> GetQueryable<T>() => _session.Query<T>();
 
-        public void Dispose()
-        {
-            _session.Dispose();
-        }
+        public void Dispose() => _session.Dispose();
 
         private static ISessionFactory CreateSessionFactory()
-        {
-            return Fluently.Configure()
+            => Fluently.Configure()
               .Database(MsSqlConfiguration.MsSql2012.ConnectionString(c => c.FromConnectionStringWithKey("ConnectionString")))
               .Mappings(m => m.FluentMappings.AddFromAssembly(typeof(NHContext).Assembly))
               .BuildSessionFactory();
-        }
     }
 }

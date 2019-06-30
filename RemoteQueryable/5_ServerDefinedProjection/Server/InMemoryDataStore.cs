@@ -3,13 +3,10 @@
 namespace Server
 {
     using Common.Model;
-    using System.Collections.Generic;
     using System.Linq;
 
     public sealed class InMemoryDataStore
     {
-        private static readonly InMemoryDataStore _instance = new InMemoryDataStore();
-
         private readonly ProductCategory[] _productCategories;
         private readonly Product[] _products;
         private readonly OrderItem[] _orderItems;
@@ -39,12 +36,12 @@ namespace Server
             };
         }
 
-        public static InMemoryDataStore Instance { get { return _instance; } }
+        public static InMemoryDataStore Instance { get; } = new InMemoryDataStore();
 
-        public IQueryable<ProductCategory> ProductCategories { get { return _productCategories.AsQueryable(); } }
+        public IQueryable<ProductCategory> ProductCategories => _productCategories.AsQueryable();
 
-        public IQueryable<Product> Products { get { return _products.AsQueryable(); } }
+        public IQueryable<Product> Products => _products.AsQueryable();
 
-        public IQueryable<OrderItem> OrderItems { get { return _orderItems.AsQueryable(); } }
+        public IQueryable<OrderItem> OrderItems => _orderItems.AsQueryable();
     }
 }

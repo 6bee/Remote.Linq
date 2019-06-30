@@ -19,7 +19,7 @@ namespace Server
             if (type == typeof(Product)) return dataStore.Products.AsQueryable();
             if (type == typeof(OrderItem)) return dataStore.OrderItems.AsQueryable();
 
-            throw new Exception(string.Format("No queryable resource available for type {0}", type));
+            throw new Exception($"No queryable resource available for type {type}");
         };
 
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)

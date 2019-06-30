@@ -34,12 +34,8 @@ namespace Server
                 {
                     while (true)
                     {
-                        //Console.Write("Waiting for a connection... ");
-
                         using (var client = _server.AcceptTcpClient())
                         {
-                            //Console.Write("Connected... ");
-
                             using (var stream = client.GetStream())
                             {
                                 var queryExpression = stream.Read<Expression>();
@@ -59,13 +55,12 @@ namespace Server
                             }
 
                             client.Close();
-                            //Console.WriteLine("Closed client session.");
                         }
                     }
                 }
-                catch (SocketException)
+                catch (SocketException ex)
                 {
-                    //Console.WriteLine("SocketException: {0}", ex);
+                    Console.WriteLine($"SocketException: {ex.Message}");
                 }
             });
         }
@@ -76,7 +71,9 @@ namespace Server
             {
                 _server.Stop();
             }
-            catch { }
+            catch
+            {
+            }
         }
     }
 }

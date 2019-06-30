@@ -2,6 +2,7 @@
 
 namespace Server
 {
+    using Newtonsoft.Json;
     using Remote.Linq;
     using System;
     using System.Linq;
@@ -35,8 +36,9 @@ namespace Server
             config.Services.Replace(typeof(IBodyModelValidator), new CustomBodyModelValidator());
 
             var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().Single();
-            jsonFormatter.SerializerSettings = jsonFormatter.SerializerSettings.ConfigureRemoteLinq();
-            jsonFormatter.SerializerSettings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
+            //jsonFormatter.SerializerSettings = jsonFormatter.SerializerSettings.ConfigureRemoteLinq();
+            //jsonFormatter.SerializerSettings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
+            jsonFormatter.SerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }.ConfigureRemoteLinq();
 
             config.Routes.MapHttpRoute("API Default", "api/{controller}");
 

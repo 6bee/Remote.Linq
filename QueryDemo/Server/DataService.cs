@@ -9,20 +9,14 @@ namespace Server
 {
     public class DataService : IDataService
     {
-        public IEnumerable<Product> GetProductsByName(string productName)
-        {
-            return
-                from product in DataSource.Products
-                where product.Name == productName
-                select product;
-        }
+        public IEnumerable<Product> GetProductsByName(string productName) =>
+            from product in DataSource.Products
+            where product.Name == productName
+            select product;
 
-        public IEnumerable<Order> GetOrdersByProductId(long productId)
-        {
-            return
-                from order in DataSource.Orders
-                where order.Items.Any(item => item.ProductId == productId)
-                select order;
-        }
+        public IEnumerable<Order> GetOrdersByProductId(long productId) =>
+            from order in DataSource.Orders
+            where order.Items.Any(item => item.ProductId == productId)
+            select order;
     }
 }

@@ -46,7 +46,7 @@ namespace Client
                 }
                 catch (SocketException ex)
                 {
-                    Console.WriteLine("SocketException: {0}", ex);
+                    Console.WriteLine($"SocketException: {ex.Message}");
                     throw;
                 }
             };

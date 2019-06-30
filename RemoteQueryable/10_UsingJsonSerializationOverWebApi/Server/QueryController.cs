@@ -30,7 +30,8 @@ namespace Server
         {
             try
             {
-                return query.Expression.Execute(_queryableResourceProvider);
+                var result = query.Expression.Execute(_queryableResourceProvider);
+                return result;
             }
             catch (Exception ex)
             {

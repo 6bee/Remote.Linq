@@ -9,6 +9,6 @@
     <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.4.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.5.3" />
   </ItemGroup>
 </Project>

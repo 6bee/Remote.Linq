@@ -5,12 +5,12 @@
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.2.0" />
-    <PackageReference Include="EntityFramework" Version="6.1.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="Remote.Linq" Version="5.6.0" />
-    <PackageReference Include="Remote.Linq.EntityFramework" Version="1.6.0" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.4.0" />
+    <PackageReference Include="aqua-core" Version="4.5.2" />
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Remote.Linq" Version="6.0.0-beta-003" />
+    <PackageReference Include="Remote.Linq.EntityFramework" Version="6.0.0-beta-003" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.5.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />

@@ -1,2 +1,2 @@
-sqlcmd -S . -i "%~dp0\RemoteQueryableDemoDB.sql"
+sqlcmd -S . -U sa -P "sa(!)Password" -i "%~dp0\RemoteQueryableDemoDB.sql"
 pause

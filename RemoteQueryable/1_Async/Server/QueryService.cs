@@ -24,9 +24,7 @@ namespace Server
             throw new Exception(string.Format("No queryable resource available for type {0}", type));
         };
 
-        public async Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression)
-        {
-            return await Task.Run(() => queryExpression.Execute(_queryableResourceProvider)).ConfigureAwait(false);
-        }
+        public Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression)
+            => Task.Run(() => queryExpression.Execute(_queryableResourceProvider));
     }
 }

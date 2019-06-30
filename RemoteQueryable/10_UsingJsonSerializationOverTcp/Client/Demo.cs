@@ -24,21 +24,14 @@ namespace Client
             Console.WriteLine("\nGET ALL PRODUCTS:");
             foreach (var i in repo.Products)
             {
-                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
 
             Console.WriteLine("\nGET PRODUCTS FILTERED BY ID:");
-            //TODO: fix type conversion issues
-            // note: due to the dynamic nature of the query expression sent to the server
-            //       json serializer can not properly decide on the integer type and therefore
-            //       sets integers as long resulting in conversion errors when recreating the expression
-            // http://stackoverflow.com/questions/8297541/how-do-i-change-the-default-type-for-numeric-deserialization/9444519#9444519
-            // http://stackoverflow.com/questions/17745866/how-can-i-restore-the-int-deserialization-behavior-after-upgrading-json-net
-            // http://stackoverflow.com/questions/8237748/c-sharp-newtonsoft-json-linq-jvalue-always-returning-int64/28748973#28748973
-            var idSelection = new List<long>() { 1, 11, 111 };
+            var idSelection = new List<int> { 1, 11, 111 };
             foreach (var i in repo.Products.Where(p => idSelection.Contains(p.Id) || p.Id % 3L == 0 || p.Id == 10L))
             {
-                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
 
             Console.WriteLine("\nCROSS JOIN:");
@@ -50,7 +43,7 @@ namespace Client
             var crossJoinResult = crossJoinQuery.ToList();
             foreach (var i in crossJoinResult)
             {
-                Console.WriteLine("  {0}", i);
+                Console.WriteLine($"  {i}");
             }
 
             Console.WriteLine("\nINNER JOIN:");
@@ -61,7 +54,7 @@ namespace Client
             var innerJoinResult = innerJoinQuery.ToList();
             foreach (var i in innerJoinResult)
             {
-                Console.WriteLine("  {0}", i);
+                Console.WriteLine($"  {i}");
             }
 
 
@@ -73,7 +66,7 @@ namespace Client
             var productIds = productIdsQuery.ToList();
             foreach (var id in productIdsQuery)
             {
-                Console.WriteLine("  {0}", id);
+                Console.WriteLine($"  {id}");
             }
 
 
@@ -81,7 +74,7 @@ namespace Client
             var productsQuery =
                 from p in repo.Products
                 select p;
-            Console.WriteLine("  Count = {0}", productsQuery.Count());
+            Console.WriteLine($"  Count = {productsQuery.Count()}");
 
 
             Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
@@ -101,7 +94,7 @@ namespace Client
             var totalAmountByCategroyResult = totalAmountByCategoryQuery.ToDictionary(x => x.Category);
             foreach (var i in totalAmountByCategroyResult)
             {
-                Console.WriteLine("  {0}", i);
+                Console.WriteLine($"  {i}");
             }
 
 
@@ -112,7 +105,7 @@ namespace Client
             }
             catch (Exception ex)
             {
-                Console.WriteLine("  {0}", ex.Message);
+                Console.WriteLine($"  {ex.Message}");
             }
         }
     }

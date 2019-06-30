@@ -66,9 +66,6 @@ namespace Client
 
         public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateQueryable<ProductGroup>(_dataProvider);
 
-        public void Dispose()
-        {
-            ((IDisposable)_channelFactory).Dispose();
-        }
+        public void Dispose() => ((IDisposable)_channelFactory).Dispose();
     }
 }

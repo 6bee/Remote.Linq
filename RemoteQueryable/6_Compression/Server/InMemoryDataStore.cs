@@ -7,8 +7,6 @@ namespace Server
 
     public sealed class InMemoryDataStore
     {
-        private static readonly InMemoryDataStore _instance = new InMemoryDataStore();
-
         private readonly ProductCategory[] _productCategories;
         private readonly Product[] _products;
         private readonly OrderItem[] _orderItems;
@@ -38,10 +36,10 @@ namespace Server
             };
         }
 
-        public static InMemoryDataStore Instance { get { return _instance; } }
+        public static InMemoryDataStore Instance { get; } = new InMemoryDataStore();
 
-        public IEnumerable<ProductCategory> ProductCategories { get { return _productCategories; } }
-        public IEnumerable<Product> Products { get { return _products; } }
-        public IEnumerable<OrderItem> OrderItems { get { return _orderItems; } }
+        public IEnumerable<ProductCategory> ProductCategories => _productCategories;
+        public IEnumerable<Product> Products => _products;
+        public IEnumerable<OrderItem> OrderItems => _orderItems;
     }
 }

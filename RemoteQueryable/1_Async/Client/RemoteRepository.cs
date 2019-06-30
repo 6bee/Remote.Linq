@@ -65,9 +65,6 @@ namespace Client
 
         public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateAsyncQueryable<OrderItem>(_asyncDataProvider);
 
-        public void Dispose()
-        {
-            ((IDisposable)_channelFactory).Dispose();
-        }
+        public void Dispose() => ((IDisposable)_channelFactory).Dispose();
     }
 }

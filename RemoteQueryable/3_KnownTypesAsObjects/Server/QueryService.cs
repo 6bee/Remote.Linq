@@ -10,22 +10,36 @@ namespace Server
 
     public class QueryService : IQueryService
     {
-        private static readonly Func<Type, IQueryable> _queryableResourceProvider = type =>
+        private class QueryExecutor : ExpressionExecutor
         {
-            var dataStore = InMemoryDataStore.Instance;
+            private QueryExecutor() : base(QueryableResourceProvider)
+            {
+            }
 
-            if (type == typeof(ProductCategory)) return dataStore.ProductCategories.AsQueryable();
-            if (type == typeof(Product)) return dataStore.Products.AsQueryable();
-            if (type == typeof(OrderItem)) return dataStore.OrderItems.AsQueryable();
+            public static QueryExecutor Instance { get; } = new QueryExecutor();
 
-            throw new Exception(string.Format("No queryable resource available for type {0}", type));
-        };
+            public new object Execute(Expression expression)
+            {
+                var preparedRemoteExpression = Prepare(expression);
+                var linqExpression = Transform(preparedRemoteExpression);
+                var preparedLinqExpression = Prepare(linqExpression);
+                var queryResult = Execute(preparedLinqExpression);
+                return queryResult;
+            }
+
+            private static IQueryable QueryableResourceProvider(Type type)
+            {
+                var dataStore = InMemoryDataStore.Instance;
+
+                if (type == typeof(ProductCategory)) return dataStore.ProductCategories.AsQueryable();
+                if (type == typeof(Product)) return dataStore.Products.AsQueryable();
+                if (type == typeof(OrderItem)) return dataStore.OrderItems.AsQueryable();
+
+                throw new Exception($"No queryable resource available for type {type}");
+            }
+        }
 
         public object ExecuteQuery(Expression queryExpression)
-        {
-            return queryExpression
-                .PrepareForExecution(_queryableResourceProvider)
-                .Execute();
-        }
+            => QueryExecutor.Instance.Execute(queryExpression);
     }
 }

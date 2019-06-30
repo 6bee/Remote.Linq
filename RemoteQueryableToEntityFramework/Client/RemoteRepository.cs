@@ -11,12 +11,13 @@ namespace Client
     using System.Collections.Generic;
     using System.Linq;
     using System.ServiceModel;
+    using System.Threading.Tasks;
 
     public class RemoteRepository : IDisposable
     {
         private readonly ChannelFactory<IQueryService> _channelFactory;
 
-        private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
+        private readonly Func<Expression, Task<IEnumerable<DynamicObject>>> _dataProvider;
 
         public RemoteRepository(string uri)
         {
@@ -30,14 +31,14 @@ namespace Client
 
             _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
 
-            _dataProvider = expression =>
+            _dataProvider = async expression =>
                 {
                     IQueryService channel = null;
                     try
                     {
                         channel = _channelFactory.CreateChannel();
 
-                        var result = channel.ExecuteQuery(expression);
+                        var result = await channel.ExecuteQueryAsync(expression).ConfigureAwait(false);
                         return result;
                     }
                     finally
@@ -64,9 +65,6 @@ namespace Client
 
         public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<OrderItem>(_dataProvider);
 
-        public void Dispose()
-        {
-            ((IDisposable)_channelFactory).Dispose();
-        }
+        public void Dispose() => ((IDisposable)_channelFactory).Dispose();
     }
 }

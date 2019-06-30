@@ -10,15 +10,14 @@ namespace Client
     public sealed class ServiceProxy<T> : IDisposable
     {
         private readonly ChannelFactory<T> _channelFactory;
-        private readonly T _channel;
 
         public ServiceProxy(string endpointConfigurationName)
         {
             _channelFactory = new ChannelFactory<T>(endpointConfigurationName);
-            _channel = _channelFactory.CreateChannel();
+            Channel = _channelFactory.CreateChannel();
         }
 
-        public T Channel => _channel;
+        public T Channel { get; }
 
         public IQuery<Entity> CreateQuery<Entity>(Func<T, Func<Query<Entity>, IEnumerable<Entity>>> serviceMethod)
             => new Query<Entity>(serviceMethod(Channel));
@@ -27,15 +26,19 @@ namespace Client
         {
             try
             {
-                ((IClientChannel)_channel).Close();
+                ((IClientChannel)Channel).Close();
             }
-            catch { }
+            catch
+            {
+            }
 
             try
             {
                 _channelFactory.Close();
             }
-            catch { }
+            catch
+            {
+            }
         }
     }
 }

@@ -5,11 +5,11 @@
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FluentNHibernate" Version="2.0.3" />
+    <PackageReference Include="FluentNHibernate" Version="2.1.2" />
     <PackageReference Include="NHibernate.Linq" Version="1.0.0" />
-    <PackageReference Include="NHibernate" Version="4.1.1.4000" />
-    <PackageReference Include="Iesi.Collections" Version="4.0.2" />
-    <PackageReference Include="Remote.Linq" Version="5.6.0" />
+    <PackageReference Include="NHibernate" Version="5.2.5" />
+    <PackageReference Include="Iesi.Collections" Version="4.0.4" />
+    <PackageReference Include="Remote.Linq" Version="5.8.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />

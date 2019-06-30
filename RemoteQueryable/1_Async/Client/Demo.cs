@@ -2,8 +2,11 @@
 
 namespace Client
 {
+    using Common.Model;
     using Remote.Linq;
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -23,7 +26,7 @@ namespace Client
             Console.WriteLine("\nGET ALL PRODUCTS:");
             foreach (var i in await repo.Products.ToArrayAsync())
             {
-                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
 
             Console.WriteLine("\nCROSS JOIN:");
@@ -35,7 +38,7 @@ namespace Client
             var crossJoinResult = await crossJoinQuery.ToListAsync();
             foreach (var i in crossJoinResult)
             {
-                Console.WriteLine("  {0}", i);
+                Console.WriteLine($"  {i}");
             }
 
 
@@ -47,7 +50,7 @@ namespace Client
             var innerJoinResult = await innerJoinQuery.ToListAsync();
             foreach (var i in innerJoinResult)
             {
-                Console.WriteLine("  {0}", i);
+                Console.WriteLine($"  {i}");
             }
 
 
@@ -59,7 +62,7 @@ namespace Client
             var productIds = await productIdsQuery.ToListAsync();
             foreach (var id in productIdsQuery)
             {
-                Console.WriteLine("  {0}", id);
+                Console.WriteLine($"  {id}");
             }
 
 
@@ -67,7 +70,7 @@ namespace Client
             var productsQuery =
                 from p in repo.Products
                 select p;
-            Console.WriteLine("  Count = {0}", await productsQuery.CountAsync());
+            Console.WriteLine($"  Count = {await productsQuery.CountAsync()}");
 
 
             Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
@@ -88,7 +91,7 @@ namespace Client
             var totalAmountByCategroyResult = await totalAmountByCategoryQuery.ToDictionaryAsync(x => x.Category);
             foreach (var i in totalAmountByCategroyResult)
             {
-                Console.WriteLine("  {0}", i);
+                Console.WriteLine($"  {i}");
             }
 
 
@@ -99,7 +102,7 @@ namespace Client
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine("  {0}", ex.Message);
+                Console.WriteLine($"  {ex.Message}");
             }
         }
     }

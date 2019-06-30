@@ -8,6 +8,6 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Remote.Linq" Version="5.6.0" />
+    <PackageReference Include="Remote.Linq" Version="6.0.0-beta-006" />
   </ItemGroup>
 </Project>

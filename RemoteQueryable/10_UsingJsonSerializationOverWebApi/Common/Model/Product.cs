@@ -4,7 +4,7 @@ namespace Common.Model
 {
     public class Product
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
 
         public long ProductCategoryId { get; set; }
 

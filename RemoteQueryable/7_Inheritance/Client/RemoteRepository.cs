@@ -60,9 +60,6 @@ namespace Client
 
         public IQueryable<Entity> Entities => RemoteQueryable.Factory.CreateQueryable<Entity>(_dataProvider);
 
-        public void Dispose()
-        {
-            ((IDisposable)_channelFactory).Dispose();
-        }
+        public void Dispose() => ((IDisposable)_channelFactory).Dispose();
     }
 }

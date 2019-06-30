@@ -32,9 +32,7 @@ namespace Server
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    modelBuilder.Entity<OrderItem>();
-
         //    modelBuilder.Entity<Product>();
-
         //    modelBuilder.Entity<ProductCategory>();
         //}
     }

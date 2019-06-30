@@ -5,7 +5,7 @@
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Remote.Linq" Version="5.8.0-beta-004" />
+    <PackageReference Include="Remote.Linq" Version="5.8.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Client\Client.csproj" />

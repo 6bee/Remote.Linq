@@ -33,8 +33,9 @@ namespace Client
                     };
 
                     var formatter = new JsonMediaTypeFormatter();
-                    formatter.SerializerSettings = formatter.SerializerSettings.ConfigureRemoteLinq();
-                    formatter.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+                    //formatter.SerializerSettings = formatter.SerializerSettings.ConfigureRemoteLinq();
+                    //formatter.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+                    formatter.SerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }.ConfigureRemoteLinq();
 
                     var response = await client.PostAsync("api/query", new Common.Model.Query { Expression = expression }, formatter);
 

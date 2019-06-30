@@ -26,8 +26,8 @@ namespace Server
             }
             finally
             {
-                if (dataServiceHost != null) dataServiceHost.Close();
-                if (remoteLinqDataServiceHost != null) remoteLinqDataServiceHost.Close();
+                dataServiceHost?.Close();
+                remoteLinqDataServiceHost?.Close();
             }
         }
     }

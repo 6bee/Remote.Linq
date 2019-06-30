@@ -19,18 +19,65 @@ namespace Client
         {
             var repo = new RemoteRepository(_url);
 
+
+            Console.WriteLine("\nGET ALL PRODUCTS:");
+            foreach (var i in repo.Products)
+            {
+                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
+            }
+
+
+            Console.WriteLine("\nSELECT IDs:");
+            var productIdsQuery =
+                from p in repo.Products
+                orderby p.Price descending
+                select p.Id;
+            var productIds = productIdsQuery.ToList();
+            foreach (var id in productIdsQuery)
+            {
+                Console.WriteLine($"  {id}");
+            }
+
+
+            Console.WriteLine("\nCOUNT:");
+            var productsQuery =
+                from p in repo.Products
+                select p;
+            Console.WriteLine($"  Count = {productsQuery.Count()}");
+
+
+            Console.WriteLine("\nINVALID OPERATIONS:");
+            try
+            {
+                var first = productsQuery.First(x => false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"  {ex.Message}");
+            }
+
+            try
+            {
+                var first = productsQuery.Single();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"  {ex.Message}");
+            }
+
+
             Console.WriteLine("\nGET MARKETS WITH PRODUCTS:");
             var marketsQuery = repo.Products.SelectMany(x => x.Markets).Include(x => x.Products);
             var exp = marketsQuery.Expression;
             foreach (var market in marketsQuery)
             {
-                Console.WriteLine("  {0}", market.Name);
+                Console.WriteLine($"  {market.Name}");
 
                 if (market.Products != null)
                 {
                     foreach (var product in market.Products)
                     {
-                        Console.WriteLine("    {0}", product.Name);
+                        Console.WriteLine($"    {product.Name}");
                     }
                 }
             }
@@ -39,11 +86,11 @@ namespace Client
             Console.WriteLine("\nGET ALL PRODUCTS AND THEIR MARKETS:");
             foreach (var i in repo.Products.Include(x => x.Markets))
             {
-                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
 
                 foreach (var m in i.Markets)
                 {
-                    Console.WriteLine("         {0}", m.Name);
+                    Console.WriteLine($"         {m.Name}");
                 }
             }
 
@@ -52,7 +99,7 @@ namespace Client
             var query = repo.Products.Where(p => p.Markets.Any());
             foreach (var i in query)
             {
-                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
 
 
@@ -61,7 +108,7 @@ namespace Client
             foreach (var i in query)
             {
                 var markets = i.Markets.Select(x => x.Name);
-                Console.WriteLine("  {0} | {1} | {2:C} | {3}", i.Id, i.Name, i.Price, string.Join("; ", markets));
+                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C} | {string.Join("; ", markets)}");
             }
         }
     }

@@ -6,11 +6,12 @@ namespace Common.ServiceContracts
     using Remote.Linq.Expressions;
     using System.Collections.Generic;
     using System.ServiceModel;
+    using System.Threading.Tasks;
 
     [ServiceContract]
     public interface IQueryService
     {
         [OperationContract]
-        IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression);
+        Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression);
     }
 }

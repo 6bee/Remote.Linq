@@ -48,9 +48,9 @@ namespace Server
             Orders = orders;
         }
 
-        public static readonly ICollection<Product> Products;
+        public static ICollection<Product> Products { get; }
 
-        public static readonly ICollection<Order> Orders;
+        public static ICollection<Order> Orders { get; }
 
         public static IEnumerable<T> Query<T>()
         {
@@ -60,9 +60,7 @@ namespace Server
         }
 
         private static void AddProduct(this Order order, Product product, int quantity)
-        {
-            order.Items.Add(new OrderItem { ProductId = product.Id, UnitPrice = product.Price, Quantity = quantity });
-        }
+            => order.Items.Add(new OrderItem { ProductId = product.Id, UnitPrice = product.Price, Quantity = quantity });
 
         public static long GetNextProductId()
             => Interlocked.Increment(ref _productCount);

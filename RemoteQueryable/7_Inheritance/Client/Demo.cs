@@ -22,14 +22,14 @@ namespace Client
             Console.WriteLine("\nGET ALL ENTITIES:");
             foreach (var i in repo.Entities)
             {
-                Console.WriteLine("  {0}: {1}", i.Id, i);
+                Console.WriteLine($"  {i.Id}: {i}");
             }
 
 
             Console.WriteLine("\nGET ALL ENTITIES OF TYPE PRODUCT:");
             foreach (var i in repo.Entities.OfType<Product>())
             {
-                Console.WriteLine("  {0}: {1}", i.Id, i.Name);
+                Console.WriteLine($"  {i.Id}: {i.Name}");
             }
 
 
@@ -40,7 +40,7 @@ namespace Client
                 select new { EntityId = e.Id };
             foreach (var item in entityIdsQuery)
             {
-                Console.WriteLine("  {0}", item.EntityId);
+                Console.WriteLine($"  {item.EntityId}");
             }
 
 
@@ -48,7 +48,7 @@ namespace Client
             var entitiesQuery =
                 from p in repo.Entities
                 select p;
-            Console.WriteLine("  Count = {0}", entitiesQuery.Count());
+            Console.WriteLine($"  Count = {entitiesQuery.Count()}");
         }
     }
 }

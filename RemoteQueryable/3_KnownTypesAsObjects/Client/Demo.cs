@@ -21,7 +21,7 @@ namespace Client
             Console.WriteLine("\nGET ALL PRODUCTS:");
             foreach (var i in repo.Products)
             {
-                Console.WriteLine("  {0} | {1} | {2:C}", i.Id, i.Name, i.Price);
+                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
 
             Console.WriteLine("\nINNER JOIN FOR FILTERING:");
@@ -34,7 +34,7 @@ namespace Client
             var crossJoinResult = crossJoinQuery.ToList();
             foreach (var i in crossJoinResult)
             {
-                Console.WriteLine("  {0} - {1}", i.Id, i.Name);
+                Console.WriteLine($"  {i.Id} - {i.Name}");
             }
 
 
@@ -46,7 +46,7 @@ namespace Client
             var innerJoinResult = innerJoinQuery.ToList();
             foreach (var i in innerJoinResult)
             {
-                Console.WriteLine("  {0}", i);
+                Console.WriteLine($"  {i}");
             }
 
 
@@ -58,7 +58,7 @@ namespace Client
             var productIds = productIdsQuery.ToList();
             foreach (var id in productIdsQuery)
             {
-                Console.WriteLine("  {0}", id);
+                Console.WriteLine($"  {id}");
             }
 
 
@@ -66,7 +66,7 @@ namespace Client
             var productsQuery =
                 from p in repo.Products
                 select p;
-            Console.WriteLine("  Count = {0}", productsQuery.Count());
+            Console.WriteLine($"  Count = {productsQuery.Count()}");
 
 
             Console.WriteLine("\nMAX TOTAL AMOUNT BY CATEGORY:");
@@ -79,7 +79,7 @@ namespace Client
                 group new { c, p, i } by c.Name into g
                 select g.Sum(x => x.i.Quantity * x.p.Price);
 
-            Console.WriteLine("  {0}", totalAmountByCategoryQuery.Max());
+            Console.WriteLine($"  {totalAmountByCategoryQuery.Max()}");
 
 
             Console.WriteLine("\nINVALID OPERATION:");
@@ -89,7 +89,7 @@ namespace Client
             }
             catch (Exception ex)
             {
-                Console.WriteLine("  {0}", ex.Message);
+                Console.WriteLine($"  {ex.Message}");
             }
         }
     }

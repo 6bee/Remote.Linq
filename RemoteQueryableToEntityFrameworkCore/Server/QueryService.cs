@@ -7,15 +7,15 @@ namespace Server
     using Remote.Linq.EntityFrameworkCore;
     using Remote.Linq.Expressions;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class QueryService : IQueryService
     {
-        public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
+        public async Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression)
         {
             using (var efContext = new EFContext())
             {
-                var result = queryExpression.ExecuteWithEntityFrameworkCore(efContext);
-                return result;
+                return await queryExpression.ExecuteWithEntityFrameworkCoreAsync(efContext);
             }
         }
     }

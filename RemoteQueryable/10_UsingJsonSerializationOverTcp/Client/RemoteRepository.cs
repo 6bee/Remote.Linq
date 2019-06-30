@@ -20,31 +20,23 @@ namespace Client
         {
             _dataProvider = expression =>
             {
-                try
+                IEnumerable<DynamicObject> result;
+
+                using (var client = new TcpClient(server, port))
                 {
-                    IEnumerable<DynamicObject> result;
-
-                    using (var client = new TcpClient(server, port))
+                    using (var stream = client.GetStream())
                     {
-                        using (var stream = client.GetStream())
-                        {
-                            stream.Write(expression);
+                        stream.Write(expression);
 
-                            result = stream.Read<IEnumerable<DynamicObject>>();
+                        result = stream.Read<IEnumerable<DynamicObject>>();
 
-                            stream.Close();
-                        }
-
-                        client.Close();
+                        stream.Close();
                     }
 
-                    return result;
+                    client.Close();
                 }
-                catch (SocketException)
-                {
-                    //Console.WriteLine("SocketException: {0}", ex);
-                    throw;
-                }
+
+                return result;
             };
         }
 

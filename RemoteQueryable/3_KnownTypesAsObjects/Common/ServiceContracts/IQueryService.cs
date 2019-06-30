@@ -13,7 +13,7 @@ namespace Common.ServiceContracts
         [ServiceKnownType(typeof(Product[]))]
         [ServiceKnownType(typeof(string[]))]
         [ServiceKnownType(typeof(int[]))]
-        [ServiceKnownType(typeof(decimal))]
+        [ServiceKnownType(typeof(decimal[]))]
         object ExecuteQuery(Expression queryExpression);
     }
 }

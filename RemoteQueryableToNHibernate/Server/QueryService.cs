@@ -13,8 +13,7 @@ namespace Server
         {
             using (var nhContext = new NHContext())
             {
-                var result = queryExpression.Execute(queryableProvider: type => nhContext.GetQueryable(type));
-                return result;
+                return queryExpression.Execute(queryableProvider: type => nhContext.GetQueryable(type));
             }
         }
     }
