@@ -86,18 +86,23 @@ namespace Remote.Linq.Expressions
         /// <summary>
         /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
         /// </summary>
+        /// <remarks>
+        /// <see cref="InvalidOperationException"/> get handled for failing
+        /// <see cref="Queryable.Single{TSource}(IQueryable{TSource})"/> and
+        /// <see cref="Queryable.Single{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>,
+        /// <see cref="Queryable.First{TSource}(IQueryable{TSource})"/>,
+        /// <see cref="Queryable.First{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>,
+        /// <see cref="Queryable.Last{TSource}(IQueryable{TSource})"/>,
+        /// <see cref="Queryable.Last{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>.
+        /// Instead of throwing an exception, an array with the length of zero respectively two elements is returned.
+        /// </remarks>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
         protected virtual object Execute(System.Linq.Expressions.Expression expression)
         {
-            var lambdaExpression =
-                (expression as System.Linq.Expressions.LambdaExpression) ??
-                System.Linq.Expressions.Expression.Lambda(expression);
-
-            object queryResult;
             try
             {
-                queryResult = lambdaExpression.Compile().DynamicInvoke();
+                return ExecuteCore(expression);
             }
             catch (TargetInvocationException ex)
             {
@@ -106,41 +111,48 @@ namespace Remote.Linq.Expressions
                 {
                     if (string.Equals(excption.Message, "Sequence contains no elements", StringComparison.Ordinal))
                     {
-                        return new DynamicObject[0];
+                        return Array.CreateInstance(expression.Type, 0);
                     }
 
                     if (string.Equals(excption.Message, "Sequence contains no matching element", StringComparison.Ordinal))
                     {
-                        return new DynamicObject[0];
+                        return Array.CreateInstance(expression.Type, 0);
                     }
 
                     if (string.Equals(excption.Message, "Sequence contains more than one element", StringComparison.Ordinal))
                     {
-                        return new DynamicObject[2];
+                        return Array.CreateInstance(expression.Type, 2);
                     }
 
                     if (string.Equals(excption.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
                     {
-                        return new DynamicObject[2];
+                        return Array.CreateInstance(expression.Type, 2);
                     }
                 }
 
                 throw excption;
             }
+        }
+
+        /// <summary>
+        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
+        /// </summary>
+        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
+        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
+        protected object ExecuteCore(System.Linq.Expressions.Expression expression)
+        {
+            var lambdaExpression =
+                (expression as System.Linq.Expressions.LambdaExpression) ??
+                System.Linq.Expressions.Expression.Lambda(expression);
+
+            var queryResult = lambdaExpression.Compile().DynamicInvoke();
 
             var queryableType = queryResult.GetType();
             if (queryableType.Implements(typeof(IQueryable<>)))
             {
-                try
-                {
-                    // force query execution
-                    var elementType = TypeHelper.GetElementType(queryableType);
-                    queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { queryResult });
-                }
-                catch (TargetInvocationException ex)
-                {
-                    throw ex.InnerException;
-                }
+                // force query execution
+                var elementType = TypeHelper.GetElementType(queryableType);
+                queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { queryResult });
             }
 
             return queryResult;

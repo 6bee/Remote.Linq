@@ -80,10 +80,58 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <summary>
         /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
         /// </summary>
+        /// <remarks>
+        /// <see cref="InvalidOperationException"/> get handled for failing
+        /// <see cref="Queryable.Single{TSource}(IQueryable{TSource})"/> and
+        /// <see cref="Queryable.Single{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>,
+        /// <see cref="Queryable.First{TSource}(IQueryable{TSource})"/>,
+        /// <see cref="Queryable.First{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>,
+        /// <see cref="Queryable.Last{TSource}(IQueryable{TSource})"/>,
+        /// <see cref="Queryable.Last{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>.
+        /// Instead of throwing an exception, an array with the length of zero respectively two elements is returned.
+        /// </remarks>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        private async Task<object> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
+        protected virtual async Task<object> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
+        {
+            try
+            {
+                return await ExecuteCoreAsync(expression, cancellationToken);
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (string.Equals(ex.Message, "Sequence contains no elements", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 0);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains no matching element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 0);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains more than one element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 2);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 2);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
+        /// </summary>
+        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
+        protected async Task<object> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -91,39 +139,11 @@ namespace Remote.Linq.EntityFrameworkCore
                 (expression as System.Linq.Expressions.LambdaExpression) ??
                 System.Linq.Expressions.Expression.Lambda(expression);
 
-            object queryResult;
-            try
+            var queryResult = lambdaExpression.Compile().DynamicInvoke();
+
+            if (queryResult is Task task)
             {
-                queryResult = lambdaExpression.Compile().DynamicInvoke();
-
-                if (queryResult is Task task)
-                {
-                    queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
-                }
-            }
-            catch (InvalidOperationException ex)
-            {
-                if (string.Equals(ex.Message, "Sequence contains no elements", StringComparison.Ordinal))
-                {
-                    return new DynamicObject[0];
-                }
-
-                if (string.Equals(ex.Message, "Sequence contains no matching element", StringComparison.Ordinal))
-                {
-                    return new DynamicObject[0];
-                }
-
-                if (string.Equals(ex.Message, "Sequence contains more than one element", StringComparison.Ordinal))
-                {
-                    return new DynamicObject[2];
-                }
-
-                if (string.Equals(ex.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
-                {
-                    return new DynamicObject[2];
-                }
-
-                throw;
+                queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
             }
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -131,17 +151,10 @@ namespace Remote.Linq.EntityFrameworkCore
             var queryableType = queryResult.GetType();
             if (queryableType.Implements(typeof(IQueryable<>)))
             {
-                try
-                {
-                    // force query execution
-                    var elementType = TypeHelper.GetElementType(queryableType);
-                    var task = (Task)ToListAsync.MakeGenericMethod(elementType).Invoke(null, new[] { queryResult, cancellationToken });
-                    queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
-                }
-                catch (TargetInvocationException ex)
-                {
-                    throw ex.InnerException;
-                }
+                // force query execution
+                var elementType = TypeHelper.GetElementType(queryableType);
+                task = (Task)ToListAsync.MakeGenericMethod(elementType).Invoke(null, new[] { queryResult, cancellationToken });
+                queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
             }
 
             return queryResult;
