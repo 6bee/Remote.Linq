@@ -6,7 +6,7 @@
     <Authors>Christof Senn</Authors>
     <PackageIconUrl>https://raw.githubusercontent.com/6bee/Remote.Linq/master/remotelinq-small.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/6bee/Remote.Linq</PackageProjectUrl>
-    <PackageLicense>https://raw.githubusercontent.com/6bee/Remote.Linq/master/license.txt</PackageLicense>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/6bee/Remote.Linq.git</RepositoryUrl>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
@@ -17,7 +17,13 @@
     <GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
+    <IncludeSymbols>true</IncludeSymbols>
+    <EmbedAllSources>true</EmbedAllSources>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)license.txt" Pack="true" Visible="false" PackagePath=""/>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
   </ItemGroup>

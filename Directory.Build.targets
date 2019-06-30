@@ -1,6 +1,6 @@
 ﻿<Project>
   <ItemGroup>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false">
       <Link>Stylecop.json</Link>
     </AdditionalFiles>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
