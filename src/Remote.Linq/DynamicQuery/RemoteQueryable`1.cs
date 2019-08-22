@@ -5,7 +5,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Collections.Generic;
     using System.Linq.Expressions;
 
-    internal sealed class RemoteQueryable<T> : RemoteQueryable, IRemoteQueryable<T>, IOrderedRemoteQueryable<T>
+    internal class RemoteQueryable<T> : RemoteQueryable, IRemoteQueryable<T>, IOrderedRemoteQueryable<T>
     {
         internal RemoteQueryable(IRemoteQueryProvider provider)
             : base(typeof(T), provider)
@@ -17,7 +17,10 @@ namespace Remote.Linq.DynamicQuery
         {
         }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-            => Provider.Execute<IEnumerable<T>>(Expression).GetEnumerator();
+        public IEnumerator<T> GetEnumerator()
+            => Execute().GetEnumerator();
+
+        public IEnumerable<T> Execute()
+            => Provider.Execute<IEnumerable<T>>(Expression);
     }
 }

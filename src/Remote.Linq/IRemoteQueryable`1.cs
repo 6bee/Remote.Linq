@@ -2,9 +2,11 @@
 
 namespace Remote.Linq
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     public interface IRemoteQueryable<T> : IRemoteQueryable, IQueryable<T>
     {
+        IEnumerable<T> Execute();
     }
 }

@@ -4,7 +4,7 @@ namespace Remote.Linq
 {
     using System.Linq;
 
-    internal interface IRemoteQueryProvider : IQueryProvider
+    public interface IRemoteQueryProvider : IQueryProvider
     {
     }
 }

@@ -34,10 +34,10 @@ namespace Remote.Linq.DynamicQuery
 
             if (result is null)
             {
-                return default(T);
+                return default;
             }
 
-            if (typeof(T).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
+            if (result is T || typeof(T).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
             {
                 return (T)result;
             }
@@ -65,7 +65,7 @@ namespace Remote.Linq.DynamicQuery
                 }
             }
 
-            throw new Exception(string.Format("Failed to cast result of type '{0}' to '{1}'", result.GetType(), typeof(T)));
+            throw new Exception($"Failed to cast result of type '{result.GetType()}' to '{typeof(T)}'");
         }
 
         private static object GetTruePredicate(Type t)

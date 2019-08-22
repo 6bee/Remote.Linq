@@ -6,7 +6,7 @@ namespace Remote.Linq
     using System.Threading;
     using System.Threading.Tasks;
 
-    internal interface IAsyncRemoteQueryProvider : IRemoteQueryProvider
+    public interface IAsyncRemoteQueryProvider : IRemoteQueryProvider
     {
         Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken);
     }

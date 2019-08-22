@@ -34,9 +34,9 @@ namespace Remote.Linq.ExpressionVisitors
 
         private sealed class AnonymousTypesReplacer : ExpressionVisitorBase
         {
-            private static readonly System.Reflection.ConstructorInfo _dynamicPropertyContructorInfo = typeof(Property).GetConstructor(new[] { typeof(string), typeof(object) });
-            private static readonly System.Reflection.ConstructorInfo _dynamicObjectContructorInfo = typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<Property>) });
-            private static readonly System.Reflection.MethodInfo _dynamicObjectGetMethod = typeof(DynamicObject).GetMethod("Get");
+            private static readonly ConstructorInfo _dynamicPropertyContructorInfo = typeof(Property).GetConstructor(new[] { typeof(string), typeof(object) });
+            private static readonly ConstructorInfo _dynamicObjectContructorInfo = typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<Property>) });
+            private static readonly MethodInfo _dynamicObjectGetMethod = typeof(DynamicObject).GetMethod("Get");
 
             private readonly Dictionary<ParameterExpression, ParameterExpression> _parameterMap = new Dictionary<ParameterExpression, ParameterExpression>();
 
@@ -165,7 +165,7 @@ namespace Remote.Linq.ExpressionVisitors
                 }
             }
 
-            private static string GetMemberName(System.Reflection.MemberInfo memberInfo)
+            private static string GetMemberName(MemberInfo memberInfo)
             {
                 var name = memberInfo.Name;
                 if (memberInfo.GetMemberType() == MemberTypes.Method && name.Length > 4 && name.StartsWith("get_"))
@@ -186,7 +186,7 @@ namespace Remote.Linq.ExpressionVisitors
                 return Expression.Lambda(type, body, parameters);
             }
 
-            private System.Reflection.MethodInfo ReplaceAnonymousType(System.Reflection.MethodInfo methodInfo)
+            private MethodInfo ReplaceAnonymousType(MethodInfo methodInfo)
             {
                 if (methodInfo.IsGenericMethod)
                 {
@@ -229,7 +229,7 @@ namespace Remote.Linq.ExpressionVisitors
                 if (call != null)
                 {
                     var method = call.Method;
-                    if (method.DeclaringType == typeof(System.Linq.Queryable) && method.Name == "Select")
+                    if (method.DeclaringType == typeof(Queryable) && method.Name == "Select")
                     {
                         return true;
                     }

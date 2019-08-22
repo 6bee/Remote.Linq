@@ -3,7 +3,7 @@
 namespace Remote.Linq.DynamicQuery
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -21,13 +21,15 @@ namespace Remote.Linq.DynamicQuery
             Expression = expression ?? Expression.Constant(this);
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            => Provider.Execute<IEnumerable<object>>(Expression).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+            => ((IEnumerable)Provider.Execute(Expression)).GetEnumerator();
 
         public Type ElementType { get; }
 
         public Expression Expression { get; }
 
-        public IQueryProvider Provider { get; }
+        public IRemoteQueryProvider Provider { get; }
+
+        IQueryProvider IQueryable.Provider => Provider;
     }
 }

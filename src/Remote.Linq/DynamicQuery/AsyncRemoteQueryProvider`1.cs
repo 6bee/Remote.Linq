@@ -9,7 +9,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Threading;
     using System.Threading.Tasks;
 
-    internal sealed partial class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
+    internal sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
     {
         private readonly Func<Expressions.Expression, CancellationToken, Task<TSource>> _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
@@ -19,7 +19,7 @@ namespace Remote.Linq.DynamicQuery
         internal AsyncRemoteQueryProvider(Func<Expressions.Expression, CancellationToken, Task<TSource>> asyncDataProvider, ITypeInfoProvider typeInfoProvider, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool> canBeEvaluatedLocally)
         {
             _asyncDataProvider = asyncDataProvider ?? throw new ArgumentNullException(nameof(asyncDataProvider));
-            _resultMapper = resutMapper;
+            _resultMapper = resutMapper ?? throw new ArgumentNullException(nameof(resutMapper));
             _typeInfoProvider = typeInfoProvider;
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
@@ -70,7 +70,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public object Execute(Expression expression)
-            => throw new NotImplementedException();
+            => Execute<object>(expression);
 
         public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {

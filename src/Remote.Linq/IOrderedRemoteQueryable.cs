@@ -2,8 +2,9 @@
 
 namespace Remote.Linq
 {
-    public interface IAsyncRemoteQueryable : IRemoteQueryable
+    using System.Linq;
+
+    public interface IOrderedRemoteQueryable : IRemoteQueryable, IOrderedQueryable
     {
-        new IAsyncRemoteQueryProvider Provider { get; }
     }
 }

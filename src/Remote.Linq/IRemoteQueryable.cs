@@ -6,9 +6,6 @@ namespace Remote.Linq
 
     public interface IRemoteQueryable : IQueryable
     {
-    }
-
-    public interface IOrderedRemoteQueryable : IRemoteQueryable, IOrderedQueryable
-    {
+        new IRemoteQueryProvider Provider { get; }
     }
 }

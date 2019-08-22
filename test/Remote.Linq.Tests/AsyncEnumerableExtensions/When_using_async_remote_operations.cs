@@ -33,7 +33,7 @@ namespace Remote.Linq.Tests.AsyncEnumerableExtensions
         [Fact]
         public async Task Should_execute_async_remote_queriable()
         {
-            var remoteAsyncQueryable = RemoteQueryable.Factory.CreateQueryable<int>(x => Task.Run(() => x.Execute(t => _queryable)));
+            var remoteAsyncQueryable = RemoteQueryable.Factory.CreateQueryable<int>(x => Task.FromResult(x.Execute(t => _queryable)));
 
             var result = await remoteAsyncQueryable.ToListAsync().ConfigureAwait(false);
 
@@ -59,7 +59,7 @@ namespace Remote.Linq.Tests.AsyncEnumerableExtensions
         [Fact]
         public async Task Should_execute_async_remote_queriable_scalar()
         {
-            var remoteAsyncQueryable = RemoteQueryable.Factory.CreateQueryable<int>(x => Task.Run(() => x.Execute(t => _queryable)));
+            var remoteAsyncQueryable = RemoteQueryable.Factory.CreateQueryable<int>(x => Task.FromResult(x.Execute(t => _queryable)));
 
             var result = await remoteAsyncQueryable.AverageAsync().ConfigureAwait(false);
 

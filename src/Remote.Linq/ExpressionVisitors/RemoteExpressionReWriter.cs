@@ -3,7 +3,6 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.TypeSystem;
-    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
     using System.ComponentModel;
@@ -12,7 +11,7 @@ namespace Remote.Linq.ExpressionVisitors
     public static class RemoteExpressionReWriter
     {
         public static T ReplaceResourceDescriptorsByQueryable<T>(this T expression, ITypeResolver typeResolver = null, Func<Type, System.Linq.IQueryable> provider = null) where T : Expression
-            => new QueryableResourceVisitor().ReplaceResourceDescriptorsByQueryable(expression, provider ?? ProviderRegistry.QueryableResourceProvider, typeResolver);
+            => new QueryableResourceVisitor().ReplaceResourceDescriptorsByQueryable(expression, provider, typeResolver);
 
         public static T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(this T expression) where T : Expression
             => new VariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
