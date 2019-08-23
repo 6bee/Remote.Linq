@@ -103,7 +103,7 @@ namespace Remote.Linq.ExpressionVisitors
                     return VisitTypeIs((TypeBinaryExpression)expression);
 
                 default:
-                    throw new Exception(string.Format("Unhandled expression type: '{0}'", expression.NodeType));
+                    throw new Exception($"Unhandled expression type: '{expression.NodeType}'");
             }
         }
 
@@ -179,7 +179,7 @@ namespace Remote.Linq.ExpressionVisitors
                     return VisitMemberListBinding((MemberListBinding)binding);
 
                 default:
-                    throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType));
+                    throw new Exception($"Unhandled binding type '{binding.BindingType}'");
             }
         }
 

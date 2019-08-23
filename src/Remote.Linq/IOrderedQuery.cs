@@ -2,8 +2,6 @@
 
 namespace Remote.Linq
 {
-    using System;
-
     public interface IOrderedQuery : IQuery
     {
         /// <summary>

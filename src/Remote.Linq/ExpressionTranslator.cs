@@ -750,7 +750,7 @@ namespace Remote.Linq
                         return VisitUnary((RLinq.UnaryExpression)expression);
 
                     default:
-                        throw new Exception(string.Format("Unknown expression note type: '{0}'", expression.NodeType));
+                        throw new Exception($"Unknown expression note type: '{expression.NodeType}'");
                 }
             }
 
@@ -902,7 +902,7 @@ namespace Remote.Linq
                         return VisitMemberListBinding((RLinq.MemberListBinding)binding);
 
                     default:
-                        throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType));
+                        throw new Exception($"Unhandled binding type '{binding.BindingType}'");
                 }
             }
 

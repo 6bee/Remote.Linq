@@ -23,8 +23,8 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class GenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
-            private static readonly PropertyInfo QueryArgumentValuePropertyInfo = new PropertyInfo(typeof(VariableQueryArgument).GetProperty("Value"));
-            private static readonly PropertyInfo QueryArgumentValueListPropertyInfo = new PropertyInfo(typeof(VariableQueryArgumentList).GetProperty("Values"));
+            private static readonly PropertyInfo QueryArgumentValuePropertyInfo = new PropertyInfo(typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value)));
+            private static readonly PropertyInfo QueryArgumentValueListPropertyInfo = new PropertyInfo(typeof(VariableQueryArgumentList).GetProperty(nameof(VariableQueryArgumentList.Values)));
 
             internal Expression ReplaceGenericQueryArgumentsByNonGenericArguments(Expression expression)
                 => Visit(expression);
@@ -33,7 +33,7 @@ namespace Remote.Linq.ExpressionVisitors
             {
                 if (IsGenericVariableQueryArgument(expression))
                 {
-                    var valueProperty = expression.Value.GetType().GetProperty("Value");
+                    var valueProperty = expression.Value.GetType().GetProperty(nameof(VariableQueryArgument.Value));
                     var value = valueProperty.GetValue(expression.Value);
 
                     object queryArgument;
@@ -85,7 +85,7 @@ namespace Remote.Linq.ExpressionVisitors
                         }
                         else
                         {
-                            throw new Exception(string.Format("Unexpected instance expression: {0}", instanceExpression));
+                            throw new Exception($"Unexpected instance expression: {instanceExpression}");
                         }
 
                         var newMemberExpression = new MemberExpression(instanceExpression, propertyInfo);
@@ -100,7 +100,7 @@ namespace Remote.Linq.ExpressionVisitors
         protected class NonGenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
             private static readonly System.Reflection.MethodInfo CreateVariableQueryArgumentListMethodInfo =
-                typeof(NonGenericVariableQueryArgumentVisitor).GetMethod(nameof(CreateVariableQueryArgumentList), System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+                typeof(NonGenericVariableQueryArgumentVisitor).GetMethod(nameof(CreateVariableQueryArgumentList), BindingFlags.Static | BindingFlags.NonPublic);
 
             internal Expression ReplaceNonGenericQueryArgumentsByGenericArguments(Expression expression)
                 => Visit(expression);
@@ -149,7 +149,7 @@ namespace Remote.Linq.ExpressionVisitors
                             if (instanceType.IsGenericType && instanceType.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                             {
                                 var valueType = instanceType.GenericArguments.Single();
-                                var valuePropertyInfo = new PropertyInfo("Value", valueType, instanceType);
+                                var valuePropertyInfo = new PropertyInfo(nameof(VariableQueryArgument.Value), valueType, instanceType);
 
                                 var newMemberExpression = new MemberExpression(instanceExpression, valuePropertyInfo);
                                 return newMemberExpression;

@@ -7,7 +7,6 @@ namespace Remote.Linq.JsonConverters
     using Remote.Linq.Expressions;
     using System;
     using System.Reflection;
-    using System.Runtime.Serialization.Formatters;
 
     internal class ConstantExpressionJsonConverter : JsonConverter
     {

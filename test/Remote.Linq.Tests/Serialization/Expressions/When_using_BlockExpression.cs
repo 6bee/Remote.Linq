@@ -4,7 +4,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using System;
     using System.Linq.Expressions;
-    using System.Reflection;
     using Xunit;
     using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 

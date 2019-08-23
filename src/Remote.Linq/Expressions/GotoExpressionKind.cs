@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Expressions
 {
-    using Aqua;
     using System;
     using Kind = System.Linq.Expressions.GotoExpressionKind;
 

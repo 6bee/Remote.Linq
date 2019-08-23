@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.EntityFramework
 {
-    using Aqua.TypeSystem;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
     using System.ComponentModel;

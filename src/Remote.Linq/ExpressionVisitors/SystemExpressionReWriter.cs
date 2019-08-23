@@ -85,7 +85,7 @@ namespace Remote.Linq.ExpressionVisitors
                         var member = instance.Type.GetMember(name, m.Member.GetMemberType(), (BindingFlags)0xfffffff);
                         if (member.Count() != 1)
                         {
-                            throw new Exception(string.Format("Failed to bind {2} {0} of type {1}", name, instance.Type, m.Member.GetMemberType().ToString().ToLower()));
+                            throw new Exception($"Failed to bind {m.Member.GetMemberType().ToString().ToLower()} {name} of type {instance.Type}");
                         }
 
                         return Expression.MakeMemberAccess(instance, member.Single());
@@ -229,7 +229,7 @@ namespace Remote.Linq.ExpressionVisitors
                 if (call != null)
                 {
                     var method = call.Method;
-                    if (method.DeclaringType == typeof(Queryable) && method.Name == "Select")
+                    if (method.DeclaringType == typeof(Queryable) && string.Equals(method.Name, nameof(Queryable.Select), StringComparison.Ordinal))
                     {
                         return true;
                     }
@@ -286,7 +286,7 @@ namespace Remote.Linq.ExpressionVisitors
 
                             if (_throwOnInvalidProperty)
                             {
-                                throw new Exception(string.Format("'{0}' is not a valid or an ambiguous property of type {1}", propertyName, m.Object.Type.FullName));
+                                throw new Exception($"'{propertyName}' is not a valid or an ambiguous property of type {m.Object.Type.FullName}");
                             }
                         }
                     }

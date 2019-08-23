@@ -5,7 +5,6 @@ namespace Remote.Linq.Tests.Serialization
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.IO;
-    using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
     public static class XmlSerializationHelper

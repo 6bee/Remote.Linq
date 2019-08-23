@@ -36,12 +36,13 @@ namespace Remote.Linq.ExpressionVisitors
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
                 var type = expression.Type.ResolveType(_typeResolver);
-                if (type == typeof(QueryableResourceDescriptor) && !(expression.Value is null))
                 {
-                    var queryableResourceDescriptor = (QueryableResourceDescriptor)expression.Value;
-                    var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
-                    var queryable = _provider(queryableType);
-                    return new ConstantExpression(queryable);
+                    if (type == typeof(QueryableResourceDescriptor) && expression.Value is QueryableResourceDescriptor queryableResourceDescriptor)
+                    {
+                        var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
+                        var queryable = _provider(queryableType);
+                        return new ConstantExpression(queryable);
+                    }
                 }
 
                 if (type == typeof(ConstantQueryArgument) && !(expression.Value is null))
@@ -50,8 +51,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var properties = newConstantQueryArgument.Properties ?? Enumerable.Empty<Property>();
                     foreach (var property in properties)
                     {
-                        var queryableResourceDescriptor = property.Value as QueryableResourceDescriptor;
-                        if (!(queryableResourceDescriptor is null))
+                        if (property.Value is QueryableResourceDescriptor queryableResourceDescriptor)
                         {
                             var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
                             var queryable = _provider(queryableType);
