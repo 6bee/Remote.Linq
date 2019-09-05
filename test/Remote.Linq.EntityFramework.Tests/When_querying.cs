@@ -71,5 +71,33 @@ namespace Remote.Linq.EntityFramework.Tests
             var ex = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("O"))).ConfigureAwait(false);
             ex.Message.ShouldBe("Sequence contains more than one matching element");
         }
+
+        [Fact]
+        public void Single_with_predicate_should_faile_if_no_match()
+        {
+            var ex = Should.Throw<InvalidOperationException>(() => _queryable.Single(x => x.Value.ToUpper().Contains("no match")));
+            ex.Message.ShouldBe("Sequence contains no matching element");
+        }
+
+        [Fact]
+        public void SingleAsync_with_predicate_should_faile_if_no_match()
+        {
+            var ex = Should.Throw<InvalidOperationException>(() => _queryable.SingleAsync(x => x.Value.ToUpper().Contains("no match")));
+            ex.Message.ShouldBe("Sequence contains no matching element");
+        }
+
+        [Fact]
+        public void SingleOrDefault_with_predicate_should_return_null_if_no_match()
+        {
+            var result = _queryable.SingleOrDefault(x => x.Value.ToUpper().Contains("no match"));
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task SingleOrDefaultAsync_with_predicate_should_return_null_if_no_match()
+        {
+            var result = await _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("no match")).ConfigureAwait(false);
+            result.ShouldBeNull();
+        }
     }
 }

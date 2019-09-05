@@ -37,8 +37,9 @@ namespace Remote.Linq
             internal static readonly MethodInfo ToList = GetStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.ToList));
             internal static readonly MethodInfo Contains = GetStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.Contains), 2);
             internal static readonly MethodInfo Single = GetStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.Single), 1);
-            internal static readonly MethodInfo SingleWithFilter = GetStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.Single), 2);
+            internal static readonly MethodInfo SingleWithPredicate = GetStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.Single), 2);
             internal static readonly MethodInfo SingleOrDefault = GetStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.SingleOrDefault), 1);
+            internal static readonly MethodInfo SingleOrDefaultWithPredicate = GetStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.SingleOrDefault), 2);
         }
 
         internal static class Expression

@@ -3,7 +3,7 @@
 namespace Remote.Linq.DynamicQuery
 {
     using Aqua.TypeSystem;
-    using System;
+    using System.Collections;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -11,35 +11,16 @@ namespace Remote.Linq.DynamicQuery
     {
         public TResult MapResult<TResult>(object source, Expression expression)
         {
-            var sourceType = source?.GetType();
-            if (sourceType?.IsArray ?? false)
+            if (source is IEnumerable enumerable)
             {
-                var elementType = TypeHelper.GetElementType(sourceType);
-                if (typeof(TResult).IsAssignableFrom(elementType))
+                var elementType = TypeHelper.GetElementType(enumerable.GetType());
+                if (typeof(TResult).IsAssignableFrom(elementType) && expression is MethodCallExpression methodCallExpression)
                 {
-                    try
-                    {
-                        if ((expression as MethodCallExpression)?.Arguments.Count == 2)
-                        {
-                            var predicate = GetTruePredicate(elementType);
-                            source = MethodInfos.Enumerable.SingleWithFilter.MakeGenericMethod(elementType).Invoke(null, new object[] { source, predicate });
-                        }
-                        else
-                        {
-                            source = MethodInfos.Enumerable.Single.MakeGenericMethod(elementType).Invoke(null, new object[] { source });
-                        }
-                    }
-                    catch (TargetInvocationException ex)
-                    {
-                        throw ex.InnerException;
-                    }
+                    return DynamicResultMapper.MapToSingleResult<TResult>(elementType, enumerable, methodCallExpression);
                 }
             }
 
             return (TResult)source;
         }
-
-        private static object GetTruePredicate(Type t)
-            => Expression.Lambda(Expression.Constant(true), Expression.Parameter(t)).Compile();
     }
 }

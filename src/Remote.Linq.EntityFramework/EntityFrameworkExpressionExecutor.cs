@@ -148,7 +148,7 @@ namespace Remote.Linq.EntityFramework
                 queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
             }
 
-            if (queryResult == null)
+            if (queryResult is null)
             {
                 return null;
             }

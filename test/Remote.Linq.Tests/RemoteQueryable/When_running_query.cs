@@ -905,10 +905,22 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_return_on_query_first_or_default_on_empty_sequence()
+        {
+            _productQueryable.Where(x => false).FirstOrDefault().ShouldBeNull();
+        }
+
+        [Fact]
         public void Should_throw_on_query_first_with_filter_on_empty_sequence()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.First(x => false));
             ex.Message.ShouldBe("Sequence contains no matching element");
+        }
+
+        [Fact]
+        public void Should_return_null_on_query_first_or_default_with_filter_on_empty_sequence()
+        {
+            _productQueryable.FirstOrDefault(x => false).ShouldBeNull();
         }
 
         [Fact]
@@ -919,10 +931,22 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        public void Should_return_null_on_query_last_or_default_on_empty_sequence()
+        {
+            _productQueryable.Where(x => false).LastOrDefault().ShouldBeNull();
+        }
+
+        [Fact]
         public void Should_throw_on_query_last_with_filter_on_empty_sequence()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.Last(x => false));
             ex.Message.ShouldBe("Sequence contains no matching element");
+        }
+
+        [Fact]
+        public void Should_return_null_on_query_last_or_default_with_filter_on_empty_sequence()
+        {
+            _productQueryable.LastOrDefault(x => false).ShouldBeNull();
         }
 
         [Fact]
@@ -937,6 +961,27 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.Single(x => x.Name.Length > 0));
             ex.Message.ShouldBe("Sequence contains more than one matching element");
+        }
+
+        [Fact]
+        public void Should_throw_on_query_elementat_with_index_out_of_bounds()
+        {
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => _productQueryable.ElementAt(10));
+            ex.Message
+                .Replace("\n", " ").Replace("\r", " ").Replace("  ", " ")
+                .ShouldBe("Index was out of range. Must be non-negative and less than the size of the collection. Parameter name: index");
+        }
+
+        [Fact]
+        public void Should_return_null_on_query_elementat_or_default_with_index_out_of_bounds()
+        {
+            _productQueryable.ElementAtOrDefault(10).ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_return_null_on_query_elementat_or_default_with_negative_index()
+        {
+            _productQueryable.ElementAtOrDefault(-1).ShouldBeNull();
         }
     }
 }

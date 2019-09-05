@@ -21,9 +21,9 @@ namespace Remote.Linq.DynamicQuery
         public TResult MapResult<TResult>(IEnumerable<DynamicObject> source, Expression expression)
             => MapToType<TResult>(source, _mapper, expression);
 
-        internal static T MapToType<T>(IEnumerable<DynamicObject> dataRecords, IDynamicObjectMapper mapper, Expression expression)
+        internal static TResult MapToType<TResult>(IEnumerable<DynamicObject> dataRecords, IDynamicObjectMapper mapper, Expression expression)
         {
-            var elementType = TypeHelper.GetElementType(typeof(T));
+            var elementType = TypeHelper.GetElementType(typeof(TResult));
 
             if (mapper is null)
             {
@@ -42,35 +42,37 @@ namespace Remote.Linq.DynamicQuery
                 return default;
             }
 
-            if (result is T || typeof(T).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
+            if (result is TResult || typeof(TResult).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
             {
-                return (T)result;
+                return (TResult)result;
             }
 
-            if (typeof(T).IsAssignableFrom(elementType))
+            if (typeof(TResult).IsAssignableFrom(elementType) && expression is MethodCallExpression methodCallExpression)
             {
-                try
-                {
-                    object single;
-                    if ((expression as MethodCallExpression)?.Arguments.Count == 2)
-                    {
-                        var predicate = GetTruePredicate(elementType);
-                        single = MethodInfos.Enumerable.SingleWithFilter.MakeGenericMethod(elementType).Invoke(null, new object[] { result, predicate });
-                    }
-                    else
-                    {
-                        single = MethodInfos.Enumerable.Single.MakeGenericMethod(elementType).Invoke(null, new object[] { result });
-                    }
-
-                    return (T)single;
-                }
-                catch (TargetInvocationException ex)
-                {
-                    throw ex.InnerException;
-                }
+                return MapToSingleResult<TResult>(elementType, result, methodCallExpression);
             }
 
-            throw new Exception($"Failed to cast result of type '{result.GetType()}' to '{typeof(T)}'");
+            throw new Exception($"Failed to cast result of type '{result.GetType()}' to '{typeof(TResult)}'");
+        }
+
+        internal static TResult MapToSingleResult<TResult>(Type elementType, System.Collections.IEnumerable result, MethodCallExpression methodCallExpression)
+        {
+            try
+            {
+                var hasPredicate = methodCallExpression.Arguments.Count == 2;
+                var arguments = hasPredicate
+                    ? new object[] { result, GetTruePredicate(elementType) }
+                    : new object[] { result };
+                var method = methodCallExpression.Method.Name.EndsWith("OrDefault")
+                    ? (hasPredicate ? MethodInfos.Enumerable.SingleOrDefaultWithPredicate : MethodInfos.Enumerable.SingleOrDefault)
+                    : (hasPredicate ? MethodInfos.Enumerable.SingleWithPredicate : MethodInfos.Enumerable.Single);
+                object single = method.MakeGenericMethod(elementType).Invoke(null, arguments);
+                return (TResult)single;
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
         }
 
         private static object GetTruePredicate(Type t)

@@ -146,7 +146,7 @@ namespace Remote.Linq.Expressions
                 System.Linq.Expressions.Expression.Lambda(expression);
 
             var queryResult = lambdaExpression.Compile().DynamicInvoke();
-            if (queryResult == null)
+            if (queryResult is null)
             {
                 return null;
             }
@@ -184,7 +184,7 @@ namespace Remote.Linq.Expressions
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>Processed result.</returns>
         protected virtual IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult)
-            => queryResult;
+            => queryResult ?? Enumerable.Empty<DynamicObject>();
 
         Expression IExpressionExecutionDecorator.Prepare(Expression expression)
             => Prepare(expression);
