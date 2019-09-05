@@ -146,6 +146,10 @@ namespace Remote.Linq.Expressions
                 System.Linq.Expressions.Expression.Lambda(expression);
 
             var queryResult = lambdaExpression.Compile().DynamicInvoke();
+            if (queryResult == null)
+            {
+                return null;
+            }
 
             var queryableType = queryResult.GetType();
             if (queryableType.Implements(typeof(IQueryable<>)))

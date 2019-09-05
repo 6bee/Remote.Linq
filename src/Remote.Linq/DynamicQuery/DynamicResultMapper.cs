@@ -30,6 +30,11 @@ namespace Remote.Linq.DynamicQuery
                 mapper = new DynamicQueryResultMapper();
             }
 
+            if (dataRecords == null)
+            {
+                return default;
+            }
+
             var result = mapper.Map(dataRecords, elementType);
 
             if (result is null)

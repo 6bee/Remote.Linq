@@ -146,6 +146,11 @@ namespace Remote.Linq.EntityFrameworkCore
                 queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
             }
 
+            if (queryResult == null)
+            {
+                return null;
+            }
+
             cancellationToken.ThrowIfCancellationRequested();
 
             var queryableType = queryResult.GetType();

@@ -45,6 +45,13 @@ namespace Remote.Linq.EntityFramework.Tests
         }
 
         [Fact]
+        public void Should_query_single_or_default_with_predicate()
+        {
+            var result = _queryable.SingleOrDefault(x => x.Value.ToUpper().Contains("asdfasdfasdfW"));
+            result.ShouldBeNull();
+        }
+
+        [Fact]
         public async Task Should_query_single_with_predicate_async()
         {
             var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W")).ConfigureAwait(false);
