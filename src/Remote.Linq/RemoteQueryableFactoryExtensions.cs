@@ -38,28 +38,14 @@ namespace Remote.Linq
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified.
         /// </summary>
         public static IQueryable CreateQueryable(this RemoteQueryableFactory factory, Type elementType, Func<Expressions.Expression, object> dataProvider, ITypeInfoProvider typeInfoProvider = null, IQueryResultMapper<object> resultMapper = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
-        {
-            if (resultMapper is null)
-            {
-                resultMapper = new ObjectResultCaster();
-            }
-
-            return factory.CreateQueryable<object>(elementType, dataProvider, resultMapper, typeInfoProvider, canBeEvaluatedLocally);
-        }
+            => factory.CreateQueryable<object>(elementType, dataProvider, resultMapper ?? new ObjectResultCaster(), typeInfoProvider, canBeEvaluatedLocally);
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified.
         /// </summary>
         /// <typeparam name="T">Element type of the <see cref="IQueryable{T}"/>.</typeparam>
         public static IQueryable<T> CreateQueryable<T>(this RemoteQueryableFactory factory, Func<Expressions.Expression, object> dataProvider, ITypeInfoProvider typeInfoProvider = null, IQueryResultMapper<object> resultMapper = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
-        {
-            if (resultMapper is null)
-            {
-                resultMapper = new ObjectResultCaster();
-            }
-
-            return factory.CreateQueryable<T, object>(dataProvider, resultMapper ?? new ObjectResultCaster(), typeInfoProvider, canBeEvaluatedLocally);
-        }
+            => factory.CreateQueryable<T, object>(dataProvider, resultMapper ?? new ObjectResultCaster(), typeInfoProvider, canBeEvaluatedLocally);
 
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified.
