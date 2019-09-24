@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for Remote.Linq.EntityFrameworkCore</Description>
-    <TargetFrameworks>net472;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

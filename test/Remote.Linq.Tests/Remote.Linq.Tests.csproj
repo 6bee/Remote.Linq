@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for Remote.Linq</Description>
-    <TargetFrameworks>net472;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +21,7 @@
     <PackageReference Include="Shouldly" Version="3.0.2" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
     <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
@@ -31,7 +31,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
   </PropertyGroup>
 
