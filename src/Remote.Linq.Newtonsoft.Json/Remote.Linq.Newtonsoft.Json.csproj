@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <Description>Provides Json.NET serialization settings for Remote.Linq types.</Description>
-    <TargetFrameworks>net451;netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
     <AssemblyName>Remote.Linq.Newtonsoft.Json</AssemblyName>
     <PackageId>Remote.Linq.Newtonsoft.Json</PackageId>
     <PackageTags>remote-linq;json-net;newtonsoft-json</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,14 +14,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.5.3" />
-    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.5.3" />
+    <PackageReference Include="aqua-core" Version="4.6.0-alpha-001" />
+    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.6.0-alpha-001" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);NETSTANDARD1_X</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <DefineConstants>$(DefineConstants);NETSTANDARD1_X</DefineConstants>
+  </PropertyGroup>
 
 </Project>

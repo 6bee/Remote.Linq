@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for Remote.Linq.EntityFramework</Description>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

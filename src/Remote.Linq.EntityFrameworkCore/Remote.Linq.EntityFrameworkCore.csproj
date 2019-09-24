@@ -6,7 +6,7 @@
     <AssemblyName>Remote.Linq.EntityFrameworkCore</AssemblyName>
     <PackageId>Remote.Linq.EntityFrameworkCore</PackageId>
     <PackageTags>LINQ,expression-tree,lambda,dynamic,remote,remote-query,multi-tier,n-tier,fluent-interface,entity-framework-core,entity-framework,ef-core,ef</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

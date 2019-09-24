@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for Remote.Linq.EntityFrameworkCore</Description>
-    <TargetFrameworks>net462;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net472;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.5.3" />
+    <PackageReference Include="aqua-core" Version="4.6.0-alpha-001" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="xunit" Version="2.4.1" />

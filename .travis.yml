@@ -4,6 +4,11 @@ branches:
   except:
   - experimental
 
+env:
+  global:
+    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+    - DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 addons:  
   apt:
     packages:
@@ -17,17 +22,13 @@ addons:
 matrix:
   include:
     - os: linux
-      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=2.2.100 CONFIGURATION=Debug
-    - os: linux
-      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=Latest CONFIGURATION=Release
+      env: FRAMEWORK_VERSION=3.0 CLI_VERSION=Latest CONFIGURATION=Release
     - os: osx
-      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=2.2.100 CONFIGURATION=Debug
-    - os: osx
-      env: FRAMEWORK_VERSION=2.2 CLI_VERSION=Latest CONFIGURATION=Release
+      env: FRAMEWORK_VERSION=3.0 CLI_VERSION=Latest CONFIGURATION=Release
 
 install:  
   - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
-  - curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --channel 2.2 --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
+  - curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --channel 3.0 --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
   - export PATH="$DOTNET_INSTALL_DIR:$PATH" 
 
 before_script:  
