@@ -967,9 +967,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         public void Should_throw_on_query_elementat_with_index_out_of_bounds()
         {
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => _productQueryable.ElementAt(10));
-            ex.Message
-                .Replace("\n", " ").Replace("\r", " ").Replace("  ", " ")
-                .ShouldBe("Index was out of range. Must be non-negative and less than the size of the collection. Parameter name: index");
+            ex.Message.ShouldStartWith("Index was out of range. Must be non-negative and less than the size of the collection.");
         }
 
         [Fact]
