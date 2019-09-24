@@ -26,10 +26,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
             _queryable = RemoteQueryable.Factory.CreateQueryable<LookupItem>(x => x.ExecuteWithEntityFrameworkCoreAsync(_context));
         }
 
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
+        public void Dispose() => _context.Dispose();
 
         [Fact]
         public void Should_query_single_with_predicate()

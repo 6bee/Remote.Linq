@@ -10,6 +10,7 @@ namespace Remote.Linq.EntityFramework
     using System.ComponentModel;
     using System.Data.Entity;
     using System.Linq;
+    using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -25,6 +26,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <returns>A new instance <see cref="ExpressionExecutionContext" />.</returns>
+        [SecuritySafeCritical]
         public static ExpressionExecutionContext EntityFrameworkExecutor(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
             => new ExpressionExecutionContext(new EntityFrameworkExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation), expression);
 
@@ -49,6 +51,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <returns>The mapped result of the query execution.</returns>
+        [SecuritySafeCritical]
         public static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
             => new EntityFrameworkExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation).Execute(expression);
 
@@ -62,6 +65,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <returns>The mapped result of the query execution.</returns>
+        [SecuritySafeCritical]
         public static Task<IEnumerable<DynamicObject>> ExecuteWithEntityFrameworkAsync(this Expression expression, DbContext dbContext, CancellationToken cancellationToken = default, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
             => new EntityFrameworkExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation).ExecuteAsync(expression, cancellationToken);
 

@@ -4,6 +4,7 @@ namespace Remote.Linq.Tests
 {
     using Shouldly;
     using System;
+    using System.Security;
 
     public static class Helper
     {
@@ -13,6 +14,7 @@ namespace Remote.Linq.Tests
             return tuple;
         }
 
+        [SecuritySafeCritical]
         public static T ShouldMatch<T>(this T t1, T t2)
         {
             var isMatch = string.Equals(t1.ToString(), t2.ToString());

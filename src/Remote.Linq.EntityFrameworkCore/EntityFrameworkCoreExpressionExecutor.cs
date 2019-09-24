@@ -11,6 +11,7 @@ namespace Remote.Linq.EntityFrameworkCore
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -33,6 +34,7 @@ namespace Remote.Linq.EntityFrameworkCore
 
         private static readonly Func<Task, object> GetTaskResult = t => TaskResultProperty(t.GetType().GetGenericArguments().Single()).GetValue(t);
 
+        [SecuritySafeCritical]
         public EntityFrameworkCoreExpressionExecutor(DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             : this(GetQueryableSetProvider(dbContext), typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))
         {
@@ -135,12 +137,7 @@ namespace Remote.Linq.EntityFrameworkCore
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var lambdaExpression =
-                (expression as System.Linq.Expressions.LambdaExpression) ??
-                System.Linq.Expressions.Expression.Lambda(expression);
-
-            var queryResult = lambdaExpression.Compile().DynamicInvoke();
-
+            var queryResult = CompileAndInvokeExpression(expression);
             if (queryResult is Task task)
             {
                 queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
@@ -176,12 +173,28 @@ namespace Remote.Linq.EntityFrameworkCore
         /// Returns the generic <see cref="DbSet{T}"/> for the type specified.
         /// </summary>
         /// <returns>Returns an instance of type <see cref="DbSet{T}"/>.</returns>
-        private static Func<Type, IQueryable> GetQueryableSetProvider(DbContext dbContext) => (Type type) =>
+        [SecuritySafeCritical]
+        private static Func<Type, IQueryable> GetQueryableSetProvider(DbContext dbContext) => new QueryableSetProvider(dbContext).GetQueryableSet;
+
+        [SecuritySafeCritical]
+        private sealed class QueryableSetProvider
         {
-            var method = DbContextSetMethod.MakeGenericMethod(type);
-            var set = method.Invoke(dbContext, new object[0]);
-            return (IQueryable)set;
-        };
+            private readonly DbContext _dbContext;
+
+            [SecuritySafeCritical]
+            public QueryableSetProvider(DbContext dbContext)
+            {
+                _dbContext = dbContext;
+            }
+
+            [SecuritySafeCritical]
+            public IQueryable GetQueryableSet(Type type)
+            {
+                var method = DbContextSetMethod.MakeGenericMethod(type);
+                var set = method.Invoke(_dbContext, null);
+                return (IQueryable)set;
+            }
+        }
 
         private static async Task<object> GetTaskResultAsync(Task task)
         {

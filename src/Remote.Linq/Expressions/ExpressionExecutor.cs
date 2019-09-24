@@ -11,6 +11,7 @@ namespace Remote.Linq.Expressions
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Security;
 
     public class ExpressionExecutor : IExpressionExecutionDecorator
     {
@@ -139,13 +140,9 @@ namespace Remote.Linq.Expressions
         /// </summary>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected object ExecuteCore(System.Linq.Expressions.Expression expression)
+        protected static object ExecuteCore(System.Linq.Expressions.Expression expression)
         {
-            var lambdaExpression =
-                (expression as System.Linq.Expressions.LambdaExpression) ??
-                System.Linq.Expressions.Expression.Lambda(expression);
-
-            var queryResult = lambdaExpression.Compile().DynamicInvoke();
+            var queryResult = CompileAndInvokeExpression(expression);
             if (queryResult is null)
             {
                 return null;
@@ -160,6 +157,15 @@ namespace Remote.Linq.Expressions
             }
 
             return queryResult;
+        }
+
+        [SecuritySafeCritical]
+        protected static object CompileAndInvokeExpression(System.Linq.Expressions.Expression expression)
+        {
+            var lambdaExpression =
+                (expression as System.Linq.Expressions.LambdaExpression) ??
+                System.Linq.Expressions.Expression.Lambda(expression);
+            return lambdaExpression.Compile().DynamicInvoke();
         }
 
         /// <summary>

@@ -2,10 +2,12 @@
 
 namespace Remote.Linq.Tests.Serialization
 {
+    using System.Security;
     using Xunit;
 
     public static class ExpressionHelper
     {
+        [SecuritySafeCritical]
         public static void EqualsRemoteExpression<T>(this T expression1, T expression2) where T : Remote.Linq.Expressions.Expression
         {
             var expression1String = expression1.ToString();
@@ -17,6 +19,7 @@ namespace Remote.Linq.Tests.Serialization
         /// <summary>
         /// Best effort comparison using Expression.ToString().
         /// </summary>
+        [SecuritySafeCritical]
         public static void EqualsExpression<T>(this T expression1, T expression2) where T : System.Linq.Expressions.Expression
         {
             var expression1String = expression1.ToString();

@@ -10,6 +10,7 @@ namespace Remote.Linq.EntityFrameworkCore
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -26,6 +27,7 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>A new instance <see cref="ExpressionExecutionContext" />.</returns>
+        [SecuritySafeCritical]
         public static ExpressionExecutionContext EntityFrameworkCoreExecutor(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new ExpressionExecutionContext(new EntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally), expression);
 
@@ -52,6 +54,7 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The mapped result of the query execution.</returns>
+        [SecuritySafeCritical]
         public static IEnumerable<DynamicObject> ExecuteWithEntityFrameworkCore(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new EntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).Execute(expression);
 
@@ -66,6 +69,7 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The mapped result of the query execution.</returns>
+        [SecuritySafeCritical]
         public static Task<IEnumerable<DynamicObject>> ExecuteWithEntityFrameworkCoreAsync(this Expression expression, DbContext dbContext, CancellationToken cancellationToken = default, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new EntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsync(expression, cancellationToken);
 
