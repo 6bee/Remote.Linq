@@ -1,2 +1,2 @@
-for /d /r . %%d in (packages,bin,obj) do @if exist "%%d" rd /s /q "%%d"
-del /s /q "*.csproj.user" "packages.config"
+for /d /r . %%d in (artifacts,packages,bin,obj,.vs) do @if exist "%%d" rd /s /q "%%d"
+for    /r . %%f in (*.bak,*.user,*.suo)             do @if exist "%%f" del "%%f"
