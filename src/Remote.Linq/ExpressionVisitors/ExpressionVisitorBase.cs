@@ -241,7 +241,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (test != node.Test || ifTrue != node.IfTrue || ifFalse != node.IfFalse)
             {
-                if (ifFalse is DefaultExpression || ifFalse.Type == typeof(void))
+                if (ifFalse is DefaultExpression)
                 {
                     return Expression.IfThen(test, ifTrue);
                 }
