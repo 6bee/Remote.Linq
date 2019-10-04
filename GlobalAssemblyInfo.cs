@@ -10,6 +10,4 @@ using System.Security;
 
 [assembly: ComVisible(false)]
 
-#if !NETSTANDARD1_X
 [assembly: SecurityRules(SecurityRuleSet.Level2)]
-#endif

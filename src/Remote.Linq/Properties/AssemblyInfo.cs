@@ -9,6 +9,4 @@ using System.Runtime.CompilerServices;
 "a7af3a678e96c00aacca6d460cbb7c9d2bdbed375a40cf89430a404314bec9b7f4498b24017548" +
 "f3dd92ed")]
 
-#if !NETSTANDARD1_X
 [assembly: System.Security.AllowPartiallyTrustedCallers]
-#endif

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Provides Json.NET serialization settings for Remote.Linq types.</Description>
-    <TargetFrameworks>netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Remote.Linq.Newtonsoft.Json</AssemblyName>
     <PackageId>Remote.Linq.Newtonsoft.Json</PackageId>
     <PackageTags>remote-linq;json-net;newtonsoft-json</PackageTags>
@@ -14,17 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.6.0-alpha-001" />
-    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.6.0-alpha-001" />
+    <PackageReference Include="aqua-core" Version="4.6.0-alpha-003" />
+    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.6.0-alpha-003" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_X</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_X</DefineConstants>
-  </PropertyGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Remote linq extensions for entity framework core. Use this package to apply eager-loading (i.e. using Include-expressions) to EF Core queries or make use of DB functions.</Description>
-    <TargetFrameworks>netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Remote.Linq.EntityFrameworkCore</AssemblyName>
     <PackageId>Remote.Linq.EntityFrameworkCore</PackageId>
     <PackageTags>LINQ,expression-tree,lambda,dynamic,remote,remote-query,multi-tier,n-tier,fluent-interface,entity-framework-core,entity-framework,ef-core,ef</PackageTags>
@@ -13,20 +13,8 @@
     <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.6" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_X</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_X</DefineConstants>
-  </PropertyGroup>
 
 </Project>

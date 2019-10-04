@@ -9,12 +9,10 @@ namespace Remote.Linq.EntityFrameworkCore
     {
         public static bool CanBeEvaluated(Expression expression)
         {
-#if !NETSTANDARD1_X
             if ((expression as MemberExpression)?.Member.DeclaringType == typeof(EF))
             {
                 return false;
             }
-#endif
 
             return true;
         }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Summary>Simply LINQ your remote resources...</Summary>
     <Description>Remote Linq is a small and easy to use - yet very powerful - library to translate linq expression trees to strongly typed, serializable object trees and vice versa. It provides functionality to send arbitrary linq queries to a remote service to be applied and executed against any enumerable or queryable data source.</Description>
-    <TargetFrameworks>netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Remote.Linq</AssemblyName>
     <PackageId>Remote.Linq</PackageId>
     <PackageTags>LINQ;expression-tree;lambda;dynamic;remote;remote-query;multi-tier;n-tier;fluent-interface</PackageTags>
@@ -11,24 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.6.0-alpha-001" />
+    <PackageReference Include="aqua-core" Version="4.6.0-alpha-003" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
-  </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_X</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_X</DefineConstants>
-  </PropertyGroup>
 
 </Project>
