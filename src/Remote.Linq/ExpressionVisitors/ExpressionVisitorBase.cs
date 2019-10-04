@@ -27,17 +27,15 @@ namespace Remote.Linq.ExpressionVisitors
         {
             if (expression is null)
             {
-                return expression;
+                return null;
             }
 
-            var unaryExpression = expression as UnaryExpression;
-            if (!(unaryExpression is null))
+            if (expression is UnaryExpression unaryExpression)
             {
                 return VisitUnary(unaryExpression);
             }
 
-            var binaryExpression = expression as BinaryExpression;
-            if (!(binaryExpression is null))
+            if (expression is BinaryExpression binaryExpression)
             {
                 return VisitBinary(binaryExpression);
             }
@@ -166,22 +164,16 @@ namespace Remote.Linq.ExpressionVisitors
         }
 
         protected virtual MemberBinding VisitMemberBinding(MemberBinding binding)
-        {
-            switch (binding.BindingType)
+            => binding.BindingType switch
             {
-                case MemberBindingType.Assignment:
-                    return VisitMemberAssignment((MemberAssignment)binding);
+                MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment)binding),
 
-                case MemberBindingType.MemberBinding:
-                    return VisitMemberMemberBinding((MemberMemberBinding)binding);
+                MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding)binding),
 
-                case MemberBindingType.ListBinding:
-                    return VisitMemberListBinding((MemberListBinding)binding);
+                MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding)binding),
 
-                default:
-                    throw new Exception($"Unhandled binding type '{binding.BindingType}'");
-            }
-        }
+                _ => throw new Exception($"Unhandled binding type '{binding.BindingType}'"),
+            };
 
         protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
         {

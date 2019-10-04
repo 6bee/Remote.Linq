@@ -107,8 +107,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
-                var nonGenericQueryArgument = expression.Value as VariableQueryArgument;
-                if (!(nonGenericQueryArgument is null))
+                if (expression.Value is VariableQueryArgument nonGenericQueryArgument)
                 {
                     var type = nonGenericQueryArgument.Type.Type;
                     var value = nonGenericQueryArgument.Value;
@@ -116,8 +115,7 @@ namespace Remote.Linq.ExpressionVisitors
                     return new ConstantExpression(queryArgument);
                 }
 
-                var nonGenericQueryArgumentList = expression.Value as VariableQueryArgumentList;
-                if (!(nonGenericQueryArgumentList is null))
+                if (expression.Value is VariableQueryArgumentList nonGenericQueryArgumentList)
                 {
                     var elementType = nonGenericQueryArgumentList.ElementType.Type;
                     var values = nonGenericQueryArgumentList.Values;
@@ -142,8 +140,7 @@ namespace Remote.Linq.ExpressionVisitors
                 {
                     if (member.DeclaringType.FullName == typeof(VariableQueryArgument).FullName || member.DeclaringType.FullName == typeof(VariableQueryArgumentList).FullName)
                     {
-                        var instanceExpression = Visit(expression.Expression) as ConstantExpression;
-                        if (!(instanceExpression is null))
+                        if (Visit(expression.Expression) is ConstantExpression instanceExpression)
                         {
                             var instanceType = instanceExpression.Type;
                             if (instanceType.IsGenericType && instanceType.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
