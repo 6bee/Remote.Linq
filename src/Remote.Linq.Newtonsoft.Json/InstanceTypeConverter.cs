@@ -12,8 +12,7 @@ namespace Remote.Linq
     {
         public static void ConstantExpressionSerializationCallback(object o, StreamingContext context)
         {
-            var constantExpression = o as ConstantExpression;
-            if (!(constantExpression?.Value is null))
+            if (o is ConstantExpression constantExpression && !(constantExpression.Value is null))
             {
                 var converter = NativeValueInspector.GetConverter(constantExpression.Type);
                 if (!(converter is null))
@@ -25,8 +24,7 @@ namespace Remote.Linq
 
         public static void VariableQueryArgumentSerializationCallback(object o, StreamingContext context)
         {
-            var variableQueryArgument = o as VariableQueryArgument;
-            if (!(variableQueryArgument?.Value is null))
+            if (o is VariableQueryArgument variableQueryArgument && !(variableQueryArgument.Value is null))
             {
                 var converter = NativeValueInspector.GetConverter(variableQueryArgument.Type);
                 if (!(converter is null))
@@ -38,8 +36,7 @@ namespace Remote.Linq
 
         public static void VariableQueryArgumentListSerializationCallback(object o, StreamingContext context)
         {
-            var variableQueryArgumentList = o as VariableQueryArgumentList;
-            if (!(variableQueryArgumentList?.Values is null))
+            if (o is VariableQueryArgumentList variableQueryArgumentList && !(variableQueryArgumentList.Values is null))
             {
                 var converter = NativeValueInspector.GetConverter(variableQueryArgumentList.ElementType);
                 if (!(converter is null))

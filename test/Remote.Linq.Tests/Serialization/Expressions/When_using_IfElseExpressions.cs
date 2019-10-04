@@ -42,11 +42,11 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 #pragma warning restore SA1128 // Put constructor initializers on their own line
 #pragma warning restore SA1502 // Element should not be on a single line
 
-        private Expression _originalExpression;
+        private readonly Expression _originalExpression;
 
-        private RemoteExpression _remoteExpression;
+        private readonly RemoteExpression _remoteExpression;
 
-        private RemoteExpression _serializedRemoteExpression;
+        private readonly RemoteExpression _serializedRemoteExpression;
 
         protected When_using_IfElseExpressions(Func<RemoteExpression, RemoteExpression> serialize)
         {
@@ -65,7 +65,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         [Fact]
         public void Expression_result_should_be_equal()
         {
-            void Execute(Expression expression) => Expression.Lambda<Action>(expression).Compile()();
+            static void Execute(Expression expression) => Expression.Lambda<Action>(expression).Compile()();
 
             Assert.Throws<Exception>(() => Execute(_originalExpression)).Message.ShouldMatch("The condition is false.");
 
