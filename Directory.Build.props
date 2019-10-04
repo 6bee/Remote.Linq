@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Copyright>Copyright © Christof Senn 2013-2019</Copyright>
     <VersionPrefix>6.2.0</VersionPrefix>
-    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <AssemblyVersion>6.2.0.0</AssemblyVersion>
     <Authors>Christof Senn</Authors>
     <PackageIcon>remotelinq-small.png</PackageIcon>
     <PackageProjectUrl>https://github.com/6bee/Remote.Linq</PackageProjectUrl>
