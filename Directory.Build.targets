@@ -1,8 +1,2 @@
 ﻿<Project>
-  <ItemGroup>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
 </Project>

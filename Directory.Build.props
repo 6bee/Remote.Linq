@@ -1,48 +1,30 @@
 ﻿<Project>
+
   <PropertyGroup>
-    <Copyright>Copyright © Christof Senn 2013-2019</Copyright>
-    <VersionPrefix>6.2.0</VersionPrefix>
-    <AssemblyVersion>6.2.0.0</AssemblyVersion>
-    <Authors>Christof Senn</Authors>
-    <PackageIcon>remotelinq-small.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/6bee/Remote.Linq</PackageProjectUrl>
-    <PackageLicenseFile>license.txt</PackageLicenseFile>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/6bee/Remote.Linq.git</RepositoryUrl>
-    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
-    <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
-    <IncludeSymbols>true</IncludeSymbols>
-    <EmbedAllSources>true</EmbedAllSources>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <MajorVersion>6</MajorVersion>
+    <MinorVersion>2</MinorVersion>
+    <PatchVersion>0</PatchVersion>
+    <PreReleaseLabel>alpha-002</PreReleaseLabel>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)remotelinq-small.png" Pack="true" Visible="false" PackagePath=""/>
-    <None Include="$(MSBuildThisFileDirectory)license.txt" Pack="true" Visible="false" PackagePath=""/>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
-  </ItemGroup>
+
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-    <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-  </PropertyGroup>
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)StyleNoDoc.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
+
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>
