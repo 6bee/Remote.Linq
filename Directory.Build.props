@@ -1,10 +1,10 @@
 ﻿<Project>
   <PropertyGroup>
     <Copyright>Copyright © Christof Senn 2013-2019</Copyright>
-    <VersionPrefix>6.1.0</VersionPrefix>
+    <VersionPrefix>6.1.1</VersionPrefix>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <Authors>Christof Senn</Authors>
-    <PackageIconUrl>https://raw.githubusercontent.com/6bee/Remote.Linq/master/remotelinq-small.png</PackageIconUrl>
+    <PackageIcon>remotelinq-small.png</PackageIcon>
     <PackageProjectUrl>https://github.com/6bee/Remote.Linq</PackageProjectUrl>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
     <RepositoryType>git</RepositoryType>
@@ -22,6 +22,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)remotelinq-small.png" Pack="true" Visible="false" PackagePath=""/>
     <None Include="$(MSBuildThisFileDirectory)license.txt" Pack="true" Visible="false" PackagePath=""/>
   </ItemGroup>
   <ItemGroup>
