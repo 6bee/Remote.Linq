@@ -8,9 +8,9 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
     public abstract partial class When_using_complex_expression_with_local_lambda
     {
-        private LambdaExpression _remoteExpression;
+        private readonly LambdaExpression _remoteExpression;
 
-        private LambdaExpression _serializedRemoteExpression;
+        private readonly LambdaExpression _serializedRemoteExpression;
 
         protected When_using_complex_expression_with_local_lambda(Func<LambdaExpression, LambdaExpression> serialize)
         {
