@@ -13,7 +13,7 @@ namespace Remote.Linq.Expressions
     public static class ExpressionExtensions
     {
         private static ExpressionExecutor CreateExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver, IDynamicObjectMapper mapper, Func<Type, bool> setTypeInformation, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally)
-            => new ExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation);
+            => new ExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally);
 
         public static ExpressionExecutionContext Executor(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new ExpressionExecutionContext(CreateExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally), expression);
