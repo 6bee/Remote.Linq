@@ -4,7 +4,7 @@
     <MajorVersion>6</MajorVersion>
     <MinorVersion>2</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-003</PreReleaseLabel>
+    <PreReleaseLabel>alpha-004</PreReleaseLabel>
   </PropertyGroup>
 
   <PropertyGroup>
