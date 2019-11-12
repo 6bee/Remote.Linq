@@ -7,9 +7,14 @@ namespace Remote.Linq.DynamicQuery
     using System;
     using System.Linq;
     using Expression = System.Linq.Expressions.Expression;
+    using MethodInfo = System.Reflection.MethodInfo;
 
     internal sealed class RemoteQueryProvider<TSource> : IRemoteQueryProvider
     {
+        private static readonly MethodInfo _executeMethod = typeof(RemoteQueryProvider<TSource>)
+            .GetMethods()
+            .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(Execute), StringComparison.Ordinal));
+
         private readonly Func<Expressions.Expression, TSource> _dataProvider;
         private readonly IQueryResultMapper<TSource> _resultMapper;
         private readonly ITypeInfoProvider _typeInfoProvider;
@@ -43,7 +48,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public object Execute(Expression expression)
-            => Execute<object>(expression);
+            => this.InvokeAndUnwrap<object>(_executeMethod, expression);
 
         internal static Expressions.Expression TranslateExpression(Expression expression, ITypeInfoProvider typeInfoProvider, Func<Expression, bool> canBeEvaluatedLocally)
         {

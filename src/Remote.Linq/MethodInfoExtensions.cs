@@ -2,7 +2,6 @@
 
 namespace Remote.Linq
 {
-    using System;
     using System.ComponentModel;
     using System.Reflection;
 
@@ -21,10 +20,6 @@ namespace Remote.Linq
             catch (TargetInvocationException ex)
             {
                 throw ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
         }
     }

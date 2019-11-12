@@ -154,7 +154,7 @@ namespace Remote.Linq.EntityFramework
             {
                 // force query execution
                 var elementType = TypeHelper.GetElementType(queryableType);
-                task = (Task)ToListAsync.MakeGenericMethod(elementType).InvokeAndUnwrap(null, new[] { queryResult, cancellationToken });
+                task = ToListAsync.MakeGenericMethod(elementType).InvokeAndUnwrap<Task>(null, queryResult, cancellationToken);
                 await task.ConfigureAwait(false);
                 var result = TaskResultProperty(typeof(List<>).MakeGenericType(elementType)).GetValue(task);
                 queryResult = result;

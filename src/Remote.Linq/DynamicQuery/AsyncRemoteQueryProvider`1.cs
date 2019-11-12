@@ -5,12 +5,17 @@ namespace Remote.Linq.DynamicQuery
     using Aqua.TypeSystem;
     using System;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
+    using Expression = System.Linq.Expressions.Expression;
+    using MethodInfo = System.Reflection.MethodInfo;
 
     internal sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
     {
+        private static readonly MethodInfo _executeMethod = typeof(AsyncRemoteQueryProvider<TSource>)
+            .GetMethods()
+            .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(Execute), StringComparison.Ordinal));
+
         private readonly Func<Expressions.Expression, CancellationToken, Task<TSource>> _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly ITypeInfoProvider _typeInfoProvider;
@@ -70,7 +75,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public object Execute(Expression expression)
-            => Execute<object>(expression);
+            => this.InvokeAndUnwrap<object>(_executeMethod, expression);
 
         public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {

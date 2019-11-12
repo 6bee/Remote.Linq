@@ -149,7 +149,7 @@ namespace Remote.Linq.Expressions
             {
                 // force query execution
                 var elementType = TypeHelper.GetElementType(queryableType);
-                queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).InvokeAndUnwrap(null, new[] { queryResult });
+                queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).InvokeAndUnwrap(null, queryResult);
             }
 
             return queryResult;
