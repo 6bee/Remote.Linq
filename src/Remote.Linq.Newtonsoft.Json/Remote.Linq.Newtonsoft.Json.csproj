@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.6.0-alpha-003" />
-    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.6.0-alpha-003" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="aqua-core" Version="4.6.0-beta-001" />
+    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.6.0-beta-001" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
 </Project>
