@@ -100,33 +100,29 @@ namespace Remote.Linq.EntityFramework
             {
                 return await ExecuteCoreAsync(expression, cancellationToken);
             }
-            catch (TargetInvocationException ex)
+            catch (InvalidOperationException ex)
             {
-                var exception = ex.InnerException;
-                if (exception is InvalidOperationException)
+                if (string.Equals(ex.Message, "Sequence contains no elements", StringComparison.Ordinal))
                 {
-                    if (string.Equals(exception.Message, "Sequence contains no elements", StringComparison.Ordinal))
-                    {
-                        return Array.CreateInstance(expression.Type, 0);
-                    }
-
-                    if (string.Equals(exception.Message, "Sequence contains no matching element", StringComparison.Ordinal))
-                    {
-                        return Array.CreateInstance(expression.Type, 0);
-                    }
-
-                    if (string.Equals(exception.Message, "Sequence contains more than one element", StringComparison.Ordinal))
-                    {
-                        return Array.CreateInstance(expression.Type, 2);
-                    }
-
-                    if (string.Equals(exception.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
-                    {
-                        return Array.CreateInstance(expression.Type, 2);
-                    }
+                    return Array.CreateInstance(expression.Type, 0);
                 }
 
-                throw exception;
+                if (string.Equals(ex.Message, "Sequence contains no matching element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 0);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains more than one element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 2);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 2);
+                }
+
+                throw ex;
             }
         }
 
@@ -158,7 +154,7 @@ namespace Remote.Linq.EntityFramework
             {
                 // force query execution
                 var elementType = TypeHelper.GetElementType(queryableType);
-                task = (Task)ToListAsync.MakeGenericMethod(elementType).Invoke(null, new[] { queryResult, cancellationToken });
+                task = (Task)ToListAsync.MakeGenericMethod(elementType).InvokeAndUnwrap(null, new[] { queryResult, cancellationToken });
                 await task.ConfigureAwait(false);
                 var result = TaskResultProperty(typeof(List<>).MakeGenericType(elementType)).GetValue(task);
                 queryResult = result;

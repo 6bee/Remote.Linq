@@ -105,33 +105,29 @@ namespace Remote.Linq.Expressions
             {
                 return ExecuteCore(expression);
             }
-            catch (TargetInvocationException ex)
+            catch (InvalidOperationException ex)
             {
-                var excption = ex.InnerException;
-                if (excption is InvalidOperationException)
+                if (string.Equals(ex.Message, "Sequence contains no elements", StringComparison.Ordinal))
                 {
-                    if (string.Equals(excption.Message, "Sequence contains no elements", StringComparison.Ordinal))
-                    {
-                        return Array.CreateInstance(expression.Type, 0);
-                    }
-
-                    if (string.Equals(excption.Message, "Sequence contains no matching element", StringComparison.Ordinal))
-                    {
-                        return Array.CreateInstance(expression.Type, 0);
-                    }
-
-                    if (string.Equals(excption.Message, "Sequence contains more than one element", StringComparison.Ordinal))
-                    {
-                        return Array.CreateInstance(expression.Type, 2);
-                    }
-
-                    if (string.Equals(excption.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
-                    {
-                        return Array.CreateInstance(expression.Type, 2);
-                    }
+                    return Array.CreateInstance(expression.Type, 0);
                 }
 
-                throw excption;
+                if (string.Equals(ex.Message, "Sequence contains no matching element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 0);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains more than one element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 2);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 2);
+                }
+
+                throw ex;
             }
         }
 
@@ -153,7 +149,7 @@ namespace Remote.Linq.Expressions
             {
                 // force query execution
                 var elementType = TypeHelper.GetElementType(queryableType);
-                queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { queryResult });
+                queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).InvokeAndUnwrap(null, new[] { queryResult });
             }
 
             return queryResult;
@@ -165,7 +161,7 @@ namespace Remote.Linq.Expressions
             var lambdaExpression =
                 (expression as System.Linq.Expressions.LambdaExpression) ??
                 System.Linq.Expressions.Expression.Lambda(expression);
-            return lambdaExpression.Compile().DynamicInvoke();
+            return lambdaExpression.Compile().DynamicInvokeAndUnwrap();
         }
 
         /// <summary>

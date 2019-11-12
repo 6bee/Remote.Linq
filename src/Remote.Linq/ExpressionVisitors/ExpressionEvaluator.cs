@@ -139,19 +139,9 @@ namespace Remote.Linq.ExpressionVisitors
 
                 var lambda = Expression.Lambda(expression);
                 var func = lambda.Compile();
-                object value;
+                object value = func.DynamicInvokeAndUnwrap(null);
 
-                try
-                {
-                    value = func.DynamicInvoke(null);
-                }
-                catch (TargetInvocationException ex)
-                {
-                    throw ex.InnerException;
-                }
-
-                var valueAsExpression = value as Expression;
-                if (!(valueAsExpression is null))
+                if (value is Expression valueAsExpression)
                 {
                     return valueAsExpression;
                 }

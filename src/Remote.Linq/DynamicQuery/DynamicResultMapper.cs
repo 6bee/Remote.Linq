@@ -7,7 +7,6 @@ namespace Remote.Linq.DynamicQuery
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
-    using System.Reflection;
 
     internal sealed class DynamicResultMapper : IQueryResultMapper<IEnumerable<DynamicObject>>
     {
@@ -30,7 +29,7 @@ namespace Remote.Linq.DynamicQuery
                 mapper = new DynamicQueryResultMapper();
             }
 
-            if (dataRecords == null)
+            if (dataRecords is null)
             {
                 return default;
             }
@@ -57,22 +56,15 @@ namespace Remote.Linq.DynamicQuery
 
         internal static TResult MapToSingleResult<TResult>(Type elementType, System.Collections.IEnumerable result, MethodCallExpression methodCallExpression)
         {
-            try
-            {
-                var hasPredicate = methodCallExpression.Arguments.Count == 2;
-                var arguments = hasPredicate
-                    ? new object[] { result, GetTruePredicate(elementType) }
-                    : new object[] { result };
-                var method = methodCallExpression.Method.Name.EndsWith("OrDefault")
-                    ? (hasPredicate ? MethodInfos.Enumerable.SingleOrDefaultWithPredicate : MethodInfos.Enumerable.SingleOrDefault)
-                    : (hasPredicate ? MethodInfos.Enumerable.SingleWithPredicate : MethodInfos.Enumerable.Single);
-                object single = method.MakeGenericMethod(elementType).Invoke(null, arguments);
-                return (TResult)single;
-            }
-            catch (TargetInvocationException ex)
-            {
-                throw ex.InnerException;
-            }
+            var hasPredicate = methodCallExpression.Arguments.Count == 2;
+            var arguments = hasPredicate
+                ? new object[] { result, GetTruePredicate(elementType) }
+                : new object[] { result };
+            var method = methodCallExpression.Method.Name.EndsWith("OrDefault")
+                ? (hasPredicate ? MethodInfos.Enumerable.SingleOrDefaultWithPredicate : MethodInfos.Enumerable.SingleOrDefault)
+                : (hasPredicate ? MethodInfos.Enumerable.SingleWithPredicate : MethodInfos.Enumerable.Single);
+            object single = method.MakeGenericMethod(elementType).InvokeAndUnwrap(null, arguments);
+            return (TResult)single;
         }
 
         private static object GetTruePredicate(Type t)
