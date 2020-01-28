@@ -96,5 +96,19 @@ namespace Remote.Linq.EntityFramework.Tests
             var result = await _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("no match")).ConfigureAwait(false);
             result.ShouldBeNull();
         }
+
+        [Fact]
+        private async Task Contains_on_non_materialized_ienumerable()
+        {
+            var data = new List<LookupItem>
+            {
+                new LookupItem { Key = "1", Value = "One" },
+                new LookupItem { Key = "2", Value = "Two" },
+                new LookupItem { Key = "3", Value = "Three" },
+            };
+            var filteredPeoplesNames = data.Where(x => x.Value.StartsWith("O")).Select(x => x.Value);
+            var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Key));
+            result.Value.ShouldBe("One");
+        }
     }
 }
