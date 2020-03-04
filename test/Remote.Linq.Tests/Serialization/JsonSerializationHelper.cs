@@ -8,7 +8,7 @@ namespace Remote.Linq.Tests.Serialization
 
     public static class JsonSerializationHelper
     {
-        private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings() { Formatting = Formatting.Indented }.ConfigureRemoteLinq();
+        private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { Formatting = Formatting.Indented }.ConfigureRemoteLinq();
 
         public static T Serialize<T>(this T graph)
         {

@@ -2,12 +2,14 @@
 
 namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
 {
+    using System.Collections.Generic;
+
     partial class When_using_local_variable_query_argument_list
     {
         public class XmlSerializer : When_using_local_variable_query_argument_list
         {
             public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
+                : base(x => XmlSerializationHelper.SerializeExpression(x, new[] { typeof(List<int>) }))
             {
             }
         }

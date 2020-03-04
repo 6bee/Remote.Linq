@@ -448,7 +448,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_query_category_filterd_using_local_short_variable()
         {
-            short id = 1; // potetial issue: the test doesn't seem to cover the ciscumstance of the unknown id variable/arg type (inline type)
+            short id = 1; // potential issue: the test doesn't seem to cover the circumstance of the unknown id variable/arg type (inline type)
             var query =
                 from x in _categoryQueryable
                 where x.Id == id
@@ -980,6 +980,57 @@ namespace Remote.Linq.Tests.RemoteQueryable
         public void Should_return_null_on_query_elementat_or_default_with_negative_index()
         {
             _productQueryable.ElementAtOrDefault(-1).ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_support_non_materialized_ienumerable_query_argument()
+        {
+            var data = new List<(int key, string value)>
+            {
+                (1, "Fruit"),
+                (2, "Vehicle"),
+            };
+            var filteredItems = data
+                .Where(x => x.value.StartsWith("V"))
+                .Select(x => x.key);
+            var result = _categoryQueryable.FirstOrDefault(x => filteredItems.Contains(x.Id));
+            result.Id.ShouldBe(2);
+            result.Name.ShouldBe("Vehicles");
+        }
+
+        [Fact]
+        public void Should_support_non_materialized_enumerablequery_argument()
+        {
+            var data = new List<(int key, string value)>
+            {
+                (1, "Fruit"),
+                (2, "Vehicle"),
+            };
+            var filteredItems = data
+                .AsQueryable()
+                .Where(x => x.value.StartsWith("V"))
+                .Select(x => x.key);
+            var result = _categoryQueryable.FirstOrDefault(x => filteredItems.Contains(x.Id));
+            result.Id.ShouldBe(2);
+            result.Name.ShouldBe("Vehicles");
+        }
+
+        [Fact]
+        public void Should_support_tuple_query_argument()
+        {
+            var data = (2, "Vehicle");
+            var result = _categoryQueryable.FirstOrDefault(x => x.Id == data.Item1);
+            result.Id.ShouldBe(2);
+            result.Name.ShouldBe("Vehicles");
+        }
+
+        [Fact]
+        public void Should_support_string_query_argument()
+        {
+            var data = "Vehicle";
+            var result = _categoryQueryable.FirstOrDefault(x => x.Name.StartsWith(data));
+            result.Id.ShouldBe(2);
+            result.Name.ShouldBe("Vehicles");
         }
     }
 }

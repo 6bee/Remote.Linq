@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
+    using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
     using Remote.Linq.DynamicQuery;
     using System;
@@ -144,6 +145,23 @@ namespace Remote.Linq.ExpressionVisitors
                 if (value is Expression valueAsExpression)
                 {
                     return valueAsExpression;
+                }
+
+                if (value is System.Collections.IEnumerable)
+                {
+                    var collectionType = value.GetType();
+                    var elementType = TypeHelper.GetElementType(collectionType);
+                    if (expression.Type.IsAssignableFrom(elementType.MakeArrayType()))
+                    {
+                        var enumerated = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { value });
+                        value = enumerated;
+                    }
+                    else if (value is EnumerableQuery && expression.Type.IsAssignableFrom(typeof(IQueryable<>).MakeGenericType(elementType)))
+                    {
+                        var enumerated = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { value });
+                        var queryable = MethodInfos.Queryable.AsQueryable.MakeGenericMethod(elementType).Invoke(null, new[] { enumerated });
+                        value = queryable;
+                    }
                 }
 
                 return Expression.Property(

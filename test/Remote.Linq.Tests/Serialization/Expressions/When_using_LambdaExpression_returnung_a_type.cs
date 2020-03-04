@@ -5,6 +5,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
     using Remote.Linq.ExpressionVisitors;
     using Shouldly;
     using System;
+    using System.Collections.Generic;
     using System.Linq.Expressions;
     using Xunit;
     using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
@@ -48,7 +49,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public class XmlSerializer : When_using_LambdaExpression_returnung_a_type
         {
             public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
+                : base(x => XmlSerializationHelper.SerializeExpression(x, new[] { typeof(List<Aqua.TypeSystem.TypeInfo>) }))
             {
             }
         }

@@ -223,7 +223,7 @@ namespace Remote.Linq
 
             private static readonly Type[] _excludeFromUnmappedTypes = new[]
                 {
-                    typeof(EnumerableQuery<>),
+                    typeof(EnumerableQuery),
                 };
 
             private sealed class IsKnownTypeProvider : IIsKnownTypeProvider
@@ -1027,8 +1027,7 @@ namespace Remote.Linq
                     foreach (var property in oldConstantQueryArgument.Properties)
                     {
                         var propertyValue = property.Value;
-                        var expressionValue = propertyValue as RLinq.Expression;
-                        if (!(expressionValue is null))
+                        if (propertyValue is RLinq.Expression expressionValue)
                         {
                             propertyValue = Visit(expressionValue);
                         }

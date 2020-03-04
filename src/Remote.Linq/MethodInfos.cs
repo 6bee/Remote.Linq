@@ -55,6 +55,7 @@ namespace Remote.Linq
 
         internal static class Queryable
         {
+            internal static readonly MethodInfo AsQueryable = GetGenericQueryableMethod(nameof(System.Linq.Queryable.AsQueryable), 1);
             internal static readonly MethodInfo OrderBy = GetGenericQueryableMethod(nameof(System.Linq.Queryable.OrderBy), 2);
             internal static readonly MethodInfo OrderByDescending = GetGenericQueryableMethod(nameof(System.Linq.Queryable.OrderByDescending), 2);
             internal static readonly MethodInfo ThenBy = GetGenericQueryableMethod(nameof(System.Linq.Queryable.ThenBy), 2);
