@@ -6,7 +6,6 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
     using Aqua.TypeSystem;
     using global::Newtonsoft.Json;
     using Remote.Linq.Expressions;
-    using System;
     using System.Collections.Generic;
 
     public sealed class ExpressionConverter : ObjectConverter<Expression>

@@ -99,23 +99,5 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <returns>The mapped result of the query execution.</returns>
         public static Task<IEnumerable<DynamicObject>> ExecuteWithEntityFrameworkCoreAsync(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellationToken = default, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
             => new EntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsync(expression, cancellationToken);
-
-        /// <summary>
-        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/>
-        /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself.
-        /// </summary>
-        [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.EntityFrameworkCore.EntityFrameworkCoreExpressionExecutor or use expression.EntityFrameworkCoreExecutor(..).With(customstrategy).Execute() instead.", false)]
-        public static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFrameworkCore(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
-            => new EntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, canBeEvaluatedLocally: canBeEvaluatedLocally).PrepareForExecution(expression);
-
-        /// <summary>
-        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/>
-        /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself. <para/>
-        /// Please note that Inlude operation has no effect if using non-generic method <see cref="IQueryable" /> <see cref="DbContext" />.Get(<see cref="Type" />) as queryableProvider.
-        /// Better use generic version instead.
-        /// </summary>
-        [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.EntityFrameworkCore.EntityFrameworkCoreExpressionExecutor or use expression.EntityFrameworkCoreExecutor(..).With(customstrategy).Execute() instead.", false)]
-        public static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFrameworkCore(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
-            => new EntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, canBeEvaluatedLocally: canBeEvaluatedLocally).PrepareForExecution(expression);
     }
 }

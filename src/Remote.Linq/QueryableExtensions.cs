@@ -26,13 +26,6 @@ namespace Remote.Linq
         /// <summary>
         /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified.
         /// </summary>
-        [Obsolete("This method will be removed in future versions. Use AsQueryable() without generic argument instead.", false)]
-        public static IQueryable AsQueryable<T>(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeInfoProvider typeInfoProvider = null, IDynamicObjectMapper mapper = null)
-            => RemoteQueryable.Factory.CreateQueryable(resource.ElementType, dataProvider, typeInfoProvider, mapper);
-
-        /// <summary>
-        /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified.
-        /// </summary>
         public static IQueryable AsQueryable(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeInfoProvider typeInfoProvider = null, IDynamicObjectMapper mapper = null)
             => RemoteQueryable.Factory.CreateQueryable(resource.ElementType, dataProvider, typeInfoProvider, mapper);
 

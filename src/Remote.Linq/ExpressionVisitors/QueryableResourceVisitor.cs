@@ -9,7 +9,6 @@ namespace Remote.Linq.ExpressionVisitors
     using Remote.Linq.Expressions;
     using System;
     using System.Linq;
-    using System.Reflection;
 
     public class QueryableResourceVisitor
     {

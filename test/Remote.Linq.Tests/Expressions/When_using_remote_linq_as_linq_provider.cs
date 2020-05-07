@@ -6,7 +6,6 @@ namespace Remote.Linq.Tests.Expressions
     using Remote.Linq.Expressions;
     using Shouldly;
     using System.Linq;
-    using System.Threading.Tasks;
     using Xunit;
     using Expression = System.Linq.Expressions.Expression;
 

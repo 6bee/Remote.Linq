@@ -6,7 +6,6 @@ namespace Remote.Linq
     using global::Newtonsoft.Json;
     using global::Newtonsoft.Json.Serialization;
     using Remote.Linq.Newtonsoft.Json.ContractResolvers;
-    using System;
     using System.ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]

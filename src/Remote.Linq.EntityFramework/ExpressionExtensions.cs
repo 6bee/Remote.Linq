@@ -93,31 +93,5 @@ namespace Remote.Linq.EntityFramework
         /// <returns>The mapped result of the query execution.</returns>
         public static Task<IEnumerable<DynamicObject>> ExecuteWithEntityFrameworkAsync(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellationToken = default, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
             => new EntityFrameworkExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation).ExecuteAsync(expression, cancellationToken);
-
-        /// <summary>
-        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/>
-        /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself.
-        /// </summary>
-        /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
-        /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution.</returns>
-        [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.EntityFramework.EntityFrameworkExpressionExecutor or use expression.EntityFrameworkExecutor(..).With(customstrategy).Execute() instead.", false)]
-        public static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFramework(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null)
-            => new EntityFrameworkExpressionExecutor(dbContext, typeResolver).PrepareForExecution(expression);
-
-        /// <summary>
-        /// Prepares the query <see cref="Expression"/> to be able to be executed. <para/>
-        /// Use this method if you wan to execute the <see cref="System.Linq.Expressions.Expression"/> and map the raw result yourself. <para/>
-        /// Please note that Inlude operation has no effect if using non-generic method <see cref="IQueryable" /> <see cref="DbContext" />.Get(<see cref="Type" />) as queryableProvider.
-        /// Better use generic version instead.
-        /// </summary>
-        /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
-        /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances based on <see cref="Type"/>s.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution.</returns>
-        [Obsolete("This method is being removed in a future version. Inherit from Remote.Linq.EntityFramework.EntityFrameworkExpressionExecutor or use expression.EntityFrameworkExecutor(..).With(customstrategy).Execute() instead.", false)]
-        public static System.Linq.Expressions.Expression PrepareForExecutionWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null)
-            => new EntityFrameworkExpressionExecutor(queryableProvider, typeResolver).PrepareForExecution(expression);
     }
 }

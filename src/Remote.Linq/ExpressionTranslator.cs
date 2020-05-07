@@ -2,7 +2,6 @@
 
 namespace Remote.Linq
 {
-    using Aqua;
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;

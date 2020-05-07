@@ -10,7 +10,6 @@ namespace Remote.Linq.ExpressionVisitors
     using System.ComponentModel;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
 
     /// <summary>
     /// Enables the partial evalutation of queries.
