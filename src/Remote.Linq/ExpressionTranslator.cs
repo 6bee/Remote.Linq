@@ -6,6 +6,7 @@ namespace Remote.Linq
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
+    using Aqua.Utils;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
     using System;
@@ -1036,6 +1037,12 @@ namespace Remote.Linq
                     }
 
                     value = ConstantValueMapper.ForReconstruction(_typeResolver).Map(newConstantQueryArgument, type);
+                }
+                else if (value is string && type != null && type != typeof(string))
+                {
+                    var mapper = new DynamicObjectMapper();
+                    var obj = mapper.MapObject(value);
+                    value = mapper.Map(obj, type);
                 }
 
                 return Expression.Constant(value, type);

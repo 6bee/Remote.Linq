@@ -2,7 +2,8 @@
 
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
-    using Newtonsoft.Json;
+    using Aqua;
+    using global::Newtonsoft.Json;
     using Remote.Linq;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
@@ -11,35 +12,33 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
     public class When_deserializing_json_with_constant_expression
     {
-        private static readonly string Json = string.Format(
-            @"
-            {{
-              ""$id"": ""1"",
-              ""$type"": ""Remote.Linq.Expressions.ConstantExpression, Remote.Linq"",
-              ""Type"": {{
-                ""$id"": ""2"",
-                ""Name"": ""QueryableResourceDescriptor"",
-                ""Namespace"": ""Remote.Linq.DynamicQuery""
-              }},
-              ""Value"": {{
-                ""$type"": ""Remote.Linq.DynamicQuery.QueryableResourceDescriptor, Remote.Linq"",
-                ""Type"": {{
-                  ""$id"": ""3"",
-                  ""Name"": ""{0}"",
-                  ""Namespace"": ""{1}""
-                }}
-              }}
-            }}",
-            nameof(When_deserializing_json_with_constant_expression),
-            typeof(When_deserializing_json_with_constant_expression).Namespace);
+        private static readonly string Json = $@"
+{{
+    ""$id"": ""1"",
+    ""$type"": ""Remote.Linq.Expressions.ConstantExpression, Remote.Linq"",
+    ""Type"": {{
+        ""$id"": ""2"",
+        ""Name"": ""QueryableResourceDescriptor"",
+        ""Namespace"": ""Remote.Linq.DynamicQuery""
+    }},
+    ""Value"": {{
+        ""$type"": ""Remote.Linq.DynamicQuery.QueryableResourceDescriptor, Remote.Linq"",
+        ""Type"": {{
+            ""Name"": ""{nameof(When_deserializing_json_with_constant_expression)}"",
+            ""Namespace"": ""{typeof(When_deserializing_json_with_constant_expression).Namespace}""
+        }}
+    }}
+}}";
 
         private ConstantExpression expression;
 
         public When_deserializing_json_with_constant_expression()
         {
-            var serializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
+            var serializerSettings = new JsonSerializerSettings()
+                .ConfigureAqua()
+                .ConfigureRemoteLinq();
 
-            expression = (ConstantExpression)JsonConvert.DeserializeObject(Json, serializerSettings);
+            expression = JsonConvert.DeserializeObject<ConstantExpression>(Json, serializerSettings);
         }
 
         [Fact]

@@ -3,8 +3,10 @@
 namespace Remote.Linq
 {
     using Aqua;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
+    using global::Newtonsoft.Json;
+    using global::Newtonsoft.Json.Serialization;
+    using Remote.Linq.Newtonsoft.Json.ContractResolvers;
+    using System;
     using System.ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -18,10 +20,10 @@ namespace Remote.Linq
         {
             jsonSerializerSettings = jsonSerializerSettings.ConfigureAqua();
 
-            jsonSerializerSettings.ContractResolver =
-                jsonSerializerSettings.ContractResolver?.GetType() == typeof(DefaultContractResolver)
-                    ? new RemoteLinqContractResolver()
-                    : new RemoteLinqContractResolver(jsonSerializerSettings.ContractResolver);
+            if (jsonSerializerSettings.ContractResolver?.GetType() != typeof(RemoteLinqContractResolver))
+            {
+                jsonSerializerSettings.ContractResolver = new RemoteLinqContractResolver(jsonSerializerSettings.ContractResolver);
+            }
 
             return jsonSerializerSettings;
         }

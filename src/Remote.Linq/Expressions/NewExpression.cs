@@ -47,16 +47,16 @@ namespace Remote.Linq.Expressions
 
         public override ExpressionType NodeType => ExpressionType.New;
 
-        [DataMember(Order = 1, EmitDefaultValue = true, IsRequired = false)]
+        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
         public ConstructorInfo Constructor { get; set; }
 
-        [DataMember(Order = 2, EmitDefaultValue = true, IsRequired = false)]
+        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
         public List<Expression> Arguments { get; set; }
 
-        [DataMember(Order = 3, EmitDefaultValue = true, IsRequired = false)]
+        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public List<MemberInfo> Members { get; set; }
 
-        [DataMember(Order = 4, EmitDefaultValue = true, IsRequired = false)]
+        [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo Type { get; set; }
 
         public override string ToString()

@@ -2,7 +2,7 @@
 
 namespace Remote.Linq.Tests.Serialization
 {
-    using Newtonsoft.Json;
+    using global::Newtonsoft.Json;
     using Remote.Linq.ExpressionVisitors;
     using System;
 
