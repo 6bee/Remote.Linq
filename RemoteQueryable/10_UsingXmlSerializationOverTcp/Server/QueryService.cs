@@ -23,8 +23,6 @@ namespace Server
         };
 
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
-        {
-            return queryExpression.Execute(_queryableResourceProvider);
-        }
+            => queryExpression.Execute(_queryableResourceProvider);
     }
 }

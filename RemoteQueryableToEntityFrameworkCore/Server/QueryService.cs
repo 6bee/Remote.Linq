@@ -13,10 +13,8 @@ namespace Server
     {
         public async Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression)
         {
-            using (var efContext = new EFContext())
-            {
-                return await queryExpression.ExecuteWithEntityFrameworkCoreAsync(efContext);
-            }
+            using var efContext = new EFContext();
+            return await queryExpression.ExecuteWithEntityFrameworkCoreAsync(efContext);
         }
     }
 }

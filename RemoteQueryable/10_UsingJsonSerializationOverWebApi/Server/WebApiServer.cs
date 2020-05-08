@@ -38,7 +38,7 @@ namespace Server
             var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().Single();
             //jsonFormatter.SerializerSettings = jsonFormatter.SerializerSettings.ConfigureRemoteLinq();
             //jsonFormatter.SerializerSettings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
-            jsonFormatter.SerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }.ConfigureRemoteLinq();
+            jsonFormatter.SerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.None }.ConfigureRemoteLinq();
 
             config.Routes.MapHttpRoute("API Default", "api/{controller}");
 

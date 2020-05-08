@@ -4,6 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Remote.Linq" Version="6.2.0-alpha-001" />
+    <PackageReference Include="Remote.Linq" Version="6.3.0-alpha-002" />
   </ItemGroup>
 </Project>

@@ -24,8 +24,6 @@ namespace Server
 
         [SecuritySafeCritical]
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
-        {
-            return queryExpression.Execute(_queryableProvider);
-        }
+            => queryExpression.Execute(_queryableProvider);
     }
 }

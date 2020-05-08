@@ -12,14 +12,7 @@ namespace Server
 
     public class QueryService
     {
-        private static readonly IDynamicObjectMapper _dynamicObjectMapper;
-        private static readonly Func<Type, IQueryable> _queryableResourceProvider;
-
-        static QueryService()
-        {
-            _dynamicObjectMapper = new DynamicObjectMapper(settings: new DynamicObjectMapperSettings { FormatPrimitiveTypesAsString = true });
-
-            _queryableResourceProvider = type =>
+        private static readonly Func<Type, IQueryable> _queryableResourceProvider = type =>
             {
                 var dataStore = InMemoryDataStore.Instance;
 
@@ -29,13 +22,12 @@ namespace Server
 
                 throw new Exception(string.Format("No queryable resource available for type {0}", type));
             };
-        }
 
         public Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression)
         {
             // Note: there is no async version of IQueryable yet, but there is e.g. for EF Core. 
             // Async methods awailable with `Remote.Linq.EntityFramework` and `Remote.Linq.EntityFrameworkCore` version 6 and later.
-            return Task.Run(() => queryExpression.Execute(_queryableResourceProvider, mapper: _dynamicObjectMapper));
+            return Task.Run(() => queryExpression.Execute(_queryableResourceProvider));
         }
     }
 }

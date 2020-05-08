@@ -16,7 +16,7 @@ namespace Client
 
         public void Run()
         {
-            var repo = new RemoteRepository(_url);
+            using var repo = new RemoteRepository(_url);
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
             foreach (var i in repo.Products)

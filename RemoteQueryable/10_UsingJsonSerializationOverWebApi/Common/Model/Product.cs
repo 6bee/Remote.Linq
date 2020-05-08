@@ -6,7 +6,7 @@ namespace Common.Model
     {
         public int Id { get; set; }
 
-        public long ProductCategoryId { get; set; }
+        public int ProductCategoryId { get; set; }
 
         public string Name { get; set; }
 

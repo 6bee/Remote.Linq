@@ -11,14 +11,7 @@ namespace Server
 
     public class QueryService
     {
-        private static readonly IDynamicObjectMapper _dynamicObjectMapper;
-        private static readonly Func<Type, IQueryable> _queryableResourceProvider;
-
-        static QueryService()
-        {
-            _dynamicObjectMapper = new DynamicObjectMapper(settings: new DynamicObjectMapperSettings { FormatPrimitiveTypesAsString = true });
-
-            _queryableResourceProvider = type =>
+        private static Func<Type, IQueryable> _queryableResourceProvider = type =>
             {
                 var dataStore = InMemoryDataStore.Instance;
 
@@ -28,11 +21,8 @@ namespace Server
 
                 throw new Exception(string.Format("No queryable resource available for type {0}", type));
             };
-        }
 
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
-        {
-            return queryExpression.Execute(_queryableResourceProvider, mapper: _dynamicObjectMapper);
-        }
+            => queryExpression.Execute(_queryableResourceProvider);
     }
 }

@@ -4,10 +4,10 @@ namespace Common.Model
 {
     public class OrderItem
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
 
-        public long ProductId { get; set; }
+        public int ProductId { get; set; }
 
-        public long Quantity { get; set; }
+        public int Quantity { get; set; }
     }
 }

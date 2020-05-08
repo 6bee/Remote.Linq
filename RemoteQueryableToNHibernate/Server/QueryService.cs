@@ -11,10 +11,8 @@ namespace Server
     {
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
         {
-            using (var nhContext = new NHContext())
-            {
-                return queryExpression.Execute(queryableProvider: type => nhContext.GetQueryable(type));
-            }
+            using var nhContext = new NHContext();
+            return queryExpression.Execute(queryableProvider: type => nhContext.GetQueryable(type));
         }
     }
 }

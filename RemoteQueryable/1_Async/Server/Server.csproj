@@ -2,11 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="aqua-core" Version="4.5.2" />
-    <PackageReference Include="Remote.Linq" Version="5.8.2" />
+    <PackageReference Include="aqua-core" Version="4.7.0-alpha-002" />
+    <PackageReference Include="Remote.Linq" Version="6.3.0-alpha-002" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
