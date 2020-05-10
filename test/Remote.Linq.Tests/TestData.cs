@@ -6,6 +6,7 @@ namespace Remote.Linq.Tests
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
     using System.Reflection;
 
     public static class TestData
@@ -63,10 +64,8 @@ namespace Remote.Linq.Tests
                 float.MaxValue,
                 double.MinValue,
                 double.MaxValue,
-
-                // NOTE: decimal doesn't work with json.net (when assigned to an object property)
-                // decimal.MinValue,
-                // decimal.MaxValue,
+                decimal.MinValue,
+                decimal.MaxValue,
                 new decimal(Math.E),
                 new decimal(Math.PI),
                 char.MinValue,
@@ -80,28 +79,20 @@ namespace Remote.Linq.Tests
                 DateTime.Now,
                 TestEnum.Foo,
                 TestEnum.Bar,
-
-                // NOTE: TimeSpan doesn't work with XmlSerializer
                 default(TimeSpan),
-
-                // new TimeSpan(long.MaxValue),
-                // NOTE: DateTimeOffset doesn't work with json.net (when assigned to an object property) since DateTimeOffset gets confused with DateTime
-                // default(DateTimeOffset),
-                // DateTimeOffset.MinValue,
-                // DateTimeOffset.MaxValue,
-                // new DateTimeOffset(new DateTime(2012, 12, 12), new TimeSpan(12, 12, 0)),
-                // NOTE: BigInteger doesn't work with json.net (when assigned to an object property) since values seem to get lost (on .net core only)
-                // new BigInteger(),
-                // default(BigInteger),
-                // new BigInteger(ulong.MinValue) - 1,
-                // new BigInteger(ulong.MaxValue) + 1,
-                // NOTE: Complex doesn't work with json.net (when assigned to an object property) since values seem to get lost entirely
-                // new Complex(),
-                // default(Complex),
-                // new Complex(32, -87654),
-                // new Complex(-87654, 234),
-                // new Complex(double.MinValue, double.MinValue),
-                // new Complex(double.MaxValue, double.MaxValue),
+                new TimeSpan(long.MaxValue),
+                default(DateTimeOffset),
+                DateTimeOffset.MinValue,
+                DateTimeOffset.MaxValue,
+                new DateTimeOffset(new DateTime(2012, 12, 12), new TimeSpan(12, 12, 0)),
+                default(BigInteger),
+                new BigInteger(ulong.MinValue) - 1,
+                new BigInteger(ulong.MaxValue) + 1,
+                default(Complex),
+                new Complex(32, -87654),
+                new Complex(-87654, 234),
+                new Complex(double.MinValue, double.MinValue),
+                new Complex(double.MaxValue, double.MaxValue),
             }
             .SelectMany(x => new Tuple<Type, object>[]
             {
@@ -119,7 +110,6 @@ namespace Remote.Linq.Tests
                 CreateArray((Type)x[0], x[1]),
             });
 
-        // NOTE: PrimitiveValueLists don't work with json.net since list element types don't get corrected by PrimitiveValueInspector
         public static IEnumerable<object[]> PrimitiveValueLists => PrimitiveValues
             .Select(x => new[]
             {

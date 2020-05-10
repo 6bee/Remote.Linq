@@ -15,6 +15,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Numerics;
     using System.Reflection;
     using System.Threading;
     using Xunit;
@@ -811,10 +812,15 @@ namespace Remote.Linq.Tests.RemoteQueryable
                     System.Linq.Expressions.Expression.Invoke(expression, parameter), parameter)).ToList();
         }
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
         {
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), "Data type not supported by XmlSerializer");
+
             RunTestMethod(
                 nameof(TestMethodFor_Should_query_primitive_value_injected_as_variable_closure),
                 type,
@@ -826,25 +832,36 @@ namespace Remote.Linq.Tests.RemoteQueryable
             _productQueryable.Select(x => value).ShouldAllBe(x => Equals(x, value), $"type: {typeof(T).FullName}, value: {value}");
         }
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
-        public void Should_query_primitive_value_array_injected_as_variable_closure(Type type, object value)
+        [MemberData(nameof(TestData.PrimitiveValueLists), MemberType = typeof(TestData))]
+        public void Should_query_primitive_value_collection_injected_as_variable_closure(Type type, object value)
         {
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), "Data type not supported by XmlSerializer");
+
             RunTestMethod(
-                nameof(TestMethodFor_Should_query_primitive_value_array_injected_as_variable_closure),
+                nameof(TestMethodFor_Should_query_primitive_value_collection_injected_as_variable_closure),
                 TypeHelper.GetElementType(type),
                 value);
         }
 
-        protected void TestMethodFor_Should_query_primitive_value_array_injected_as_variable_closure<T>(T[] array)
+        protected void TestMethodFor_Should_query_primitive_value_collection_injected_as_variable_closure<T>(IEnumerable<T> collection)
         {
-            _productQueryable.Select(x => array).ShouldAllBe(x => x.CollectionEquals(array), $"element type: {typeof(T).FullName}, array: {array}");
+            _productQueryable.Select(x => collection).ShouldAllBe(x => x.CollectionEquals(collection), $"element type: {typeof(T).FullName}, array: {collection}");
         }
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure(Type type, object value)
         {
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), "Data type not supported by XmlSerializer");
+
             RunTestMethod(
                 nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure),
                 type,
@@ -852,38 +869,40 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         protected void TestMethodFor_Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure<T>(T value)
-        {
-            _productQueryable.Select(x => new { Value = value }).ShouldAllBe(x => Equals(x.Value, value), $"type: {typeof(T).FullName}, value: {value}");
-        }
+            => _productQueryable
+            .Select(x => new { Value = value })
+            .ShouldAllBe(x => Equals(x.Value, value), $"type: {typeof(T).FullName}, value: {value}");
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
-        public void Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure(Type type, object value)
+        [MemberData(nameof(TestData.PrimitiveValueLists), MemberType = typeof(TestData))]
+        public void Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure(Type type, object value)
         {
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), "Data type not supported by XmlSerializer");
+
             RunTestMethod(
-                nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure),
+                nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure),
                 TypeHelper.GetElementType(type),
                 value);
         }
 
-        protected void TestMethodFor_Should_query_anonymous_type_with_primitive_value_array_injected_as_variable_closure<T>(T[] array)
-        {
-            _productQueryable.Select(x => new { Array = array }).ShouldAllBe(x => x.Array.CollectionEquals(array), $"element type: {typeof(T).FullName}, array: {array}");
-        }
+        protected void TestMethodFor_Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure<T>(IEnumerable<T> collection)
+            => _productQueryable
+            .Select(x => new { Collection = collection })
+            .ShouldAllBe(x => x.Collection.CollectionEquals(collection), $"element type: {typeof(T).FullName}, array: {collection}");
 
         private void RunTestMethod(string methodName, Type genericType, object argument)
-        {
-            GetType()
-                .GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .MakeGenericMethod(genericType)
-                .Invoke(this, new[] { argument });
-        }
+            => GetType()
+            .GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            .MakeGenericMethod(genericType)
+            .Invoke(this, new[] { argument });
 
-        [SkippableFact]
-        public void Should_query_value_created_using_default_constructor()
+        [Fact]
+        public void Should_query_value_created_using_default_operator()
         {
-            Skip.If(this.TestIs<With_xml_serializer>(), "Not supported by XmlSerializer (circuar reference)");
-
             _productQueryable
                 .Select(x => default(DateTime))
                 .ShouldAllBe(x => Equals(x, default(DateTime)));

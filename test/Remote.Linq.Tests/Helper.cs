@@ -4,6 +4,7 @@ namespace Remote.Linq.Tests
 {
     using Shouldly;
     using System;
+    using System.Collections.Generic;
     using System.Security;
 
     public static class Helper
@@ -34,7 +35,7 @@ namespace Remote.Linq.Tests
         public static bool Is<T>(this Type type) where T : struct
             => type == typeof(T)
             || type == typeof(T?)
-            || type == typeof(T[])
-            || type == typeof(T?[]);
+            || typeof(ICollection<T>).IsAssignableFrom(type)
+            || typeof(ICollection<T?>).IsAssignableFrom(type);
     }
 }
