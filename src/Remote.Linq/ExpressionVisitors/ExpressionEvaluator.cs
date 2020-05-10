@@ -3,7 +3,6 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;
@@ -38,7 +37,7 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 var type = expression.Type;
-                if (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                 {
                     return false;
                 }

@@ -7,7 +7,6 @@ namespace Remote.Linq.Expressions
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
-    using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]
     [DataContract]
@@ -36,12 +35,12 @@ namespace Remote.Linq.Expressions
         }
 
         public NewExpression(System.Reflection.ConstructorInfo constructor, IEnumerable<Expression> arguments = null, IEnumerable<System.Reflection.MemberInfo> members = null)
-            : this(new ConstructorInfo(constructor), arguments, members is null ? null : members.Select(x => MemberInfo.Create(x)))
+            : this(new ConstructorInfo(constructor), arguments, members?.Select(x => MemberInfo.Create(x)))
         {
         }
 
-        public NewExpression(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments = null, IEnumerable<System.Reflection.MemberInfo> members = null)
-            : this(new ConstructorInfo(name, declaringType, bindingFlags, genericArguments, parameterTypes), arguments)
+        public NewExpression(string name, Type declaringType, IEnumerable<Type> parameterTypes, IEnumerable<Expression> arguments = null, IEnumerable<System.Reflection.MemberInfo> members = null)
+            : this(new ConstructorInfo(name, declaringType, parameterTypes), arguments, members?.Select(x => MemberInfo.Create(x)))
         {
         }
 

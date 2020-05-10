@@ -3,7 +3,6 @@
 namespace Remote.Linq.Tests
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -30,7 +29,7 @@ namespace Remote.Linq.Tests
             .SelectMany(x => new[]
             {
                 x,
-                x.IsClass() ? x : typeof(Nullable<>).MakeGenericType(x),
+                x.IsClass ? x : typeof(Nullable<>).MakeGenericType(x),
             })
             .SelectMany(x => new[]
             {
@@ -107,8 +106,8 @@ namespace Remote.Linq.Tests
             .SelectMany(x => new Tuple<Type, object>[]
             {
                 Tuple.Create(x.GetType(), x),
-                Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
-                Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), default(object)),
+                Tuple.Create(x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
+                Tuple.Create(x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), default(object)),
             })
             .Distinct()
             .Select(x => new object[] { x.Item1, x.Item2 });

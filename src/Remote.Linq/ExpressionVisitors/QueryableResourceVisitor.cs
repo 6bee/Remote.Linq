@@ -4,7 +4,6 @@ namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
@@ -118,7 +117,7 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 var type = queryable.GetType();
-                if (type.IsGenericType() && typeof(EnumerableQuery<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+                if (type.IsGenericType && typeof(EnumerableQuery<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
                 {
                     return null;
                 }

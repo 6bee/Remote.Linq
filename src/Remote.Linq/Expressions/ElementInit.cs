@@ -7,7 +7,6 @@ namespace Remote.Linq.Expressions
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
-    using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]
     [DataContract]
@@ -28,9 +27,8 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        // TODO: replace binding flags by bool flags
-        public ElementInit(string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, Type returnType, IEnumerable<Expression> arguments)
-            : this(new MethodInfo(methodName, declaringType, bindingFlags, genericArguments, parameterTypes, returnType), arguments)
+        public ElementInit(string methodName, Type declaringType, Type[] genericArguments, Type[] parameterTypes, Type returnType, IEnumerable<Expression> arguments, bool? isStatic)
+            : this(new MethodInfo(methodName, declaringType, genericArguments, parameterTypes, returnType) { IsStatic = isStatic.NullIf(flag => !flag) }, arguments)
         {
         }
 
@@ -41,6 +39,6 @@ namespace Remote.Linq.Expressions
         public List<Expression> Arguments { get; set; }
 
         public override string ToString()
-            => string.Format("{0}({1})", AddMethod.Name, string.Join(", ", Arguments));
+            => $"{AddMethod?.Name}({string.Join(", ", Arguments ?? Enumerable.Empty<Expression>())})";
     }
 }

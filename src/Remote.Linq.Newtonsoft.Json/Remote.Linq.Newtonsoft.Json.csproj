@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.7.0-alpha-002" />
+    <PackageReference Include="aqua-core-newtonsoft-json" Version="4.7.0-alpha-003" />
   </ItemGroup>
 
 </Project>

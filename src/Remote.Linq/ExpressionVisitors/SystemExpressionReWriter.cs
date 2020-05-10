@@ -61,7 +61,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitMemberAccess(MemberExpression m)
             {
-                if (m.Member.DeclaringType.IsAnonymousType() || (m.Member.DeclaringType.IsGenericType() && m.Member.DeclaringType.GetGenericArguments().Any(x => x.IsAnonymousType())))
+                if (m.Member.DeclaringType.IsAnonymousType() || (m.Member.DeclaringType.IsGenericType && m.Member.DeclaringType.GetGenericArguments().Any(x => x.IsAnonymousType())))
                 {
                     var name = m.Member.Name;
                     var instance = Visit(m.Expression);
@@ -82,10 +82,10 @@ namespace Remote.Linq.ExpressionVisitors
                     }
                     else
                     {
-                        var member = instance.Type.GetMember(name, m.Member.GetMemberType(), (BindingFlags)0xfffffff);
+                        var member = instance.Type.GetMember(name, m.Member.MemberType, (BindingFlags)0xfffffff);
                         if (member.Count() != 1)
                         {
-                            throw new Exception($"Failed to bind {m.Member.GetMemberType().ToString().ToLower()} {name} of type {instance.Type}");
+                            throw new Exception($"Failed to bind {m.Member.MemberType.ToString().ToLower()} {name} of type {instance.Type}");
                         }
 
                         return Expression.MakeMemberAccess(instance, member.Single());
@@ -203,7 +203,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             private Type ReplaceAnonymousType(Type type)
             {
-                if (type.IsGenericType())
+                if (type.IsGenericType)
                 {
                     if (type.IsAnonymousType())
                     {
@@ -301,7 +301,7 @@ namespace Remote.Linq.ExpressionVisitors
                 if (body != lambda.Body)
                 {
                     var type = lambda.Type;
-                    if (type.IsGenericType())
+                    if (type.IsGenericType)
                     {
                         var genericTypeDefinition = type.GetGenericTypeDefinition();
                         if (genericTypeDefinition == typeof(Func<,>))

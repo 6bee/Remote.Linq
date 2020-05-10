@@ -4,7 +4,6 @@ namespace Remote.Linq
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using Aqua.Utils;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
@@ -206,7 +205,7 @@ namespace Remote.Linq
                     typeof(System.Numerics.BigInteger),
                     typeof(System.Numerics.Complex),
                 }
-                .SelectMany(x => x.IsValueType() ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
+                .SelectMany(x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
                 .ToDictionary(x => x, x => (object)null)
                 .ContainsKey;
 
@@ -266,7 +265,7 @@ namespace Remote.Linq
 
             private static bool IsUnmappedType(Type type)
             {
-                var t = type.IsGenericType() ? type.GetGenericTypeDefinition() : type;
+                var t = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
                 return _unmappedTypes.Any(x => x.IsAssignableFrom(t))
                     && !_excludeFromUnmappedTypes.Any(x => x.IsAssignableFrom(t));
             }

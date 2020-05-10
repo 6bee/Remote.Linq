@@ -7,7 +7,6 @@ namespace Remote.Linq.Expressions
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
-    using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]
     [DataContract]
@@ -21,7 +20,7 @@ namespace Remote.Linq.Expressions
         {
             Instance = insatnce;
             Method = methodInfo;
-            Arguments = arguments.ToList();
+            Arguments = arguments?.ToList();
         }
 
         public MethodCallExpression(Expression insatnce, System.Reflection.MethodInfo methodInfo, IEnumerable<Expression> arguments)
@@ -29,8 +28,8 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public MethodCallExpression(Expression insatnce, string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, Type returnType, IEnumerable<Expression> arguments)
-            : this(insatnce, new MethodInfo(methodName, declaringType, bindingFlags, genericArguments, parameterTypes, returnType), arguments)
+        public MethodCallExpression(Expression insatnce, string methodName, Type declaringType, Type[] genericArguments, Type[] parameterTypes, Type returnType, IEnumerable<Expression> arguments, bool? isStatic)
+            : this(insatnce, new MethodInfo(methodName, declaringType, genericArguments, parameterTypes, returnType) { IsStatic = isStatic.NullIf(flag => !flag) }, arguments)
         {
         }
 
@@ -46,14 +45,10 @@ namespace Remote.Linq.Expressions
         public List<Expression> Arguments { get; set; }
 
         public override string ToString()
-        {
-            var instance = Instance;
-            var arguments = Arguments;
-            return string.Format(
+            => string.Format(
                 "{0}.{1}({2})",
-                instance?.ToString() ?? Method?.DeclaringType?.ToString(),
+                (object)Instance ?? Method?.DeclaringType,
                 Method?.Name,
-                arguments is null ? null : string.Join(", ", arguments));
-        }
+                string.Join(", ", Arguments.AsEmptyIfNull()));
     }
 }
