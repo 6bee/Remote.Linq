@@ -130,10 +130,9 @@ namespace Remote.Linq.ExpressionVisitors
 
             private Expression Evaluate(Expression expression)
             {
-                switch (expression.NodeType)
+                if (expression.NodeType == ExpressionType.Constant)
                 {
-                    case ExpressionType.Constant:
-                        return expression;
+                    return expression;
                 }
 
                 var lambda = Expression.Lambda(expression);

@@ -98,7 +98,7 @@ namespace Remote.Linq.EntityFramework
         {
             try
             {
-                return await ExecuteCoreAsync(expression, cancellationToken);
+                return await ExecuteCoreAsync(expression, cancellationToken).ConfigureAwait(false);
             }
             catch (InvalidOperationException ex)
             {
@@ -178,7 +178,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <returns>Returns an instance of type <see cref="DbSet{T}"/>.</returns>
         [SecuritySafeCritical]
-        private static Func<Type, IQueryable> GetQueryableSetProvider(DbContext dbContext) => new QueryableSetProvider(dbContext).GetQueryableSetProvider;
+        private static Func<Type, IQueryable> GetQueryableSetProvider(DbContext dbContext) => new QueryableSetProvider(dbContext).GetQueryableSet;
 
         [SecuritySafeCritical]
         private sealed class QueryableSetProvider
@@ -192,7 +192,7 @@ namespace Remote.Linq.EntityFramework
             }
 
             [SecuritySafeCritical]
-            public IQueryable GetQueryableSetProvider(Type type)
+            public IQueryable GetQueryableSet(Type type)
             {
                 var method = DbContextSetMethod.MakeGenericMethod(type);
                 var set = method.Invoke(_dbContext, null);

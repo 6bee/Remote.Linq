@@ -99,7 +99,7 @@ namespace Remote.Linq.EntityFrameworkCore
         {
             try
             {
-                return await ExecuteCoreAsync(expression, cancellationToken);
+                return await ExecuteCoreAsync(expression, cancellationToken).ConfigureAwait(false);
             }
             catch (InvalidOperationException ex)
             {

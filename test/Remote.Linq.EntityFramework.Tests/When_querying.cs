@@ -107,7 +107,7 @@ namespace Remote.Linq.EntityFramework.Tests
                 new LookupItem { Key = "3", Value = "Three" },
             };
             var filteredPeoplesNames = data.Where(x => x.Value.StartsWith("O")).Select(x => x.Value);
-            var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value));
+            var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value)).ConfigureAwait(false);
             result.Value.ShouldBe("One");
         }
 
@@ -121,7 +121,7 @@ namespace Remote.Linq.EntityFramework.Tests
                 new LookupItem { Key = "3", Value = "Three" },
             };
             var filteredPeoplesNames = data.Where(x => x.Value.StartsWith("O")).Select(x => x.Value).AsQueryable();
-            var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value));
+            var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value)).ConfigureAwait(false);
             result.Value.ShouldBe("One");
         }
 
@@ -129,7 +129,7 @@ namespace Remote.Linq.EntityFramework.Tests
         private async Task Should_handle_closure_with_string_property()
         {
             var lookupitem = new LookupItem { Key = "1", Value = "One" };
-            var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem.Value);
+            var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem.Value).ConfigureAwait(false);
             result.Value.ShouldBe("One");
         }
 
@@ -137,7 +137,7 @@ namespace Remote.Linq.EntityFramework.Tests
         private async Task Should_handle_string_closure()
         {
             var lookupitem = "One";
-            var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem);
+            var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem).ConfigureAwait(false);
             result.Value.ShouldBe("One");
         }
     }
