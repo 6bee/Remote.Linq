@@ -122,7 +122,7 @@ namespace Remote.Linq.EntityFramework
                     return Array.CreateInstance(expression.Type, 2);
                 }
 
-                throw ex;
+                throw;
             }
         }
 

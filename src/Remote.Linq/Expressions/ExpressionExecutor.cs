@@ -126,7 +126,7 @@ namespace Remote.Linq.Expressions
                     return Array.CreateInstance(expression.Type, 2);
                 }
 
-                throw ex;
+                throw;
             }
         }
 
