@@ -19,9 +19,9 @@ Building a LINQ interface for custom services is made a breeze by using Remote L
 
 
 ### Features
-* Translate LINQ expressions into serializable expression trees (remote LINQ expression) and vice versa. 
-* Build remote single-type query services (paging, sorting, filtering)
-* Build remote complex LINQ query services (arbitrary LINQ query including joins, groupings, aggregations, projections, etc.)
+*   Translate LINQ expressions into serializable expression trees (remote LINQ expression) and vice versa. 
+*   Build remote single-type query services (paging, sorting, filtering)
+*   Build remote complex LINQ query services (arbitrary LINQ query including joins, groupings, aggregations, projections, etc.)
 
 ### Scope
 In contrast to [re-linq](https://github.com/re-motion/Relinq), this project enables serialization and deserialization of expression trees and applying LINQ expressions to other LINQ providers e.g. linq-to-object, linq-to-entity, etc. 
@@ -114,9 +114,9 @@ public class QueryService : IQueryService, IDisposable
 Remote linq extensions for entity framework and entity framework core. 
 
 Use this package when using features specific to EF6 and EF Core:
-- Apply eager-loading (`Include`-expressions)
-- Make use of DB functions 
-  e.g. `queryable.Where(x => Microsoft.EntityFrameworkCore.EF.Functions.Like(x.Name, "%fruit%"))`
+*   Apply eager-loading (`Include`-expressions)
+*   Make use of DB functions 
+    e.g. `queryable.Where(x => Microsoft.EntityFrameworkCore.EF.Functions.Like(x.Name, "%fruit%"))`
 
 ### Sample
 
