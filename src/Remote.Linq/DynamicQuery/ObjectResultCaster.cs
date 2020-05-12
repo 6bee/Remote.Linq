@@ -7,10 +7,11 @@ namespace Remote.Linq.DynamicQuery
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
-    internal sealed class ObjectResultCaster : IQueryResultMapper<object?>
+#nullable disable
+    internal sealed class ObjectResultCaster : IQueryResultMapper<object>
     {
         [return: MaybeNull]
-        public TResult MapResult<TResult>(object? source, Expression expression)
+        public TResult MapResult<TResult>(object source, Expression expression)
         {
             if (source.IsCollection(out var enumerable))
             {
@@ -24,4 +25,5 @@ namespace Remote.Linq.DynamicQuery
             return (TResult)source;
         }
     }
+#nullable restore
 }

@@ -44,6 +44,7 @@ namespace Remote.Linq.DynamicQuery
             return new RemoteQueryable(elementType, this, expression);
         }
 
+#nullable disable
         [return: MaybeNull]
         public TResult Execute<TResult>(Expression expression)
         {
@@ -81,9 +82,6 @@ namespace Remote.Linq.DynamicQuery
             return result;
         }
 
-        public object Execute(Expression expression)
-            => this.InvokeAndUnwrap<object>(_executeMethod, expression);
-
         public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
@@ -94,5 +92,9 @@ namespace Remote.Linq.DynamicQuery
 
             return result;
         }
+#nullable restore
+
+        public object? Execute(Expression expression)
+            => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
     }
 }
