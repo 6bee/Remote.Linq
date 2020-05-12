@@ -36,5 +36,5 @@ before_script:
   - dotnet --info
 
 script: 
-  - dotnet test ./test/Remote.Linq.Tests/Remote.Linq.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
+  - travis_wait 20 dotnet test ./test/Remote.Linq.Tests/Remote.Linq.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
   - dotnet test ./test/Remote.Linq.EntityFrameworkCore.Tests/Remote.Linq.EntityFrameworkCore.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
