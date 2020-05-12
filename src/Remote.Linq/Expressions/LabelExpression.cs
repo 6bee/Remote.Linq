@@ -13,21 +13,20 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public LabelExpression(LabelTarget target, Expression defaultValue)
+        public LabelExpression(LabelTarget target, Expression? defaultValue)
         {
-            Target = target;
+            Target = target ?? throw new ArgumentNullException(nameof(target));
             DefaultValue = defaultValue;
         }
 
         public override ExpressionType NodeType => ExpressionType.Label;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public LabelTarget Target { get; set; }
+        public LabelTarget Target { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public Expression DefaultValue { get; set; }
+        public Expression? DefaultValue { get; set; }
 
-        public override string ToString()
-            => $".Label {Target} {DefaultValue}";
+        public override string ToString() => $".Label {Target} {DefaultValue}";
     }
 }

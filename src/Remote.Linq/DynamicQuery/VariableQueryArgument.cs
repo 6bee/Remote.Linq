@@ -21,7 +21,7 @@ namespace Remote.Linq.DynamicQuery
         {
         }
 
-        public VariableQueryArgument(object value, Type type = null)
+        public VariableQueryArgument(object? value, Type? type = null)
         {
             if (type is null)
             {
@@ -40,7 +40,7 @@ namespace Remote.Linq.DynamicQuery
             Value = value;
         }
 
-        public VariableQueryArgument(object value, TypeInfo type = null)
+        public VariableQueryArgument(object? value, TypeInfo? type = null)
         {
             if (type is null)
             {
@@ -55,16 +55,16 @@ namespace Remote.Linq.DynamicQuery
         }
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo Type { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = true)]
-        public object Value { get; set; }
+        public object? Value { get; set; }
 
         public override string ToString()
             => string.Format(
                 "{0}({2}{1}{2})",
                 GetType().Name,
                 Value ?? "null",
-                Value is string || Value is char ? "'" : null);
+                Value is string ? @"""" : Value is char ? "'" : null);
     }
 }

@@ -17,11 +17,11 @@ namespace Remote.Linq.Expressions
         public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand)
         {
             BinaryOperator = binaryOperator;
-            LeftOperand = leftOperand;
-            RightOperand = rightOperand;
+            LeftOperand = leftOperand ?? throw new ArgumentNullException(nameof(leftOperand));
+            RightOperand = rightOperand ?? throw new ArgumentNullException(nameof(rightOperand));
         }
 
-        public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, MethodInfo method, LambdaExpression conversion = null)
+        public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, MethodInfo? method, LambdaExpression? conversion = null)
             : this(binaryOperator, leftOperand, rightOperand)
         {
             IsLiftedToNull = liftToNull;
@@ -29,7 +29,7 @@ namespace Remote.Linq.Expressions
             Conversion = conversion;
         }
 
-        public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, System.Reflection.MethodInfo method, LambdaExpression conversion = null)
+        public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, System.Reflection.MethodInfo? method, LambdaExpression? conversion = null)
             : this(binaryOperator, leftOperand, rightOperand, liftToNull, method is null ? null : new MethodInfo(method), conversion)
         {
         }
@@ -40,19 +40,19 @@ namespace Remote.Linq.Expressions
         public BinaryOperator BinaryOperator { get; set; }
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public Expression LeftOperand { get; set; }
+        public Expression LeftOperand { get; set; } = null!;
 
         [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
-        public Expression RightOperand { get; set; }
+        public Expression RightOperand { get; set; } = null!;
 
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public bool IsLiftedToNull { get; set; }
 
         [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
-        public MethodInfo Method { get; set; }
+        public MethodInfo? Method { get; set; }
 
         [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
-        public LambdaExpression Conversion { get; set; }
+        public LambdaExpression? Conversion { get; set; }
 
         public override string ToString()
             => $"({LeftOperand} {BinaryOperator} {RightOperand})";

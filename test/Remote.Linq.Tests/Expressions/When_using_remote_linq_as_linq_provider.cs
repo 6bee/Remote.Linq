@@ -17,7 +17,7 @@ namespace Remote.Linq.Tests.Expressions
 
         private IQueryable<TestModel> Items => new[] { new TestModel() }.AsQueryable();
 
-        private IQueryable<TestModel> RemoteItems => RemoteQueryable.Factory.CreateQueryable<TestModel>(exp => exp.Execute(t => Items)); // .Where(x => x != null);
+        private IQueryable<TestModel> RemoteItems => RemoteQueryable.Factory.CreateQueryable<TestModel>(exp => exp.Execute(t => Items));
 
         [Fact]
         public void Should_execute_with_normal_enumeration()

@@ -24,7 +24,7 @@ namespace Remote.Linq
         /// <summary>
         /// Initializes a new instance of the <see cref="Query"/> class.
         /// </summary>
-        public Query(Type type, IEnumerable<LambdaExpression> filterExpressions = null, IEnumerable<SortExpression> sortExpressions = null, int? skip = null, int? take = null)
+        public Query(Type type, IEnumerable<LambdaExpression>? filterExpressions = null, IEnumerable<SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
             : this(new TypeInfo(type, false, false), filterExpressions, sortExpressions, skip, take)
         {
         }
@@ -32,29 +32,29 @@ namespace Remote.Linq
         /// <summary>
         /// Initializes a new instance of the <see cref="Query"/> class.
         /// </summary>
-        public Query(TypeInfo typeInfo, IEnumerable<LambdaExpression> filterExpressions = null, IEnumerable<SortExpression> sortExpressions = null, int? skip = null, int? take = null)
+        public Query(TypeInfo typeInfo, IEnumerable<LambdaExpression>? filterExpressions = null, IEnumerable<SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
         {
-            Type = typeInfo;
-            FilterExpressions = (filterExpressions ?? Enumerable.Empty<LambdaExpression>()).ToList();
-            SortExpressions = (sortExpressions ?? Enumerable.Empty<SortExpression>()).ToList();
+            Type = typeInfo ?? throw new ArgumentNullException(nameof(typeInfo));
+            FilterExpressions = filterExpressions?.ToList();
+            SortExpressions = sortExpressions?.ToList();
             SkipValue = skip;
             TakeValue = take;
         }
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo Type { get; set; } = null!;
 
-        public bool HasFilters => FilterExpressions.Count > 0;
+        public bool HasFilters => FilterExpressions?.Count > 0;
 
-        public bool HasSorting => SortExpressions.Count > 0;
+        public bool HasSorting => SortExpressions?.Count > 0;
 
         public bool HasPaging => TakeValue.HasValue;
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public List<LambdaExpression> FilterExpressions { get; set; }
+        public List<LambdaExpression>? FilterExpressions { get; set; }
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public List<SortExpression> SortExpressions { get; set; }
+        public List<SortExpression>? SortExpressions { get; set; }
 
         [DataMember(Name = "Skip", Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public int? SkipValue { get; set; }
@@ -193,7 +193,11 @@ namespace Remote.Linq
         public override string ToString()
         {
             var queryParameters = QueryParametersToString();
-            return string.Format("Query {0}{1}{2}", Type, string.IsNullOrEmpty(queryParameters) ? null : ": ", queryParameters);
+            return string.Format(
+                "Query {0}{1}{2}",
+                Type,
+                string.IsNullOrEmpty(queryParameters) ? null : ": ",
+                queryParameters);
         }
 
         protected string QueryParametersToString()

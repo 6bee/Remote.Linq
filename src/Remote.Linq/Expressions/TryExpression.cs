@@ -5,6 +5,7 @@ namespace Remote.Linq.Expressions
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.Serialization;
 
     [Serializable]
@@ -15,16 +16,16 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public TryExpression(Type type, Expression body, Expression fault, Expression @finally, List<CatchBlock> handlers)
+        public TryExpression(Type? type, Expression body, Expression? fault, Expression? @finally, List<CatchBlock>? handlers)
             : this(type is null ? null : new TypeInfo(type, false, false), body, fault, @finally, handlers)
         {
         }
 
-        public TryExpression(TypeInfo type, Expression body, Expression fault, Expression @finally, List<CatchBlock> handlers)
+        public TryExpression(TypeInfo? type, Expression body, Expression? fault, Expression? @finally, IEnumerable<CatchBlock>? handlers)
         {
             Type = type;
-            Body = body;
-            Handlers = handlers;
+            Body = body ?? throw new ArgumentNullException(nameof(body));
+            Handlers = handlers?.ToList();
             Finally = @finally;
             Fault = fault;
         }
@@ -32,24 +33,24 @@ namespace Remote.Linq.Expressions
         public override ExpressionType NodeType => ExpressionType.Try;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public Expression Body { get; set; }
+        public Expression Body { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public List<CatchBlock> Handlers { get; set; }
+        public List<CatchBlock>? Handlers { get; set; }
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public Expression Finally { get; set; }
+        public Expression? Finally { get; set; }
 
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
-        public Expression Fault { get; set; }
+        public Expression? Fault { get; set; }
 
         [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo? Type { get; set; }
 
         public override string ToString()
             => $"try({Type}) {{{Body}}}" +
-                (Handlers is null ? string.Empty : " " + string.Join("; ", Handlers)) +
-                (Finally is null ? string.Empty : $" finally{{{Finally}}}") +
-                (Fault is null ? string.Empty : $" faulted{{{Fault}}}");
+                (Handlers is null ? null : " " + string.Join("; ", Handlers)) +
+                (Finally is null ? null : $" finally{{{Finally}}}") +
+                (Fault is null ? null : $" faulted{{{Fault}}}");
     }
 }

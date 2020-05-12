@@ -14,30 +14,30 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public CatchBlock(Type test, ParameterExpression parameter, Expression body, Expression filter)
-            : this(test is null ? null : new TypeInfo(test, false, false), parameter, body, filter)
+        public CatchBlock(Type test, ParameterExpression? parameter, Expression body, Expression? filter)
+            : this(new TypeInfo(test ?? throw new ArgumentNullException(nameof(test)), false, false), parameter, body, filter)
         {
         }
 
-        public CatchBlock(TypeInfo test, ParameterExpression parameter, Expression body, Expression filter)
+        public CatchBlock(TypeInfo test, ParameterExpression? parameter, Expression body, Expression? filter)
         {
-            Test = test;
+            Test = test ?? throw new ArgumentNullException(nameof(test));
             Variable = parameter;
             Filter = filter;
-            Body = body;
+            Body = body ?? throw new ArgumentNullException(nameof(body));
         }
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public ParameterExpression Variable { get; set; }
+        public ParameterExpression? Variable { get; set; }
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public Expression Filter { get; set; }
+        public Expression? Filter { get; set; }
 
         [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
-        public Expression Body { get; set; }
+        public Expression Body { get; set; } = null!;
 
         [DataMember(Order = 4, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Test { get; set; }
+        public TypeInfo Test { get; set; } = null!;
 
         public override string ToString()
         {

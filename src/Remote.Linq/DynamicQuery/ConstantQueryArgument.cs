@@ -22,18 +22,18 @@ namespace Remote.Linq.DynamicQuery
         {
         }
 
-        public ConstantQueryArgument(Type type)
+        public ConstantQueryArgument(Type? type)
             : base(type)
         {
         }
 
-        public ConstantQueryArgument(TypeInfo type)
+        public ConstantQueryArgument(TypeInfo? type)
             : base(type)
         {
         }
 
         internal ConstantQueryArgument(ConstantQueryArgument constantQueryArgument)
-            : base(constantQueryArgument, true)
+            : base(constantQueryArgument ?? throw new ArgumentNullException(nameof(constantQueryArgument)), true)
         {
         }
     }

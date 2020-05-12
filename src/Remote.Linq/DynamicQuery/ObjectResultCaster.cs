@@ -2,17 +2,19 @@
 
 namespace Remote.Linq.DynamicQuery
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
-    using System.Collections;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
-    internal sealed class ObjectResultCaster : IQueryResultMapper<object>
+    internal sealed class ObjectResultCaster : IQueryResultMapper<object?>
     {
-        public TResult MapResult<TResult>(object source, Expression expression)
+        [return: MaybeNull]
+        public TResult MapResult<TResult>(object? source, Expression expression)
         {
-            if (source is IEnumerable enumerable)
+            if (source.IsCollection(out var enumerable))
             {
-                var elementType = TypeHelper.GetElementType(enumerable.GetType());
+                var elementType = TypeHelper.GetElementType(enumerable.GetType()) ?? throw new RemoteLinqException($"Failed to get element type of {enumerable.GetType()}.");
                 if (typeof(TResult).IsAssignableFrom(elementType) && expression is MethodCallExpression methodCallExpression)
                 {
                     return DynamicResultMapper.MapToSingleResult<TResult>(elementType, enumerable, methodCallExpression);

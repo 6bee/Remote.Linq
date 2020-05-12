@@ -10,13 +10,13 @@ namespace Remote.Linq.ExpressionVisitors
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class RemoteExpressionReWriter
     {
-        public static T ReplaceResourceDescriptorsByQueryable<T>(this T expression, ITypeResolver typeResolver = null, Func<Type, System.Linq.IQueryable> provider = null) where T : Expression
+        public static T ReplaceResourceDescriptorsByQueryable<T>(this T expression, Func<Type, System.Linq.IQueryable> provider, ITypeResolver? typeResolver = null) where T : Expression
             => new QueryableResourceVisitor().ReplaceResourceDescriptorsByQueryable(expression, provider, typeResolver);
 
         public static T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(this T expression) where T : Expression
             => new VariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
 
-        public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeInfoProvider typeInfoProvider = null)
+        public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeInfoProvider? typeInfoProvider = null)
             => new QueryableResourceVisitor().ReplaceQueryablesByResourceDescriptors(expression, typeInfoProvider);
 
         public static T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(this T expression) where T : Expression

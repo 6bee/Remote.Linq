@@ -5,6 +5,7 @@ namespace Remote.Linq.TestSupport
     using Remote.Linq.DynamicQuery;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -14,9 +15,12 @@ namespace Remote.Linq.TestSupport
         /// !!! For unit testing only !!! <br />
         /// Creates an <see cref="IAsyncRemoteQueryable{T}"/> type wrapping test data.
         /// </summary>
-        public static IAsyncRemoteQueryable<T> AsRemoteQueryable<T>(this IEnumerable<T> source)
-            => source is IAsyncRemoteQueryable<T> remoteQueryable
-                ? remoteQueryable
-                : new AsyncRemoteQueryable<T>(new TaskAsyncQueryProvider(), source.AsQueryable().Expression);
+        [return: NotNullIfNotNull("source")]
+        public static IAsyncRemoteQueryable<T>? AsRemoteQueryable<T>(this IEnumerable<T>? source)
+            => source is null
+                ? null
+                : source is IAsyncRemoteQueryable<T> remoteQueryable
+                    ? remoteQueryable
+                    : new AsyncRemoteQueryable<T>(new TaskAsyncQueryProvider(), source.AsQueryable().Expression);
     }
 }

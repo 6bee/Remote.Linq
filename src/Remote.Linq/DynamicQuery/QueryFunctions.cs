@@ -8,7 +8,6 @@ namespace Remote.Linq.DynamicQuery
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class QueryFunctions
     {
-        public static IQueryable<T> Include<T>(IQueryable<T> queryable, string path)
-            => queryable;
+        public static IQueryable<T> Include<T>(IQueryable<T> queryable, string path) => queryable;
     }
 }

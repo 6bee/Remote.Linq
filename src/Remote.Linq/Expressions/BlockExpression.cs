@@ -16,35 +16,29 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public BlockExpression(Type type, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> expressions)
+        public BlockExpression(Type? type, IEnumerable<ParameterExpression>? variables, IEnumerable<Expression>? expressions)
             : this(type is null ? null : new TypeInfo(type, false, false), variables, expressions)
         {
         }
 
-        public BlockExpression(TypeInfo type, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> expressions)
+        public BlockExpression(TypeInfo? type, IEnumerable<ParameterExpression>? variables, IEnumerable<Expression>? expressions)
         {
             Type = type;
-            Variables = variables?.Any() ?? false ? variables.ToList() : null;
-            Expressions = expressions?.Any() ?? false ? expressions.ToList() : null;
+            Variables = variables.AsNullIfEmpty()?.ToList();
+            Expressions = expressions.AsNullIfEmpty()?.ToList();
         }
 
         public override ExpressionType NodeType => ExpressionType.Block;
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo? Type { get; set; }
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public List<ParameterExpression> Variables { get; set; }
+        public List<ParameterExpression>? Variables { get; set; }
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public List<Expression> Expressions { get; set; }
+        public List<Expression>? Expressions { get; set; }
 
-        public override string ToString()
-        {
-            var expressions = Expressions;
-            return string.Format(
-                ".Block {{0}}",
-                expressions is null ? null : string.Join("; ", expressions));
-        }
+        public override string ToString() => $".Block {{{Expressions.StringJoin("; ")}}}";
     }
 }

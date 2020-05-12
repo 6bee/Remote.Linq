@@ -14,15 +14,15 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public GotoExpression(GotoExpressionKind kind, LabelTarget target, Type type, Expression value)
+        public GotoExpression(GotoExpressionKind kind, LabelTarget target, Type? type, Expression? value)
             : this(kind, target, type is null ? null : new TypeInfo(type, false, false), value)
         {
         }
 
-        public GotoExpression(GotoExpressionKind kind, LabelTarget target, TypeInfo type, Expression value)
+        public GotoExpression(GotoExpressionKind kind, LabelTarget target, TypeInfo? type, Expression? value)
         {
             Kind = kind;
-            Target = target;
+            Target = target ?? throw new ArgumentNullException(nameof(target));
             Type = type;
             Value = value;
         }
@@ -33,15 +33,14 @@ namespace Remote.Linq.Expressions
         public GotoExpressionKind Kind { get; set; }
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public LabelTarget Target { get; set; }
+        public LabelTarget Target { get; set; } = null!;
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo? Type { get; set; }
 
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
-        public Expression Value { get; set; }
+        public Expression? Value { get; set; }
 
-        public override string ToString()
-            => $".Goto {Kind} {Target} {Value}";
+        public override string ToString() => $".Goto {Kind} {Target} {Value}";
     }
 }

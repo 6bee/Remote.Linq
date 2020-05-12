@@ -22,7 +22,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public new IEnumerable<DynamicObject> Execute(Expression expression)
+        public new IEnumerable<DynamicObject?>? Execute(Expression expression)
             => base.Execute(expression);
     }
 }

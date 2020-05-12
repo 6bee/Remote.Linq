@@ -11,20 +11,22 @@ namespace Remote.Linq
 
     internal static class MethodInfos
     {
-        private class ProbingType
+        private sealed class ProbingType
         {
             private ProbingType()
             {
             }
         }
 
-        private static MethodInfo GetStaticMethod(Type declaringType, string name, BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public)
+        private const BindingFlags PublicStatic = BindingFlags.Public | BindingFlags.Static;
+
+        private static MethodInfo GetStaticMethod(Type declaringType, string name, BindingFlags bindingFlags = PublicStatic)
             => GetStaticMethod(declaringType, name, x => true, bindingFlags);
 
-        private static MethodInfo GetStaticMethod(Type declaringType, string name, int parameterCount, BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public)
+        private static MethodInfo GetStaticMethod(Type declaringType, string name, int parameterCount, BindingFlags bindingFlags = PublicStatic)
             => GetStaticMethod(declaringType, name, x => x.GetParameters().Length == parameterCount, bindingFlags);
 
-        private static MethodInfo GetStaticMethod(Type declaringType, string name, Func<MethodInfo, bool> filter, BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public)
+        private static MethodInfo GetStaticMethod(Type declaringType, string name, Func<MethodInfo, bool> filter, BindingFlags bindingFlags = PublicStatic)
             => declaringType
                 .GetMethods(bindingFlags)
                 .Single(x => string.Equals(x.Name, name, StringComparison.Ordinal) && filter(x));

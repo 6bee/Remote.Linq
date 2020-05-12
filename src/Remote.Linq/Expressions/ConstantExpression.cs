@@ -20,7 +20,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public ConstantExpression(object value, Type type = null)
+        public ConstantExpression(object? value, Type? type = null)
         {
             if (type is null)
             {
@@ -38,19 +38,19 @@ namespace Remote.Linq.Expressions
             Value = value;
         }
 
-        public ConstantExpression(object value, TypeInfo type)
+        public ConstantExpression(object? value, TypeInfo type)
         {
-            Type = type;
+            Type = type ?? throw new ArgumentNullException(nameof(type));
             Value = value;
         }
 
         public override ExpressionType NodeType => ExpressionType.Constant;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo Type { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = true)]
-        public object Value { get; set; }
+        public object? Value { get; set; }
 
         public override string ToString()
             => string.Format("{1}{0}{1}", Value ?? "null", Value is string ? "\"" : Value is char ? "'" : null);

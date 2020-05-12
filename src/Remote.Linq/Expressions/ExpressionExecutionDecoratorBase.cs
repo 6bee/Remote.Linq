@@ -5,6 +5,7 @@ namespace Remote.Linq.Expressions
     using Aqua.Dynamic;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public abstract class ExpressionExecutionDecoratorBase : IExpressionExecutionDecorator
     {
@@ -25,7 +26,7 @@ namespace Remote.Linq.Expressions
             _parent = parent ?? throw new ArgumentNullException(nameof(parent));
         }
 
-        protected IEnumerable<DynamicObject> Execute(Expression expression)
+        protected IEnumerable<DynamicObject?>? Execute(Expression expression)
         {
             var preparedRemoteExpression = Prepare(expression);
             var linqExpression = Transform(preparedRemoteExpression);
@@ -46,16 +47,19 @@ namespace Remote.Linq.Expressions
         protected virtual System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression)
             => _parent.Prepare(expression);
 
-        protected virtual object Execute(System.Linq.Expressions.Expression expression)
+        protected virtual object? Execute(System.Linq.Expressions.Expression expression)
             => _parent.Execute(expression);
 
-        protected virtual object ProcessResult(object queryResult)
+        [return: NotNullIfNotNull("queryResult")]
+        protected virtual object? ProcessResult(object? queryResult)
             => _parent.ProcessResult(queryResult);
 
-        protected virtual IEnumerable<DynamicObject> ConvertResult(object queryResult)
+        [return: NotNullIfNotNull("queryResult")]
+        protected virtual IEnumerable<DynamicObject?>? ConvertResult(object? queryResult)
             => _parent.ConvertResult(queryResult);
 
-        protected virtual IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult)
+        [return: NotNullIfNotNull("queryResult")]
+        protected virtual IEnumerable<DynamicObject?>? ProcessResult(IEnumerable<DynamicObject?>? queryResult)
             => _parent.ProcessResult(queryResult);
 
         Expression IExpressionExecutionDecorator.Prepare(Expression expression)
@@ -67,16 +71,19 @@ namespace Remote.Linq.Expressions
         System.Linq.Expressions.Expression IExpressionExecutionDecorator.Prepare(System.Linq.Expressions.Expression expression)
             => Prepare(expression);
 
-        object IExpressionExecutionDecorator.Execute(System.Linq.Expressions.Expression expression)
+        object? IExpressionExecutionDecorator.Execute(System.Linq.Expressions.Expression expression)
             => Execute(expression);
 
-        object IExpressionExecutionDecorator.ProcessResult(object queryResult)
+        [return: NotNullIfNotNull("queryResult")]
+        object? IExpressionExecutionDecorator.ProcessResult(object? queryResult)
             => ProcessResult(queryResult);
 
-        IEnumerable<DynamicObject> IExpressionExecutionDecorator.ConvertResult(object queryResult)
+        [return: NotNullIfNotNull("queryResult")]
+        IEnumerable<DynamicObject?>? IExpressionExecutionDecorator.ConvertResult(object? queryResult)
             => ConvertResult(queryResult);
 
-        IEnumerable<DynamicObject> IExpressionExecutionDecorator.ProcessResult(IEnumerable<DynamicObject> queryResult)
+        [return: NotNullIfNotNull("queryResult")]
+        IEnumerable<DynamicObject?>? IExpressionExecutionDecorator.ProcessResult(IEnumerable<DynamicObject?>? queryResult)
             => ProcessResult(queryResult);
     }
 }

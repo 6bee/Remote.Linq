@@ -17,19 +17,18 @@ namespace Remote.Linq.Expressions
 
         public MemberInitExpression(NewExpression newExpression, IEnumerable<MemberBinding> bindings)
         {
-            NewExpression = newExpression;
-            Bindings = bindings.ToList();
+            NewExpression = newExpression ?? throw new ArgumentNullException(nameof(newExpression));
+            Bindings = bindings?.ToList() ?? throw new ArgumentNullException(nameof(bindings));
         }
 
         public override ExpressionType NodeType => ExpressionType.MemberInit;
 
-        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public NewExpression NewExpression { get; set; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public NewExpression NewExpression { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public List<MemberBinding> Bindings { get; set; }
+        public List<MemberBinding> Bindings { get; set; } = null!;
 
-        public override string ToString()
-            => $"{NewExpression} {string.Join(", ", Bindings)}";
+        public override string ToString() => $"{NewExpression} {Bindings.StringJoin(", ")}";
     }
 }

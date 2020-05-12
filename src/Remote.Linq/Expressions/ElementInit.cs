@@ -18,8 +18,8 @@ namespace Remote.Linq.Expressions
 
         public ElementInit(MethodInfo addMethod, IEnumerable<Expression> arguments)
         {
-            AddMethod = addMethod;
-            Arguments = arguments.ToList();
+            AddMethod = addMethod ?? throw new ArgumentNullException(nameof(addMethod));
+            Arguments = arguments?.ToList() ?? throw new ArgumentNullException(nameof(arguments));
         }
 
         public ElementInit(System.Reflection.MethodInfo addMethod, IEnumerable<Expression> arguments)
@@ -27,16 +27,16 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public ElementInit(string methodName, Type declaringType, Type[] genericArguments, Type[] parameterTypes, Type returnType, IEnumerable<Expression> arguments, bool? isStatic)
-            : this(new MethodInfo(methodName, declaringType, genericArguments, parameterTypes, returnType) { IsStatic = isStatic.NullIf(flag => !flag) }, arguments)
+        public ElementInit(string methodName, Type declaringType, Type[] genericArguments, Type[] parameterTypes, Type returnType, IEnumerable<Expression> arguments)
+            : this(new MethodInfo(methodName, declaringType, genericArguments, parameterTypes, returnType), arguments)
         {
         }
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public MethodInfo AddMethod { get; set; }
+        public MethodInfo AddMethod { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public List<Expression> Arguments { get; set; }
+        public List<Expression> Arguments { get; set; } = null!;
 
         public override string ToString()
             => $"{AddMethod?.Name}({string.Join(", ", Arguments ?? Enumerable.Empty<Expression>())})";

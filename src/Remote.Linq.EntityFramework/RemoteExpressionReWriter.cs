@@ -2,8 +2,10 @@
 
 namespace Remote.Linq.EntityFramework
 {
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
+    using System;
     using System.ComponentModel;
     using System.Linq;
 
@@ -11,18 +13,15 @@ namespace Remote.Linq.EntityFramework
     internal static class RemoteExpressionReWriter
     {
         private static readonly System.Reflection.MethodInfo QueryableIncludeMethod = typeof(System.Data.Entity.QueryableExtensions)
-                .GetMethods()
-                .Where(x => x.Name == "Include")
-                .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
-                .Single();
+            .GetMethods()
+            .Where(x => x.Name == "Include")
+            .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
+            .Single();
 
         /// <summary>
         /// Replaces resource descriptors by queryable and replaces include method call with entity framework's include methods.
         /// </summary>
-        internal static Expression ReplaceIncludeMethodCall(this Expression expression)
-        {
-            return new ElementReplacer().Run(expression);
-        }
+        internal static Expression ReplaceIncludeMethodCall(this Expression expression) => new ElementReplacer().Run(expression);
 
         private sealed class ElementReplacer : RemoteExpressionVisitorBase
         {
@@ -30,19 +29,15 @@ namespace Remote.Linq.EntityFramework
             {
             }
 
-            internal Expression Run(Expression expression)
-            {
-                var result = Visit(expression);
-                return result;
-            }
+            internal Expression Run(Expression expression) => Visit(expression);
 
             protected override Expression VisitMethodCall(MethodCallExpression expression)
             {
                 if (expression.Instance is null &&
-                    expression.Method.Name == "Include" &&
-                    expression.Method.DeclaringType.Type == typeof(Remote.Linq.DynamicQuery.QueryFunctions) &&
-                    expression.Method.GenericArgumentTypes.Count == 1 &&
-                    expression.Arguments.Count == 2)
+                    string.Equals(expression.Method?.Name, "Include", StringComparison.Ordinal) &&
+                    expression.Method?.DeclaringType?.Type == typeof(QueryFunctions) &&
+                    expression.Method?.GenericArgumentTypes?.Count == 1 &&
+                    expression.Arguments?.Count == 2)
                 {
                     var elementType = expression.Method.GenericArgumentTypes.Single().Type;
 

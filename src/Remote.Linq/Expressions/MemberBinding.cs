@@ -14,14 +14,18 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(MemberMemberBinding)), XmlInclude(typeof(MemberMemberBinding))]
     public abstract class MemberBinding
     {
+        protected MemberBinding()
+        {
+        }
+
         protected MemberBinding(MemberInfo member)
         {
-            Member = member;
+            Member = member ?? throw new ArgumentNullException(nameof(member));
         }
 
         public abstract MemberBindingType BindingType { get; }
 
-        [DataMember(Order = 1)]
-        public MemberInfo Member { get; set; }
+        [DataMember(Order = 1, IsRequired = true)]
+        public MemberInfo Member { get; set; } = null!;
     }
 }

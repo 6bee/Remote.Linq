@@ -5,6 +5,7 @@ namespace Remote.Linq.EntityFramework
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -21,7 +22,8 @@ namespace Remote.Linq.EntityFramework
         {
             internal Expression Run(Expression expression) => Visit(expression);
 
-            protected override Expression Visit(Expression expression)
+            [return: NotNullIfNotNull("expression")]
+            protected override Expression? Visit(Expression? expression)
             {
                 if (expression?.NodeType == ExpressionType.New)
                 {
@@ -36,8 +38,8 @@ namespace Remote.Linq.EntityFramework
                 var type = node.Type;
                 if (type.IsGenericType &&
                     type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>) &&
-                    node.Constructor.GetParameters().Length == 1 &&
-                    node.Arguments.Count == 1)
+                    node.Constructor?.GetParameters().Length == 1 &&
+                    node.Arguments?.Count == 1)
                 {
                     var argument = node.Arguments.Single();
                     return Expression.MemberInit(
@@ -46,8 +48,8 @@ namespace Remote.Linq.EntityFramework
                 }
 
                 if (type == typeof(VariableQueryArgument) &&
-                    node.Constructor.GetParameters().Length == 2 &&
-                    node.Arguments.Any())
+                    node.Constructor?.GetParameters().Length == 2 &&
+                    node.Arguments?.Any() == true)
                 {
                     var valueArgument = node.Arguments.First();
 

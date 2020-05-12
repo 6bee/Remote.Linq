@@ -21,10 +21,10 @@ namespace Remote.Linq.DynamicQuery
 
         public QueryableResourceDescriptor(TypeInfo type)
         {
-            Type = type;
+            Type = type ?? throw new ArgumentNullException(nameof(type));
         }
 
         [DataMember(Name = "Type", Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo Type { get; set; } = null!;
     }
 }

@@ -13,7 +13,7 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public LoopExpression(Expression body, LabelTarget breakLabel, LabelTarget continueLabel)
+        public LoopExpression(Expression? body, LabelTarget? breakLabel, LabelTarget? continueLabel)
         {
             Body = body;
             BreakLabel = breakLabel;
@@ -23,15 +23,14 @@ namespace Remote.Linq.Expressions
         public override ExpressionType NodeType => ExpressionType.Loop;
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public Expression Body { get; set; }
+        public Expression? Body { get; set; }
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public LabelTarget BreakLabel { get; set; }
+        public LabelTarget? BreakLabel { get; set; }
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public LabelTarget ContinueLabel { get; set; }
+        public LabelTarget? ContinueLabel { get; set; }
 
-        public override string ToString()
-            => $"loop(body:{Body}, break:{BreakLabel}, continue:{ContinueLabel})";
+        public override string ToString() => $"loop(body:{Body}, break:{BreakLabel}, continue:{ContinueLabel})";
     }
 }

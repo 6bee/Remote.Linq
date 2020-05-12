@@ -13,9 +13,9 @@ namespace Remote.Linq
 
         bool HasPaging { get; }
 
-        List<Expressions.LambdaExpression> FilterExpressions { get; }
+        List<Expressions.LambdaExpression>? FilterExpressions { get; }
 
-        List<Expressions.SortExpression> SortExpressions { get; }
+        List<Expressions.SortExpression>? SortExpressions { get; }
 
         int? SkipValue { get; }
 

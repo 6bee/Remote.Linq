@@ -11,7 +11,7 @@ namespace Remote.Linq.Expressions
         private readonly Expression _expression;
 
         public ExpressionExecutionContext(ExpressionExecutionContext parent)
-            : this(parent, parent._expression)
+            : this(parent ?? throw new ArgumentNullException(nameof(parent)), parent._expression)
         {
         }
 
@@ -26,7 +26,6 @@ namespace Remote.Linq.Expressions
             _expression = expression ?? throw new ArgumentNullException(nameof(expression));
         }
 
-        public IEnumerable<DynamicObject> Execute()
-            => Execute(_expression);
+        public IEnumerable<DynamicObject?>? Execute() => Execute(_expression);
     }
 }

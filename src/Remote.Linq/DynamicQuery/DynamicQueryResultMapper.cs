@@ -19,12 +19,12 @@ namespace Remote.Linq.DynamicQuery
         protected override bool ShouldMapToDynamicObject(IEnumerable collection)
             => collection.GetType().Implements(typeof(IGrouping<,>));
 
-        protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
+        protected override DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation)
         {
-            Type[] genericTypeArguments = null;
-            if (obj?.GetType().Implements(typeof(IGrouping<,>), out genericTypeArguments) ?? false)
+            var genericTypeArguments = default(Type[]);
+            if (obj?.GetType().Implements(typeof(IGrouping<,>), out genericTypeArguments) == true)
             {
-                return (DynamicObject)_MapGroupToDynamicObjectGraphMethod(genericTypeArguments)
+                return (DynamicObject)_MapGroupToDynamicObjectGraphMethod(genericTypeArguments!)
                     .Invoke(this, new[] { obj, setTypeInformation });
             }
 

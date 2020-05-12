@@ -30,17 +30,17 @@ namespace Remote.Linq.EntityFrameworkCore
 
         private static readonly Func<Type, System.Reflection.PropertyInfo> TaskResultProperty = (Type resultType) =>
             typeof(Task<>).MakeGenericType(resultType)
-                .GetProperty(nameof(Task<object>.Result));
+                .GetProperty(nameof(Task<object?>.Result));
 
-        private static readonly Func<Task, object> GetTaskResult = t => TaskResultProperty(t.GetType().GetGenericArguments().Single()).GetValue(t);
+        private static readonly Func<Task, object?> GetTaskResult = t => TaskResultProperty(t.GetType().GetGenericArguments().Single()).GetValue(t);
 
         [SecuritySafeCritical]
-        public EntityFrameworkCoreExpressionExecutor(DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
+        public EntityFrameworkCoreExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             : this(GetQueryableSetProvider(dbContext), typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))
         {
         }
 
-        public EntityFrameworkCoreExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
+        public EntityFrameworkCoreExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             : base(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally)
         {
         }
@@ -58,8 +58,13 @@ namespace Remote.Linq.EntityFrameworkCore
         /// A task that represents the asynchronous operation.
         /// The task result contains the mapped result of the query execution.
         /// </returns>
-        public async Task<IEnumerable<DynamicObject>> ExecuteAsync(Expression expression, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<DynamicObject?>?> ExecuteAsync(Expression expression, CancellationToken cancellationToken = default)
         {
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
             var preparedRemoteExpression = Prepare(expression);
             var linqExpression = Transform(preparedRemoteExpression);
             var preparedLinqExpression = PrepareAsyncQuery(linqExpression, cancellationToken);
@@ -95,7 +100,7 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected virtual async Task<object> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
+        protected virtual async Task<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
         {
             try
             {
@@ -133,7 +138,7 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected async Task<object> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
+        protected async Task<object?> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -162,12 +167,7 @@ namespace Remote.Linq.EntityFrameworkCore
             return queryResult;
         }
 
-        protected override Expression Prepare(Expression expression)
-            => base.Prepare(expression).ReplaceIncludeMethodCall();
-
-        // temporary implementation for compatibility with previous versions
-        internal System.Linq.Expressions.Expression PrepareForExecution(Expression expression)
-            => Prepare(Transform(Prepare(expression)));
+        protected override Expression Prepare(Expression expression) => base.Prepare(expression).ReplaceIncludeMethodCall();
 
         /// <summary>
         /// Returns the generic <see cref="DbSet{T}"/> for the type specified.
@@ -196,7 +196,7 @@ namespace Remote.Linq.EntityFrameworkCore
             }
         }
 
-        private static async Task<object> GetTaskResultAsync(Task task)
+        private static async Task<object?> GetTaskResultAsync(Task task)
         {
             await task.ConfigureAwait(false);
             return GetTaskResult(task);

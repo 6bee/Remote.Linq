@@ -14,14 +14,14 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public ParameterExpression(TypeInfo parameterType, string parameterName, int instanceId)
+        public ParameterExpression(TypeInfo parameterType, string? parameterName, int instanceId)
         {
-            ParameterType = parameterType;
+            ParameterType = parameterType ?? throw new ArgumentNullException(nameof(ParameterType));
             ParameterName = parameterName;
             InstanceId = instanceId;
         }
 
-        public ParameterExpression(Type parameterType, string parameterName, int instanceId)
+        public ParameterExpression(Type parameterType, string? parameterName, int instanceId)
             : this(new TypeInfo(parameterType, false, false), parameterName, instanceId)
         {
         }
@@ -29,10 +29,10 @@ namespace Remote.Linq.Expressions
         public override ExpressionType NodeType => ExpressionType.Parameter;
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public string ParameterName { get; set; }
+        public string? ParameterName { get; set; }
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo ParameterType { get; set; }
+        public TypeInfo ParameterType { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets an instance id,
@@ -41,7 +41,6 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public int InstanceId { get; set; }
 
-        public override string ToString()
-            => ParameterName ?? "_";
+        public override string ToString() => ParameterName ?? "_";
     }
 }

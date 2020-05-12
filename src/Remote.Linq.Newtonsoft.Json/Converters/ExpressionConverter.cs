@@ -18,7 +18,7 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
             {
                 reader.AssertProperty(nameof(ConstantExpression.Type));
                 var typeInfo = reader.Read<TypeInfo>(serializer);
-                constantExpression.Type = typeInfo;
+                constantExpression.Type = typeInfo ?? throw reader.CreateException($"{nameof(ConstantExpression.Type)} must not be null.");
 
                 reader.Advance();
                 if (reader.IsProperty(ValueTypePropertyName))

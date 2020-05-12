@@ -9,10 +9,10 @@ namespace Remote.Linq
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class DelegateExtensions
     {
-        public static object DynamicInvokeAndUnwrap(this Delegate @delegate, params object[] args)
-            => @delegate.DynamicInvokeAndUnwrap<object>(args);
+        public static object? DynamicInvokeAndUnwrap(this Delegate @delegate, params object?[] args)
+            => @delegate.DynamicInvokeAndUnwrap<object?>(args);
 
-        public static TResult DynamicInvokeAndUnwrap<TResult>(this Delegate @delegate, params object[] args)
+        public static TResult DynamicInvokeAndUnwrap<TResult>(this Delegate @delegate, params object?[] args)
         {
             try
             {

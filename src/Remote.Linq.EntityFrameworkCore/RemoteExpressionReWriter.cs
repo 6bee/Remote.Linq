@@ -3,8 +3,10 @@
 namespace Remote.Linq.EntityFrameworkCore
 {
     using Aqua.TypeSystem;
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
+    using System;
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
@@ -29,16 +31,15 @@ namespace Remote.Linq.EntityFrameworkCore
             {
             }
 
-            internal Expression Run(Expression expression)
-                => Visit(expression);
+            internal Expression Run(Expression expression) => Visit(expression);
 
             protected override Expression VisitMethodCall(MethodCallExpression expression)
             {
                 if (expression.Instance is null &&
-                    string.Equals(expression.Method.Name, nameof(Remote.Linq.DynamicQuery.QueryFunctions.Include), System.StringComparison.Ordinal) &&
-                    expression.Method.DeclaringType.Type == typeof(Remote.Linq.DynamicQuery.QueryFunctions) &&
-                    expression.Method.GenericArgumentTypes.Count == 1 &&
-                    expression.Arguments.Count == 2)
+                    string.Equals(expression.Method?.Name, nameof(QueryFunctions.Include), StringComparison.Ordinal) &&
+                    expression.Method?.DeclaringType?.Type == typeof(QueryFunctions) &&
+                    expression.Method?.GenericArgumentTypes?.Count == 1 &&
+                    expression.Arguments?.Count == 2)
                 {
                     var elementType = expression.Method.GenericArgumentTypes.Single().Type;
 

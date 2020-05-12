@@ -16,7 +16,7 @@ namespace Remote.Linq.EntityFrameworkCore
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class AsyncScalarQueryExpressionReWriter
     {
-        private class ProbingType
+        private sealed class ProbingType
         {
             private ProbingType()
             {

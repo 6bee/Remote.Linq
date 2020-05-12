@@ -16,14 +16,14 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public MethodCallExpression(Expression insatnce, MethodInfo methodInfo, IEnumerable<Expression> arguments)
+        public MethodCallExpression(Expression? insatnce, MethodInfo methodInfo, IEnumerable<Expression>? arguments)
         {
             Instance = insatnce;
             Method = methodInfo;
             Arguments = arguments?.ToList();
         }
 
-        public MethodCallExpression(Expression insatnce, System.Reflection.MethodInfo methodInfo, IEnumerable<Expression> arguments)
+        public MethodCallExpression(Expression? insatnce, System.Reflection.MethodInfo methodInfo, IEnumerable<Expression>? arguments)
             : this(insatnce, new MethodInfo(methodInfo), arguments)
         {
         }
@@ -36,19 +36,19 @@ namespace Remote.Linq.Expressions
         public override ExpressionType NodeType => ExpressionType.Call;
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public Expression Instance { get; set; }
+        public Expression? Instance { get; set; }
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public MethodInfo Method { get; set; }
+        public MethodInfo Method { get; set; } = null!;
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public List<Expression> Arguments { get; set; }
+        public List<Expression>? Arguments { get; set; }
 
         public override string ToString()
             => string.Format(
                 "{0}.{1}({2})",
-                (object)Instance ?? Method?.DeclaringType,
+                (object?)Instance ?? Method?.DeclaringType,
                 Method?.Name,
-                string.Join(", ", Arguments.AsEmptyIfNull()));
+                Arguments.StringJoin(", "));
     }
 }

@@ -5,6 +5,7 @@ namespace Remote.Linq.DynamicQuery
     using Aqua.TypeSystem;
     using Remote.Linq.ExpressionVisitors;
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Expression = System.Linq.Expressions.Expression;
     using MethodInfo = System.Reflection.MethodInfo;
@@ -17,10 +18,10 @@ namespace Remote.Linq.DynamicQuery
 
         private readonly Func<Expressions.Expression, TSource> _dataProvider;
         private readonly IQueryResultMapper<TSource> _resultMapper;
-        private readonly ITypeInfoProvider _typeInfoProvider;
-        private readonly Func<Expression, bool> _canBeEvaluatedLocally;
+        private readonly ITypeInfoProvider? _typeInfoProvider;
+        private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
 
-        internal RemoteQueryProvider(Func<Expressions.Expression, TSource> dataProvider, ITypeInfoProvider typeInfoProvider, IQueryResultMapper<TSource> resultMapper, Func<Expression, bool> canBeEvaluatedLocally)
+        internal RemoteQueryProvider(Func<Expressions.Expression, TSource> dataProvider, ITypeInfoProvider? typeInfoProvider, IQueryResultMapper<TSource> resultMapper, Func<Expression, bool>? canBeEvaluatedLocally)
         {
             _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
             _resultMapper = resultMapper ?? throw new ArgumentNullException(nameof(resultMapper));
@@ -33,10 +34,11 @@ namespace Remote.Linq.DynamicQuery
 
         public IQueryable CreateQuery(Expression expression)
         {
-            var elementType = TypeHelper.GetElementType(expression.Type);
+            var elementType = TypeHelper.GetElementType(expression.Type) ?? throw new RemoteLinqException($"Cannot get element type based on expression's type {expression.Type}");
             return new RemoteQueryable(elementType, this, expression);
         }
 
+        [return: MaybeNull]
         public TResult Execute<TResult>(Expression expression)
         {
             var rlinq = TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
@@ -50,8 +52,13 @@ namespace Remote.Linq.DynamicQuery
         public object Execute(Expression expression)
             => this.InvokeAndUnwrap<object>(_executeMethod, expression);
 
-        internal static Expressions.Expression TranslateExpression(Expression expression, ITypeInfoProvider typeInfoProvider, Func<Expression, bool> canBeEvaluatedLocally)
+        internal static Expressions.Expression TranslateExpression(Expression expression, ITypeInfoProvider? typeInfoProvider, Func<Expression, bool>? canBeEvaluatedLocally)
         {
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
             var slinq1 = expression.SimplifyIncorporationOfRemoteQueryables();
             var rlinq1 = slinq1.ToRemoteLinqExpression(typeInfoProvider, canBeEvaluatedLocally);
             var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors(typeInfoProvider);

@@ -13,6 +13,7 @@ namespace Remote.Linq.DynamicQuery
     [DataContract]
     public sealed class VariableQueryArgument<T>
     {
+#nullable disable
         public VariableQueryArgument()
         {
         }
@@ -24,12 +25,12 @@ namespace Remote.Linq.DynamicQuery
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
         public T Value { get; set; }
+#nullable restore
 
         public override string ToString()
             => string.Format(
-                "{0}({2}{1}{2})",
+                "{0}({1})",
                 new Aqua.TypeSystem.TypeInfo(typeof(VariableQueryArgument<T>)),
-                (object)Value ?? "null",
-                Value is string || Value is char ? "'" : null);
+                Value.QuotValue());
     }
 }

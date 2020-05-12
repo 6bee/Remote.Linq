@@ -23,15 +23,14 @@ namespace Remote.Linq.Expressions
         public override ExpressionType NodeType => ExpressionType.Conditional;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public Expression Test { get; set; }
+        public Expression Test { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public Expression IfTrue { get; set; }
+        public Expression IfTrue { get; set; } = null!;
 
         [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
-        public Expression IfFalse { get; set; }
+        public Expression IfFalse { get; set; } = null!;
 
-        public override string ToString()
-            => $"IF {Test} THEN {IfTrue} ELSE {IfFalse}";
+        public override string ToString() => $"IF {Test} THEN {IfTrue} ELSE {IfFalse}";
     }
 }

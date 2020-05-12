@@ -31,25 +31,25 @@ namespace Remote.Linq.Expressions
         /// <summary>
         /// Replace expression execution logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<System.Linq.Expressions.Expression, object> transform)
+        public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<System.Linq.Expressions.Expression, object?> transform)
             => new ExpressionExecutionContextWithExpressionExecutor(context, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<object, object> transform)
+        public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<object?, object?> transform)
             => new ExpressionExecutionContextWithObjectResultProcessor(context, transform);
 
         /// <summary>
         /// Replace result transformation logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<object, IEnumerable<DynamicObject>> transform)
+        public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<object?, IEnumerable<DynamicObject?>?> transform)
             => new ExpressionExecutionContextWithResultConverter(context, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
+        public static ExpressionExecutionContext With(this ExpressionExecutionContext context, Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> transform)
             => new ExpressionExecutionContextWithDynamicObjectResultProcessor(context, transform);
 
         private sealed class ExpressionExecutionContextWithRemoteExpressionTransformer : ExpressionExecutionContext
@@ -96,57 +96,57 @@ namespace Remote.Linq.Expressions
 
         private sealed class ExpressionExecutionContextWithExpressionExecutor : ExpressionExecutionContext
         {
-            private readonly Func<System.Linq.Expressions.Expression, object> _transform;
+            private readonly Func<System.Linq.Expressions.Expression, object?> _transform;
 
-            public ExpressionExecutionContextWithExpressionExecutor(ExpressionExecutionContext parent, Func<System.Linq.Expressions.Expression, object> transform)
+            public ExpressionExecutionContextWithExpressionExecutor(ExpressionExecutionContext parent, Func<System.Linq.Expressions.Expression, object?> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
             }
 
-            protected override object Execute(System.Linq.Expressions.Expression expression)
+            protected override object? Execute(System.Linq.Expressions.Expression expression)
                 => _transform(expression);
         }
 
         private sealed class ExpressionExecutionContextWithObjectResultProcessor : ExpressionExecutionContext
         {
-            private readonly Func<object, object> _transform;
+            private readonly Func<object?, object?> _transform;
 
-            public ExpressionExecutionContextWithObjectResultProcessor(ExpressionExecutionContext parent, Func<object, object> transform)
+            public ExpressionExecutionContextWithObjectResultProcessor(ExpressionExecutionContext parent, Func<object?, object?> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
             }
 
-            protected override object ProcessResult(object queryResult)
+            protected override object? ProcessResult(object? queryResult)
                 => _transform(base.ProcessResult(queryResult));
         }
 
         private sealed class ExpressionExecutionContextWithResultConverter : ExpressionExecutionContext
         {
-            private readonly Func<object, IEnumerable<DynamicObject>> _transform;
+            private readonly Func<object?, IEnumerable<DynamicObject?>?> _transform;
 
-            public ExpressionExecutionContextWithResultConverter(ExpressionExecutionContext parent, Func<object, IEnumerable<DynamicObject>> transform)
+            public ExpressionExecutionContextWithResultConverter(ExpressionExecutionContext parent, Func<object?, IEnumerable<DynamicObject?>?> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
             }
 
-            protected override IEnumerable<DynamicObject> ConvertResult(object queryResult)
+            protected override IEnumerable<DynamicObject?>? ConvertResult(object? queryResult)
                 => _transform(queryResult);
         }
 
         private sealed class ExpressionExecutionContextWithDynamicObjectResultProcessor : ExpressionExecutionContext
         {
-            private readonly Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> _transform;
+            private readonly Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> _transform;
 
-            public ExpressionExecutionContextWithDynamicObjectResultProcessor(ExpressionExecutionContext parent, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
+            public ExpressionExecutionContextWithDynamicObjectResultProcessor(ExpressionExecutionContext parent, Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
             }
 
-            protected override IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult)
+            protected override IEnumerable<DynamicObject?>? ProcessResult(IEnumerable<DynamicObject?>? queryResult)
                 => _transform(base.ProcessResult(queryResult));
         }
     }

@@ -4,6 +4,7 @@ namespace Remote.Linq.DynamicQuery
 {
     using Aqua.TypeSystem;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -19,25 +20,12 @@ namespace Remote.Linq.DynamicQuery
         {
         }
 
-        public VariableQueryArgumentList(System.Collections.IEnumerable values, Type elementType = null)
+        public VariableQueryArgumentList(IEnumerable values, Type? elementType = null)
+            : this(values, elementType is null ? null : new TypeInfo(elementType, false, false))
         {
-            if (values is null)
-            {
-                throw new ArgumentNullException(nameof(values));
-            }
-
-            if (elementType is null)
-            {
-                var collectionType = values.GetType();
-                elementType = TypeHelper.GetElementType(collectionType);
-            }
-
-            ElementType = new TypeInfo(elementType, false, false);
-
-            Values = values.Cast<object>().ToList();
         }
 
-        public VariableQueryArgumentList(System.Collections.IEnumerable values, TypeInfo elementType = null)
+        public VariableQueryArgumentList(IEnumerable values, TypeInfo? elementType = null)
         {
             if (values is null)
             {
@@ -47,31 +35,26 @@ namespace Remote.Linq.DynamicQuery
             if (elementType is null)
             {
                 var collectionType = values.GetType();
-                var type = TypeHelper.GetElementType(collectionType);
+                var type = collectionType.GetElementTypeOrThrow();
                 elementType = new TypeInfo(type, false, false);
             }
 
             ElementType = elementType;
 
-            Values = values.Cast<object>().ToList();
+            Values = values.Cast<object?>().ToList();
         }
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo ElementType { get; set; }
+        public TypeInfo ElementType { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = true)]
-        public List<object> Values { get; set; }
+        public List<object?> Values { get; set; } = null!;
 
         public override string ToString()
-        {
-            var elementType = ElementType;
-            var values = Values;
-
-            return string.Format(
+            => string.Format(
                 "{0}Of{1}[{2}]",
                 GetType().Name,
-                elementType is null ? "?" : elementType.Name,
-                values is null ? 0 : values.Count);
-        }
+                ElementType?.Name ?? "?",
+                Values?.Count ?? 0);
     }
 }

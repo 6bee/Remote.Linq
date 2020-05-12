@@ -4,6 +4,7 @@ namespace Remote.Linq.Expressions
 {
     using Aqua.Dynamic;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     internal interface IExpressionExecutionDecorator
     {
@@ -13,12 +14,15 @@ namespace Remote.Linq.Expressions
 
         System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression);
 
-        object Execute(System.Linq.Expressions.Expression expression);
+        object? Execute(System.Linq.Expressions.Expression expression);
 
-        object ProcessResult(object queryResult);
+        [return: NotNullIfNotNull("queryResult")]
+        object? ProcessResult(object? queryResult);
 
-        IEnumerable<DynamicObject> ConvertResult(object queryResult);
+        [return: NotNullIfNotNull("queryResult")]
+        IEnumerable<DynamicObject?>? ConvertResult(object? queryResult);
 
-        IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult);
+        [return: NotNullIfNotNull("queryResult")]
+        IEnumerable<DynamicObject?>? ProcessResult(IEnumerable<DynamicObject?>? queryResult);
     }
 }

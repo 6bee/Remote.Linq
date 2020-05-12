@@ -2,11 +2,12 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
-    using Aqua.TypeSystem;
+    using Aqua.Extensions;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using MemberTypes = Aqua.TypeSystem.MemberTypes;
@@ -25,27 +26,24 @@ namespace Remote.Linq.ExpressionVisitors
             private static readonly PropertyInfo QueryArgumentValuePropertyInfo = new PropertyInfo(typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value)));
             private static readonly PropertyInfo QueryArgumentValueListPropertyInfo = new PropertyInfo(typeof(VariableQueryArgumentList).GetProperty(nameof(VariableQueryArgumentList.Values)));
 
-            internal Expression ReplaceGenericQueryArgumentsByNonGenericArguments(Expression expression)
-                => Visit(expression);
+            internal Expression ReplaceGenericQueryArgumentsByNonGenericArguments(Expression expression) => Visit(expression);
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
-                if (IsGenericVariableQueryArgument(expression))
+                if (IsGenericVariableQueryArgument(expression, out var valueType))
                 {
-                    var valueProperty = expression.Value.GetType().GetProperty(nameof(VariableQueryArgument.Value));
-                    var value = valueProperty.GetValue(expression.Value);
+                    var valueProperty = expression.Value?.GetType().GetProperty(nameof(VariableQueryArgument<object>.Value));
+                    var value = valueProperty?.GetValue(expression.Value);
 
                     object queryArgument;
-
-                    var collection = value as System.Collections.IEnumerable;
-                    if (collection is null || value is string)
+                    if (value.IsCollection(out var collection))
                     {
-                        queryArgument = new VariableQueryArgument(value, valueProperty.PropertyType);
+                        var elementType = valueType.GetElementTypeOrThrow();
+                        queryArgument = new VariableQueryArgumentList(collection, elementType);
                     }
                     else
                     {
-                        var elementType = TypeHelper.GetElementType(valueProperty.PropertyType);
-                        queryArgument = new VariableQueryArgumentList(collection, elementType);
+                        queryArgument = new VariableQueryArgument(value, valueProperty?.PropertyType ?? valueType);
                     }
 
                     return new ConstantExpression(queryArgument);
@@ -54,12 +52,17 @@ namespace Remote.Linq.ExpressionVisitors
                 return base.VisitConstant(expression);
             }
 
-            private static bool IsGenericVariableQueryArgument(ConstantExpression expression)
+            private static bool IsGenericVariableQueryArgument(ConstantExpression expression, [NotNullWhen(true)] out Type? valueType)
             {
                 var type = expression.Type?.Type ?? expression.Value?.GetType();
-                return !(type is null)
-                    && type.IsGenericType
-                    && type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>);
+                var result =
+                    type != null &&
+                    type.IsGenericType &&
+                    type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>);
+                valueType = result
+                    ? type!.GetGenericArguments().Single()
+                    : null;
+                return result;
             }
 
             protected override Expression VisitMemberAccess(MemberExpression expression)
@@ -68,8 +71,8 @@ namespace Remote.Linq.ExpressionVisitors
                 {
                     var member = expression.Member;
                     if (member.MemberType == MemberTypes.Property &&
-                        member.DeclaringType.IsGenericType &&
-                        member.DeclaringType.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                        member.DeclaringType?.IsGenericType == true &&
+                        member.DeclaringType?.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                     {
                         var instanceExpression = (ConstantExpression)Visit(expression.Expression);
 
@@ -87,8 +90,7 @@ namespace Remote.Linq.ExpressionVisitors
                             throw new Exception($"Unexpected instance expression: {instanceExpression}");
                         }
 
-                        var newMemberExpression = new MemberExpression(instanceExpression, propertyInfo);
-                        return newMemberExpression;
+                        return new MemberExpression(instanceExpression, propertyInfo);
                     }
                 }
 
@@ -101,8 +103,7 @@ namespace Remote.Linq.ExpressionVisitors
             private static readonly System.Reflection.MethodInfo CreateVariableQueryArgumentListMethodInfo =
                 typeof(NonGenericVariableQueryArgumentVisitor).GetMethod(nameof(CreateVariableQueryArgumentList), BindingFlags.Static | BindingFlags.NonPublic);
 
-            internal Expression ReplaceNonGenericQueryArgumentsByGenericArguments(Expression expression)
-                => Visit(expression);
+            internal Expression ReplaceNonGenericQueryArgumentsByGenericArguments(Expression expression) => Visit(expression);
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
@@ -137,7 +138,8 @@ namespace Remote.Linq.ExpressionVisitors
                 var member = expression.Member;
                 if (member.MemberType == MemberTypes.Property)
                 {
-                    if (member.DeclaringType.FullName == typeof(VariableQueryArgument).FullName || member.DeclaringType.FullName == typeof(VariableQueryArgumentList).FullName)
+                    if (string.Equals(member.DeclaringType?.FullName, typeof(VariableQueryArgument).FullName) ||
+                        string.Equals(member.DeclaringType?.FullName, typeof(VariableQueryArgumentList).FullName))
                     {
                         if (Visit(expression.Expression) is ConstantExpression instanceExpression)
                         {
@@ -147,8 +149,7 @@ namespace Remote.Linq.ExpressionVisitors
                                 var valueType = instanceType.GenericArguments.Single();
                                 var valuePropertyInfo = new PropertyInfo(nameof(VariableQueryArgument.Value), valueType, instanceType);
 
-                                var newMemberExpression = new MemberExpression(instanceExpression, valuePropertyInfo);
-                                return newMemberExpression;
+                                return new MemberExpression(instanceExpression, valuePropertyInfo);
                             }
                         }
                     }

@@ -15,25 +15,24 @@ namespace Remote.Linq.Expressions
         }
 
         public TypeBinaryExpression(Expression expression, Type type)
-            : this(expression, type is null ? null : new TypeInfo(type, false, false))
+            : this(expression, new TypeInfo(type, false, false))
         {
         }
 
         public TypeBinaryExpression(Expression expression, TypeInfo type)
         {
-            Expression = expression;
-            TypeOperand = type;
+            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+            TypeOperand = type ?? throw new ArgumentNullException(nameof(type));
         }
 
         public override ExpressionType NodeType => ExpressionType.TypeIs;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public Expression Expression { get; set; }
+        public Expression Expression { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo TypeOperand { get; set; }
+        public TypeInfo TypeOperand { get; set; } = null!;
 
-        public override string ToString()
-            => $"{Expression} is {TypeOperand}";
+        public override string ToString() => $"{Expression} is {TypeOperand}";
     }
 }

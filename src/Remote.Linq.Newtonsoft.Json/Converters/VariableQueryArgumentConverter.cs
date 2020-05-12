@@ -13,7 +13,7 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
         protected override void ReadObjectProperties(JsonReader reader, VariableQueryArgument result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
             reader.AssertProperty(nameof(VariableQueryArgument.Type));
-            var typeInfo = reader.Read<TypeInfo>(serializer);
+            var typeInfo = reader.Read<TypeInfo>(serializer) ?? throw reader.CreateException($"{nameof(VariableQueryArgument.Type)} must not be null.");
 
             reader.AssertProperty(nameof(VariableQueryArgument.Value));
             var value = reader.Read(typeInfo, serializer);

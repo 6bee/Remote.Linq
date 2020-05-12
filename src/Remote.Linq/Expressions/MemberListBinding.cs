@@ -13,19 +13,18 @@ namespace Remote.Linq.Expressions
     public sealed class MemberListBinding : MemberBinding
     {
         public MemberListBinding()
-            : base(null)
         {
         }
 
         public MemberListBinding(MemberInfo member, IEnumerable<ElementInit> initializers)
             : base(member)
         {
-            Initializers = initializers.ToList();
+            Initializers = initializers?.ToList() ?? throw new ArgumentNullException(nameof(initializers));
         }
 
         public override MemberBindingType BindingType => MemberBindingType.ListBinding;
 
         [DataMember(Order = 1)]
-        public List<ElementInit> Initializers { get; set; }
+        public List<ElementInit> Initializers { get; set; } = null!;
     }
 }

@@ -26,7 +26,7 @@ namespace Remote.Linq.Newtonsoft.Json.ContractResolvers
 
         private readonly IContractResolver _decorated;
 
-        public RemoteLinqContractResolver(IContractResolver decorated = null)
+        public RemoteLinqContractResolver(IContractResolver? decorated = null)
         {
             if (decorated is RemoteLinqContractResolver self)
             {

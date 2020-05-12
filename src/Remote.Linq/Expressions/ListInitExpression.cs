@@ -15,21 +15,20 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public ListInitExpression(NewExpression n, IEnumerable<ElementInit> initializers)
+        public ListInitExpression(NewExpression newExpression, IEnumerable<ElementInit> initializers)
         {
-            NewExpression = n;
-            Initializers = initializers.ToList();
+            NewExpression = newExpression ?? throw new ArgumentNullException(nameof(newExpression));
+            Initializers = initializers?.ToList() ?? throw new ArgumentNullException(nameof(initializers));
         }
 
         public override ExpressionType NodeType => ExpressionType.ListInit;
 
         [DataMember(Order = 1)]
-        public NewExpression NewExpression { get; set; }
+        public NewExpression NewExpression { get; set; } = null!;
 
         [DataMember(Order = 2)]
-        public List<ElementInit> Initializers { get; set; }
+        public List<ElementInit> Initializers { get; set; } = null!;
 
-        public override string ToString()
-            => $"{NewExpression} {{ {string.Join(", ", Initializers)} }}";
+        public override string ToString() => $"{NewExpression} {{ {Initializers.StringJoin(", ")} }}";
     }
 }

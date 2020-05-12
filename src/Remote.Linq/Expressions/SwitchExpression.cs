@@ -5,6 +5,7 @@ namespace Remote.Linq.Expressions
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.Serialization;
 
     [Serializable]
@@ -15,15 +16,15 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public SwitchExpression(Expression switchValue, MethodInfo comparison, Expression defaultExpression, List<SwitchCase> cases)
+        public SwitchExpression(Expression switchValue, MethodInfo? comparison, Expression? defaultExpression, IEnumerable<SwitchCase>? cases)
         {
-            SwitchValue = switchValue;
+            SwitchValue = switchValue ?? throw new ArgumentNullException(nameof(SwitchValue));
             Comparison = comparison;
             DefaultExpression = defaultExpression;
-            Cases = cases;
+            Cases = cases?.ToList();
         }
 
-        public SwitchExpression(Expression switchValue, System.Reflection.MethodInfo comparison, Expression defaultExpression, List<SwitchCase> cases)
+        public SwitchExpression(Expression switchValue, System.Reflection.MethodInfo? comparison, Expression? defaultExpression, IEnumerable<SwitchCase> cases)
             : this(switchValue, comparison is null ? null : new MethodInfo(comparison), defaultExpression, cases)
         {
         }
@@ -31,15 +32,15 @@ namespace Remote.Linq.Expressions
         public override ExpressionType NodeType => ExpressionType.Switch;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public Expression SwitchValue { get; set; }
+        public Expression SwitchValue { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public MethodInfo Comparison { get; set; }
+        public MethodInfo? Comparison { get; set; }
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public Expression DefaultExpression { get; set; }
+        public Expression? DefaultExpression { get; set; }
 
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
-        public List<SwitchCase> Cases { get; set; }
+        public List<SwitchCase>? Cases { get; set; }
     }
 }

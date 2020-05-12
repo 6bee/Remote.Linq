@@ -7,6 +7,7 @@ namespace Remote.Linq.ExpressionVisitors
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -23,7 +24,7 @@ namespace Remote.Linq.ExpressionVisitors
         /// <param name="expression">The root of the expression tree.</param>
         /// <param name="canBeEvaluatedLocally">A function that decides whether a given expression node can be evaluated locally, assumes true if no function defined.</param>
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
-        public static Expression PartialEval(this Expression expression, Func<Expression, bool> canBeEvaluatedLocally = null)
+        public static Expression PartialEval(this Expression expression, Func<Expression, bool>? canBeEvaluatedLocally = null)
             => new SubtreeEvaluator(new Nominator(canBeEvaluatedLocally).Nominate(expression)).Eval(expression);
 
         private static bool CanBeEvaluatedLocally(Expression expression)
@@ -107,13 +108,10 @@ namespace Remote.Linq.ExpressionVisitors
                 _candidates = candidates;
             }
 
-            internal Expression Eval(Expression expression)
-            {
-                var expression2 = Visit(expression);
-                return expression2;
-            }
+            internal Expression Eval(Expression expression) => Visit(expression);
 
-            protected override Expression Visit(Expression expression)
+            [return: NotNullIfNotNull("expression")]
+            protected override Expression? Visit(Expression? expression)
             {
                 if (expression is null)
                 {
@@ -137,7 +135,7 @@ namespace Remote.Linq.ExpressionVisitors
 
                 var lambda = Expression.Lambda(expression);
                 var func = lambda.Compile();
-                object value = func.DynamicInvokeAndUnwrap(null);
+                var value = func.DynamicInvokeAndUnwrap();
 
                 if (value is Expression valueAsExpression)
                 {
@@ -147,7 +145,7 @@ namespace Remote.Linq.ExpressionVisitors
                 if (value is System.Collections.IEnumerable)
                 {
                     var collectionType = value.GetType();
-                    var elementType = TypeHelper.GetElementType(collectionType);
+                    var elementType = TypeHelper.GetElementType(collectionType) ?? throw new RemoteLinqException($"Failed to find element type of {collectionType}");
                     if (expression.Type.IsAssignableFrom(elementType.MakeArrayType()))
                     {
                         var enumerated = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { value });
@@ -175,11 +173,12 @@ namespace Remote.Linq.ExpressionVisitors
         /// </summary>
         private sealed class Nominator : ExpressionVisitorBase
         {
+            private readonly object _lock = new object();
             private Func<Expression, bool> _fnCanBeEvaluated;
-            private HashSet<Expression> _candidates;
+            private HashSet<Expression>? _candidates;
             private bool _cannotBeEvaluated;
 
-            internal Nominator(Func<Expression, bool> fnCanBeEvaluated)
+            internal Nominator(Func<Expression, bool>? fnCanBeEvaluated)
             {
                 _fnCanBeEvaluated = fnCanBeEvaluated is null
                     ? CanBeEvaluatedLocally
@@ -188,12 +187,16 @@ namespace Remote.Linq.ExpressionVisitors
 
             internal HashSet<Expression> Nominate(Expression expression)
             {
-                _candidates = new HashSet<Expression>();
-                Visit(expression);
-                return _candidates;
+                lock (_lock)
+                {
+                    _candidates = new HashSet<Expression>();
+                    Visit(expression);
+                    return _candidates;
+                }
             }
 
-            protected override Expression Visit(Expression expression)
+            [return: NotNullIfNotNull("expression")]
+            protected override Expression? Visit(Expression? expression)
             {
                 if (expression != null)
                 {
@@ -206,7 +209,7 @@ namespace Remote.Linq.ExpressionVisitors
                     {
                         if (_fnCanBeEvaluated(expression))
                         {
-                            _candidates.Add(expression);
+                            _candidates!.Add(expression);
                         }
                         else
                         {

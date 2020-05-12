@@ -20,14 +20,14 @@ namespace Remote.Linq
             => ExecuteAsync<TSource, TAccumulate>(
                 MethodInfos.Queryable.AggregateWithSeed,
                 source,
-                new object[] { seed, func },
+                new object?[] { seed, func },
                 cancellationToken);
 
         public static Task<TResult> AggregateAsync<TSource, TAccumulate, TResult>(this IQueryable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> func, Expression<Func<TAccumulate, TResult>> selector, CancellationToken cancellationToken = default)
             => ExecuteAsync<TSource, TResult>(
                 MethodInfos.Queryable.AggregateWithSeedAndSelector.MakeGenericMethod(typeof(TSource), typeof(TAccumulate), typeof(TResult)),
                 source,
-                new object[] { seed, func, selector },
+                new object?[] { seed, func, selector },
                 cancellationToken);
 
         public static async Task<List<TSource>> ToListAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken = default)
@@ -115,7 +115,7 @@ namespace Remote.Linq
             => ExecuteAsync<TSource, bool>(
                 MethodInfos.Queryable.ContainsWithComparer,
                 source,
-                new object[] { item, comparer },
+                new object?[] { item, comparer },
                 cancellationToken);
 
         public static Task<bool> SequenceEqualAsync<TSource>(this IQueryable<TSource> source1, IEnumerable<TSource> source2, CancellationToken cancellationToken = default)
@@ -294,10 +294,10 @@ namespace Remote.Linq
         private static Task<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, CancellationToken cancellationToken)
             => ExecuteAsync<TSource, TResult>(method, source, Enumerable.Empty<object>(), cancellationToken);
 
-        private static Task<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, object arg, CancellationToken cancellationToken)
+        private static Task<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, object? arg, CancellationToken cancellationToken)
             => ExecuteAsync<TSource, TResult>(method, source, new[] { arg }, cancellationToken);
 
-        private static async Task<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, IEnumerable<object> args, CancellationToken cancellationToken)
+        private static async Task<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, IEnumerable<object?> args, CancellationToken cancellationToken)
         {
             if (source.Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
             {

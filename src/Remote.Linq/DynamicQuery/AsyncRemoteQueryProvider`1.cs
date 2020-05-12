@@ -4,6 +4,7 @@ namespace Remote.Linq.DynamicQuery
 {
     using Aqua.TypeSystem;
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -18,10 +19,10 @@ namespace Remote.Linq.DynamicQuery
 
         private readonly Func<Expressions.Expression, CancellationToken, Task<TSource>> _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
-        private readonly ITypeInfoProvider _typeInfoProvider;
-        private readonly Func<Expression, bool> _canBeEvaluatedLocally;
+        private readonly ITypeInfoProvider? _typeInfoProvider;
+        private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
 
-        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, CancellationToken, Task<TSource>> asyncDataProvider, ITypeInfoProvider typeInfoProvider, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool> canBeEvaluatedLocally)
+        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, CancellationToken, Task<TSource>>? asyncDataProvider, ITypeInfoProvider? typeInfoProvider, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool>? canBeEvaluatedLocally)
         {
             _asyncDataProvider = asyncDataProvider ?? throw new ArgumentNullException(nameof(asyncDataProvider));
             _resultMapper = resutMapper ?? throw new ArgumentNullException(nameof(resutMapper));
@@ -34,10 +35,16 @@ namespace Remote.Linq.DynamicQuery
 
         public IQueryable CreateQuery(Expression expression)
         {
-            var elementType = TypeHelper.GetElementType(expression.Type);
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            var elementType = TypeHelper.GetElementType(expression.Type) ?? throw new RemoteLinqException($"Failed to get element type of {expression.Type}");
             return new RemoteQueryable(elementType, this, expression);
         }
 
+        [return: MaybeNull]
         public TResult Execute<TResult>(Expression expression)
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);

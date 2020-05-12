@@ -16,14 +16,14 @@ namespace Remote.Linq.Expressions
 
         public SwitchCase(Expression body, List<Expression> testValues)
         {
-            Body = body;
-            TestValues = testValues;
+            Body = body ?? throw new ArgumentNullException(nameof(body));
+            TestValues = testValues ?? throw new ArgumentNullException(nameof(testValues));
         }
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public Expression Body { get; set; }
+        public Expression Body { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public List<Expression> TestValues { get; set; }
+        public List<Expression> TestValues { get; set; } = null!;
     }
 }

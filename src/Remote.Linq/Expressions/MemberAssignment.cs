@@ -11,19 +11,18 @@ namespace Remote.Linq.Expressions
     public sealed class MemberAssignment : MemberBinding
     {
         public MemberAssignment()
-            : base(null)
         {
         }
 
         public MemberAssignment(MemberInfo member, Expression expression)
             : base(member)
         {
-            Expression = expression;
+            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
         }
 
         public override MemberBindingType BindingType => MemberBindingType.Assignment;
 
-        [DataMember(Order = 1)]
-        public Expression Expression { get; set; }
+        [DataMember(Order = 1, IsRequired = true)]
+        public Expression Expression { get; set; } = null!;
     }
 }

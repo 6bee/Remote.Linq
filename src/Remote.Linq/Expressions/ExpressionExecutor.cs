@@ -15,15 +15,15 @@ namespace Remote.Linq.Expressions
     public class ExpressionExecutor : IExpressionExecutionDecorator
     {
         private readonly Func<Type, IQueryable> _queryableProvider;
-        private readonly ITypeResolver _typeResolver;
+        private readonly ITypeResolver? _typeResolver;
         private readonly IDynamicObjectMapper _mapper;
         private readonly Func<Type, bool> _setTypeInformation;
-        private readonly Func<System.Linq.Expressions.Expression, bool> _canBeEvaluatedLocally;
+        private readonly Func<System.Linq.Expressions.Expression, bool>? _canBeEvaluatedLocally;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionExecutor"/> class.
         /// </summary>
-        public ExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool> canBeEvaluatedLocally = null)
+        public ExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
         {
             _queryableProvider = queryableProvider;
             _typeResolver = typeResolver;
@@ -37,7 +37,7 @@ namespace Remote.Linq.Expressions
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <returns>The mapped result of the query execution.</returns>
-        public IEnumerable<DynamicObject> Execute(Expression expression)
+        public IEnumerable<DynamicObject?>? Execute(Expression expression)
         {
             var preparedRemoteExpression = Prepare(expression);
             var linqExpression = Transform(preparedRemoteExpression);
@@ -57,7 +57,7 @@ namespace Remote.Linq.Expressions
         protected virtual Expression Prepare(Expression expression)
         {
             var expression1 = expression.ReplaceNonGenericQueryArgumentsByGenericArguments();
-            var queryableExpression = expression1.ReplaceResourceDescriptorsByQueryable(_typeResolver, _queryableProvider);
+            var queryableExpression = expression1.ReplaceResourceDescriptorsByQueryable(_queryableProvider, _typeResolver);
             return queryableExpression;
         }
 
@@ -98,7 +98,7 @@ namespace Remote.Linq.Expressions
         /// </remarks>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected virtual object Execute(System.Linq.Expressions.Expression expression)
+        protected virtual object? Execute(System.Linq.Expressions.Expression expression)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace Remote.Linq.Expressions
         /// </summary>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected static object ExecuteCore(System.Linq.Expressions.Expression expression)
+        protected static object? ExecuteCore(System.Linq.Expressions.Expression expression)
         {
             var queryResult = CompileAndInvokeExpression(expression);
             if (queryResult is null)
@@ -155,7 +155,7 @@ namespace Remote.Linq.Expressions
         }
 
         [SecuritySafeCritical]
-        protected static object CompileAndInvokeExpression(System.Linq.Expressions.Expression expression)
+        protected static object? CompileAndInvokeExpression(System.Linq.Expressions.Expression expression)
         {
             var lambdaExpression =
                 (expression as System.Linq.Expressions.LambdaExpression) ??
@@ -168,7 +168,7 @@ namespace Remote.Linq.Expressions
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>Processed result.</returns>
-        protected virtual object ProcessResult(object queryResult)
+        protected virtual object? ProcessResult(object? queryResult)
             => queryResult;
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Remote.Linq.Expressions
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>The mapped query result.</returns>
-        protected virtual IEnumerable<DynamicObject> ConvertResult(object queryResult)
+        protected virtual IEnumerable<DynamicObject?>? ConvertResult(object? queryResult)
             => _mapper.MapCollection(queryResult, _setTypeInformation);
 
         /// <summary>
@@ -184,8 +184,8 @@ namespace Remote.Linq.Expressions
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>Processed result.</returns>
-        protected virtual IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult)
-            => queryResult ?? Enumerable.Empty<DynamicObject>();
+        protected virtual IEnumerable<DynamicObject?>? ProcessResult(IEnumerable<DynamicObject?>? queryResult)
+            => queryResult ?? Enumerable.Empty<DynamicObject?>();
 
         Expression IExpressionExecutionDecorator.Prepare(Expression expression)
             => Prepare(expression);
@@ -196,16 +196,16 @@ namespace Remote.Linq.Expressions
         System.Linq.Expressions.Expression IExpressionExecutionDecorator.Prepare(System.Linq.Expressions.Expression expression)
             => Prepare(expression);
 
-        object IExpressionExecutionDecorator.Execute(System.Linq.Expressions.Expression expression)
+        object? IExpressionExecutionDecorator.Execute(System.Linq.Expressions.Expression expression)
             => Execute(expression);
 
-        object IExpressionExecutionDecorator.ProcessResult(object queryResult)
+        object? IExpressionExecutionDecorator.ProcessResult(object? queryResult)
             => ProcessResult(queryResult);
 
-        IEnumerable<DynamicObject> IExpressionExecutionDecorator.ConvertResult(object queryResult)
+        IEnumerable<DynamicObject?>? IExpressionExecutionDecorator.ConvertResult(object? queryResult)
             => ConvertResult(queryResult);
 
-        IEnumerable<DynamicObject> IExpressionExecutionDecorator.ProcessResult(IEnumerable<DynamicObject> queryResult)
+        IEnumerable<DynamicObject?>? IExpressionExecutionDecorator.ProcessResult(IEnumerable<DynamicObject?>? queryResult)
             => ProcessResult(queryResult);
     }
 }

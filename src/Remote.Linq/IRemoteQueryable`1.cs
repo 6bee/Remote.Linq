@@ -5,7 +5,7 @@ namespace Remote.Linq
     using System.Collections.Generic;
     using System.Linq;
 
-    public interface IRemoteQueryable<T> : IRemoteQueryable, IQueryable<T>
+    public interface IRemoteQueryable<out T> : IRemoteQueryable, IQueryable<T>
     {
         IEnumerable<T> Execute();
     }

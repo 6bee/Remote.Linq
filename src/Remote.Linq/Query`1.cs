@@ -16,7 +16,7 @@ namespace Remote.Linq
     public class Query<T> : IQuery<T>, IOrderedQuery<T>
     {
         [NonSerialized]
-        private readonly Func<Query<T>, IEnumerable<T>> _dataProvider;
+        private readonly Func<Query<T>, IEnumerable<T>>? _dataProvider;
 
         [NonSerialized]
         private readonly Func<LambdaExpression, Expressions.LambdaExpression> _expressionTranslator;
@@ -26,32 +26,33 @@ namespace Remote.Linq
         /// </summary>
         public Query()
         {
+            _expressionTranslator = exp => exp.ToRemoteLinqExpression().ReplaceGenericQueryArgumentsByNonGenericArguments();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Query{T}"/> class.
         /// </summary>
-        public Query(Func<Query<T>, IEnumerable<T>> dataProvider = null, Func<LambdaExpression, Expressions.LambdaExpression> expressionTranslator = null, IEnumerable<Expressions.LambdaExpression> filterExpressions = null, IEnumerable<Expressions.SortExpression> sortExpressions = null, int? skip = null, int? take = null)
+        public Query(Func<Query<T>, IEnumerable<T>>? dataProvider = null, Func<LambdaExpression, Expressions.LambdaExpression>? expressionTranslator = null, IEnumerable<Expressions.LambdaExpression>? filterExpressions = null, IEnumerable<Expressions.SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
         {
             _dataProvider = dataProvider;
             _expressionTranslator = expressionTranslator ?? (exp => exp.ToRemoteLinqExpression().ReplaceGenericQueryArgumentsByNonGenericArguments());
-            FilterExpressions = (filterExpressions ?? Enumerable.Empty<Expressions.LambdaExpression>()).ToList();
-            SortExpressions = (sortExpressions ?? Enumerable.Empty<Expressions.SortExpression>()).ToList();
+            FilterExpressions = filterExpressions?.ToList();
+            SortExpressions = sortExpressions?.ToList();
             SkipValue = skip;
             TakeValue = take;
         }
 
-        public bool HasFilters => FilterExpressions.Count > 0;
+        public bool HasFilters => FilterExpressions?.Count > 0;
 
-        public bool HasSorting => SortExpressions.Count > 0;
+        public bool HasSorting => SortExpressions?.Count > 0;
 
         public bool HasPaging => TakeValue.HasValue;
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public List<Expressions.LambdaExpression> FilterExpressions { get; set; }
+        public List<Expressions.LambdaExpression>? FilterExpressions { get; set; }
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public List<Expressions.SortExpression> SortExpressions { get; set; }
+        public List<Expressions.SortExpression>? SortExpressions { get; set; }
 
         [DataMember(Name = "Skip", Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public int? SkipValue { get; set; }
@@ -187,15 +188,12 @@ namespace Remote.Linq
             return _dataProvider(this).GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
         /// Creates a generic version of the specified query instance.
         /// </summary>
-        public static Query<T> CreateFromNonGeneric(IQuery query, Func<Query<T>, IEnumerable<T>> dataProvider = null, Func<LambdaExpression, Expressions.LambdaExpression> expressionTranslator = null, ITypeResolver typeResolver = null)
+        public static Query<T> CreateFromNonGeneric(IQuery query, Func<Query<T>, IEnumerable<T>>? dataProvider = null, Func<LambdaExpression, Expressions.LambdaExpression>? expressionTranslator = null, ITypeResolver? typeResolver = null)
         {
             if (query is null)
             {
@@ -215,7 +213,11 @@ namespace Remote.Linq
         public override string ToString()
         {
             var queryParameters = QueryParametersToString();
-            return string.Format("Query<{0}>{1}{2}", typeof(T).FullName, string.IsNullOrEmpty(queryParameters) ? null : ": ", queryParameters);
+            return string.Format(
+                "Query<{0}>{1}{2}",
+                typeof(T).FullName,
+                string.IsNullOrEmpty(queryParameters) ? null : ": ",
+                queryParameters);
         }
 
         protected string QueryParametersToString()

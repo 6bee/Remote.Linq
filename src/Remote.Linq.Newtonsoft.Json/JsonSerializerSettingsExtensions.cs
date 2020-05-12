@@ -6,6 +6,7 @@ namespace Remote.Linq
     using global::Newtonsoft.Json;
     using global::Newtonsoft.Json.Serialization;
     using Remote.Linq.Newtonsoft.Json.ContractResolvers;
+    using System;
     using System.ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -17,6 +18,11 @@ namespace Remote.Linq
         /// </summary>
         public static JsonSerializerSettings ConfigureRemoteLinq(this JsonSerializerSettings jsonSerializerSettings)
         {
+            if (jsonSerializerSettings is null)
+            {
+                throw new ArgumentNullException(nameof(jsonSerializerSettings));
+            }
+
             jsonSerializerSettings = jsonSerializerSettings.ConfigureAqua();
 
             if (jsonSerializerSettings.ContractResolver?.GetType() != typeof(RemoteLinqContractResolver))

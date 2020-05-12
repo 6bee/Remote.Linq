@@ -15,13 +15,13 @@ namespace Remote.Linq
         /// <summary>
         /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified.
         /// </summary>
-        public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeInfoProvider typeInfoProvider = null, IDynamicObjectMapper mapper = null)
+        public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null)
             => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeInfoProvider, mapper);
 
         /// <summary>
         /// Applies this query instance to an enumerable.
         /// </summary>
-        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery<TEntity> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor = null)
+        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery<TEntity> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor = null)
             => enumerable
                 .AsQueryable()
                 .ApplyQuery(query, expressionVisitor)
@@ -30,12 +30,16 @@ namespace Remote.Linq
         /// <summary>
         /// Applies this query instance to an enumerable.
         /// </summary>
-        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor = null)
+        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor = null)
             => enumerable
                 .AsQueryable()
                 .ApplyQuery(query, expressionVisitor)
                 .AsEnumerable();
 
-        internal static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T> source) => source ?? Enumerable.Empty<T>();
+        internal static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? Enumerable.Empty<T>();
+
+        internal static IEnumerable<T>? AsNullIfEmpty<T>(this IEnumerable<T>? source) => source?.Any() == true ? source : null;
+
+        internal static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? default : string.Join(separator, source);
     }
 }

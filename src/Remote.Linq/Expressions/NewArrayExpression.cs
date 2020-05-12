@@ -19,8 +19,8 @@ namespace Remote.Linq.Expressions
         public NewArrayExpression(NewArrayType newArrayType, TypeInfo typeInfo, IEnumerable<Expression> expressions)
         {
             NewArrayType = newArrayType;
-            Type = typeInfo;
-            Expressions = expressions.ToList();
+            Type = typeInfo ?? throw new ArgumentNullException(nameof(typeInfo));
+            Expressions = expressions?.ToList() ?? throw new ArgumentNullException(nameof(expressions));
         }
 
         public NewArrayExpression(NewArrayType newArrayType, Type type, IEnumerable<Expression> expressions)
@@ -34,16 +34,14 @@ namespace Remote.Linq.Expressions
         public NewArrayType NewArrayType { get; set; }
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo Type { get; set; } = null!;
 
         [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
-        public List<Expression> Expressions { get; set; }
+        public List<Expression> Expressions { get; set; } = null!;
 
         public override string ToString()
-        {
-            return NewArrayType == NewArrayType.NewArrayBounds
-                ? $"New [lenght]"
-                : $"New [] {{ {string.Join(", ", Expressions)} }}";
-        }
+            => NewArrayType == NewArrayType.NewArrayBounds
+            ? $"New [lenght]"
+            : $"New [] {{ {Expressions.StringJoin(", ")} }}";
     }
 }

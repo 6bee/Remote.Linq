@@ -248,20 +248,16 @@ namespace Remote.Linq.ExpressionVisitors
                 _throwOnInvalidProperty = throwOnInvalidProperty;
             }
 
-            internal Expression ResolveDynamicPropertySelectors(Expression expression)
-            {
-                return Visit(expression);
-            }
+            internal Expression ResolveDynamicPropertySelectors(Expression expression) => Visit(expression);
 
             protected override Expression VisitMethodCall(MethodCallExpression m)
             {
-                if (m.Method.Name == "get_Item" && m.Arguments.Count == 1)
+                if (string.Equals(m.Method.Name, "get_Item", StringComparison.Ordinal) && m.Arguments.Count == 1)
                 {
-                    string propertyName = null;
-
                     var expression = m.Arguments[0];
                     if (expression.Type == typeof(string))
                     {
+                        string propertyName;
                         if (expression.NodeType == ExpressionType.Constant)
                         {
                             var exp = (ConstantExpression)expression;
@@ -274,12 +270,12 @@ namespace Remote.Linq.ExpressionVisitors
                             propertyName = (string)value;
                         }
 
-                        if (!(propertyName is null))
+                        if (propertyName != null)
                         {
                             var instance = Visit(m.Object);
                             var propertyInfo = m.Object.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
-                            if (!(propertyInfo is null))
+                            if (propertyInfo != null)
                             {
                                 return Expression.MakeMemberAccess(instance, propertyInfo);
                             }
@@ -297,7 +293,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitLambda(LambdaExpression lambda)
             {
-                Expression body = Visit(lambda.Body);
+                var body = Visit(lambda.Body);
                 if (body != lambda.Body)
                 {
                     var type = lambda.Type;
@@ -325,7 +321,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             private class ParameterScope : IDisposable
             {
-                private readonly ParameterScope _parent;
+                private readonly ParameterScope? _parent;
                 private readonly RemoteQueryableVisitor _visitor;
                 private int _count;
 
@@ -334,18 +330,18 @@ namespace Remote.Linq.ExpressionVisitors
                 {
                 }
 
-                private ParameterScope(RemoteQueryableVisitor visitor, ParameterScope parent)
+                private ParameterScope(RemoteQueryableVisitor visitor, ParameterScope? parent)
                 {
                     _parent = parent;
                     _count = parent?._count ?? 0;
 
-                    _visitor = visitor;
+                    _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));
                     _visitor._parameterScope = this;
                 }
 
                 internal void Increment() => _count++;
 
-                void IDisposable.Dispose() => _visitor._parameterScope = _parent;
+                void IDisposable.Dispose() => _visitor._parameterScope = _parent!;
 
                 internal bool HasParameters => _count > 0;
 
@@ -359,8 +355,7 @@ namespace Remote.Linq.ExpressionVisitors
                 _parameterScope = new ParameterScope(this);
             }
 
-            public Expression Simplify(Expression expression)
-                => Visit(expression);
+            public Expression Simplify(Expression expression) => Visit(expression);
 
             protected override Expression VisitMemberAccess(MemberExpression node)
             {

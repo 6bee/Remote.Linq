@@ -11,10 +11,10 @@ namespace Remote.Linq.ExpressionVisitors
 
     public class QueryableResourceVisitor
     {
-        internal T ReplaceResourceDescriptorsByQueryable<T>(T expression, Func<Type, IQueryable> provider, ITypeResolver typeResolver) where T : Expression
+        internal T ReplaceResourceDescriptorsByQueryable<T>(T expression, Func<Type, IQueryable> provider, ITypeResolver? typeResolver) where T : Expression
             => (T)new ResourceDescriptorVisitor(provider, typeResolver).ReplaceResourceDescriptorsByQueryable(expression);
 
-        internal Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider typeInfoProvider)
+        internal Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider? typeInfoProvider)
             => new QueryableVisitor(typeInfoProvider).ReplaceQueryablesByResourceDescriptors(expression);
 
         protected class ResourceDescriptorVisitor : RemoteExpressionVisitorBase
@@ -22,14 +22,13 @@ namespace Remote.Linq.ExpressionVisitors
             private readonly ITypeResolver _typeResolver;
             private readonly Func<Type, IQueryable> _provider;
 
-            internal protected ResourceDescriptorVisitor(Func<Type, IQueryable> provider, ITypeResolver typeResolver)
+            internal protected ResourceDescriptorVisitor(Func<Type, IQueryable> provider, ITypeResolver? typeResolver)
             {
                 _provider = provider;
                 _typeResolver = typeResolver ?? TypeResolver.Instance;
             }
 
-            internal Expression ReplaceResourceDescriptorsByQueryable(Expression expression)
-                => Visit(expression);
+            internal Expression ReplaceResourceDescriptorsByQueryable(Expression expression) => Visit(expression);
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
@@ -68,7 +67,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             private readonly ITypeInfoProvider _typeInfoProvider;
 
-            internal protected QueryableVisitor(ITypeInfoProvider typeInfoProvider)
+            internal protected QueryableVisitor(ITypeInfoProvider? typeInfoProvider)
             {
                 _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
             }
@@ -94,7 +93,7 @@ namespace Remote.Linq.ExpressionVisitors
                     foreach (var property in properties)
                     {
                         var value = AsQueryableOrNull(property.Value);
-                        if (!(value is null))
+                        if (value != null)
                         {
                             var typeInfo = _typeInfoProvider.Get(value.ElementType);
                             var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
@@ -108,7 +107,7 @@ namespace Remote.Linq.ExpressionVisitors
                 return base.VisitConstant(expression);
             }
 
-            private static IQueryable AsQueryableOrNull(object value)
+            private static IQueryable? AsQueryableOrNull(object? value)
             {
                 var queryable = value as IQueryable;
                 if (queryable is null)

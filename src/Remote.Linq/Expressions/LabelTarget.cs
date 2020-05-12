@@ -14,12 +14,12 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public LabelTarget(string name, Type type = null, int instanceId = 0)
+        public LabelTarget(string? name, Type? type = null, int instanceId = 0)
             : this(name, type is null ? null : new TypeInfo(type, false, false), instanceId)
         {
         }
 
-        public LabelTarget(string name, TypeInfo type, int instanceId)
+        public LabelTarget(string? name, TypeInfo? type, int instanceId)
         {
             Name = name;
             Type = type;
@@ -27,10 +27,10 @@ namespace Remote.Linq.Expressions
         }
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo? Type { get; set; }
 
         /// <summary>
         /// Gets or sets the instance id,
@@ -39,7 +39,6 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
         public int InstanceId { get; set; }
 
-        public override string ToString()
-            => $"{Name ?? InstanceId.ToString()}";
+        public override string ToString() => $"{Name ?? InstanceId.ToString()}";
     }
 }

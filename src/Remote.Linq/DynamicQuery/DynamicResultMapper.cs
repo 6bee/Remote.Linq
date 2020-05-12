@@ -6,36 +6,38 @@ namespace Remote.Linq.DynamicQuery
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
     internal sealed class DynamicResultMapper : IQueryResultMapper<IEnumerable<DynamicObject>>
     {
-        private readonly IDynamicObjectMapper _mapper;
+        private readonly IDynamicObjectMapper? _mapper;
 
-        public DynamicResultMapper(IDynamicObjectMapper mapper)
+        public DynamicResultMapper(IDynamicObjectMapper? mapper)
         {
             _mapper = mapper;
         }
 
+        [return: MaybeNull]
         public TResult MapResult<TResult>(IEnumerable<DynamicObject> source, Expression expression)
             => MapToType<TResult>(source, _mapper, expression);
 
-        internal static TResult MapToType<TResult>(IEnumerable<DynamicObject> dataRecords, IDynamicObjectMapper mapper, Expression expression)
+        [return: MaybeNull]
+        internal static TResult MapToType<TResult>(IEnumerable<DynamicObject?>? dataRecords, IDynamicObjectMapper? mapper, Expression expression)
         {
-            var elementType = TypeHelper.GetElementType(typeof(TResult));
+            if (dataRecords is null)
+            {
+                return default;
+            }
 
             if (mapper is null)
             {
                 mapper = new DynamicQueryResultMapper();
             }
 
-            if (dataRecords is null)
-            {
-                return default;
-            }
+            var elementType = TypeHelper.GetElementType(typeof(TResult)) ?? throw new RemoteLinqException($"Failed to get element type of {typeof(TResult)}.");
 
             var result = mapper.Map(dataRecords, elementType);
-
             if (result is null)
             {
                 return default;
@@ -54,6 +56,7 @@ namespace Remote.Linq.DynamicQuery
             throw new Exception($"Failed to cast result of type '{result.GetType()}' to '{typeof(TResult)}'");
         }
 
+        [return: MaybeNull]
         internal static TResult MapToSingleResult<TResult>(Type elementType, System.Collections.IEnumerable result, MethodCallExpression methodCallExpression)
         {
             var hasPredicate = methodCallExpression.Arguments.Count == 2;
@@ -63,7 +66,7 @@ namespace Remote.Linq.DynamicQuery
             var method = methodCallExpression.Method.Name.EndsWith("OrDefault")
                 ? (hasPredicate ? MethodInfos.Enumerable.SingleOrDefaultWithPredicate : MethodInfos.Enumerable.SingleOrDefault)
                 : (hasPredicate ? MethodInfos.Enumerable.SingleWithPredicate : MethodInfos.Enumerable.Single);
-            object single = method.MakeGenericMethod(elementType).InvokeAndUnwrap(null, arguments);
+            var single = method.MakeGenericMethod(elementType).InvokeAndUnwrap(null, arguments);
             return (TResult)single;
         }
 

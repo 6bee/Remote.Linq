@@ -7,22 +7,21 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
     using global::Newtonsoft.Json;
     using Remote.Linq.DynamicQuery;
     using System.Collections.Generic;
-    using System.Linq;
 
     public sealed class VariableQueryArgumentListConverter : ObjectConverter<VariableQueryArgumentList>
     {
         protected override void ReadObjectProperties(JsonReader reader, VariableQueryArgumentList result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
-            TypeInfo elementTypeInfo;
-            void SetResult(List<object> values = null)
+            TypeInfo? elementTypeInfo;
+            void SetResult(List<object?>? values = null)
             {
                 reader.AssertEndObject();
                 result.ElementType = elementTypeInfo;
-                result.Values = values?.ToList();
+                result.Values = values ?? new List<object?>();
             }
 
             reader.AssertProperty(nameof(VariableQueryArgumentList.ElementType));
-            elementTypeInfo = reader.Read<TypeInfo>(serializer);
+            elementTypeInfo = reader.Read<TypeInfo>(serializer) ?? throw reader.CreateException($"{nameof(VariableQueryArgumentList.ElementType)} must not be null.");
 
             reader.Advance();
             if (reader.TokenType == JsonToken.Null)
@@ -36,21 +35,25 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
                 throw reader.CreateException($"Expected array");
             }
 
-            var elementType = elementTypeInfo.Type;
-            var values = new List<object>();
-            while (true)
+            bool TryReadNextItem(out object? value)
             {
-                if (!reader.TryRead(elementType, serializer, out object value))
+                if (!reader.TryRead(elementTypeInfo!, serializer, out value))
                 {
                     // TODO: is max length quota required?
                     if (reader.TokenType == JsonToken.EndArray)
                     {
-                        break;
+                        return false;
                     }
 
                     throw reader.CreateException("Unexpected token structure.");
                 }
 
+                return true;
+            }
+
+            var values = new List<object?>();
+            while (TryReadNextItem(out object? value))
+            {
                 values.Add(value);
             }
 

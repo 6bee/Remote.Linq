@@ -6,7 +6,7 @@ namespace Remote.Linq
     using System.Threading;
     using System.Threading.Tasks;
 
-    public interface IAsyncQueryResultMapper<TSource>
+    public interface IAsyncQueryResultMapper<in TSource>
     {
         Task<TResult> MapResultAsync<TResult>(TSource source, Expression expression, CancellationToken cancellationToken = default);
     }

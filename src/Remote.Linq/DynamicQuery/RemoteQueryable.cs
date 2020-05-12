@@ -14,10 +14,10 @@ namespace Remote.Linq.DynamicQuery
         {
         }
 
-        internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression expression)
+        internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression? expression)
         {
-            ElementType = elemntType;
-            Provider = provider;
+            ElementType = elemntType ?? throw new ArgumentNullException(nameof(elemntType));
+            Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             Expression = expression ?? Expression.Constant(this);
         }
 

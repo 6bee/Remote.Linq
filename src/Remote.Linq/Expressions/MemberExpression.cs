@@ -14,10 +14,10 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public MemberExpression(Expression expression, MemberInfo member)
+        public MemberExpression(Expression? expression, MemberInfo member)
         {
             Expression = expression;
-            Member = member;
+            Member = member ?? throw new ArgumentNullException(nameof(member));
         }
 
         public MemberExpression(Expression expression, System.Reflection.MemberInfo member)
@@ -28,12 +28,11 @@ namespace Remote.Linq.Expressions
         public override ExpressionType NodeType => ExpressionType.MemberAccess;
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public Expression Expression { get; set; }
+        public Expression? Expression { get; set; }
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public MemberInfo Member { get; set; }
+        public MemberInfo Member { get; set; } = null!;
 
-        public override string ToString()
-            => $"{Expression}.{Member?.Name}";
+        public override string ToString() => $"{Expression}.{Member?.Name}";
     }
 }

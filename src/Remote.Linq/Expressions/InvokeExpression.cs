@@ -15,21 +15,20 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public InvokeExpression(Expression expression, IEnumerable<Expression> arguments)
+        public InvokeExpression(Expression expression, IEnumerable<Expression>? arguments)
         {
-            Expression = expression;
+            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
             Arguments = arguments?.Any() ?? false ? arguments.ToList() : null;
         }
 
         public override ExpressionType NodeType => ExpressionType.Invoke;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public Expression Expression { get; set; }
+        public Expression Expression { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public List<Expression> Arguments { get; set; }
+        public List<Expression>? Arguments { get; set; }
 
-        public override string ToString()
-            => $".Invoke {Expression}";
+        public override string ToString() => $".Invoke {Expression}";
     }
 }

@@ -37,19 +37,19 @@ namespace Remote.Linq.Expressions
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<object, object> transform)
+        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<object?, object?> transform)
             => new ExpressionExecutorWithObjectResultProcessor(decorator, transform);
 
         /// <summary>
         /// Replace result transformation logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<object, IEnumerable<DynamicObject>> transform)
+        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<object?, IEnumerable<DynamicObject?>?> transform)
             => new ExpressionExecutorWithResultConverter(decorator, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
+        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> transform)
             => new ExpressionExecutorWithDynamicObjectResultProcessor(decorator, transform);
 
         /// <summary>
@@ -73,25 +73,25 @@ namespace Remote.Linq.Expressions
         /// <summary>
         /// Replace expression execution logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<System.Linq.Expressions.Expression, object> transform)
+        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<System.Linq.Expressions.Expression, object?> transform)
             => new ExpressionExecutorWithExpressionExecutor(executor, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<object, object> transform)
+        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<object?, object?> transform)
             => new ExpressionExecutorWithObjectResultProcessor(executor, transform);
 
         /// <summary>
         /// Replace result transformation logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<object, IEnumerable<DynamicObject>> transform)
+        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<object?, IEnumerable<DynamicObject?>?> transform)
             => new ExpressionExecutorWithResultConverter(executor, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
+        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> transform)
             => new ExpressionExecutorWithDynamicObjectResultProcessor(executor, transform);
 
         private sealed class ExpressionExecutorWithRemoteExpressionTransformer : ExpressionExecutionDecorator
@@ -138,57 +138,57 @@ namespace Remote.Linq.Expressions
 
         private sealed class ExpressionExecutorWithExpressionExecutor : ExpressionExecutionDecorator
         {
-            private readonly Func<System.Linq.Expressions.Expression, object> _transform;
+            private readonly Func<System.Linq.Expressions.Expression, object?> _transform;
 
-            public ExpressionExecutorWithExpressionExecutor(IExpressionExecutionDecorator parent, Func<System.Linq.Expressions.Expression, object> transform)
+            public ExpressionExecutorWithExpressionExecutor(IExpressionExecutionDecorator parent, Func<System.Linq.Expressions.Expression, object?> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
             }
 
-            protected override object Execute(System.Linq.Expressions.Expression expression)
+            protected override object? Execute(System.Linq.Expressions.Expression expression)
                 => _transform(expression);
         }
 
         private sealed class ExpressionExecutorWithObjectResultProcessor : ExpressionExecutionDecorator
         {
-            private readonly Func<object, object> _transform;
+            private readonly Func<object?, object?> _transform;
 
-            public ExpressionExecutorWithObjectResultProcessor(IExpressionExecutionDecorator parent, Func<object, object> transform)
+            public ExpressionExecutorWithObjectResultProcessor(IExpressionExecutionDecorator parent, Func<object?, object?> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
             }
 
-            protected override object ProcessResult(object queryResult)
+            protected override object? ProcessResult(object? queryResult)
                 => _transform(base.ProcessResult(queryResult));
         }
 
         private sealed class ExpressionExecutorWithResultConverter : ExpressionExecutionDecorator
         {
-            private readonly Func<object, IEnumerable<DynamicObject>> _transform;
+            private readonly Func<object?, IEnumerable<DynamicObject?>?> _transform;
 
-            public ExpressionExecutorWithResultConverter(IExpressionExecutionDecorator parent, Func<object, IEnumerable<DynamicObject>> transform)
+            public ExpressionExecutorWithResultConverter(IExpressionExecutionDecorator parent, Func<object?, IEnumerable<DynamicObject?>?> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
             }
 
-            protected override IEnumerable<DynamicObject> ConvertResult(object queryResult)
+            protected override IEnumerable<DynamicObject?>? ConvertResult(object? queryResult)
                 => _transform(queryResult);
         }
 
         private sealed class ExpressionExecutorWithDynamicObjectResultProcessor : ExpressionExecutionDecorator
         {
-            private readonly Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> _transform;
+            private readonly Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> _transform;
 
-            public ExpressionExecutorWithDynamicObjectResultProcessor(IExpressionExecutionDecorator parent, Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> transform)
+            public ExpressionExecutorWithDynamicObjectResultProcessor(IExpressionExecutionDecorator parent, Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
             }
 
-            protected override IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult)
+            protected override IEnumerable<DynamicObject?>? ProcessResult(IEnumerable<DynamicObject?>? queryResult)
                 => _transform(base.ProcessResult(queryResult));
         }
     }

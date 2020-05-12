@@ -15,21 +15,20 @@ namespace Remote.Linq.Expressions
         }
 
         public DefaultExpression(Type type)
-            : this(type is null ? null : new TypeInfo(type, false, false))
+            : this(new TypeInfo(type ?? throw new ArgumentNullException(nameof(type)), false, false))
         {
         }
 
         public DefaultExpression(TypeInfo type)
         {
-            Type = type;
+            Type = type ?? throw new ArgumentNullException(nameof(type));
         }
 
         public override ExpressionType NodeType => ExpressionType.Default;
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo Type { get; set; } = null!;
 
-        public override string ToString()
-            => $".Default {Type}";
+        public override string ToString() => $".Default {Type}";
     }
 }

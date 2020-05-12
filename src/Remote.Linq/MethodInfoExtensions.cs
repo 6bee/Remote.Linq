@@ -8,10 +8,10 @@ namespace Remote.Linq
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class MethodInfoExtensions
     {
-        public static object InvokeAndUnwrap(this MethodInfo methodInfo, object instance, params object[] args)
-            => methodInfo.InvokeAndUnwrap<object>(instance, args);
+        public static object? InvokeAndUnwrap(this MethodInfo methodInfo, object? instance, params object?[] args)
+            => methodInfo.InvokeAndUnwrap<object?>(instance, args);
 
-        public static TResult InvokeAndUnwrap<TResult>(this MethodInfo methodInfo, object instance, params object[] args)
+        public static TResult InvokeAndUnwrap<TResult>(this MethodInfo methodInfo, object? instance, params object?[] args)
         {
             try
             {

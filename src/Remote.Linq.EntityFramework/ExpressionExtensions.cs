@@ -27,7 +27,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <returns>A new instance <see cref="ExpressionExecutionContext" />.</returns>
         [SecuritySafeCritical]
-        public static ExpressionExecutionContext EntityFrameworkExecutor(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
+        public static ExpressionExecutionContext EntityFrameworkExecutor(this Expression expression, DbContext dbContext, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null)
             => new ExpressionExecutionContext(new EntityFrameworkExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation), expression);
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <returns>A new instance <see cref="ExpressionExecutionContext" />.</returns>
-        public static ExpressionExecutionContext EntityFrameworkExecutor(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
+        public static ExpressionExecutionContext EntityFrameworkExecutor(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null)
             => new ExpressionExecutionContext(new EntityFrameworkExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation), expression);
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <returns>The mapped result of the query execution.</returns>
         [SecuritySafeCritical]
-        public static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, DbContext dbContext, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
+        public static IEnumerable<DynamicObject?>? ExecuteWithEntityFramework(this Expression expression, DbContext dbContext, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null)
             => new EntityFrameworkExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation).Execute(expression);
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <returns>The mapped result of the query execution.</returns>
         [SecuritySafeCritical]
-        public static Task<IEnumerable<DynamicObject>> ExecuteWithEntityFrameworkAsync(this Expression expression, DbContext dbContext, CancellationToken cancellationToken = default, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
+        public static Task<IEnumerable<DynamicObject?>?> ExecuteWithEntityFrameworkAsync(this Expression expression, DbContext dbContext, CancellationToken cancellationToken = default, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null)
             => new EntityFrameworkExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation).ExecuteAsync(expression, cancellationToken);
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <returns>The mapped result of the query execution.</returns>
-        public static IEnumerable<DynamicObject> ExecuteWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
+        public static IEnumerable<DynamicObject?>? ExecuteWithEntityFramework(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null)
             => new EntityFrameworkExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation).Execute(expression);
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <returns>The mapped result of the query execution.</returns>
-        public static Task<IEnumerable<DynamicObject>> ExecuteWithEntityFrameworkAsync(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellationToken = default, ITypeResolver typeResolver = null, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
+        public static Task<IEnumerable<DynamicObject?>?> ExecuteWithEntityFrameworkAsync(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellationToken = default, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null)
             => new EntityFrameworkExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation).ExecuteAsync(expression, cancellationToken);
     }
 }

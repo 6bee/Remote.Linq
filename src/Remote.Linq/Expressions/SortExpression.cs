@@ -15,17 +15,16 @@ namespace Remote.Linq.Expressions
 
         public SortExpression(LambdaExpression operand, SortDirection sortDirection)
         {
-            Operand = operand;
+            Operand = operand ?? throw new ArgumentNullException(nameof(operand));
             SortDirection = sortDirection;
         }
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public LambdaExpression Operand { get; set; }
+        public LambdaExpression Operand { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = true)]
         public SortDirection SortDirection { get; set; }
 
-        public override string ToString()
-            => $"OrderBy ({Operand}) {SortDirection}";
+        public override string ToString() => $"OrderBy ({Operand}) {SortDirection}";
     }
 }

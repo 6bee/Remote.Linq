@@ -10,14 +10,16 @@ namespace Remote.Linq.DynamicQuery
 
     internal sealed class AsyncDynamicResultMapper : IAsyncQueryResultMapper<IEnumerable<DynamicObject>>
     {
-        private readonly IDynamicObjectMapper _mapper;
+        private readonly IDynamicObjectMapper? _mapper;
 
-        public AsyncDynamicResultMapper(IDynamicObjectMapper mapper)
+        public AsyncDynamicResultMapper(IDynamicObjectMapper? mapper)
         {
             _mapper = mapper;
         }
 
+#nullable disable
         public Task<TResult> MapResultAsync<TResult>(IEnumerable<DynamicObject> source, Expression expression, CancellationToken cancellationToken)
             => Task.Run(() => DynamicResultMapper.MapToType<TResult>(source, _mapper, expression), cancellationToken);
+#nullable restore
     }
 }
