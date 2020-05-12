@@ -103,7 +103,7 @@ namespace Remote.Linq.ExpressionVisitors
                     return VisitTypeIs((TypeBinaryExpression)expression);
 
                 default:
-                    throw new Exception($"Unhandled expression type: '{expression.NodeType}'");
+                    throw new RemoteLinqException($"Unhandled expression type: '{expression.NodeType}'");
             }
         }
 

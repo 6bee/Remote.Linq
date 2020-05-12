@@ -29,7 +29,7 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(TryExpression)), XmlInclude(typeof(TryExpression))]
     [KnownType(typeof(TypeBinaryExpression)), XmlInclude(typeof(TypeBinaryExpression))]
     [KnownType(typeof(UnaryExpression)), XmlInclude(typeof(UnaryExpression))]
-    public abstract partial class Expression
+    public abstract class Expression
     {
         public abstract ExpressionType NodeType { get; }
     }

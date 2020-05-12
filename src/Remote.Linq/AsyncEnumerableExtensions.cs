@@ -305,7 +305,7 @@ namespace Remote.Linq
                 {
                     if (method.GetGenericArguments().Length > 2)
                     {
-                        throw new Exception("Implementation error: expected closed generic method definition.");
+                        throw new RemoteLinqException("Implementation error: expected closed generic method definition.");
                     }
 
                     method = method.GetGenericArguments().Length == 2

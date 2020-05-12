@@ -116,7 +116,7 @@ namespace Remote.Linq
         {
             if (!SortExpressions.Any())
             {
-                throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
+                throw new InvalidOperationException($"No sorting defined yet, use {nameof(OrderBy)} or {nameof(OrderByDescending)} first.");
             }
 
             var expression = _expressionTranslator(keySelector);
@@ -182,7 +182,7 @@ namespace Remote.Linq
         {
             if (_dataProvider is null)
             {
-                throw new Exception("A query may only be enumerated if a data provider has been specified via constructor parameter.");
+                throw new RemoteLinqException("A query may only be enumerated if a data provider has been specified via constructor parameter.");
             }
 
             return _dataProvider(this).GetEnumerator();
@@ -203,7 +203,7 @@ namespace Remote.Linq
             var type = (typeResolver ?? TypeResolver.Instance).ResolveType(query.Type);
             if (typeof(T) != type)
             {
-                throw new Exception($"Generic type mismatch: {typeof(T)} vs. {query.Type}");
+                throw new RemoteLinqException($"Generic type mismatch: {typeof(T)} vs. {query.Type}");
             }
 
             var instance = new Query<T>(dataProvider, expressionTranslator, query.FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);

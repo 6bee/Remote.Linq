@@ -27,7 +27,7 @@ namespace Remote.Linq.EntityFramework
             .Where(m => m.IsGenericMethodDefinition && m.GetParameters().Length == 2)
             .Single();
 
-        private static readonly Func<Type, System.Reflection.PropertyInfo> TaskResultProperty = (Type resultType) =>
+        private static readonly Func<Type, System.Reflection.PropertyInfo> TaskResultProperty = resultType =>
             typeof(Task<>).MakeGenericType(resultType)
                 .GetProperty(nameof(Task<object?>.Result));
 
