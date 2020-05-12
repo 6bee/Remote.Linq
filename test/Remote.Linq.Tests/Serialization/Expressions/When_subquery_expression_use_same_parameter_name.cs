@@ -48,7 +48,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
         private readonly Func<Expression, Func<Type, IQueryable>, IEnumerable<DynamicObject>> _execute;
 
-        public When_subquery_expression_use_same_parameter_name(Func<Expression, Expression> serialize)
+        protected When_subquery_expression_use_same_parameter_name(Func<Expression, Expression> serialize)
         {
             _execute = (expression, queryableProvider) => serialize(expression).Execute(queryableProvider: queryableProvider);
         }
