@@ -16,6 +16,7 @@ environment:
 before_build:
   - dotnet --info
   - dotnet restore
+  - dotnet tool install --global codecov.tool
 
 build_script:
   - dotnet build src\Remote.Linq 
@@ -27,9 +28,14 @@ build_script:
   - dotnet build test\Remote.Linq.EntityFrameworkCore.Tests
 
 test_script:
-  - dotnet test test\Remote.Linq.Tests\Remote.Linq.Tests.csproj
-  - dotnet test test\Remote.Linq.EntityFramework.Tests\Remote.Linq.EntityFramework.Tests.csproj
-  - dotnet test test\Remote.Linq.EntityFrameworkCore.Tests\Remote.Linq.EntityFrameworkCore.Tests.csproj
+  - dotnet test test\Remote.Linq.Tests
+  - dotnet test test\Remote.Linq.EntityFramework.Tests
+  - dotnet test test\Remote.Linq.EntityFrameworkCore.Tests
+
+after_test:
+  - dotnet test test\Remote.Linq.Tests                     -f netcoreapp3.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory TestResults
+  - dotnet test test\Remote.Linq.EntityFrameworkCore.Tests -f netcoreapp3.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory TestResults
+  - codecov -f **\coverage.cobertura.xml
 
 build:
   verbosity: normal

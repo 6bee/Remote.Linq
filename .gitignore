@@ -34,3 +34,5 @@ config.test.json
 .idea/
 *.sln.iml
 *.DotSettings
+coverage*.json
+coverage*.xml
