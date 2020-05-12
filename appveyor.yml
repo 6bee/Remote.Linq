@@ -19,7 +19,7 @@ before_build:
   - dotnet tool install --global codecov.tool
 
 build_script:
-  - dotnet build src\Remote.Linq 
+  - dotnet build src\Remote.Linq
   - dotnet build src\Remote.Linq.EntityFramework
   - dotnet build src\Remote.Linq.EntityFrameworkCore
   - dotnet build src\Remote.Linq.Newtonsoft.Json

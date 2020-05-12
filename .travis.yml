@@ -1,4 +1,4 @@
-language: generic  
+language: generic
 
 branches:
   except:
@@ -9,7 +9,7 @@ env:
     - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
     - DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-addons:  
+addons:
   apt:
     packages:
     - gettext
@@ -26,15 +26,15 @@ matrix:
     - os: osx
       env: FRAMEWORK_VERSION=3.0 CLI_VERSION=Latest CONFIGURATION=Release
 
-install:  
+install:
   - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
   - curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --channel 3.0 --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
-  - export PATH="$DOTNET_INSTALL_DIR:$PATH" 
+  - export PATH="$DOTNET_INSTALL_DIR:$PATH"
 
-before_script:  
+before_script:
   - if test "$TRAVIS_OS_NAME" == "osx"; then export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib; fi
   - dotnet --info
 
-script: 
+script:
   - travis_wait 20 dotnet test ./test/Remote.Linq.Tests/Remote.Linq.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
   - dotnet test ./test/Remote.Linq.EntityFrameworkCore.Tests/Remote.Linq.EntityFrameworkCore.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
