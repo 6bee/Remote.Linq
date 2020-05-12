@@ -1,15 +1,15 @@
 # Remote.Linq
 
-| branch   | AppVeyor                             | Travis CI                          | Codecov.io         | Codacy                  | CodeFactor             | License                     |
-| ---      | ---                                  | ---                                | ---                | ---                     | ---                    | ---                         |
-| `master` | [![AppVeyor Build Status]([1])]([2]) | [![Travis build Status]([3])]([4]) | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
+| branch   | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy            | CodeFactor             | License                     |
+| ---      | ---                              | ---                            | ---                | ---               | ---                    | ---                         |
+| `master` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
 
-| package                           | nuget                        | myget                              |
-| ---                               | ---                          | ---                                |
-| `Remote.Linq`                     | [![NuGet Badge]([13])]([14]) | [![MyGet Pre Release]([15])]([16]) |
-| `Remote.Linq.EntityFramework`     | [![NuGet Badge]([17])]([18]) | [![MyGet Pre Release]([19])]([20]) |
-| `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge]([21])]([22]) | [![MyGet Pre Release]([23])]([24]) |
-| `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge]([25])]([26]) | [![MyGet Pre Release]([27])]([28]) |
+| package                           | nuget                    | myget                          |
+| ---                               | ---                      | ---                            |
+| `Remote.Linq`                     | [![NuGet Badge][13]][14] | [![MyGet Pre Release][15]][16] |
+| `Remote.Linq.EntityFramework`     | [![NuGet Badge][17]][18] | [![MyGet Pre Release][19]][20] |
+| `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
+| `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge][25]][26] | [![MyGet Pre Release][27]][28] |
 
 
 ### Description
