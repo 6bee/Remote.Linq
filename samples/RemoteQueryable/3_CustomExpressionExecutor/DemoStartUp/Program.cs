@@ -9,7 +9,7 @@ namespace DemoStartUp
 
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             const string url = "net.pipe://localhost/8080/query";
 

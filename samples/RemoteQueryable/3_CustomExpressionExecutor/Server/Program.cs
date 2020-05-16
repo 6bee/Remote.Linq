@@ -10,7 +10,7 @@ namespace Server
 
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             using (ServiceHost serviceHost = new ServiceHost(typeof(QueryService)))
             {
