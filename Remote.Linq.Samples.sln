@@ -18,86 +18,86 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RemoteQueryable", "RemoteQu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00_Basic", "00_Basic", "{70F965F6-5A55-4C7D-9502-D01A308E87C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\0_Basic\Client\Client.csproj", "{B28D239C-372E-4793-A00B-A2022D9D2867}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\00_Basic\Client\Client.csproj", "{B28D239C-372E-4793-A00B-A2022D9D2867}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\0_Basic\Common\Common.csproj", "{A1F1CB3B-EBD9-440D-A520-E3FB853E9818}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\00_Basic\Common\Common.csproj", "{A1F1CB3B-EBD9-440D-A520-E3FB853E9818}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\0_Basic\DemoStartUp\DemoStartUp.csproj", "{4D7C80A8-1BAF-447D-BF37-62DA11F4F79C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\00_Basic\DemoStartUp\DemoStartUp.csproj", "{4D7C80A8-1BAF-447D-BF37-62DA11F4F79C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\0_Basic\Server\Server.csproj", "{6103BAB0-52F8-4267-BC60-1DBA76709CAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\00_Basic\Server\Server.csproj", "{6103BAB0-52F8-4267-BC60-1DBA76709CAA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Async", "01_Async", "{9A21BBB2-7261-4D37-98D3-74CCAF4FC0B2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\1_Async\Client\Client.csproj", "{6EB98CB4-E754-4CA8-8A21-C948E4A91560}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\01_Async\Client\Client.csproj", "{6EB98CB4-E754-4CA8-8A21-C948E4A91560}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\1_Async\Common\Common.csproj", "{8EEE1959-06B5-4FA3-91D6-FD3AFD2450B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\01_Async\Common\Common.csproj", "{8EEE1959-06B5-4FA3-91D6-FD3AFD2450B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\1_Async\DemoStartUp\DemoStartUp.csproj", "{88AC9DC4-0879-439A-B77F-920DA633D825}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\01_Async\DemoStartUp\DemoStartUp.csproj", "{88AC9DC4-0879-439A-B77F-920DA633D825}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\1_Async\Server\Server.csproj", "{81DF0D09-821F-404E-B2B5-3DC56733C978}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\01_Async\Server\Server.csproj", "{81DF0D09-821F-404E-B2B5-3DC56733C978}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02_DynamicObjectWithKnownTypes", "02_DynamicObjectWithKnownTypes", "{E27FC46E-8BCA-4F9B-A694-E2867FCF23A0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\2_DynamicObjectWithKnownTypes\Client\Client.csproj", "{9F812E66-23AC-4DF0-9FB0-9BC8E3325CB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\02_DynamicObjectWithKnownTypes\Client\Client.csproj", "{9F812E66-23AC-4DF0-9FB0-9BC8E3325CB8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\2_DynamicObjectWithKnownTypes\Common\Common.csproj", "{52ADD556-577F-47E6-ADCF-C08D1C1A2131}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\02_DynamicObjectWithKnownTypes\Common\Common.csproj", "{52ADD556-577F-47E6-ADCF-C08D1C1A2131}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\2_DynamicObjectWithKnownTypes\DemoStartUp\DemoStartUp.csproj", "{A78300EE-E0D9-4AFF-BBD5-C0FE193A8659}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\02_DynamicObjectWithKnownTypes\DemoStartUp\DemoStartUp.csproj", "{A78300EE-E0D9-4AFF-BBD5-C0FE193A8659}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\2_DynamicObjectWithKnownTypes\Server\Server.csproj", "{DBD7BE55-A939-4865-BA02-51180E1BF9C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\02_DynamicObjectWithKnownTypes\Server\Server.csproj", "{DBD7BE55-A939-4865-BA02-51180E1BF9C7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03_CustomExpressionExecutor", "03_CustomExpressionExecutor", "{C046B71A-C09D-4F3C-8B83-E848BFBEB9CF}"
 	ProjectSection(SolutionItems) = preProject
-		samples\RemoteQueryable\3_CustomExpressionExecutor\README.md = samples\RemoteQueryable\3_CustomExpressionExecutor\README.md
+		samples\RemoteQueryable\03_CustomExpressionExecutor\README.md = samples\RemoteQueryable\03_CustomExpressionExecutor\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\3_CustomExpressionExecutor\Client\Client.csproj", "{11B76CF7-E1FF-43BF-9266-31CE01DDBD8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\03_CustomExpressionExecutor\Client\Client.csproj", "{11B76CF7-E1FF-43BF-9266-31CE01DDBD8F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\3_CustomExpressionExecutor\Common\Common.csproj", "{598BFF94-DCBB-4D45-B817-606AD45C58DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\03_CustomExpressionExecutor\Common\Common.csproj", "{598BFF94-DCBB-4D45-B817-606AD45C58DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\3_CustomExpressionExecutor\DemoStartUp\DemoStartUp.csproj", "{04FC1811-42F1-4A89-9585-2D768F587CB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\03_CustomExpressionExecutor\DemoStartUp\DemoStartUp.csproj", "{04FC1811-42F1-4A89-9585-2D768F587CB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\3_CustomExpressionExecutor\Server\Server.csproj", "{3CD3C5E5-EBD9-4B8C-BCB1-ACD97FBEDB70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\03_CustomExpressionExecutor\Server\Server.csproj", "{3CD3C5E5-EBD9-4B8C-BCB1-ACD97FBEDB70}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_CustomTypeResolver", "04_CustomTypeResolver", "{D3DDA0FA-DBD2-4ADB-B4AF-269FABA2D8C0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\4_CustomTypeResolver\Client\Client.csproj", "{DBA833E2-8DDF-405E-8D17-5404577B975B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\04_CustomTypeResolver\Client\Client.csproj", "{DBA833E2-8DDF-405E-8D17-5404577B975B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\4_CustomTypeResolver\Common\Common.csproj", "{A7A915A6-E058-4796-8F2C-2B0540A7FE9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\04_CustomTypeResolver\Common\Common.csproj", "{A7A915A6-E058-4796-8F2C-2B0540A7FE9B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\4_CustomTypeResolver\DemoStartUp\DemoStartUp.csproj", "{7BAEE2D5-038E-4FC1-9864-6CD994F1B1E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\04_CustomTypeResolver\DemoStartUp\DemoStartUp.csproj", "{7BAEE2D5-038E-4FC1-9864-6CD994F1B1E0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\4_CustomTypeResolver\Server\Server.csproj", "{88A2B943-235B-40D2-A338-C43AF47D2A9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\04_CustomTypeResolver\Server\Server.csproj", "{88A2B943-235B-40D2-A338-C43AF47D2A9E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05_ServerDefinedProjection", "05_ServerDefinedProjection", "{F96F9950-06A6-4DDF-B133-DD108126A3DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\5_ServerDefinedProjection\Client\Client.csproj", "{B19A8E74-14A9-42C3-99B5-DA08567C8E63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\05_ServerDefinedProjection\Client\Client.csproj", "{B19A8E74-14A9-42C3-99B5-DA08567C8E63}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\5_ServerDefinedProjection\Common\Common.csproj", "{DCB737BB-7B2A-4D0A-ADDC-7C7ABD6F10B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\05_ServerDefinedProjection\Common\Common.csproj", "{DCB737BB-7B2A-4D0A-ADDC-7C7ABD6F10B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\5_ServerDefinedProjection\DemoStartUp\DemoStartUp.csproj", "{49B9E3BA-3F07-45B5-8DC5-F95D08BF240C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\05_ServerDefinedProjection\DemoStartUp\DemoStartUp.csproj", "{49B9E3BA-3F07-45B5-8DC5-F95D08BF240C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\5_ServerDefinedProjection\Server\Server.csproj", "{69645AE6-0517-4E7B-B293-B37BDE278C85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\05_ServerDefinedProjection\Server\Server.csproj", "{69645AE6-0517-4E7B-B293-B37BDE278C85}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06_Compression", "06_Compression", "{8E9A1CB0-00D0-4E98-8D06-43B353DF2B78}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\6_Compression\Client\Client.csproj", "{D8F636FB-DE9F-4482-80C1-ED66CC92DEB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\06_Compression\Client\Client.csproj", "{D8F636FB-DE9F-4482-80C1-ED66CC92DEB9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\6_Compression\Common\Common.csproj", "{FD5D94C8-1C12-4E45-B565-965C38A295D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\06_Compression\Common\Common.csproj", "{FD5D94C8-1C12-4E45-B565-965C38A295D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\6_Compression\DemoStartUp\DemoStartUp.csproj", "{A0DD7A7C-7022-4FE4-A3AD-18BD82BB5679}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\06_Compression\DemoStartUp\DemoStartUp.csproj", "{A0DD7A7C-7022-4FE4-A3AD-18BD82BB5679}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\6_Compression\Server\Server.csproj", "{8EAC5502-9E29-45ED-80D2-0A0A3107B0F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\06_Compression\Server\Server.csproj", "{8EAC5502-9E29-45ED-80D2-0A0A3107B0F9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "07_Inheritance", "07_Inheritance", "{2EC1959F-D673-407F-AD20-4615CA731CC7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\7_Inheritance\Client\Client.csproj", "{B6B42260-816E-4883-9F4F-E175E0C9FA75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\07_Inheritance\Client\Client.csproj", "{B6B42260-816E-4883-9F4F-E175E0C9FA75}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\7_Inheritance\Common\Common.csproj", "{F9A97154-E804-47D5-99A9-4867BC43CAB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\07_Inheritance\Common\Common.csproj", "{F9A97154-E804-47D5-99A9-4867BC43CAB5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\7_Inheritance\DemoStartUp\DemoStartUp.csproj", "{185DCBE9-E138-46AB-B71B-DA59462EDBC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\07_Inheritance\DemoStartUp\DemoStartUp.csproj", "{185DCBE9-E138-46AB-B71B-DA59462EDBC4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\7_Inheritance\Server\Server.csproj", "{9C13073B-998A-4C9D-9DFE-4882000BF9DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\07_Inheritance\Server\Server.csproj", "{9C13073B-998A-4C9D-9DFE-4882000BF9DF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10_UsingBinarySerializationOverTcp", "10_UsingBinarySerializationOverTcp", "{890EFF0D-45BF-47E1-A106-8732D6B1DF42}"
 EndProject

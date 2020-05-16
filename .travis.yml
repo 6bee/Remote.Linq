@@ -40,15 +40,15 @@ script:
   - travis_wait 20 dotnet test test/Remote.Linq.Tests -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
   - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
   # samples
-  #WCF- dotnet build samples/QueryDemo
-  #WCF- dotnet build samples/RemoteQueryable/0_Basic
-  #WCF- dotnet build samples/RemoteQueryable/1_Async
-  #WCF- dotnet build samples/RemoteQueryable/2_DynamicObjectWithKnownTypes
-  #WCF- dotnet build samples/RemoteQueryable/3_KnownTypesAsObjects
-  #WCF- dotnet build samples/RemoteQueryable/4_CustomTypeResolver
-  #WCF- dotnet build samples/RemoteQueryable/5_ServerDefinedProjection
-  #WCF- dotnet build samples/RemoteQueryable/6_Compression
-  #WCF- dotnet build samples/RemoteQueryable/7_Inheritance
+  #WCF- dotnet build samples/QueryDemov
+  #WCF- dotnet build samples/RemoteQueryable/00_Basic
+  #WCF- dotnet build samples/RemoteQueryable/01_Async
+  #WCF- dotnet build samples/RemoteQueryable/02_DynamicObjectWithKnownTypes
+  #WCF- dotnet build samples/RemoteQueryable/03_CustomExpressionExecutor
+  #WCF- dotnet build samples/RemoteQueryable/04_CustomTypeResolver
+  #WCF- dotnet build samples/RemoteQueryable/05_ServerDefinedProjection
+  #WCF- dotnet build samples/RemoteQueryable/06_Compression
+  #WCF- dotnet build samples/RemoteQueryable/07_Inheritance
   - dotnet build samples/RemoteQueryable/10_UsingBinarySerializationOverTcp
   - dotnet build samples/RemoteQueryable/11_UsingBinarySerializationOverTcpAsync
   - dotnet build samples/RemoteQueryable/12_UsingJsonSerializationOverTcp
