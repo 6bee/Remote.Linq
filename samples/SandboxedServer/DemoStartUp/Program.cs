@@ -34,7 +34,7 @@ namespace DemoStartUp
 
             Console.WriteLine("\n\n2nd demo: running server in restricted app domain (partial-trust)");
             AppDomain serverDomain = CreateServerAppDomain(
-                new FileIOPermission(PermissionState.None), // <-- this prevents clients to enumerate the server's file system
+                new FileIOPermission(PermissionState.None), // this prevents clients from enumerating the server's file system
                 new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, ip, port));
             using (Server server = Create<Server>(serverDomain, ip, port))
             {
