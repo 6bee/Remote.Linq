@@ -19,13 +19,35 @@ before_build:
   - dotnet tool install --global codecov.tool
 
 build_script:
+  # framework
   - dotnet build src\Remote.Linq
   - dotnet build src\Remote.Linq.EntityFramework
   - dotnet build src\Remote.Linq.EntityFrameworkCore
   - dotnet build src\Remote.Linq.Newtonsoft.Json
+  # tests
   - dotnet build test\Remote.Linq.Tests
   - dotnet build test\Remote.Linq.EntityFramework.Tests
   - dotnet build test\Remote.Linq.EntityFrameworkCore.Tests
+  # samples
+  - dotnet build samples\QueryDemo
+  - dotnet build samples\RemoteQueryable\0_Basic
+  - dotnet build samples\RemoteQueryable\1_Async
+  - dotnet build samples\RemoteQueryable\2_DynamicObjectWithKnownTypes
+  - dotnet build samples\RemoteQueryable\3_KnownTypesAsObjects
+  - dotnet build samples\RemoteQueryable\4_CustomTypeResolver
+  - dotnet build samples\RemoteQueryable\5_ServerDefinedProjection
+  - dotnet build samples\RemoteQueryable\6_Compression
+  - dotnet build samples\RemoteQueryable\7_Inheritance
+  - dotnet build samples\RemoteQueryable\10_UsingBinarySerializationOverTcp
+  - dotnet build samples\RemoteQueryable\10_UsingJsonSerializationOverTcp
+  - dotnet build samples\RemoteQueryable\10_UsingJsonSerializationOverWebApi
+  - dotnet build samples\RemoteQueryable\10_UsingXmlSerializationOverHttp
+  - dotnet build samples\RemoteQueryable\10_UsingXmlSerializationOverTcp
+  - dotnet build samples\RemoteQueryable\10_UsingXmlSerializationOverWebApi
+  - dotnet build samples\RemoteQueryableToEntityFramework
+  - dotnet build samples\RemoteQueryableToEntityFrameworkCore
+  - dotnet build samples\RemoteQueryableToNHibernate
+  - dotnet build samples\SandboxedQueryServer
 
 test_script:
   - dotnet test test\Remote.Linq.Tests

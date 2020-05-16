@@ -36,5 +36,25 @@ before_script:
   - dotnet --info
 
 script:
-  - travis_wait 20 dotnet test ./test/Remote.Linq.Tests/Remote.Linq.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
-  - dotnet test ./test/Remote.Linq.EntityFrameworkCore.Tests/Remote.Linq.EntityFrameworkCore.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
+  # tests
+  - travis_wait 20 dotnet test test/Remote.Linq.Tests -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
+  - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
+  # samples
+  #WCF- dotnet build samples/QueryDemo
+  #WCF- dotnet build samples/RemoteQueryable/0_Basic
+  #WCF- dotnet build samples/RemoteQueryable/1_Async
+  #WCF- dotnet build samples/RemoteQueryable/2_DynamicObjectWithKnownTypes
+  #WCF- dotnet build samples/RemoteQueryable/3_KnownTypesAsObjects
+  #WCF- dotnet build samples/RemoteQueryable/4_CustomTypeResolver
+  #WCF- dotnet build samples/RemoteQueryable/5_ServerDefinedProjection
+  #WCF- dotnet build samples/RemoteQueryable/6_Compression
+  #WCF- dotnet build samples/RemoteQueryable/7_Inheritance
+  - dotnet build samples/RemoteQueryable/10_UsingBinarySerializationOverTcp
+  - dotnet build samples/RemoteQueryable/10_UsingJsonSerializationOverTcp
+  #WebAPI- dotnet build samples/RemoteQueryable/10_UsingJsonSerializationOverWebApi
+  - dotnet build samples/RemoteQueryable/10_UsingXmlSerializationOverHttp
+  - dotnet build samples/RemoteQueryable/10_UsingXmlSerializationOverTcp
+  #WebAPI- dotnet build samples/RemoteQueryable/10_UsingXmlSerializationOverWebApi
+  #WCF- dotnet build samples/RemoteQueryableToEntityFramework
+  #WCF- dotnet build samples/RemoteQueryableToEntityFrameworkCore
+  #WCF- dotnet build samples/RemoteQueryableToNHibernate

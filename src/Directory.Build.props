@@ -1,55 +1,6 @@
 ﻿<Project>
-
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
-
   <PropertyGroup>
-    <VersionPrefix>$(MajorVersion).$(MinorVersion).$(PatchVersion)</VersionPrefix>
-    <VersionSuffix>$(PreReleaseLabel)</VersionSuffix>
-    <AssemblyVersion>$(MajorVersion).$(MinorVersion).0.0</AssemblyVersion>
-    <AssemblyFileVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).0</AssemblyFileVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Copyright>Copyright © Christof Senn 2013-2020</Copyright>
-    <Authors>Christof Senn</Authors>
-    <PackageIcon>remotelinq-small.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/6bee/Remote.Linq</PackageProjectUrl>
-    <PackageLicenseFile>license.txt</PackageLicenseFile>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/6bee/Remote.Linq.git</RepositoryUrl>
-    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
-    <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
-    <IncludeSymbols>true</IncludeSymbols>
-    <EmbedAllSources>true</EmbedAllSources>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\remotelinq-small.png" Pack="true" Visible="false" PackagePath=""/>
-    <None Include="$(MSBuildThisFileDirectory)..\license.txt" Pack="true" Visible="false" PackagePath=""/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)..\GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <SignAssembly Condition=" '$(SignAssembly)' == '' ">true</SignAssembly>
-    <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)..\key.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\Style.NoDoc.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-
 </Project>
