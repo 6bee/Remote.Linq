@@ -19,11 +19,11 @@ namespace Client
         {
             _dataProvider = expression =>
             {
-                using var client = new TcpClient(ip, port);
-                using var stream = client.GetStream();
+                using TcpClient client = new TcpClient(ip, port);
+                using NetworkStream stream = client.GetStream();
                 stream.Write(expression);
                 stream.Flush();
-                var result = stream.Read<IEnumerable<DynamicObject>>();
+                IEnumerable<DynamicObject> result = stream.Read<IEnumerable<DynamicObject>>();
                 stream.Close();
                 client.Close();
                 return result;

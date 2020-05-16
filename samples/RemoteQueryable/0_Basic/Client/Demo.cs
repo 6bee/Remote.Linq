@@ -4,7 +4,6 @@ namespace Client
 {
     using Common.Model;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -19,23 +18,21 @@ namespace Client
 
         public void Run()
         {
-            var repo = new RemoteRepository(_url);
+            RemoteRepository repo = new RemoteRepository(_url);
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
             foreach (object o in (IQueryable)repo.Products)
             {
-                var i = o as Product;
+                Product i = o as Product;
                 Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
 
-
             Console.WriteLine("\nGET PRODUCTS FILTERED BY ID:");
-            var idSelection = new List<int> { 1, 11, 111 };
-            foreach (var i in repo.Products.Where(p => idSelection.Contains(p.Id) || p.Id % 3 == 0))
+            List<int> idSelection = new List<int> { 1, 11, 111 };
+            foreach (Product i in repo.Products.Where(p => idSelection.Contains(p.Id) || p.Id % 3 == 0))
             {
                 Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
-
 
             Console.WriteLine("\nCROSS JOIN:");
             Func<object, string> sufix = (x) => x + "ending";
@@ -49,7 +46,6 @@ namespace Client
                 Console.WriteLine($"  {i}");
             }
 
-
             Console.WriteLine("\nINNER JOIN:");
             var innerJoinQuery =
                 from c in repo.ProductCategories
@@ -61,25 +57,22 @@ namespace Client
                 Console.WriteLine($"  {i}");
             }
 
-
             Console.WriteLine("\nSELECT IDs:");
-            var productIdsQuery =
+            IQueryable<int> productIdsQuery =
                 from p in repo.Products
                 orderby p.Price descending
                 select p.Id;
-            var productIds = productIdsQuery.ToList();
-            foreach (var id in productIdsQuery)
+            List<int> productIds = productIdsQuery.ToList();
+            foreach (int id in productIdsQuery)
             {
                 Console.WriteLine($"  {id}");
             }
 
-
             Console.WriteLine("\nCOUNT:");
-            var productsQuery =
+            IQueryable<Product> productsQuery =
                 from p in repo.Products
                 select p;
             Console.WriteLine($"  Count = {productsQuery.Count()}");
-
 
             Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
             var totalAmountByCategoryQuery =
@@ -102,18 +95,16 @@ namespace Client
                 Console.WriteLine($"  {i}");
             }
 
-
             Console.WriteLine("\nGET PRODUCT GROUPS:");
-            foreach (var g in repo.ProductGroups)
+            foreach (ProductGroup g in repo.ProductGroups)
             {
                 Console.WriteLine($"  {g.Id} | {g.GroupName}");
 
-                foreach (var p in g.Products)
+                foreach (Product p in g.Products)
                 {
                     Console.WriteLine($"    | * {p.Name}");
                 }
             }
-
 
             Console.WriteLine("\nEXPECTED INVALID OPERATION:");
             try

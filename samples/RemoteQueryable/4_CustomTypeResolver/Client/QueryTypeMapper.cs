@@ -9,7 +9,7 @@ namespace Client
     {
         public override TypeInfo Get(Type type, bool? includePropertyInfosOverride = null, bool? setMemberDeclaringTypesOverride = null)
         {
-            var typeInfo = base.Get(type, includePropertyInfosOverride, setMemberDeclaringTypesOverride);
+            TypeInfo typeInfo = base.Get(type, includePropertyInfosOverride, setMemberDeclaringTypesOverride);
             if (typeInfo.Namespace == "Client.ClientModel")
             {
                 typeInfo.Namespace = "Server.ServerModel";

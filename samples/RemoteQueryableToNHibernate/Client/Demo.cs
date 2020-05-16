@@ -16,14 +16,13 @@ namespace Client
 
         public void Run()
         {
-            using var repo = new RemoteRepository(_url);
+            using RemoteRepository repo = new RemoteRepository(_url);
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
-            foreach (var i in repo.Products)
+            foreach (Common.Model.Product i in repo.Products)
             {
                 Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
-
 
             Console.WriteLine("\nCROSS JOIN:");
             var crossJoinQuery =
@@ -36,7 +35,6 @@ namespace Client
                 Console.WriteLine($"  {i}");
             }
 
-
             Console.WriteLine("\nINNER JOIN:");
             var innerJoinQuery =
                 from c in repo.ProductCategories
@@ -48,25 +46,22 @@ namespace Client
                 Console.WriteLine($"  {i}");
             }
 
-
             Console.WriteLine("\nSELECT IDs:");
-            var productIdsQuery =
+            IQueryable<int> productIdsQuery =
                 from p in repo.Products
                 orderby p.Price descending
                 select p.Id;
-            var productIds = productIdsQuery.ToList();
-            foreach (var id in productIdsQuery)
+            System.Collections.Generic.List<int> productIds = productIdsQuery.ToList();
+            foreach (int id in productIdsQuery)
             {
                 Console.WriteLine($"  {id}");
             }
 
-
             Console.WriteLine("\nCOUNT:");
-            var productsQuery =
+            IQueryable<Common.Model.Product> productsQuery =
                 from p in repo.Products
                 select p;
             Console.WriteLine($"  Count = {productsQuery.Count()}");
-
 
             Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
             var totalAmountByCategoryQuery =
@@ -88,7 +83,6 @@ namespace Client
             {
                 Console.WriteLine($"  {i}");
             }
-
 
             Console.WriteLine("\nINVALID OPERATION:");
             try

@@ -6,8 +6,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.0" />
-    <PackageReference Include="Remote.Linq" Version="6.3.0-alpha-002" />
-    <PackageReference Include="Remote.Linq.EntityFramework" Version="6.3.0-alpha-002" />
+    <PackageReference Include="Remote.Linq" />
+    <PackageReference Include="Remote.Linq.EntityFramework" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>

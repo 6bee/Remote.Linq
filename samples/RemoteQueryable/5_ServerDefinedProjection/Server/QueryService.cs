@@ -13,7 +13,7 @@ namespace Server
     {
         private static readonly Func<Type, IQueryable> _queryableResourceProvider = type =>
         {
-            var dataStore = InMemoryDataStore.Instance;
+            InMemoryDataStore dataStore = InMemoryDataStore.Instance;
 
             if (type == typeof(Common.Model.ProductCategory))
             {
@@ -22,20 +22,20 @@ namespace Server
                     select new Common.Model.ProductCategory
                     {
                         Id = x.Id,
-                        Name = x.Name
+                        Name = x.Name,
                     };
             }
 
             if (type == typeof(Common.Model.Product))
             {
-                return 
+                return
                     from x in dataStore.Products
                     select new Common.Model.Product
                     {
                         Id = x.Id,
                         Name = x.Name,
                         Price = x.Price,
-                        ProductCategoryId = x.ProductCategoryId
+                        ProductCategoryId = x.ProductCategoryId,
                     };
             }
 
@@ -47,7 +47,7 @@ namespace Server
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
-                        Quantity = x.Quantity
+                        Quantity = x.Quantity,
                     };
             }
 

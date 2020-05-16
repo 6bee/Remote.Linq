@@ -41,7 +41,9 @@ namespace Server
         public static InMemoryDataStore Instance => _instance;
 
         public IEnumerable<ProductCategory> ProductCategories => _productCategories;
+
         public IEnumerable<Product> Products => _products;
+
         public IEnumerable<OrderItem> OrderItems => _orderItems;
     }
 }

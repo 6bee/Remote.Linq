@@ -2,7 +2,7 @@
 
 namespace Common.Model
 {
-   using System.Collections.Generic;
+    using System.Collections.Generic;
 
     public class ProductGroup
     {

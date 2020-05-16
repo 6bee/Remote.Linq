@@ -13,21 +13,32 @@ namespace Server
     {
         private static readonly Func<Type, IQueryable> _queryableResourceProvider = type =>
         {
-            var dataStore = InMemoryDataStore.Instance;
+            InMemoryDataStore dataStore = InMemoryDataStore.Instance;
 
-            if (type == typeof(ProductCategory)) return dataStore.ProductCategories.AsQueryable();
-            if (type == typeof(Product)) return dataStore.Products.AsQueryable();
-            if (type == typeof(OrderItem)) return dataStore.OrderItems.AsQueryable();
+            if (type == typeof(ProductCategory))
+            {
+                return dataStore.ProductCategories.AsQueryable();
+            }
+
+            if (type == typeof(Product))
+            {
+                return dataStore.Products.AsQueryable();
+            }
+
+            if (type == typeof(OrderItem))
+            {
+                return dataStore.OrderItems.AsQueryable();
+            }
 
             throw new Exception(string.Format("No queryable resource available for type {0}", type));
         };
 
         public byte[] ExecuteQuery(Expression queryExpression)
         {
-            var result = queryExpression.Execute(_queryableResourceProvider);
-            
-            var compressedData = new CompressionHelper().Compress(result);
-            
+            System.Collections.Generic.IEnumerable<Aqua.Dynamic.DynamicObject> result = queryExpression.Execute(_queryableResourceProvider);
+
+            byte[] compressedData = new CompressionHelper().Compress(result);
+
             return compressedData;
         }
     }

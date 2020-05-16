@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Server
 {
@@ -21,7 +21,7 @@ namespace Server
 
         public IQueryable GetQueryable(Type type)
         {
-            var method = typeof(NHContext).GetMethods()
+            System.Reflection.MethodInfo method = typeof(NHContext).GetMethods()
                 .Single(x => x.Name == nameof(GetQueryable) && x.IsGenericMethod)
                 .MakeGenericMethod(type);
 

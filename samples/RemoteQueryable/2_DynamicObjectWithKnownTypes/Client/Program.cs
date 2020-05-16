@@ -4,9 +4,9 @@ namespace Client
 {
     using System;
 
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("Wait for query service to indicate that it's started, ");
             Console.WriteLine("then press <ENTER> to start the client.");

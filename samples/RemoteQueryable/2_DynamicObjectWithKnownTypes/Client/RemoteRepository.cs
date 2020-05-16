@@ -16,7 +16,7 @@ namespace Client
     public class RemoteRepository : IDisposable
     {
         private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
-        
+
         private readonly IDynamicObjectMapper _mapper;
 
         private readonly ChannelFactory<IQueryService> _channelFactory;
@@ -25,12 +25,12 @@ namespace Client
         {
             _mapper = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
 
-            var binding = new NetNamedPipeBinding()
+            NetNamedPipeBinding binding = new NetNamedPipeBinding()
             {
                 CloseTimeout = TimeSpan.FromMinutes(10),
                 ReceiveTimeout = TimeSpan.FromMinutes(10),
                 SendTimeout = TimeSpan.FromMinutes(10),
-                MaxReceivedMessageSize = 640000L
+                MaxReceivedMessageSize = 640000L,
             };
 
             _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
@@ -42,12 +42,12 @@ namespace Client
                     {
                         channel = _channelFactory.CreateChannel();
 
-                        var result = channel.ExecuteQuery(expression);
+                        IEnumerable<DynamicObject> result = channel.ExecuteQuery(expression);
                         return result;
                     }
                     finally
                     {
-                        var communicationObject = channel as ICommunicationObject;
+                        ICommunicationObject communicationObject = channel as ICommunicationObject;
                         if (communicationObject != null)
                         {
                             if (communicationObject.State == CommunicationState.Faulted)

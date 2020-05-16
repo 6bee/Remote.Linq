@@ -14,8 +14,8 @@ namespace Server
     {
         private static readonly Func<Type, IQueryable> _queryableProvider = type =>
         {
-            var single = Array.CreateInstance(type, 1);
-            var queryable = typeof(Queryable).GetMethods(BindingFlags.Public | BindingFlags.Static)
+            Array single = Array.CreateInstance(type, 1);
+            object queryable = typeof(Queryable).GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Single(x => string.Equals(x.Name, nameof(Queryable.AsQueryable)) && x.IsGenericMethodDefinition)
                 .MakeGenericMethod(type)
                 .Invoke(null, new object[] { single });

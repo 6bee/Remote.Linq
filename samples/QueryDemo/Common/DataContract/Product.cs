@@ -1,9 +1,9 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
-
-using System.Runtime.Serialization;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Common.DataContract
 {
+    using System.Runtime.Serialization;
+
     [DataContract]
     public class Product
     {

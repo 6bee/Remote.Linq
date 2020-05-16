@@ -1,15 +1,15 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
-
-using Common.DataContract;
-using Common.ServiceContract;
-using Remote.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Server
 {
+    using Common.DataContract;
+    using Common.ServiceContract;
+    using Remote.Linq;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+
     public class RemoteLinqDataService : IRemoteLinqDataService
     {
         public IEnumerable<Product> GetProducts(Query<Product> query)

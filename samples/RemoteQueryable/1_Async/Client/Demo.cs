@@ -2,11 +2,8 @@
 
 namespace Client
 {
-    using Common.Model;
     using Remote.Linq;
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -21,10 +18,10 @@ namespace Client
 
         public async Task RunAsync()
         {
-            var repo = new RemoteRepository(_url);
+            RemoteRepository repo = new RemoteRepository(_url);
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
-            foreach (var i in await repo.Products.ToArrayAsync())
+            foreach (Common.Model.Product i in await repo.Products.ToArrayAsync())
             {
                 Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
@@ -41,7 +38,6 @@ namespace Client
                 Console.WriteLine($"  {i}");
             }
 
-
             Console.WriteLine("\nINNER JOIN:");
             var innerJoinQuery =
                 from c in repo.ProductCategories
@@ -53,25 +49,22 @@ namespace Client
                 Console.WriteLine($"  {i}");
             }
 
-
             Console.WriteLine("\nSELECT IDs:");
-            var productIdsQuery =
+            IQueryable<int> productIdsQuery =
                 from p in repo.Products
                 orderby p.Price descending
                 select p.Id;
-            var productIds = await productIdsQuery.ToListAsync();
-            foreach (var id in productIdsQuery)
+            System.Collections.Generic.List<int> productIds = await productIdsQuery.ToListAsync();
+            foreach (int id in productIdsQuery)
             {
                 Console.WriteLine($"  {id}");
             }
 
-
             Console.WriteLine("\nCOUNT:");
-            var productsQuery =
+            IQueryable<Common.Model.Product> productsQuery =
                 from p in repo.Products
                 select p;
             Console.WriteLine($"  Count = {await productsQuery.CountAsync()}");
-
 
             Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
             var totalAmountByCategoryQuery =
@@ -93,7 +86,6 @@ namespace Client
             {
                 Console.WriteLine($"  {i}");
             }
-
 
             Console.WriteLine("\nINVALID OPERATION:");
             try

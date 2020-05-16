@@ -1,12 +1,12 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
-
-using System.Collections.Generic;
-using System.ServiceModel;
-using Common.DataContract;
-using Remote.Linq;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Common.ServiceContract
 {
+    using Common.DataContract;
+    using Remote.Linq;
+    using System.Collections.Generic;
+    using System.ServiceModel;
+
     [ServiceContract]
     public interface IRemoteLinqDataService
     {

@@ -1,12 +1,12 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
-
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using Common.DataContract;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Server
 {
+    using Common.DataContract;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+
     internal static class DataSource
     {
         private static long _productCount;
@@ -14,7 +14,7 @@ namespace Server
 
         static DataSource()
         {
-            var products = new List<Product>()
+            List<Product> products = new List<Product>()
             {
                 new Product { Id = GetNextProductId(), Name = "Apple", Price = 0.85m },
                 new Product { Id = GetNextProductId(), Name = "Pear", Price = 1.2m },
@@ -22,7 +22,7 @@ namespace Server
                 new Product { Id = GetNextProductId(), Name = "House", Price = 680000m },
             };
 
-            var orders = new List<Order>()
+            List<Order> orders = new List<Order>()
             {
                 new Order { Id = GetNextOrderId() },
                 new Order { Id = GetNextOrderId() },
@@ -54,8 +54,16 @@ namespace Server
 
         public static IEnumerable<T> Query<T>()
         {
-            if (typeof(T) == typeof(Product)) return (IEnumerable<T>)Products;
-            if (typeof(T) == typeof(Order)) return (IEnumerable<T>)Orders;
+            if (typeof(T) == typeof(Product))
+            {
+                return (IEnumerable<T>)Products;
+            }
+
+            if (typeof(T) == typeof(Order))
+            {
+                return (IEnumerable<T>)Orders;
+            }
+
             throw new Exception(string.Format("Data type {0} may not be served by this data source.", typeof(T).FullName));
         }
 

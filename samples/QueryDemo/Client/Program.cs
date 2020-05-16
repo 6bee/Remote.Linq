@@ -1,14 +1,14 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
-
-using System;
-using System.Linq;
-using Common.DataContract;
-using Common.ServiceContract;
-using Remote.Linq;
-using Remote.Linq.ExpressionVisitors;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Client
 {
+    using Common.DataContract;
+    using Common.ServiceContract;
+    using Remote.Linq;
+    using Remote.Linq.ExpressionVisitors;
+    using System;
+    using System.Linq;
+
     public class Program
     {
         public static void Main()
@@ -22,13 +22,11 @@ namespace Client
             Console.WriteLine();
             Console.ReadLine();
 
-
             TraditionalQuery();
 
             LinqQuery();
 
             LinqQueryWithOpenType();
-
 
             Console.WriteLine();
             Console.WriteLine("Done");
@@ -41,28 +39,28 @@ namespace Client
             Console.WriteLine();
             Console.WriteLine("QUERY PRODUCTS AND ORDERS THE LINQified WAY :)");
             Console.WriteLine("========================================================================");
-            using (var serviceProxy = new ServiceProxy<IRemoteLinqDataService>("RemoteLinqDataService"))
+            using (ServiceProxy<IRemoteLinqDataService> serviceProxy = new ServiceProxy<IRemoteLinqDataService>("RemoteLinqDataService"))
             {
-                var productQuery = serviceProxy
+                IQuery<Product> productQuery = serviceProxy
                     .CreateQuery<Product>(service => service.GetProducts)
                     .Where(p => p.Name == "Car");
-                var products = productQuery.ToList();
+                System.Collections.Generic.List<Product> products = productQuery.ToList();
 
                 Console.WriteLine("List orders for product 'Car' having an order quantity bigger than one:\n");
-                foreach (var product in products)
+                foreach (Product product in products)
                 {
                     Console.WriteLine("\t{0}", product);
 
-                    var orderQuery = serviceProxy
+                    IQuery<Order> orderQuery = serviceProxy
                         .CreateQuery<Order>(service => service.GetOrders)
                         .Where(o => o.Items.Where(i => i.ProductId == product.Id).Sum(i => i.Quantity) > 1);
-                    var orders = orderQuery.ToList();
+                    System.Collections.Generic.List<Order> orders = orderQuery.ToList();
 
                     Console.WriteLine("\tOrders ({0}):", orders.Count());
-                    foreach (var order in orders)
+                    foreach (Order order in orders)
                     {
                         Console.WriteLine("\t\t{0}", order);
-                        foreach (var item in order.Items)
+                        foreach (OrderItem item in order.Items)
                         {
                             Console.WriteLine("\t\t\t{0}", item);
                         }
@@ -78,15 +76,15 @@ namespace Client
             Console.WriteLine();
             Console.WriteLine("QUERY AN OPEN TYPE DATA SERVICE THE LINQified WAY :)");
             Console.WriteLine("========================================================================");
-            using (var serviceProxy = new ServiceProxy<IRemoteLinqDataService>("RemoteLinqDataService"))
+            using (ServiceProxy<IRemoteLinqDataService> serviceProxy = new ServiceProxy<IRemoteLinqDataService>("RemoteLinqDataService"))
             {
-                var service = serviceProxy.Channel;
+                IRemoteLinqDataService service = serviceProxy.Channel;
 
                 System.Linq.Expressions.Expression<Func<Product, bool>> productFilterLinqExpression = product => product.Name == "Car";
                 Remote.Linq.Expressions.LambdaExpression productFilterRemoteExpression = productFilterLinqExpression.ToRemoteLinqExpression();
-                var productQuery = new Query(typeof(Product)).Where(productFilterRemoteExpression);
+                IQuery productQuery = new Query(typeof(Product)).Where(productFilterRemoteExpression);
 
-                var products = service.GetData(productQuery);
+                System.Collections.Generic.IEnumerable<object> products = service.GetData(productQuery);
 
                 Console.WriteLine("List orders for product 'Car' having an order quantity bigger than one:\n");
                 foreach (Product product in products)
@@ -95,15 +93,15 @@ namespace Client
 
                     System.Linq.Expressions.Expression<Func<Order, bool>> orderFilterLinqExpression = order => order.Items.Where(i => i.ProductId == product.Id).Sum(i => i.Quantity) > 1;
                     Remote.Linq.Expressions.LambdaExpression orderFilterRemoteExpression = orderFilterLinqExpression.ToRemoteLinqExpression().ReplaceGenericQueryArgumentsByNonGenericArguments();
-                    var orderQuery = new Query(typeof(Order)).Where(orderFilterRemoteExpression);
+                    IQuery orderQuery = new Query(typeof(Order)).Where(orderFilterRemoteExpression);
 
-                    var orders = service.GetData(orderQuery);
+                    System.Collections.Generic.IEnumerable<object> orders = service.GetData(orderQuery);
 
                     Console.WriteLine("\tOrders ({0}):", orders.Count());
                     foreach (Order order in orders)
                     {
                         Console.WriteLine("\t\t{0}", order);
-                        foreach (var item in order.Items)
+                        foreach (OrderItem item in order.Items)
                         {
                             Console.WriteLine("\t\t\t{0}", item);
                         }
@@ -119,27 +117,27 @@ namespace Client
             Console.WriteLine();
             Console.WriteLine("QUERY PRODUCTS AND ORDERS THE TRADITIONAL WAY");
             Console.WriteLine("========================================================================");
-            using (var serviceProxy = new ServiceProxy<IDataService>("DataService"))
+            using (ServiceProxy<IDataService> serviceProxy = new ServiceProxy<IDataService>("DataService"))
             {
-                var service = serviceProxy.Channel;
+                IDataService service = serviceProxy.Channel;
 
-                var products = service.GetProductsByName("Car");
+                System.Collections.Generic.IEnumerable<Product> products = service.GetProductsByName("Car");
 
                 Console.WriteLine("List orders for product 'Car' having an order quantity bigger than one.\n");
                 Console.WriteLine("Note that filtering based on items count is performed on the client.\n");
-                foreach (var product in products)
+                foreach (Product product in products)
                 {
                     Console.WriteLine("\t{0}", product);
 
-                    var orders = service.GetOrdersByProductId(product.Id);
+                    System.Collections.Generic.IEnumerable<Order> orders = service.GetOrdersByProductId(product.Id);
 
                     orders = orders.Where(o => o.Items.Where(i => i.ProductId == product.Id).Sum(i => i.Quantity) > 1);
 
                     Console.WriteLine("\tOrders ({0}):", orders.Count());
-                    foreach (var order in orders)
+                    foreach (Order order in orders)
                     {
                         Console.WriteLine("\t\t{0}", order);
-                        foreach (var item in order.Items)
+                        foreach (OrderItem item in order.Items)
                         {
                             Console.WriteLine("\t\t\t{0}", item);
                         }

@@ -3,7 +3,7 @@
 namespace Common.ServiceContracts
 {
     using Aqua.Dynamic;
-    using Model;
+    using Common.Model;
     using Remote.Linq.Expressions;
     using System.Collections.Generic;
     using System.ServiceModel;

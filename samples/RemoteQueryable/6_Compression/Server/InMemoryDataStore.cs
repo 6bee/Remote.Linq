@@ -39,7 +39,9 @@ namespace Server
         public static InMemoryDataStore Instance { get; } = new InMemoryDataStore();
 
         public IEnumerable<ProductCategory> ProductCategories => _productCategories;
+
         public IEnumerable<Product> Products => _products;
+
         public IEnumerable<OrderItem> OrderItems => _orderItems;
     }
 }

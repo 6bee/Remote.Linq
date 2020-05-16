@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Server.Mappings
 {
@@ -10,9 +10,9 @@ namespace Server.Mappings
         public ProductMap()
         {
             Table("Products");
-            
+
             Id(x => x.Id);
-            
+
             Map(x => x.Name);
             Map(x => x.ProductCategoryId);
             Map(x => x.Price);

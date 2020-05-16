@@ -1,11 +1,11 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Server
 {
     using Aqua.Dynamic;
     using Common.ServiceContracts;
-    using Remote.Linq.Expressions;
     using Remote.Linq.EntityFramework;
+    using Remote.Linq.Expressions;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -13,10 +13,8 @@ namespace Server
     {
         public async Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression)
         {
-            using (var efContext = new EFContext())
-            {
-                return await queryExpression.ExecuteWithEntityFrameworkAsync(efContext).ConfigureAwait(false);
-            }
+            using EFContext efContext = new EFContext();
+            return await queryExpression.ExecuteWithEntityFrameworkAsync(efContext).ConfigureAwait(false);
         }
     }
 }

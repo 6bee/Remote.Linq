@@ -21,12 +21,12 @@ namespace Client
 
         public RemoteRepository(string uri)
         {
-            var binding = new NetNamedPipeBinding()
+            NetNamedPipeBinding binding = new NetNamedPipeBinding()
             {
                 CloseTimeout = TimeSpan.FromMinutes(10),
                 ReceiveTimeout = TimeSpan.FromMinutes(10),
                 SendTimeout = TimeSpan.FromMinutes(10),
-                MaxReceivedMessageSize = 640000L
+                MaxReceivedMessageSize = 640000L,
             };
 
             _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
@@ -38,13 +38,13 @@ namespace Client
                     {
                         channel = _channelFactory.CreateChannel();
 
-                        var compressedData = channel.ExecuteQuery(expression);
-                        var result = new CompressionHelper().Decompress(compressedData);
+                        byte[] compressedData = channel.ExecuteQuery(expression);
+                        IEnumerable<DynamicObject> result = new CompressionHelper().Decompress(compressedData);
                         return result;
                     }
                     finally
                     {
-                        var communicationObject = channel as ICommunicationObject;
+                        ICommunicationObject communicationObject = channel as ICommunicationObject;
                         if (communicationObject != null)
                         {
                             if (communicationObject.State == CommunicationState.Faulted)

@@ -8,11 +8,11 @@ namespace Server
     using System.ServiceModel;
     using System.ServiceModel.Description;
 
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            using (var serviceHost = new ServiceHost(typeof(QueryService)))
+            using (ServiceHost serviceHost = new ServiceHost(typeof(QueryService)))
             {
                 serviceHost.Description.Behaviors.OfType<ServiceDebugBehavior>().Single().IncludeExceptionDetailInFaults = true;
                 serviceHost.AddServiceEndpoint(typeof(IQueryService), new NetNamedPipeBinding(), "net.pipe://localhost/8080/query");

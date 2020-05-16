@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Server
 {
@@ -11,7 +11,7 @@ namespace Server
     {
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
         {
-            using var nhContext = new NHContext();
+            using NHContext nhContext = new NHContext();
             return queryExpression.Execute(queryableProvider: type => nhContext.GetQueryable(type));
         }
     }

@@ -30,15 +30,15 @@ namespace Server
         {
             while (true)
             {
-                using (var client = _server.AcceptTcpClient())
-                using (var stream = client.GetStream())
+                using (TcpClient client = _server.AcceptTcpClient())
+                using (NetworkStream stream = client.GetStream())
                 {
-                    var queryExpression = stream.Read<Expression>();
+                    Expression queryExpression = stream.Read<Expression>();
 
                     try
                     {
-                        var queryService = new QueryService();
-                        var result = queryService.ExecuteQuery(queryExpression);
+                        QueryService queryService = new QueryService();
+                        System.Collections.Generic.IEnumerable<Aqua.Dynamic.DynamicObject> result = queryService.ExecuteQuery(queryExpression);
                         stream.Write(result);
                     }
                     catch (Exception ex)

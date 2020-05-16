@@ -1,11 +1,11 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Common.DataContract
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
+
     [DataContract]
     public class Order
     {

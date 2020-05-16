@@ -18,13 +18,13 @@ namespace Client
 
         public void Run()
         {
-            var query = _repo.Queryable
+            IQueryable<string> query = _repo.Queryable
                 .SelectMany(x => Directory.GetLogicalDrives())
                 .SelectMany(x => Directory.GetDirectories(x));
 
             try
             {
-                foreach (var result in query)
+                foreach (string result in query)
                 {
                     Console.WriteLine(result);
                 }

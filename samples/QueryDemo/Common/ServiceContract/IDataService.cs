@@ -1,11 +1,11 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
-
-using System.Collections.Generic;
-using System.ServiceModel;
-using Common.DataContract;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Common.ServiceContract
 {
+    using Common.DataContract;
+    using System.Collections.Generic;
+    using System.ServiceModel;
+
     [ServiceContract]
     public interface IDataService
     {

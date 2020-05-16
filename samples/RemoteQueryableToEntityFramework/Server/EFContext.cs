@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Server
 {
@@ -33,8 +33,11 @@ namespace Server
         }
 
         public virtual DbSet<OrderItem> OrderItems { get; set; }
+
         public virtual DbSet<Product> Products { get; set; }
+
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+
         public virtual DbSet<Market> Markets { get; set; }
     }
 }

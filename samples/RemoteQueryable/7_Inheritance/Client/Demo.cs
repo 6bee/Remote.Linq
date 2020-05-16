@@ -17,21 +17,19 @@ namespace Client
 
         public void Run()
         {
-            var repo = new RemoteRepository(_url);
+            RemoteRepository repo = new RemoteRepository(_url);
 
             Console.WriteLine("\nGET ALL ENTITIES:");
-            foreach (var i in repo.Entities)
+            foreach (Entity i in repo.Entities)
             {
                 Console.WriteLine($"  {i.Id}: {i}");
             }
 
-
             Console.WriteLine("\nGET ALL ENTITIES OF TYPE PRODUCT:");
-            foreach (var i in repo.Entities.OfType<Product>())
+            foreach (Product i in repo.Entities.OfType<Product>())
             {
                 Console.WriteLine($"  {i.Id}: {i.Name}");
             }
-
 
             Console.WriteLine("\nSELECT IDs:");
             var entityIdsQuery =
@@ -43,9 +41,8 @@ namespace Client
                 Console.WriteLine($"  {item.EntityId}");
             }
 
-
             Console.WriteLine("\nCOUNT:");
-            var entitiesQuery =
+            IQueryable<Entity> entitiesQuery =
                 from p in repo.Entities
                 select p;
             Console.WriteLine($"  Count = {entitiesQuery.Count()}");

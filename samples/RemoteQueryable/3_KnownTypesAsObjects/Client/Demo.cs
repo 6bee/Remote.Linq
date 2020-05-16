@@ -16,61 +16,57 @@ namespace Client
 
         public void Run()
         {
-            var repo = new RemoteRepository(_url);
+            RemoteRepository repo = new RemoteRepository(_url);
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
-            foreach (var i in repo.Products)
+            foreach (Common.Model.Product i in repo.Products)
             {
                 Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
 
             Console.WriteLine("\nINNER JOIN FOR FILTERING:");
             Func<object, string> sufix = (x) => x + "ending";
-            var crossJoinQuery =
+            IQueryable<Common.Model.Product> crossJoinQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
                 where c.Name == "Fruits"
                 select p;
-            var crossJoinResult = crossJoinQuery.ToList();
-            foreach (var i in crossJoinResult)
+            System.Collections.Generic.List<Common.Model.Product> crossJoinResult = crossJoinQuery.ToList();
+            foreach (Common.Model.Product i in crossJoinResult)
             {
                 Console.WriteLine($"  {i.Id} - {i.Name}");
             }
 
-
             Console.WriteLine("\nINNER JOIN AND PROJECTION TO STRING:");
-            var innerJoinQuery =
+            IQueryable<string> innerJoinQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
                 select string.Concat(c.Name, "-", p.Name);
-            var innerJoinResult = innerJoinQuery.ToList();
-            foreach (var i in innerJoinResult)
+            System.Collections.Generic.List<string> innerJoinResult = innerJoinQuery.ToList();
+            foreach (string i in innerJoinResult)
             {
                 Console.WriteLine($"  {i}");
             }
 
-
             Console.WriteLine("\nSELECT IDs:");
-            var productIdsQuery =
+            IQueryable<int> productIdsQuery =
                 from p in repo.Products
                 orderby p.Price descending
                 select p.Id;
-            var productIds = productIdsQuery.ToList();
-            foreach (var id in productIdsQuery)
+            System.Collections.Generic.List<int> productIds = productIdsQuery.ToList();
+            foreach (int id in productIdsQuery)
             {
                 Console.WriteLine($"  {id}");
             }
 
-
             Console.WriteLine("\nCOUNT:");
-            var productsQuery =
+            IQueryable<Common.Model.Product> productsQuery =
                 from p in repo.Products
                 select p;
             Console.WriteLine($"  Count = {productsQuery.Count()}");
 
-
             Console.WriteLine("\nMAX TOTAL AMOUNT BY CATEGORY:");
-            var totalAmountByCategoryQuery =
+            IQueryable<decimal> totalAmountByCategoryQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products
                     on c.Id equals p.ProductCategoryId
@@ -81,11 +77,10 @@ namespace Client
 
             Console.WriteLine($"  {totalAmountByCategoryQuery.Max()}");
 
-
             Console.WriteLine("\nINVALID OPERATION:");
             try
             {
-                var first = totalAmountByCategoryQuery.First(x => false);
+                decimal first = totalAmountByCategoryQuery.First(x => false);
             }
             catch (Exception ex)
             {

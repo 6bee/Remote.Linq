@@ -1,12 +1,12 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
-
-using System.Collections.Generic;
-using System.Linq;
-using Common.DataContract;
-using Common.ServiceContract;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Server
 {
+    using Common.DataContract;
+    using Common.ServiceContract;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class DataService : IDataService
     {
         public IEnumerable<Product> GetProductsByName(string productName) =>

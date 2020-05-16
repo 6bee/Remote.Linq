@@ -17,39 +17,35 @@ namespace Client
 
         public void Run()
         {
-            var repo = new RemoteRepository(_url);
-
+            RemoteRepository repo = new RemoteRepository(_url);
 
             Console.WriteLine("\nGET ALL PRODUCTS:");
-            foreach (var i in repo.Products)
+            foreach (Common.Model.Product i in repo.Products)
             {
                 Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
 
-
             Console.WriteLine("\nSELECT IDs:");
-            var productIdsQuery =
+            IQueryable<int> productIdsQuery =
                 from p in repo.Products
                 orderby p.Price descending
                 select p.Id;
-            var productIds = productIdsQuery.ToList();
-            foreach (var id in productIdsQuery)
+            System.Collections.Generic.List<int> productIds = productIdsQuery.ToList();
+            foreach (int id in productIdsQuery)
             {
                 Console.WriteLine($"  {id}");
             }
 
-
             Console.WriteLine("\nCOUNT:");
-            var productsQuery =
+            IQueryable<Common.Model.Product> productsQuery =
                 from p in repo.Products
                 select p;
             Console.WriteLine($"  Count = {productsQuery.Count()}");
 
-
             Console.WriteLine("\nINVALID OPERATIONS:");
             try
             {
-                var first = productsQuery.First(x => false);
+                Common.Model.Product first = productsQuery.First(x => false);
             }
             catch (Exception ex)
             {
@@ -58,56 +54,52 @@ namespace Client
 
             try
             {
-                var first = productsQuery.Single();
+                Common.Model.Product first = productsQuery.Single();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"  {ex.Message}");
             }
 
-
             Console.WriteLine("\nGET MARKETS WITH PRODUCTS:");
-            var marketsQuery = repo.Products.SelectMany(x => x.Markets).Include(x => x.Products);
-            var exp = marketsQuery.Expression;
-            foreach (var market in marketsQuery)
+            IQueryable<Common.Model.Market> marketsQuery = repo.Products.SelectMany(x => x.Markets).Include(x => x.Products);
+            System.Linq.Expressions.Expression exp = marketsQuery.Expression;
+            foreach (Common.Model.Market market in marketsQuery)
             {
                 Console.WriteLine($"  {market.Name}");
 
                 if (market.Products != null)
                 {
-                    foreach (var product in market.Products)
+                    foreach (Common.Model.Product product in market.Products)
                     {
                         Console.WriteLine($"    {product.Name}");
                     }
                 }
             }
 
-
             Console.WriteLine("\nGET ALL PRODUCTS AND THEIR MARKETS:");
-            foreach (var i in repo.Products.Include(x => x.Markets))
+            foreach (Common.Model.Product i in repo.Products.Include(x => x.Markets))
             {
                 Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
 
-                foreach (var m in i.Markets)
+                foreach (Common.Model.Market m in i.Markets)
                 {
                     Console.WriteLine($"         {m.Name}");
                 }
             }
 
-
             Console.WriteLine("\nGET ALL PRODUCTS HAVING MARKETS DEFINED:");
-            var query = repo.Products.Where(p => p.Markets.Any());
-            foreach (var i in query)
+            IQueryable<Common.Model.Product> query = repo.Products.Where(p => p.Markets.Any());
+            foreach (Common.Model.Product i in query)
             {
                 Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
             }
 
-
             Console.WriteLine("\nGET ALL PRODUCTS HAVING MARKETS DEFINED (INCLUDING MARKETS):");
             query = query.Include(p => p.Markets);
-            foreach (var i in query)
+            foreach (Common.Model.Product i in query)
             {
-                var markets = i.Markets.Select(x => x.Name);
+                System.Collections.Generic.IEnumerable<string> markets = i.Markets.Select(x => x.Name);
                 Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C} | {string.Join("; ", markets)}");
             }
         }

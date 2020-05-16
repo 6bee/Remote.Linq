@@ -7,15 +7,15 @@ namespace DemoStartUp
     using System.ServiceModel;
     using System.ServiceModel.Description;
 
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             const string url = "net.pipe://localhost/8080/query";
 
             Console.WriteLine("Starting WCF service...");
 
-            using (var wcfServiceHost = new ServiceHost(typeof(Server.QueryService)))
+            using (ServiceHost wcfServiceHost = new ServiceHost(typeof(Server.QueryService)))
             {
                 wcfServiceHost.Description.Behaviors.OfType<ServiceDebugBehavior>().Single().IncludeExceptionDetailInFaults = true;
                 wcfServiceHost.AddServiceEndpoint(typeof(Common.ServiceContracts.IQueryService), new NetNamedPipeBinding(), url);
@@ -27,9 +27,7 @@ namespace DemoStartUp
                 Console.WriteLine("Staring client demo...");
                 Console.WriteLine("-------------------------------------------------");
 
-
                 new Client.Demo(url).RunAsync().Wait();
-
 
                 Console.WriteLine();
                 Console.WriteLine("-------------------------------------------------");

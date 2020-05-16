@@ -14,7 +14,7 @@ namespace Client
                 typeInfo.Namespace = "Client.ClientModel";
             }
 
-            var type = base.ResolveType(typeInfo);
+            Type type = base.ResolveType(typeInfo);
             return type;
         }
     }

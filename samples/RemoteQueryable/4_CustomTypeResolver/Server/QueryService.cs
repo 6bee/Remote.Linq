@@ -11,7 +11,7 @@ namespace Server
     {
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
         {
-            var dataStore = InMemoryDataStore.Instance;
+            InMemoryDataStore dataStore = InMemoryDataStore.Instance;
 
             return queryExpression.Execute(queryableProvider: type => dataStore.GetSet(type));
         }

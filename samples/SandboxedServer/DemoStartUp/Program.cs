@@ -13,9 +13,9 @@ namespace DemoStartUp
     using Client = Client.Client;
     using Server = Server.Server;
 
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("NOTE");
             Console.WriteLine("This demo shows how-to secure your server using restricted app domain.");
@@ -26,17 +26,17 @@ namespace DemoStartUp
             const int port = 1234;
 
             Console.WriteLine("\n\n1st demo: running server in default app domain (full-trust -> unsecured)");
-            using (var server = new Server(ip, port))
+            using (Server server = new Server(ip, port))
             {
                 server.Start();
                 new Client(ip, port).Run();
             }
 
             Console.WriteLine("\n\n2nd demo: running server in restricted app domain (partial-trust)");
-            var serverDomain = CreateServerAppDomain(
+            AppDomain serverDomain = CreateServerAppDomain(
                 new FileIOPermission(PermissionState.None), // <-- this prevents clients to enumerate the server's file system
                 new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, ip, port));
-            using (var server = Create<Server>(serverDomain, ip, port))
+            using (Server server = Create<Server>(serverDomain, ip, port))
             {
                 server.Start();
                 new Client(ip, port).Run();
@@ -48,15 +48,15 @@ namespace DemoStartUp
 
         private static T Create<T>(AppDomain appdomain, params object[] args)
         {
-            var type = typeof(T);
+            Type type = typeof(T);
             return (T)appdomain.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName, false, BindingFlags.Default, null, args, null, null);
         }
 
         private static AppDomain CreateServerAppDomain(params IPermission[] permissions)
         {
-            var permissionSet = CreatePermissionSet(permissions);
+            PermissionSet permissionSet = CreatePermissionSet(permissions);
 
-            var appDomainSetup = new AppDomainSetup
+            AppDomainSetup appDomainSetup = new AppDomainSetup
             {
                 ApplicationName = "Query Service",
                 ApplicationBase = Path.GetDirectoryName(typeof(Program).Assembly.Location),
@@ -64,7 +64,7 @@ namespace DemoStartUp
                 {
                     IsApplicationTrustedToRun = true,
                     DefaultGrantSet = new PolicyStatement(permissionSet),
-                }
+                },
             };
 
             return AppDomain.CreateDomain("Server Domain", null, appDomainSetup);
@@ -72,7 +72,7 @@ namespace DemoStartUp
 
         private static PermissionSet CreatePermissionSet(IPermission[] permissions)
         {
-            var ps = new PermissionSet(PermissionState.None);
+            PermissionSet ps = new PermissionSet(PermissionState.None);
             ps.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution | SecurityPermissionFlag.SerializationFormatter));
             permissions.ForEach(x => ps.AddPermission(x));
             return ps;
