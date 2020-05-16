@@ -15,7 +15,8 @@ environment:
 
 before_build:
   - dotnet --info
-  - dotnet restore
+  - dotnet restore Remote.Linq.sln
+  - dotnet restore Remote.Linq.Samples.sln
   - dotnet tool install --global codecov.tool
 
 build_script:
