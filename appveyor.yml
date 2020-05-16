@@ -18,9 +18,7 @@ before_build:
   - dotnet restore Remote.Linq.sln
   - dotnet restore Remote.Linq.Samples.sln
   - dotnet tool install --global codecov.tool
-
-build:
-
+  
 build_script:
   - dotnet build Remote.Linq.sln
   - dotnet build Remote.Linq.Samples.sln
@@ -34,6 +32,3 @@ after_test:
   - dotnet test test\Remote.Linq.Tests                     -f netcoreapp3.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings        --results-directory TestResults
   - dotnet test test\Remote.Linq.EntityFrameworkCore.Tests -f netcoreapp3.0 --collect:"XPlat Code Coverage" --settings coverlet.efcore.runsettings --results-directory TestResults
   - codecov -f **\coverage.cobertura.xml
-
-build:
-  verbosity: normal
