@@ -17,7 +17,6 @@ namespace Common.DataContract
 
         public decimal TotalAmount => Items.Sum(i => i.TotalAmount);
 
-        public override string ToString()
-            => string.Format("Order: {0} Item{2}  Total {1:C}", Items.Count, TotalAmount, Items.Count > 1 ? "s" : null);
+        public override string ToString() => $"Order: {Items.Count} Item{(Items.Count > 1 ? "s" : null)}  Total {TotalAmount:C}";
     }
 }

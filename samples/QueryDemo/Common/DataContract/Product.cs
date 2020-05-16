@@ -16,7 +16,6 @@ namespace Common.DataContract
         [DataMember]
         public decimal Price { get; set; }
 
-        public override string ToString()
-            => string.Format("Product #{0} '{1}' ({2:C})", Id, Name, Price);
+        public override string ToString() => $"Product #{Id} '{Name}' ({Price:C})";
     }
 }

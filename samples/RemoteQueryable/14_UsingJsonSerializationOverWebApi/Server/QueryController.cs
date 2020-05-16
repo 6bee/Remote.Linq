@@ -34,7 +34,7 @@ namespace Server
                 return dataStore.OrderItems.AsQueryable();
             }
 
-            throw new Exception(string.Format("No queryable resource available for type {0}", type));
+            throw new Exception($"No queryable resource available for type {type}");
         };
 
         public IEnumerable<DynamicObject> Query([FromBody] Query query)
@@ -46,10 +46,10 @@ namespace Server
             }
             catch (Exception ex)
             {
-                string errorMessage = string.Format("{0}: {1}", ex.GetType(), ex.Message);
+                string errorMessage = $"{ex.GetType()}: {ex.Message}";
                 byte[] errorMessageData = Encoding.UTF8.GetBytes(errorMessage);
 
-                HttpResponseMessage httpResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                var httpResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
                     Content = new ByteArrayContent(errorMessageData),
                 };

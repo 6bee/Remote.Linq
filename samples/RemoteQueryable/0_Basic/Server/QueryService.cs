@@ -45,12 +45,10 @@ namespace Server
                 }).AsQueryable();
             }
 
-            throw new Exception(string.Format("No queryable resource available for type {0}", type));
+            throw new Exception($"No queryable resource available for type {type}");
         };
 
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
-        {
-            return queryExpression.Execute(_queryableResourceProvider);
-        }
+            => queryExpression.Execute(_queryableResourceProvider);
     }
 }

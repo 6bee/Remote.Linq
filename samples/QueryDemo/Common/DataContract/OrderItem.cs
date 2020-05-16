@@ -18,7 +18,6 @@ namespace Common.DataContract
 
         public decimal TotalAmount => Quantity * UnitPrice;
 
-        public override string ToString()
-            => string.Format("Prod #{0}: {1} * {2:C} = {3:C}", ProductId, Quantity, UnitPrice, TotalAmount);
+        public override string ToString() => $"Prod #{ProductId}: {Quantity} * {UnitPrice:C} = {TotalAmount:C}";
     }
 }

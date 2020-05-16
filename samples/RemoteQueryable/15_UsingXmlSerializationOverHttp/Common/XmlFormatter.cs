@@ -90,7 +90,7 @@ namespace Common
             if (isException)
             {
                 string exceptionMessage = (string)obj;
-                throw new Exception(string.Format("{0}: '{1}'", type ?? typeof(T), exceptionMessage));
+                throw new Exception($"{type ?? typeof(T)}: '{exceptionMessage}'");
             }
 
             return (T)obj;
