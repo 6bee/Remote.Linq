@@ -20,8 +20,8 @@ before_build:
   - dotnet tool install --global codecov.tool
 
 build_script:
-  - dotnet build Remote.Linq.sln
-  - dotnet build Remote.Linq.Samples.sln
+  #- dotnet build Remote.Linq.sln
+  #- dotnet build Remote.Linq.Samples.sln
 
 test_script:
   - dotnet test test\Remote.Linq.Tests
