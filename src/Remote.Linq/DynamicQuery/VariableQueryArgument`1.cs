@@ -31,6 +31,6 @@ namespace Remote.Linq.DynamicQuery
             => string.Format(
                 "{0}({1})",
                 new Aqua.TypeSystem.TypeInfo(typeof(VariableQueryArgument<T>)),
-                Value.QuotValue());
+                Value.QuoteValue());
     }
 }

@@ -30,7 +30,7 @@ namespace Remote.Linq.Expressions
         }
 
         public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, System.Reflection.MethodInfo? method, LambdaExpression? conversion = null)
-            : this(binaryOperator, leftOperand, rightOperand, liftToNull, method is null ? null : new MethodInfo(method), conversion)
+            : this(binaryOperator, leftOperand, rightOperand, liftToNull, method.AsMethodInfo(), conversion)
         {
         }
 

@@ -5,10 +5,17 @@ namespace Remote.Linq
     using Aqua.TypeSystem;
     using System;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class Helper
     {
+        [return: NotNullIfNotNull("type")]
+        public static TypeInfo? AsTypeInfo(this Type? type) => type is null ? null : new TypeInfo(type, false, false);
+
+        [return: NotNullIfNotNull("method")]
+        public static MethodInfo? AsMethodInfo(this System.Reflection.MethodInfo? method) => method is null ? null : new MethodInfo(method);
+
         /// <summary>
         /// Returns null if either the value is null or the value matches the predicate. The original value is returned otherwise.
         /// </summary>
@@ -19,7 +26,7 @@ namespace Remote.Linq
         internal static Type GetElementTypeOrThrow(this Type collectionType)
             => TypeHelper.GetElementType(collectionType) ?? throw new RemoteLinqException($"Failed to get element type of {collectionType}.");
 
-        internal static string? QuotValue(this object? value, string nullValue = "null")
+        internal static string QuoteValue(this object? value, string nullValue = "null")
             => string.Format(
                 "{1}{0}{1}",
                 value ?? nullValue,

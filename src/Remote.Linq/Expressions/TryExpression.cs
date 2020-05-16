@@ -17,7 +17,7 @@ namespace Remote.Linq.Expressions
         }
 
         public TryExpression(Type? type, Expression body, Expression? fault, Expression? @finally, List<CatchBlock>? handlers)
-            : this(type is null ? null : new TypeInfo(type, false, false), body, fault, @finally, handlers)
+            : this(type.AsTypeInfo(), body, fault, @finally, handlers)
         {
         }
 

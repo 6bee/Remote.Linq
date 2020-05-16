@@ -21,7 +21,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public VariableQueryArgumentList(IEnumerable values, Type? elementType = null)
-            : this(values, elementType is null ? null : new TypeInfo(elementType, false, false))
+            : this(values, elementType.AsTypeInfo())
         {
         }
 

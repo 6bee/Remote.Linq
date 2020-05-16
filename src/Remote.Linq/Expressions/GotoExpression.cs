@@ -15,7 +15,7 @@ namespace Remote.Linq.Expressions
         }
 
         public GotoExpression(GotoExpressionKind kind, LabelTarget target, Type? type, Expression? value)
-            : this(kind, target, type is null ? null : new TypeInfo(type, false, false), value)
+            : this(kind, target, type.AsTypeInfo(), value)
         {
         }
 

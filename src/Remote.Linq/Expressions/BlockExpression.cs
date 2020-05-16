@@ -17,7 +17,7 @@ namespace Remote.Linq.Expressions
         }
 
         public BlockExpression(Type? type, IEnumerable<ParameterExpression>? variables, IEnumerable<Expression>? expressions)
-            : this(type is null ? null : new TypeInfo(type, false, false), variables, expressions)
+            : this(type.AsTypeInfo(), variables, expressions)
         {
         }
 
