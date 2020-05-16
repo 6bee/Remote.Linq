@@ -50,11 +50,11 @@ script:
   #WCF- dotnet build samples/RemoteQueryable/6_Compression
   #WCF- dotnet build samples/RemoteQueryable/7_Inheritance
   - dotnet build samples/RemoteQueryable/10_UsingBinarySerializationOverTcp
-  - dotnet build samples/RemoteQueryable/11_UsingJsonSerializationOverTcp
-  #WebAPI- dotnet build samples/RemoteQueryable/12_UsingJsonSerializationOverWebApi
-  - dotnet build samples/RemoteQueryable/14_UsingXmlSerializationOverTcp
-  - dotnet build samples/RemoteQueryable/13_UsingXmlSerializationOverHttp
-  #WebAPI- dotnet build samples/RemoteQueryable/15_UsingXmlSerializationOverWebApi
+  - dotnet build samples/RemoteQueryable/11_UsingBinarySerializationOverTcpAsync
+  - dotnet build samples/RemoteQueryable/12_UsingJsonSerializationOverTcp
+  - dotnet build samples/RemoteQueryable/13_UsingJsonSerializationOverTcpAsync
+  #WebAPI- dotnet build samples/RemoteQueryable/14_UsingJsonSerializationOverWebApi
+  #WebAPI- dotnet build samples/RemoteQueryable/15_UsingXmlSerializationOverHttp
   - dotnet build samples/RemoteQueryable/16_UsingXmlSerializationOverTcp
   #WebAPI- dotnet build samples/RemoteQueryable/17_UsingXmlSerializationOverWebApi
   #WCF- dotnet build samples/RemoteQueryableToEntityFramework
