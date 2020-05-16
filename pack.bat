@@ -1,7 +1,7 @@
 @echo off
 set configuration=Debug
 clean ^
-  && dotnet restore ^
+  && dotnet restore Remote.Linq.sln ^
   && dotnet build src\Remote.Linq                           --configuration %configuration% ^
   && dotnet build src\Remote.Linq.EntityFramework           --configuration %configuration% ^
   && dotnet build src\Remote.Linq.EntityFrameworkCore       --configuration %configuration% ^
