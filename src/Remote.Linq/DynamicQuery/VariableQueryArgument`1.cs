@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.DynamicQuery
 {
+    using Aqua.TypeSystem;
     using System;
     using System.Runtime.Serialization;
 
@@ -27,10 +28,6 @@ namespace Remote.Linq.DynamicQuery
         public T Value { get; set; }
 #nullable restore
 
-        public override string ToString()
-            => string.Format(
-                "{0}({1})",
-                new Aqua.TypeSystem.TypeInfo(typeof(VariableQueryArgument<T>)),
-                Value.QuoteValue());
+        public override string ToString() => $"{new TypeInfo(typeof(VariableQueryArgument<T>))}({Value.QuoteValue()})";
     }
 }

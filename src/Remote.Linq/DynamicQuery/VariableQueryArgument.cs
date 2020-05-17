@@ -60,11 +60,6 @@ namespace Remote.Linq.DynamicQuery
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = true)]
         public object? Value { get; set; }
 
-        public override string ToString()
-            => string.Format(
-                "{0}({2}{1}{2})",
-                GetType().Name,
-                Value ?? "null",
-                Value is string ? @"""" : Value is char ? "'" : null);
+        public override string ToString() => $"{nameof(VariableQueryArgument)}({Value.QuoteValue()})";
     }
 }

@@ -51,10 +51,6 @@ namespace Remote.Linq.DynamicQuery
         public List<object?> Values { get; set; } = null!;
 
         public override string ToString()
-            => string.Format(
-                "{0}Of{1}[{2}]",
-                GetType().Name,
-                ElementType?.Name ?? "?",
-                Values?.Count ?? 0);
+            => $"{nameof(VariableQueryArgumentList)}Of{ElementType?.Name ?? "?"}[{Values?.Count ?? 0}]";
     }
 }
