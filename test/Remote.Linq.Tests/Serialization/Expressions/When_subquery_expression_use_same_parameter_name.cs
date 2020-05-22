@@ -13,12 +13,46 @@ namespace Remote.Linq.Tests.Serialization.Expressions
     using Xunit;
     using Expression = Remote.Linq.Expressions.Expression;
 
-    public abstract partial class When_subquery_expression_use_same_parameter_name
+    public abstract class When_subquery_expression_use_same_parameter_name
     {
-        public class NoSerialization : When_subquery_expression_use_same_parameter_name
+        public class BinaryFormatter : When_subquery_expression_use_same_parameter_name
         {
-            public NoSerialization()
-                : base(x => x)
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class DataContractSerializer : When_subquery_expression_use_same_parameter_name
+        {
+            public DataContractSerializer()
+                : base(DataContractSerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class JsonSerializer : When_subquery_expression_use_same_parameter_name
+        {
+            public JsonSerializer()
+                : base(x => (Expression)JsonSerializationHelper.Serialize(x, x.GetType()))
+            {
+            }
+        }
+
+#if NETFX
+        public class NetDataContractSerializer : When_subquery_expression_use_same_parameter_name
+        {
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // NETFX
+
+        public class XmlSerializer : When_subquery_expression_use_same_parameter_name
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.Serialize)
             {
             }
         }

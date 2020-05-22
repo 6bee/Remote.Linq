@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Expressions
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
@@ -16,19 +17,19 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public LambdaExpression(Expression expression, IEnumerable<ParameterExpression> parameters)
+        public LambdaExpression(Expression expression, IEnumerable<ParameterExpression>? parameters)
         {
             Expression = expression ?? throw new ArgumentNullException(nameof(expression));
-            Parameters = parameters?.ToList() ?? throw new ArgumentNullException(nameof(parameters));
+            Parameters = parameters.AsNullIfEmpty()?.ToList();
         }
 
-        public LambdaExpression(TypeInfo? type, Expression expression, IEnumerable<ParameterExpression> parameters)
+        public LambdaExpression(TypeInfo? type, Expression expression, IEnumerable<ParameterExpression>? parameters)
             : this(expression, parameters)
         {
             Type = type;
         }
 
-        public LambdaExpression(Type? type, Expression expression, IEnumerable<ParameterExpression> parameters)
+        public LambdaExpression(Type? type, Expression expression, IEnumerable<ParameterExpression>? parameters)
             : this(type.AsTypeInfo(), expression, parameters)
         {
         }
@@ -38,8 +39,8 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public Expression Expression { get; set; } = null!;
 
-        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public List<ParameterExpression> Parameters { get; set; } = null!;
+        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
+        public List<ParameterExpression>? Parameters { get; set; }
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? Type { get; set; }

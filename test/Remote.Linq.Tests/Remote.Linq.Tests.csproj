@@ -10,6 +10,10 @@
     <ProjectReference Include="..\..\src\Remote.Linq.Newtonsoft.Json\Remote.Linq.Newtonsoft.Json.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+    <ProjectReference Include="..\..\src\Remote.Linq.protobuf-net\Remote.Linq.protobuf-net.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -19,6 +23,9 @@
     </PackageReference>
     <PackageReference Include="Xunit.SkippableFact" Version="1.3.12" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
     <PackageReference Include="coverlet.collector" Version="1.2.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -35,8 +42,12 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+    <DefineConstants>$(DefineConstants);COREFX</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
-    <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETFX</DefineConstants>
   </PropertyGroup>
 
 </Project>

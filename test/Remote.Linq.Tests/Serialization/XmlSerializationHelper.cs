@@ -9,19 +9,15 @@ namespace Remote.Linq.Tests.Serialization
 
     public static class XmlSerializationHelper
     {
-        public static T Serialize<T>(this T graph)
-            => Serialize(graph, null);
+        public static T Serialize<T>(this T graph) => Serialize(graph, null);
 
         public static T Serialize<T>(this T graph, Type[] extraTypes)
         {
             var serializer = new XmlSerializer(typeof(T), extraTypes);
-
-            using (var stream = new MemoryStream())
-            {
-                serializer.Serialize(stream, graph);
-                stream.Seek(0, SeekOrigin.Begin);
-                return (T)serializer.Deserialize(stream);
-            }
+            using var stream = new MemoryStream();
+            serializer.Serialize(stream, graph);
+            stream.Seek(0, SeekOrigin.Begin);
+            return (T)serializer.Deserialize(stream);
         }
 
         public static T SerializeExpression<T>(T expression) where T : Remote.Linq.Expressions.Expression

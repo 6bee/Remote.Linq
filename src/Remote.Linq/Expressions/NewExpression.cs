@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Expressions
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
@@ -58,10 +59,6 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? Type { get; set; }
 
-        public override string ToString()
-            => string.Format(
-                "New {0}({1})",
-                Constructor?.DeclaringType ?? Type,
-                Arguments.StringJoin(", "));
+        public override string ToString() => $"new {Constructor?.DeclaringType ?? Type}({Arguments.StringJoin(", ")})";
     }
 }

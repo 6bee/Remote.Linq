@@ -35,11 +35,5 @@ namespace Remote.Linq
                 .AsQueryable()
                 .ApplyQuery(query, expressionVisitor)
                 .AsEnumerable();
-
-        internal static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? Enumerable.Empty<T>();
-
-        internal static IEnumerable<T>? AsNullIfEmpty<T>(this IEnumerable<T>? source) => source?.Any() == true ? source : null;
-
-        internal static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? default : string.Join(separator, source);
     }
 }

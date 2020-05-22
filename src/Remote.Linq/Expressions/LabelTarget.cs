@@ -39,6 +39,6 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
         public int InstanceId { get; set; }
 
-        public override string ToString() => $"{Name ?? InstanceId.ToString()}";
+        public override string ToString() => Name ?? InstanceId.ToString();
     }
 }

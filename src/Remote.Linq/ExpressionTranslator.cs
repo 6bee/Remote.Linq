@@ -3,6 +3,7 @@
 namespace Remote.Linq
 {
     using Aqua.Dynamic;
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using Aqua.Utils;
     using Remote.Linq.DynamicQuery;
@@ -41,7 +42,7 @@ namespace Remote.Linq
 
             public override System.Linq.Expressions.Expression Reduce() => throw Exception;
 
-            private static Exception Exception => throw new RemoteLinqException($"{nameof(ResultWrapperExpression)} is not meant for direct usage.");
+            private static Exception Exception => throw new RemoteLinqException($"{nameof(ResultWrapperExpression)} is meant for internal usage and must not be exposed externally.");
         }
 
         /// <summary>
@@ -398,7 +399,11 @@ namespace Remote.Linq
             protected override System.Linq.Expressions.Expression VisitConstant(System.Linq.Expressions.ConstantExpression node)
             {
                 RLinq.ConstantExpression exp;
-                if (node.Value != null && ConstantValueMapper.TypeNeedsWrapping(node.Value.GetType()))
+                if (node.Type == typeof(Type) && node.Value is Type typeValue)
+                {
+                    exp = new RLinq.ConstantExpression(typeValue.AsTypeInfo(), node.Type);
+                }
+                else if (node.Value != null && ConstantValueMapper.TypeNeedsWrapping(node.Value.GetType()))
                 {
                     var key = new { node.Value, node.Type };
                     if (!_constantQueryArgumentCache.TryGetValue(key, out var constantQueryArgument))
@@ -877,7 +882,7 @@ namespace Remote.Linq
             private System.Linq.Expressions.Expression VisitMethodCall(RLinq.MethodCallExpression methodCallExpression)
             {
                 var instance = Visit(methodCallExpression.Instance);
-                var arguments = methodCallExpression.Arguments
+                var arguments = methodCallExpression.Arguments?
                     .Select(x => Visit(x))
                     .ToArray();
                 var methodInfo = methodCallExpression.Method.ResolveMethod(_typeResolver);
@@ -903,8 +908,11 @@ namespace Remote.Linq
                 var value = constantValueExpression.Value;
                 var type = constantValueExpression.Type.ResolveType(_typeResolver);
 
-                var oldConstantQueryArgument = value as ConstantQueryArgument;
-                if (!(oldConstantQueryArgument?.Type is null))
+                if (type == typeof(Type) && value is Aqua.TypeSystem.TypeInfo typeInfo)
+                {
+                    value = typeInfo.ResolveType(_typeResolver);
+                }
+                else if (value is ConstantQueryArgument oldConstantQueryArgument && oldConstantQueryArgument.Type != null)
                 {
                     var newConstantQueryArgument = new ConstantQueryArgument(oldConstantQueryArgument.Type);
                     foreach (var property in oldConstantQueryArgument.Properties ?? Enumerable.Empty<Property>())
@@ -950,17 +958,15 @@ namespace Remote.Linq
             private System.Linq.Expressions.Expression VisitLambda(RLinq.LambdaExpression lambdaExpression)
             {
                 var body = Visit(lambdaExpression.Expression);
-                var parameters =
-                    from p in lambdaExpression.Parameters
-                    select VisitParameter(p);
+                var parameters = lambdaExpression.Parameters?.Select(VisitParameter) ?? Enumerable.Empty<System.Linq.Expressions.ParameterExpression>();
 
                 if (lambdaExpression.Type is null)
                 {
-                    return System.Linq.Expressions.Expression.Lambda(body, parameters.ToArray());
+                    return System.Linq.Expressions.Expression.Lambda(body, parameters);
                 }
 
                 var delegateType = _typeResolver.ResolveType(lambdaExpression.Type);
-                return System.Linq.Expressions.Expression.Lambda(delegateType, body, parameters.ToArray());
+                return System.Linq.Expressions.Expression.Lambda(delegateType, body, parameters);
             }
 
             private System.Linq.Expressions.Expression VisitDefault(RLinq.DefaultExpression defaultExpression)

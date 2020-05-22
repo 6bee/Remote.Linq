@@ -3,10 +3,7 @@
   <PropertyGroup>
     <Description>Provides Json.NET serialization for Remote.Linq types.</Description>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <AssemblyName>Remote.Linq.Newtonsoft.Json</AssemblyName>
-    <PackageId>Remote.Linq.Newtonsoft.Json</PackageId>
     <PackageTags>remote-linq;json-net;newtonsoft-json</PackageTags>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core-newtonsoft-json" Version="5.0.0-alpha-001" />
+    <PackageReference Include="aqua-core-newtonsoft-json" />
   </ItemGroup>
 
 </Project>

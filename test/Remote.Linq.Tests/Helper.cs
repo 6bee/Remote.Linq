@@ -4,8 +4,8 @@ namespace Remote.Linq.Tests
 {
     using Shouldly;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
-    using System.Security;
 
     public static class Helper
     {
@@ -15,7 +15,6 @@ namespace Remote.Linq.Tests
             return tuple;
         }
 
-        [SecuritySafeCritical]
         public static T ShouldMatch<T>(this T t1, T t2)
         {
             var isMatch = string.Equals(t1.ToString(), t2.ToString());
@@ -37,5 +36,9 @@ namespace Remote.Linq.Tests
             || type == typeof(T?)
             || typeof(ICollection<T>).IsAssignableFrom(type)
             || typeof(ICollection<T?>).IsAssignableFrom(type);
+
+        public static bool IsCollection(this Type type)
+            => typeof(IEnumerable).IsAssignableFrom(type)
+            && type != typeof(string);
     }
 }

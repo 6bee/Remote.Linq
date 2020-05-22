@@ -18,16 +18,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 
-#if NET
-        public class NetDataContractSerializer : When_using_GotoAndLabelExpressions_with_names
-        {
-            public NetDataContractSerializer()
-                : base(NetDataContractSerializationHelper.Serialize)
-            {
-            }
-        }
-#endif
-
         public class DataContractSerializer : When_using_GotoAndLabelExpressions_with_names
         {
             public DataContractSerializer()
@@ -44,6 +34,16 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 
+#if NETFX
+        public class NetDataContractSerializer : When_using_GotoAndLabelExpressions_with_names
+        {
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif
+
         public class XmlSerializer : When_using_GotoAndLabelExpressions_with_names
         {
             public XmlSerializer()
@@ -51,6 +51,16 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
+
+#if COREFX
+        public class ProtobufNetSerializer : When_using_GotoAndLabelExpressions_with_names
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // COREFX
 
         private Expression<Func<StreamWriter, long>> _originalExpression;
 

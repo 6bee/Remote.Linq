@@ -55,14 +55,16 @@ namespace Remote.Linq.ExpressionVisitors
             private static bool IsGenericVariableQueryArgument(ConstantExpression expression, [NotNullWhen(true)] out Type? valueType)
             {
                 var type = expression.Type?.Type ?? expression.Value?.GetType();
-                var result =
-                    type != null &&
+                if (type != null &&
                     type.IsGenericType &&
-                    type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>);
-                valueType = result
-                    ? type!.GetGenericArguments().Single()
-                    : null;
-                return result;
+                    type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                {
+                    valueType = type.GetGenericArguments().Single();
+                    return true;
+                }
+
+                valueType = null;
+                return false;
             }
 
             protected override Expression VisitMemberAccess(MemberExpression expression)

@@ -7,8 +7,61 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
     using System.Collections.Generic;
     using Xunit;
 
-    public abstract partial class When_using_local_variable_query_argument_list
+    public abstract class When_using_local_variable_query_argument_list
     {
+        public class BinaryFormatter : When_using_local_variable_query_argument_list
+        {
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class DataContractSerializer : When_using_local_variable_query_argument_list
+        {
+            public DataContractSerializer()
+                : base(x => DataContractSerializationHelper.SerializeExpression(x, new[] { typeof(List<int>) }))
+            {
+            }
+        }
+
+        public class JsonSerializer : When_using_local_variable_query_argument_list
+        {
+            public JsonSerializer()
+                : base(JsonSerializationHelper.Serialize)
+            {
+            }
+        }
+
+#if NETFX
+        public class NetDataContractSerializer : When_using_local_variable_query_argument_list
+        {
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // NETFX
+
+        public class XmlSerializer : When_using_local_variable_query_argument_list
+        {
+            public XmlSerializer()
+                : base(x => XmlSerializationHelper.SerializeExpression(x, new[] { typeof(List<int>) }))
+            {
+            }
+        }
+
+#if COREFX
+        // Unsupported by ProtobufNetSerializer
+        // public class ProtobufNetSerializer : When_using_local_variable_query_argument_list
+        // {
+        //     public ProtobufNetSerializer()
+        //         : base(ProtobufNetSerializationHelper.Serialize)
+        //     {
+        //     }
+        // }
+#endif // COREFX
+
         public class AType
         {
             public int Number { get; set; }

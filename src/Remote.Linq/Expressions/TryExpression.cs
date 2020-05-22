@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Expressions
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
             => $"try({Type}) {{{Body}}}" +
-                (Handlers is null ? null : " " + string.Join("; ", Handlers)) +
+                (Handlers is null ? null : " " + Handlers.StringJoin("; ")) +
                 (Finally is null ? null : $" finally{{{Finally}}}") +
                 (Fault is null ? null : $" faulted{{{Fault}}}");
     }

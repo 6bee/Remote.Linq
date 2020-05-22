@@ -6,8 +6,60 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
     using System;
     using Xunit;
 
-    public abstract partial class When_using_instance_variable_query_argument
+    public abstract class When_using_instance_variable_query_argument
     {
+        public class BinaryFormatter : When_using_instance_variable_query_argument
+        {
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class DataContractSerializer : When_using_instance_variable_query_argument
+        {
+            public DataContractSerializer()
+                : base(DataContractSerializationHelper.SerializeExpression)
+            {
+            }
+        }
+
+        public class JsonSerializer : When_using_instance_variable_query_argument
+        {
+            public JsonSerializer()
+                : base(JsonSerializationHelper.Serialize)
+            {
+            }
+        }
+
+#if NETFX
+        public class NetDataContractSerializer : When_using_instance_variable_query_argument
+        {
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // NETFX
+
+        public class XmlSerializer : When_using_instance_variable_query_argument
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
+        }
+
+#if COREFX
+        public class ProtobufNetSerializer : When_using_instance_variable_query_argument
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // COREFX
+
         private class AType
         {
             public int Number { get; set; }

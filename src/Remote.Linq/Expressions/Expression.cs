@@ -2,7 +2,10 @@
 
 namespace Remote.Linq.Expressions
 {
+    using Aqua.Dynamic;
+    using Aqua.TypeSystem;
     using System;
+    using System.Diagnostics;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
@@ -29,8 +32,53 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(TryExpression)), XmlInclude(typeof(TryExpression))]
     [KnownType(typeof(TypeBinaryExpression)), XmlInclude(typeof(TypeBinaryExpression))]
     [KnownType(typeof(UnaryExpression)), XmlInclude(typeof(UnaryExpression))]
+    [KnownType(typeof(TypeInfo)), XmlInclude(typeof(TypeInfo))]
+    [KnownType(typeof(ConstructorInfo)), XmlInclude(typeof(ConstructorInfo))]
+    [KnownType(typeof(FieldInfo)), XmlInclude(typeof(FieldInfo))]
+    [KnownType(typeof(PropertyInfo)), XmlInclude(typeof(PropertyInfo))]
+    [KnownType(typeof(MethodInfo)), XmlInclude(typeof(MethodInfo))]
+    [DebuggerDisplay("{DebugFormatter}")]
     public abstract class Expression
     {
+        [Unmapped]
         public abstract ExpressionType NodeType { get; }
+
+        [Unmapped]
+        internal string DebugView => DebugFormatter.ToString(0);
+
+        // TODO: make DebugFormatter property abstract and have every expresison implement its own formatter
+        [Unmapped]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected internal virtual ExpressionDebugFormatter DebugFormatter => new ExpressionDebugFormatter(this);
+
+        protected internal class ExpressionDebugFormatter
+        {
+            public ExpressionDebugFormatter(Expression expression)
+            {
+                Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+            }
+
+            protected Expression Expression { get; }
+
+            public override string ToString() => Expression.ToString();
+
+            // TODO: add indentation and line break formtting
+            protected internal string ToString(int level) => ToString();
+
+            protected static string Format(Type? t) => Format(t.AsTypeInfo());
+
+            protected static string Format(TypeInfo? typeInfo) => $"{typeInfo?.NameWithoutNameSpace}{typeInfo?.GetGenericArgumentsString()}";
+        }
+
+        protected internal abstract class ExpressionDebugFormatter<T> : ExpressionDebugFormatter
+            where T : Expression
+        {
+            public ExpressionDebugFormatter(T expression)
+                : base(expression)
+            {
+            }
+
+            public new T Expression => (T)base.Expression;
+        }
     }
 }

@@ -31,6 +31,6 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 3, IsRequired = true, EmitDefaultValue = false)]
         public Expression IfFalse { get; set; } = null!;
 
-        public override string ToString() => $"IF {Test} THEN {IfTrue} ELSE {IfFalse}";
+        public override string ToString() => $"if {Test} then {IfTrue} else {IfFalse}";
     }
 }

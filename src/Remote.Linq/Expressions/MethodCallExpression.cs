@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Expressions
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
@@ -45,10 +46,9 @@ namespace Remote.Linq.Expressions
         public List<Expression>? Arguments { get; set; }
 
         public override string ToString()
-            => string.Format(
-                "{0}.{1}({2})",
-                (object?)Instance ?? Method?.DeclaringType,
-                Method?.Name,
-                Arguments.StringJoin(", "));
+        {
+            var instalce = Instance is null ? null : $"{Instance}.";
+            return $"{instalce}{Method?.Name}({Arguments.StringJoin(", ")})";
+        }
     }
 }

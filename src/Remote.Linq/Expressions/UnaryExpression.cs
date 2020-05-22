@@ -46,6 +46,23 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public MethodInfo? Method { get; set; }
 
-        public override string ToString() => $"{UnaryOperator}({Operand})";
+        protected internal override ExpressionDebugFormatter DebugFormatter => new UnaryExpressionDebugView(this);
+
+        public override string ToString() => DebugFormatter.ToString();
+
+        private sealed class UnaryExpressionDebugView : ExpressionDebugFormatter<UnaryExpression>
+        {
+            public UnaryExpressionDebugView(UnaryExpression expression)
+                : base(expression)
+            {
+            }
+
+            public override string ToString() => Expression.UnaryOperator switch
+            {
+                // TODO: add operation specific info/format
+                UnaryOperator.Convert => $"{Expression.UnaryOperator}({Expression.Operand?.DebugFormatter}, {Format(Expression.Type)})",
+                _ => $"{Expression.UnaryOperator}({Expression.Operand?.DebugFormatter})",
+            };
+        }
     }
 }

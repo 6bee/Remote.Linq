@@ -4,7 +4,8 @@
     <MajorVersion>6</MajorVersion>
     <MinorVersion>3</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-003</PreReleaseLabel>
+    <PreReleaseLabel>alpha-004</PreReleaseLabel>
+    <AquaCoreVersion>5.0.0-alpha-004</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -34,6 +35,8 @@
     <EmbedAllSources>true</EmbedAllSources>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Nullable Condition=" '$(Nullable)' == '' ">enable</Nullable>
+    <IncludeGlobalAssemblyInfo Condition=" '$(IncludeGlobalAssemblyInfo)' == ''">true</IncludeGlobalAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,15 +45,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" Condition=" '$(IncludeGlobalAssemblyInfo)' == 'true' " />
   </ItemGroup>
-
-  <PropertyGroup>
-    <SignAssembly Condition=" '$(SignAssembly)' == '' ">true</SignAssembly>
-    <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-  </PropertyGroup>
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>

@@ -3,6 +3,7 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
 
   <PropertyGroup>
+    <Nullable>disable</Nullable>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\Style.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 

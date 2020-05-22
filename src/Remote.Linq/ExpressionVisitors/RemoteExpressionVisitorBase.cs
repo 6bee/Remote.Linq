@@ -320,7 +320,7 @@ namespace Remote.Linq.ExpressionVisitors
             if (!ReferenceEquals(args, node.Arguments))
             {
                 return node.Constructor is null
-                    ? new NewExpression(node.Type ?? throw new RemoteLinqException($"{nameof(NewExpression)} requires either {nameof(NewExpression.Type)} or {nameof(NewExpression.Constructor)} proeprty not null."))
+                    ? new NewExpression(node.Type ?? throw new RemoteLinqException($"{nameof(NewExpression)} requires either {nameof(NewExpression.Type)} or {nameof(NewExpression.Constructor)} property not null."))
                     : new NewExpression(node.Constructor, args, node.Members);
             }
 
@@ -455,10 +455,10 @@ namespace Remote.Linq.ExpressionVisitors
         protected virtual Expression VisitLambda(LambdaExpression node)
         {
             var exp = Visit(node.Expression);
-            var parameters = node.Parameters
+            var parameters = node.Parameters?
                 .Select(i => new { Old = i, New = VisitParameter(i) })
                 .ToList();
-            if (!ReferenceEquals(exp, node.Expression) || parameters.Any(i => !ReferenceEquals(i.Old, i.New)))
+            if (!ReferenceEquals(exp, node.Expression) || parameters?.Any(i => !ReferenceEquals(i.Old, i.New)) == true)
             {
                 return new LambdaExpression(node.Type, exp, parameters.Select(i => i.New));
             }

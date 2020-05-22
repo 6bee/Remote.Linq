@@ -6,8 +6,68 @@ namespace Remote.Linq.Tests.Serialization.Expressions
     using System;
     using Xunit;
 
-    public abstract partial class When_using_const_bool_expression
+    public abstract class When_using_const_bool_expression
     {
+        public class NoSerialization : When_subquery_expression_use_same_parameter_name
+        {
+            public NoSerialization()
+                : base(x => x)
+            {
+            }
+        }
+
+        public class BinaryFormatter : When_using_const_bool_expression
+        {
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class DataContractSerializer : When_using_const_bool_expression
+        {
+            public DataContractSerializer()
+                : base(DataContractSerializationHelper.SerializeExpression)
+            {
+            }
+        }
+
+        public class JsonSerializer : When_using_const_bool_expression
+        {
+            public JsonSerializer()
+                : base(JsonSerializationHelper.Serialize)
+            {
+            }
+        }
+
+#if NETFX
+        public class NetDataContractSerializer : When_using_const_bool_expression
+        {
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // NETFX
+
+        public class XmlSerializer : When_using_const_bool_expression
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
+        }
+
+#if COREFX
+        public class ProtobufNetSerializer : When_using_const_bool_expression
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // COREFX
+
         private LambdaExpression _remoteExpression;
 
         private LambdaExpression _serializedRemoteExpression;

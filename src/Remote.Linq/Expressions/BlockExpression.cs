@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Expressions
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
@@ -39,6 +40,6 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public List<Expression>? Expressions { get; set; }
 
-        public override string ToString() => $".Block {{{Expressions.StringJoin("; ")}}}";
+        public override string ToString() => $".block {{{Expressions.StringJoin("; ")}}}";
     }
 }

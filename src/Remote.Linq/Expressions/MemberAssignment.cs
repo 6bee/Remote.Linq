@@ -22,7 +22,7 @@ namespace Remote.Linq.Expressions
 
         public override MemberBindingType BindingType => MemberBindingType.Assignment;
 
-        [DataMember(Order = 1, IsRequired = true)]
+        [DataMember(Order = 2, IsRequired = true)]
         public Expression Expression { get; set; } = null!;
     }
 }

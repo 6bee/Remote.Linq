@@ -20,16 +20,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 
-#if NET
-        public class NetDataContractSerializer : When_using_LambdaExpression_returnung_a_type
-        {
-            public NetDataContractSerializer()
-                : base(NetDataContractSerializationHelper.Serialize)
-            {
-            }
-        }
-#endif
-
         public class DataContractSerializer : When_using_LambdaExpression_returnung_a_type
         {
             public DataContractSerializer()
@@ -46,13 +36,33 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 
-        public class XmlSerializer : When_using_LambdaExpression_returnung_a_type
+#if NETFX
+        public class NetDataContractSerializer : When_using_LambdaExpression_returnung_a_type
         {
-            public XmlSerializer()
-                : base(x => XmlSerializationHelper.SerializeExpression(x, new[] { typeof(List<Aqua.TypeSystem.TypeInfo>) }))
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
             {
             }
         }
+#endif
+
+        public class XmlSerializer : When_using_LambdaExpression_returnung_a_type
+        {
+            public XmlSerializer()
+                : base(x => XmlSerializationHelper.SerializeExpression(x, new[] { typeof(List<Aqua.TypeSystem.TypeInfo>), typeof(Aqua.TypeSystem.TypeInfo[]) }))
+            {
+            }
+        }
+
+#if COREFX
+        public class ProtobufNetSerializer : When_using_LambdaExpression_returnung_a_type
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // COREFX
 
         private readonly Func<RemoteLambdaExpression, RemoteLambdaExpression> _serialize;
 

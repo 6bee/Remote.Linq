@@ -29,6 +29,6 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
         public List<Expression>? Arguments { get; set; }
 
-        public override string ToString() => $".Invoke {Expression}";
+        public override string ToString() => $".invoke {Expression}";
     }
 }

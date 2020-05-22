@@ -1,2 +1,7 @@
 ﻿<Project>
+  <ItemGroup>
+    <PackageReference Update="aqua-core" Version="$(AquaCoreVersion)" />
+    <PackageReference Update="aqua-core-newtonsoft-json" Version="$(AquaCoreVersion)" />
+    <PackageReference Update="aqua-core-protobuf-net" Version="$(AquaCoreVersion)" />
+  </ItemGroup>
 </Project>

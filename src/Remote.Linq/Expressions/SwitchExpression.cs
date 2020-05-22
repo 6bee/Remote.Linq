@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Expressions
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
@@ -42,5 +43,7 @@ namespace Remote.Linq.Expressions
 
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public List<SwitchCase>? Cases { get; set; }
+
+        public override string ToString() => $"switch({SwitchValue}) {{ {Cases.StringJoin("; ")}; {DefaultExpression} }}";
     }
 }

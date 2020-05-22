@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Expressions
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace Remote.Linq.Expressions
 
         public override string ToString()
             => NewArrayType == NewArrayType.NewArrayBounds
-            ? $"New [lenght]"
-            : $"New [] {{ {Expressions.StringJoin(", ")} }}";
+            ? $"new {Type}[lenght]"
+            : $"new {Type}[] {{ {Expressions.StringJoin(", ")} }}";
     }
 }

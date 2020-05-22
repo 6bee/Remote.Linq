@@ -3,6 +3,7 @@
 namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
 {
     using Remote.Linq;
+    using Shouldly;
     using System;
     using System.Linq.Expressions;
     using Xunit;
@@ -24,7 +25,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
             var remoteExpr = expr.ToRemoteLinqExpression();
 
             var stringRepresentation = remoteExpr.ToString();
-            stringRepresentation.ShouldMatch("x => (Convert(x.Property) Equal Convert(New Remote.Linq.DynamicQuery.VariableQueryArgument`1[System.Int16](1).Value))");
+            stringRepresentation.ShouldBe("x => (Convert(x.Property, Int32) Equal Convert(new Remote.Linq.DynamicQuery.VariableQueryArgument`1[System.Int16](1).Value, Int32))");
         }
 
         [Fact]
@@ -37,7 +38,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
             var remoteExpr = expr.ToRemoteLinqExpression();
 
             var stringRepresentation = remoteExpr.ToString();
-            stringRepresentation.ShouldMatch("x => (Convert(x.Property) Equal New Remote.Linq.DynamicQuery.VariableQueryArgument`1[System.Int32](1).Value)");
+            stringRepresentation.ShouldBe("x => (Convert(x.Property, Int32) Equal new Remote.Linq.DynamicQuery.VariableQueryArgument`1[System.Int32](1).Value)");
         }
     }
 }

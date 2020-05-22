@@ -52,7 +52,6 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = true)]
         public object? Value { get; set; }
 
-        public override string ToString()
-            => string.Format("{1}{0}{1}", Value ?? "null", Value is string ? "\"" : Value is char ? "'" : null);
+        public override string ToString() => Value.QuoteValue();
     }
 }

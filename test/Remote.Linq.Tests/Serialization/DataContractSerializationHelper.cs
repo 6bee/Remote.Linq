@@ -15,13 +15,10 @@ namespace Remote.Linq.Tests.Serialization
         public static T Serialize<T>(T graph, Type[] knownTypes)
         {
             var serializer = new DataContractSerializer(typeof(T), knownTypes);
-
-            using (var stream = new MemoryStream())
-            {
-                serializer.WriteObject(stream, graph);
-                stream.Seek(0, SeekOrigin.Begin);
-                return (T)serializer.ReadObject(stream);
-            }
+            using var stream = new MemoryStream();
+            serializer.WriteObject(stream, graph);
+            stream.Seek(0, SeekOrigin.Begin);
+            return (T)serializer.ReadObject(stream);
         }
 
         public static T SerializeExpression<T>(T expression) where T : Remote.Linq.Expressions.Expression

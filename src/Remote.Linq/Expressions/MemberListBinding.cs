@@ -24,7 +24,7 @@ namespace Remote.Linq.Expressions
 
         public override MemberBindingType BindingType => MemberBindingType.ListBinding;
 
-        [DataMember(Order = 1)]
+        [DataMember(Order = 2)]
         public List<ElementInit> Initializers { get; set; } = null!;
     }
 }

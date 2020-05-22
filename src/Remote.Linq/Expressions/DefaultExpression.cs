@@ -29,6 +29,6 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public TypeInfo Type { get; set; } = null!;
 
-        public override string ToString() => $".Default {Type}";
+        public override string ToString() => $".default {Type}";
     }
 }

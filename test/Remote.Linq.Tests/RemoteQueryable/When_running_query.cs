@@ -50,7 +50,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             public With_binary_formatter() : base(BinarySerializationHelper.Serialize) { }
         }
 
-#if NET
+#if NETFX
         public class With_net_data_contract_serializer : When_running_query
         {
             public With_net_data_contract_serializer() : base(NetDataContractSerializationHelper.Serialize) { }

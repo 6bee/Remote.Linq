@@ -25,6 +25,6 @@ namespace Remote.Linq.Expressions
         [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = true)]
         public SortDirection SortDirection { get; set; }
 
-        public override string ToString() => $"OrderBy ({Operand}) {SortDirection}";
+        public override string ToString() => $"orderby ({Operand}) {SortDirection}";
     }
 }

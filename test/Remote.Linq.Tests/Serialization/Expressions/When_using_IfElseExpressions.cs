@@ -9,38 +9,57 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
     public abstract class When_using_IfElseExpressions
     {
-#pragma warning disable SA1502 // Element should not be on a single line
-#pragma warning disable SA1128 // Put constructor initializers on their own line
-
         public class BinaryFormatter : When_using_IfElseExpressions
         {
-            public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
         }
-
-#if NET
-        public class NetDataContractSerializer : When_using_IfElseExpressions
-        {
-            public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
-        }
-#endif
 
         public class DataContractSerializer : When_using_IfElseExpressions
         {
-            public DataContractSerializer() : base(DataContractSerializationHelper.SerializeExpression) { }
+            public DataContractSerializer()
+                : base(DataContractSerializationHelper.SerializeExpression)
+            {
+            }
         }
 
         public class JsonSerializer : When_using_IfElseExpressions
         {
-            public JsonSerializer() : base(x => (RemoteExpression)JsonSerializationHelper.Serialize(x, x.GetType())) { }
+            public JsonSerializer()
+                : base(x => (RemoteExpression)JsonSerializationHelper.Serialize(x, x.GetType()))
+            {
+            }
         }
+
+#if NETFX
+        public class NetDataContractSerializer : When_using_IfElseExpressions
+        {
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif
 
         public class XmlSerializer : When_using_IfElseExpressions
         {
-            public XmlSerializer() : base(XmlSerializationHelper.SerializeExpression) { }
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
         }
 
-#pragma warning restore SA1128 // Put constructor initializers on their own line
-#pragma warning restore SA1502 // Element should not be on a single line
+#if COREFX
+        public class ProtobufNetSerializer : When_using_IfElseExpressions
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // COREFX
 
         private readonly Expression _originalExpression;
 
