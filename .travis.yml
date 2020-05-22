@@ -22,13 +22,13 @@ addons:
 matrix:
   include:
     - os: linux
-      env: FRAMEWORK_VERSION=3.0 CLI_VERSION=Latest CONFIGURATION=Release
+      env: FRAMEWORK_VERSION=3.1 CLI_VERSION=Latest CONFIGURATION=Release
     - os: osx
-      env: FRAMEWORK_VERSION=3.0 CLI_VERSION=Latest CONFIGURATION=Release
+      env: FRAMEWORK_VERSION=3.1 CLI_VERSION=Latest CONFIGURATION=Release
 
 install:
   - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
-  - curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --channel 3.0 --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
+  - curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --channel 3.1 --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
   - export PATH="$DOTNET_INSTALL_DIR:$PATH"
 
 before_script:
