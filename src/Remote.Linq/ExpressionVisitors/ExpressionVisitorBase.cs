@@ -26,86 +26,32 @@ namespace Remote.Linq.ExpressionVisitors
     {
         [return: NotNullIfNotNull("expression")]
         protected virtual Expression? Visit(Expression? expression)
-        {
-            if (expression is null)
+            => expression switch
             {
-                return null;
-            }
-
-            if (expression is UnaryExpression unaryExpression)
-            {
-                return VisitUnary(unaryExpression);
-            }
-
-            if (expression is BinaryExpression binaryExpression)
-            {
-                return VisitBinary(binaryExpression);
-            }
-
-            switch (expression.NodeType)
-            {
-                case ExpressionType.Block:
-                    return VisitBlock((BlockExpression)expression);
-
-                case ExpressionType.Call:
-                    return VisitMethodCall((MethodCallExpression)expression);
-
-                case ExpressionType.Conditional:
-                    return VisitConditional((ConditionalExpression)expression);
-
-                case ExpressionType.Constant:
-                    return VisitConstant((ConstantExpression)expression);
-
-                case ExpressionType.Default:
-                    return VisitDefault((DefaultExpression)expression);
-
-                case ExpressionType.Goto:
-                    return VisitGoto((GotoExpression)expression);
-
-                case ExpressionType.Invoke:
-                    return VisitInvocation((InvocationExpression)expression);
-
-                case ExpressionType.Label:
-                    return VisitLabel((LabelExpression)expression);
-
-                case ExpressionType.Lambda:
-                    return VisitLambda((LambdaExpression)expression);
-
-                case ExpressionType.ListInit:
-                    return VisitListInit((ListInitExpression)expression);
-
-                case ExpressionType.Loop:
-                    return VisitLoop((LoopExpression)expression);
-
-                case ExpressionType.MemberAccess:
-                    return VisitMemberAccess((MemberExpression)expression);
-
-                case ExpressionType.MemberInit:
-                    return VisitMemberInit((MemberInitExpression)expression);
-
-                case ExpressionType.New:
-                    return VisitNew((NewExpression)expression);
-
-                case ExpressionType.NewArrayInit:
-                case ExpressionType.NewArrayBounds:
-                    return VisitNewArray((NewArrayExpression)expression);
-
-                case ExpressionType.Parameter:
-                    return VisitParameter((ParameterExpression)expression);
-
-                case ExpressionType.Switch:
-                    return VisitSwitch((SwitchExpression)expression);
-
-                case ExpressionType.Try:
-                    return VisitTry((TryExpression)expression);
-
-                case ExpressionType.TypeIs:
-                    return VisitTypeIs((TypeBinaryExpression)expression);
-
-                default:
-                    throw new RemoteLinqException($"Unhandled expression type: '{expression.NodeType}'");
-            }
-        }
+                null => null,
+                UnaryExpression unaryExpression => VisitUnary(unaryExpression),
+                BinaryExpression binaryExpression => VisitBinary(binaryExpression),
+                NewArrayExpression newArrayExpression => VisitNewArray(newArrayExpression),
+                BlockExpression blockExpression => VisitBlock(blockExpression),
+                MethodCallExpression methodCallExpression => VisitMethodCall(methodCallExpression),
+                ConditionalExpression conditionalExpression => VisitConditional(conditionalExpression),
+                ConstantExpression constantExpression => VisitConstant(constantExpression),
+                DefaultExpression defaultExpression => VisitDefault(defaultExpression),
+                GotoExpression gotoExpression => VisitGoto(gotoExpression),
+                InvocationExpression invocationExpression => VisitInvocation(invocationExpression),
+                LabelExpression labelExpression => VisitLabel(labelExpression),
+                LambdaExpression lambdaExpression => VisitLambda(lambdaExpression),
+                ListInitExpression listInitExpression => VisitListInit(listInitExpression),
+                LoopExpression loopExpression => VisitLoop(loopExpression),
+                MemberExpression memberExpression => VisitMemberAccess(memberExpression),
+                MemberInitExpression memberInitExpression => VisitMemberInit(memberInitExpression),
+                NewExpression newExpression => VisitNew(newExpression),
+                ParameterExpression parameterExpression => VisitParameter(parameterExpression),
+                SwitchExpression switchExpression => VisitSwitch(switchExpression),
+                TryExpression tryExpression => VisitTry(tryExpression),
+                TypeBinaryExpression typeBinaryExpression => VisitTypeIs(typeBinaryExpression),
+                _ => throw new RemoteLinqException($"Unhandled expression type: '{expression.NodeType}'"),
+            };
 
         protected virtual Expression VisitSwitch(SwitchExpression switchExpression)
         {

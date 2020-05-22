@@ -12,81 +12,32 @@ namespace Remote.Linq.ExpressionVisitors
     {
         [return: NotNullIfNotNull("expression")]
         protected virtual Expression? Visit(Expression? expression)
-        {
-            if (expression is null)
+            => expression?.NodeType switch
             {
-                return null;
-            }
-
-            switch (expression.NodeType)
-            {
-                case ExpressionType.Binary:
-                    return VisitBinary((BinaryExpression)expression);
-
-                case ExpressionType.Block:
-                    return VisitBlock((BlockExpression)expression);
-
-                case ExpressionType.Call:
-                    return VisitMethodCall((MethodCallExpression)expression);
-
-                case ExpressionType.Conditional:
-                    return VisitConditional((ConditionalExpression)expression);
-
-                case ExpressionType.Constant:
-                    return VisitConstant((ConstantExpression)expression);
-
-                case ExpressionType.Default:
-                    return VisitDefault((DefaultExpression)expression);
-
-                case ExpressionType.Goto:
-                    return VisitGoto((GotoExpression)expression);
-
-                case ExpressionType.Invoke:
-                    return VisitInvoke((InvokeExpression)expression);
-
-                case ExpressionType.Label:
-                    return VisitLabel((LabelExpression)expression);
-
-                case ExpressionType.Lambda:
-                    return VisitLambda((LambdaExpression)expression);
-
-                case ExpressionType.ListInit:
-                    return VisitListInit((ListInitExpression)expression);
-
-                case ExpressionType.Loop:
-                    return VisitLoop((LoopExpression)expression);
-
-                case ExpressionType.MemberAccess:
-                    return VisitMemberAccess((MemberExpression)expression);
-
-                case ExpressionType.MemberInit:
-                    return VisitMemberInit((MemberInitExpression)expression);
-
-                case ExpressionType.New:
-                    return VisitNew((NewExpression)expression);
-
-                case ExpressionType.NewArray:
-                    return VisitNewArray((NewArrayExpression)expression);
-
-                case ExpressionType.Parameter:
-                    return VisitParameter((ParameterExpression)expression);
-
-                case ExpressionType.Switch:
-                    return VisitSwitch((SwitchExpression)expression);
-
-                case ExpressionType.TypeIs:
-                    return VisitTypeIs((TypeBinaryExpression)expression);
-
-                case ExpressionType.Try:
-                    return VisitTry((TryExpression)expression);
-
-                case ExpressionType.Unary:
-                    return VisitUnary((UnaryExpression)expression);
-
-                default:
-                    throw new Exception(string.Format("Unknown expression type: '{0}'", expression.NodeType));
-            }
-        }
+                null => null,
+                ExpressionType.Binary => VisitBinary((BinaryExpression)expression),
+                ExpressionType.Block => VisitBlock((BlockExpression)expression),
+                ExpressionType.Call => VisitMethodCall((MethodCallExpression)expression),
+                ExpressionType.Conditional => VisitConditional((ConditionalExpression)expression),
+                ExpressionType.Constant => VisitConstant((ConstantExpression)expression),
+                ExpressionType.Default => VisitDefault((DefaultExpression)expression),
+                ExpressionType.Goto => VisitGoto((GotoExpression)expression),
+                ExpressionType.Invoke => VisitInvoke((InvokeExpression)expression),
+                ExpressionType.Label => VisitLabel((LabelExpression)expression),
+                ExpressionType.Lambda => VisitLambda((LambdaExpression)expression),
+                ExpressionType.ListInit => VisitListInit((ListInitExpression)expression),
+                ExpressionType.Loop => VisitLoop((LoopExpression)expression),
+                ExpressionType.MemberAccess => VisitMemberAccess((MemberExpression)expression),
+                ExpressionType.MemberInit => VisitMemberInit((MemberInitExpression)expression),
+                ExpressionType.New => VisitNew((NewExpression)expression),
+                ExpressionType.NewArray => VisitNewArray((NewArrayExpression)expression),
+                ExpressionType.Parameter => VisitParameter((ParameterExpression)expression),
+                ExpressionType.Switch => VisitSwitch((SwitchExpression)expression),
+                ExpressionType.TypeIs => VisitTypeIs((TypeBinaryExpression)expression),
+                ExpressionType.Try => VisitTry((TryExpression)expression),
+                ExpressionType.Unary => VisitUnary((UnaryExpression)expression),
+                _ => throw new Exception($"Unknown expression type: '{expression.NodeType}'"),
+            };
 
         protected virtual Expression VisitSwitch(SwitchExpression switchExpression)
         {
@@ -191,22 +142,13 @@ namespace Remote.Linq.ExpressionVisitors
         }
 
         protected virtual MemberBinding VisitBinding(MemberBinding binding)
-        {
-            switch (binding.BindingType)
+            => binding.BindingType switch
             {
-                case MemberBindingType.Assignment:
-                    return VisitMemberAssignment((MemberAssignment)binding);
-
-                case MemberBindingType.MemberBinding:
-                    return VisitMemberMemberBinding((MemberMemberBinding)binding);
-
-                case MemberBindingType.ListBinding:
-                    return VisitMemberListBinding((MemberListBinding)binding);
-
-                default:
-                    throw new Exception(string.Format("Unhandled binding type '{0}'", binding.BindingType));
-            }
-        }
+                MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment)binding),
+                MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding)binding),
+                MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding)binding),
+                _ => throw new Exception($"Unhandled binding type '{binding.BindingType}'"),
+            };
 
         protected virtual MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
         {
