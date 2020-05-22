@@ -115,6 +115,7 @@ Remote linq extensions for entity framework and entity framework core.
 
 Use this package when using features specific to EF6 and EF Core:
 *   Apply eager-loading (`Include`-expressions)
+
 *   Make use of DB functions
     e.g. `queryable.Where(x => Microsoft.EntityFrameworkCore.EF.Functions.Like(x.Name, "%fruit%"))`
 
