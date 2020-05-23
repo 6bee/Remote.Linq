@@ -46,7 +46,7 @@ namespace Remote.Linq.Expressions
         [Unmapped]
         internal string DebugView => DebugFormatter.ToString(0);
 
-        // TODO: make DebugFormatter property abstract and have every expresison implement its own formatter
+        // TODO: make DebugFormatter property abstract and have every expression implement its own formatter
         [Unmapped]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected internal virtual ExpressionDebugFormatter DebugFormatter => new ExpressionDebugFormatter(this);

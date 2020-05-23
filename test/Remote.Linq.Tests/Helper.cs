@@ -40,5 +40,22 @@ namespace Remote.Linq.Tests
         public static bool IsCollection(this Type type)
             => typeof(IEnumerable).IsAssignableFrom(type)
             && type != typeof(string);
+
+        public static Type AsNonNullableType(this Type type)
+        {
+            var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            return isNullable ? type.GetGenericArguments()[0] : type;
+        }
+
+        public static void ShouldBeNullable(this Type type)
+        {
+            var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            if (isNullable)
+            {
+                return;
+            }
+
+            throw new Xunit.Sdk.IsNotTypeException(typeof(Nullable<>), type);
+        }
     }
 }

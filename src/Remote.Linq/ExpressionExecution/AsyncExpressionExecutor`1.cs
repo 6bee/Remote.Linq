@@ -1,0 +1,123 @@
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+namespace Remote.Linq.ExpressionExecution
+{
+    using Aqua.TypeSystem;
+    using Remote.Linq.Expressions;
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public abstract class AsyncExpressionExecutor<TDataTranferObject> : ExpressionExecutor<TDataTranferObject>, IAsyncExpressionExecutionDecorator<TDataTranferObject>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncExpressionExecutor{TDataTranferObject}"/> class.
+        /// </summary>
+        protected AsyncExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+            : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
+        {
+        }
+
+        /// <summary>
+        /// Composes and executes the query asynchronously based on the <see cref="Expression"/> and mappes the result into dynamic objects.
+        /// </summary>
+        /// <remarks>
+        /// Multiple active operations on the same EF context instance are not supported. Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on the same context.
+        /// </remarks>
+        /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the mapped result of the query execution.
+        /// </returns>
+        public async Task<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellationToken = default)
+        {
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            var preparedRemoteExpression = Prepare(expression);
+            var linqExpression = Transform(preparedRemoteExpression);
+            var preparedLinqExpression = PrepareAsyncQuery(linqExpression, cancellationToken);
+            var queryResult = await ExecuteAsync(preparedLinqExpression, cancellationToken).ConfigureAwait(false);
+            var processedResult = ProcessResult(queryResult);
+            var dynamicObjects = ConvertResult(processedResult);
+            var processedDynamicObjects = ProcessResult(dynamicObjects);
+            return processedDynamicObjects;
+        }
+
+        /// <summary>
+        /// Prepares the query <see cref="System.Linq.Expressions.Expression"/> to be able to be executed.
+        /// </summary>
+        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> returned by the Transform method.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution.</returns>
+        protected virtual System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
+            => Prepare(expression);
+
+        /// <summary>
+        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="InvalidOperationException"/> get handled for failing
+        /// <see cref="Queryable.Single{TSource}(IQueryable{TSource})"/> and
+        /// <see cref="Queryable.Single{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>,
+        /// <see cref="Queryable.First{TSource}(IQueryable{TSource})"/>,
+        /// <see cref="Queryable.First{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>,
+        /// <see cref="Queryable.Last{TSource}(IQueryable{TSource})"/>,
+        /// <see cref="Queryable.Last{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>.
+        /// Instead of throwing an exception, an array with the length of zero respectively two elements is returned.
+        /// </remarks>
+        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
+        protected virtual async Task<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
+        {
+            try
+            {
+                return await ExecuteCoreAsync(expression, cancellationToken).ConfigureAwait(false);
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (string.Equals(ex.Message, "Sequence contains no elements", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 0);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains no matching element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 0);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains more than one element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 2);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
+                {
+                    return Array.CreateInstance(expression.Type, 2);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
+        /// </summary>
+        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
+        protected abstract Task<object?> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken);
+
+        System.Linq.Expressions.Expression IAsyncExpressionExecutionDecorator<TDataTranferObject>.PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
+            => PrepareAsyncQuery(expression, cancellationToken);
+
+        Task<object?> IAsyncExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
+            => ExecuteAsync(expression, cancellationToken);
+    }
+}
