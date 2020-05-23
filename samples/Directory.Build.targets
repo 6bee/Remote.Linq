@@ -1,9 +1,9 @@
 ﻿<Project>
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
   <ItemGroup>
-    <PackageReference Update="Remote.Linq" Version="6.3.0-alpha-002" />
-    <PackageReference Update="Remote.Linq.EntityFramework" Version="6.3.0-alpha-002" />
-    <PackageReference Update="Remote.Linq.EntityFrameworkCore" Version="6.3.0-alpha-002" />
-    <PackageReference Update="Remote.Linq.Newtonsoft.Json" Version="6.3.0-alpha-002" />
+    <PackageReference Update="Remote.Linq" Version="$(RemoteLinqVersion)" />
+    <PackageReference Update="Remote.Linq.EntityFramework" Version="$(RemoteLinqVersion)" />
+    <PackageReference Update="Remote.Linq.EntityFrameworkCore" Version="$(RemoteLinqVersion)" />
+    <PackageReference Update="Remote.Linq.Newtonsoft.Json" Version="$(RemoteLinqVersion)" />
   </ItemGroup>
 </Project>

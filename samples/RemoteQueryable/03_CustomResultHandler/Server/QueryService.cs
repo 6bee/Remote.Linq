@@ -3,26 +3,13 @@
 namespace Server
 {
     using Common.Model;
+    using Common.ServiceContracts;
     using Remote.Linq.Expressions;
     using System;
     using System.Linq;
 
-    public class CustomExpressionExecutor : ExpressionExecutor
+    public class QueryService : IQueryService
     {
-        public CustomExpressionExecutor()
-            : base(QueryableResourceProvider)
-        {
-        }
-
-        public new object Execute(Expression expression)
-        {
-            Remote.Linq.Expressions.Expression preparedRemoteExpression = Prepare(expression);
-            System.Linq.Expressions.Expression linqExpression = Transform(preparedRemoteExpression);
-            System.Linq.Expressions.Expression preparedLinqExpression = Prepare(linqExpression);
-            object queryResult = Execute(preparedLinqExpression);
-            return queryResult;
-        }
-
         private static IQueryable QueryableResourceProvider(Type type)
         {
             InMemoryDataStore dataStore = InMemoryDataStore.Instance;
@@ -44,5 +31,7 @@ namespace Server
 
             throw new Exception($"No queryable resource available for type {type}");
         }
+
+        public object ExecuteQuery(Expression queryExpression) => queryExpression.Execute<object>(QueryableResourceProvider);
     }
 }
