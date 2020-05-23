@@ -16,9 +16,9 @@ namespace Remote.Linq
         public TKey Key { get; set; }
 
         public TElement[] Elements { get; set; }
-#nullable restore
 
         public IEnumerator<TElement> GetEnumerator() => ((IEnumerable<TElement>)Elements).GetEnumerator();
+#nullable restore
 
         IEnumerator IEnumerable.GetEnumerator() => Elements.GetEnumerator();
     }

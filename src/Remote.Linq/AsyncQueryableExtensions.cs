@@ -11,7 +11,7 @@ namespace Remote.Linq
     using System.Threading.Tasks;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class AsyncEnumerableExtensions
+    public static class AsyncQueryableExtensions
     {
         public static Task<TSource> AggregateAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, TSource, TSource>> func, CancellationToken cancellationToken = default)
             => ExecuteAsync<TSource, TSource>(MethodInfos.Queryable.Aggregate, source, func, cancellationToken);
@@ -281,11 +281,19 @@ namespace Remote.Linq
         public static Task<decimal?> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector, CancellationToken cancellationToken = default)
             => ExecuteAsync<TSource, decimal?>(MethodInfos.Queryable.AverageWithNullableDecimalSelector, source, selector, cancellationToken);
 
-        private static async Task<IEnumerable<TSource>> ExecuteAsync<TSource>(IQueryable<TSource> source, CancellationToken cancellationToken)
+        internal static Task<IEnumerable<TSource>> ExecuteAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken = default)
+            => ExecuteAsync<IEnumerable<TSource>>(source, cancellationToken);
+
+        public static async Task<TResult> ExecuteAsync<TResult>(this IQueryable source, CancellationToken cancellationToken = default)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             if (source.Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
             {
-                return await asyncQueryableProvider.ExecuteAsync<IEnumerable<TSource>>(source.Expression, cancellationToken).ConfigureAwait(false);
+                return await asyncQueryableProvider.ExecuteAsync<TResult>(source.Expression, cancellationToken).ConfigureAwait(false);
             }
 
             throw InvalidProviderException;
@@ -299,6 +307,11 @@ namespace Remote.Linq
 
         private static async Task<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, IEnumerable<object?> args, CancellationToken cancellationToken)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             if (source.Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
             {
                 if (method.IsGenericMethodDefinition)

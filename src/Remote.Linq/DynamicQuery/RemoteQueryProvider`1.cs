@@ -38,7 +38,6 @@ namespace Remote.Linq.DynamicQuery
             return new RemoteQueryable(elementType, this, expression);
         }
 
-#nullable disable
         [return: MaybeNull]
         public TResult Execute<TResult>(Expression expression)
         {
@@ -49,7 +48,6 @@ namespace Remote.Linq.DynamicQuery
                 : _resultMapper.MapResult<TResult>(dataRecords, expression);
             return result;
         }
-#nullable restore
 
         public object? Execute(Expression expression)
             => this.InvokeAndUnwrap<object?>(_executeMethod, expression);

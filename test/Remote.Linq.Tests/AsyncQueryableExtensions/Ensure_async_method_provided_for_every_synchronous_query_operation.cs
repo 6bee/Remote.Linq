@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Tests.AsyncEnumerableExtensions
+namespace Remote.Linq.Tests.AsyncQueryableExtensions
 {
     using Remote.Linq;
     using Shouldly;
@@ -36,7 +36,7 @@ namespace Remote.Linq.Tests.AsyncEnumerableExtensions
                 : Array.Empty<Type>();
 
             var methodName = $"{method.Name}Async";
-            var matchingMethods = typeof(AsyncEnumerableExtensions)
+            var matchingMethods = typeof(AsyncQueryableExtensions)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(x => string.Equals(x.Name, methodName, StringComparison.Ordinal))
                 .ToArray();

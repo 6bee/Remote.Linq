@@ -29,6 +29,19 @@ namespace Remote.Linq
         public static IQueryable AsQueryable(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null)
             => RemoteQueryable.Factory.CreateQueryable(resource.ElementType, dataProvider, typeInfoProvider, mapper);
 
+        /// <summary>
+        /// Execute the <see cref="IQueryable"/> and return the result without any extra tranformation.
+        /// </summary>
+        public static TResult Execute<TResult>(this IQueryable source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.Execute<TResult>(source.Expression);
+        }
+
         private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression, MethodInfo methodInfo)
         {
             var exp = lambdaExpression.Body;
@@ -59,7 +72,7 @@ namespace Remote.Linq
         /// <summary>
         /// Applies this query instance to a queryable.
         /// </summary>
-        public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, IQuery<TEntity> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor)
+        public static IQueryable<T> ApplyQuery<T>(this IQueryable<T> queryable, IQuery<T> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor)
         {
             var visitor = expressionVisitor ?? _defaultExpressionVisitor;
             return queryable
@@ -71,9 +84,9 @@ namespace Remote.Linq
         /// <summary>
         /// Applies this query instance to a queryable.
         /// </summary>
-        public static IQueryable<TEntity> ApplyQuery<TEntity>(this IQueryable<TEntity> queryable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor)
+        public static IQueryable<T> ApplyQuery<T>(this IQueryable<T> queryable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor)
         {
-            var q = Query<TEntity>.CreateFromNonGeneric(query);
+            var q = Query<T>.CreateFromNonGeneric(query);
             return queryable.ApplyQuery(q, expressionVisitor ?? _defaultExpressionVisitor);
         }
 

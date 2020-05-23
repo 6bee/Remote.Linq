@@ -30,8 +30,7 @@ namespace Remote.Linq.DynamicQuery
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
 
-        public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
-            => new AsyncRemoteQueryable<TElement>(this, expression);
+        public IQueryable<TElement> CreateQuery<TElement>(Expression expression) => new AsyncRemoteQueryable<TElement>(this, expression);
 
         public IQueryable CreateQuery(Expression expression)
         {
@@ -44,7 +43,6 @@ namespace Remote.Linq.DynamicQuery
             return new RemoteQueryable(elementType, this, expression);
         }
 
-#nullable disable
         [return: MaybeNull]
         public TResult Execute<TResult>(Expression expression)
         {
@@ -82,6 +80,7 @@ namespace Remote.Linq.DynamicQuery
             return result;
         }
 
+#nullable disable
         public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
@@ -94,7 +93,6 @@ namespace Remote.Linq.DynamicQuery
         }
 #nullable restore
 
-        public object? Execute(Expression expression)
-            => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
+        public object? Execute(Expression expression) => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
     }
 }

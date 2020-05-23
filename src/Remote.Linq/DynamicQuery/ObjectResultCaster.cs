@@ -7,13 +7,12 @@ namespace Remote.Linq.DynamicQuery
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
-#nullable disable
-    internal sealed class ObjectResultCaster : IQueryResultMapper<object>
+    public sealed class ObjectResultCaster : IQueryResultMapper<object>
     {
         [return: MaybeNull]
         public TResult MapResult<TResult>(object source, Expression expression)
         {
-            if (source.IsCollection(out var enumerable))
+            if (source != null && !typeof(TResult).IsAssignableFrom(source.GetType()) && source.IsCollection(out var enumerable))
             {
                 var elementType = TypeHelper.GetElementType(enumerable.GetType()) ?? throw new RemoteLinqException($"Failed to get element type of {enumerable.GetType()}.");
                 if (typeof(TResult).IsAssignableFrom(elementType) && expression is MethodCallExpression methodCallExpression)
@@ -25,5 +24,4 @@ namespace Remote.Linq.DynamicQuery
             return (TResult)source;
         }
     }
-#nullable restore
 }

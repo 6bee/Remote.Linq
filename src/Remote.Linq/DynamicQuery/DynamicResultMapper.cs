@@ -18,23 +18,19 @@ namespace Remote.Linq.DynamicQuery
             _mapper = mapper;
         }
 
-#nullable disable
         [return: MaybeNull]
-        public TResult MapResult<TResult>(IEnumerable<DynamicObject> source, Expression expression)
+        public TResult MapResult<TResult>(IEnumerable<DynamicObject?>? source, Expression expression)
             => MapToType<TResult>(source, _mapper, expression);
 
         [return: MaybeNull]
-        internal static TResult MapToType<TResult>(IEnumerable<DynamicObject> dataRecords, IDynamicObjectMapper mapper, Expression expression)
+        internal static TResult MapToType<TResult>(IEnumerable<DynamicObject?>? dataRecords, IDynamicObjectMapper? mapper, Expression expression)
         {
             if (dataRecords is null)
             {
                 return default;
             }
 
-            if (mapper is null)
-            {
-                mapper = new DynamicQueryResultMapper();
-            }
+            mapper ??= new DynamicQueryResultMapper();
 
             var elementType = TypeHelper.GetElementType(typeof(TResult)) ?? throw new RemoteLinqException($"Failed to get element type of {typeof(TResult)}.");
 
@@ -70,7 +66,6 @@ namespace Remote.Linq.DynamicQuery
             var single = method.MakeGenericMethod(elementType).InvokeAndUnwrap(null, arguments);
             return (TResult)single;
         }
-#nullable restore
 
         private static object GetTruePredicate(Type t)
             => Expression.Lambda(Expression.Constant(true), Expression.Parameter(t)).Compile();
