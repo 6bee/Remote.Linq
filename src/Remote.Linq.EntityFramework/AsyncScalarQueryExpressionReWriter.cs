@@ -67,10 +67,10 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         internal static Expression ScalarQueryToAsyncExpression(this Expression expression, CancellationToken cancellationToken)
         {
-            if (expression is MethodCallExpression methodCallExpression)
+            if (expression is MethodCallExpression methodCallExpression && methodCallExpression.Method.IsGenericMethod)
             {
                 var methodDefinition = methodCallExpression.Method.GetGenericMethodDefinition();
-                if (_methods.TryGetValue(methodDefinition, out MethodInfo mappedMethodDefinition))
+                if (_methods.TryGetValue(methodDefinition, out var mappedMethodDefinition))
                 {
                     var mappedMethod = mappedMethodDefinition.MakeGenericMethod(methodCallExpression.Method.GetGenericArguments());
                     var arguments = methodCallExpression.Arguments.Concat(new[] { Expression.Constant(cancellationToken) }).ToArray();

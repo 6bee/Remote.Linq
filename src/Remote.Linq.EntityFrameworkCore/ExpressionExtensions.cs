@@ -18,7 +18,7 @@ namespace Remote.Linq.EntityFrameworkCore
     public static class ExpressionExtensions
     {
         /// <summary>
-        /// Creates an <see cref="ExpressionExecutionContext" /> for the given <see cref="Expression"/>.
+        /// Creates an <see cref="AsyncDefaultExpressionExecutionContext" /> for the given <see cref="Expression"/>.
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
@@ -26,13 +26,13 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
-        /// <returns>A new instance <see cref="ExpressionExecutionContext" />.</returns>
+        /// <returns>A new instance <see cref="AsyncDefaultExpressionExecutionContext" />.</returns>
         [SecuritySafeCritical]
-        public static ExpressionExecutionContext EntityFrameworkCoreExecutor(this Expression expression, DbContext dbContext, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            => new ExpressionExecutionContext(new EntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally), expression);
+        public static AsyncDefaultExpressionExecutionContext EntityFrameworkCoreExecutor(this Expression expression, DbContext dbContext, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+            => new AsyncDefaultExpressionExecutionContext(new DefaultEntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally), expression);
 
         /// <summary>
-        /// Creates an <see cref="ExpressionExecutionContext" /> for the given <see cref="Expression"/>.
+        /// Creates an <see cref="AsyncDefaultExpressionExecutionContext" /> for the given <see cref="Expression"/>.
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s.</param>
@@ -40,9 +40,9 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
-        /// <returns>A new instance <see cref="ExpressionExecutionContext" />.</returns>
-        public static ExpressionExecutionContext EntityFrameworkCoreExecutor(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            => new ExpressionExecutionContext(new EntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally), expression);
+        /// <returns>A new instance <see cref="AsyncDefaultExpressionExecutionContext" />.</returns>
+        public static AsyncDefaultExpressionExecutionContext EntityFrameworkCoreExecutor(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+            => new AsyncDefaultExpressionExecutionContext(new DefaultEntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally), expression);
 
         /// <summary>
         /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
@@ -56,7 +56,7 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <returns>The mapped result of the query execution.</returns>
         [SecuritySafeCritical]
         public static IEnumerable<DynamicObject?>? ExecuteWithEntityFrameworkCore(this Expression expression, DbContext dbContext, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            => new EntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).Execute(expression);
+            => new DefaultEntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).Execute(expression);
 
         /// <summary>
         /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
@@ -71,7 +71,7 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <returns>The mapped result of the query execution.</returns>
         [SecuritySafeCritical]
         public static Task<IEnumerable<DynamicObject?>?> ExecuteWithEntityFrameworkCoreAsync(this Expression expression, DbContext dbContext, CancellationToken cancellationToken = default, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            => new EntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsync(expression, cancellationToken);
+            => new DefaultEntityFrameworkCoreExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsync(expression, cancellationToken);
 
         /// <summary>
         /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
@@ -84,7 +84,7 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The mapped result of the query execution.</returns>
         public static IEnumerable<DynamicObject?>? ExecuteWithEntityFrameworkCore(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            => new EntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).Execute(expression);
+            => new DefaultEntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).Execute(expression);
 
         /// <summary>
         /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
@@ -98,6 +98,6 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The mapped result of the query execution.</returns>
         public static Task<IEnumerable<DynamicObject?>?> ExecuteWithEntityFrameworkCoreAsync(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellationToken = default, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            => new EntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsync(expression, cancellationToken);
+            => new DefaultEntityFrameworkCoreExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsync(expression, cancellationToken);
     }
 }

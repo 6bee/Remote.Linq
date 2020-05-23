@@ -15,7 +15,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
         public void Should_apply_all_custom_strategies_and_return_expected_result()
         {
             var context = new TestExpressionExecutionContext(
-                new ExpressionExecutor(null),
+                new DefaultExpressionExecutor(null),
                 TestExpressionExecutionContext.Step0_Expression);
 
             context
@@ -34,7 +34,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
             var callCounter = new int[3];
 
             var context = new TestExpressionExecutionContext(
-                new ExpressionExecutor(null),
+                new DefaultExpressionExecutor(null),
                 TestExpressionExecutionContext.Step0_Expression);
 
             context
@@ -69,7 +69,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
             var callCounter = new int[1];
 
             var context = new TestExpressionExecutionContext(
-                new ExpressionExecutor(null),
+                new DefaultExpressionExecutor(null),
                 TestExpressionExecutionContext.Step0_Expression);
 
             context
@@ -103,7 +103,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
             var callCounter = new int[3];
 
             var context = new TestExpressionExecutionContext(
-                new ExpressionExecutor(null),
+                new DefaultExpressionExecutor(null),
                 TestExpressionExecutionContext.Step0_Expression);
 
             context
@@ -138,7 +138,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
             var callCounter = new int[1];
 
             var context = new TestExpressionExecutionContext(
-                new ExpressionExecutor(null),
+                new DefaultExpressionExecutor(null),
                 TestExpressionExecutionContext.Step0_Expression);
 
             context
@@ -172,7 +172,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
             var callCounter = new int[3];
 
             var context = new TestExpressionExecutionContext(
-                new ExpressionExecutor(null),
+                new DefaultExpressionExecutor(null),
                 TestExpressionExecutionContext.Step0_Expression);
 
             context
@@ -207,7 +207,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
             var callCounter = new int[1];
 
             var context = new TestExpressionExecutionContext(
-                new ExpressionExecutor(null),
+                new DefaultExpressionExecutor(null),
                 TestExpressionExecutionContext.Step0_Expression);
 
             context
@@ -241,7 +241,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
             var callCounter = new int[3];
 
             var context = new TestExpressionExecutionContext(
-                new ExpressionExecutor(null),
+                new DefaultExpressionExecutor(null),
                 TestExpressionExecutionContext.Step0_Expression);
 
             context

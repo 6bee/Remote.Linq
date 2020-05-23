@@ -2,11 +2,7 @@
 
 namespace Remote.Linq.Expressions
 {
-    using Aqua.Dynamic;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-
-    internal interface IExpressionExecutionDecorator
+    internal interface IExpressionExecutionDecorator<TDataTranferObject>
     {
         Expression Prepare(Expression expression);
 
@@ -16,13 +12,10 @@ namespace Remote.Linq.Expressions
 
         object? Execute(System.Linq.Expressions.Expression expression);
 
-        [return: NotNullIfNotNull("queryResult")]
         object? ProcessResult(object? queryResult);
 
-        [return: NotNullIfNotNull("queryResult")]
-        IEnumerable<DynamicObject?>? ConvertResult(object? queryResult);
+        TDataTranferObject ConvertResult(object? queryResult);
 
-        [return: NotNullIfNotNull("queryResult")]
-        IEnumerable<DynamicObject?>? ProcessResult(IEnumerable<DynamicObject?>? queryResult);
+        TDataTranferObject ProcessResult(TDataTranferObject queryResult);
     }
 }

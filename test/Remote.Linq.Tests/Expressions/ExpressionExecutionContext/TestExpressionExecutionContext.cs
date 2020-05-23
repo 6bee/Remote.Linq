@@ -8,7 +8,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
     using System.Collections.Generic;
     using System.Linq;
 
-    public class TestExpressionExecutionContext : ExpressionExecutionContext
+    public class TestExpressionExecutionContext : DefaultExpressionExecutionContext
     {
         public static readonly Expression Step0_Expression = new ConstantExpression("step0");
         public static readonly Expression Step1_Expression = new ConstantExpression("step1");
@@ -21,7 +21,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionContext
 
         private readonly int[] _callCounters = new int[7];
 
-        public TestExpressionExecutionContext(ExpressionExecutor parent, Expression expression)
+        public TestExpressionExecutionContext(DefaultExpressionExecutor parent, Expression expression)
             : base(parent, expression)
         {
         }

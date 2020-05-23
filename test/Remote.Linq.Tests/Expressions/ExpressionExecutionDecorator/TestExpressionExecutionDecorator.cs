@@ -8,7 +8,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
     using System.Collections.Generic;
     using System.Linq;
 
-    public class TestExpressionExecutionDecorator : ExpressionExecutionDecorator
+    public class TestExpressionExecutionDecorator : ExpressionExecutionDecorator<IEnumerable<DynamicObject>>
     {
         public static readonly Expression Step0_Expression = new ConstantExpression("step0");
         public static readonly Expression Step1_Expression = new ConstantExpression("step1");
@@ -21,7 +21,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
 
         private readonly int[] _callCounters = new int[7];
 
-        public TestExpressionExecutionDecorator(ExpressionExecutor parent)
+        public TestExpressionExecutionDecorator(DefaultExpressionExecutor parent)
             : base(parent)
         {
         }

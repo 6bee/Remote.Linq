@@ -8,27 +8,22 @@ namespace Remote.Linq.Expressions
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Security;
 
-    public class ExpressionExecutor : IExpressionExecutionDecorator
+    public abstract class ExpressionExecutor<TDataTranferObject> : IExpressionExecutionDecorator<TDataTranferObject>
     {
         private readonly Func<Type, IQueryable> _queryableProvider;
         private readonly ITypeResolver? _typeResolver;
-        private readonly IDynamicObjectMapper _mapper;
-        private readonly Func<Type, bool> _setTypeInformation;
         private readonly Func<System.Linq.Expressions.Expression, bool>? _canBeEvaluatedLocally;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExpressionExecutor"/> class.
+        /// Initializes a new instance of the <see cref="ExpressionExecutor{TDataTranferObject}"/> class.
         /// </summary>
-        public ExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        protected ExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
         {
             _queryableProvider = queryableProvider;
             _typeResolver = typeResolver;
-            _mapper = mapper ?? new DynamicQueryResultMapper();
-            _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
 
@@ -37,16 +32,16 @@ namespace Remote.Linq.Expressions
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <returns>The mapped result of the query execution.</returns>
-        public IEnumerable<DynamicObject?>? Execute(Expression expression)
+        public TDataTranferObject Execute(Expression expression)
         {
             var preparedRemoteExpression = Prepare(expression);
             var linqExpression = Transform(preparedRemoteExpression);
             var preparedLinqExpression = Prepare(linqExpression);
             var queryResult = Execute(preparedLinqExpression);
             var processedResult = ProcessResult(queryResult);
-            var dynamicObjects = ConvertResult(processedResult);
-            var processedDynamicObjects = ProcessResult(dynamicObjects);
-            return processedDynamicObjects;
+            var dataTransferObjects = ConvertResult(processedResult);
+            var processedDataTransferObjects = ProcessResult(dataTransferObjects);
+            return processedDataTransferObjects;
         }
 
         /// <summary>
@@ -168,44 +163,34 @@ namespace Remote.Linq.Expressions
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>Processed result.</returns>
-        protected virtual object? ProcessResult(object? queryResult)
-            => queryResult;
+        protected virtual object? ProcessResult(object? queryResult) => queryResult;
 
         /// <summary>
         /// Converts the query result into a collection of <see cref="DynamicObject"/>.
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>The mapped query result.</returns>
-        protected virtual IEnumerable<DynamicObject?>? ConvertResult(object? queryResult)
-            => _mapper.MapCollection(queryResult, _setTypeInformation);
+        protected abstract TDataTranferObject ConvertResult(object? queryResult);
 
         /// <summary>
         /// If overriden in a derived transforms the collection of <see cref="DynamicObject"/>.
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>Processed result.</returns>
-        protected virtual IEnumerable<DynamicObject?>? ProcessResult(IEnumerable<DynamicObject?>? queryResult)
-            => queryResult ?? Enumerable.Empty<DynamicObject?>();
+        protected virtual TDataTranferObject ProcessResult(TDataTranferObject queryResult) => queryResult;
 
-        Expression IExpressionExecutionDecorator.Prepare(Expression expression)
-            => Prepare(expression);
+        Expression IExpressionExecutionDecorator<TDataTranferObject>.Prepare(Expression expression) => Prepare(expression);
 
-        System.Linq.Expressions.Expression IExpressionExecutionDecorator.Transform(Expression expression)
-            => Transform(expression);
+        System.Linq.Expressions.Expression IExpressionExecutionDecorator<TDataTranferObject>.Transform(Expression expression) => Transform(expression);
 
-        System.Linq.Expressions.Expression IExpressionExecutionDecorator.Prepare(System.Linq.Expressions.Expression expression)
-            => Prepare(expression);
+        System.Linq.Expressions.Expression IExpressionExecutionDecorator<TDataTranferObject>.Prepare(System.Linq.Expressions.Expression expression) => Prepare(expression);
 
-        object? IExpressionExecutionDecorator.Execute(System.Linq.Expressions.Expression expression)
-            => Execute(expression);
+        object? IExpressionExecutionDecorator<TDataTranferObject>.Execute(System.Linq.Expressions.Expression expression) => Execute(expression);
 
-        object? IExpressionExecutionDecorator.ProcessResult(object? queryResult)
-            => ProcessResult(queryResult);
+        object? IExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(object? queryResult) => ProcessResult(queryResult);
 
-        IEnumerable<DynamicObject?>? IExpressionExecutionDecorator.ConvertResult(object? queryResult)
-            => ConvertResult(queryResult);
+        TDataTranferObject IExpressionExecutionDecorator<TDataTranferObject>.ConvertResult(object? queryResult) => ConvertResult(queryResult);
 
-        IEnumerable<DynamicObject?>? IExpressionExecutionDecorator.ProcessResult(IEnumerable<DynamicObject?>? queryResult)
-            => ProcessResult(queryResult);
+        TDataTranferObject IExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(TDataTranferObject queryResult) => ProcessResult(queryResult);
     }
 }

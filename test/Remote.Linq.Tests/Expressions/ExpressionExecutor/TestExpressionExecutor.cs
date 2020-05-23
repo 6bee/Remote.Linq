@@ -8,7 +8,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutor
     using System.Collections.Generic;
     using System.Linq;
 
-    public class TestExpressionExecutor : ExpressionExecutor
+    public class TestExpressionExecutor : DefaultExpressionExecutor
     {
         public static readonly Expression Step0_Expression = new ConstantExpression("step0");
         public static readonly Expression Step1_Expression = new ConstantExpression("step1");

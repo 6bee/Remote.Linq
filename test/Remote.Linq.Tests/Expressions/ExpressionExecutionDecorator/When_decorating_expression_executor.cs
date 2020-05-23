@@ -14,7 +14,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
         [Fact]
         public void Should_apply_all_custom_strategies_and_return_expected_result()
         {
-            var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
+            var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
                 .Execute(TestExpressionExecutionDecorator.Step0_Expression)
@@ -31,7 +31,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
 
             var callCounter = new int[3];
 
-            var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
+            var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
                 .With(x =>
@@ -64,7 +64,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
         {
             var callCounter = new int[1];
 
-            var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
+            var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
                 .With(new Func<Expression, System.Linq.Expressions.Expression>(x =>
@@ -96,7 +96,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
 
             var callCounter = new int[3];
 
-            var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
+            var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
                 .With((System.Linq.Expressions.Expression x) =>
@@ -129,7 +129,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
         {
             var callCounter = new int[1];
 
-            var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
+            var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
                 .With(new Func<System.Linq.Expressions.Expression, object>(x =>
@@ -161,7 +161,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
 
             var callCounter = new int[3];
 
-            var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
+            var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
                 .With((object x) =>
@@ -194,7 +194,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
         {
             var callCounter = new int[1];
 
-            var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
+            var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
                 .With(new Func<object, IEnumerable<DynamicObject>>(x =>
@@ -226,7 +226,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExecutionDecorator
 
             var callCounter = new int[3];
 
-            var decorator = new TestExpressionExecutionDecorator(new ExpressionExecutor(null));
+            var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
                 .With((IEnumerable<DynamicObject> x) =>

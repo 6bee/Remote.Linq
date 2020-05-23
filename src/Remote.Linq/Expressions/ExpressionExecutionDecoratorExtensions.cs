@@ -2,9 +2,7 @@
 
 namespace Remote.Linq.Expressions
 {
-    using Aqua.Dynamic;
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -13,92 +11,92 @@ namespace Remote.Linq.Expressions
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<Expression, Expression> transform)
-            => new ExpressionExecutorWithRemoteExpressionTransformer(decorator, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutionDecorator<TDataTranferObject> decorator, Func<Expression, Expression> transform)
+            => new ExpressionExecutorWithRemoteExpressionTransformer<TDataTranferObject>(decorator, transform);
 
         /// <summary>
         /// Replace expression transformtion logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<Expression, System.Linq.Expressions.Expression> transform)
-            => new ExpressionExecutorWithExpressionTransformer(decorator, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutionDecorator<TDataTranferObject> decorator, Func<Expression, System.Linq.Expressions.Expression> transform)
+            => new ExpressionExecutorWithExpressionTransformer<TDataTranferObject>(decorator, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transform)
-            => new ExpressionExecutorWithSystemExpressionTransformer(decorator, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutionDecorator<TDataTranferObject> decorator, Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transform)
+            => new ExpressionExecutorWithSystemExpressionTransformer<TDataTranferObject>(decorator, transform);
 
         /// <summary>
         /// Replace expression execution logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<System.Linq.Expressions.Expression, object> transform)
-            => new ExpressionExecutorWithExpressionExecutor(decorator, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutionDecorator<TDataTranferObject> decorator, Func<System.Linq.Expressions.Expression, object> transform)
+            => new ExpressionExecutorWithExpressionExecutor<TDataTranferObject>(decorator, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<object?, object?> transform)
-            => new ExpressionExecutorWithObjectResultProcessor(decorator, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutionDecorator<TDataTranferObject> decorator, Func<object?, object?> transform)
+            => new ExpressionExecutorWithObjectResultProcessor<TDataTranferObject>(decorator, transform);
 
         /// <summary>
         /// Replace result transformation logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<object?, IEnumerable<DynamicObject?>?> transform)
-            => new ExpressionExecutorWithResultConverter(decorator, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutionDecorator<TDataTranferObject> decorator, Func<object?, TDataTranferObject> transform)
+            => new ExpressionExecutorWithResultConverter<TDataTranferObject>(decorator, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutionDecorator decorator, Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> transform)
-            => new ExpressionExecutorWithDynamicObjectResultProcessor(decorator, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutionDecorator<TDataTranferObject> decorator, Func<TDataTranferObject, TDataTranferObject> transform)
+            => new ExpressionExecutorWithDynamicObjectResultProcessor<TDataTranferObject>(decorator, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<Expression, Expression> transform)
-            => new ExpressionExecutorWithRemoteExpressionTransformer(executor, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutor<TDataTranferObject> executor, Func<Expression, Expression> transform)
+            => new ExpressionExecutorWithRemoteExpressionTransformer<TDataTranferObject>(executor, transform);
 
         /// <summary>
         /// Replace expression transformtion logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<Expression, System.Linq.Expressions.Expression> transform)
-            => new ExpressionExecutorWithExpressionTransformer(executor, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutor<TDataTranferObject> executor, Func<Expression, System.Linq.Expressions.Expression> transform)
+            => new ExpressionExecutorWithExpressionTransformer<TDataTranferObject>(executor, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transform)
-            => new ExpressionExecutorWithSystemExpressionTransformer(executor, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutor<TDataTranferObject> executor, Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transform)
+            => new ExpressionExecutorWithSystemExpressionTransformer<TDataTranferObject>(executor, transform);
 
         /// <summary>
         /// Replace expression execution logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<System.Linq.Expressions.Expression, object?> transform)
-            => new ExpressionExecutorWithExpressionExecutor(executor, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutor<TDataTranferObject> executor, Func<System.Linq.Expressions.Expression, object?> transform)
+            => new ExpressionExecutorWithExpressionExecutor<TDataTranferObject>(executor, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<object?, object?> transform)
-            => new ExpressionExecutorWithObjectResultProcessor(executor, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutor<TDataTranferObject> executor, Func<object?, object?> transform)
+            => new ExpressionExecutorWithObjectResultProcessor<TDataTranferObject>(executor, transform);
 
         /// <summary>
         /// Replace result transformation logic with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<object?, IEnumerable<DynamicObject?>?> transform)
-            => new ExpressionExecutorWithResultConverter(executor, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutor<TDataTranferObject> executor, Func<object?, TDataTranferObject> transform)
+            => new ExpressionExecutorWithResultConverter<TDataTranferObject>(executor, transform);
 
         /// <summary>
         /// Decorate with custom strategy.
         /// </summary>
-        public static ExpressionExecutionDecorator With(this ExpressionExecutor executor, Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> transform)
-            => new ExpressionExecutorWithDynamicObjectResultProcessor(executor, transform);
+        public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(this ExpressionExecutor<TDataTranferObject> executor, Func<TDataTranferObject, TDataTranferObject> transform)
+            => new ExpressionExecutorWithDynamicObjectResultProcessor<TDataTranferObject>(executor, transform);
 
-        private sealed class ExpressionExecutorWithRemoteExpressionTransformer : ExpressionExecutionDecorator
+        private sealed class ExpressionExecutorWithRemoteExpressionTransformer<TDataTranferObject> : ExpressionExecutionDecorator<TDataTranferObject>
         {
             private readonly Func<Expression, Expression> _transform;
 
-            public ExpressionExecutorWithRemoteExpressionTransformer(IExpressionExecutionDecorator parent, Func<Expression, Expression> transform)
+            public ExpressionExecutorWithRemoteExpressionTransformer(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<Expression, Expression> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
@@ -108,11 +106,11 @@ namespace Remote.Linq.Expressions
                 => _transform(base.Prepare(expression));
         }
 
-        private sealed class ExpressionExecutorWithSystemExpressionTransformer : ExpressionExecutionDecorator
+        private sealed class ExpressionExecutorWithSystemExpressionTransformer<TDataTranferObject> : ExpressionExecutionDecorator<TDataTranferObject>
         {
             private readonly Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> _transform;
 
-            public ExpressionExecutorWithSystemExpressionTransformer(IExpressionExecutionDecorator parent, Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transform)
+            public ExpressionExecutorWithSystemExpressionTransformer(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
@@ -122,11 +120,11 @@ namespace Remote.Linq.Expressions
                 => _transform(base.Prepare(expression));
         }
 
-        private sealed class ExpressionExecutorWithExpressionTransformer : ExpressionExecutionDecorator
+        private sealed class ExpressionExecutorWithExpressionTransformer<TDataTranferObject> : ExpressionExecutionDecorator<TDataTranferObject>
         {
             private readonly Func<Expression, System.Linq.Expressions.Expression> _transform;
 
-            public ExpressionExecutorWithExpressionTransformer(IExpressionExecutionDecorator parent, Func<Expression, System.Linq.Expressions.Expression> transform)
+            public ExpressionExecutorWithExpressionTransformer(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<Expression, System.Linq.Expressions.Expression> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
@@ -136,11 +134,11 @@ namespace Remote.Linq.Expressions
                 => _transform(expression);
         }
 
-        private sealed class ExpressionExecutorWithExpressionExecutor : ExpressionExecutionDecorator
+        private sealed class ExpressionExecutorWithExpressionExecutor<TDataTranferObject> : ExpressionExecutionDecorator<TDataTranferObject>
         {
             private readonly Func<System.Linq.Expressions.Expression, object?> _transform;
 
-            public ExpressionExecutorWithExpressionExecutor(IExpressionExecutionDecorator parent, Func<System.Linq.Expressions.Expression, object?> transform)
+            public ExpressionExecutorWithExpressionExecutor(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<System.Linq.Expressions.Expression, object?> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
@@ -150,11 +148,11 @@ namespace Remote.Linq.Expressions
                 => _transform(expression);
         }
 
-        private sealed class ExpressionExecutorWithObjectResultProcessor : ExpressionExecutionDecorator
+        private sealed class ExpressionExecutorWithObjectResultProcessor<TDataTranferObject> : ExpressionExecutionDecorator<TDataTranferObject>
         {
             private readonly Func<object?, object?> _transform;
 
-            public ExpressionExecutorWithObjectResultProcessor(IExpressionExecutionDecorator parent, Func<object?, object?> transform)
+            public ExpressionExecutorWithObjectResultProcessor(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<object?, object?> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
@@ -164,31 +162,31 @@ namespace Remote.Linq.Expressions
                 => _transform(base.ProcessResult(queryResult));
         }
 
-        private sealed class ExpressionExecutorWithResultConverter : ExpressionExecutionDecorator
+        private sealed class ExpressionExecutorWithResultConverter<TDataTranferObject> : ExpressionExecutionDecorator<TDataTranferObject>
         {
-            private readonly Func<object?, IEnumerable<DynamicObject?>?> _transform;
+            private readonly Func<object?, TDataTranferObject> _transform;
 
-            public ExpressionExecutorWithResultConverter(IExpressionExecutionDecorator parent, Func<object?, IEnumerable<DynamicObject?>?> transform)
+            public ExpressionExecutorWithResultConverter(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<object?, TDataTranferObject> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
             }
 
-            protected override IEnumerable<DynamicObject?>? ConvertResult(object? queryResult)
+            protected override TDataTranferObject ConvertResult(object? queryResult)
                 => _transform(queryResult);
         }
 
-        private sealed class ExpressionExecutorWithDynamicObjectResultProcessor : ExpressionExecutionDecorator
+        private sealed class ExpressionExecutorWithDynamicObjectResultProcessor<TDataTranferObject> : ExpressionExecutionDecorator<TDataTranferObject>
         {
-            private readonly Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> _transform;
+            private readonly Func<TDataTranferObject, TDataTranferObject> _transform;
 
-            public ExpressionExecutorWithDynamicObjectResultProcessor(IExpressionExecutionDecorator parent, Func<IEnumerable<DynamicObject?>?, IEnumerable<DynamicObject?>?> transform)
+            public ExpressionExecutorWithDynamicObjectResultProcessor(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<TDataTranferObject, TDataTranferObject> transform)
                 : base(parent)
             {
                 _transform = transform ?? throw new ArgumentNullException(nameof(transform));
             }
 
-            protected override IEnumerable<DynamicObject?>? ProcessResult(IEnumerable<DynamicObject?>? queryResult)
+            protected override TDataTranferObject ProcessResult(TDataTranferObject queryResult)
                 => _transform(base.ProcessResult(queryResult));
         }
     }
