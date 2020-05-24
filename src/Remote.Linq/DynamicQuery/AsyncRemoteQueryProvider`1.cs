@@ -22,10 +22,10 @@ namespace Remote.Linq.DynamicQuery
         private readonly ITypeInfoProvider? _typeInfoProvider;
         private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
 
-        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, CancellationToken, Task<TSource>>? asyncDataProvider, ITypeInfoProvider? typeInfoProvider, IAsyncQueryResultMapper<TSource> resutMapper, Func<Expression, bool>? canBeEvaluatedLocally)
+        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, CancellationToken, Task<TSource>>? asyncDataProvider, ITypeInfoProvider? typeInfoProvider, IAsyncQueryResultMapper<TSource> resultMapper, Func<Expression, bool>? canBeEvaluatedLocally)
         {
             _asyncDataProvider = asyncDataProvider ?? throw new ArgumentNullException(nameof(asyncDataProvider));
-            _resultMapper = resutMapper ?? throw new ArgumentNullException(nameof(resutMapper));
+            _resultMapper = resultMapper ?? throw new ArgumentNullException(nameof(resultMapper));
             _typeInfoProvider = typeInfoProvider;
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }

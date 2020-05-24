@@ -25,7 +25,7 @@ namespace Remote.Linq
         /// Initializes a new instance of the <see cref="Query"/> class.
         /// </summary>
         public Query(Type type, IEnumerable<LambdaExpression>? filterExpressions = null, IEnumerable<SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
-            : this(new TypeInfo(type, false, false), filterExpressions, sortExpressions, skip, take)
+            : this(type.AsTypeInfo(), filterExpressions, sortExpressions, skip, take)
         {
         }
 

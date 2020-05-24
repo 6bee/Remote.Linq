@@ -5,6 +5,7 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
     using Aqua.Newtonsoft.Json.Converters;
     using Aqua.TypeSystem;
     using global::Newtonsoft.Json;
+    using Remote.Linq;
     using Remote.Linq.Expressions;
     using System.Collections.Generic;
 
@@ -54,7 +55,7 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
                     {
                         type = valueType;
                         writer.WritePropertyName(ValueTypePropertyName);
-                        serializer.Serialize(writer, new TypeInfo(type, false, false));
+                        serializer.Serialize(writer, type.AsTypeInfo());
                     }
                 }
 

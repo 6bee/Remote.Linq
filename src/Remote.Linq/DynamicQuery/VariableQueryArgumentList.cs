@@ -36,7 +36,7 @@ namespace Remote.Linq.DynamicQuery
             {
                 var collectionType = values.GetType();
                 var type = collectionType.GetElementTypeOrThrow();
-                elementType = new TypeInfo(type, false, false);
+                elementType = type.AsTypeInfo();
             }
 
             ElementType = elementType;

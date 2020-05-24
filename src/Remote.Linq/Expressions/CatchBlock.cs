@@ -15,7 +15,7 @@ namespace Remote.Linq.Expressions
         }
 
         public CatchBlock(Type test, ParameterExpression? parameter, Expression body, Expression? filter)
-            : this(new TypeInfo(test ?? throw new ArgumentNullException(nameof(test)), false, false), parameter, body, filter)
+            : this(test.AsTypeInfo(), parameter, body, filter)
         {
         }
 

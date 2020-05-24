@@ -7,10 +7,10 @@ namespace Remote.Linq.DynamicQuery
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
-    public sealed class ObjectResultCaster : IQueryResultMapper<object>
+    public sealed class ObjectResultCaster : IQueryResultMapper<object?>
     {
         [return: MaybeNull]
-        public TResult MapResult<TResult>(object source, Expression expression)
+        public TResult MapResult<TResult>(object? source, Expression expression)
         {
             if (source != null && !typeof(TResult).IsAssignableFrom(source.GetType()) && source.IsCollection(out var enumerable))
             {

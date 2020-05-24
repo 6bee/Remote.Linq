@@ -12,7 +12,7 @@ namespace Remote.Linq.DynamicQuery
         {
         }
 
-        internal RemoteQueryable(IRemoteQueryProvider provider, Expression expression)
+        internal RemoteQueryable(IRemoteQueryProvider provider, Expression? expression)
             : base(typeof(T), provider, expression)
         {
         }

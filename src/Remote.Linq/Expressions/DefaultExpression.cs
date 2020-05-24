@@ -15,7 +15,7 @@ namespace Remote.Linq.Expressions
         }
 
         public DefaultExpression(Type type)
-            : this(new TypeInfo(type ?? throw new ArgumentNullException(nameof(type)), false, false))
+            : this(type.AsTypeInfo())
         {
         }
 

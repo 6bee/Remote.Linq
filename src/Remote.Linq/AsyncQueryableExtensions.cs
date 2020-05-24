@@ -296,7 +296,7 @@ namespace Remote.Linq
                 return await asyncQueryableProvider.ExecuteAsync<TResult>(source.Expression, cancellationToken).ConfigureAwait(false);
             }
 
-            throw InvalidProviderException;
+            throw NotAsyncRemoteQueryProviderException;
         }
 
         private static Task<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, CancellationToken cancellationToken)
@@ -334,10 +334,34 @@ namespace Remote.Linq
                 return await asyncQueryableProvider.ExecuteAsync<TResult>(methodCallExpression, cancellationToken).ConfigureAwait(false);
             }
 
-            throw InvalidProviderException;
+            throw NotAsyncRemoteQueryProviderException;
         }
 
-        private static InvalidOperationException InvalidProviderException
+        private static InvalidOperationException NotAsyncRemoteQueryProviderException
             => new InvalidOperationException($"The provider for the source IQueryable doesn't implement {nameof(IAsyncRemoteQueryProvider)}. Only providers implementing {typeof(IAsyncRemoteQueryProvider).FullName} can be used for Remote Linq asynchronous operations.");
+
+#if ASYNC_STREAM
+        /// <summary>Returns an <see cref="IAsyncEnumerable{TSource}" /> which can be enumerated asynchronously.</summary>
+        /// <param name="source">An <see cref="IQueryable{TSource}" /> to enumerate.</param>
+        /// <param name="cancellation">A <see cref="CancellationToken"/> allowing cancellation of the async stream execution.</param>
+        /// <returns>The query results.</returns>
+        public static IAsyncEnumerable<TSource> AsAsyncEnumerable<TSource>(this IQueryable<TSource> source, CancellationToken cancellation = default)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source.Provider is IAsyncRemoteStreamProvider asyncRemoteStreamProvider)
+            {
+                return asyncRemoteStreamProvider.ExecuteAsyncRemoteStream<TSource>(source.Expression, cancellation);
+            }
+
+            throw NotAsyncRemoteStreamProviderException;
+        }
+
+        private static InvalidOperationException NotAsyncRemoteStreamProviderException
+            => new InvalidOperationException($"The provider for the source IQueryable doesn't implement {nameof(IAsyncRemoteStreamProvider)}. Only providers implementing {typeof(IAsyncRemoteStreamProvider).FullName} can be used for Remote Linq's {nameof(AsAsyncEnumerable)} operation.");
+#endif // ASYNC_STREAM
     }
 }

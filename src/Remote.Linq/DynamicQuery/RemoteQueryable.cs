@@ -9,12 +9,7 @@ namespace Remote.Linq.DynamicQuery
 
     internal class RemoteQueryable : IRemoteQueryable, IOrderedRemoteQueryable
     {
-        internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider)
-            : this(elemntType, provider, null)
-        {
-        }
-
-        internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression? expression)
+        internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression? expression = null)
         {
             ElementType = elemntType ?? throw new ArgumentNullException(nameof(elemntType));
             Provider = provider ?? throw new ArgumentNullException(nameof(provider));

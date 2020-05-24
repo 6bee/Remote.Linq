@@ -22,7 +22,7 @@ namespace Remote.Linq.Expressions
         }
 
         public ParameterExpression(Type parameterType, string? parameterName, int instanceId)
-            : this(new TypeInfo(parameterType, false, false), parameterName, instanceId)
+            : this(parameterType.AsTypeInfo(), parameterName, instanceId)
         {
         }
 

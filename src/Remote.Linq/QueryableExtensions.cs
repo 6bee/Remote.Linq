@@ -4,6 +4,7 @@ namespace Remote.Linq
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
@@ -17,17 +18,13 @@ namespace Remote.Linq
     {
         private static readonly Func<Expressions.LambdaExpression, Expressions.LambdaExpression> _defaultExpressionVisitor = RemoteExpressionReWriter.ReplaceNonGenericQueryArgumentsByGenericArguments;
 
-        /// <summary>
-        /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified.
-        /// </summary>
+        [Obsolete("Use Remote.Linq.RemoteQueryable.Factory.CreateQueryable() to create remote queryable.", true)]
         public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null)
-            => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeInfoProvider, mapper);
+            => throw new NotImplementedException();
 
-        /// <summary>
-        /// Creates an instance of <see cref="IQueryable" /> that utilizes the data provider specified.
-        /// </summary>
+        [Obsolete("Use Remote.Linq.RemoteQueryable.Factory.CreateQueryable() to create remote queryable.", true)]
         public static IQueryable AsQueryable(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null)
-            => RemoteQueryable.Factory.CreateQueryable(resource.ElementType, dataProvider, typeInfoProvider, mapper);
+            => throw new NotImplementedException();
 
         /// <summary>
         /// Execute the <see cref="IQueryable"/> and return the result without any extra tranformation.

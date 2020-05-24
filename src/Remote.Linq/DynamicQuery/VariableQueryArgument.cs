@@ -35,7 +35,7 @@ namespace Remote.Linq.DynamicQuery
                 }
             }
 
-            Type = new TypeInfo(type, false, false);
+            Type = type.AsTypeInfo();
 
             Value = value;
         }
@@ -46,7 +46,7 @@ namespace Remote.Linq.DynamicQuery
             {
                 var valueType = value is null ? typeof(object) : value.GetType();
 
-                type = new TypeInfo(valueType, false, false);
+                type = valueType.AsTypeInfo();
             }
 
             Type = type;

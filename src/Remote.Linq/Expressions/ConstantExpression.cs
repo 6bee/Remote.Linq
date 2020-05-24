@@ -34,7 +34,7 @@ namespace Remote.Linq.Expressions
                 }
             }
 
-            Type = new TypeInfo(type, false, false);
+            Type = type.AsTypeInfo();
             Value = value;
         }
 
