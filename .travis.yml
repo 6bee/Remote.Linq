@@ -44,7 +44,7 @@ script:
   #WCF- dotnet build samples/RemoteQueryable/00_Basic
   #WCF- dotnet build samples/RemoteQueryable/01_Async
   #WCF- dotnet build samples/RemoteQueryable/02_DynamicObjectWithKnownTypes
-  #WCF- dotnet build samples/RemoteQueryable/03_CustomExpressionExecutor
+  #WCF- dotnet build samples/RemoteQueryable/03_CustomResultHandler
   #WCF- dotnet build samples/RemoteQueryable/04_CustomTypeResolver
   #WCF- dotnet build samples/RemoteQueryable/05_ServerDefinedProjection
   #WCF- dotnet build samples/RemoteQueryable/06_Compression

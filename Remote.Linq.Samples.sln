@@ -46,18 +46,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\Remo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\02_DynamicObjectWithKnownTypes\Server\Server.csproj", "{DBD7BE55-A939-4865-BA02-51180E1BF9C7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03_CustomExpressionExecutor", "03_CustomExpressionExecutor", "{C046B71A-C09D-4F3C-8B83-E848BFBEB9CF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03_CustomResultHandler", "03_CustomResultHandler", "{C046B71A-C09D-4F3C-8B83-E848BFBEB9CF}"
 	ProjectSection(SolutionItems) = preProject
-		samples\RemoteQueryable\03_CustomExpressionExecutor\README.md = samples\RemoteQueryable\03_CustomExpressionExecutor\README.md
+		samples\RemoteQueryable\03_CustomResultHandler\README.md = samples\RemoteQueryable\03_CustomResultHandler\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\03_CustomExpressionExecutor\Client\Client.csproj", "{11B76CF7-E1FF-43BF-9266-31CE01DDBD8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\RemoteQueryable\03_CustomResultHandler\Client\Client.csproj", "{11B76CF7-E1FF-43BF-9266-31CE01DDBD8F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\03_CustomExpressionExecutor\Common\Common.csproj", "{598BFF94-DCBB-4D45-B817-606AD45C58DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\RemoteQueryable\03_CustomResultHandler\Common\Common.csproj", "{598BFF94-DCBB-4D45-B817-606AD45C58DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\03_CustomExpressionExecutor\DemoStartUp\DemoStartUp.csproj", "{04FC1811-42F1-4A89-9585-2D768F587CB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\RemoteQueryable\03_CustomResultHandler\DemoStartUp\DemoStartUp.csproj", "{04FC1811-42F1-4A89-9585-2D768F587CB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\03_CustomExpressionExecutor\Server\Server.csproj", "{3CD3C5E5-EBD9-4B8C-BCB1-ACD97FBEDB70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\RemoteQueryable\03_CustomResultHandler\Server\Server.csproj", "{3CD3C5E5-EBD9-4B8C-BCB1-ACD97FBEDB70}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_CustomTypeResolver", "04_CustomTypeResolver", "{D3DDA0FA-DBD2-4ADB-B4AF-269FABA2D8C0}"
 EndProject
