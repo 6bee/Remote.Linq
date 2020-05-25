@@ -13,7 +13,7 @@ namespace DemoStartUp
     using Client = Client.Client;
     using Server = Server.Server;
 
-    internal class Program
+    internal static class Program
     {
         private static void Main(string[] args)
         {

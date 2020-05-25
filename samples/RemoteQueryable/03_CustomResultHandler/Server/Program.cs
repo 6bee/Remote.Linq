@@ -8,7 +8,7 @@ namespace Server
     using System.ServiceModel;
     using System.ServiceModel.Description;
 
-    internal class Program
+    internal static class Program
     {
         private static void Main()
         {

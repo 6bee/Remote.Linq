@@ -8,22 +8,20 @@ namespace Server
     using System.ServiceModel;
     using System.ServiceModel.Description;
 
-    internal class Program
+    internal static class Program
     {
         private static void Main(string[] args)
         {
-            using (ServiceHost serviceHost = new ServiceHost(typeof(QueryService)))
-            {
-                serviceHost.Description.Behaviors.OfType<ServiceDebugBehavior>().Single().IncludeExceptionDetailInFaults = true;
-                serviceHost.AddServiceEndpoint(typeof(IQueryService), new NetNamedPipeBinding(), "net.pipe://localhost/8080/query");
+            using ServiceHost serviceHost = new ServiceHost(typeof(QueryService));
+            serviceHost.Description.Behaviors.OfType<ServiceDebugBehavior>().Single().IncludeExceptionDetailInFaults = true;
+            serviceHost.AddServiceEndpoint(typeof(IQueryService), new NetNamedPipeBinding(), "net.pipe://localhost/8080/query");
 
-                serviceHost.Open();
+            serviceHost.Open();
 
-                Console.WriteLine("The query service is ready.");
-                Console.WriteLine("Press <ENTER> to terminate service.");
-                Console.WriteLine();
-                Console.ReadLine();
-            }
+            Console.WriteLine("The query service is ready.");
+            Console.WriteLine("Press <ENTER> to terminate service.");
+            Console.WriteLine();
+            Console.ReadLine();
         }
     }
 }
