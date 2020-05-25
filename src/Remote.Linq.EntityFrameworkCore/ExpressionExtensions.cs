@@ -172,5 +172,19 @@ namespace Remote.Linq.EntityFrameworkCore
         /// <returns>The result of the query execution.</returns>
         public static Task<TResult> ExecuteWithEntityFrameworkCoreAsync<TResult>(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellationToken = default, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => new CastingEntityFrameworkCoreExpressionExecutor<TResult>(queryableProvider, typeResolver, canBeEvaluatedLocally).ExecuteAsync(expression, cancellationToken);
+
+#if ASYNC_STREAM
+        /// <summary>
+        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
+        /// </summary>
+        /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
+        /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
+        /// <returns>The result of the query execution.</returns>
+        [SecuritySafeCritical]
+        public static IAsyncEnumerable<object?> ExecuteAsyncStreamWithEntityFrameworkCore(this Expression expression, DbContext dbContext, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+            => new CastingEntityFrameworkCoreAsyncStreamExpressionExecutor<object>(dbContext, typeResolver, canBeEvaluatedLocally).ExecuteAsyncStream(expression);
+#endif // ASYNC_STREAM
     }
 }

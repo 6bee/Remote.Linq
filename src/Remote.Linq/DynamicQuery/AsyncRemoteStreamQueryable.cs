@@ -31,7 +31,7 @@ namespace Remote.Linq.DynamicQuery
         IEnumerator IEnumerable.GetEnumerator() => throw QueryOperationNotSupportedException;
 
         internal static Exception QueryOperationNotSupportedException
-            => new QueryOperationNotSupportedException($"Async remote stream must be executed as IAsyncEnumerable<T>. The {nameof(AsyncQueryableExtensions.AsAsyncEnumerable)}() extension method may be used.");
+            => new InvalidOperationException($"Async remote stream must be executed as IAsyncEnumerable<T>. The {nameof(AsyncQueryableExtensions.AsAsyncEnumerable)}() extension method may be used.");
    }
 }
 

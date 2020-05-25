@@ -5,6 +5,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
     using Microsoft.EntityFrameworkCore;
+    using Remote.Linq.EntityFrameworkCore.ExpressionVisitors;
     using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
     using System;
@@ -16,11 +17,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
     public abstract class EntityFrameworkCoreExpressionExecutor<TDataTranferObject> : AsyncExpressionExecutor<TDataTranferObject>
     {
-        private static readonly System.Reflection.MethodInfo DbContextSetMethod = typeof(DbContext)
-            .GetTypeInfo()
-            .GetDeclaredMethods(nameof(DbContext.Set))
-            .Single(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 0);
-
         private static readonly System.Reflection.MethodInfo ToListAsync = typeof(EntityFrameworkQueryableExtensions)
             .GetTypeInfo()
             .GetDeclaredMethods(nameof(EntityFrameworkQueryableExtensions.ToListAsync))
@@ -33,7 +29,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
         [SecuritySafeCritical]
         protected EntityFrameworkCoreExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            : this(GetQueryableSetProvider(dbContext), typeResolver, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))
+            : this(dbContext.GetQueryableSetProvider(), typeResolver, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))
         {
         }
 
@@ -61,7 +57,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var queryResult = CompileAndInvokeExpression(expression);
+            var queryResult = expression.CompileAndInvokeExpression();
             if (queryResult is Task task)
             {
                 queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
@@ -87,33 +83,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         }
 
         protected override Expression Prepare(Expression expression) => base.Prepare(expression).ReplaceIncludeMethodCall();
-
-        /// <summary>
-        /// Returns the generic <see cref="DbSet{T}"/> for the type specified.
-        /// </summary>
-        /// <returns>Returns an instance of type <see cref="DbSet{T}"/>.</returns>
-        [SecuritySafeCritical]
-        protected static Func<Type, IQueryable> GetQueryableSetProvider(DbContext dbContext) => new QueryableSetProvider(dbContext).GetQueryableSet;
-
-        [SecuritySafeCritical]
-        private sealed class QueryableSetProvider
-        {
-            private readonly DbContext _dbContext;
-
-            [SecuritySafeCritical]
-            public QueryableSetProvider(DbContext dbContext)
-            {
-                _dbContext = dbContext;
-            }
-
-            [SecuritySafeCritical]
-            public IQueryable GetQueryableSet(Type type)
-            {
-                var method = DbContextSetMethod.MakeGenericMethod(type);
-                var set = method.Invoke(_dbContext, null);
-                return (IQueryable)set;
-            }
-        }
 
         private static async Task<object?> GetTaskResultAsync(Task task)
         {

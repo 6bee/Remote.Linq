@@ -9,7 +9,6 @@ namespace Remote.Linq.TestSupport
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -19,25 +18,35 @@ namespace Remote.Linq.TestSupport
         /// !!! For unit testing only !!! <br />
         /// Creates an <see cref="IAsyncRemoteQueryable{T}"/> for given test data.
         /// </summary>
-        public static IAsyncRemoteQueryable<T> AsRemoteQueryable<T>(this IEnumerable<T> source)
-            => source is null
-            ? throw new ArgumentNullException(nameof(source))
-            : source is IAsyncRemoteQueryable<T> remoteQueryable
+        public static IAsyncRemoteQueryable<T> AsRemoteQueryable<T>(this IEnumerable<T> testData)
+            => testData is null
+            ? throw new ArgumentNullException(nameof(testData))
+            : testData is IAsyncRemoteQueryable<T> remoteQueryable
             ? remoteQueryable
-            : new AsyncRemoteQueryable<T>(new TaskAsyncQueryProvider(), source.AsQueryable().Expression);
+            : new AsyncRemoteQueryable<T>(new TaskAsyncQueryProvider(), testData.AsQueryable().Expression);
 
 #if ASYNC_STREAM
         /// <summary>
         /// !!! For unit testing only !!! <br />
         /// Creates an <see cref="IAsyncRemoteStreamQueryable{T}"/> for given test data.
         /// </summary>
-        public static IQueryable<T> AsAsyncRemoteStreamQueryable<T>(this IEnumerable<T> testData)
+        public static IAsyncRemoteStreamQueryable<T> AsAsyncRemoteStreamQueryable<T>(this IEnumerable<T> testData)
         {
+            if (testData is null)
+            {
+                throw new ArgumentNullException(nameof(testData));
+            }
+
+            if (testData is IAsyncRemoteStreamQueryable<T> asyncRemoteStream)
+            {
+                return asyncRemoteStream;
+            }
+
             var provider = CreateAsyncRemoteSreamProviderWithTestData<T, object?>(testData);
-            return Remote.Linq.RemoteQueryable.Factory.CreateQueryable<T>(provider);
+            return (IAsyncRemoteStreamQueryable<T>)Remote.Linq.RemoteQueryable.Factory.CreateQueryable<T>(provider);
         }
 
-        private static Func<Expression, CancellationToken, IAsyncEnumerable<TResult>> CreateAsyncRemoteSreamProviderWithTestData<TData, TResult>(IEnumerable<TData> items)
+        private static Func<Expression, IAsyncEnumerable<TResult>> CreateAsyncRemoteSreamProviderWithTestData<TData, TResult>(IEnumerable<TData> items)
             where TData : TResult
         {
             async IAsyncEnumerable<TResult> CreateAsyncStream(IEnumerable<TData> source)
@@ -48,7 +57,7 @@ namespace Remote.Linq.TestSupport
                 }
             }
 
-            return (expression, cancellation) =>
+            return expression =>
             {
                 var result = expression.Execute<IEnumerable<TData>>(_ => items.AsQueryable());
                 return CreateAsyncStream(result);

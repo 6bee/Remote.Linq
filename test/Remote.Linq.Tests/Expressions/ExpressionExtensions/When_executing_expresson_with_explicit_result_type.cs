@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Tests.Expressions.ExpressionExtensions
 {
-    using Aqua.TypeSystem.Extensions;
     using Remote.Linq.Expressions;
     using Shouldly;
     using System;

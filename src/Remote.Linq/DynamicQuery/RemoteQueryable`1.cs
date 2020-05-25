@@ -7,12 +7,7 @@ namespace Remote.Linq.DynamicQuery
 
     internal class RemoteQueryable<T> : RemoteQueryable, IRemoteQueryable<T>, IOrderedRemoteQueryable<T>
     {
-        internal RemoteQueryable(IRemoteQueryProvider provider)
-            : base(typeof(T), provider)
-        {
-        }
-
-        internal RemoteQueryable(IRemoteQueryProvider provider, Expression? expression)
+        internal RemoteQueryable(IRemoteQueryProvider provider, Expression? expression = null)
             : base(typeof(T), provider, expression)
         {
         }

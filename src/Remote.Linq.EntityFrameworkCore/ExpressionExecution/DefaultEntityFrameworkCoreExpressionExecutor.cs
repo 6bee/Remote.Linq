@@ -19,7 +19,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
         [SecuritySafeCritical]
         public DefaultEntityFrameworkCoreExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            : this(GetQueryableSetProvider(dbContext), typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))
+            : this(dbContext.GetQueryableSetProvider(), typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))
         {
         }
 

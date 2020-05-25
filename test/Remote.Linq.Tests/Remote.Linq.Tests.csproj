@@ -3,6 +3,8 @@
   <PropertyGroup>
     <Description>Tests for Remote.Linq</Description>
     <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
+    <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">$(DefineConstants);COREFX</DefineConstants>
+    <DefineConstants Condition=" '$(TargetFramework)' == 'net48' ">$(DefineConstants);NETFX</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,13 +43,5 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
-    <DefineConstants>$(DefineConstants);COREFX</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
-    <DefineConstants>$(DefineConstants);NETFX</DefineConstants>
-  </PropertyGroup>
 
 </Project>

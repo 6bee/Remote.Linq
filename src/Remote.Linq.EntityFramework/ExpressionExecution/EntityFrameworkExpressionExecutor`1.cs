@@ -61,7 +61,7 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var queryResult = CompileAndInvokeExpression(expression);
+            var queryResult = expression.CompileAndInvokeExpression();
             if (queryResult is Task task)
             {
                 queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);

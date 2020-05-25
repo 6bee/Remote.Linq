@@ -9,12 +9,7 @@ namespace Remote.Linq.DynamicQuery
 
     internal sealed class AsyncRemoteQueryable<T> : RemoteQueryable<T>, IAsyncRemoteQueryable<T>, IOrderedAsyncRemoteQueryable<T>
     {
-        internal AsyncRemoteQueryable(IAsyncRemoteQueryProvider provider)
-            : base(provider)
-        {
-        }
-
-        internal AsyncRemoteQueryable(IAsyncRemoteQueryProvider provider, Expression expression)
+        internal AsyncRemoteQueryable(IAsyncRemoteQueryProvider provider, Expression? expression = null)
             : base(provider, expression)
         {
         }

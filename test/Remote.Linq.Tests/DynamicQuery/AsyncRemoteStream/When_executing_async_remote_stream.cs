@@ -80,21 +80,21 @@ namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteStream
         [Fact]
         public void Should_throw_upon_calling_count_linq_extension()
         {
-            var ex = Should.Throw<QueryOperationNotSupportedException>(() => _queryable.Count());
+            var ex = Should.Throw<InvalidOperationException>(() => _queryable.Count());
             ex.Message.ShouldBe("Async remote stream must be executed as IAsyncEnumerable<T>. The AsAsyncEnumerable() extension method may be used.");
         }
 
         [Fact]
         public void Should_throw_upon_calling_single_linq_extension()
         {
-            var ex = Should.Throw<QueryOperationNotSupportedException>(() => _queryable.Single(x => x.Id == 1));
+            var ex = Should.Throw<InvalidOperationException>(() => _queryable.Single(x => x.Id == 1));
             ex.Message.ShouldBe("Async remote stream must be executed as IAsyncEnumerable<T>. The AsAsyncEnumerable() extension method may be used.");
         }
 
         [Fact]
         public void Should_throw_upon_calling_tolist_linq_extension()
         {
-            var ex = Should.Throw<QueryOperationNotSupportedException>(() => _queryable.ToList());
+            var ex = Should.Throw<InvalidOperationException>(() => _queryable.ToList());
             ex.Message.ShouldBe("Async remote stream must be executed as IAsyncEnumerable<T>. The AsAsyncEnumerable() extension method may be used.");
         }
 
