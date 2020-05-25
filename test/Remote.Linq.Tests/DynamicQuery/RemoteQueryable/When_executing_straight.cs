@@ -43,7 +43,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         {
             var instance = new Entity();
             var queryable = RemoteQueryable.Factory.CreateQueryable<Entity>(exp => Task.FromResult<object>(instance));
-            var result = await queryable.ExecuteAsync<Entity>();
+            var result = await queryable.ExecuteAsync<Entity>().ConfigureAwait(false);
             result.ShouldBeSameAs(instance);
         }
 
@@ -52,7 +52,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         {
             var instance = new Entity();
             var queryable = RemoteQueryable.Factory.CreateQueryable<Entity>(exp => Task.FromResult<object>(new[] { instance }));
-            var result = await queryable.ExecuteAsync<Entity[]>();
+            var result = await queryable.ExecuteAsync<Entity[]>().ConfigureAwait(false);
             result.Single().ShouldBeSameAs(instance);
         }
 
@@ -79,7 +79,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         {
             var instance = new Entity();
             var queryable = RemoteQueryable.Factory.CreateQueryable(typeof(object), exp => Task.FromResult<object>(instance));
-            var result = await queryable.ExecuteAsync<Entity>();
+            var result = await queryable.ExecuteAsync<Entity>().ConfigureAwait(false);
             result.ShouldBeSameAs(instance);
         }
 
@@ -88,7 +88,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         {
             var instance = new Entity();
             var queryable = RemoteQueryable.Factory.CreateQueryable(typeof(object), exp => Task.FromResult<object>(new[] { instance }));
-            var result = await queryable.ExecuteAsync<IEnumerable<Entity>>();
+            var result = await queryable.ExecuteAsync<IEnumerable<Entity>>().ConfigureAwait(false);
             result.Single().ShouldBeSameAs(instance);
         }
     }
