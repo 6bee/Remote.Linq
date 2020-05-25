@@ -10,7 +10,7 @@ namespace Server
     using System.Net.Sockets;
     using System.Threading.Tasks;
 
-    public class HttpServer : IDisposable
+    public sealed class HttpServer : IDisposable
     {
         private readonly HttpListener _server;
 

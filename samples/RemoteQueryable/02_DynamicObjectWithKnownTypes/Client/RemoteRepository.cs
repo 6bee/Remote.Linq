@@ -13,7 +13,7 @@ namespace Client
     using System.Linq;
     using System.ServiceModel;
 
-    public class RemoteRepository : IDisposable
+    public sealed class RemoteRepository : IDisposable
     {
         private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
 

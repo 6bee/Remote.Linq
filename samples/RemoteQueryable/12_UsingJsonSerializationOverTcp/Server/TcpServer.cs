@@ -9,7 +9,7 @@ namespace Server
     using System.Net.Sockets;
     using System.Threading.Tasks;
 
-    public class TcpServer : IDisposable
+    public sealed class TcpServer : IDisposable
     {
         private readonly TcpListener _server;
 

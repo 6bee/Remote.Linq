@@ -8,7 +8,7 @@ namespace Server
     using System;
     using System.Linq;
 
-    public class NHContext : IDisposable
+    public sealed class NHContext : IDisposable
     {
         private static readonly ISessionFactory _sessionFactory = CreateSessionFactory();
 

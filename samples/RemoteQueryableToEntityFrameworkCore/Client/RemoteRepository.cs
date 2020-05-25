@@ -13,7 +13,7 @@ namespace Client
     using System.ServiceModel;
     using System.Threading.Tasks;
 
-    public class RemoteRepository : IDisposable
+    public sealed class RemoteRepository : IDisposable
     {
         private readonly ChannelFactory<IQueryService> _channelFactory;
 

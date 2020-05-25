@@ -12,7 +12,7 @@ namespace Client
     using System.Linq;
     using System.Net.Sockets;
 
-    public class RemoteRepository : IDisposable
+    public sealed class RemoteRepository : IDisposable
     {
         private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
         private readonly TcpClient _client;

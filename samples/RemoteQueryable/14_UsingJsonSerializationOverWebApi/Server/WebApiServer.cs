@@ -11,7 +11,7 @@ namespace Server
     using System.Web.Http.SelfHost;
     using System.Web.Http.Validation;
 
-    public class WebApiServer : IDisposable
+    public sealed class WebApiServer : IDisposable
     {
         private readonly int _port;
         private HttpSelfHostServer _server;
