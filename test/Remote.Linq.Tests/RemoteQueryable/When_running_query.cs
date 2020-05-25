@@ -484,7 +484,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             result.Count().ShouldBe(4);
         }
 
-        private static IQueryable<int?> __listOfIds = new List<int?>() { null, 1, 11, 111 }.AsQueryable(); // <=== EnumerableQuery
+        private static readonly IQueryable<int?> __listOfIds = new List<int?>() { null, 1, 11, 111 }.AsQueryable(); // <=== EnumerableQuery
 
         [Fact]
         public void Should_query_products_filterd_using_local_variables_closure_inline_mix_with_EnumerableQuery2()
@@ -510,7 +510,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             result.Count().ShouldBe(5 * 4);
         }
 
-        private static IQueryable<int?> __factors = new List<int?>() { null, 1, 2, 3 }.AsQueryable(); // <=== EnumerableQuery
+        private static readonly IQueryable<int?> __factors = new List<int?>() { null, 1, 2, 3 }.AsQueryable(); // <=== EnumerableQuery
 
         [Fact]
         public void Should_join_remote_query_with_EnumerableQuery2()

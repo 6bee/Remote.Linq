@@ -5,6 +5,7 @@ namespace Server
     using Common;
     using Remote.Linq.Expressions;
     using System;
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
     using System.Security;
@@ -30,25 +31,23 @@ namespace Server
         {
             while (true)
             {
-                using (TcpClient client = _server.AcceptTcpClient())
-                using (NetworkStream stream = client.GetStream())
+                using TcpClient client = _server.AcceptTcpClient();
+                using NetworkStream stream = client.GetStream();
+
+                Expression queryExpression = stream.Read<Expression>();
+                try
                 {
-                    Expression queryExpression = stream.Read<Expression>();
-
-                    try
-                    {
-                        QueryService queryService = new QueryService();
-                        System.Collections.Generic.IEnumerable<Aqua.Dynamic.DynamicObject> result = queryService.ExecuteQuery(queryExpression);
-                        stream.Write(result);
-                    }
-                    catch (Exception ex)
-                    {
-                        stream.Write(ex);
-                    }
-
-                    stream.Close();
-                    client.Close();
+                    QueryService queryService = new QueryService();
+                    IEnumerable<Aqua.Dynamic.DynamicObject> result = queryService.ExecuteQuery(queryExpression);
+                    stream.Write(result);
                 }
+                catch (Exception ex)
+                {
+                    stream.Write(ex);
+                }
+
+                stream.Close();
+                client.Close();
             }
         }
 

@@ -174,7 +174,7 @@ namespace Remote.Linq.ExpressionVisitors
         private sealed class Nominator : ExpressionVisitorBase
         {
             private readonly object _lock = new object();
-            private Func<Expression, bool> _fnCanBeEvaluated;
+            private readonly Func<Expression, bool> _fnCanBeEvaluated;
             private HashSet<Expression>? _candidates;
             private bool _cannotBeEvaluated;
 

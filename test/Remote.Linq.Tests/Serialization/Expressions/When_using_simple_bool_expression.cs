@@ -60,9 +60,9 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif // COREFX
 
-        private LambdaExpression _remoteExpression;
+        private readonly LambdaExpression _remoteExpression;
 
-        private LambdaExpression _serializedRemoteExpression;
+        private readonly LambdaExpression _serializedRemoteExpression;
 
         protected When_using_simple_bool_expression(Func<LambdaExpression, LambdaExpression> serialize)
         {

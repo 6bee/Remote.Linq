@@ -21,7 +21,7 @@ namespace Client
 
         public RemoteRepository(string uri)
         {
-            NetNamedPipeBinding binding = new NetNamedPipeBinding()
+            var binding = new NetNamedPipeBinding()
             {
                 CloseTimeout = TimeSpan.FromMinutes(10),
                 ReceiveTimeout = TimeSpan.FromMinutes(10),

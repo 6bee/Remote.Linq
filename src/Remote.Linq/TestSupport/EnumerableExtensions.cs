@@ -25,7 +25,6 @@ namespace Remote.Linq.TestSupport
             ? remoteQueryable
             : new AsyncRemoteQueryable<T>(new TaskAsyncQueryProvider(), testData.AsQueryable().Expression);
 
-#if ASYNC_STREAM
         /// <summary>
         /// !!! For unit testing only !!! <br />
         /// Creates an <see cref="IAsyncRemoteStreamQueryable{T}"/> for given test data.
@@ -49,7 +48,7 @@ namespace Remote.Linq.TestSupport
         private static Func<Expression, IAsyncEnumerable<TResult>> CreateAsyncRemoteSreamProviderWithTestData<TData, TResult>(IEnumerable<TData> items)
             where TData : TResult
         {
-            async IAsyncEnumerable<TResult> CreateAsyncStream(IEnumerable<TData> source)
+            static async IAsyncEnumerable<TResult> CreateAsyncStream(IEnumerable<TData> source)
             {
                 foreach (var item in source)
                 {
@@ -63,6 +62,5 @@ namespace Remote.Linq.TestSupport
                 return CreateAsyncStream(result);
             };
         }
-#endif // ASYNC_STREAM
     }
 }

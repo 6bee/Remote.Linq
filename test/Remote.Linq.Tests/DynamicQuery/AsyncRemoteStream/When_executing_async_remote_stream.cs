@@ -5,7 +5,6 @@
 namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteStream
 {
     using Remote.Linq;
-    using Remote.Linq.DynamicQuery;
     using Remote.Linq.TestSupport;
     using Shouldly;
     using System;

@@ -62,11 +62,11 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif // COREFX
 
-        private Expression<Func<StreamWriter, long>> _originalExpression;
+        private readonly Expression<Func<StreamWriter, long>> _originalExpression;
 
-        private RemoteLambdaExpression _remoteExpression;
+        private readonly RemoteLambdaExpression _remoteExpression;
 
-        private RemoteLambdaExpression _serializedRemoteExpression;
+        private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
         protected When_using_GotoAndLabelExpressions_with_names(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
         {

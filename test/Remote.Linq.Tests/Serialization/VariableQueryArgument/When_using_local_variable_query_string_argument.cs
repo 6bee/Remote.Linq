@@ -65,9 +65,9 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             public string Key { get; set; }
         }
 
-        private LambdaExpression _remoteExpression;
+        private readonly LambdaExpression _remoteExpression;
 
-        private LambdaExpression _serializedRemoteExpression;
+        private readonly LambdaExpression _serializedRemoteExpression;
 
         protected When_using_local_variable_query_string_argument(Func<LambdaExpression, LambdaExpression> serialize)
         {
@@ -83,9 +83,6 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         [Fact]
         public void Remote_expression_should_be_equal()
         {
-            var str1 = _remoteExpression.ToString();
-            var str2 = _serializedRemoteExpression.ToString();
-
             _remoteExpression.EqualsRemoteExpression(_serializedRemoteExpression);
         }
 

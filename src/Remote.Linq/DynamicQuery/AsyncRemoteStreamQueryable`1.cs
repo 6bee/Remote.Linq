@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if ASYNC_STREAM
-
 namespace Remote.Linq.DynamicQuery
 {
     using System.Collections.Generic;
@@ -20,5 +18,3 @@ namespace Remote.Linq.DynamicQuery
         public IEnumerator<T> GetEnumerator() => throw QueryOperationNotSupportedException;
     }
 }
-
-#endif // ASYNC_STREAM

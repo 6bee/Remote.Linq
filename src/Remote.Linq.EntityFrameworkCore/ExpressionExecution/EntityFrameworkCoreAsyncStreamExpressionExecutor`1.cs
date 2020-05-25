@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if ASYNC_STREAM
-
 namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 {
     using Aqua.TypeSystem;
@@ -14,7 +12,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using System.Linq;
     using System.Reflection;
     using System.Security;
-    using System.Threading;
     using System.Threading.Tasks;
 
     public abstract class EntityFrameworkCoreAsyncStreamExpressionExecutor<TDataTranferObject> : AsyncStreamExpressionExecutor<TDataTranferObject>
@@ -56,5 +53,3 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         }
     }
 }
-
-#endif // ASYNC_STREAM

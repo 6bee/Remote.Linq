@@ -62,11 +62,11 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif // COREFX
 
-        private Expression<Func<bool, bool>> _originalExpression;
+        private readonly Expression<Func<bool, bool>> _originalExpression;
 
-        private RemoteLambdaExpression _remoteExpression;
+        private readonly RemoteLambdaExpression _remoteExpression;
 
-        private RemoteLambdaExpression _serializedRemoteExpression;
+        private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
         protected When_using_TryFinallyExpressions(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
         {

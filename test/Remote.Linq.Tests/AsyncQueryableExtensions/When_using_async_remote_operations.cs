@@ -12,7 +12,7 @@ namespace Remote.Linq.Tests.AsyncEnumerableExtensions
 
     public class When_using_async_remote_operations
     {
-        private IQueryable<int> _queryable = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1001, 1002, 1004, -1, -2, -5 }.AsQueryable();
+        private readonly IQueryable<int> _queryable = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1001, 1002, 1004, -1, -2, -5 }.AsQueryable();
 
         [Fact]
         public async Task Should_throw_with_enumerable_query()

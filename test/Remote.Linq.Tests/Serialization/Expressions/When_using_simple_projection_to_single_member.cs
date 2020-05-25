@@ -65,9 +65,9 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             public string Value { get; set; }
         }
 
-        private LambdaExpression _remoteExpression;
+        private readonly LambdaExpression _remoteExpression;
 
-        private LambdaExpression _serializedRemoteExpression;
+        private readonly LambdaExpression _serializedRemoteExpression;
 
         protected When_using_simple_projection_to_single_member(Func<LambdaExpression, LambdaExpression> serialize)
         {

@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if ASYNC_STREAM
-
 namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.TypeSystem;
@@ -124,5 +122,3 @@ namespace Remote.Linq.ExpressionExecution
         IAsyncEnumerable<TDataTranferObject?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(IAsyncEnumerable<TDataTranferObject?> queryResult) => ProcessResult(queryResult);
     }
 }
-
-#endif // ASYNC_STREAM

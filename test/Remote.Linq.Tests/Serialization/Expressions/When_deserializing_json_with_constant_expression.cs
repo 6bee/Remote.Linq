@@ -30,7 +30,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
     }}
 }}";
 
-        private ConstantExpression expression;
+        private readonly ConstantExpression expression;
 
         public When_deserializing_json_with_constant_expression()
         {

@@ -61,11 +61,11 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif // COREFX
 
-        private Expression<Func<decimal, string>> _originalExpression;
+        private readonly Expression<Func<decimal, string>> _originalExpression;
 
-        private RemoteLambdaExpression _remoteExpression;
+        private readonly RemoteLambdaExpression _remoteExpression;
 
-        private RemoteLambdaExpression _serializedRemoteExpression;
+        private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
         protected When_using_BlockExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
         {

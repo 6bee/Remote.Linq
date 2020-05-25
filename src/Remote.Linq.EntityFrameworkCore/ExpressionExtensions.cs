@@ -173,7 +173,19 @@ namespace Remote.Linq.EntityFrameworkCore
         public static Task<TResult> ExecuteWithEntityFrameworkCoreAsync<TResult>(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellationToken = default, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => new CastingEntityFrameworkCoreExpressionExecutor<TResult>(queryableProvider, typeResolver, canBeEvaluatedLocally).ExecuteAsync(expression, cancellationToken);
 
-#if ASYNC_STREAM
+        /// <summary>
+        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
+        /// </summary>
+        /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
+        /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
+        /// <param name="setTypeInformation">Function to define whether to add type information.</param>
+        /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
+        /// <returns>The mapped result of the query execution.</returns>
+        public static IAsyncEnumerable<DynamicObject?> ExecuteAsyncStreamWithEntityFrameworkCore(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+            => new DefaultEntityFrameworkCoreAsyncStreamExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsyncStream(expression);
+
         /// <summary>
         /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
         /// </summary>
@@ -185,6 +197,5 @@ namespace Remote.Linq.EntityFrameworkCore
         [SecuritySafeCritical]
         public static IAsyncEnumerable<object?> ExecuteAsyncStreamWithEntityFrameworkCore(this Expression expression, DbContext dbContext, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => new CastingEntityFrameworkCoreAsyncStreamExpressionExecutor<object>(dbContext, typeResolver, canBeEvaluatedLocally).ExecuteAsyncStream(expression);
-#endif // ASYNC_STREAM
     }
 }

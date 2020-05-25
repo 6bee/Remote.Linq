@@ -67,9 +67,9 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             public string Key { get; set; }
         }
 
-        private LambdaExpression _remoteExpression;
+        private readonly LambdaExpression _remoteExpression;
 
-        private LambdaExpression _serializedRemoteExpression;
+        private readonly LambdaExpression _serializedRemoteExpression;
 
         protected When_using_local_variable_query_string_argument_list(Func<LambdaExpression, LambdaExpression> serialize)
         {

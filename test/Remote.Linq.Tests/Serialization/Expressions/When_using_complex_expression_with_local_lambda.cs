@@ -60,9 +60,9 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif // COREFX
 
-        private LambdaExpression _remoteExpression;
+        private readonly LambdaExpression _remoteExpression;
 
-        private LambdaExpression _serializedRemoteExpression;
+        private readonly LambdaExpression _serializedRemoteExpression;
 
         protected When_using_complex_expression_with_local_lambda(Func<LambdaExpression, LambdaExpression> serialize)
         {
@@ -78,9 +78,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         [Fact]
         public void Remote_expression_should_be_equal()
         {
-            var str1 = _remoteExpression.ToString();
-            var str2 = _serializedRemoteExpression.ToString();
-
             _remoteExpression.EqualsRemoteExpression(_serializedRemoteExpression);
         }
 

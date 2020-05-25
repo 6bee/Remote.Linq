@@ -12,7 +12,7 @@ namespace Remote.Linq.Tests.TestSupport
 
     public class When_using_test_support_remote_queryable
     {
-        private IQueryable<double> _queryable;
+        private readonly IQueryable<double> _queryable;
 
         public When_using_test_support_remote_queryable()
         {

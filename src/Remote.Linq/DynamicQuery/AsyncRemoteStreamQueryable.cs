@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if ASYNC_STREAM
-
 namespace Remote.Linq.DynamicQuery
 {
     using System;
@@ -34,5 +32,3 @@ namespace Remote.Linq.DynamicQuery
             => new InvalidOperationException($"Async remote stream must be executed as IAsyncEnumerable<T>. The {nameof(AsyncQueryableExtensions.AsAsyncEnumerable)}() extension method may be used.");
    }
 }
-
-#endif // ASYNC_STREAM

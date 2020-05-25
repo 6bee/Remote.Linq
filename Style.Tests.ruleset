@@ -3,5 +3,8 @@
   <Include Path="Style.NoDoc.ruleset" Action="Default" />
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1310" Action="None" />
+    <Rule Id="SA1611" Action="None" />
+    <Rule Id="SA1615" Action="None" />
+    <Rule Id="SA1618" Action="None" />
   </Rules>
 </RuleSet>

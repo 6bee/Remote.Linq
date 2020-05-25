@@ -65,11 +65,11 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             public int Number { get; set; }
         }
 
-        private int _value = 123;
+        private readonly int _value = 123;
 
-        private LambdaExpression _remoteExpression;
+        private readonly LambdaExpression _remoteExpression;
 
-        private LambdaExpression _serializedRemoteExpression;
+        private readonly LambdaExpression _serializedRemoteExpression;
 
         protected When_using_instance_variable_query_argument(Func<LambdaExpression, LambdaExpression> serialize)
         {

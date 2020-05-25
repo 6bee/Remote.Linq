@@ -9,7 +9,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using System.Linq;
     using System.Reflection;
     using System.Security;
-    using System.Threading;
 
     internal static class Helper
     {
@@ -17,6 +16,9 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
             .GetTypeInfo()
             .GetDeclaredMethods(nameof(DbContext.Set))
             .Single(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 0);
+
+        private static readonly System.Reflection.MethodInfo _executeAsAsyncStream = typeof(Helper)
+            .GetMethod(nameof(ExecuteAsAsyncStream), BindingFlags.NonPublic | BindingFlags.Static);
 
         /// <summary>
         /// Returns the generic <see cref="DbSet{T}"/> for the type specified.
@@ -45,10 +47,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
             }
         }
 
-#if ASYNC_STREAM
-        private static readonly System.Reflection.MethodInfo _executeAsAsyncStream = typeof(Helper)
-            .GetMethod(nameof(ExecuteAsAsyncStream), BindingFlags.NonPublic | BindingFlags.Static);
-
         public static IAsyncEnumerable<object?> ExecuteAsAsyncStream(this IQueryable queryable)
             => (IAsyncEnumerable<object?>)_executeAsAsyncStream
             .MakeGenericMethod(queryable.ElementType)
@@ -61,6 +59,5 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
                 yield return item;
             }
         }
-#endif // ASYNC_STREAM
     }
 }

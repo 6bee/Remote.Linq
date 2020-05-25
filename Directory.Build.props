@@ -1,11 +1,14 @@
 ﻿<Project>
 
   <PropertyGroup>
+
     <MajorVersion>6</MajorVersion>
     <MinorVersion>3</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-005</PreReleaseLabel>
+    <PreReleaseLabel>alpha-006</PreReleaseLabel>
+
     <AquaCoreVersion>5.0.0-alpha-004</AquaCoreVersion>
+
   </PropertyGroup>
 
   <PropertyGroup>

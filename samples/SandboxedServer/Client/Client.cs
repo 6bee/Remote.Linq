@@ -36,7 +36,9 @@ namespace Client
                     ex = inner;
                 }
 
-                Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ex is SecurityException
+                    ? ConsoleColor.Green
+                    : ConsoleColor.Red;
                 Console.WriteLine($"{ex.GetType()}: {ex.Message}");
                 Console.ResetColor();
             }

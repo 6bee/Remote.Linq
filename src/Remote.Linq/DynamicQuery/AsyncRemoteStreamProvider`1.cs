@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if ASYNC_STREAM
-
 namespace Remote.Linq.DynamicQuery
 {
     using Aqua.TypeSystem;
@@ -10,7 +8,9 @@ namespace Remote.Linq.DynamicQuery
     using System.Linq;
     using System.Linq.Expressions;
     using System.Runtime.CompilerServices;
+    using System.Security;
     using System.Threading;
+    using System.Threading.Tasks;
 
     internal sealed class AsyncRemoteStreamProvider<TSource> : IAsyncRemoteStreamProvider, IQueryProvider
     {
@@ -19,6 +19,7 @@ namespace Remote.Linq.DynamicQuery
         private readonly IQueryResultMapper<TSource> _resultMapper;
         private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
 
+        [SecuritySafeCritical]
         public AsyncRemoteStreamProvider(Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource>> dataProvider, ITypeInfoProvider? typeInfoProvider, Func<Expression, bool>? canBeEvaluatedLocally, IQueryResultMapper<TSource> resultMapper)
         {
             _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
@@ -36,7 +37,7 @@ namespace Remote.Linq.DynamicQuery
             var asyncEnumerable = _dataProvider(rlinq, cancellation);
 
             cancellation.ThrowIfCancellationRequested();
-            await foreach (var resultItem in asyncEnumerable)
+            await foreach (var resultItem in asyncEnumerable.WithCancellation(cancellation))
             {
                 cancellation.ThrowIfCancellationRequested();
                 var result = _resultMapper.MapResult<TResult>(resultItem, expression);
@@ -62,5 +63,3 @@ namespace Remote.Linq.DynamicQuery
         TResult IQueryProvider.Execute<TResult>(Expression expression) => throw AsyncRemoteStreamQueryable.QueryOperationNotSupportedException;
     }
 }
-
-#endif // ASYNC_STREAM

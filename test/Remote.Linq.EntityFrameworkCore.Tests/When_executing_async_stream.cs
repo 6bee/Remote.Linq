@@ -10,6 +10,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -18,6 +19,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         private readonly TestContext _context;
         private readonly IQueryable<LookupItem> _queryable;
 
+        [SecuritySafeCritical]
         public When_executing_async_stream()
         {
             _context = new TestContext();

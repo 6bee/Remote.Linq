@@ -26,13 +26,13 @@ namespace Remote.Linq.EntityFramework
 
         private static IEnumerable<Tuple<MethodInfo, MethodInfo>> GetScalarQueryMethods()
         {
-            Type[] CreateGenericArguments(MethodInfo m) => Enumerable.Range(0, m.GetGenericArguments().Length)
+            static Type[] CreateGenericArguments(MethodInfo m) => Enumerable.Range(0, m.GetGenericArguments().Length)
                 .Select(x => typeof(ProbingType))
                 .ToArray();
 
-            MethodInfo CreateClosedGenericTypeIfRequired(MethodInfo m) => m.IsGenericMethodDefinition ? m.MakeGenericMethod(CreateGenericArguments(m)) : m;
+            static MethodInfo CreateClosedGenericTypeIfRequired(MethodInfo m) => m.IsGenericMethodDefinition ? m.MakeGenericMethod(CreateGenericArguments(m)) : m;
 
-            bool IsMatch(MethodInfo m1, MethodInfo m2)
+            static bool IsMatch(MethodInfo m1, MethodInfo m2)
             {
                 m1 = CreateClosedGenericTypeIfRequired(m1);
                 m2 = CreateClosedGenericTypeIfRequired(m2);

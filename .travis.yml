@@ -37,7 +37,8 @@ before_script:
 
 script:
   # tests
-  - travis_wait 20 dotnet test test/Remote.Linq.Tests -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
+  - travis_wait 20 dotnet test test/Remote.Linq.Tests      -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
+  - dotnet test test/Remote.Linq.EntityFramework.Tests     -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
   - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
   # samples
   #WCF- dotnet build samples/QueryDemov

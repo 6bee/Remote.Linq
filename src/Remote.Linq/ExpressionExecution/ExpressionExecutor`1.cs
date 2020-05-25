@@ -9,7 +9,6 @@ namespace Remote.Linq.ExpressionExecution
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Linq;
-    using System.Security;
 
     public abstract class ExpressionExecutor<TDataTranferObject> : IExpressionExecutionDecorator<TDataTranferObject>
     {
