@@ -38,7 +38,7 @@ namespace Client
                     {
                         channel = _channelFactory.CreateChannel();
 
-                        IEnumerable<DynamicObject> result = await channel.ExecuteQueryAsync(expression);
+                        IEnumerable<DynamicObject> result = await channel.ExecuteQueryAsync(expression).ConfigureAwait(false);
                         return result;
                     }
                     finally

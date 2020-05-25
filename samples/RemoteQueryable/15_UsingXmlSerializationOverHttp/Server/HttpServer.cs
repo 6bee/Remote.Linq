@@ -5,6 +5,7 @@ namespace Server
     using Common;
     using Remote.Linq.Expressions;
     using System;
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
     using System.Threading.Tasks;
@@ -35,23 +36,21 @@ namespace Server
                             // Console.Write("Connected... ");
                             System.IO.Stream inStream = client.Request.InputStream;
                             System.IO.Stream outStream = client.Response.OutputStream;
+                            Expression queryExpression = await inStream.ReadAsync<Expression>().ConfigureAwait(false);
+
+                            try
                             {
-                                Expression queryExpression = await inStream.ReadAsync<Expression>();
-
-                                try
-                                {
-                                    QueryService queryService = new QueryService();
-                                    System.Collections.Generic.IEnumerable<Aqua.Dynamic.DynamicObject> result = queryService.ExecuteQuery(queryExpression);
-                                    await outStream.WriteAsync(result);
-                                }
-                                catch (Exception ex)
-                                {
-                                    await outStream.WriteAsync(ex);
-                                }
-
-                                inStream.Close();
-                                outStream.Close();
+                                QueryService queryService = new QueryService();
+                                IEnumerable<Aqua.Dynamic.DynamicObject> result = queryService.ExecuteQuery(queryExpression);
+                                await outStream.WriteAsync(result).ConfigureAwait(false);
                             }
+                            catch (Exception ex)
+                            {
+                                await outStream.WriteAsync(ex).ConfigureAwait(false);
+                            }
+
+                            inStream.Close();
+                            outStream.Close();
 
                             // Console.WriteLine("Closed client session.");
                         }

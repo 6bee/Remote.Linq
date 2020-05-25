@@ -5,6 +5,7 @@ namespace Server
     using Common;
     using Remote.Linq.Expressions;
     using System;
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
     using System.Threading.Tasks;
@@ -32,28 +33,24 @@ namespace Server
             {
                 while (true)
                 {
-                    using (TcpClient client = _server.AcceptTcpClient())
+                    using TcpClient client = _server.AcceptTcpClient();
+                    using NetworkStream stream = client.GetStream();
+                    Expression queryExpression = await stream.ReadAsync<Expression>().ConfigureAwait(false);
+
+                    try
                     {
-                        using (NetworkStream stream = client.GetStream())
-                        {
-                            Expression queryExpression = await stream.ReadAsync<Expression>().ConfigureAwait(false);
-
-                            try
-                            {
-                                QueryService queryService = new QueryService();
-                                System.Collections.Generic.IEnumerable<Aqua.Dynamic.DynamicObject> result = await queryService.ExecuteQueryAsync(queryExpression);
-                                await stream.WriteAsync(result).ConfigureAwait(false);
-                            }
-                            catch (Exception ex)
-                            {
-                                await stream.WriteAsync(ex).ConfigureAwait(false);
-                            }
-
-                            stream.Close();
-                        }
-
-                        client.Close();
+                        QueryService queryService = new QueryService();
+                        IEnumerable<Aqua.Dynamic.DynamicObject> result =
+                            await queryService.ExecuteQueryAsync(queryExpression).ConfigureAwait(false);
+                        await stream.WriteAsync(result).ConfigureAwait(false);
                     }
+                    catch (Exception ex)
+                    {
+                        await stream.WriteAsync(ex).ConfigureAwait(false);
+                    }
+
+                    stream.Close();
+                    client.Close();
                 }
             });
         }

@@ -14,9 +14,9 @@ namespace Common
         {
             TypeInfo typeInfo = new TypeInfo(obj.GetType(), false, false);
 
-            await WriteInternalAsync(stream, typeInfo);
+            await WriteInternalAsync(stream, typeInfo).ConfigureAwait(false);
 
-            await WriteInternalAsync(stream, obj);
+            await WriteInternalAsync(stream, obj).ConfigureAwait(false);
         }
 
         private static async Task WriteInternalAsync(this Stream stream, object obj)
@@ -35,17 +35,17 @@ namespace Common
             long size = data.LongLength;
             byte[] sizeData = BitConverter.GetBytes(size);
 
-            await stream.WriteAsync(sizeData, 0, sizeData.Length);
+            await stream.WriteAsync(sizeData, 0, sizeData.Length).ConfigureAwait(false);
             stream.WriteByte(obj is Exception ? (byte)1 : (byte)0);
-            await stream.WriteAsync(data, 0, data.Length);
+            await stream.WriteAsync(data, 0, data.Length).ConfigureAwait(false);
         }
 
         public static async Task<T> ReadAsync<T>(this Stream stream)
         {
-            TypeInfo typeInfo = await ReadInternalAsync<TypeInfo>(stream);
+            TypeInfo typeInfo = await ReadInternalAsync<TypeInfo>(stream).ConfigureAwait(false);
             Type type = typeInfo.Type;
 
-            T obj = await ReadInternalAsync<T>(stream, type);
+            T obj = await ReadInternalAsync<T>(stream, type).ConfigureAwait(false);
             return obj;
         }
 
@@ -53,7 +53,7 @@ namespace Common
         {
             byte[] bytes = new byte[256];
 
-            await stream.ReadAsync(bytes, 0, 8);
+            await stream.ReadAsync(bytes, 0, 8).ConfigureAwait(false);
             long size = BitConverter.ToInt64(bytes, 0);
 
             bool isException = stream.ReadByte() != 0;
@@ -68,7 +68,7 @@ namespace Common
                         ? (int)(size - count)
                         : bytes.Length;
 
-                    int i = await stream.ReadAsync(bytes, 0, length);
+                    int i = await stream.ReadAsync(bytes, 0, length).ConfigureAwait(false);
                     count += i;
 
                     dataStream.Write(bytes, 0, i);

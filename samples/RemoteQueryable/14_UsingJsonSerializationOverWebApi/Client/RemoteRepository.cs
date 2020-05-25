@@ -37,18 +37,18 @@ namespace Client
                         SerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }.ConfigureRemoteLinq(),
                     };
 
-                    var response = await client.PostAsync("api/query", new Common.Model.Query { Expression = expression }, formatter);
+                    var response = await client.PostAsync("api/query", new Common.Model.Query { Expression = expression }, formatter).ConfigureAwait(false);
 
                     if (response.StatusCode == HttpStatusCode.InternalServerError)
                     {
-                        byte[] errorMessageData = await response.Content.ReadAsByteArrayAsync();
+                        byte[] errorMessageData = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                         string errorMessage = Encoding.UTF8.GetString(errorMessageData);
                         throw new Exception(errorMessage);
                     }
 
                     response.EnsureSuccessStatusCode();
 
-                    IEnumerable<DynamicObject> result = await response.Content.ReadAsAsync<IEnumerable<DynamicObject>>(new[] { formatter });
+                    IEnumerable<DynamicObject> result = await response.Content.ReadAsAsync<IEnumerable<DynamicObject>>(new[] { formatter }).ConfigureAwait(false);
                     return result;
                 }
                 catch (SocketException ex)

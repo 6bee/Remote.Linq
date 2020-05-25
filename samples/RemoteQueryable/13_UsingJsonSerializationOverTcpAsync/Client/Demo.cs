@@ -90,7 +90,7 @@ namespace Client
                     Amount = g.Sum(x => x.i.Quantity * x.p.Price),
                 };
 
-            var totalAmountByCategroyResult = await totalAmountByCategoryQuery.ToDictionaryAsync(x => x.Category);
+            var totalAmountByCategroyResult = await totalAmountByCategoryQuery.ToDictionaryAsync(x => x.Category).ConfigureAwait(false);
             foreach (var i in totalAmountByCategroyResult)
             {
                 Console.WriteLine($"  {i}");
@@ -99,7 +99,7 @@ namespace Client
             Console.WriteLine("\nINVALID OPERATION:");
             try
             {
-                var first = await totalAmountByCategoryQuery.FirstAsync(x => false);
+                var first = await totalAmountByCategoryQuery.FirstAsync(x => false).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

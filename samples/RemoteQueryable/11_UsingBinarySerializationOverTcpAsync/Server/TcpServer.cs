@@ -49,7 +49,7 @@ namespace Server
                                 await stream.WriteAsync(ex).ConfigureAwait(false);
                             }
 
-                            await stream.FlushAsync();
+                            await stream.FlushAsync().ConfigureAwait(false);
                             stream.Close();
                         }
 

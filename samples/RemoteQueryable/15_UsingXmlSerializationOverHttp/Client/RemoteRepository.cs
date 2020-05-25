@@ -25,24 +25,20 @@ namespace Client
             {
                 try
                 {
-                    using (HttpClient client = new HttpClient())
-                    using (MemoryStream requestStream = new MemoryStream())
-                    using (MemoryStream responseStream = new MemoryStream())
-                    {
-                        await requestStream.WriteAsync(expression);
-                        requestStream.Position = 0;
+                    using HttpClient client = new HttpClient();
+                    using MemoryStream requestStream = new MemoryStream();
+                    using MemoryStream responseStream = new MemoryStream();
+                    await requestStream.WriteAsync(expression).ConfigureAwait(false);
+                    requestStream.Position = 0;
 
-                        StreamContent request = new StreamContent(requestStream);
+                    StreamContent request = new StreamContent(requestStream);
 
-                        using (HttpResponseMessage response = await client.PostAsync(url, request))
-                        {
-                            await response.Content.CopyToAsync(responseStream);
-                            responseStream.Position = 0;
+                    using HttpResponseMessage response = await client.PostAsync(url, request).ConfigureAwait(false);
+                    await response.Content.CopyToAsync(responseStream).ConfigureAwait(false);
+                    responseStream.Position = 0;
 
-                            IEnumerable<DynamicObject> result = await responseStream.ReadAsync<IEnumerable<DynamicObject>>();
-                            return result;
-                        }
-                    }
+                    IEnumerable<DynamicObject> result = await responseStream.ReadAsync<IEnumerable<DynamicObject>>().ConfigureAwait(false);
+                    return result;
                 }
                 catch (SocketException ex)
                 {

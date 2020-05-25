@@ -31,18 +31,18 @@ namespace Client
                         BaseAddress = new Uri($"http://{server}:{port}/"),
                     };
 
-                    HttpResponseMessage response = await client.PostAsync("api/query", expression, new XmlMediaTypeFormatter());
+                    HttpResponseMessage response = await client.PostAsync("api/query", expression, new XmlMediaTypeFormatter()).ConfigureAwait(false);
 
                     if (response.StatusCode == HttpStatusCode.InternalServerError)
                     {
-                        byte[] errorMessageData = await response.Content.ReadAsByteArrayAsync();
+                        byte[] errorMessageData = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                         string errorMessage = Encoding.UTF8.GetString(errorMessageData);
                         throw new Exception(errorMessage);
                     }
 
                     response.EnsureSuccessStatusCode();
 
-                    IEnumerable<DynamicObject> result = await response.Content.ReadAsAsync<IEnumerable<DynamicObject>>();
+                    IEnumerable<DynamicObject> result = await response.Content.ReadAsAsync<IEnumerable<DynamicObject>>().ConfigureAwait(false);
                     return result;
                 }
                 catch (SocketException ex)
