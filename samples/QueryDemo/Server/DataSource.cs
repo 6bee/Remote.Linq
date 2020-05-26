@@ -64,7 +64,7 @@ namespace Server
                 return (IEnumerable<T>)Orders;
             }
 
-            throw new Exception($"Data type {typeof(T).FullName} may not be served by this data source.");
+            throw new NotSupportedException($"Data type {typeof(T).FullName} may not be served by this data source.");
         }
 
         private static void AddProduct(this Order order, Product product, int quantity)

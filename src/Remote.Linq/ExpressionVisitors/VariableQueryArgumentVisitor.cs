@@ -89,7 +89,7 @@ namespace Remote.Linq.ExpressionVisitors
                         }
                         else
                         {
-                            throw new Exception($"Unexpected instance expression: {instanceExpression}");
+                            throw new RemoteLinqException($"Expected instance expression of type {nameof(VariableQueryArgument)} {nameof(VariableQueryArgumentList)} but got '{instanceExpression.Value?.GetType().FullName ?? "null"}'");
                         }
 
                         return new MemberExpression(instanceExpression, propertyInfo);

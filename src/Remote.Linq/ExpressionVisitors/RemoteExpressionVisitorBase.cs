@@ -36,7 +36,7 @@ namespace Remote.Linq.ExpressionVisitors
                 ExpressionType.TypeIs => VisitTypeIs((TypeBinaryExpression)expression),
                 ExpressionType.Try => VisitTry((TryExpression)expression),
                 ExpressionType.Unary => VisitUnary((UnaryExpression)expression),
-                _ => throw new Exception($"Unknown expression type: '{expression.NodeType}'"),
+                _ => throw new NotSupportedException($"Unknown expression type: '{expression.NodeType}'"),
             };
 
         protected virtual Expression VisitSwitch(SwitchExpression switchExpression)
@@ -147,7 +147,7 @@ namespace Remote.Linq.ExpressionVisitors
                 MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment)binding),
                 MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding)binding),
                 MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding)binding),
-                _ => throw new Exception($"Unhandled binding type '{binding.BindingType}'"),
+                _ => throw new NotSupportedException($"Unhandled binding type '{binding.BindingType}'"),
             };
 
         protected virtual MemberAssignment VisitMemberAssignment(MemberAssignment assignment)

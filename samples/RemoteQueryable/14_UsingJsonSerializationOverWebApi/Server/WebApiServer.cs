@@ -25,7 +25,7 @@ namespace Server
         {
             if (_server != null)
             {
-                throw new Exception("Server has been opened already.");
+                throw new InvalidOperationException("Server has been opened already.");
             }
 
             // load common assembly into app domain
@@ -36,9 +36,6 @@ namespace Server
             config.Services.Replace(typeof(IBodyModelValidator), new CustomBodyModelValidator());
 
             JsonMediaTypeFormatter jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().Single();
-
-            // jsonFormatter.SerializerSettings = jsonFormatter.SerializerSettings.ConfigureRemoteLinq();
-            // jsonFormatter.SerializerSettings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
             jsonFormatter.SerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.None }.ConfigureRemoteLinq();
 
             config.Routes.MapHttpRoute("API Default", "api/{controller}");
@@ -52,11 +49,8 @@ namespace Server
 
         public void Dispose()
         {
-            if (_server != null)
-            {
-                _server.Dispose();
-                _server = null;
-            }
+            _server?.Dispose();
+            _server = null;
         }
     }
 }

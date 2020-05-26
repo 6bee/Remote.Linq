@@ -10,23 +10,12 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using Remote.Linq.Expressions;
     using System;
     using System.Linq;
-    using System.Reflection;
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
 
     public abstract class EntityFrameworkCoreExpressionExecutor<TDataTranferObject> : AsyncExpressionExecutor<TDataTranferObject>
     {
-        private static readonly System.Reflection.MethodInfo ToListAsync = typeof(EntityFrameworkQueryableExtensions)
-            .GetTypeInfo()
-            .GetDeclaredMethods(nameof(EntityFrameworkQueryableExtensions.ToListAsync))
-            .Where(m => m.IsGenericMethodDefinition && m.GetParameters().Length == 2)
-            .Single();
-
-        private static readonly Func<Type, System.Reflection.PropertyInfo> TaskResultProperty = (Type resultType) =>
-            typeof(Task<>).MakeGenericType(resultType)
-                .GetProperty(nameof(Task<object?>.Result));
-
         [SecuritySafeCritical]
         protected EntityFrameworkCoreExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             : this(dbContext.GetQueryableSetProvider(), typeResolver, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))
@@ -71,11 +60,10 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
             cancellationToken.ThrowIfCancellationRequested();
 
             var queryableType = queryResult.GetType();
-            if (queryableType.Implements(typeof(IQueryable<>)))
+            if (queryableType.Implements(typeof(IQueryable<>), out var elementType))
             {
                 // force query execution
-                var elementType = TypeHelper.GetElementType(queryableType);
-                task = (Task)ToListAsync.MakeGenericMethod(elementType).Invoke(null, new[] { queryResult, cancellationToken });
+                task = (Task)Helper.ToListAsync(elementType.Single()).Invoke(null, new[] { queryResult, cancellationToken });
                 queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
             }
 
@@ -91,5 +79,9 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         }
 
         private static object? GetTaskResult(Task task) => TaskResultProperty(task.GetType().GetGenericArguments().Single()).GetValue(task);
+
+        private static System.Reflection.PropertyInfo TaskResultProperty(Type resultType) =>
+            typeof(Task<>).MakeGenericType(resultType)
+                .GetProperty(nameof(Task<object?>.Result));
     }
 }

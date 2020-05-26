@@ -490,7 +490,7 @@ namespace Remote.Linq
                     System.Linq.Expressions.MemberBindingType.Assignment => VisitMemberAssignment((System.Linq.Expressions.MemberAssignment)binding),
                     System.Linq.Expressions.MemberBindingType.MemberBinding => VisitMemberMemberBinding((System.Linq.Expressions.MemberMemberBinding)binding),
                     System.Linq.Expressions.MemberBindingType.ListBinding => VisitMemberListBinding((System.Linq.Expressions.MemberListBinding)binding),
-                    _ => throw new Exception($"Unhandled binding type '{binding.BindingType}'"),
+                    _ => throw new NotSupportedException($"Unhandled binding type '{binding.BindingType}'"),
                 };
 
             private new RLinq.MemberAssignment VisitMemberAssignment(System.Linq.Expressions.MemberAssignment assignment)
@@ -667,7 +667,7 @@ namespace Remote.Linq
                     RLinq.ExpressionType.Try => VisitTry((RLinq.TryExpression)expression),
                     RLinq.ExpressionType.TypeIs => VisitTypeIs((RLinq.TypeBinaryExpression)expression),
                     RLinq.ExpressionType.Unary => VisitUnary((RLinq.UnaryExpression)expression),
-                    _ => throw new Exception($"Unknown expression note type: '{expression.NodeType}'"),
+                    _ => throw new NotSupportedException($"Unknown expression note type: '{expression.NodeType}'"),
                 };
 
             private System.Linq.Expressions.Expression VisitSwitch(RLinq.SwitchExpression switchExpression)
@@ -754,7 +754,7 @@ namespace Remote.Linq
                 {
                     RLinq.NewArrayType.NewArrayBounds => System.Linq.Expressions.Expression.NewArrayBounds(type, expressions),
                     RLinq.NewArrayType.NewArrayInit => System.Linq.Expressions.Expression.NewArrayInit(type, expressions),
-                    _ => throw new Exception($"Unhandled new array type {expression.NewArrayType}"),
+                    _ => throw new NotSupportedException($"Unhandled new array type {expression.NewArrayType}"),
                 };
             }
 
@@ -798,7 +798,7 @@ namespace Remote.Linq
                     RLinq.MemberBindingType.Assignment => VisitMemberAssignment((RLinq.MemberAssignment)binding),
                     RLinq.MemberBindingType.MemberBinding => VisitMemberMemberBinding((RLinq.MemberMemberBinding)binding),
                     RLinq.MemberBindingType.ListBinding => VisitMemberListBinding((RLinq.MemberListBinding)binding),
-                    _ => throw new Exception($"Unhandled binding type '{binding.BindingType}'"),
+                    _ => throw new NotSupportedException($"Unhandled binding type '{binding.BindingType}'"),
                 };
 
             private System.Linq.Expressions.MemberAssignment VisitMemberAssignment(RLinq.MemberAssignment assignment)

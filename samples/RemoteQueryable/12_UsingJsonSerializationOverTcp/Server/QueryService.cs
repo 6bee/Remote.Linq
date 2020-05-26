@@ -13,7 +13,7 @@ namespace Server
     {
         private static Func<Type, IQueryable> _queryableResourceProvider = type =>
             {
-                InMemoryDataStore dataStore = InMemoryDataStore.Instance;
+                var dataStore = InMemoryDataStore.Instance;
 
                 if (type == typeof(ProductCategory))
                 {
@@ -30,7 +30,7 @@ namespace Server
                     return dataStore.OrderItems.AsQueryable();
                 }
 
-                throw new Exception($"No queryable resource available for type {type}");
+                throw new NotSupportedException($"No queryable resource available for type {type}.");
             };
 
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)

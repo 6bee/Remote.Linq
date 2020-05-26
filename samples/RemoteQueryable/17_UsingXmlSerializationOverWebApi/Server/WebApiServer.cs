@@ -21,11 +21,11 @@ namespace Server
         {
             if (_server != null)
             {
-                throw new Exception("Server has been opened already.");
+                throw new InvalidOperationException("Server has been opened already.");
             }
 
             // load common assembly into app domain
-            System.Reflection.Assembly asm = typeof(Common.Model.ProductCategory).Assembly;
+            _ = typeof(Common.Model.ProductCategory).Assembly;
 
             HttpSelfHostConfiguration config = new HttpSelfHostConfiguration($"http://localhost:{_port}");
 
@@ -42,11 +42,8 @@ namespace Server
 
         public void Dispose()
         {
-            if (_server != null)
-            {
-                _server.Dispose();
-                _server = null;
-            }
+            _server?.Dispose();
+            _server = null;
         }
     }
 }

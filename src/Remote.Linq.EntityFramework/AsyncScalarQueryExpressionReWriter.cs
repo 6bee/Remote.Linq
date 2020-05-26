@@ -17,9 +17,6 @@ namespace Remote.Linq.EntityFramework
     {
         private class ProbingType
         {
-            private ProbingType()
-            {
-            }
         }
 
         private static readonly Dictionary<MethodInfo, MethodInfo> _methods = GetScalarQueryMethods().ToDictionary(x => x.Item1, x => x.Item2);

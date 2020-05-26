@@ -40,7 +40,7 @@ namespace Server
                    .AsQueryable();
             }
 
-            throw new Exception($"No queryable resource available for type {type}");
+            throw new NotSupportedException($"No queryable resource available for type {type}");
         };
 
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)

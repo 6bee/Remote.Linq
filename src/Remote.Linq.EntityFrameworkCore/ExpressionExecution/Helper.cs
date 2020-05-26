@@ -12,6 +12,12 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
     internal static class Helper
     {
+        private static readonly System.Reflection.MethodInfo _toListAsync = typeof(EntityFrameworkQueryableExtensions)
+            .GetTypeInfo()
+            .GetDeclaredMethods(nameof(EntityFrameworkQueryableExtensions.ToListAsync))
+            .Where(m => m.IsGenericMethodDefinition && m.GetParameters().Length == 2)
+            .Single();
+
         private static readonly System.Reflection.MethodInfo _dbSetGetter = typeof(DbContext)
             .GetTypeInfo()
             .GetDeclaredMethods(nameof(DbContext.Set))
@@ -19,6 +25,8 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
         private static readonly System.Reflection.MethodInfo _executeAsAsyncStream = typeof(Helper)
             .GetMethod(nameof(ExecuteAsAsyncStream), BindingFlags.NonPublic | BindingFlags.Static);
+
+        internal static System.Reflection.MethodInfo ToListAsync(Type elementType) => _toListAsync.MakeGenericMethod(elementType);
 
         /// <summary>
         /// Returns the generic <see cref="DbSet{T}"/> for the type specified.

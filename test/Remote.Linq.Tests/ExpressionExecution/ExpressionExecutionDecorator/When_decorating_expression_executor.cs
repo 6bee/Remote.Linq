@@ -9,9 +9,12 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutionDecorator
     using System;
     using System.Collections.Generic;
     using Xunit;
+    using Xunit.Sdk;
 
     public class When_decorating_expression_executor
     {
+        private static Exception ShouldHaveBeenReplacedException => new XunitException("should have been replaced by next strategy");
+
         [Fact]
         public void Should_apply_all_custom_strategies_and_return_expected_result()
         {
@@ -68,14 +71,8 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutionDecorator
             var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
-                .With(new Func<Expression, System.Linq.Expressions.Expression>(x =>
-                {
-                    throw new Exception("should have been replaced by next strategy");
-                }))
-                .With(new Func<Expression, System.Linq.Expressions.Expression>(x =>
-                {
-                    throw new Exception("should have been replaced by next strategy");
-                }))
+                .With(new Func<Expression, System.Linq.Expressions.Expression>(x => throw ShouldHaveBeenReplacedException))
+                .With(new Func<Expression, System.Linq.Expressions.Expression>(x => throw ShouldHaveBeenReplacedException))
                 .With((Expression x) =>
                 {
                     callCounter[0]++;
@@ -133,14 +130,8 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutionDecorator
             var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
-                .With(new Func<System.Linq.Expressions.Expression, object>(x =>
-                {
-                    throw new Exception("should have been replaced by next strategy");
-                }))
-                .With(new Func<System.Linq.Expressions.Expression, object>(x =>
-                {
-                    throw new Exception("should have been replaced by next strategy");
-                }))
+                .With(new Func<System.Linq.Expressions.Expression, object>(x => throw ShouldHaveBeenReplacedException))
+                .With(new Func<System.Linq.Expressions.Expression, object>(x => throw ShouldHaveBeenReplacedException))
                 .With((System.Linq.Expressions.Expression x) =>
                 {
                     callCounter[0]++;
@@ -198,14 +189,8 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutionDecorator
             var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
-                .With(new Func<object, IEnumerable<DynamicObject>>(x =>
-                {
-                    throw new Exception("should have been replaced by next strategy");
-                }))
-                .With(new Func<object, IEnumerable<DynamicObject>>(x =>
-                {
-                    throw new Exception("should have been replaced by next strategy");
-                }))
+                .With(new Func<object, IEnumerable<DynamicObject>>(x => throw ShouldHaveBeenReplacedException))
+                .With(new Func<object, IEnumerable<DynamicObject>>(x => throw ShouldHaveBeenReplacedException))
                 .With((object x) =>
                 {
                     callCounter[0]++;

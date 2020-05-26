@@ -46,6 +46,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif
 
+        // protobuf-net serializer not working in this scenario
         public class XmlSerializer : When_using_LambdaExpression_returnung_a_type
         {
             public XmlSerializer()
@@ -53,16 +54,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-
-#if COREFX
-        public class ProtobufNetSerializer : When_using_LambdaExpression_returnung_a_type
-        {
-            public ProtobufNetSerializer()
-                : base(ProtobufNetSerializationHelper.Serialize)
-            {
-            }
-        }
-#endif // COREFX
 
         private readonly Func<RemoteLambdaExpression, RemoteLambdaExpression> _serialize;
 
@@ -82,15 +73,15 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             resurectedExpression.Compile()().ShouldBe(type);
         }
 
-        // [Theory]
-        // [MemberData(nameof(TestData.Types), MemberType = typeof(TestData))]
-        // public void Should_support_lambda_returning_type(Type type)
-        // {
-        //     Expression<Func<Type>> transform = () => type;
-        //     var expression = transform.ToRemoteLinqExpression();
-        //     var serialized = _serialize(expression);
-        //     var resurectedExpression = serialized.ToLinqExpression<Type>();
-        //     resurectedExpression.Compile()().ShouldBe(type);
-        // }
+        [Theory]
+        [MemberData(nameof(TestData.Types), MemberType = typeof(TestData))]
+        public void Should_support_lambda_returning_type(Type type)
+        {
+            Expression<Func<Type>> transform = () => type;
+            var expression = transform.ToRemoteLinqExpression();
+            var serialized = _serialize(expression);
+            var resurectedExpression = serialized.ToLinqExpression<Type>();
+            resurectedExpression.Compile()().ShouldBe(type);
+        }
     }
 }

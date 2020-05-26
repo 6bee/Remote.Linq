@@ -30,6 +30,7 @@ namespace Client
             }
             catch
             {
+                // ignore
             }
 
             try
@@ -38,6 +39,7 @@ namespace Client
             }
             catch
             {
+                // ignore
             }
         }
     }

@@ -9,8 +9,7 @@ namespace Server
     public class CustomBodyModelValidator : DefaultBodyModelValidator
     {
         public override bool ShouldValidateType(Type type)
-        {
-            return type != typeof(Query) && base.ShouldValidateType(type);
-        }
+            => type != typeof(Query)
+            && base.ShouldValidateType(type);
     }
 }

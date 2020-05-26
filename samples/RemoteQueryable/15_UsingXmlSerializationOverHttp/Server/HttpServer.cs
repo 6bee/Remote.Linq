@@ -30,30 +30,25 @@ namespace Server
                 {
                     while (true)
                     {
-                        // Console.Write("Waiting for a connection... ");
                         HttpListenerContext client = _server.GetContext();
+
+                        System.IO.Stream inStream = client.Request.InputStream;
+                        System.IO.Stream outStream = client.Response.OutputStream;
+                        Expression queryExpression = await inStream.ReadAsync<Expression>().ConfigureAwait(false);
+
+                        try
                         {
-                            // Console.Write("Connected... ");
-                            System.IO.Stream inStream = client.Request.InputStream;
-                            System.IO.Stream outStream = client.Response.OutputStream;
-                            Expression queryExpression = await inStream.ReadAsync<Expression>().ConfigureAwait(false);
-
-                            try
-                            {
-                                QueryService queryService = new QueryService();
-                                IEnumerable<Aqua.Dynamic.DynamicObject> result = queryService.ExecuteQuery(queryExpression);
-                                await outStream.WriteAsync(result).ConfigureAwait(false);
-                            }
-                            catch (Exception ex)
-                            {
-                                await outStream.WriteAsync(ex).ConfigureAwait(false);
-                            }
-
-                            inStream.Close();
-                            outStream.Close();
-
-                            // Console.WriteLine("Closed client session.");
+                            QueryService queryService = new QueryService();
+                            IEnumerable<Aqua.Dynamic.DynamicObject> result = queryService.ExecuteQuery(queryExpression);
+                            await outStream.WriteAsync(result).ConfigureAwait(false);
                         }
+                        catch (Exception ex)
+                        {
+                            await outStream.WriteAsync(ex).ConfigureAwait(false);
+                        }
+
+                        inStream.Close();
+                        outStream.Close();
                     }
                 }
                 catch (SocketException ex)
@@ -71,6 +66,7 @@ namespace Server
             }
             catch
             {
+                // ignore
             }
         }
     }

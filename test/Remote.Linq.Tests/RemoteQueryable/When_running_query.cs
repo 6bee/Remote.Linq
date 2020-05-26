@@ -22,43 +22,55 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
     public abstract class When_running_query
     {
-#pragma warning disable SA1502 // Element should not be on a single line
-#pragma warning disable SA1128 // Put constructor initializers on their own line
-
         public class With_no_serialization : When_running_query
         {
-            public With_no_serialization() : base(x => x) { }
+            public With_no_serialization()
+                : base(x => x)
+            {
+            }
         }
 
         public class With_data_contract_serializer : When_running_query
         {
-            public With_data_contract_serializer() : base(DataContractSerializationHelper.Serialize) { }
+            public With_data_contract_serializer()
+                : base(DataContractSerializationHelper.Serialize)
+            {
+            }
         }
 
         public class With_json_serializer : When_running_query
         {
-            public With_json_serializer() : base(x => (Expression)JsonSerializationHelper.Serialize(x, x.GetType())) { }
+            public With_json_serializer()
+                : base(x => (Expression)JsonSerializationHelper.Serialize(x, x.GetType()))
+            {
+            }
         }
 
         public class With_xml_serializer : When_running_query
         {
-            public With_xml_serializer() : base(XmlSerializationHelper.Serialize) { }
+            public With_xml_serializer()
+                : base(XmlSerializationHelper.Serialize)
+            {
+            }
         }
 
         public class With_binary_formatter : When_running_query
         {
-            public With_binary_formatter() : base(BinarySerializationHelper.Serialize) { }
+            public With_binary_formatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
         }
 
 #if NETFX
         public class With_net_data_contract_serializer : When_running_query
         {
-            public With_net_data_contract_serializer() : base(NetDataContractSerializationHelper.Serialize) { }
+            public With_net_data_contract_serializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
         }
 #endif
-
-#pragma warning restore SA1128 // Put constructor initializers on their own line
-#pragma warning restore SA1502 // Element should not be on a single line
 
         private readonly IQueryable<Category> _categoryQueryable;
         private readonly IQueryable<Product> _productQueryable;
@@ -474,7 +486,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_query_products_filterd_using_local_variables_closure_inline_mix_with_EnumerableQuery()
         {
-            IQueryable<int?> listOfIds = new List<int?>() { null, 1, 11, 111 }.AsQueryable(); // <=== EnumerableQuery
+            IQueryable<int?> listOfIds = new List<int?> { null, 1, 11, 111 }.AsQueryable(); // <=== EnumerableQuery
             int oneId = 10;
             var query =
                 from p in _productQueryable

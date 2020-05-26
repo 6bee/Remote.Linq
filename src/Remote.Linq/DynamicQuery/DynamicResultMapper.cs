@@ -50,7 +50,7 @@ namespace Remote.Linq.DynamicQuery
                 return MapToSingleResult<TResult>(elementType, result, methodCallExpression);
             }
 
-            throw new Exception($"Failed to cast result of type '{result.GetType()}' to '{typeof(TResult)}'");
+            throw new RemoteLinqException($"Failed to cast result of type '{result.GetType()}' to '{typeof(TResult)}'");
         }
 
         [return: MaybeNull]

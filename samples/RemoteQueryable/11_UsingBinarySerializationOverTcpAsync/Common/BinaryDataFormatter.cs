@@ -39,7 +39,7 @@ namespace Common
             int i = await stream.ReadAsync(exceptionFlag, 0, 1).ConfigureAwait(false);
             if (i != 1)
             {
-                throw new Exception("Unable to read expected error indication flag.");
+                throw new IOException("Unable to read expected error indication flag.");
             }
 
             object obj;

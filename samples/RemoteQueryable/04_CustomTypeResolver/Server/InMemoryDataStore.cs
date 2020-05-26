@@ -56,7 +56,7 @@ namespace Server
                 return _orderItems.AsQueryable();
             }
 
-            throw new Exception($"No queryable resource available for type {type}");
+            throw new NotSupportedException($"No queryable resource available for type {type}");
         }
     }
 }

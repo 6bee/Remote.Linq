@@ -109,7 +109,7 @@ namespace Client
             Console.WriteLine("\nEXPECTED INVALID OPERATION:");
             try
             {
-                var first = totalAmountByCategoryQuery.First(x => false);
+                _ = totalAmountByCategoryQuery.First(x => false);
             }
             catch (Exception ex)
             {

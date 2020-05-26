@@ -88,7 +88,7 @@ namespace Client
             Console.WriteLine("\nINVALID OPERATION:");
             try
             {
-                var first = totalAmountByCategoryQuery.First(x => false);
+                _ = totalAmountByCategoryQuery.First(x => false);
             }
             catch (Exception ex)
             {

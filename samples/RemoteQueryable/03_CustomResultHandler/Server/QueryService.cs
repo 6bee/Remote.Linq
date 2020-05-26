@@ -29,7 +29,7 @@ namespace Server
                 return dataStore.OrderItems.AsQueryable();
             }
 
-            throw new Exception($"No queryable resource available for type {type}");
+            throw new NotSupportedException($"No queryable resource available for type {type}");
         }
 
         public object ExecuteQuery(Expression queryExpression) => queryExpression.Execute<object>(QueryableResourceProvider);

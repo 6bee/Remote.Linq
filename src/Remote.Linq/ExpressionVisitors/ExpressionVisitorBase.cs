@@ -117,7 +117,7 @@ namespace Remote.Linq.ExpressionVisitors
                 MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment)binding),
                 MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding)binding),
                 MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding)binding),
-                _ => throw new Exception($"Unhandled binding type '{binding.BindingType}'"),
+                _ => throw new NotSupportedException($"Unhandled binding type '{binding.BindingType}'"),
             };
 
         protected virtual ElementInit VisitElementInitializer(ElementInit initializer)

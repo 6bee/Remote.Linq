@@ -24,7 +24,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
@@ -38,7 +38,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
@@ -51,7 +51,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
@@ -66,7 +66,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
@@ -80,7 +80,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
@@ -94,7 +94,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
@@ -107,7 +107,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>A new instance <see cref="AsyncExpressionExecutionContext{TResult}" />.</returns>
         [SecuritySafeCritical]
@@ -119,7 +119,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>A new instance <see cref="AsyncExpressionExecutionContext{TResult}" />.</returns>
         public static AsyncExpressionExecutionContext<TResult> EntityFrameworkExecutor<TResult>(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
@@ -130,7 +130,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The result of the query execution.</returns>
         [SecuritySafeCritical]
@@ -143,7 +143,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The result of the query execution.</returns>
         [SecuritySafeCritical]
@@ -155,7 +155,7 @@ namespace Remote.Linq.EntityFramework
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The result of the query execution.</returns>
         public static TResult ExecuteWithEntityFramework<TResult>(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
@@ -167,7 +167,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The result of the query execution.</returns>
         public static Task<TResult> ExecuteWithEntityFrameworkAsync<TResult>(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellationToken = default, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)

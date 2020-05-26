@@ -43,7 +43,7 @@ namespace Client
                     {
                         byte[] errorMessageData = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                         string errorMessage = Encoding.UTF8.GetString(errorMessageData);
-                        throw new Exception(errorMessage);
+                        throw new RemoteLinqException(errorMessage);
                     }
 
                     response.EnsureSuccessStatusCode();

@@ -3,6 +3,7 @@
 namespace Common
 {
     using Aqua.TypeSystem;
+    using Remote.Linq;
     using System;
     using System.IO;
     using System.Xml.Serialization;
@@ -88,7 +89,7 @@ namespace Common
             if (isException)
             {
                 string exceptionMessage = (string)obj;
-                throw new Exception($"{type ?? typeof(T)}: '{exceptionMessage}'");
+                throw new RemoteLinqException($"{type ?? typeof(T)}: '{exceptionMessage}'");
             }
 
             return (T)obj;

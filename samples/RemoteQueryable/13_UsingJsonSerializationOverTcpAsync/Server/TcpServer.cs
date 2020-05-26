@@ -63,6 +63,7 @@ namespace Server
             }
             catch
             {
+                // ignore
             }
         }
     }

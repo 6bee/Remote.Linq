@@ -73,7 +73,7 @@ namespace Remote.Linq.Expressions
         protected internal abstract class ExpressionDebugFormatter<T> : ExpressionDebugFormatter
             where T : Expression
         {
-            public ExpressionDebugFormatter(T expression)
+            protected ExpressionDebugFormatter(T expression)
                 : base(expression)
             {
             }

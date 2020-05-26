@@ -34,7 +34,12 @@ namespace Common
         {
             byte[] bytes = new byte[256];
 
-            stream.Read(bytes, 0, 8);
+            int i = stream.Read(bytes, 0, 8);
+            if (i != 8)
+            {
+                throw new IOException("Failed to read message size from stream.");
+            }
+
             long size = BitConverter.ToInt64(bytes, 0);
 
             bool isException = stream.ReadByte() != 0;
@@ -49,7 +54,7 @@ namespace Common
                         ? (int)(size - count)
                         : bytes.Length;
 
-                    int i = stream.Read(bytes, 0, length);
+                    i = stream.Read(bytes, 0, length);
                     count += i;
 
                     dataStream.Write(bytes, 0, i);

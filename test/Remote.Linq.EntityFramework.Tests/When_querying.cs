@@ -13,7 +13,7 @@ namespace Remote.Linq.EntityFramework.Tests
     using System.Threading.Tasks;
     using Xunit;
 
-    public partial class When_querying : IDisposable
+    public sealed class When_querying : IDisposable
     {
         private readonly TestContext _context;
         private readonly IQueryable<LookupItem> _queryable;
