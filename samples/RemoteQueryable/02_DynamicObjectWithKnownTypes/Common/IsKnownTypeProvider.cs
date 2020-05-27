@@ -9,7 +9,15 @@ namespace Common
 
     public class IsKnownTypeProvider : IIsKnownTypeProvider
     {
-        private static readonly Func<Type, bool> _isKnowType = new[] { typeof(OrderItem), typeof(Product), typeof(ProductCategory) }.ToDictionary(x => x).ContainsKey;
+        private static readonly Func<Type, bool> _isKnowType = new[]
+            {
+                typeof(OrderItem),
+                typeof(Product),
+                typeof(ProductCategory),
+                typeof(ProductGroup),
+            }
+            .ToHashSet()
+            .Contains;
 
         public bool IsKnownType(Type type) => _isKnowType(type);
     }

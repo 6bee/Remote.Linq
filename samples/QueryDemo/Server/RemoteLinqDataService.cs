@@ -2,7 +2,7 @@
 
 namespace Server
 {
-    using Common.DataContract;
+    using Common.Model;
     using Common.ServiceContract;
     using Remote.Linq;
     using System;
@@ -12,26 +12,43 @@ namespace Server
 
     public class RemoteLinqDataService : IRemoteLinqDataService
     {
+        private InMemoryDataStore DataSource => InMemoryDataStore.Instance;
+
+        private IEnumerable<T> GetQuerySource<T>()
+        {
+            if (typeof(T) == typeof(Product))
+            {
+                return (IEnumerable<T>)DataSource.Products;
+            }
+
+            if (typeof(T) == typeof(Order))
+            {
+                return (IEnumerable<T>)DataSource.Orders;
+            }
+
+            throw new NotSupportedException($"Data type {typeof(T).FullName} may not be served by this data source.");
+        }
+
         public IEnumerable<Product> GetProducts(Query<Product> query)
             => DataSource.Products
-                .ApplyQuery(query)
-                .ToList();
+            .ApplyQuery(query)
+            .ToList();
 
         public IEnumerable<Order> GetOrders(Query<Order> query)
             => DataSource.Orders
-                .ApplyQuery(query)
-                .ToList();
+            .ApplyQuery(query)
+            .ToList();
 
         public IEnumerable<object> GetData(IQuery query)
             => (IEnumerable<object>)typeof(RemoteLinqDataService)
-                .GetMethod(nameof(OpenTypeQuery), BindingFlags.Instance | BindingFlags.NonPublic)
-                .MakeGenericMethod((Type)query.Type)
-                .Invoke(this, new object[] { query });
+            .GetMethod(nameof(OpenTypeQuery), BindingFlags.Instance | BindingFlags.NonPublic)
+            .MakeGenericMethod((Type)query.Type)
+            .Invoke(this, new object[] { query });
 
         private IEnumerable<T> OpenTypeQuery<T>(IQuery query)
         {
             Query<T> genericQuery = Query<T>.CreateFromNonGeneric(query);
-            return DataSource.Query<T>()
+            return GetQuerySource<T>()
                 .ApplyQuery(genericQuery)
                 .ToList();
         }

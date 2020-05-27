@@ -2,12 +2,12 @@
 
 namespace Common.ServiceContract
 {
-    using Common.DataContract;
+    using Common.Model;
     using System.Collections.Generic;
     using System.ServiceModel;
 
     [ServiceContract]
-    public interface IDataService
+    public interface ITraditionalDataService
     {
         [OperationContract]
         IEnumerable<Product> GetProductsByName(string productName);

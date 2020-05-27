@@ -2,13 +2,15 @@
 
 namespace Server
 {
-    using Common.DataContract;
+    using Common.Model;
     using Common.ServiceContract;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class DataService : IDataService
+    public class TraditionalDataService : ITraditionalDataService
     {
+        private InMemoryDataStore DataSource => InMemoryDataStore.Instance;
+
         public IEnumerable<Product> GetProductsByName(string productName) =>
             from product in DataSource.Products
             where product.Name == productName

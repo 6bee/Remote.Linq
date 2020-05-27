@@ -3,9 +3,10 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
 
   <PropertyGroup>
+    <RemoteLinqVersion>6.3.0-alpha-007</RemoteLinqVersion>
     <Nullable>disable</Nullable>
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
-    <RemoteLinqVersion>6.3.0-alpha-006</RemoteLinqVersion>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\Style.Samples.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
 </Project>

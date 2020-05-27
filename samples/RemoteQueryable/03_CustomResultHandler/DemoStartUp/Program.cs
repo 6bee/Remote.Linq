@@ -2,41 +2,31 @@
 
 namespace DemoStartUp
 {
-    using System;
-    using System.Linq;
-    using System.ServiceModel;
-    using System.ServiceModel.Description;
+    using Client;
+    using Common.ServiceContracts;
+    using Server;
+    using static CommonHelper;
 
     internal static class Program
     {
         private static void Main()
         {
+            Title("Custom Result Handler");
             const string url = "net.pipe://localhost/8080/query";
 
-            Console.WriteLine("Starting WCF service...");
+            PrintSetup("Starting WCF service...");
+            using var wcfServiceHost = WcfHelper.CreateServiceHost<QueryService>()
+                .AddNetNamedPipeEndpoint<IQueryService>(url)
+                .OpenService();
 
-            using (ServiceHost wcfServiceHost = new ServiceHost(typeof(Server.QueryService)))
-            {
-                wcfServiceHost.Description.Behaviors.OfType<ServiceDebugBehavior>().Single().IncludeExceptionDetailInFaults = true;
-                wcfServiceHost.AddServiceEndpoint(typeof(Common.ServiceContracts.IQueryService), new NetNamedPipeBinding(), url);
+            PrintSetup("Staring client demo...");
+            PrintSetup("-------------------------------------------------");
+            new Demo(() => new RemoteRepository(url)).Run();
 
-                wcfServiceHost.Open();
-
-                Console.WriteLine("Started query service.");
-
-                Console.WriteLine("Staring client demo...");
-                Console.WriteLine("-------------------------------------------------");
-
-                new Client.Demo(url).Run();
-
-                Console.WriteLine();
-                Console.WriteLine("-------------------------------------------------");
-
-                Console.WriteLine("Done.");
-            }
-
-            Console.WriteLine("Terminated WCF service. Hit enter to exit.");
-            Console.ReadLine();
+            PrintSetup();
+            PrintSetup("-------------------------------------------------");
+            PrintSetup("Done.");
+            WaitForEnterKey();
         }
     }
 }

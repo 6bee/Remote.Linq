@@ -2,33 +2,25 @@
 
 namespace Server
 {
-    using System;
-    using System.ServiceModel;
+    using Common.ServiceContract;
+    using static CommonHelper;
 
     public class Host
     {
         public static void Main()
         {
-            ServiceHost dataServiceHost = null;
-            ServiceHost remoteLinqDataServiceHost = null;
-            try
-            {
-                dataServiceHost = new ServiceHost(typeof(DataService));
-                dataServiceHost.Open();
+            Title("Simple Remote Query Server");
 
-                remoteLinqDataServiceHost = new ServiceHost(typeof(RemoteLinqDataService));
-                remoteLinqDataServiceHost.Open();
+            using var dataServiceHost = WcfHelper.CreateServiceHost<TraditionalDataService>()
+                .AddNetTcpEndpoint<ITraditionalDataService>("net.tcp://localhost:8080/traditionaldataservice")
+                .OpenService();
 
-                Console.WriteLine("The server is ready.");
-                Console.WriteLine("Press <ENTER> to terminate services.");
-                Console.WriteLine();
-                Console.ReadLine();
-            }
-            finally
-            {
-                dataServiceHost?.Close();
-                remoteLinqDataServiceHost?.Close();
-            }
+            using var remoteLinqDataServiceHost = WcfHelper.CreateServiceHost<RemoteLinqDataService>()
+                .AddNetTcpEndpoint<IRemoteLinqDataService>("net.tcp://localhost:8080/remotelinqdataservice")
+                .OpenService();
+
+            PrintSetup("The server is ready.");
+            WaitForEnterKey();
         }
     }
 }

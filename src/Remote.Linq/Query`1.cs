@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using Remote.Linq.ExpressionVisitors;
     using System;
@@ -36,8 +37,8 @@ namespace Remote.Linq
         {
             _dataProvider = dataProvider;
             _expressionTranslator = expressionTranslator ?? (exp => exp.ToRemoteLinqExpression().ReplaceGenericQueryArgumentsByNonGenericArguments());
-            FilterExpressions = filterExpressions?.ToList();
-            SortExpressions = sortExpressions?.ToList();
+            FilterExpressions = filterExpressions.AsNullIfEmpty()?.ToList();
+            SortExpressions = sortExpressions.AsNullIfEmpty()?.ToList();
             SkipValue = skip;
             TakeValue = take;
         }
@@ -69,7 +70,7 @@ namespace Remote.Linq
         {
             var filter = _expressionTranslator(predicate);
 
-            var filterExpressions = FilterExpressions.ToList();
+            var filterExpressions = FilterExpressions.AsEmptyIfNull().ToList();
             filterExpressions.Add(filter);
 
             var query = new Query<T>(_dataProvider, _expressionTranslator, filterExpressions, SortExpressions, SkipValue, TakeValue);
@@ -225,7 +226,7 @@ namespace Remote.Linq
             var sb = new StringBuilder();
 
             var filterExpressions = FilterExpressions;
-            if (!(filterExpressions is null))
+            if (filterExpressions != null)
             {
                 foreach (var expression in filterExpressions)
                 {
@@ -235,7 +236,7 @@ namespace Remote.Linq
             }
 
             var sortExpressions = SortExpressions;
-            if (!(sortExpressions is null))
+            if (sortExpressions != null)
             {
                 foreach (var expression in sortExpressions)
                 {

@@ -4,7 +4,6 @@ namespace Server
 {
     using Aqua.Dynamic;
     using Common;
-    using Common.Model;
     using Common.ServiceContracts;
     using Remote.Linq;
     using Remote.Linq.Expressions;
@@ -14,32 +13,11 @@ namespace Server
 
     public class QueryService : IQueryService
     {
-        private static readonly Func<Type, IQueryable> _queryableResourceProvider = type =>
-        {
-            InMemoryDataStore dataStore = InMemoryDataStore.Instance;
+        private readonly Func<Type, IQueryable> _queryableResourceProvider = InMemoryDataStore.Instance.GetQueryableByType;
 
-            if (type == typeof(ProductCategory))
-            {
-                return dataStore.ProductCategories.AsQueryable();
-            }
-
-            if (type == typeof(Product))
-            {
-                return dataStore.Products.AsQueryable();
-            }
-
-            if (type == typeof(OrderItem))
-            {
-                return dataStore.OrderItems.AsQueryable();
-            }
-
-            throw new NotSupportedException($"No queryable resource available for type {type}");
-        };
+        private readonly DynamicObjectMapper _mapper = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
 
         public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
-        {
-            var mapper = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
-            return queryExpression.Execute(_queryableResourceProvider, mapper: mapper);
-        }
+            => queryExpression.Execute(_queryableResourceProvider, mapper: _mapper);
     }
 }

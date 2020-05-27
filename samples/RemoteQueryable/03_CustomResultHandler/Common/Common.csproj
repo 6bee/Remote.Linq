@@ -7,4 +7,11 @@
     <PackageReference Include="Remote.Linq" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\SharedCode\Common.Model.OrderItem.cs" Link="Model\OrderItem.cs" Visible="true" />
+    <Compile Include="..\..\..\SharedCode\Common.Model.Product.cs" Link="Model\Product.cs" Visible="true" />
+    <Compile Include="..\..\..\SharedCode\Common.Model.ProductCategory.cs" Link="Model\ProductCategory.cs" Visible="true" />
+    <Compile Include="..\..\..\SharedCode\Common.Model.ProductGroup.cs" Link="Model\ProductGroup.cs" Visible="true" />
+    <Compile Include="..\..\..\SharedCode\Common.Model.DataTransferObjects.cs" Link="Model\DataTransferObjects.cs" Visible="true" />
+  </ItemGroup>
 </Project>

@@ -12,9 +12,8 @@ namespace Common.ServiceContracts
     public interface IQueryService
     {
         [OperationContract]
-        [ServiceKnownType(typeof(OrderItem))]
         [ServiceKnownType(typeof(Product))]
-        [ServiceKnownType(typeof(ProductCategory))]
+        [ServiceKnownType(typeof(ProductGroup))]
         IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression);
     }
 }

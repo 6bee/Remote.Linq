@@ -2,7 +2,6 @@
 
 namespace Server
 {
-    using Common.Model;
     using Common.ServiceContracts;
     using Remote.Linq.Expressions;
     using System;
@@ -10,28 +9,19 @@ namespace Server
 
     public class QueryService : IQueryService
     {
-        private static IQueryable QueryableResourceProvider(Type type)
+        private readonly Func<Type, IQueryable> _queryableResourceProvider = InMemoryDataStore.Instance.GetQueryableByType;
+
+        public object ExecuteQuery(Expression queryExpression)
         {
-            InMemoryDataStore dataStore = InMemoryDataStore.Instance;
-
-            if (type == typeof(ProductCategory))
+            try
             {
-                return dataStore.ProductCategories.AsQueryable();
+                var result = queryExpression.Execute<object>(_queryableResourceProvider);
+                return result;
             }
-
-            if (type == typeof(Product))
+            catch (Exception ex)
             {
-                return dataStore.Products.AsQueryable();
+                throw ex;
             }
-
-            if (type == typeof(OrderItem))
-            {
-                return dataStore.OrderItems.AsQueryable();
-            }
-
-            throw new NotSupportedException($"No queryable resource available for type {type}");
         }
-
-        public object ExecuteQuery(Expression queryExpression) => queryExpression.Execute<object>(QueryableResourceProvider);
     }
 }

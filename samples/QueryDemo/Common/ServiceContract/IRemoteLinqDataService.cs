@@ -2,7 +2,7 @@
 
 namespace Common.ServiceContract
 {
-    using Common.DataContract;
+    using Common.Model;
     using Remote.Linq;
     using System.Collections.Generic;
     using System.ServiceModel;

@@ -3,27 +3,20 @@
 namespace Server
 {
     using Common.ServiceContracts;
-    using System;
-    using System.Linq;
-    using System.ServiceModel;
-    using System.ServiceModel.Description;
+    using static CommonHelper;
 
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            using (ServiceHost serviceHost = new ServiceHost(typeof(QueryService)))
-            {
-                serviceHost.Description.Behaviors.OfType<ServiceDebugBehavior>().Single().IncludeExceptionDetailInFaults = true;
-                serviceHost.AddServiceEndpoint(typeof(IQueryService), new NetNamedPipeBinding(), "net.pipe://localhost/8080/query");
+            Title("Async Server");
+            using var serviceHost = WcfHelper.CreateServiceHost<QueryService>()
+                .IncludeExceptionDetailInFaults()
+                .AddNetNamedPipeEndpoint<IQueryService>("net.pipe://localhost/8080/query")
+                .OpenService();
 
-                serviceHost.Open();
-
-                Console.WriteLine("The query service is ready.");
-                Console.WriteLine("Press <ENTER> to terminate service.");
-                Console.WriteLine();
-                Console.ReadLine();
-            }
+            PrintSetup("The query service is ready.");
+            WaitForEnterKey();
         }
     }
 }

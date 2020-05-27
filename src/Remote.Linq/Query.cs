@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using Remote.Linq.Expressions;
     using System;
@@ -32,11 +33,11 @@ namespace Remote.Linq
         /// <summary>
         /// Initializes a new instance of the <see cref="Query"/> class.
         /// </summary>
-        public Query(TypeInfo typeInfo, IEnumerable<LambdaExpression>? filterExpressions = null, IEnumerable<SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
+        public Query(TypeInfo type, IEnumerable<LambdaExpression>? filterExpressions = null, IEnumerable<SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
         {
-            Type = typeInfo ?? throw new ArgumentNullException(nameof(typeInfo));
-            FilterExpressions = filterExpressions?.ToList();
-            SortExpressions = sortExpressions?.ToList();
+            Type = type ?? throw new ArgumentNullException(nameof(type));
+            FilterExpressions = filterExpressions.AsNullIfEmpty()?.ToList();
+            SortExpressions = sortExpressions.AsNullIfEmpty()?.ToList();
             SkipValue = skip;
             TakeValue = take;
         }
@@ -69,7 +70,7 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters.</returns>
         public IQuery Where(LambdaExpression predicate)
         {
-            var filterExpressions = FilterExpressions.ToList();
+            var filterExpressions = FilterExpressions.AsEmptyIfNull().ToList();
             filterExpressions.Add(predicate);
 
             var query = new Query(Type, filterExpressions, SortExpressions, SkipValue, TakeValue);
@@ -111,7 +112,7 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery IOrderedQuery.ThenBy(SortExpression sortExpression)
         {
-            if (!SortExpressions.Any())
+            if (SortExpressions?.Any() != true)
             {
                 throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
             }
@@ -135,7 +136,7 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery IOrderedQuery.ThenByDescending(SortExpression sortExpression)
         {
-            if (!SortExpressions.Any())
+            if (SortExpressions?.Any() != true)
             {
                 throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
             }
@@ -205,7 +206,7 @@ namespace Remote.Linq
             var sb = new StringBuilder();
 
             var filterExpressions = FilterExpressions;
-            if (!(filterExpressions is null))
+            if (filterExpressions != null)
             {
                 foreach (var expression in filterExpressions)
                 {
@@ -215,7 +216,7 @@ namespace Remote.Linq
             }
 
             var sortExpressions = SortExpressions;
-            if (!(sortExpressions is null))
+            if (sortExpressions != null)
             {
                 foreach (var expression in sortExpressions)
                 {

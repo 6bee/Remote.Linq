@@ -9,38 +9,19 @@ namespace Client
 
     public sealed class ServiceProxy<T> : IDisposable
     {
-        private readonly ChannelFactory<T> _channelFactory;
+        private readonly WcfServiceProxy<T> _proxy;
 
-        public ServiceProxy(string endpointConfigurationName)
+        public ServiceProxy(string uri)
         {
-            _channelFactory = new ChannelFactory<T>(endpointConfigurationName);
-            Channel = _channelFactory.CreateChannel();
+            var netTcpBinding = new NetTcpBinding { MaxReceivedMessageSize = 640000L }.WithDebugSetting();
+            _proxy = new WcfServiceProxy<T>(netTcpBinding, uri);
         }
 
-        public T Channel { get; }
+        public T Service => _proxy.Service;
 
         public IQuery<TEntity> CreateQuery<TEntity>(Func<T, Func<Query<TEntity>, IEnumerable<TEntity>>> serviceMethod)
-            => new Query<TEntity>(serviceMethod(Channel));
+            => new Query<TEntity>(serviceMethod(Service));
 
-        public void Dispose()
-        {
-            try
-            {
-                ((IClientChannel)Channel).Close();
-            }
-            catch
-            {
-                // ignore
-            }
-
-            try
-            {
-                _channelFactory.Close();
-            }
-            catch
-            {
-                // ignore
-            }
-        }
+        public void Dispose() => _proxy.Dispose();
     }
 }

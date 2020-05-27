@@ -6,50 +6,51 @@ namespace Client
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using static CommonHelper;
 
-    public class Demo
+    public class AsyncDemo
     {
-        private readonly string _url;
+        private readonly Func<IRemoteRepository> _repoProvider;
 
-        public Demo(string url)
+        public AsyncDemo(Func<IRemoteRepository> repoProvider)
         {
-            _url = url;
+            _repoProvider = repoProvider;
         }
 
         public async Task RunAsync()
         {
-            RemoteRepository repo = new RemoteRepository(_url);
+            using IRemoteRepository repo = _repoProvider();
 
-            Console.WriteLine("\nGET ALL PRODUCTS:");
-            foreach (Common.Model.Product i in await repo.Products.ToArrayAsync().ConfigureAwait(false))
+            PrintHeader("GET ALL PRODUCTS:");
+            foreach (var item in await repo.Products.ToArrayAsync().ConfigureAwait(false))
             {
-                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
+                PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
             }
 
-            Console.WriteLine("\nCROSS JOIN:");
+            PrintHeader("CROSS JOIN:");
             Func<object, string> sufix = (x) => x + "ending";
             var crossJoinQuery =
                 from c in repo.ProductCategories
                 from p in repo.Products
                 select new { Category = "#" + c.Name + sufix("-"), p.Name };
             var crossJoinResult = await crossJoinQuery.ToListAsync().ConfigureAwait(false);
-            foreach (var i in crossJoinResult)
+            foreach (var item in crossJoinResult)
             {
-                Console.WriteLine($"  {i}");
+                PrintLine($"  {item}");
             }
 
-            Console.WriteLine("\nINNER JOIN:");
+            PrintHeader("INNER JOIN:");
             var innerJoinQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
                 select new { c.Name, P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
             var innerJoinResult = await innerJoinQuery.ToListAsync().ConfigureAwait(false);
-            foreach (var i in innerJoinResult)
+            foreach (var item in innerJoinResult)
             {
-                Console.WriteLine($"  {i}");
+                PrintLine($"  {item}");
             }
 
-            Console.WriteLine("\nSELECT IDs:");
+            PrintHeader("SELECT IDs:");
             IQueryable<int> productIdsQuery =
                 from p in repo.Products
                 orderby p.Price descending
@@ -57,16 +58,16 @@ namespace Client
             System.Collections.Generic.List<int> productIds = await productIdsQuery.ToListAsync().ConfigureAwait(false);
             foreach (int id in productIdsQuery)
             {
-                Console.WriteLine($"  {id}");
+                PrintLine($"  {id}");
             }
 
-            Console.WriteLine("\nCOUNT:");
+            PrintHeader("COUNT:");
             IQueryable<Common.Model.Product> productsQuery =
                 from p in repo.Products
                 select p;
-            Console.WriteLine($"  Count = {await productsQuery.CountAsync().ConfigureAwait(false)}");
+            PrintLine($"  Count = {await productsQuery.CountAsync().ConfigureAwait(false)}");
 
-            Console.WriteLine("\nTOTAL AMOUNT BY CATEGORY:");
+            PrintHeader("TOTAL AMOUNT BY CATEGORY:");
             var totalAmountByCategoryQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products
@@ -82,19 +83,19 @@ namespace Client
                 };
 
             var totalAmountByCategroyResult = await totalAmountByCategoryQuery.ToDictionaryAsync(x => x.Category).ConfigureAwait(false);
-            foreach (var i in totalAmountByCategroyResult)
+            foreach (var item in totalAmountByCategroyResult)
             {
-                Console.WriteLine($"  {i}");
+                PrintLine($"  {item}");
             }
 
-            Console.WriteLine("\nINVALID OPERATION:");
+            PrintHeader("EXPECTED INVALID OPERATION:");
             try
             {
-                var first = await totalAmountByCategoryQuery.FirstAsync(x => false).ConfigureAwait(false);
+                _ = await totalAmountByCategoryQuery.FirstAsync(x => false).ConfigureAwait(false);
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine($"  {ex.Message}");
+                PrintLine($"  {ex.Message}");
             }
         }
     }

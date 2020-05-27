@@ -4,6 +4,7 @@ namespace Common.ServiceContracts
 {
     using Common.Model;
     using Remote.Linq.Expressions;
+    using System;
     using System.ServiceModel;
 
     [ServiceContract]
@@ -11,6 +12,10 @@ namespace Common.ServiceContracts
     {
         [OperationContract]
         [ServiceKnownType(typeof(Product[]))]
+        [ServiceKnownType(typeof(ProductGroup[]))]
+        [ServiceKnownType(typeof(TotalAmountByCategoryDto[]))]
+        [ServiceKnownType(typeof(InnerJoinResultDto[]))]
+        [ServiceKnownType(typeof(CrossJoinResultDto[]))]
         [ServiceKnownType(typeof(string[]))]
         [ServiceKnownType(typeof(int[]))]
         [ServiceKnownType(typeof(decimal[]))]
