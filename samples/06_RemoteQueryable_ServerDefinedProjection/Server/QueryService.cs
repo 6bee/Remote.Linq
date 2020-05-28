@@ -11,14 +11,15 @@ namespace Server
 
     public class QueryService : IQueryService
     {
-        private static readonly Func<Type, IQueryable> _queryableResourceProvider = type =>
+        private Func<Type, string, IQueryable> QueryableResourceProvider => (type, accessToken) =>
         {
-            InMemoryDataStore dataStore = InMemoryDataStore.Instance;
+            var dataStore = InMemoryDataStore.Instance;
 
             if (type == typeof(Common.Model.ProductCategory))
             {
                 return
-                    from x in dataStore.ProductCategories
+                    from x in dataStore.ProductCategories.AsQueryable()
+                    where accessToken.StartsWith("secure")
                     select new Common.Model.ProductCategory
                     {
                         Id = x.Id,
@@ -26,10 +27,24 @@ namespace Server
                     };
             }
 
+            if (type == typeof(Common.Model.ProductGroup))
+            {
+                return
+                    from x in dataStore.ProductGroups.AsQueryable()
+                    where accessToken.StartsWith("secure")
+                    select new Common.Model.ProductGroup
+                    {
+                        Id = x.Id,
+                        GroupName = x.GroupName,
+                        Products = x.Products.ToList(),
+                    };
+            }
+
             if (type == typeof(Common.Model.Product))
             {
                 return
-                    from x in dataStore.Products
+                    from x in dataStore.Products.AsQueryable()
+                    where accessToken.StartsWith("secure")
                     select new Common.Model.Product
                     {
                         Id = x.Id,
@@ -42,7 +57,8 @@ namespace Server
             if (type == typeof(Common.Model.OrderItem))
             {
                 return
-                    from x in dataStore.OrderItems
+                    from x in dataStore.OrderItems.AsQueryable()
+                    where accessToken.StartsWith("secure")
                     select new Common.Model.OrderItem
                     {
                         Id = x.Id,
@@ -54,7 +70,7 @@ namespace Server
             throw new NotSupportedException($"No queryable resource available for type {type}");
         };
 
-        public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
-            => queryExpression.Execute(_queryableResourceProvider);
+        public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression, string accessToken)
+            => queryExpression.Execute(type => QueryableResourceProvider(type, accessToken));
     }
 }

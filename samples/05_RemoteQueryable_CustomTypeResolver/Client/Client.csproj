@@ -10,4 +10,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedCode\Client.Demo.cs" Link="Demo.cs" />
+    <Compile Include="..\..\SharedCode\CommonHelper.cs" Visible="false" />
+    <Compile Include="..\..\SharedCode\WcfHelper.cs" Visible="false" />
+  </ItemGroup>
 </Project>

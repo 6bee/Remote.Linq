@@ -4,7 +4,7 @@ namespace Common.Model
 {
     using System.Collections.Generic;
 
-    public class ProductGroup
+    public partial class ProductGroup
     {
         public int Id { get; set; }
 

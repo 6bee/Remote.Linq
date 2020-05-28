@@ -2,21 +2,18 @@
 
 namespace Server
 {
-    using System;
+    using static CommonHelper;
 
     public static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            using (WebApiServer server = new WebApiServer(8089))
-            {
-                server.Open();
+            Title("JSON Serialization over Web API async [Server]");
+            using var webServer = new WebApiServer(8089);
+            webServer.Open();
 
-                Console.WriteLine("The query service is ready.");
-                Console.WriteLine("Press <ENTER> to terminate service.");
-                Console.WriteLine();
-                Console.ReadLine();
-            }
+            PrintServerReady();
+            WaitForEnterKey();
         }
     }
 }

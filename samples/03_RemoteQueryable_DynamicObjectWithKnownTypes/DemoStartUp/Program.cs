@@ -16,7 +16,7 @@ namespace DemoStartUp
             const string url = "net.pipe://localhost/8080/query";
 
             PrintSetup("Starting WCF service...");
-            using var wcfServiceHost = new ServiceHost(typeof(QueryService))
+            using var serviceHost = new ServiceHost(typeof(QueryService))
                 .AddNetNamedPipeEndpoint<IQueryService>(url)
                 .OpenService();
 

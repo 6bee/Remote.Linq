@@ -8,7 +8,7 @@ namespace Client
     {
         private static void Main()
         {
-            Title("Custom Result Handler Client");
+            Title("Custom Result Handler [Client]");
             WaitForEnterKey("Launch the query service, then press <ENTER> to start the client.");
 
             new Demo(() => new RemoteRepository("net.pipe://localhost/8080/query")).Run();

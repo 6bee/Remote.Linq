@@ -18,7 +18,7 @@ namespace Client
 
         public RemoteRepository(string uri)
         {
-            var binding = new NetNamedPipeBinding { MaxReceivedMessageSize = 640000L }.WithDebugSetting();
+            var binding = new NetNamedPipeBinding { MaxReceivedMessageSize = 10240 }.WithDebugSetting();
             _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
 
             _dataProvider = expression =>

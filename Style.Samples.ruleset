@@ -2,6 +2,7 @@
 <RuleSet Name="Aqua.Tests" Description=" " ToolsVersion="14.0">
   <Include Path="Style.NoDoc.ruleset" Action="Default" />
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="IDE0039" Action="None" />
     <Rule Id="SA1310" Action="None" />
     <Rule Id="SA1402" Action="None" />
     <Rule Id="SA1611" Action="None" />

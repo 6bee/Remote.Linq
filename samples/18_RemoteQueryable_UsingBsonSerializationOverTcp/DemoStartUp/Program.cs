@@ -2,37 +2,30 @@
 
 namespace DemoStartUp
 {
+    using Client;
     using Server;
-    using System;
+    using static CommonHelper;
 
     internal static class Program
     {
         private static void Main()
         {
+            Title("Bson Serialization over TCP/IP");
             const string host = "localhost";
             const int port = 8899;
 
-            Console.WriteLine("Starting TCP service...");
+            PrintSetup("Starting TCP service...");
+            using var serviceHost = new TcpServer("0.0.0.0", port);
+            serviceHost.RunAsyncQueryService(new QueryService().ExecuteQueryAsync);
 
-            using (TcpServer tcpServiceHost = new TcpServer(port))
-            {
-                tcpServiceHost.Open();
+            PrintSetup("Staring client demo...");
+            PrintSetup("-------------------------------------------------");
+            new AsyncDemo(() => new RemoteRepository(host, port)).RunAsync().Wait();
 
-                Console.WriteLine("Started query service.");
-
-                Console.WriteLine("Staring client demo...");
-                Console.WriteLine("-------------------------------------------------");
-
-                new Client.Demo(host, port).Run();
-
-                Console.WriteLine();
-                Console.WriteLine("-------------------------------------------------");
-
-                Console.WriteLine("Done.");
-            }
-
-            Console.WriteLine("Terminated TCP service. Hit enter to exit.");
-            Console.ReadLine();
+            PrintSetup();
+            PrintSetup("-------------------------------------------------");
+            PrintSetup("Done.");
+            WaitForEnterKey();
         }
     }
 }

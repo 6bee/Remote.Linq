@@ -13,6 +13,13 @@ namespace Server
 
     public sealed class WebApiServer : IDisposable
     {
+        private sealed class CustomBodyModelValidator : DefaultBodyModelValidator
+        {
+            public override bool ShouldValidateType(Type type)
+                => type != typeof(Common.Model.Query)
+                && base.ShouldValidateType(type);
+        }
+
         private readonly int _port;
         private HttpSelfHostServer _server;
 
@@ -28,15 +35,15 @@ namespace Server
                 throw new InvalidOperationException("Server has been opened already.");
             }
 
-            // load common assembly into app domain
-            _ = typeof(Common.Model.ProductCategory).Assembly;
+            // ensure common assembly is loaded
+            _ = typeof(Common.Model.Query).Assembly;
 
             HttpSelfHostConfiguration config = new HttpSelfHostConfiguration($"http://localhost:{_port}");
 
             config.Services.Replace(typeof(IBodyModelValidator), new CustomBodyModelValidator());
 
             JsonMediaTypeFormatter jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().Single();
-            jsonFormatter.SerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.None }.ConfigureRemoteLinq();
+            jsonFormatter.SerializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
 
             config.Routes.MapHttpRoute("API Default", "api/{controller}");
 
@@ -47,10 +54,6 @@ namespace Server
             _server.OpenAsync().Wait();
         }
 
-        public void Dispose()
-        {
-            _server?.Dispose();
-            _server = null;
-        }
+        public void Dispose() => _server?.Dispose();
     }
 }

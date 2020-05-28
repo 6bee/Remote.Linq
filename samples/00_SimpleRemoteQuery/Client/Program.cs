@@ -15,28 +15,36 @@ namespace Client
     {
         private static readonly ModelFormatter _formatter = new ModelFormatter();
 
-        public static void Main()
+        static Program()
         {
-            Title("Simple Remote Query Client");
+            Title("Simple Remote Query [Client]");
             PrintSetup("This sample client retrieves data from the backend by using:");
             PrintSetup(" a) traditional data services (get by id/name), and");
             PrintSetup(" b) typed remote linq data services (dynamic filtering, sorting, and paging), and");
             PrintSetup(" c) a single generic remote linq data service (dynamic filtering, sorting, and paging).");
             PrintSetup();
+        }
+
+        private static void Main()
+        {
             WaitForEnterKey("Launch the server and then press <ENTER> to run the queries.");
 
-            PrintSetup();
-            TraditionalQuery();
+            RunQueries();
 
-            PrintSetup();
-            LinqQuery();
-
-            PrintSetup();
-            LinqQueryWithOpenType();
-
-            PrintSetup();
             PrintSetup("Done");
             WaitForEnterKey("Press <ENTER> to terminate the client.");
+        }
+
+        public static void RunQueries()
+        {
+            TraditionalQuery();
+            PrintSetup();
+
+            LinqQuery();
+            PrintSetup();
+
+            LinqQueryWithOpenType();
+            PrintSetup();
         }
 
         private static void TraditionalQuery()

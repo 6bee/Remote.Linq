@@ -2,19 +2,18 @@
 
 namespace Server
 {
-    using System;
+    using static CommonHelper;
 
     internal static class Program
     {
         private static void Main()
         {
-            using var serviceHost = new TcpServer("127.0.0.1", 8899);
-            serviceHost.Open();
+            Title("Bson Serialization over TCP/IP [Server]");
+            using var serviceHost = new TcpServer(8899);
+            serviceHost.RunAsyncQueryService(new QueryService().ExecuteQueryAsync);
 
-            Console.WriteLine("The query service is ready.");
-            Console.WriteLine("Press <ENTER> to terminate service.");
-            Console.WriteLine();
-            Console.ReadLine();
+            PrintServerReady();
+            WaitForEnterKey();
         }
     }
 }

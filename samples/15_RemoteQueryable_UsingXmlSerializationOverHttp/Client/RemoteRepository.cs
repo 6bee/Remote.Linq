@@ -14,8 +14,9 @@ namespace Client
     using System.Net.Http;
     using System.Net.Sockets;
     using System.Threading.Tasks;
+    using static CommonHelper;
 
-    public class RemoteRepository
+    public class RemoteRepository : IRemoteRepository
     {
         private readonly Func<Expression, Task<IEnumerable<DynamicObject>>> _dataProvider;
 
@@ -42,7 +43,7 @@ namespace Client
                 }
                 catch (SocketException ex)
                 {
-                    Console.WriteLine($"SocketException: {ex.Message}");
+                    PrintError(ex);
                     throw;
                 }
             };
@@ -53,5 +54,11 @@ namespace Client
         public IQueryable<Product> Products => RemoteQueryable.Factory.CreateQueryable<Product>(_dataProvider);
 
         public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<OrderItem>(_dataProvider);
+
+        public IQueryable<ProductGroup> ProductGroups => throw new NotImplementedException();
+
+        public void Dispose()
+        {
+        }
     }
 }

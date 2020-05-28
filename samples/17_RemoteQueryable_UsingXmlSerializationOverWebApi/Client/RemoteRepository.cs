@@ -15,23 +15,22 @@ namespace Client
     using System.Net.Sockets;
     using System.Text;
     using System.Threading.Tasks;
+    using static CommonHelper;
 
-    public class RemoteRepository
+    public class RemoteRepository : IRemoteRepository
     {
+        private readonly HttpClient _httpClient;
         private readonly Func<Expression, Task<IEnumerable<DynamicObject>>> _dataProvider;
 
         public RemoteRepository(string server, int port)
         {
+            _httpClient = new HttpClient { BaseAddress = new Uri($"http://{server}:{port}/") };
             _dataProvider = async expression =>
             {
                 try
                 {
-                    HttpClient client = new HttpClient
-                    {
-                        BaseAddress = new Uri($"http://{server}:{port}/"),
-                    };
-
-                    HttpResponseMessage response = await client.PostAsync("api/query", expression, new XmlMediaTypeFormatter()).ConfigureAwait(false);
+                    var query = new Common.Model.Query { Expression = expression };
+                    var response = await _httpClient.PostAsync("api/query", query, new XmlMediaTypeFormatter()).ConfigureAwait(false);
 
                     if (response.StatusCode == HttpStatusCode.InternalServerError)
                     {
@@ -47,7 +46,7 @@ namespace Client
                 }
                 catch (SocketException ex)
                 {
-                    Console.WriteLine("Exception: {0}", ex);
+                    PrintError(ex);
                     throw;
                 }
             };
@@ -58,5 +57,9 @@ namespace Client
         public IQueryable<Product> Products => RemoteQueryable.Factory.CreateQueryable<Product>(_dataProvider);
 
         public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<OrderItem>(_dataProvider);
+
+        public IQueryable<ProductGroup> ProductGroups => throw new NotImplementedException();
+
+        public void Dispose() => _httpClient.Dispose();
     }
 }

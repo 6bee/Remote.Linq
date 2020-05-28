@@ -6,11 +6,13 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="Remote.Linq" />
     <PackageReference Include="Remote.Linq.EntityFramework" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedCode\CommonHelper.cs" Visible="false" />
+    <Compile Include="..\..\SharedCode\Server.TcpServer.cs" Link="TcpServer.cs" />
   </ItemGroup>
 </Project>

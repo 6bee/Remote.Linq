@@ -3,18 +3,26 @@
 namespace Server
 {
     using Aqua.Dynamic;
-    using Common.ServiceContracts;
     using Remote.Linq.EntityFramework;
     using Remote.Linq.Expressions;
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class QueryService : IQueryService
+    public class QueryService
     {
         public async Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression)
         {
-            using EFContext efContext = new EFContext();
-            return await queryExpression.ExecuteWithEntityFrameworkAsync(efContext).ConfigureAwait(false);
+            using var efContext = new EFContext();
+            try
+            {
+                var result = await queryExpression.ExecuteWithEntityFrameworkAsync(efContext).ConfigureAwait(false);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

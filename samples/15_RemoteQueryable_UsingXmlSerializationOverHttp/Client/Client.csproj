@@ -13,4 +13,9 @@
   <ItemGroup>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedCode\Client.AsyncDemo.cs" Link="AsyncDemo.cs" />
+    <Compile Include="..\..\SharedCode\Client.IRemoteRepository.cs" Visible="false" />
+    <Compile Include="..\..\SharedCode\CommonHelper.cs" Visible="false" />
+  </ItemGroup>
 </Project>

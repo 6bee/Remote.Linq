@@ -12,13 +12,12 @@ namespace DemoStartUp
             const string url = "net.pipe://localhost/8080/query";
 
             PrintSetup("Starting WCF service...");
-            using var wcfServiceHost = WcfHelper.CreateServiceHost<Server.QueryService>()
+            using var serviceHost = WcfHelper.CreateServiceHost<Server.QueryService>()
                 .AddNetNamedPipeEndpoint<Common.ServiceContracts.IQueryService>(url)
                 .OpenService();
 
             PrintSetup("Staring client demo...");
             PrintSetup("-------------------------------------------------");
-
             new Client.AsyncDemo(() => new Client.RemoteRepository(url)).RunAsync().Wait();
 
             PrintSetup();

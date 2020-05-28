@@ -4,24 +4,12 @@ namespace Server
 {
     using Common.ServiceContracts;
     using Remote.Linq.Expressions;
-    using System;
-    using System.Linq;
 
     public class QueryService : IQueryService
     {
-        private readonly Func<Type, IQueryable> _queryableResourceProvider = InMemoryDataStore.Instance.GetQueryableByType;
+        private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
         public object ExecuteQuery(Expression queryExpression)
-        {
-            try
-            {
-                var result = queryExpression.Execute<object>(_queryableResourceProvider);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+            => queryExpression.Execute<object>(DataStore.QueryableByTypeProvider);
     }
 }

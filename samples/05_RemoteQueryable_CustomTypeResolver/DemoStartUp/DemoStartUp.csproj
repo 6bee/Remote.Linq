@@ -12,4 +12,8 @@
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedCode\CommonHelper.cs" Link="CommonHelper.cs" Visible="false" />
+    <Compile Include="..\..\SharedCode\WcfHelper.cs" Link="WcfHelper.cs" Visible="false" />
+  </ItemGroup>
 </Project>

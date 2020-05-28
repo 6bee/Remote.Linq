@@ -2,37 +2,30 @@
 
 namespace DemoStartUp
 {
-    using Server;
-    using System;
+    using static CommonHelper;
 
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
+            Title("Binary Serialization over TCP/IP");
             const string host = "localhost";
             const int port = 8899;
 
-            Console.WriteLine("Starting TCP service...");
+            PrintSetup("Starting TCP service...");
 
-            using (TcpServer tcpServiceHost = new TcpServer(port))
-            {
-                tcpServiceHost.Open();
+            using var tcpServiceHost = new Server.TcpServer(port);
+            tcpServiceHost.RunQueryService(new Server.QueryService().ExecuteQuery);
 
-                Console.WriteLine("Started query service.");
+            PrintSetup("Staring client demo...");
+            PrintSetup("-------------------------------------------------");
+            new Client.Demo(() => new Client.RemoteRepository(host, port)).Run();
 
-                Console.WriteLine("Staring client demo...");
-                Console.WriteLine("-------------------------------------------------");
+            PrintSetup();
+            PrintSetup("-------------------------------------------------");
+            PrintSetup("Done.");
 
-                new Client.Demo(host, port).Run();
-
-                Console.WriteLine();
-                Console.WriteLine("-------------------------------------------------");
-
-                Console.WriteLine("Done.");
-            }
-
-            Console.WriteLine("Terminated TCP service. Hit enter to exit.");
-            Console.ReadLine();
+            WaitForEnterKey();
         }
     }
 }

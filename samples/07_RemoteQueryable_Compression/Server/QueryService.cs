@@ -3,39 +3,17 @@
 namespace Server
 {
     using Common;
-    using Common.Model;
     using Common.ServiceContracts;
     using Remote.Linq.Expressions;
-    using System;
-    using System.Linq;
+    using System.Collections.Generic;
 
     public class QueryService : IQueryService
     {
-        private static readonly Func<Type, IQueryable> _queryableResourceProvider = type =>
-        {
-            InMemoryDataStore dataStore = InMemoryDataStore.Instance;
-
-            if (type == typeof(ProductCategory))
-            {
-                return dataStore.ProductCategories.AsQueryable();
-            }
-
-            if (type == typeof(Product))
-            {
-                return dataStore.Products.AsQueryable();
-            }
-
-            if (type == typeof(OrderItem))
-            {
-                return dataStore.OrderItems.AsQueryable();
-            }
-
-            throw new NotSupportedException($"No queryable resource available for type {type}");
-        };
+        private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
         public byte[] ExecuteQuery(Expression queryExpression)
         {
-            System.Collections.Generic.IEnumerable<Aqua.Dynamic.DynamicObject> result = queryExpression.Execute(_queryableResourceProvider);
+            IEnumerable<Aqua.Dynamic.DynamicObject> result = queryExpression.Execute(DataStore.QueryableByTypeProvider);
 
             byte[] compressedData = new CompressionHelper().Compress(result);
 

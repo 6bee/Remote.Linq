@@ -13,4 +13,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedCode\CommonHelper.cs" Visible="false" />
+    <Compile Include="..\..\SharedCode\Server.InMemoryDataStore.cs" Link="InMemoryDataStore.cs" />
+    <Compile Include="..\..\SharedCode\Server.WebApi.QueryController.cs" Link="QueryController.cs" />
+  </ItemGroup>
 </Project>

@@ -4,7 +4,9 @@
     <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Remote.Linq" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
+    <PackageReference Include="Remote.Linq.Newtonsoft.Json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedCode\Common.JsonFormatter.cs" Link="JsonFormatter.cs" />
   </ItemGroup>
 </Project>

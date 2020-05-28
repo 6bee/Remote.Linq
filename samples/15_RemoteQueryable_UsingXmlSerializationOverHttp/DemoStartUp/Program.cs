@@ -3,37 +3,29 @@
 namespace DemoStartUp
 {
     using Server;
-    using System;
+    using static CommonHelper;
 
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
+            Title("Xml Serialization over Http");
             const string host = "localhost";
             const int port = 8089;
 
-            Console.WriteLine("Starting HTTP service...");
+            PrintSetup("Starting HTTP service...");
+            using var httpServer = new HttpServer(port);
+            httpServer.RunQueryService(new QueryService().ExecuteQueryAsync);
 
-            using (HttpServer httpServiceHost = new HttpServer(port))
-            {
-                httpServiceHost.Open();
+            PrintSetup("Staring client demo...");
+            PrintSetup("-------------------------------------------------");
+            string url = $"http://{host}:{port}/queryservice/";
+            new Client.AsyncDemo(() => new Client.RemoteRepository(url)).RunAsync().Wait();
 
-                Console.WriteLine("Started query service.");
-
-                Console.WriteLine("Staring client demo...");
-                Console.WriteLine("-------------------------------------------------");
-
-                string url = $"http://{host}:{port}/queryservice/";
-                new Client.Demo(url).RunAsync().Wait();
-
-                Console.WriteLine();
-                Console.WriteLine("-------------------------------------------------");
-
-                Console.WriteLine("Done.");
-            }
-
-            Console.WriteLine("Terminated HTTP service. Hit enter to exit.");
-            Console.ReadLine();
+            PrintSetup();
+            PrintSetup("-------------------------------------------------");
+            PrintSetup("Done.");
+            WaitForEnterKey();
         }
     }
 }

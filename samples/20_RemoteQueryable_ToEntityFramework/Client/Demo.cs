@@ -5,102 +5,123 @@ namespace Client
     using Remote.Linq;
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
+    using static CommonHelper;
 
-    public class Demo
+    public class AsyncDemo
     {
-        private readonly string _url;
+        private readonly Func<RemoteRepository> _repoProvider;
 
-        public Demo(string url)
+        public AsyncDemo(Func<RemoteRepository> repoProvider)
         {
-            _url = url;
+            _repoProvider = repoProvider;
         }
 
-        public void Run()
+        public async Task RunAsync()
         {
-            RemoteRepository repo = new RemoteRepository(_url);
+            using RemoteRepository repo = _repoProvider();
 
-            Console.WriteLine("\nGET ALL PRODUCTS:");
-            foreach (Common.Model.Product i in repo.Products)
+            PrintHeader("GET ALL PRODUCTS:");
+            var list = await repo.Products
+                .ToListAsync()
+                .ConfigureAwait(false);
+            foreach (var item in list)
             {
-                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
+                PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
             }
 
-            Console.WriteLine("\nSELECT IDs:");
-            IQueryable<int> productIdsQuery =
+            PrintHeader("SELECT IDs:");
+            var productIdsQuery =
                 from p in repo.Products
                 orderby p.Price descending
                 select p.Id;
-            System.Collections.Generic.List<int> productIds = productIdsQuery.ToList();
+            var productIds = await productIdsQuery
+                .ToListAsync()
+                .ConfigureAwait(false);
             foreach (int id in productIdsQuery)
             {
-                Console.WriteLine($"  {id}");
+                PrintLine($"  {id}");
             }
 
-            Console.WriteLine("\nCOUNT:");
-            IQueryable<Common.Model.Product> productsQuery =
+            PrintHeader("COUNT:");
+            var productsQuery =
                 from p in repo.Products
                 select p;
-            Console.WriteLine($"  Count = {productsQuery.Count()}");
+            PrintLine($"  Count = {await productsQuery.CountAsync().ConfigureAwait(false)}");
 
-            Console.WriteLine("\nINVALID OPERATIONS:");
+            PrintHeader("INVALID OPERATIONS:");
             try
             {
-                Common.Model.Product first = productsQuery.First(x => false);
+                _ = await productsQuery
+                    .FirstAsync(x => false)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"  {ex.Message}");
+                PrintLine($"  {ex.GetType().Name}: {ex.Message}");
             }
 
             try
             {
-                Common.Model.Product first = productsQuery.Single();
+                _ = await productsQuery
+                    .SingleAsync()
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"  {ex.Message}");
+                PrintLine($"  {ex.GetType().Name}: {ex.Message}");
             }
 
-            Console.WriteLine("\nGET MARKETS WITH PRODUCTS:");
-            IQueryable<Common.Model.Market> marketsQuery = repo.Products.SelectMany(x => x.Markets).Include(x => x.Products);
-            System.Linq.Expressions.Expression exp = marketsQuery.Expression;
-            foreach (Common.Model.Market market in marketsQuery)
+            PrintHeader("GET MARKETS WITH PRODUCTS:");
+            var marketsWithProducts = await repo.Products
+                .SelectMany(x => x.Markets)
+                .Include(x => x.Products)
+                .ToListAsync()
+                .ConfigureAwait(false);
+            foreach (var market in marketsWithProducts)
             {
-                Console.WriteLine($"  {market.Name}");
+                PrintLine($"  {market.Name}");
 
                 if (market.Products != null)
                 {
-                    foreach (Common.Model.Product product in market.Products)
+                    foreach (var product in market.Products)
                     {
-                        Console.WriteLine($"    {product.Name}");
+                        PrintLine($"    {product.Name}");
                     }
                 }
             }
 
-            Console.WriteLine("\nGET ALL PRODUCTS AND THEIR MARKETS:");
-            foreach (Common.Model.Product i in repo.Products.Include(x => x.Markets))
+            PrintHeader("GET ALL PRODUCTS AND THEIR MARKETS:");
+            foreach (var item in repo.Products.Include(x => x.Markets))
             {
-                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
+                PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
 
-                foreach (Common.Model.Market m in i.Markets)
+                foreach (var m in item.Markets)
                 {
-                    Console.WriteLine($"         {m.Name}");
+                    PrintLine($"         {m.Name}");
                 }
             }
 
-            Console.WriteLine("\nGET ALL PRODUCTS HAVING MARKETS DEFINED:");
-            IQueryable<Common.Model.Product> query = repo.Products.Where(p => p.Markets.Any());
-            foreach (Common.Model.Product i in query)
+            PrintHeader("GET ALL PRODUCTS HAVING MARKETS DEFINED:");
+            var query = repo.Products
+                .Where(p => p.Markets.Any());
+            var queryResult = await query
+                .ToListAsync()
+                .ConfigureAwait(false);
+            foreach (var item in queryResult)
             {
-                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C}");
+                PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
             }
 
-            Console.WriteLine("\nGET ALL PRODUCTS HAVING MARKETS DEFINED (INCLUDING MARKETS):");
-            query = query.Include(p => p.Markets);
-            foreach (Common.Model.Product i in query)
+            PrintHeader("GET ALL PRODUCTS HAVING MARKETS DEFINED (INCLUDING MARKETS):");
+            var queryResultWithMarketData = await query
+                .Include(p => p.Markets)
+                .ToListAsync()
+                .ConfigureAwait(false);
+            foreach (var item in queryResultWithMarketData)
             {
-                System.Collections.Generic.IEnumerable<string> markets = i.Markets.Select(x => x.Name);
-                Console.WriteLine($"  {i.Id} | {i.Name} | {i.Price:C} | {string.Join("; ", markets)}");
+                var markets = item.Markets.Select(x => x.Name);
+                PrintLine($"  {item.Id} | {item.Name} | {item.Price:C} | {string.Join("; ", markets)}");
             }
         }
     }

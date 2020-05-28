@@ -2,7 +2,7 @@
 
 namespace Common.Model
 {
-    public class ProductCategory
+    public partial class ProductCategory
     {
         public int Id { get; set; }
 

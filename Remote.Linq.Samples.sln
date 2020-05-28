@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00_SimpleRemoteQuery", "00_
 		samples\00_SimpleRemoteQuery\README.md = samples\00_SimpleRemoteQuery\README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\00_SimpleRemoteQuery\DemoStartUp\DemoStartUp.csproj", "{4F282572-47A1-40D9-BDC2-D0ED25B84891}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\00_SimpleRemoteQuery\Client\Client.csproj", "{25D6C93B-EF21-4105-8315-67933AC28382}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\00_SimpleRemoteQuery\Common\Common.csproj", "{CB28B4BB-4459-43D3-875B-9E861CC1A79B}"
@@ -87,15 +89,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\07_R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\07_RemoteQueryable_Compression\Server\Server.csproj", "{8EAC5502-9E29-45ED-80D2-0A0A3107B0F9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "08_RemoteQueryable_Inheritance", "08_RemoteQueryable_Inheritance", "{2EC1959F-D673-407F-AD20-4615CA731CC7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "08_RemoteQueryable_ModelAbstraction", "08_RemoteQueryable_ModelAbstraction", "{2EC1959F-D673-407F-AD20-4615CA731CC7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\08_RemoteQueryable_Inheritance\Client\Client.csproj", "{B6B42260-816E-4883-9F4F-E175E0C9FA75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\08_RemoteQueryable_ModelAbstraction\Client\Client.csproj", "{B6B42260-816E-4883-9F4F-E175E0C9FA75}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\08_RemoteQueryable_Inheritance\Common\Common.csproj", "{F9A97154-E804-47D5-99A9-4867BC43CAB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\08_RemoteQueryable_ModelAbstraction\Common\Common.csproj", "{F9A97154-E804-47D5-99A9-4867BC43CAB5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\08_RemoteQueryable_Inheritance\DemoStartUp\DemoStartUp.csproj", "{185DCBE9-E138-46AB-B71B-DA59462EDBC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\08_RemoteQueryable_ModelAbstraction\DemoStartUp\DemoStartUp.csproj", "{185DCBE9-E138-46AB-B71B-DA59462EDBC4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\08_RemoteQueryable_Inheritance\Server\Server.csproj", "{9C13073B-998A-4C9D-9DFE-4882000BF9DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\08_RemoteQueryable_ModelAbstraction\Server\Server.csproj", "{9C13073B-998A-4C9D-9DFE-4882000BF9DF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10_RemoteQueryable_UsingBinarySerializationOverTcp", "10_RemoteQueryable_UsingBinarySerializationOverTcp", "{890EFF0D-45BF-47E1-A106-8732D6B1DF42}"
 EndProject
@@ -139,7 +141,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\13_Remote
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "14_RemoteQueryable_UsingJsonSerializationOverWebApi", "14_RemoteQueryable_UsingJsonSerializationOverWebApi", "{CE952BA5-268B-4349-9037-3C1DC55B8E9B}"
 	ProjectSection(SolutionItems) = preProject
-		samples\14_RemoteQueryable_UsingJsonSerializationOverWebApi\netsh_http_add_urlacl.bat = samples\14_RemoteQueryable_UsingJsonSerializationOverWebApi\netsh_http_add_urlacl.bat
+		samples\SharedCode\netsh_http_add_urlacl.bat = samples\SharedCode\netsh_http_add_urlacl.bat
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\14_RemoteQueryable_UsingJsonSerializationOverWebApi\Client\Client.csproj", "{9B39FFB8-9F84-4B3C-8E57-EB3FD129DC85}"
@@ -152,7 +154,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\14_Remote
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "15_RemoteQueryable_UsingXmlSerializationOverHttp", "15_RemoteQueryable_UsingXmlSerializationOverHttp", "{070CA5D2-1EA9-41E9-861F-C618AC3605EF}"
 	ProjectSection(SolutionItems) = preProject
-		samples\15_RemoteQueryable_UsingXmlSerializationOverHttp\netsh_http_add_urlacl.bat = samples\15_RemoteQueryable_UsingXmlSerializationOverHttp\netsh_http_add_urlacl.bat
+		samples\SharedCode\netsh_http_add_urlacl.bat = samples\SharedCode\netsh_http_add_urlacl.bat
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\15_RemoteQueryable_UsingXmlSerializationOverHttp\Client\Client.csproj", "{FFFA5302-0C71-48CC-B3C7-096B369C7B08}"
@@ -175,7 +177,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\16_Remote
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "17_RemoteQueryable_UsingXmlSerializationOverWebApi", "17_RemoteQueryable_UsingXmlSerializationOverWebApi", "{1806E79F-5BEA-435D-A0EA-FC9BC43CACF2}"
 	ProjectSection(SolutionItems) = preProject
-		samples\17_RemoteQueryable_UsingXmlSerializationOverWebApi\netsh_http_add_urlacl.bat = samples\17_RemoteQueryable_UsingXmlSerializationOverWebApi\netsh_http_add_urlacl.bat
+		samples\SharedCode\netsh_http_add_urlacl.bat = samples\SharedCode\netsh_http_add_urlacl.bat
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\17_RemoteQueryable_UsingXmlSerializationOverWebApi\Client\Client.csproj", "{202FCF7A-EE20-4A0B-9E21-85AEE32BE590}"
@@ -260,6 +262,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F282572-47A1-40D9-BDC2-D0ED25B84891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F282572-47A1-40D9-BDC2-D0ED25B84891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F282572-47A1-40D9-BDC2-D0ED25B84891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F282572-47A1-40D9-BDC2-D0ED25B84891}.Release|Any CPU.Build.0 = Release|Any CPU
 		{25D6C93B-EF21-4105-8315-67933AC28382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{25D6C93B-EF21-4105-8315-67933AC28382}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25D6C93B-EF21-4105-8315-67933AC28382}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -613,6 +619,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{4F282572-47A1-40D9-BDC2-D0ED25B84891} = {692E4FD8-80B0-4AAF-AE58-3934D0247CAA}
 		{25D6C93B-EF21-4105-8315-67933AC28382} = {692E4FD8-80B0-4AAF-AE58-3934D0247CAA}
 		{CB28B4BB-4459-43D3-875B-9E861CC1A79B} = {692E4FD8-80B0-4AAF-AE58-3934D0247CAA}
 		{2765F030-24A7-4AB7-9482-EE253E1C171F} = {692E4FD8-80B0-4AAF-AE58-3934D0247CAA}

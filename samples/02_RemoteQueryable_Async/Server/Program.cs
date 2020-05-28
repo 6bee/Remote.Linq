@@ -9,13 +9,13 @@ namespace Server
     {
         private static void Main()
         {
-            Title("Async Server");
+            Title("Async [Server]");
             using var serviceHost = WcfHelper.CreateServiceHost<QueryService>()
                 .IncludeExceptionDetailInFaults()
                 .AddNetNamedPipeEndpoint<IQueryService>("net.pipe://localhost/8080/query")
                 .OpenService();
 
-            PrintSetup("The query service is ready.");
+            PrintServerReady();
             WaitForEnterKey();
         }
     }

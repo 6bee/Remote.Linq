@@ -2,7 +2,6 @@
 
 namespace Client
 {
-    using Common.Model;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -28,7 +27,7 @@ namespace Client
             }
 
             PrintHeader("GET PRODUCTS FILTERED BY ID:");
-            List<int> idSelection = new List<int> { 1, 11, 111 };
+            var idSelection = new List<int> { 1, 11, 111 };
             foreach (var item in repo.Products.Where(p => idSelection.Contains(p.Id) || p.Id % 3 == 0))
             {
                 PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
@@ -42,10 +41,10 @@ namespace Client
                 select new { Category = "#" + c.Name + sufix("-"), p.Name };
 
             var crossJoinResult = crossJoinQuery
-#if KNOW_TYPES_ONLY
-                            .Select(x => new CrossJoinResultDto { Category = x.Category, Name = x.Name })
+#if KNOWN_TYPES_ONLY
+                .Select(x => new Common.Model.CrossJoinResultDto { Category = x.Category, Name = x.Name })
 #endif
-                            .ToList();
+                .ToList();
 
             foreach (var i in crossJoinResult)
             {
@@ -58,8 +57,8 @@ namespace Client
                 join p in repo.Products on c.Id equals p.ProductCategoryId
                 select new { c.Name, P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
             var innerJoinResult = innerJoinQuery
-#if KNOW_TYPES_ONLY
-                .Select(x => new InnerJoinResultDto { Name = x.Name, Price = x.P.Price, XY = x.X.Y })
+#if KNOWN_TYPES_ONLY
+                .Select(x => new Common.Model.InnerJoinResultDto { Name = x.Name, Price = x.P.Price, XY = x.X.Y })
 #endif
                 .ToList();
 
@@ -69,18 +68,18 @@ namespace Client
             }
 
             PrintHeader("SELECT IDs:");
-            IQueryable<int> productIdsQuery =
+            var productIdsQuery =
                 from p in repo.Products
                 orderby p.Price descending
                 select p.Id;
-            List<int> productIds = productIdsQuery.ToList();
+            var productIds = productIdsQuery.ToList();
             foreach (int id in productIdsQuery)
             {
                 PrintLine($"  {id}");
             }
 
             PrintHeader("COUNT:");
-            IQueryable<Product> productsQuery =
+            var productsQuery =
                 from p in repo.Products
                 select p;
             PrintLine($"  Count = {productsQuery.Count()}");
@@ -100,8 +99,8 @@ namespace Client
                 };
 
             var totalAmountByCategroyResult = totalAmountByCategoryQuery
-#if KNOW_TYPES_ONLY
-                .Select(x => new TotalAmountByCategoryDto { Category = x.Category, Amount = x.Amount })
+#if KNOWN_TYPES_ONLY
+                .Select(x => new Common.Model.TotalAmountByCategoryDto { Category = x.Category, Amount = x.Amount })
 #endif
                 .ToDictionary(x => x.Category, x => x.Amount);
 
@@ -111,11 +110,11 @@ namespace Client
             }
 
             PrintHeader("GET PRODUCT GROUPS:");
-            foreach (ProductGroup group in repo.ProductGroups)
+            foreach (var group in repo.ProductGroups)
             {
                 PrintLine($"  {group.Id} | {group.GroupName}");
 
-                foreach (Product p in group.Products)
+                foreach (var p in group.Products)
                 {
                     PrintLine($"    | * {p.Name}");
                 }
@@ -128,9 +127,9 @@ namespace Client
                     .Select(x => x.Category)
                     .First(x => false);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                PrintLine($"  {ex.Message}");
+                PrintLine($"  {ex.GetType().Name}: {ex.Message}");
             }
         }
     }

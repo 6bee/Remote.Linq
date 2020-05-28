@@ -7,6 +7,7 @@
     <Nullable>disable</Nullable>
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\Style.Samples.ruleset</CodeAnalysisRuleSet>
+    <ApplicationIcon>$(MSBuildThisFileDirectory)..\remotelinq.ico</ApplicationIcon>
   </PropertyGroup>
 
 </Project>

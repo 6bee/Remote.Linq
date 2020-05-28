@@ -11,7 +11,7 @@ namespace Client
     using System.Linq;
     using System.ServiceModel;
 
-    public sealed class RemoteRepository : IDisposable
+    public sealed class RemoteRepository : IRemoteRepository
     {
         private readonly ChannelFactory<IQueryService> _channelFactory;
 
@@ -19,59 +19,32 @@ namespace Client
 
         public RemoteRepository(string uri)
         {
-            NetNamedPipeBinding binding = new NetNamedPipeBinding
-            {
-                CloseTimeout = TimeSpan.FromMinutes(10),
-                ReceiveTimeout = TimeSpan.FromMinutes(10),
-                SendTimeout = TimeSpan.FromMinutes(10),
-                MaxReceivedMessageSize = 640000L,
-            };
-
+            var binding = new NetNamedPipeBinding { MaxReceivedMessageSize = 10240 }.WithDebugSetting();
             _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
 
             _dataProvider = expression =>
-                {
-                    IQueryService channel = null;
-                    try
-                    {
-                        channel = _channelFactory.CreateChannel();
+            {
+                using var proxy = _channelFactory.CreateServiceProxy();
 
-                        IEnumerable<DynamicObject> result = channel.ExecuteQuery(expression);
-                        return result;
-                    }
-                    finally
-                    {
-                        ICommunicationObject communicationObject = channel as ICommunicationObject;
-                        if (communicationObject != null)
-                        {
-                            if (communicationObject.State == CommunicationState.Faulted)
-                            {
-                                communicationObject.Abort();
-                            }
-                            else
-                            {
-                                communicationObject.Close();
-                            }
-                        }
-                    }
-                };
+                IEnumerable<DynamicObject> result = proxy.Service.ExecuteQuery(expression);
+                return result;
+            };
         }
 
-        public IQueryable<ClientModel.ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ClientModel.ProductCategory>(
-            _dataProvider,
-            typeInfoProvider: new QueryTypeMapper(),
-            mapper: new DynamicObjectMapper(typeResolver: new ResultTypeMapper()));
+        public IQueryable<ClientModel.ProductCategory> ProductCategories => CreateQueryable<ClientModel.ProductCategory>();
 
-        public IQueryable<ClientModel.Product> Products => RemoteQueryable.Factory.CreateQueryable<ClientModel.Product>(
-            _dataProvider,
-            typeInfoProvider: new QueryTypeMapper(),
-            mapper: new DynamicObjectMapper(typeResolver: new ResultTypeMapper()));
+        public IQueryable<ClientModel.ProductGroup> ProductGroups => CreateQueryable<ClientModel.ProductGroup>();
 
-        public IQueryable<ClientModel.OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<ClientModel.OrderItem>(
-            _dataProvider,
-            typeInfoProvider: new QueryTypeMapper(),
-            mapper: new DynamicObjectMapper(typeResolver: new ResultTypeMapper()));
+        public IQueryable<ClientModel.Product> Products => CreateQueryable<ClientModel.Product>();
 
-        public void Dispose() => ((IDisposable)_channelFactory).Dispose();
+        public IQueryable<ClientModel.OrderItem> OrderItems => CreateQueryable<ClientModel.OrderItem>();
+
+        private IQueryable<T> CreateQueryable<T>()
+            => RemoteQueryable.Factory.CreateQueryable<T>(
+                _dataProvider,
+                typeInfoProvider: new QueryTypeMapper(),
+                mapper: new DynamicObjectMapper(typeResolver: new ResultTypeMapper()));
+
+        public void Dispose() => _channelFactory.Close();
     }
 }

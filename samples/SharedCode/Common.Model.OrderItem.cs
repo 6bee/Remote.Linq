@@ -2,7 +2,7 @@
 
 namespace Common.Model
 {
-    public class OrderItem
+    public partial class OrderItem
     {
         public int Id { get; set; }
 

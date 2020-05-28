@@ -9,12 +9,12 @@ namespace Server
     {
         private static void Main()
         {
-            Title("Basic Server");
+            Title("Basic [Server]");
             using var serviceHost = WcfHelper.CreateServiceHost<QueryService>()
                 .AddNetNamedPipeEndpoint<IQueryService>("net.pipe://localhost/8080/query")
                 .OpenService();
 
-            PrintSetup("The query service is ready.");
+            PrintServerReady();
             WaitForEnterKey();
         }
     }

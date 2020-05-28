@@ -8,4 +8,7 @@
     <ProjectReference Include="..\Client\Client.csproj" />
     <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedCode\CommonHelper.cs" Link="CommonHelper.cs" Visible="false" />
+  </ItemGroup>
 </Project>

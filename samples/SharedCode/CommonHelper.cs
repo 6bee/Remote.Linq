@@ -41,10 +41,33 @@ internal static class CommonHelper
     /// <summary>
     /// Writest the text to std out.
     /// </summary>
+    public static void PrintServerReady(string text = "The query service is ready.")
+    {
+        using var bg = BackgroundColor(ConsoleColor.DarkGreen);
+        PrintLine(text);
+    }
+
+    /// <summary>
+    /// Writest the text to std out.
+    /// </summary>
     public static void PrintSetup(string text = null)
     {
         using var c = TextColor(ConsoleColor.DarkGray);
-        Print(text + "\n");
+        PrintLine(text);
+    }
+
+    /// <summary>
+    /// Writest the error to std out.
+    /// </summary>
+    public static void PrintError(Exception error) => PrintError(error.ToString());
+
+    /// <summary>
+    /// Writest the error to std out.
+    /// </summary>
+    public static void PrintError(string error)
+    {
+        using var c = TextColor(ConsoleColor.DarkRed);
+        PrintLine(error);
     }
 
     /// <summary>

@@ -9,7 +9,12 @@ namespace Client
     {
         public override Type ResolveType(TypeInfo typeInfo)
         {
-            if (typeInfo.Namespace == "Server.ServerModel")
+            if (typeInfo is null)
+            {
+                return null;
+            }
+
+            if (typeInfo.Namespace == "Common.Model")
             {
                 typeInfo.Namespace = "Client.ClientModel";
             }

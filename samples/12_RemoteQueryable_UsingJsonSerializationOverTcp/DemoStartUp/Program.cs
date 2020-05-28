@@ -2,37 +2,28 @@
 
 namespace DemoStartUp
 {
-    using Server;
-    using System;
+    using static CommonHelper;
 
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
+            Title("JSON Serialization over TCP/IP");
             const string host = "localhost";
             const int port = 8899;
 
-            Console.WriteLine("Starting TCP service...");
+            PrintSetup("Starting TCP service...");
+            using var serviceHost = new Server.TcpServer(port);
+            serviceHost.RunQueryService(new Server.QueryService().ExecuteQuery);
 
-            using (TcpServer tcpServiceHost = new TcpServer(port))
-            {
-                tcpServiceHost.Open();
+            PrintSetup("Staring client demo...");
+            PrintSetup("-------------------------------------------------");
+            new Client.Demo(() => new Client.RemoteRepository(host, port)).Run();
 
-                Console.WriteLine("Started query service.");
-
-                Console.WriteLine("Staring client demo...");
-                Console.WriteLine("-------------------------------------------------");
-
-                new Client.Demo(host, port).Run();
-
-                Console.WriteLine();
-                Console.WriteLine("-------------------------------------------------");
-
-                Console.WriteLine("Done.");
-            }
-
-            Console.WriteLine("Terminated TCP service. Hit enter to exit.");
-            Console.ReadLine();
+            PrintSetup();
+            PrintSetup("-------------------------------------------------");
+            PrintSetup("Done.");
+            WaitForEnterKey();
         }
     }
 }

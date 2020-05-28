@@ -2,21 +2,18 @@
 
 namespace Server
 {
-    using System;
+    using static CommonHelper;
 
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            using (HttpServer serviceHost = new HttpServer(8089))
-            {
-                serviceHost.Open();
+            Title("Xml Serialization over Http [Server]");
+            using var serviceHost = new HttpServer(8089);
+            serviceHost.RunQueryService(new QueryService().ExecuteQueryAsync);
 
-                Console.WriteLine("The query service is ready.");
-                Console.WriteLine("Press <ENTER> to terminate service.");
-                Console.WriteLine();
-                Console.ReadLine();
-            }
+            PrintServerReady();
+            WaitForEnterKey();
         }
     }
 }

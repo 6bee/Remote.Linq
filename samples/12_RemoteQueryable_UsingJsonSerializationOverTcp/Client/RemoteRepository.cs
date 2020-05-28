@@ -12,38 +12,33 @@ namespace Client
     using System.Linq;
     using System.Net.Sockets;
 
-    public class RemoteRepository
+    public class RemoteRepository : IRemoteRepository
     {
+        private readonly TcpClient _tcpClient;
         private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
 
         public RemoteRepository(string server, int port)
         {
+            _tcpClient = new TcpClient(server, port);
             _dataProvider = expression =>
             {
-                IEnumerable<DynamicObject> result;
+                var stream = _tcpClient.GetStream();
 
-                using (TcpClient client = new TcpClient(server, port))
-                {
-                    using (NetworkStream stream = client.GetStream())
-                    {
-                        stream.Write(expression);
+                stream.Write(expression);
 
-                        result = stream.Read<IEnumerable<DynamicObject>>();
-
-                        stream.Close();
-                    }
-
-                    client.Close();
-                }
-
+                IEnumerable<DynamicObject> result = stream.Read<IEnumerable<DynamicObject>>();
                 return result;
             };
         }
 
         public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ProductCategory>(_dataProvider);
 
+        public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateQueryable<ProductGroup>(_dataProvider);
+
         public IQueryable<Product> Products => RemoteQueryable.Factory.CreateQueryable<Product>(_dataProvider);
 
         public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<OrderItem>(_dataProvider);
+
+        public void Dispose() => _tcpClient.Dispose();
     }
 }

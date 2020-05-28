@@ -51,18 +51,20 @@ namespace Client
             }
 
             PrintHeader("SELECT IDs:");
-            IQueryable<int> productIdsQuery =
+            var productIdsQuery =
                 from p in repo.Products
                 orderby p.Price descending
                 select p.Id;
-            System.Collections.Generic.List<int> productIds = await productIdsQuery.ToListAsync().ConfigureAwait(false);
+            var productIds = await productIdsQuery
+                .ToListAsync()
+                .ConfigureAwait(false);
             foreach (int id in productIdsQuery)
             {
                 PrintLine($"  {id}");
             }
 
             PrintHeader("COUNT:");
-            IQueryable<Common.Model.Product> productsQuery =
+            var productsQuery =
                 from p in repo.Products
                 select p;
             PrintLine($"  Count = {await productsQuery.CountAsync().ConfigureAwait(false)}");
@@ -82,7 +84,9 @@ namespace Client
                     Amount2 = new { Amount = g.Sum(x => x.i.Quantity * x.p.Price) },
                 };
 
-            var totalAmountByCategroyResult = await totalAmountByCategoryQuery.ToDictionaryAsync(x => x.Category).ConfigureAwait(false);
+            var totalAmountByCategroyResult = await totalAmountByCategoryQuery
+                .ToDictionaryAsync(x => x.Category)
+                .ConfigureAwait(false);
             foreach (var item in totalAmountByCategroyResult)
             {
                 PrintLine($"  {item}");
@@ -91,11 +95,14 @@ namespace Client
             PrintHeader("EXPECTED INVALID OPERATION:");
             try
             {
-                _ = await totalAmountByCategoryQuery.FirstAsync(x => false).ConfigureAwait(false);
+                _ = await totalAmountByCategoryQuery
+                    .Select(x => x.Category)
+                    .FirstAsync(x => false)
+                    .ConfigureAwait(false);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                PrintLine($"  {ex.Message}");
+                PrintLine($"  {ex.GetType().Name}: {ex.Message}");
             }
         }
     }

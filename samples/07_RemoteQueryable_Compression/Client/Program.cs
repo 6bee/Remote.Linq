@@ -2,22 +2,18 @@
 
 namespace Client
 {
-    using System;
+    using static CommonHelper;
 
     public static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            Console.WriteLine("Wait for query service to indicate that it's started, ");
-            Console.WriteLine("then press <ENTER> to start the client.");
-            Console.ReadLine();
+            Title("Compression [Client]");
+            WaitForEnterKey("Launch the query service, then press <ENTER> to start the client.");
 
-            new Demo("net.pipe://localhost/8080/query").Run();
+            new Demo(() => new RemoteRepository("net.pipe://localhost/8080/query")).Run();
 
-            Console.WriteLine();
-            Console.WriteLine("Press <ENTER> to terminate.");
-            Console.WriteLine();
-            Console.ReadLine();
+            WaitForEnterKey();
         }
     }
 }

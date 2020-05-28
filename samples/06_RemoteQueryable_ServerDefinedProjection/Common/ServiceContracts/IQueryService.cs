@@ -11,6 +11,6 @@ namespace Common.ServiceContracts
     public interface IQueryService
     {
         [OperationContract]
-        IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression);
+        IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression, string accessToken);
     }
 }

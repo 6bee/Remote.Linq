@@ -8,9 +8,10 @@
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SharedCode\Common.Model.OrderItem.cs" Link="Model\OrderItem.cs" Visible="true" />
-    <Compile Include="..\..\SharedCode\Common.Model.Product.cs" Link="Model\Product.cs" Visible="true" />
-    <Compile Include="..\..\SharedCode\Common.Model.ProductCategory.cs" Link="Model\ProductCategory.cs" Visible="true" />
-    <Compile Include="..\..\SharedCode\Common.Model.ProductGroup.cs" Link="Model\ProductGroup.cs" Visible="true" />
+    <Compile Include="..\..\SharedCode\Common.Model.OrderItem.cs" Link="Model\OrderItem.cs" />
+    <Compile Include="..\..\SharedCode\Common.Model.Product.cs" Link="Model\Product.cs" />
+    <Compile Include="..\..\SharedCode\Common.Model.ProductCategory.cs" Link="Model\ProductCategory.cs" />
+    <Compile Include="..\..\SharedCode\Common.Model.ProductGroup.cs" Link="Model\ProductGroup.cs" />
+    <Compile Include="..\..\SharedCode\Common.ServiceContracts.DefaultAsyncIQueryService.wcf.cs" Link="ServiceContracts\IQueryService.cs" />
   </ItemGroup>
 </Project>

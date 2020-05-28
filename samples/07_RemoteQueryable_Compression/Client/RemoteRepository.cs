@@ -13,7 +13,7 @@ namespace Client
     using System.Linq;
     using System.ServiceModel;
 
-    public sealed class RemoteRepository : IDisposable
+    public sealed class RemoteRepository : IRemoteRepository
     {
         private readonly ChannelFactory<IQueryService> _channelFactory;
 
@@ -21,51 +21,27 @@ namespace Client
 
         public RemoteRepository(string uri)
         {
-            NetNamedPipeBinding binding = new NetNamedPipeBinding()
-            {
-                CloseTimeout = TimeSpan.FromMinutes(10),
-                ReceiveTimeout = TimeSpan.FromMinutes(10),
-                SendTimeout = TimeSpan.FromMinutes(10),
-                MaxReceivedMessageSize = 640000L,
-            };
-
+            var binding = new NetNamedPipeBinding { MaxReceivedMessageSize = 10240 }.WithDebugSetting();
             _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
 
             _dataProvider = expression =>
                 {
-                    IQueryService channel = null;
-                    try
-                    {
-                        channel = _channelFactory.CreateChannel();
+                    using var proxy = _channelFactory.CreateServiceProxy();
 
-                        byte[] compressedData = channel.ExecuteQuery(expression);
-                        IEnumerable<DynamicObject> result = new CompressionHelper().Decompress(compressedData);
-                        return result;
-                    }
-                    finally
-                    {
-                        ICommunicationObject communicationObject = channel as ICommunicationObject;
-                        if (communicationObject != null)
-                        {
-                            if (communicationObject.State == CommunicationState.Faulted)
-                            {
-                                communicationObject.Abort();
-                            }
-                            else
-                            {
-                                communicationObject.Close();
-                            }
-                        }
-                    }
+                    byte[] compressedData = proxy.Service.ExecuteQuery(expression);
+                    IEnumerable<DynamicObject> result = new CompressionHelper().Decompress(compressedData);
+                    return result;
                 };
         }
 
         public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ProductCategory>(_dataProvider);
 
+        public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateQueryable<ProductGroup>(_dataProvider);
+
         public IQueryable<Product> Products => RemoteQueryable.Factory.CreateQueryable<Product>(_dataProvider);
 
         public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<OrderItem>(_dataProvider);
 
-        public void Dispose() => ((IDisposable)_channelFactory).Dispose();
+        public void Dispose() => _channelFactory.Close();
     }
 }

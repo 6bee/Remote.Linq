@@ -2,36 +2,28 @@
 
 namespace DemoStartUp
 {
-    using System;
+    using static CommonHelper;
 
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
+            Title("JSON Serialization over Web API async");
             const string host = "localhost";
             const int port = 8089;
 
-            Console.WriteLine("Starting Web API service...");
+            PrintSetup("Starting Web API service...");
+            using var webServer = new Server.WebApiServer(port);
+            webServer.Open();
 
-            using (Server.WebApiServer webApiServer = new Server.WebApiServer(port))
-            {
-                webApiServer.Open();
+            PrintSetup("Staring client demo...");
+            PrintSetup("-------------------------------------------------");
+            new Client.AsyncDemo(() => new Client.RemoteRepository(host, port)).RunAsync().Wait();
 
-                Console.WriteLine("Started query service.");
-
-                Console.WriteLine("Staring client demo...");
-                Console.WriteLine("-------------------------------------------------");
-
-                new Client.Demo(host, port).Run();
-
-                Console.WriteLine();
-                Console.WriteLine("-------------------------------------------------");
-
-                Console.WriteLine("Done.");
-            }
-
-            Console.WriteLine("Terminated Web API service. Hit enter to exit.");
-            Console.ReadLine();
+            PrintSetup();
+            PrintSetup("-------------------------------------------------");
+            PrintSetup("Done.");
+            WaitForEnterKey();
         }
     }
 }

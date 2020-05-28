@@ -13,7 +13,7 @@ namespace Client
 
         public ServiceProxy(string uri)
         {
-            var netTcpBinding = new NetTcpBinding { MaxReceivedMessageSize = 640000L }.WithDebugSetting();
+            var netTcpBinding = new NetTcpBinding { MaxReceivedMessageSize = 10240 }.WithDebugSetting();
             _proxy = new WcfServiceProxy<T>(netTcpBinding, uri);
         }
 

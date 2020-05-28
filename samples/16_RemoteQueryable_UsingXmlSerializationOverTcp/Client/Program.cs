@@ -2,22 +2,18 @@
 
 namespace Client
 {
-    using System;
+    using static CommonHelper;
 
     internal static class Program
     {
         private static void Main()
         {
-            Console.WriteLine("Wait for query service to indicate that it's started, ");
-            Console.WriteLine("then press <ENTER> to start the client.");
-            Console.ReadLine();
+            Title("Xml Serialization over TCP/IP [Client]");
+            WaitForEnterKey("Lauch the query service, then press <ENTER> to start the client.");
 
-            new Demo("localhost", 8899).Run();
+            new AsyncDemo(() => new RemoteRepository("localhost", 8899)).RunAsync().Wait();
 
-            Console.WriteLine();
-            Console.WriteLine("Press <ENTER> to terminate.");
-            Console.WriteLine();
-            Console.ReadLine();
+            WaitForEnterKey();
         }
     }
 }

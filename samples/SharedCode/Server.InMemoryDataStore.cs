@@ -4,8 +4,10 @@ namespace Server
 {
     using Common.Model;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
 
     public sealed partial class InMemoryDataStore
     {
@@ -71,8 +73,9 @@ namespace Server
 
         public IEnumerable<OrderItem> OrderItems => _orderItems.ToArray();
 
-        public IQueryable GetQueryableByType(Type type)
+        public Func<Type, IQueryable> QueryableByTypeProvider => (Type type) =>
         {
+            // return wellknown entity sets
             if (type == typeof(ProductGroup))
             {
                 return ProductGroups.AsQueryable();
@@ -93,7 +96,14 @@ namespace Server
                 return OrderItems.AsQueryable();
             }
 
-            throw new NotSupportedException($"No queryable resource available for type {type}");
-        }
+            // return entity sets possibly declared in partial class
+            var queryableType = typeof(IEnumerable<>).MakeGenericType(type);
+            var dataset = GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(p => queryableType.IsAssignableFrom(p.PropertyType))
+                .FirstOrDefault()?
+                .GetValue(this) as IEnumerable;
+            return dataset?.AsQueryable() ?? throw new NotSupportedException($"No queryable resource available for type {type}");
+        };
     }
 }

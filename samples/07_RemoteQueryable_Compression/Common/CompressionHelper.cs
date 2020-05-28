@@ -12,40 +12,34 @@ namespace Common
     {
         public IEnumerable<DynamicObject> Decompress(byte[] compressedData)
         {
-            using (MemoryStream decompressedStream = new MemoryStream())
+            using var decompressedStream = new MemoryStream();
+            using (var compressedStream = new MemoryStream())
             {
-                using (MemoryStream compressedStream = new MemoryStream())
-                {
-                    compressedStream.Write(compressedData, 0, compressedData.Length);
-                    compressedStream.Seek(0, SeekOrigin.Begin);
+                compressedStream.Write(compressedData, 0, compressedData.Length);
+                compressedStream.Seek(0, SeekOrigin.Begin);
 
-                    using (GZipStream decompressionStream = new GZipStream(compressedStream, CompressionMode.Decompress))
-                    {
-                        decompressionStream.CopyTo(decompressedStream);
-                    }
-                }
-
-                decompressedStream.Seek(0, SeekOrigin.Begin);
-
-                BinaryFormatter formatter = new BinaryFormatter();
-                object obj = formatter.Deserialize(decompressedStream);
-                return (IEnumerable<DynamicObject>)obj;
+                using var decompressionStream = new GZipStream(compressedStream, CompressionMode.Decompress);
+                decompressionStream.CopyTo(decompressedStream);
             }
+
+            decompressedStream.Seek(0, SeekOrigin.Begin);
+
+            var formatter = new BinaryFormatter();
+            object obj = formatter.Deserialize(decompressedStream);
+            return (IEnumerable<DynamicObject>)obj;
         }
 
         public byte[] Compress(IEnumerable<DynamicObject> graph)
         {
-            using (MemoryStream compressedStream = new MemoryStream())
+            using var compressedStream = new MemoryStream();
+            using (var compressionStream = new GZipStream(compressedStream, CompressionMode.Compress))
             {
-                using (GZipStream compressionStream = new GZipStream(compressedStream, CompressionMode.Compress))
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(compressionStream, graph);
-                }
-
-                byte[] compressedData = compressedStream.ToArray();
-                return compressedData;
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(compressionStream, graph);
             }
+
+            byte[] compressedData = compressedStream.ToArray();
+            return compressedData;
         }
     }
 }

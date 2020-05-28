@@ -2,21 +2,18 @@
 
 namespace Server
 {
-    using System;
+    using static CommonHelper;
 
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            using (TcpServer tcpServiceHost = new TcpServer("127.0.0.1", 8899))
-            {
-                tcpServiceHost.Open();
+            Title("Binary Serialization over TCP/IP [Server]");
+            using var serviceHost = new TcpServer("127.0.0.1", 8899);
+            serviceHost.RunQueryService(new QueryService().ExecuteQuery);
 
-                Console.WriteLine("The query service is ready.");
-                Console.WriteLine("Press <ENTER> to terminate service.");
-                Console.WriteLine();
-                Console.ReadLine();
-            }
+            PrintServerReady();
+            WaitForEnterKey();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Server
     {
         public static void Main()
         {
-            Title("Simple Remote Query Server");
+            Title("Simple Remote Query [Server]");
 
             using var dataServiceHost = WcfHelper.CreateServiceHost<TraditionalDataService>()
                 .AddNetTcpEndpoint<ITraditionalDataService>("net.tcp://localhost:8080/traditionaldataservice")
