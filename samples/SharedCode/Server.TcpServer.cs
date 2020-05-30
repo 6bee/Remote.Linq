@@ -7,6 +7,7 @@ namespace Server
     using System;
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public sealed class TcpServer : IDisposable
@@ -20,14 +21,14 @@ namespace Server
 
         public TcpServer(string ip, int port)
         {
-            IPAddress ipAddress = IPAddress.Parse(ip);
+            var ipAddress = IPAddress.Parse(ip);
             _server = new TcpListener(ipAddress, port);
         }
 
         public void RunService<TRequest, TResponse>(Func<TRequest, TResponse> requestHandler)
-            => RunAsyncService<TRequest, TResponse>(request => Task.FromResult(requestHandler(request)));
+            => RunAsyncService<TRequest, TResponse>((request, cancellation) => Task.FromResult(requestHandler(request)));
 
-        public void RunAsyncService<TRequest, TResponse>(Func<TRequest, Task<TResponse>> asyncRequestHandler)
+        public void RunAsyncService<TRequest, TResponse>(Func<TRequest, CancellationToken, Task<TResponse>> asyncRequestHandler)
         {
             _server.Start();
 
@@ -44,12 +45,13 @@ namespace Server
                             try
                             {
                                 using var stream = client.GetStream();
+                                using var cancellation = new CancellationTokenSource();
                                 while (true)
                                 {
                                     var request = await stream.ReadAsync<TRequest>().ConfigureAwait(false);
                                     try
                                     {
-                                        var response = await asyncRequestHandler(request).ConfigureAwait(false);
+                                        var response = await asyncRequestHandler(request, cancellation.Token).ConfigureAwait(false);
                                         await stream.WriteAsync(response).ConfigureAwait(false);
                                     }
                                     catch (Exception ex)
@@ -77,7 +79,7 @@ namespace Server
 
         public void RunQueryService<TResult>(Func<Expression, TResult> requestHandler) => RunService(requestHandler);
 
-        public void RunAsyncQueryService<TResult>(Func<Expression, Task<TResult>> asyncRequestHandler) => RunAsyncService(asyncRequestHandler);
+        public void RunAsyncQueryService<TResult>(Func<Expression, CancellationToken, Task<TResult>> asyncRequestHandler) => RunAsyncService(asyncRequestHandler);
 
         public void Dispose() => _server.Stop();
     }

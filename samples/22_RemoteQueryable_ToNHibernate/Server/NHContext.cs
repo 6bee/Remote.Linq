@@ -10,6 +10,8 @@ namespace Server
 
     public sealed class NHContext : IDisposable
     {
+        private const string ConnectionString = "data source=.;initial catalog=RemoteQueryableDemoDB_MAY2020;User Id=Demo;Password=demo(!)Password;MultipleActiveResultSets=True;App=Remote.Linq.Demo.NH;";
+
         private static readonly ISessionFactory _sessionFactory = CreateSessionFactory();
 
         private readonly ISession _session;
@@ -34,8 +36,8 @@ namespace Server
 
         private static ISessionFactory CreateSessionFactory()
             => Fluently.Configure()
-              .Database(MsSqlConfiguration.MsSql2012.ConnectionString(c => c.FromConnectionStringWithKey("ConnectionString")))
-              .Mappings(m => m.FluentMappings.AddFromAssembly(typeof(NHContext).Assembly))
-              .BuildSessionFactory();
+            .Database(MsSqlConfiguration.MsSql2012.ConnectionString(ConnectionString))
+            .Mappings(m => m.FluentMappings.AddFromAssembly(typeof(NHContext).Assembly))
+            .BuildSessionFactory();
     }
 }

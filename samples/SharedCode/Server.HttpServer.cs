@@ -7,6 +7,7 @@ namespace Server
     using System;
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public sealed class HttpServer : IDisposable
@@ -19,7 +20,7 @@ namespace Server
             _server.Prefixes.Add($"http://+:{port}/queryservice/");
         }
 
-        public void RunService<TRequest, TResponse>(Func<TRequest, Task<TResponse>> asyncRequestHandler)
+        public void RunService<TRequest, TResponse>(Func<TRequest, CancellationToken, Task<TResponse>> asyncRequestHandler)
         {
             _server.Start();
 
@@ -30,14 +31,13 @@ namespace Server
                     while (true)
                     {
                         HttpListenerContext client = await _server.GetContextAsync().ConfigureAwait(false);
-
                         using var inStream = client.Request.InputStream;
                         using var outStream = client.Response.OutputStream;
 
                         var request = await inStream.ReadAsync<TRequest>().ConfigureAwait(false);
                         try
                         {
-                            var response = await asyncRequestHandler(request).ConfigureAwait(false);
+                            var response = await asyncRequestHandler(request, CancellationToken.None).ConfigureAwait(false);
                             await outStream.WriteAsync(response).ConfigureAwait(false);
                         }
                         catch (Exception ex)
@@ -55,7 +55,7 @@ namespace Server
             });
         }
 
-        public void RunQueryService<TResult>(Func<Expression, Task<TResult>> asyncRequestHandler) => RunService(asyncRequestHandler);
+        public void RunQueryService<TResult>(Func<Expression, CancellationToken, Task<TResult>> asyncRequestHandler) => RunService(asyncRequestHandler);
 
         public void Dispose() => _server.Stop();
     }

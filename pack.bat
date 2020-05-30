@@ -2,11 +2,6 @@
 set configuration=Debug
 clean ^
   && dotnet restore Remote.Linq.sln ^
-  && dotnet build src\Remote.Linq                           --configuration %configuration% ^
-  && dotnet build src\Remote.Linq.EntityFramework           --configuration %configuration% ^
-  && dotnet build src\Remote.Linq.EntityFrameworkCore       --configuration %configuration% ^
-  && dotnet build src\Remote.Linq.Newtonsoft.Json           --configuration %configuration% ^
-  && dotnet build src\Remote.Linq.protobuf-net              --configuration %configuration% ^
   && dotnet test test\Remote.Linq.Tests                     --configuration %configuration% ^
   && dotnet test test\Remote.Linq.EntityFrameworkCore.Tests --configuration %configuration% ^
   && dotnet test test\Remote.Linq.EntityFramework.Tests     --configuration %configuration% ^

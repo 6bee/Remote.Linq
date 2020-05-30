@@ -2,10 +2,10 @@
 
 namespace Common.Model
 {
-    public class ProductCategory
+    public partial class ProductProductGroup
     {
-        public virtual int Id { get; set; }
+        public Product Product { get; set; }
 
-        public virtual string Name { get; set; }
+        public ProductGroup ProductGroup { get; set; }
     }
 }

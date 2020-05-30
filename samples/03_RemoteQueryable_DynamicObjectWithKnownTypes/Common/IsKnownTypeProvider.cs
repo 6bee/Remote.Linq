@@ -5,18 +5,17 @@ namespace Common
     using Aqua.Dynamic;
     using Common.Model;
     using System;
-    using System.Linq;
+    using System.Collections.Generic;
 
     public class IsKnownTypeProvider : IIsKnownTypeProvider
     {
-        private static readonly Func<Type, bool> _isKnowType = new[]
+        private static readonly Func<Type, bool> _isKnowType = new HashSet<Type>(new[]
             {
                 typeof(OrderItem),
                 typeof(Product),
                 typeof(ProductCategory),
                 typeof(ProductGroup),
-            }
-            .ToHashSet()
+            })
             .Contains;
 
         public bool IsKnownType(Type type) => _isKnowType(type);

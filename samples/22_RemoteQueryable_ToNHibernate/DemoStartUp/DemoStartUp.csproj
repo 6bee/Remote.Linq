@@ -2,18 +2,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net48</TargetFramework>
-    <SignAssembly>false</SignAssembly>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FluentNHibernate" Version="2.1.2" />
-    <PackageReference Include="NHibernate.Linq" Version="1.0.0" />
-    <PackageReference Include="NHibernate" Version="5.2.5" />
-    <PackageReference Include="Iesi.Collections" Version="4.0.4" />
+    <ProjectReference Include="..\Client\Client.csproj" />
+    <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Client\Client.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Server\Server.csproj" />
+    <Compile Include="..\..\SharedCode\CommonHelper.cs" Link="CommonHelper.cs" Visible="false" />
   </ItemGroup>
 </Project>

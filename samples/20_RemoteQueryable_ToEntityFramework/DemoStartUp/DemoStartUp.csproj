@@ -2,14 +2,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\Server\app.config" Link="app.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Client\Client.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>
   <ItemGroup>

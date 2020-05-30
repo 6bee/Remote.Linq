@@ -13,9 +13,9 @@ namespace Common
         public static void Write(this Stream stream, object obj)
         {
             byte[] data;
-            using (MemoryStream dataStream = new MemoryStream())
+            using (var dataStream = new MemoryStream())
             {
-                BinaryFormatter formatter = new BinaryFormatter();
+                var formatter = new BinaryFormatter();
                 formatter.Serialize(dataStream, obj);
                 dataStream.Position = 0;
                 data = dataStream.ToArray();
@@ -45,7 +45,7 @@ namespace Common
             bool isException = stream.ReadByte() != 0;
 
             object obj;
-            using (MemoryStream dataStream = new MemoryStream())
+            using (var dataStream = new MemoryStream())
             {
                 int count = 0;
                 do
@@ -63,13 +63,13 @@ namespace Common
 
                 dataStream.Position = 0;
 
-                BinaryFormatter formatter = new BinaryFormatter();
+                var formatter = new BinaryFormatter();
                 obj = formatter.Deserialize(dataStream);
             }
 
             if (isException)
             {
-                Exception exception = (Exception)obj;
+                var exception = (Exception)obj;
                 throw exception;
             }
 

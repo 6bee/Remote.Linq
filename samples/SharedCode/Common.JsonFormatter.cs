@@ -12,7 +12,7 @@ namespace Common
 
     public static class JsonFormatter
     {
-        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }.ConfigureRemoteLinq();
+        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
 
         public static void Write(this Stream stream, object obj) => stream.WriteAsync(obj).Wait();
 

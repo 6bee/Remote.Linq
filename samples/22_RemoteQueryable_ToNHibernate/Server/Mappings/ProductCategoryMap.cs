@@ -9,6 +9,8 @@ namespace Server.Mappings
     {
         public ProductCategoryMap()
         {
+            Not.LazyLoad();
+
             Table("ProductCategories");
 
             Id(x => x.Id);

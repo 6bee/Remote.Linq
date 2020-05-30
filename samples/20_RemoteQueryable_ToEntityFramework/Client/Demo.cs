@@ -8,11 +8,11 @@ namespace Client
     using System.Threading.Tasks;
     using static CommonHelper;
 
-    public class AsyncDemo
+    public class Demo
     {
         private readonly Func<RemoteRepository> _repoProvider;
 
-        public AsyncDemo(Func<RemoteRepository> repoProvider)
+        public Demo(Func<RemoteRepository> repoProvider)
         {
             _repoProvider = repoProvider;
         }
@@ -22,12 +22,13 @@ namespace Client
             using RemoteRepository repo = _repoProvider();
 
             PrintHeader("GET ALL PRODUCTS:");
+            var xl = repo.Products.ToArray();
             var list = await repo.Products
                 .ToListAsync()
                 .ConfigureAwait(false);
             foreach (var item in list)
             {
-                PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
+                PrintLine($"  P#{item.Id}| {item.Name} | {item.Price:C}");
             }
 
             PrintHeader("SELECT IDs:");
@@ -40,19 +41,17 @@ namespace Client
                 .ConfigureAwait(false);
             foreach (int id in productIdsQuery)
             {
-                PrintLine($"  {id}");
+                PrintLine($"  P#{id}");
             }
 
             PrintHeader("COUNT:");
-            var productsQuery =
-                from p in repo.Products
-                select p;
-            PrintLine($"  Count = {await productsQuery.CountAsync().ConfigureAwait(false)}");
+            var asyncProductCount = repo.Products.CountAsync().ConfigureAwait(false);
+            PrintLine($"  Count = {await asyncProductCount}");
 
             PrintHeader("INVALID OPERATIONS:");
             try
             {
-                _ = await productsQuery
+                _ = await repo.Products
                     .FirstAsync(x => false)
                     .ConfigureAwait(false);
             }
@@ -63,7 +62,7 @@ namespace Client
 
             try
             {
-                _ = await productsQuery
+                _ = await repo.Products
                     .SingleAsync()
                     .ConfigureAwait(false);
             }
@@ -73,55 +72,67 @@ namespace Client
             }
 
             PrintHeader("GET MARKETS WITH PRODUCTS:");
-            var marketsWithProducts = await repo.Products
-                .SelectMany(x => x.Markets)
+            var marketsWithProducts = repo.Markets
                 .Include(x => x.Products)
+                .Where(x => x.Products.Any())
                 .ToListAsync()
                 .ConfigureAwait(false);
-            foreach (var market in marketsWithProducts)
+            foreach (var market in await marketsWithProducts)
             {
-                PrintLine($"  {market.Name}");
+                PrintLine($"  M#{market.Id}| {market.Name}");
 
-                if (market.Products != null)
+                foreach (var product in market.Products)
                 {
-                    foreach (var product in market.Products)
-                    {
-                        PrintLine($"    {product.Name}");
-                    }
+                    PrintLine($"        P#{product.Id}| {product.Name}");
                 }
             }
 
-            PrintHeader("GET ALL PRODUCTS AND THEIR MARKETS:");
-            foreach (var item in repo.Products.Include(x => x.Markets))
+            PrintHeader("GET ALL PRODUCTS AND RELATED PRODUCTS OF CORRESPONDING MARKETS:");
+            var productMarkets = await repo.Products
+                .Include(x => x.Markets.Select(m => m.Products))
+                .ToListAsync()
+                .ConfigureAwait(false);
+            foreach (var item in productMarkets)
             {
-                PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
+                PrintLine($"  P#{item.Id}| {item.Name} | {item.Price:C}");
 
-                foreach (var m in item.Markets)
+                var relatedProducts = item.Markets
+                    .SelectMany(m => m.Products
+                        .Where(p => p != item)
+                        .Select(p => new { MarketId = m.Id, Product = p }));
+                foreach (var p in relatedProducts)
                 {
-                    PrintLine($"         {m.Name}");
+                    PrintLine($"         M#{p.MarketId}| P#{p.Product.Id}| {p.Product.Name}");
                 }
             }
 
-            PrintHeader("GET ALL PRODUCTS HAVING MARKETS DEFINED:");
+            PrintHeader("GET ALL PRODUCTS HAVING MARKETS DEFINED (USING INCLUDE):");
             var query = repo.Products
                 .Where(p => p.Markets.Any());
-            var queryResult = await query
-                .ToListAsync()
-                .ConfigureAwait(false);
-            foreach (var item in queryResult)
-            {
-                PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
-            }
-
-            PrintHeader("GET ALL PRODUCTS HAVING MARKETS DEFINED (INCLUDING MARKETS):");
-            var queryResultWithMarketData = await query
+            var productIncludingMarketData = query
                 .Include(p => p.Markets)
                 .ToListAsync()
                 .ConfigureAwait(false);
-            foreach (var item in queryResultWithMarketData)
+            foreach (var item in await productIncludingMarketData)
             {
                 var markets = item.Markets.Select(x => x.Name);
-                PrintLine($"  {item.Id} | {item.Name} | {item.Price:C} | {string.Join("; ", markets)}");
+                PrintLine($"  P#{item.Id}| {item.Name} | {string.Join("; ", markets)}");
+            }
+
+            PrintHeader("GET ALL PRODUCTS HAVING MARKETS DEFINED (USING PROJECTION):");
+            var productSelectingMarketData = query
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Name,
+                    x.Price,
+                    Markets = x.Markets.Select(m => m.Name),
+                })
+                .ToListAsync()
+                .ConfigureAwait(false);
+            foreach (var item in await productSelectingMarketData)
+            {
+                PrintLine($"  P#{item.Id}| {item.Name} | {string.Join("; ", item.Markets)}");
             }
         }
     }

@@ -2,58 +2,38 @@
 
 namespace Server
 {
-    using Newtonsoft.Json;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.DependencyInjection;
     using Remote.Linq;
     using System;
-    using System.Linq;
-    using System.Net.Http.Formatting;
-    using System.Web.Http;
-    using System.Web.Http.SelfHost;
-    using System.Web.Http.Validation;
+    using System.Threading;
 
     public sealed class WebApiServer : IDisposable
     {
-        private sealed class CustomBodyModelValidator : DefaultBodyModelValidator
-        {
-            public override bool ShouldValidateType(Type type)
-                => type != typeof(Common.Model.Query)
-                && base.ShouldValidateType(type);
-        }
-
-        private readonly int _port;
-        private HttpSelfHostServer _server;
+        private readonly CancellationTokenSource _cancellation;
+        private readonly IWebHost _webHost;
 
         public WebApiServer(int port)
         {
-            _port = port;
+            _cancellation = new CancellationTokenSource();
+            _webHost = new WebHostBuilder()
+                .ConfigureServices(services => services
+                    .AddMvcCore()
+                    .AddJsonFormatters()
+                    .AddJsonOptions(json => json.SerializerSettings.ConfigureRemoteLinq()))
+                .Configure(application => application.UseMvc())
+                .UseKestrel()
+                .UseUrls($"http://+:{port}")
+                .Build();
         }
 
-        public void Open()
+        public void Open() => _webHost.RunAsync(_cancellation.Token);
+
+        public void Dispose()
         {
-            if (_server != null)
-            {
-                throw new InvalidOperationException("Server has been opened already.");
-            }
-
-            // ensure common assembly is loaded
-            _ = typeof(Common.Model.Query).Assembly;
-
-            HttpSelfHostConfiguration config = new HttpSelfHostConfiguration($"http://localhost:{_port}");
-
-            config.Services.Replace(typeof(IBodyModelValidator), new CustomBodyModelValidator());
-
-            JsonMediaTypeFormatter jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().Single();
-            jsonFormatter.SerializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
-
-            config.Routes.MapHttpRoute("API Default", "api/{controller}");
-
-            config.MaxReceivedMessageSize = 10 * 1024 * 1024;
-
-            _server = new HttpSelfHostServer(config);
-
-            _server.OpenAsync().Wait();
+            _cancellation.Cancel();
+            _cancellation.Dispose();
         }
-
-        public void Dispose() => _server?.Dispose();
     }
 }

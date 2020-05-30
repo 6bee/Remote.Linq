@@ -4,36 +4,18 @@ namespace Server
 {
     using Aqua.Dynamic;
     using Common.Model;
+    using Microsoft.AspNetCore.Mvc;
     using Remote.Linq.Expressions;
-    using System;
     using System.Collections.Generic;
-    using System.Net;
-    using System.Net.Http;
-    using System.Text;
-    using System.Web.Http;
 
-    public class QueryController : ApiController
+    [ApiController]
+    [Route("api")]
+    public class QueryController : Controller
     {
         private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
+        [Route("query")]
         public IEnumerable<DynamicObject> Query([FromBody] Query query)
-        {
-            try
-            {
-                return query.Expression.Execute(DataStore.QueryableByTypeProvider);
-            }
-            catch (Exception ex)
-            {
-                string errorMessage = $"{ex.GetType()}: {ex.Message}";
-                byte[] errorMessageData = Encoding.UTF8.GetBytes(errorMessage);
-
-                var httpResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
-                {
-                    Content = new ByteArrayContent(errorMessageData),
-                };
-
-                throw new HttpResponseException(httpResponse);
-            }
-        }
+            => query.Expression.Execute(DataStore.QueryableByTypeProvider);
     }
 }

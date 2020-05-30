@@ -12,8 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\CommonHelper.cs" Link="CommonHelper.cs" Visible="false" />
-    <Compile Include="..\..\SharedCode\Server.DefaultAsyncQueryService.cs" Link="QueryService.cs" />
-    <Compile Include="..\..\SharedCode\Server.DefaultAsyncQueryService.wcf.cs" Visible="false" />
+    <Compile Include="..\..\SharedCode\Server.DefaultAsyncQueryService.wcf.cs" Link="QueryService.cs" />
     <Compile Include="..\..\SharedCode\Server.InMemoryDataStore.cs" Link="InMemoryDataStore.cs" />
     <Compile Include="..\..\SharedCode\WcfHelper.cs" Link="WcfHelper.cs" Visible="false" />
   </ItemGroup>

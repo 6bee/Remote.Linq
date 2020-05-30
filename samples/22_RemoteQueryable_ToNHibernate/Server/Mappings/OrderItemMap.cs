@@ -9,12 +9,15 @@ namespace Server.Mappings
     {
         public OrderItemMap()
         {
+            Not.LazyLoad();
+
             Table("OrderItems");
 
             Id(x => x.Id);
 
             Map(x => x.ProductId);
             Map(x => x.Quantity);
+            Map(x => x.UnitPrice);
         }
     }
 }

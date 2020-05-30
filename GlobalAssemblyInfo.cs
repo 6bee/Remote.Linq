@@ -10,4 +10,4 @@ using System.Security;
 
 [assembly: ComVisible(false)]
 
-[assembly: SecurityRules(SecurityRuleSet.Level2)]
+[assembly: SecurityRules(SecurityRuleSet.Level1)]

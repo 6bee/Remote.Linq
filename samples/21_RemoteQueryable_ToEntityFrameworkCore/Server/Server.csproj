@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
@@ -11,5 +11,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
     <PackageReference Include="Remote.Linq.EntityFrameworkCore" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedCode\CommonHelper.cs" Visible="false" />
+    <Compile Include="..\..\SharedCode\Server.TcpServer.cs" Link="TcpServer.cs" />
   </ItemGroup>
 </Project>

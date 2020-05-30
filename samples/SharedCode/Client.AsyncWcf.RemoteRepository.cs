@@ -11,6 +11,7 @@ namespace Client
     using System.Collections.Generic;
     using System.Linq;
     using System.ServiceModel;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public sealed class RemoteRepository : IRemoteRepository

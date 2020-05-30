@@ -9,7 +9,7 @@ namespace Client
         private static void Main()
         {
             Title("Xml Serialization over TCP/IP [Client]");
-            WaitForEnterKey("Lauch the query service, then press <ENTER> to start the client.");
+            WaitForEnterKey("Launch the query service, then press <ENTER> to start the client.");
 
             new AsyncDemo(() => new RemoteRepository("localhost", 8899)).RunAsync().Wait();
 

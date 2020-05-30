@@ -2,10 +2,12 @@
 
 namespace Client
 {
+    using Common;
     using System;
     using System.IO;
     using System.Linq;
     using System.Security;
+    using static CommonHelper;
 
     public class Client
     {
@@ -24,10 +26,8 @@ namespace Client
 
             try
             {
-                foreach (string result in query)
-                {
-                    Console.WriteLine(result);
-                }
+                using var color = TextColor(ConsoleColor.Red);
+                query.ForEach(PrintLine);
             }
             catch (Exception ex)
             {
@@ -36,11 +36,8 @@ namespace Client
                     ex = inner;
                 }
 
-                Console.ForegroundColor = ex is SecurityException
-                    ? ConsoleColor.Green
-                    : ConsoleColor.Red;
-                Console.WriteLine($"{ex.GetType()}: {ex.Message}");
-                Console.ResetColor();
+                using var color = TextColor(ex is SecurityException ? ConsoleColor.Green : ConsoleColor.Red);
+                PrintLine($"{ex.GetType()}: {ex.Message}");
             }
         }
     }

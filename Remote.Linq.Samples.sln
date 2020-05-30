@@ -198,12 +198,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\20_R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\20_RemoteQueryable_ToEntityFramework\Server\Server.csproj", "{D21D388D-86B8-4964-9D26-FDE90E2991D4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{6683CAE3-1881-4393-8C81-E3D8A6049973}"
-	ProjectSection(SolutionItems) = preProject
-		samples\20_RemoteQueryable_ToEntityFramework\Database\RemoteQueryableDemoDB.sql = samples\20_RemoteQueryable_ToEntityFramework\Database\RemoteQueryableDemoDB.sql
-		samples\20_RemoteQueryable_ToEntityFramework\Database\RemoteQueryableDemoDBSetup.cmd = samples\20_RemoteQueryable_ToEntityFramework\Database\RemoteQueryableDemoDBSetup.cmd
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "21_RemoteQueryable_ToEntityFrameworkCore", "21_RemoteQueryable_ToEntityFrameworkCore", "{4F4868C5-1021-4012-9FA2-AAFF81DE9502}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\21_RemoteQueryable_ToEntityFrameworkCore\Client\Client.csproj", "{B55BF74F-3A02-42CD-97E2-47E456FF99A3}"
@@ -214,12 +208,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\21_R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\21_RemoteQueryable_ToEntityFrameworkCore\Server\Server.csproj", "{C814EBBF-755D-42A4-AAEE-AD11BFFEE678}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{072CD055-6573-446C-BB18-0D6291BB60CB}"
-	ProjectSection(SolutionItems) = preProject
-		samples\21_RemoteQueryable_ToEntityFrameworkCore\Database\RemoteQueryableDemoDB.sql = samples\21_RemoteQueryable_ToEntityFrameworkCore\Database\RemoteQueryableDemoDB.sql
-		samples\21_RemoteQueryable_ToEntityFrameworkCore\Database\RemoteQueryableDemoDBSetup.cmd = samples\21_RemoteQueryable_ToEntityFrameworkCore\Database\RemoteQueryableDemoDBSetup.cmd
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "22_RemoteQueryable_ToNHibernate", "22_RemoteQueryable_ToNHibernate", "{D62DE0F7-57FE-428F-B77C-0DA8744B789F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\22_RemoteQueryable_ToNHibernate\Client\Client.csproj", "{9003BA74-B086-434E-A6A0-493C9FF22CE0}"
@@ -229,12 +217,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\22_RemoteQueryable_ToNHibernate\DemoStartUp\DemoStartUp.csproj", "{5873285E-C54A-43D6-9D28-539BB5E8A403}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\22_RemoteQueryable_ToNHibernate\Server\Server.csproj", "{8DD29D87-B46B-4A89-B3AE-78FC26CFE541}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{2F8979D2-12AF-4B00-A559-BE8A9AD2F016}"
-	ProjectSection(SolutionItems) = preProject
-		samples\22_RemoteQueryable_ToNHibernate\Database\RemoteQueryableDemoDB.sql = samples\22_RemoteQueryable_ToNHibernate\Database\RemoteQueryableDemoDB.sql
-		samples\22_RemoteQueryable_ToNHibernate\Database\RemoteQueryableDemoDBSetup.cmd = samples\22_RemoteQueryable_ToNHibernate\Database\RemoteQueryableDemoDBSetup.cmd
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "30_SandboxedServer", "30_SandboxedServer", "{CB53836D-1F3A-4569-8A3D-D8F9397E92F0}"
 EndProject
@@ -255,6 +237,27 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\18_RemoteQueryable_UsingBsonSerializationOverTcp\DemoStartUp\DemoStartUp.csproj", "{C34BD9D7-C146-4919-AAA9-8B47A4AD22B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\18_RemoteQueryable_UsingBsonSerializationOverTcp\Server\Server.csproj", "{236E50A6-5551-45DE-9F98-CAC4A0456BD6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{71E9AF36-9DD1-410B-8B0D-26750E46FF87}"
+	ProjectSection(SolutionItems) = preProject
+		samples\SharedCode\mssql\DockerRunMSSQL.cmd = samples\SharedCode\mssql\DockerRunMSSQL.cmd
+		samples\SharedCode\mssql\RemoteQueryableDemoDB.sql = samples\SharedCode\mssql\RemoteQueryableDemoDB.sql
+		samples\SharedCode\mssql\RemoteQueryableDemoDBSetup.cmd = samples\SharedCode\mssql\RemoteQueryableDemoDBSetup.cmd
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{D4E1DFBC-E4D6-4894-A290-8312B0767CFB}"
+	ProjectSection(SolutionItems) = preProject
+		samples\SharedCode\mssql\DockerRunMSSQL.cmd = samples\SharedCode\mssql\DockerRunMSSQL.cmd
+		samples\SharedCode\mssql\RemoteQueryableDemoDB.sql = samples\SharedCode\mssql\RemoteQueryableDemoDB.sql
+		samples\SharedCode\mssql\RemoteQueryableDemoDBSetup.cmd = samples\SharedCode\mssql\RemoteQueryableDemoDBSetup.cmd
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{EEC4A3DC-4B2F-40A5-B25C-CDF121D7125C}"
+	ProjectSection(SolutionItems) = preProject
+		samples\SharedCode\mssql\DockerRunMSSQL.cmd = samples\SharedCode\mssql\DockerRunMSSQL.cmd
+		samples\SharedCode\mssql\RemoteQueryableDemoDB.sql = samples\SharedCode\mssql\RemoteQueryableDemoDB.sql
+		samples\SharedCode\mssql\RemoteQueryableDemoDBSetup.cmd = samples\SharedCode\mssql\RemoteQueryableDemoDBSetup.cmd
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -691,17 +694,14 @@ Global
 		{8A204782-C30F-4082-9926-A6FB5916D46C} = {2BF5F1E7-296E-4D25-B756-5798E6848B95}
 		{6C2BF357-84F6-43BE-A0B7-ABD4DEC875BE} = {2BF5F1E7-296E-4D25-B756-5798E6848B95}
 		{D21D388D-86B8-4964-9D26-FDE90E2991D4} = {2BF5F1E7-296E-4D25-B756-5798E6848B95}
-		{6683CAE3-1881-4393-8C81-E3D8A6049973} = {2BF5F1E7-296E-4D25-B756-5798E6848B95}
 		{B55BF74F-3A02-42CD-97E2-47E456FF99A3} = {4F4868C5-1021-4012-9FA2-AAFF81DE9502}
 		{C91BF411-65C3-4122-B6E0-8B1956375031} = {4F4868C5-1021-4012-9FA2-AAFF81DE9502}
 		{2B14F790-1720-4D8B-B2ED-BC06779FE346} = {4F4868C5-1021-4012-9FA2-AAFF81DE9502}
 		{C814EBBF-755D-42A4-AAEE-AD11BFFEE678} = {4F4868C5-1021-4012-9FA2-AAFF81DE9502}
-		{072CD055-6573-446C-BB18-0D6291BB60CB} = {4F4868C5-1021-4012-9FA2-AAFF81DE9502}
 		{9003BA74-B086-434E-A6A0-493C9FF22CE0} = {D62DE0F7-57FE-428F-B77C-0DA8744B789F}
 		{E83B2C7F-E76C-4BBD-8E96-A9E1EDBAFC0F} = {D62DE0F7-57FE-428F-B77C-0DA8744B789F}
 		{5873285E-C54A-43D6-9D28-539BB5E8A403} = {D62DE0F7-57FE-428F-B77C-0DA8744B789F}
 		{8DD29D87-B46B-4A89-B3AE-78FC26CFE541} = {D62DE0F7-57FE-428F-B77C-0DA8744B789F}
-		{2F8979D2-12AF-4B00-A559-BE8A9AD2F016} = {D62DE0F7-57FE-428F-B77C-0DA8744B789F}
 		{1678D006-7DB6-4CF1-9358-68BB987A6585} = {CB53836D-1F3A-4569-8A3D-D8F9397E92F0}
 		{110656A9-AAE6-4590-89E5-A8F4C2D9B59C} = {CB53836D-1F3A-4569-8A3D-D8F9397E92F0}
 		{0C3FDB63-5BEE-476F-80C9-6B6E60497A3E} = {CB53836D-1F3A-4569-8A3D-D8F9397E92F0}
@@ -710,6 +710,9 @@ Global
 		{9D3284CA-9E71-464C-919B-0D233FE8C1F6} = {4A6AB7C4-9FD4-4E3F-919D-F2A979867FDA}
 		{C34BD9D7-C146-4919-AAA9-8B47A4AD22B6} = {4A6AB7C4-9FD4-4E3F-919D-F2A979867FDA}
 		{236E50A6-5551-45DE-9F98-CAC4A0456BD6} = {4A6AB7C4-9FD4-4E3F-919D-F2A979867FDA}
+		{71E9AF36-9DD1-410B-8B0D-26750E46FF87} = {2BF5F1E7-296E-4D25-B756-5798E6848B95}
+		{D4E1DFBC-E4D6-4894-A290-8312B0767CFB} = {4F4868C5-1021-4012-9FA2-AAFF81DE9502}
+		{EEC4A3DC-4B2F-40A5-B25C-CDF121D7125C} = {D62DE0F7-57FE-428F-B77C-0DA8744B789F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7222E3B1-7D71-4663-8F49-6EFBF1019E06}

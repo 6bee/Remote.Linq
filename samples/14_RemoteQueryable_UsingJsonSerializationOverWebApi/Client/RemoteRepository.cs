@@ -36,7 +36,7 @@ namespace Client
                 try
                 {
                     var query = new Common.Model.Query { Expression = expression };
-                    var response = await _httpClient.PostAsync("api/query", query, _formatter).ConfigureAwait(false);
+                    var response = await _httpClient.PostAsync("/api/query", query, _formatter).ConfigureAwait(false);
 
                     if (response.StatusCode == HttpStatusCode.InternalServerError)
                     {

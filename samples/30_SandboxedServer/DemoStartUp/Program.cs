@@ -10,31 +10,42 @@ namespace DemoStartUp
     using System.Security;
     using System.Security.Permissions;
     using System.Security.Policy;
+    using static CommonHelper;
     using Client = Client.Client;
     using Server = Server.Server;
 
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            Console.WriteLine("NOTE");
-            Console.WriteLine("This demo shows how-to secure your server using restricted app domain.");
-            Console.WriteLine("You may change `FileIOPermission` parameter to allow querying server file system.");
-            Console.WriteLine($"See {typeof(Program).FullName} ...");
+            Title("Sandboxed Server");
+
+            PrintLine("\n\nNOTE");
+            PrintLine("This demo shows how-to secure a service using restricted app domain also known as \"sandboxing\".");
+            PrintLine("You may change `FileIOPermission` parameter to allow querying server file system.");
+            PrintLine($"See `{typeof(Program).FullName}.{nameof(Main)}()`");
+
+            PrintLine("\n\nDISCLAIMER");
+            PrintLine("Sandboxing using Code Access Security (CAS) is a nice way to demonstrait both,");
+            PrintLine("validity of security concerns as well as countermeasures.");
+            PrintLine("However, Microsoft advices against using CAS as security boundaries and");
+            PrintLine("recommends the use of security boundaries provided by the operating system,");
+            PrintLine("such as virtualization, containers, or user accounts, for running processes");
+            PrintLine("with the minimum set of privileges.");
 
             const string ip = "127.0.0.1";
             const int port = 1234;
 
-            Console.WriteLine("\n\n1st demo: running server in default app domain (full-trust -> unsecured)");
+            PrintHeader("\n\n1st demo: running server in default app domain (full-trust -> unsecured)");
             using (Server server = new Server(ip, port))
             {
                 server.Start();
                 new Client(ip, port).Run();
             }
 
-            Console.WriteLine("\n\n2nd demo: running server in restricted app domain (partial-trust)");
+            PrintHeader("\n\n2nd demo: running server in restricted app domain (partial-trust)");
             AppDomain serverDomain = CreateServerAppDomain(
-                new FileIOPermission(PermissionState.None), // this prevents clients from enumerating the server's file system
+                new FileIOPermission(PermissionState.None), // <--- this prevents clients from enumerating the server's file system
                 new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, ip, port));
             using (Server server = Create<Server>(serverDomain, ip, port))
             {
@@ -42,8 +53,7 @@ namespace DemoStartUp
                 new Client(ip, port).Run();
             }
 
-            Console.WriteLine("\n\nHit enter to exit");
-            Console.ReadLine();
+            WaitForEnterKey("\n\nHit enter to exit");
         }
 
         private static T Create<T>(AppDomain appdomain, params object[] args)

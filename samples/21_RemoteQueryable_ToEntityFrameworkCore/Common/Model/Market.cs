@@ -2,10 +2,14 @@
 
 namespace Common.Model
 {
-    public class ProductCategory
+    using System.Collections.Generic;
+
+    public partial class Market
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        public IList<ProductMarket> Products { get; set; }
     }
 }

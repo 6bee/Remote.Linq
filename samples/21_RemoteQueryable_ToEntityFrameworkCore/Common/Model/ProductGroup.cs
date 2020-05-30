@@ -4,12 +4,12 @@ namespace Common.Model
 {
     using System.Collections.Generic;
 
-    public class Market
+    public partial class ProductGroup
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string GroupName { get; set; }
 
-        public IList<Product> Products { get; set; }
+        public IList<ProductProductGroup> Products { get; set; }
     }
 }

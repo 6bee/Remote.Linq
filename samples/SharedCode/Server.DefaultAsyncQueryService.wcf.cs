@@ -2,9 +2,17 @@
 
 namespace Server
 {
+    using Aqua.Dynamic;
     using Common.ServiceContracts;
+    using Remote.Linq.Expressions;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
-    partial class QueryService : IQueryService
+    public class QueryService : IQueryService
     {
+        private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
+
+        public Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression)
+            => Task.Run(() => queryExpression.Execute(DataStore.QueryableByTypeProvider));
     }
 }

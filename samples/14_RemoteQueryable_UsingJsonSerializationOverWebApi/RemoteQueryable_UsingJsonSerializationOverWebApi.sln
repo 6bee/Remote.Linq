@@ -1,6 +1,7 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "DemoStartUp\DemoStartUp.csproj", "{FDE23336-19F2-4134-88F8-D6A810A85643}"
 EndProject
@@ -10,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{D6420D9B-929B-4F1C-88D4-FF312CB0D2F0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".SolutionItems", ".SolutionItems", "{87FBDB03-99D7-475C-9B3D-6D7A2DFA22A3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ABB4E5F8-9023-4445-81D1-2C3B7BAB1A78}"
 	ProjectSection(SolutionItems) = preProject
-		netsh_http_add_urlacl.bat = netsh_http_add_urlacl.bat
+		..\SharedCode\netsh_http_add_urlacl.bat = ..\SharedCode\netsh_http_add_urlacl.bat
 	EndProjectSection
 EndProject
 Global
@@ -40,5 +41,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4F5B423-1648-49FD-B677-5EBFAA46C622}
 	EndGlobalSection
 EndGlobal

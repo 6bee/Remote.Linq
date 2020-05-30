@@ -65,6 +65,12 @@ namespace Server
                     GroupName = "Food",
                     Products = _products.Where(x => x.ProductCategoryId == 1).ToList(),
                 },
+                new ProductGroup
+                {
+                    Id = 2,
+                    GroupName = "NonFood",
+                    Products = _products.Where(x => x.ProductCategoryId == 2).ToList(),
+                },
             };
 
         public IEnumerable<ProductCategory> ProductCategories => _productCategories.ToArray();
