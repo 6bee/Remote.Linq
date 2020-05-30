@@ -7,6 +7,8 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
     using System.Linq;
     using System.Reflection;
     using System.Security;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     internal static class Helper
     {
@@ -20,7 +22,10 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
             .GetMethods()
             .Single(x => x.Name == nameof(DbContext.Set) && x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 0);
 
-        internal static MethodInfo ToListAsync(Type elementType) => _toListAsync.MakeGenericMethod(elementType);
+        internal static Task ToListAsync(IQueryable source, CancellationToken cancellation)
+            => (Task)_toListAsync
+            .MakeGenericMethod(source.ElementType)
+            .Invoke(null, new object[] { source, cancellation });
 
         /// <summary>
         /// Returns the generic <see cref="DbSet{T}"/> for the type specified.

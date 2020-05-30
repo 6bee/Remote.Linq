@@ -2,35 +2,31 @@
 
 namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
 {
-    using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.ComponentModel;
     using System.Linq;
-    using System.Reflection;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class RemoteExpressionReWriter
     {
         private static readonly System.Reflection.MethodInfo QueryableIncludeMethod = typeof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions)
-            .GetTypeInfo()
-            .GetDeclaredMethods(nameof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.Include))
+            .GetMethods()
+            .Where(x => string.Equals(x.Name, nameof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.Include), StringComparison.Ordinal))
             .Single(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1);
 
         /// <summary>
         /// Replaces resource descriptors by queryable and replaces include method call with entity framework's include methods.
         /// </summary>
-        internal static Expression ReplaceIncludeMethodCall(this Expression expression)
-            => new ElementReplacer().Run(expression);
+        /// <param name="expression">The <see cref="Expression"/> to be examined.</param>
+        /// <returns>A new expression tree with the EF's version of the include method if any call the an include methods was contained in the original expression,
+        /// otherwise the original expression tree is returned.</returns>
+        internal static Expression ReplaceIncludeMethodCall(this Expression expression) => new ElementReplacer().Run(expression);
 
         private sealed class ElementReplacer : RemoteExpressionVisitorBase
         {
-            internal ElementReplacer()
-            {
-            }
-
             internal Expression Run(Expression expression) => Visit(expression);
 
             protected override Expression VisitMethodCall(MethodCallExpression expression)

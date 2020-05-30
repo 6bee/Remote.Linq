@@ -2,31 +2,36 @@
 
 namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 {
-    using Aqua.TypeSystem;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Security;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     internal static class Helper
     {
-        private static readonly System.Reflection.MethodInfo _toListAsync = typeof(EntityFrameworkQueryableExtensions)
-            .GetTypeInfo()
-            .GetDeclaredMethods(nameof(EntityFrameworkQueryableExtensions.ToListAsync))
+        private static readonly MethodInfo _toListAsync = typeof(EntityFrameworkQueryableExtensions)
+            .GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .Where(m => string.Equals(m.Name, nameof(EntityFrameworkQueryableExtensions.ToListAsync), StringComparison.Ordinal))
             .Where(m => m.IsGenericMethodDefinition && m.GetParameters().Length == 2)
             .Single();
 
-        private static readonly System.Reflection.MethodInfo _dbSetGetter = typeof(DbContext)
-            .GetTypeInfo()
-            .GetDeclaredMethods(nameof(DbContext.Set))
-            .Single(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 0);
+        private static readonly MethodInfo _dbSetGetter = typeof(DbContext)
+            .GetMethods()
+            .Where(x => string.Equals(x.Name, nameof(DbContext.Set), StringComparison.Ordinal))
+            .Where(x => x.IsGenericMethod)
+            .Single(x => x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 0);
 
-        private static readonly System.Reflection.MethodInfo _executeAsAsyncStream = typeof(Helper)
+        private static readonly MethodInfo _executeAsAsyncStream = typeof(Helper)
             .GetMethod(nameof(ExecuteAsAsyncStream), BindingFlags.NonPublic | BindingFlags.Static);
 
-        internal static System.Reflection.MethodInfo ToListAsync(Type elementType) => _toListAsync.MakeGenericMethod(elementType);
+        internal static Task ToListAsync(IQueryable source, CancellationToken cancellation)
+            => (Task)_toListAsync
+            .MakeGenericMethod(source.ElementType)
+            .Invoke(null, new object[] { source, cancellation });
 
         /// <summary>
         /// Returns the generic <see cref="DbSet{T}"/> for the type specified.

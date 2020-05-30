@@ -4,6 +4,7 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 {
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
+    using Remote.Linq.EntityFramework.ExpressionVisitors;
     using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
     using System;
@@ -27,29 +28,49 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
         {
         }
 
+        protected override Expression Prepare(Expression expression)
+            => base.Prepare(expression).ReplaceIncludeMethodCall();
+
+        protected override System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression)
+            => base.Prepare(expression).ReplaceParameterizedConstructorCallsForVariableQueryArguments();
+
         /// <summary>
         /// Prepares the query <see cref="System.Linq.Expressions.Expression"/> to be able to be executed.
         /// </summary>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> returned by the Transform method.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution.</returns>
-        protected override System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
-            => Prepare(expression).ScalarQueryToAsyncExpression(cancellationToken);
+        protected override System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+            => Prepare(expression).ScalarQueryToAsyncExpression(cancellation);
 
         /// <summary>
         /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
         /// </summary>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected override async Task<object?> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
+        protected override async Task<object?> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            cancellation.ThrowIfCancellationRequested();
 
             var queryResult = expression.CompileAndInvokeExpression();
             if (queryResult is Task task)
             {
-                queryResult = await GetTaskResultAsync(task).ConfigureAwait(false);
+                if (!expression.Type.Implements(typeof(Task<>), out var resultType))
+                {
+                    resultType = task
+                        .GetType()
+                        .GetGenericArguments()
+                        .Where(x => x != typeof(CancellationToken))
+                        .ToArray();
+                }
+
+                if (resultType.Length != 1)
+                {
+                    throw new RemoteLinqException($"Failed to retrieve the result type for async query result {task.GetType()}");
+                }
+
+                queryResult = await GetTaskResultAsync(task, resultType[0]).ConfigureAwait(false);
             }
 
             if (queryResult is null)
@@ -57,34 +78,23 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
                 return null;
             }
 
-            cancellationToken.ThrowIfCancellationRequested();
+            cancellation.ThrowIfCancellationRequested();
 
-            var queryableType = queryResult.GetType();
-            if (queryableType.Implements(typeof(IQueryable<>), out var elementType))
+            if (queryResult is IQueryable queryable)
             {
                 // force query execution
-                task = Helper.ToListAsync(elementType.Single()).InvokeAndUnwrap<Task>(null, queryResult, cancellationToken);
-                await task.ConfigureAwait(false);
-                var result = TaskResultProperty(typeof(List<>).MakeGenericType(elementType)).GetValue(task);
-                queryResult = result;
+                task = Helper.ToListAsync(queryable, cancellation);
+                queryResult = await GetTaskResultAsync(task, typeof(List<>).MakeGenericType(queryable.ElementType)).ConfigureAwait(false);
             }
 
             return queryResult;
         }
 
-        protected override Expression Prepare(Expression expression)
-            => base.Prepare(expression).ReplaceIncludeMethodCall();
-
-        protected override System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression)
-            => base.Prepare(expression).ReplaceParameterizedConstructorCallsForVariableQueryArguments();
-
-        private static async Task<object?> GetTaskResultAsync(Task task)
+        private static async Task<object?> GetTaskResultAsync(Task task, Type resultType)
         {
             await task.ConfigureAwait(false);
-            return GetTaskResult(task);
+            return TaskResultProperty(resultType).GetValue(task);
         }
-
-        private static object? GetTaskResult(Task task) => TaskResultProperty(task.GetType().GetGenericArguments().Single()).GetValue(task);
 
         private static System.Reflection.PropertyInfo TaskResultProperty(Type resultType) =>
             typeof(Task<>).MakeGenericType(resultType)

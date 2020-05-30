@@ -234,5 +234,22 @@ namespace Remote.Linq
 
             return expression;
         }
+
+        internal static IQueryable? AsQueryableOrNull(this object? value)
+        {
+            var queryable = value as IQueryable;
+            if (queryable is null)
+            {
+                return null;
+            }
+
+            var type = queryable.GetType();
+            if (type.IsGenericType && typeof(EnumerableQuery<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+            {
+                return null;
+            }
+
+            return queryable;
+        }
     }
 }

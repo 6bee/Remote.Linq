@@ -65,13 +65,10 @@ namespace Remote.Linq.ExpressionVisitors
                 var methodDeclaringType = methodCallExpression.Method.DeclaringType;
                 if (methodDeclaringType == typeof(Queryable) || methodDeclaringType == typeof(Enumerable))
                 {
-                    if (methodCallExpression.Arguments.Count > 0)
+                    if (methodCallExpression.Arguments.FirstOrDefault() is ConstantExpression argument &&
+                        argument?.Value.AsQueryableOrNull() != null)
                     {
-                        var argument = methodCallExpression.Arguments[0] as ConstantExpression;
-                        if (!(argument is null) && argument.Value is IRemoteQueryable)
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
             }
@@ -180,9 +177,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             internal Nominator(Func<Expression, bool>? fnCanBeEvaluated)
             {
-                _fnCanBeEvaluated = fnCanBeEvaluated is null
-                    ? CanBeEvaluatedLocally
-                    : new Func<Expression, bool>(exp => fnCanBeEvaluated(exp) && CanBeEvaluatedLocally(exp));
+                _fnCanBeEvaluated = fnCanBeEvaluated.And(CanBeEvaluatedLocally) !;
             }
 
             internal HashSet<Expression> Nominate(Expression expression)

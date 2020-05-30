@@ -77,7 +77,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override ConstantExpression VisitConstant(ConstantExpression expression)
             {
-                var queryable = AsQueryableOrNull(expression.Value);
+                var queryable = expression.Value.AsQueryableOrNull();
                 if (!(queryable is null))
                 {
                     var typeInfo = _typeInfoProvider.Get(queryable.ElementType);
@@ -92,7 +92,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var properties = newConstantQueryArgument.Properties ?? Enumerable.Empty<Property>();
                     foreach (var property in properties)
                     {
-                        var value = AsQueryableOrNull(property.Value);
+                        var value = property.Value.AsQueryableOrNull();
                         if (value != null)
                         {
                             var typeInfo = _typeInfoProvider.Get(value.ElementType);
@@ -105,23 +105,6 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 return base.VisitConstant(expression);
-            }
-
-            private static IQueryable? AsQueryableOrNull(object? value)
-            {
-                var queryable = value as IQueryable;
-                if (queryable is null)
-                {
-                    return null;
-                }
-
-                var type = queryable.GetType();
-                if (type.IsGenericType && typeof(EnumerableQuery<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
-                {
-                    return null;
-                }
-
-                return queryable;
             }
         }
     }

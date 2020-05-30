@@ -9,6 +9,11 @@ namespace Remote.Linq.ExpressionExecution
         [SecuritySafeCritical]
         public static object? CompileAndInvokeExpression(this System.Linq.Expressions.Expression expression)
         {
+            if (expression is System.Linq.Expressions.ConstantExpression constant)
+            {
+                return constant.Value;
+            }
+
             var lambdaExpression =
                 (expression as System.Linq.Expressions.LambdaExpression) ??
                 System.Linq.Expressions.Expression.Lambda(expression);
