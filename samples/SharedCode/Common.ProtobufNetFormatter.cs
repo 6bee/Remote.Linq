@@ -3,17 +3,14 @@
 namespace Common
 {
     using Aqua.TypeSystem;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Bson;
     using Remote.Linq;
     using System;
-    using System.Collections;
     using System.IO;
     using System.Threading.Tasks;
 
-    public static class BsonFormatter
+    public static class ProtobufNetFormatter
     {
-        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
+        private static readonly ProtoBuf.Meta.RuntimeTypeModel _configuration = ProtoBufTypeModel.ConfigureRemoteLinq();
 
         public static async Task WriteAsync(this Stream stream, object obj)
         {
@@ -28,10 +25,8 @@ namespace Common
         {
             byte[] data;
             using (var dataStream = new MemoryStream())
-            using (var bsonWriter = new BsonDataWriter(dataStream))
             {
-                var serializer = JsonSerializer.Create(_jsonSerializerSettings);
-                serializer.Serialize(bsonWriter, obj);
+                _configuration.Serialize(dataStream, obj);
                 dataStream.Position = 0;
                 data = dataStream.ToArray();
             }
@@ -39,21 +34,7 @@ namespace Common
             long size = data.LongLength;
             byte[] sizeData = BitConverter.GetBytes(size);
 
-            byte datatype;
-            if (obj is Exception)
-            {
-                datatype = 2;
-            }
-            else if (obj is IEnumerable && !(obj is string))
-            {
-                // https://github.com/JamesNK/Newtonsoft.Json/issues/1004
-                // https://www.newtonsoft.com/json/help/html/P_Newtonsoft_Json_Bson_BsonReader_ReadRootValueAsArray.htm
-                datatype = 1;
-            }
-            else
-            {
-                datatype = 0;
-            }
+            var datatype = obj is Exception ? (byte)1 : (byte)0;
 
             stream.WriteByte(datatype);
             await stream.WriteAsync(sizeData, 0, sizeData.Length).ConfigureAwait(false);
@@ -77,39 +58,38 @@ namespace Common
                 throw new OperationCanceledException("network stream was closed by other party.");
             }
 
-            bool isException = datatye == 2;
-
-            // https://github.com/JamesNK/Newtonsoft.Json/issues/1004
-            // https://www.newtonsoft.com/json/help/html/P_Newtonsoft_Json_Bson_BsonReader_ReadRootValueAsArray.htm
-            var isCollction = datatye == 1;
-
+            bool isException = datatye == 1;
             byte[] bytes = new byte[256];
 
             await stream.ReadAsync(bytes, 0, 8).ConfigureAwait(false);
             long size = BitConverter.ToInt64(bytes, 0);
 
             object obj;
-            using (var dataStream = new MemoryStream())
+            if (size > 0)
             {
-                int count = 0;
-                do
+                using (var dataStream = new MemoryStream())
                 {
-                    int length = size - count < bytes.Length
-                        ? (int)(size - count)
-                        : bytes.Length;
+                    int count = 0;
+                    do
+                    {
+                        int length = size - count < bytes.Length
+                            ? (int)(size - count)
+                            : bytes.Length;
 
-                    int i = await stream.ReadAsync(bytes, 0, length).ConfigureAwait(false);
-                    count += i;
+                        int i = await stream.ReadAsync(bytes, 0, length).ConfigureAwait(false);
+                        count += i;
 
-                    dataStream.Write(bytes, 0, i);
+                        dataStream.Write(bytes, 0, i);
+                    }
+                    while (count < size);
+
+                    dataStream.Position = 0;
+                    obj = _configuration.Deserialize(dataStream, null, type ?? typeof(T));
                 }
-                while (count < size);
-
-                dataStream.Position = 0;
-
-                using var bsonReader = new BsonDataReader(dataStream) { ReadRootValueAsArray = isCollction };
-                JsonSerializer serializer = JsonSerializer.Create(_jsonSerializerSettings);
-                obj = serializer.Deserialize(bsonReader, type ?? typeof(T));
+            }
+            else
+            {
+                obj = Activator.CreateInstance(type);
             }
 
             if (isException)

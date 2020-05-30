@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Remote.Linq.protobuf-net" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedCode\Common.Model.OrderItem.cs" Link="Model\OrderItem.cs" />
+    <Compile Include="..\..\SharedCode\Common.Model.Product.cs" Link="Model\Product.cs" />
+    <Compile Include="..\..\SharedCode\Common.Model.ProductCategory.cs" Link="Model\ProductCategory.cs" />
+    <Compile Include="..\..\SharedCode\Common.Model.ProductGroup.cs" Link="Model\ProductGroup.cs" />
+    <Compile Include="..\..\SharedCode\Common.ProtobufNetFormatter.cs" Link="ProtobufNetFormatter.cs" />
+  </ItemGroup>
+</Project>

@@ -20,7 +20,7 @@ namespace Common
 
         public static async Task WriteAsync(this Stream stream, object obj)
         {
-            var typeInfo = new TypeInfo(obj.GetType());
+            var typeInfo = new TypeInfo(obj.GetType(), false, false);
 
             await WriteInternalAsync(stream, typeInfo).ConfigureAwait(false);
 

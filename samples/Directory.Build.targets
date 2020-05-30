@@ -5,5 +5,6 @@
     <PackageReference Update="Remote.Linq.EntityFramework" Version="$(RemoteLinqVersion)" />
     <PackageReference Update="Remote.Linq.EntityFrameworkCore" Version="$(RemoteLinqVersion)" />
     <PackageReference Update="Remote.Linq.Newtonsoft.Json" Version="$(RemoteLinqVersion)" />
+    <PackageReference Update="Remote.Linq.protobuf-net" Version="$(RemoteLinqVersion)" />
   </ItemGroup>
 </Project>
