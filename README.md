@@ -3,12 +3,13 @@
 | ---      | ---                              | ---                            | ---                | ---               | ---                    | ---                         |
 | `master` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
 
-| package                           | nuget                    | myget                          |
-| ---                               | ---                      | ---                            |
-| `Remote.Linq`                     | [![NuGet Badge][13]][14] | [![MyGet Pre Release][15]][16] |
-| `Remote.Linq.EntityFramework`     | [![NuGet Badge][17]][18] | [![MyGet Pre Release][19]][20] |
-| `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
-| `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge][25]][26] | [![MyGet Pre Release][27]][28] |
+| package                           | nuget                           | myget                          |
+| ---                               | ---                             | ---                            |
+| `Remote.Linq`                     | [![NuGet Badge][13]][14]        | [![MyGet Pre Release][15]][16] |
+| `Remote.Linq.EntityFramework`     | [![NuGet Badge][17]][18]        | [![MyGet Pre Release][19]][20] |
+| `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][21]][22]        | [![MyGet Pre Release][23]][24] |
+| `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge][25]][26]        | [![MyGet Pre Release][27]][28] |
+| `Remote.Linq.protobuf-net`        | <!--[![NuGet Badge][29]][30]--> | [![MyGet Pre Release][31]][32] |
 
 ## Description
 Remote Linq is a small and easy to use - yet very powerful - library to translate LINQ expression trees to strongly typed, serializable expression trees and vice versa. It provides functionality to send arbitrary LINQ queries to a remote service to be applied and executed against any enumerable or queryable data collection.
@@ -172,3 +173,7 @@ public TExpression DeepCopy<TExpression>(TExpression expression)
 [26]: https://www.nuget.org/packages/Remote.Linq.Newtonsoft.Json
 [27]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Newtonsoft.Json.svg?style=flat-square&label=myget
 [28]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Newtonsoft.Json
+[29]: https://buildstats.info/nuget/Remote.Linq.protobuf-net
+[30]: https://www.nuget.org/packages/Remote.Linq.protobuf-net
+[31]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.protobuf-net.svg?style=flat-square&label=myget
+[32]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.protobuf-net
