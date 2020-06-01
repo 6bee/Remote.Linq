@@ -2,6 +2,7 @@
 [Bb]in/
 TestResults/
 .nuget/
+_nuget/
 _ReSharper.*/
 packages/
 artifacts/
@@ -36,3 +37,5 @@ config.test.json
 *.DotSettings
 coverage*.json
 coverage*.xml
+*.nupkg
+*.snupkg
