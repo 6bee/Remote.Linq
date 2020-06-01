@@ -50,14 +50,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif // NETFX
 
-        public class XmlSerializer : When_using_const_bool_expression
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
-        }
-
 #if COREFX
         public class ProtobufNetSerializer : When_using_const_bool_expression
         {
@@ -67,6 +59,14 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 #endif // COREFX
+
+        public class XmlSerializer : When_using_const_bool_expression
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
+        }
 
         private readonly LambdaExpression _remoteExpression;
 

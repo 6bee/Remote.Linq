@@ -41,14 +41,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 
-#endif
-        public class XmlSerializer : When_using_complex_expression_with_local_lambda
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
-        }
+#endif // NETFX
 
 #if COREFX
         public class ProtobufNetSerializer : When_using_complex_expression_with_local_lambda
@@ -59,6 +52,14 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 #endif // COREFX
+
+        public class XmlSerializer : When_using_complex_expression_with_local_lambda
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
+        }
 
         private readonly LambdaExpression _remoteExpression;
 

@@ -49,6 +49,16 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif // NETFX
 
+#if COREFX
+        public class ProtobufNetSerializer : When_using_LoopExpressions
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // COREFX
+
         public class XmlSerializer : When_subquery_expression_use_same_parameter_name
         {
             public XmlSerializer()

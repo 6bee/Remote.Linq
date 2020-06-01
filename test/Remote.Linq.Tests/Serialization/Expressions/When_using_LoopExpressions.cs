@@ -41,15 +41,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif
-
-        public class XmlSerializer : When_using_LoopExpressions
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
-        }
+#endif // NETFX
 
 #if COREFX
         public class ProtobufNetSerializer : When_using_LoopExpressions
@@ -60,6 +52,14 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 #endif // COREFX
+
+        public class XmlSerializer : When_using_LoopExpressions
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
+        }
 
         private readonly Expression<Func<int, int>> _originalExpression;
 

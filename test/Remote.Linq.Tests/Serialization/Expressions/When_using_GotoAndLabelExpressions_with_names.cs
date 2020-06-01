@@ -44,14 +44,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif
 
-        public class XmlSerializer : When_using_GotoAndLabelExpressions_with_names
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
-        }
-
 #if COREFX
         public class ProtobufNetSerializer : When_using_GotoAndLabelExpressions_with_names
         {
@@ -61,6 +53,14 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 #endif // COREFX
+
+        public class XmlSerializer : When_using_GotoAndLabelExpressions_with_names
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
+        }
 
         private readonly Expression<Func<StreamWriter, long>> _originalExpression;
 

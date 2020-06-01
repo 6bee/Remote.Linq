@@ -42,15 +42,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif
-
-        public class XmlSerializer : When_using_TryFinallyExpressions
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
-        }
+#endif // NETFX
 
 #if COREFX
         public class ProtobufNetSerializer : When_using_TryFinallyExpressions
@@ -61,6 +53,14 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 #endif // COREFX
+
+        public class XmlSerializer : When_using_TryFinallyExpressions
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
+        }
 
         private readonly Expression<Func<bool, bool>> _originalExpression;
 

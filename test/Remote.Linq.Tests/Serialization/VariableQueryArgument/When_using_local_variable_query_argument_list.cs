@@ -43,6 +43,16 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         }
 #endif // NETFX
 
+#if COREFX
+        public class ProtobufNetSerializer : When_using_local_variable_query_argument_list
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // COREFX
+
         public class XmlSerializer : When_using_local_variable_query_argument_list
         {
             public XmlSerializer()
@@ -50,17 +60,6 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             {
             }
         }
-
-#if COREFX
-        // Unsupported by ProtobufNetSerializer
-        // public class ProtobufNetSerializer : When_using_local_variable_query_argument_list
-        // {
-        //     public ProtobufNetSerializer()
-        //         : base(ProtobufNetSerializationHelper.Serialize)
-        //     {
-        //     }
-        // }
-#endif // COREFX
 
         public class AType
         {

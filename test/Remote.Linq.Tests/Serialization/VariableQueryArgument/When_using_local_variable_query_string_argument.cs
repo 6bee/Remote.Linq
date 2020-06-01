@@ -42,14 +42,6 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         }
 #endif // NETFX
 
-        public class XmlSerializer : When_using_local_variable_query_string_argument
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
-        }
-
 #if COREFX
         public class ProtobufNetSerializer : When_using_local_variable_query_string_argument
         {
@@ -59,6 +51,14 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             }
         }
 #endif // COREFX
+
+        public class XmlSerializer : When_using_local_variable_query_string_argument
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
+        }
 
         private class AType
         {

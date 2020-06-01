@@ -32,7 +32,7 @@ namespace Remote.Linq.DynamicQuery
         {
         }
 
-        internal ConstantQueryArgument(ConstantQueryArgument constantQueryArgument)
+        internal ConstantQueryArgument(DynamicObject constantQueryArgument)
             : base(constantQueryArgument ?? throw new ArgumentNullException(nameof(constantQueryArgument)), true)
         {
         }

@@ -3,6 +3,7 @@
 namespace Remote.Linq
 {
     using Aqua;
+    using Aqua.ProtoBuf;
     using global::ProtoBuf.Meta;
     using Remote.Linq.ProtoBuf.DynamicQuery;
     using Remote.Linq.ProtoBuf.Expressions;
@@ -12,12 +13,12 @@ namespace Remote.Linq
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ProtoBufTypeModel
     {
-        public static RuntimeTypeModel ConfigureRemoteLinq(string? name = null)
-            => ConfigureRemoteLinq(RuntimeTypeModel.Create(name));
+        public static AquaTypeModel ConfigureRemoteLinq(string? name = null, bool configureDefaultSystemTypes = true)
+            => ConfigureRemoteLinq(RuntimeTypeModel.Create(name), configureDefaultSystemTypes);
 
-        public static RuntimeTypeModel ConfigureRemoteLinq(this RuntimeTypeModel typeModel)
+        public static AquaTypeModel ConfigureRemoteLinq(this RuntimeTypeModel typeModel, bool configureDefaultSystemTypes = true)
             => (typeModel ?? throw new ArgumentNullException(nameof(typeModel)))
-            .ConfigureAquaTypes()
+            .ConfigureAquaTypes(configureDefaultSystemTypes)
             .ConfigureRemoteLinqDynamicQueryTypes()
             .ConfigureRemoteLinqExpressionTypes();
     }

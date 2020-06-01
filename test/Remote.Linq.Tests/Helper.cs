@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Tests
 {
+    using Aqua.TypeSystem;
     using Shouldly;
     using System;
     using System.Collections;
@@ -36,6 +37,12 @@ namespace Remote.Linq.Tests
             || type == typeof(T?)
             || typeof(ICollection<T>).IsAssignableFrom(type)
             || typeof(ICollection<T?>).IsAssignableFrom(type);
+
+        public static bool IsEnum(this Type type)
+            => type.IsEnum
+            || (type.IsCollection() && TypeHelper.GetElementType(type).IsEnum)
+            || (type.IsGenericType && typeof(Nullable<>) == type.GetGenericTypeDefinition() && type.GetGenericArguments()[0].IsEnum)
+            || (type.IsCollection() && TypeHelper.GetElementType(type).IsGenericType && typeof(Nullable<>) == TypeHelper.GetElementType(type).GetGenericTypeDefinition() && TypeHelper.GetElementType(type).GetGenericArguments()[0].IsEnum);
 
         public static bool IsCollection(this Type type)
             => typeof(IEnumerable).IsAssignableFrom(type)

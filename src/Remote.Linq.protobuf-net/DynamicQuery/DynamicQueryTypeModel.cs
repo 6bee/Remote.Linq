@@ -2,26 +2,16 @@
 
 namespace Remote.Linq.ProtoBuf.DynamicQuery
 {
-    using Aqua.Dynamic;
     using Aqua.ProtoBuf;
-    using global::ProtoBuf.Meta;
     using Remote.Linq.DynamicQuery;
 
     internal static class DynamicQueryTypeModel
     {
-        public static RuntimeTypeModel ConfigureRemoteLinqDynamicQueryTypes(this RuntimeTypeModel typeModel)
-        {
-            typeModel.GetType<DynamicObject>().AddSubType(5, typeof(ConstantQueryArgument));
-
-            _ = typeModel.GetType<QueryableResourceDescriptor>();
-
-            typeModel.GetType<VariableQueryArgument>().SetSurrogate<VariableQueryArgumentSurrogate>();
-
-            typeModel.GetType<VariableQueryArgumentList>().SetSurrogate<VariableQueryArgumentListSurrogate>();
-
-            _ = typeModel.GetType<VariableQueryArgumentList>();
-
-            return typeModel;
-        }
+        public static AquaTypeModel ConfigureRemoteLinqDynamicQueryTypes(this AquaTypeModel typeModel)
+            => typeModel
+            .AddTypeSurrogate<ConstantQueryArgument, ConstantQueryArgumentSurrogate>()
+            .AddType<QueryableResourceDescriptor>()
+            .AddTypeSurrogate<VariableQueryArgument, VariableQueryArgumentSurrogate>()
+            .AddTypeSurrogate<VariableQueryArgumentList, VariableQueryArgumentListSurrogate>();
     }
 }

@@ -40,15 +40,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif
-
-        public class XmlSerializer : When_using_simple_projection_to_single_member
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
-        }
+#endif // NETFX
 
 #if COREFX
         public class ProtobufNetSerializer : When_using_simple_projection_to_single_member
@@ -59,6 +51,14 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 #endif // COREFX
+
+        public class XmlSerializer : When_using_simple_projection_to_single_member
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
+        }
 
         public class AType
         {

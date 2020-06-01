@@ -10,24 +10,14 @@ namespace Remote.Linq.Tests.ProtoBuf
     using Shouldly;
     using System;
     using System.IO;
-    using System.Linq;
     using Xunit;
     using static Remote.Linq.Tests.Serialization.ProtobufNetSerializationHelper;
 
     /// <summary>
-    /// This class is rather a documentation of know limitations to <i>Remote.Linq</i>'s support for <i>protobuf-net</i> that actual tests.
+    /// Rather than actual tests, this class is a documentation of know limitations to <i>Remote.Linq</i>'s support for <i>protobuf-net</i>.
     /// </summary>
     public class Issues_arise
     {
-        [Fact]
-        public void When_serializing_method_call_expression_with_parameter_and_variable_argument_A()
-        {
-            var keys = new[] { 1, 2, 3 };
-            System.Linq.Expressions.Expression<Func<int, bool>> expression = x => keys.Contains(x);
-            var remoteExpression = expression.ToRemoteLinqExpression();
-            Should.Throw<ProtoException>(remoteExpression.Serialize);
-        }
-
         [Fact]
         public void When_serializing_method_call_expression_with_parameter_and_variable_argument_B()
         {
@@ -45,7 +35,7 @@ namespace Remote.Linq.Tests.ProtoBuf
             // throws on deep clone
             Should.Throw<ProtoException>(remoteExpression.Serialize);
 
-            var config = ProtoBufTypeModel.ConfigureRemoteLinq();
+            var config = ProtoBufTypeModel.ConfigureRemoteLinq().Model;
             using var memorystream = new MemoryStream();
 
             // while serialization seems fine ...

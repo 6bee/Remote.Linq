@@ -41,15 +41,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif
-
-        public class XmlSerializer : When_using_IfElseExpressions
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.SerializeExpression)
-            {
-            }
-        }
+#endif // NETFX
 
 #if COREFX
         public class ProtobufNetSerializer : When_using_IfElseExpressions
@@ -60,6 +52,14 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 #endif // COREFX
+
+        public class XmlSerializer : When_using_IfElseExpressions
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.SerializeExpression)
+            {
+            }
+        }
 
         private readonly Expression _originalExpression;
 

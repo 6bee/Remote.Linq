@@ -44,9 +44,18 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif
+#endif // NETFX
 
-        // protobuf-net serializer not working in this scenario
+#if COREFX
+        public class ProtobufNetSerializer : When_using_LoopExpressions
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // COREFX
+
         public class XmlSerializer : When_using_LambdaExpression_returnung_a_type
         {
             public XmlSerializer()

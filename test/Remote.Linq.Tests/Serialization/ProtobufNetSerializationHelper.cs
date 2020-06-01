@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Tests.Serialization
 {
+    using Aqua.TypeSystem;
     using System;
     using System.Collections;
     using System.Linq;
@@ -11,14 +12,31 @@ namespace Remote.Linq.Tests.Serialization
     public static class ProtobufNetSerializationHelper
     {
 #if COREFX
-        private static readonly global::ProtoBuf.Meta.RuntimeTypeModel _configuration = ProtoBufTypeModel.ConfigureRemoteLinq();
+        private static readonly global::ProtoBuf.Meta.TypeModel _configuration = ProtoBufTypeModel.ConfigureRemoteLinq();
 
         public static T Serialize<T>(this T graph) => Serialize(graph, null);
 
-        public static T Serialize<T>(this T graph, global::ProtoBuf.Meta.RuntimeTypeModel configuration)
+        public static T Serialize<T>(this T graph, global::ProtoBuf.Meta.TypeModel configuration)
         {
             configuration ??= _configuration;
             return (T)configuration.DeepClone(graph);
+        }
+
+        public static global::ProtoBuf.Meta.TypeModel CreateModelFor(Type type)
+        {
+            if (type.IsCollection())
+            {
+                type = TypeHelper.GetElementType(type);
+            }
+
+            if (type.IsEnum)
+            {
+                type = typeof(string);
+            }
+
+            return ProtoBufTypeModel.ConfigureRemoteLinq()
+                .AddDynamicPropertyType(type)
+                .Compile();
         }
 #endif // COREFX
 
@@ -27,7 +45,9 @@ namespace Remote.Linq.Tests.Serialization
             Skip.If(type.Is<DateTimeOffset>(), "Data type not supported by out-of-the-box protobuf-net");
             Skip.If(type.Is<BigInteger>(), "Data type not supported by out-of-the-box protobuf-net");
             Skip.If(type.Is<Complex>(), "Data type not supported by out-of-the-box protobuf-net");
-            Skip.If(type.IsCollection() && ((IEnumerable)value).Cast<object>().All(x => x is null), "Collections with only null elements are set null by out-of-the-box protobuf-net");
+            Skip.If(
+                type.IsCollection() && ((IEnumerable)value).Cast<object>().Any(x => x is null),
+                "protobuf-net doesn't support serialization of collection with null elements as the root object");
         }
     }
 }

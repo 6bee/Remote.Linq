@@ -5,6 +5,7 @@
 namespace Remote.Linq.Tests.ProtoBuf
 {
     using Aqua.Dynamic;
+    using Aqua.TypeSystem;
     using Shouldly;
     using System;
     using System.Collections;
@@ -26,7 +27,11 @@ namespace Remote.Linq.Tests.ProtoBuf
             SkipUnsupportedDataType(type, value);
 
             var property = new Property("p1", value);
-            var copy = property.Serialize();
+
+            var config = ProtoBufTypeModel.ConfigureRemoteLinq(configureDefaultSystemTypes: false)
+                .AddDynamicPropertyType(TypeHelper.GetElementType(type) ?? type)
+                .Compile();
+            var copy = property.Serialize(config);
 
             copy.Value.ShouldBe(value);
         }
@@ -61,7 +66,10 @@ namespace Remote.Linq.Tests.ProtoBuf
                 { "p1", value },
             };
 
-            var copy = propertySet.Serialize();
+            var config = ProtoBufTypeModel.ConfigureRemoteLinq(configureDefaultSystemTypes: false)
+                .AddDynamicPropertyType(TypeHelper.GetElementType(type) ?? type)
+                .Compile();
+            var copy = propertySet.Serialize(config);
 
             copy["p1"].ShouldBe(value);
         }
@@ -73,7 +81,9 @@ namespace Remote.Linq.Tests.ProtoBuf
             SkipUnsupportedDataType(type, value);
 
             var dynamicObject = new DynamicObjectMapper().MapObject(value);
-            var copy = dynamicObject.Serialize();
+
+            var config = CreateModelFor(type);
+            var copy = dynamicObject.Serialize(config);
 
             copy?.Get().ShouldBe(dynamicObject?.Get(), $"type: {type} value: {value}");
 
@@ -89,7 +99,9 @@ namespace Remote.Linq.Tests.ProtoBuf
             SkipUnsupportedDataType(type, value);
 
             var dynamicObjects = new DynamicObjectMapper().MapCollection(value);
-            var copy = dynamicObjects.Serialize();
+
+            var config = CreateModelFor(type);
+            var copy = dynamicObjects.Serialize(config);
 
             var dynamicObjectsCount = dynamicObjects?.Count() ?? 0;
             var copyCount = copy?.Count() ?? 0;
