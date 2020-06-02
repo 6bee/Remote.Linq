@@ -218,7 +218,7 @@ namespace Remote.Linq.Expressions
         [Obsolete("This method will be removed in future versions. Use actual constructor instead.", false)]
         internal static ElementInit ElementInit(string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
         {
-            return new ElementInit(methodName, declaringType, bindingFlags, genericArguments, parameterTypes, arguments);
+            return new ElementInit(methodName, declaringType, bindingFlags, genericArguments, parameterTypes, null, arguments);
         }
     }
 }

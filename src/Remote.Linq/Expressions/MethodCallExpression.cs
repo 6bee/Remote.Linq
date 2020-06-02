@@ -29,8 +29,8 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public MethodCallExpression(Expression insatnce, string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, IEnumerable<Expression> arguments)
-            : this(insatnce, new MethodInfo(methodName, declaringType, bindingFlags, genericArguments, parameterTypes), arguments)
+        public MethodCallExpression(Expression insatnce, string methodName, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, Type returnType, IEnumerable<Expression> arguments)
+            : this(insatnce, new MethodInfo(methodName, declaringType, bindingFlags, genericArguments, parameterTypes, returnType), arguments)
         {
         }
 
