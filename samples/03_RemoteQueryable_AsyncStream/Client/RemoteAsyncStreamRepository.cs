@@ -64,28 +64,38 @@ namespace Client
 
             public async ValueTask<bool> MoveNextAsync()
             {
-                var stream = (await _tcpClient.Value.ConfigureAwait(false)).GetStream();
-
-                await stream.WriteAsync(new NextRequest { SequenceNumber = Interlocked.Increment(ref _sequence) }).ConfigureAwait(false);
-                await stream.FlushAsync().ConfigureAwait(false);
-
-                var response = await stream.ReadAsync<NextResponse<T>>().ConfigureAwait(false);
-                if (response.SequenceNumber != _sequence)
+                try
                 {
-                    var exception = new InvalidOperationException("Async stream is out of bound.");
-                    SetError(exception);
-                    throw exception;
+                    _cancellation.ThrowIfCancellationRequested();
+
+                    var stream = (await _tcpClient.Value.ConfigureAwait(false)).GetStream();
+
+                    await stream.WriteAsync(new NextRequest { SequenceNumber = Interlocked.Increment(ref _sequence) }).ConfigureAwait(false);
+                    await stream.FlushAsync().ConfigureAwait(false);
+
+                    var response = await stream.ReadAsync<NextResponse<T>>().ConfigureAwait(false);
+                    if (response.SequenceNumber != _sequence)
+                    {
+                        var exception = new InvalidOperationException("Async stream is out of bound.");
+                        SetError(exception);
+                        throw exception;
+                    }
+
+                    if (response.HasNext)
+                    {
+                        SetCurrent(response.Item);
+                        return true;
+                    }
+                    else
+                    {
+                        SetError("Reached end of stream.");
+                        return false;
+                    }
                 }
-
-                if (response.HasNext)
+                catch (Exception ex)
                 {
-                    SetCurrent(response.Item);
-                    return true;
-                }
-                else
-                {
-                    SetError("Reached end of stream.");
-                    return false;
+                    SetError(ex);
+                    throw;
                 }
             }
 
