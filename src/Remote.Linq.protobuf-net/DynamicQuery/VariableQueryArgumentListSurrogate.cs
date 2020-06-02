@@ -6,6 +6,7 @@ namespace Remote.Linq.ProtoBuf.DynamicQuery
     using Aqua.TypeSystem;
     using global::ProtoBuf;
     using Remote.Linq.DynamicQuery;
+    using System.Collections;
 
     [ProtoContract(Name = nameof(VariableQueryArgumentList))]
     public class VariableQueryArgumentListSurrogate
@@ -30,6 +31,6 @@ namespace Remote.Linq.ProtoBuf.DynamicQuery
         public static VariableQueryArgumentList? Convert(VariableQueryArgumentListSurrogate? surrogate)
             => surrogate is null
             ? null
-            : new VariableQueryArgumentList(surrogate.Values.ObjectArray, surrogate.ElementType);
+            : new VariableQueryArgumentList((IEnumerable)surrogate.Values.ObjectValue, surrogate.ElementType);
     }
 }
