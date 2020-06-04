@@ -1,5 +1,5 @@
 @echo off
-set configuration=Debug
+set configuration=Release
 clean ^
   && dotnet restore ^
   && dotnet build src\Remote.Linq                           --configuration %configuration% ^
