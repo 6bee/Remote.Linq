@@ -8,6 +8,6 @@ namespace Remote.Linq
 
     public interface IAsyncQueryResultMapper<in TSource>
     {
-        Task<TResult> MapResultAsync<TResult>(TSource source, Expression expression, CancellationToken cancellationToken = default);
+        Task<TResult> MapResultAsync<TResult>(TSource source, Expression expression, CancellationToken cancellation = default);
     }
 }

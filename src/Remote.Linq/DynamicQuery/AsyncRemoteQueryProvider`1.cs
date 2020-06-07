@@ -11,6 +11,7 @@ namespace Remote.Linq.DynamicQuery
     using Expression = System.Linq.Expressions.Expression;
     using MethodInfo = System.Reflection.MethodInfo;
 
+    [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
     internal sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
     {
         private static readonly MethodInfo _executeMethod = typeof(AsyncRemoteQueryProvider<TSource>)
@@ -81,13 +82,13 @@ namespace Remote.Linq.DynamicQuery
         }
 
 #nullable disable
-        public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+        public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation)
         {
             var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
 
-            var dataRecords = await _asyncDataProvider(rlinq, cancellationToken).ConfigureAwait(false);
+            var dataRecords = await _asyncDataProvider(rlinq, cancellation).ConfigureAwait(false);
 
-            var result = await _resultMapper.MapResultAsync<TResult>(dataRecords, expression, cancellationToken).ConfigureAwait(false);
+            var result = await _resultMapper.MapResultAsync<TResult>(dataRecords, expression, cancellation).ConfigureAwait(false);
 
             return result;
         }

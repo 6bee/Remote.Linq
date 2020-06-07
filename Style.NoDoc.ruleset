@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Remote.Linq.NoDoc" Description=" " ToolsVersion="14.0">
+<RuleSet Name="Remote.Linq.NoDoc" Description=" " ToolsVersion="16.0">
   <Include Path="Style.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CS1591" Action="Info" />
+  </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1600" Action="Info" />
     <Rule Id="SA1601" Action="None" />
     <Rule Id="SA1602" Action="Info" />
     <Rule Id="SA1611" Action="Info" />

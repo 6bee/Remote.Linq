@@ -5,7 +5,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Collections.Generic;
     using System.Linq.Expressions;
 
-    internal class RemoteQueryable<T> : RemoteQueryable, IRemoteQueryable<T>, IOrderedRemoteQueryable<T>
+    internal class RemoteQueryable<T> : RemoteQueryable, IOrderedRemoteQueryable<T>
     {
         internal RemoteQueryable(IRemoteQueryProvider provider, Expression? expression = null)
             : base(typeof(T), provider, expression)

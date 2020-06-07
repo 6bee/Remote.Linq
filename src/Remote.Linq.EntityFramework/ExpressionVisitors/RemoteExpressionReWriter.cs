@@ -29,26 +29,26 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
         {
             internal Expression Run(Expression expression) => Visit(expression);
 
-            protected override Expression VisitMethodCall(MethodCallExpression expression)
+            protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                if (expression.Instance is null &&
-                    string.Equals(expression.Method?.Name, nameof(QueryFunctions.Include), StringComparison.Ordinal) &&
-                    expression.Method?.DeclaringType?.Type == typeof(QueryFunctions) &&
-                    expression.Method?.GenericArgumentTypes?.Count == 1 &&
-                    expression.Arguments?.Count == 2)
+                if (node.Instance is null &&
+                    string.Equals(node.Method?.Name, nameof(QueryFunctions.Include), StringComparison.Ordinal) &&
+                    node.Method?.DeclaringType?.Type == typeof(QueryFunctions) &&
+                    node.Method?.GenericArgumentTypes?.Count == 1 &&
+                    node.Arguments?.Count == 2)
                 {
-                    var elementType = expression.Method.GenericArgumentTypes.Single().Type;
+                    var elementType = node.Method.GenericArgumentTypes.Single().Type;
 
-                    var queryableExpression = expression.Arguments[0];
-                    var pathExpression = expression.Arguments[1];
+                    var queryableExpression = node.Arguments[0];
+                    var pathExpression = node.Arguments[1];
 
                     var efIncludeMethod = QueryableIncludeMethod.MakeGenericMethod(elementType);
 
                     var callExpression = new MethodCallExpression(null, efIncludeMethod, new[] { queryableExpression, pathExpression });
-                    expression = callExpression;
+                    node = callExpression;
                 }
 
-                return base.VisitMethodCall(expression);
+                return base.VisitMethodCall(node);
             }
         }
     }

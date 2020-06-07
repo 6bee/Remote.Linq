@@ -4,16 +4,17 @@
 
 namespace Remote.Linq.EntityFrameworkCore.Tests
 {
-    using Remote.Linq;
     using Remote.Linq.EntityFrameworkCore.Tests.Model;
     using Shouldly;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Xunit;
 
+    [SuppressMessage("Major Code Smell", "S3881:\"IDisposable\" should be implemented correctly", Justification = "Test class")]
     public class When_executing_async_stream : IDisposable
     {
         private readonly TestContext _context;

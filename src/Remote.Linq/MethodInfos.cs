@@ -5,12 +5,14 @@ namespace Remote.Linq
     using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
 
     internal static class MethodInfos
     {
+        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
         private sealed class ProbingType
         {
             private ProbingType()

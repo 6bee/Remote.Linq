@@ -4,9 +4,11 @@ namespace Remote.Linq.ExpressionExecution
 {
     using Remote.Linq.Expressions;
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
 
+    [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
     public abstract class AsyncExpressionExecutionDecoratorBase<TDataTranferObject> : ExpressionExecutionDecoratorBase<TDataTranferObject>, IAsyncExpressionExecutionDecorator<TDataTranferObject>
     {
         private readonly IAsyncExpressionExecutionDecorator<TDataTranferObject> _parent;
@@ -21,6 +23,7 @@ namespace Remote.Linq.ExpressionExecution
         {
         }
 
+        [SuppressMessage("Major Code Smell", "S3442:\"abstract\" classes should not have \"public\" constructors", Justification = "Argument type has internal visibility only")]
         internal AsyncExpressionExecutionDecoratorBase(IAsyncExpressionExecutionDecorator<TDataTranferObject> parent)
             : base(parent)
         {
@@ -35,33 +38,33 @@ namespace Remote.Linq.ExpressionExecution
         /// that any asynchronous operations have completed before calling another method on the same context.
         /// </remarks>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The task result contains the mapped result of the query execution.
         /// </returns>
-        protected async Task<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellationToken)
+        protected async Task<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellation)
         {
             var preparedRemoteExpression = Prepare(expression);
             var linqExpression = Transform(preparedRemoteExpression);
-            var preparedLinqExpression = PrepareAsyncQuery(linqExpression, cancellationToken);
-            var queryResult = await ExecuteAsync(preparedLinqExpression, cancellationToken).ConfigureAwait(false);
+            var preparedLinqExpression = PrepareAsyncQuery(linqExpression, cancellation);
+            var queryResult = await ExecuteAsync(preparedLinqExpression, cancellation).ConfigureAwait(false);
             var processedResult = ProcessResult(queryResult);
             var dynamicObjects = ConvertResult(processedResult);
             var processedDynamicObjects = ProcessResult(dynamicObjects);
             return processedDynamicObjects;
         }
 
-        protected virtual System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
-           => _parent.PrepareAsyncQuery(expression, cancellationToken);
+        protected virtual System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+           => _parent.PrepareAsyncQuery(expression, cancellation);
 
-        protected virtual Task<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
-            => _parent.ExecuteAsync(expression, cancellationToken);
+        protected virtual Task<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+            => _parent.ExecuteAsync(expression, cancellation);
 
-        System.Linq.Expressions.Expression IAsyncExpressionExecutionDecorator<TDataTranferObject>.PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
-            => PrepareAsyncQuery(expression, cancellationToken);
+        System.Linq.Expressions.Expression IAsyncExpressionExecutionDecorator<TDataTranferObject>.PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+            => PrepareAsyncQuery(expression, cancellation);
 
-        Task<object?> IAsyncExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
-            => ExecuteAsync(expression, cancellationToken);
+        Task<object?> IAsyncExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+            => ExecuteAsync(expression, cancellation);
     }
 }

@@ -7,7 +7,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Linq;
     using System.Linq.Expressions;
 
-    internal class AsyncRemoteStreamQueryable : IAsyncRemoteStreamQueryable, IOrderedAsyncRemoteStreamQueryable
+    internal class AsyncRemoteStreamQueryable : IOrderedAsyncRemoteStreamQueryable
     {
         internal AsyncRemoteStreamQueryable(Type elementType, IAsyncRemoteStreamProvider provider, Expression? expression)
         {

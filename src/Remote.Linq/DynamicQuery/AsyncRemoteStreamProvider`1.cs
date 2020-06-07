@@ -12,7 +12,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Threading;
     using System.Threading.Tasks;
 
-    internal sealed class AsyncRemoteStreamProvider<TSource> : IAsyncRemoteStreamProvider, IQueryProvider
+    internal sealed class AsyncRemoteStreamProvider<TSource> : IAsyncRemoteStreamProvider
     {
         private readonly Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource>> _dataProvider;
         private readonly ITypeInfoProvider? _typeInfoProvider;

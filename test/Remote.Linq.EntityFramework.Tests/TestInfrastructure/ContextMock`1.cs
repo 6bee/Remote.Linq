@@ -9,7 +9,8 @@ namespace Remote.Linq.EntityFramework.Tests.TestInfrastructure
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
-    internal class ContextMock<TContext> : Mock<TContext> where TContext : DbContext
+    internal class ContextMock<TContext> : Mock<TContext>
+        where TContext : DbContext
     {
         public ContextMock()
         {
@@ -17,7 +18,8 @@ namespace Remote.Linq.EntityFramework.Tests.TestInfrastructure
             Setup(x => x.SaveChangesAsync()).Returns(Task.FromResult(1));
         }
 
-        public ContextMock<TContext> WithSet<TEntity>(Expression<Func<TContext, DbSet<TEntity>>> selector, List<TEntity> inMemoryStore) where TEntity : class
+        public ContextMock<TContext> WithSet<TEntity>(Expression<Func<TContext, DbSet<TEntity>>> selector, List<TEntity> inMemoryStore)
+            where TEntity : class
         {
             var mockSet = new DbSetMock<TEntity>(inMemoryStore);
             Setup(c => c.Set(typeof(TEntity))).Returns(mockSet.AsNonGeneric().Object);

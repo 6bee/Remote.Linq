@@ -8,6 +8,6 @@ namespace Remote.Linq
 
     public interface IAsyncRemoteQueryProvider : IRemoteQueryProvider
     {
-        Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken);
+        Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation);
     }
 }

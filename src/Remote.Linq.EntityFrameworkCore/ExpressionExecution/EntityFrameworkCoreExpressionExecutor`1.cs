@@ -35,10 +35,10 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         /// Prepares the query <see cref="System.Linq.Expressions.Expression"/> to be able to be executed.
         /// </summary>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> returned by the Transform method.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution.</returns>
-        protected override System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
-            => Prepare(expression).ScalarQueryToAsyncExpression(cancellationToken);
+        protected override System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+            => Prepare(expression).ScalarQueryToAsyncExpression(cancellation);
 
         /// <summary>
         /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.

@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Remote.Linq.Expressions;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -18,6 +19,7 @@ namespace Remote.Linq.ExpressionExecution
         {
         }
 
+        [SuppressMessage("Major Code Smell", "S3442:\"abstract\" classes should not have \"public\" constructors", Justification = "Argument type has internal visibility only")]
         internal AsyncExpressionExecutionDecorator(IAsyncExpressionExecutionDecorator<TDataTranferObject> parent)
             : base(parent)
         {
@@ -25,6 +27,6 @@ namespace Remote.Linq.ExpressionExecution
 
         public new TDataTranferObject Execute(Expression expression) => base.Execute(expression);
 
-        public new Task<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellationToken = default) => base.ExecuteAsync(expression, cancellationToken);
+        public new Task<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellation = default) => base.ExecuteAsync(expression, cancellation);
     }
 }

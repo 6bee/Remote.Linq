@@ -63,13 +63,11 @@ namespace Remote.Linq.ExpressionVisitors
 
                 var methodCallExpression = (MethodCallExpression)expression;
                 var methodDeclaringType = methodCallExpression.Method.DeclaringType;
-                if (methodDeclaringType == typeof(Queryable) || methodDeclaringType == typeof(Enumerable))
+                if ((methodDeclaringType == typeof(Queryable) || methodDeclaringType == typeof(Enumerable)) &&
+                    methodCallExpression.Arguments.FirstOrDefault() is ConstantExpression argument &&
+                    argument?.Value.AsQueryableOrNull() != null)
                 {
-                    if (methodCallExpression.Arguments.FirstOrDefault() is ConstantExpression argument &&
-                        argument?.Value.AsQueryableOrNull() != null)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 

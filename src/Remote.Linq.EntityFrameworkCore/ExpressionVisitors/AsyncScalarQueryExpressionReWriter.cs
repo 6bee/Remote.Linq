@@ -7,6 +7,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -16,6 +17,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class AsyncScalarQueryExpressionReWriter
     {
+        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
         private sealed class ProbingType
         {
             private ProbingType()
@@ -68,7 +70,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
         /// <summary>
         /// Replaces scalar query expressions by the corresponding async EF Core version.
         /// </summary>
-        internal static Expression ScalarQueryToAsyncExpression(this Expression expression, CancellationToken cancellationToken)
+        internal static Expression ScalarQueryToAsyncExpression(this Expression expression, CancellationToken cancellation)
         {
             if (expression is MethodCallExpression methodCallExpression)
             {
@@ -76,7 +78,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
                 if (_methods.TryGetValue(methodDefinition, out MethodInfo mappedMethodDefinition))
                 {
                     var mappedMethod = mappedMethodDefinition.MakeGenericMethod(methodCallExpression.Method.GetGenericArguments());
-                    var arguments = methodCallExpression.Arguments.Concat(new[] { Expression.Constant(cancellationToken) }).ToArray();
+                    var arguments = methodCallExpression.Arguments.Concat(new[] { Expression.Constant(cancellation) }).ToArray();
                     expression = Expression.Call(methodCallExpression.Object, mappedMethod, arguments);
                 }
             }

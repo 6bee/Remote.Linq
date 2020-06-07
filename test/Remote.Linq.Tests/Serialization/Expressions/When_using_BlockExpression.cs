@@ -3,6 +3,7 @@
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using Xunit;
     using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
@@ -67,6 +68,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
         private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
+        [SuppressMessage("Minor Code Smell", "S3220:Method calls should not resolve ambiguously to overloads with \"params\"", Justification = "Intentional test setup")]
         protected When_using_BlockExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
         {
             ParameterExpression decimalInputParameter = Expression.Parameter(typeof(decimal));

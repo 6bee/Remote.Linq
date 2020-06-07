@@ -81,7 +81,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         [Fact]
         public void Remote_expression_should_be_equal()
         {
-            _remoteExpression.EqualsRemoteExpression(_serializedRemoteExpression);
+            _remoteExpression.ShouldEqualRemoteExpression(_serializedRemoteExpression);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             var exp1 = _remoteExpression.ToLinqExpression<AType, string>();
             var exp2 = _serializedRemoteExpression.ToLinqExpression<AType, string>();
 
-            exp1.EqualsExpression(exp2);
+            exp1.ShouldEqualExpression(exp2);
         }
     }
 }

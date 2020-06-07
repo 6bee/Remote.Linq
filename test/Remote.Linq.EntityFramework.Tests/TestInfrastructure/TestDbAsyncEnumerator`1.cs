@@ -4,9 +4,11 @@ namespace Remote.Linq.EntityFramework.Tests.TestInfrastructure
 {
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
 
+    [SuppressMessage("Major Code Smell", "S3881:\"IDisposable\" should be implemented correctly", Justification = "Test infrastucture class")]
     internal class TestDbAsyncEnumerator<T> : IDbAsyncEnumerator<T>
     {
         private readonly IEnumerator<T> _inner;

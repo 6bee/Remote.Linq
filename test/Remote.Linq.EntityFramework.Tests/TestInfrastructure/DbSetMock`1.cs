@@ -10,7 +10,8 @@ namespace Remote.Linq.EntityFramework.Tests.TestInfrastructure
     using System.Threading;
     using System.Threading.Tasks;
 
-    internal class DbSetMock<T> : Mock<DbSet<T>> where T : class
+    internal class DbSetMock<T> : Mock<DbSet<T>>
+        where T : class
     {
         private readonly IQueryable<T> _queryable;
 

@@ -21,10 +21,12 @@ namespace Remote.Linq.Tests.Serialization
             return (T)serializer.ReadObject(stream);
         }
 
-        public static T SerializeExpression<T>(T expression) where T : Remote.Linq.Expressions.Expression
+        public static T SerializeExpression<T>(T expression)
+            where T : Remote.Linq.Expressions.Expression
             => SerializeExpression(expression, null);
 
-        public static T SerializeExpression<T>(T expression, Type[] knownTypes) where T : Remote.Linq.Expressions.Expression
+        public static T SerializeExpression<T>(T expression, Type[] knownTypes)
+            where T : Remote.Linq.Expressions.Expression
         {
             var exp1 = expression.ReplaceGenericQueryArgumentsByNonGenericArguments();
             var exp2 = Serialize(exp1, knownTypes);

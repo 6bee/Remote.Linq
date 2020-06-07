@@ -11,7 +11,7 @@ namespace Remote.Linq.Tests
 
     public static class TestData
     {
-        public enum TestEnum
+        public enum Custom
         {
             Foo,
             Bar,
@@ -24,7 +24,7 @@ namespace Remote.Linq.Tests
                 typeof(ulong),
                 typeof(string),
                 typeof(DateTime),
-                typeof(TestEnum),
+                typeof(Custom),
                 new { Text = string.Empty, Timestamp = default(DateTime?) }.GetType(),
             }
             .SelectMany(x => new[]
@@ -77,8 +77,8 @@ namespace Remote.Linq.Tests
                 Guid.NewGuid(),
                 default(DateTime),
                 DateTime.Now,
-                TestEnum.Foo,
-                TestEnum.Bar,
+                Custom.Foo,
+                Custom.Bar,
                 default(TimeSpan),
                 new TimeSpan(long.MaxValue),
                 default(DateTimeOffset),

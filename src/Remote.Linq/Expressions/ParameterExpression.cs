@@ -16,7 +16,7 @@ namespace Remote.Linq.Expressions
 
         public ParameterExpression(TypeInfo parameterType, string? parameterName, int instanceId)
         {
-            ParameterType = parameterType ?? throw new ArgumentNullException(nameof(ParameterType));
+            ParameterType = parameterType ?? throw new ArgumentNullException(nameof(parameterType));
             ParameterName = parameterName;
             InstanceId = instanceId;
         }

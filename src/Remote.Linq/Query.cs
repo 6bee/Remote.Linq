@@ -13,12 +13,12 @@ namespace Remote.Linq
 
     [Serializable]
     [DataContract]
-    public class Query : IQuery, IOrderedQuery
+    public class Query : IOrderedQuery
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Query"/> class.
         /// </summary>
-        public Query()
+        private Query()
         {
         }
 

@@ -8,6 +8,6 @@ namespace Remote.Linq
 
     public interface IAsyncRemoteQueryable<T> : IAsyncRemoteQueryable, IRemoteQueryable<T>
     {
-        Task<IEnumerable<T>> ExecuteAsync(CancellationToken cancellationToken = default);
+        Task<IEnumerable<T>> ExecuteAsync(CancellationToken cancellation = default);
     }
 }

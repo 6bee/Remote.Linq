@@ -3,6 +3,7 @@
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Reflection;
     using Xunit;
@@ -68,6 +69,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
         private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
+        [SuppressMessage("Minor Code Smell", "S3220:Method calls should not resolve ambiguously to overloads with \"params\"", Justification = "Test setup")]
         protected When_using_TryFinallyExpressions(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
         {
             ParameterExpression shouldFail = Expression.Parameter(typeof(bool));

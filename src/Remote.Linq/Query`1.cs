@@ -7,6 +7,7 @@ namespace Remote.Linq
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Runtime.Serialization;
@@ -14,7 +15,7 @@ namespace Remote.Linq
 
     [Serializable]
     [DataContract]
-    public class Query<T> : IQuery<T>, IOrderedQuery<T>
+    public class Query<T> : IOrderedQuery<T>
     {
         [NonSerialized]
         private readonly Func<Query<T>, IEnumerable<T>>? _dataProvider;
@@ -25,7 +26,7 @@ namespace Remote.Linq
         /// <summary>
         /// Initializes a new instance of the <see cref="Query{T}"/> class.
         /// </summary>
-        public Query()
+        private Query()
         {
             _expressionTranslator = exp => exp.ToRemoteLinqExpression().ReplaceGenericQueryArgumentsByNonGenericArguments();
         }
@@ -33,6 +34,7 @@ namespace Remote.Linq
         /// <summary>
         /// Initializes a new instance of the <see cref="Query{T}"/> class.
         /// </summary>
+        [SuppressMessage("Blocker Code Smell", "S3427:Method overloads with default parameter values should not overlap ", Justification = "Default constructor needed for deserialization")]
         public Query(Func<Query<T>, IEnumerable<T>>? dataProvider = null, Func<LambdaExpression, Expressions.LambdaExpression>? expressionTranslator = null, IEnumerable<Expressions.LambdaExpression>? filterExpressions = null, IEnumerable<Expressions.SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
         {
             _dataProvider = dataProvider;

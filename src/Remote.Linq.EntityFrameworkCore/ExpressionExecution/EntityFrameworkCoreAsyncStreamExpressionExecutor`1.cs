@@ -10,23 +10,11 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Security;
-    using System.Threading.Tasks;
 
     public abstract class EntityFrameworkCoreAsyncStreamExpressionExecutor<TDataTranferObject> : AsyncStreamExpressionExecutor<TDataTranferObject>
         where TDataTranferObject : class
     {
-        private static readonly System.Reflection.MethodInfo ToListAsync = typeof(EntityFrameworkQueryableExtensions)
-            .GetTypeInfo()
-            .GetDeclaredMethods(nameof(EntityFrameworkQueryableExtensions.ToListAsync))
-            .Where(m => m.IsGenericMethodDefinition && m.GetParameters().Length == 2)
-            .Single();
-
-        private static readonly Func<Type, System.Reflection.PropertyInfo> TaskResultProperty = (Type resultType) =>
-            typeof(Task<>).MakeGenericType(resultType)
-                .GetProperty(nameof(Task<object?>.Result));
-
         [SecuritySafeCritical]
         protected EntityFrameworkCoreAsyncStreamExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             : this(dbContext.GetQueryableSetProvider(), typeResolver, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))

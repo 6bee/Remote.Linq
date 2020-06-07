@@ -84,7 +84,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         [Fact]
         public void Remote_expression_should_be_equal()
         {
-            _remoteExpression.EqualsRemoteExpression(_serializedRemoteExpression);
+            _remoteExpression.ShouldEqualRemoteExpression(_serializedRemoteExpression);
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             var exp1 = _remoteExpression.ToLinqExpression<AType, bool>();
             var exp2 = _serializedRemoteExpression.ToLinqExpression<AType, bool>();
 
-            exp1.EqualsExpression(exp2);
+            exp1.ShouldEqualExpression(exp2);
         }
     }
 }

@@ -61,7 +61,7 @@ namespace Remote.Linq.ExpressionVisitors
             var switchValue = Visit(switchExpression.SwitchValue);
             if (body != switchExpression.DefaultBody ||
                 switchValue != switchExpression.SwitchValue ||
-                switchCases.SequenceEqual(cases) == false)
+                !switchCases.SequenceEqual(cases))
             {
                 return Expression.Switch(switchValue, body, switchExpression.Comparison, switchCases);
             }
@@ -73,7 +73,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             var body = Visit(switchCase.Body);
             var testValues = switchCase.TestValues.Select(Visit).ToList();
-            if (body != switchCase.Body || switchCase.TestValues.SequenceEqual(testValues) == false)
+            if (body != switchCase.Body || !switchCase.TestValues.SequenceEqual(testValues))
             {
                 return Expression.SwitchCase(body, testValues);
             }
@@ -90,7 +90,7 @@ namespace Remote.Linq.ExpressionVisitors
             if (body != tryExpression.Body ||
                 fault != tryExpression.Fault ||
                 @finally != tryExpression.Finally ||
-                handlers.SequenceEqual(tryExpression.Handlers) == false)
+                !handlers.SequenceEqual(tryExpression.Handlers))
             {
                 return Expression.MakeTry(tryExpression.Type, body, @finally, fault, handlers);
             }
@@ -217,7 +217,8 @@ namespace Remote.Linq.ExpressionVisitors
             return node;
         }
 
-        protected virtual ReadOnlyCollection<T> VisitExpressionList<T>(ReadOnlyCollection<T> original) where T : Expression
+        protected virtual ReadOnlyCollection<T> VisitExpressionList<T>(ReadOnlyCollection<T> original)
+            where T : Expression
         {
             List<T>? list = null;
             for (int i = 0, n = original.Count; i < n; i++)

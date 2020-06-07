@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
+    using Aqua.Extensions;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -43,10 +44,10 @@ namespace Remote.Linq.ExpressionVisitors
         {
             var defaultExpression = Visit(switchExpression.DefaultExpression);
             var switchValue = Visit(switchExpression.SwitchValue);
-            var cases = (switchExpression.Cases ?? Enumerable.Empty<SwitchCase>()).Select(VisitSwitchCase).ToList();
+            var cases = switchExpression.Cases.AsEmptyIfNull().Select(VisitSwitchCase).ToList();
             if (defaultExpression != switchExpression.DefaultExpression ||
                 switchValue != switchExpression.SwitchValue ||
-                cases.SequenceEqual(switchExpression.Cases) == false)
+                !cases.SequenceEqual(switchExpression.Cases))
             {
                 return new SwitchExpression(switchValue, switchExpression.Comparison, defaultExpression, cases);
             }
@@ -57,9 +58,9 @@ namespace Remote.Linq.ExpressionVisitors
         protected virtual SwitchCase VisitSwitchCase(SwitchCase switchCase)
         {
             var body = Visit(switchCase.Body);
-            var testValues = switchCase.TestValues ?? new List<Expression>();
+            var testValues = switchCase.TestValues.AsEmptyIfNull();
             var newTestValues = testValues.Select(Visit).ToList();
-            if (body != switchCase.Body || testValues.SequenceEqual(newTestValues) == false)
+            if (body != switchCase.Body || !testValues.SequenceEqual(newTestValues))
             {
                 return new SwitchCase(body, newTestValues!);
             }
@@ -72,11 +73,11 @@ namespace Remote.Linq.ExpressionVisitors
             var @finally = Visit(tryExpression.Finally);
             var body = Visit(tryExpression.Body);
             var fault = Visit(tryExpression.Fault);
-            var handlers = (tryExpression.Handlers ?? Enumerable.Empty<CatchBlock>()).Select(VisitCatchBlock).ToList();
+            var handlers = tryExpression.Handlers.AsEmptyIfNull().Select(VisitCatchBlock).ToList();
             if (@finally != tryExpression.Finally ||
                 body != tryExpression.Body ||
                 fault != tryExpression.Fault ||
-                handlers.SequenceEqual(tryExpression.Handlers) == false)
+                !handlers.SequenceEqual(tryExpression.Handlers))
             {
                 return new TryExpression(tryExpression.Type, body, fault, @finally, handlers);
             }
@@ -115,7 +116,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             if (original is null)
             {
-                return null;
+                return original;
             }
 
             List<MemberBinding>? list = null;
@@ -188,7 +189,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             if (original is null)
             {
-                return null;
+                return original;
             }
 
             List<ElementInit>? list = null;
@@ -226,11 +227,12 @@ namespace Remote.Linq.ExpressionVisitors
         }
 
         [return: NotNullIfNotNull("original")]
-        protected virtual List<T>? VisitExpressionList<T>(List<T>? original) where T : Expression
+        protected virtual List<T>? VisitExpressionList<T>(List<T>? original)
+            where T : Expression
         {
             if (original is null)
             {
-                return null;
+                return original;
             }
 
             List<T>? list = null;

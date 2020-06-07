@@ -24,7 +24,8 @@ namespace Remote.Linq.Tests.Serialization
             return JsonConvert.DeserializeObject(json, type, _serializerSettings);
         }
 
-        public static T SerializeExpression<T>(T expression) where T : Remote.Linq.Expressions.Expression
+        public static T SerializeExpression<T>(T expression)
+            where T : Remote.Linq.Expressions.Expression
         {
             var exp1 = expression.ReplaceGenericQueryArgumentsByNonGenericArguments();
             var exp2 = Serialize(exp1);

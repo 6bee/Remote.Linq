@@ -3,6 +3,7 @@
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq.Expressions;
     using Xunit;
@@ -68,6 +69,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
         private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
+        [SuppressMessage("Minor Code Smell", "S3220:Method calls should not resolve ambiguously to overloads with \"params\"", Justification = "Intentional test setup")]
         protected When_using_GotoAndLabelExpressions(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
         {
             ParameterExpression writer = Expression.Parameter(typeof(StreamWriter));

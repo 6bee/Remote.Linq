@@ -62,7 +62,7 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
         /// <summary>
         /// Replaces scalar query expressions by the corresponding async EF Core version.
         /// </summary>
-        internal static Expression ScalarQueryToAsyncExpression(this Expression expression, CancellationToken cancellationToken)
+        internal static Expression ScalarQueryToAsyncExpression(this Expression expression, CancellationToken cancellation)
         {
             if (expression is MethodCallExpression methodCallExpression && methodCallExpression.Method.IsGenericMethod)
             {
@@ -70,7 +70,7 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
                 if (_methods.TryGetValue(methodDefinition, out var mappedMethodDefinition))
                 {
                     var mappedMethod = mappedMethodDefinition.MakeGenericMethod(methodCallExpression.Method.GetGenericArguments());
-                    var arguments = methodCallExpression.Arguments.Concat(new[] { Expression.Constant(cancellationToken) }).ToArray();
+                    var arguments = methodCallExpression.Arguments.Concat(new[] { Expression.Constant(cancellation) }).ToArray();
                     expression = Expression.Call(methodCallExpression.Object, mappedMethod, arguments);
                 }
             }

@@ -2,8 +2,6 @@
 
 namespace Remote.Linq.EntityFramework.Tests
 {
-    using Remote.Linq;
-    using Remote.Linq.EntityFramework;
     using Remote.Linq.EntityFramework.Tests.TestInfrastructure;
     using Remote.Linq.EntityFramework.Tests.TestModel;
     using Shouldly;

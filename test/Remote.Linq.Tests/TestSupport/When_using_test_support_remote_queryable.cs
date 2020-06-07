@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Tests.TestSupport
 {
-    using Remote.Linq;
     using Remote.Linq.TestSupport;
     using Shouldly;
     using System.Collections.Generic;

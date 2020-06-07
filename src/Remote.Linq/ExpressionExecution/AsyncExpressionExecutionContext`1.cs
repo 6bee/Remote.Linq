@@ -29,6 +29,6 @@ namespace Remote.Linq.ExpressionExecution
 
         public TDataTranferObject Execute() => Execute(_expression);
 
-        public Task<TDataTranferObject> ExecuteAsync(CancellationToken cancellationToken) => ExecuteAsync(_expression, cancellationToken);
+        public Task<TDataTranferObject> ExecuteAsync(CancellationToken cancellation) => ExecuteAsync(_expression, cancellation);
     }
 }

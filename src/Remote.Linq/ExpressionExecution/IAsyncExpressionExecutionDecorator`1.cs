@@ -7,8 +7,8 @@ namespace Remote.Linq.ExpressionExecution
 
     internal interface IAsyncExpressionExecutionDecorator<TDataTranferObject> : IExpressionExecutionDecorator<TDataTranferObject>
     {
-        System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken);
+        System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation);
 
-        Task<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken);
+        Task<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation);
     }
 }

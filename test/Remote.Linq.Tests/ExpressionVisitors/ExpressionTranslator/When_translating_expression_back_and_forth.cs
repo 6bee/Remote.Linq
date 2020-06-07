@@ -2,10 +2,10 @@
 
 namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
 {
-    using Remote.Linq;
     using Remote.Linq.DynamicQuery;
     using Shouldly;
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using Xunit;
@@ -36,6 +36,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
         }
 
         [Fact]
+        [SuppressMessage("Minor Code Smell", "S1125:Boolean literals should not be redundant", Justification = "Intentional test setup")]
         public void Should_preserve_bool_in_lambda()
         {
             BackAndForth<Expression<Func<A, bool?>>>(a => a.Flag == true).ShouldMatch();
@@ -115,11 +116,20 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
         }
 
         [Fact]
+#if COREFX
+        [SuppressMessage("Blocker Code Smell", "S2699:Tests should include assertions", Justification = "Cannot assert")]
+#endif // COREFX
         public void Should_preserve_action_expression()
         {
             var action = new Action<int>(x => { });
             var newAction = BackAndForth<Expression<Action<int>>>(x => action(x)).Item2.Compile();
             newAction(9);
+
+#if NETFX
+            newAction.Target
+                .ShouldBeOfType<System.Runtime.CompilerServices.Closure>()
+                .Constants.Single().ShouldBeOfType<Action<int>>().Method.ShouldBeSameAs(action.Method);
+#endif // NETFX
         }
 
         [Fact]
@@ -133,7 +143,8 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
             return i;
         }
 
-        private static Tuple<T, T> BackAndForth<T>(T expression) where T : Expression
+        private static Tuple<T, T> BackAndForth<T>(T expression)
+            where T : Expression
         {
             var remoteExpression = expression.ToRemoteLinqExpression();
             var linqExpression = remoteExpression.ToLinqExpression();

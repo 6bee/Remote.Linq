@@ -146,9 +146,6 @@ namespace Remote.Linq
         private static System.Linq.Expressions.ExpressionType ToExpressionType(this RLinq.UnaryOperator unaryOperator)
             => (System.Linq.Expressions.ExpressionType)(int)unaryOperator;
 
-        private static System.Linq.Expressions.GotoExpressionKind ToGotoExpressionKind(this RLinq.GotoExpressionKind kind)
-            => (System.Linq.Expressions.GotoExpressionKind)(int)kind;
-
         private static RLinq.BinaryOperator ToBinaryOperator(this System.Linq.Expressions.ExpressionType expressionType)
             => (RLinq.BinaryOperator)(int)expressionType;
 
@@ -157,6 +154,9 @@ namespace Remote.Linq
 
         private static RLinq.NewArrayType ToNewArrayType(this System.Linq.Expressions.ExpressionType expressionType)
             => (RLinq.NewArrayType)(int)expressionType;
+
+        private static System.Linq.Expressions.GotoExpressionKind ToGotoExpressionKind(this RLinq.GotoExpressionKind kind)
+            => (System.Linq.Expressions.GotoExpressionKind)(int)kind;
 
         private static RLinq.GotoExpressionKind ToGotoExpressionKind(this System.Linq.Expressions.GotoExpressionKind kind)
             => (RLinq.GotoExpressionKind)(int)kind;
@@ -413,7 +413,7 @@ namespace Remote.Linq
 
                         _constantQueryArgumentCache.Add(key, constantQueryArgument);
 
-                        foreach (var property in dynamicObject.Properties ?? Enumerable.Empty<Property>())
+                        foreach (var property in dynamicObject.Properties.AsEmptyIfNull())
                         {
                             var propertyValue = property.Value;
                             if (propertyValue is System.Linq.Expressions.Expression expressionValue)
@@ -690,7 +690,7 @@ namespace Remote.Linq
             private System.Linq.Expressions.Expression VisitTry(RLinq.TryExpression tryExpression)
             {
                 var body = Visit(tryExpression.Body);
-                var type = tryExpression.Type is null ? null : _typeResolver.ResolveType(tryExpression.Type);
+                var type = tryExpression.Type.ResolveType(_typeResolver);
                 var fault = tryExpression.Fault is null ? null : Visit(tryExpression.Fault);
                 var @finally = tryExpression.Finally is null ? null : Visit(tryExpression.Finally);
                 var handlers = tryExpression.Handlers?.Select(VisitCatchBlock) ?? Enumerable.Empty<System.Linq.Expressions.CatchBlock>();
@@ -700,7 +700,7 @@ namespace Remote.Linq
 
             private System.Linq.Expressions.CatchBlock VisitCatchBlock(RLinq.CatchBlock catchBlock)
             {
-                var exceptionType = catchBlock.Test is null ? null : _typeResolver.ResolveType(catchBlock.Test);
+                var exceptionType = catchBlock.Test.ResolveType(_typeResolver);
                 var exceptionParameter = catchBlock.Variable is null ? null : VisitParameter(catchBlock.Variable);
                 var body = catchBlock.Body is null ? null : Visit(catchBlock.Body);
                 var filter = catchBlock.Filter is null ? null : Visit(catchBlock.Filter);
@@ -749,7 +749,7 @@ namespace Remote.Linq
             private System.Linq.Expressions.Expression VisitNewArray(RLinq.NewArrayExpression expression)
             {
                 var expressions = VisitExpressionList(expression.Expressions);
-                var type = _typeResolver.ResolveType(expression.Type);
+                var type = expression.Type.ResolveType(_typeResolver);
                 return expression.NewArrayType switch
                 {
                     RLinq.NewArrayType.NewArrayBounds => System.Linq.Expressions.Expression.NewArrayBounds(type, expressions),
@@ -854,7 +854,7 @@ namespace Remote.Linq
                 {
                     if (!_parameterExpressionCache.TryGetValue(parameterExpression, out var exp))
                     {
-                        var type = _typeResolver.ResolveType(parameterExpression.ParameterType);
+                        var type = parameterExpression.ParameterType.ResolveType(_typeResolver);
                         exp = System.Linq.Expressions.Expression.Parameter(type, parameterExpression.ParameterName);
                         _parameterExpressionCache.Add(parameterExpression, exp);
                     }
@@ -867,8 +867,8 @@ namespace Remote.Linq
             {
                 var expressionType = unaryExpression.UnaryOperator.ToExpressionType();
                 var exp = Visit(unaryExpression.Operand);
-                var type = unaryExpression.Type is null ? null : _typeResolver.ResolveType(unaryExpression.Type);
-                var method = unaryExpression.Method?.ResolveMethod(_typeResolver);
+                var type = unaryExpression.Type.ResolveType(_typeResolver);
+                var method = unaryExpression.Method.ResolveMethod(_typeResolver);
                 return System.Linq.Expressions.Expression.MakeUnary(expressionType, exp, type, method);
             }
 
@@ -915,7 +915,7 @@ namespace Remote.Linq
                 else if (value is ConstantQueryArgument oldConstantQueryArgument && oldConstantQueryArgument.Type != null)
                 {
                     var newConstantQueryArgument = new ConstantQueryArgument(oldConstantQueryArgument.Type);
-                    foreach (var property in oldConstantQueryArgument.Properties ?? Enumerable.Empty<Property>())
+                    foreach (var property in oldConstantQueryArgument.Properties.AsEmptyIfNull())
                     {
                         var propertyValue = property.Value;
                         if (propertyValue is RLinq.Expression expressionValue)
@@ -944,14 +944,14 @@ namespace Remote.Linq
                 var p2 = Visit(binaryExpression.RightOperand);
                 var conversion = Visit(binaryExpression.Conversion) as System.Linq.Expressions.LambdaExpression;
                 var binaryType = binaryExpression.BinaryOperator.ToExpressionType();
-                var method = binaryExpression.Method is null ? null : binaryExpression.Method.ResolveMethod(_typeResolver);
+                var method = binaryExpression.Method.ResolveMethod(_typeResolver);
                 return System.Linq.Expressions.Expression.MakeBinary(binaryType, p1, p2, binaryExpression.IsLiftedToNull, method, conversion);
             }
 
             private System.Linq.Expressions.Expression VisitTypeIs(RLinq.TypeBinaryExpression typeBinaryExpression)
             {
                 var expression = Visit(typeBinaryExpression.Expression);
-                var type = _typeResolver.ResolveType(typeBinaryExpression.TypeOperand);
+                var type = typeBinaryExpression.TypeOperand.ResolveType(_typeResolver);
                 return System.Linq.Expressions.Expression.TypeIs(expression, type);
             }
 
@@ -965,7 +965,7 @@ namespace Remote.Linq
                     return System.Linq.Expressions.Expression.Lambda(body, parameters);
                 }
 
-                var delegateType = _typeResolver.ResolveType(lambdaExpression.Type);
+                var delegateType = lambdaExpression.Type.ResolveType(_typeResolver);
                 return System.Linq.Expressions.Expression.Lambda(delegateType, body, parameters);
             }
 

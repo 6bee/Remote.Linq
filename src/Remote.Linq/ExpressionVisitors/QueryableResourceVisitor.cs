@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.Dynamic;
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
@@ -11,7 +12,8 @@ namespace Remote.Linq.ExpressionVisitors
 
     public class QueryableResourceVisitor
     {
-        internal T ReplaceResourceDescriptorsByQueryable<T>(T expression, Func<Type, IQueryable> provider, ITypeResolver? typeResolver) where T : Expression
+        internal T ReplaceResourceDescriptorsByQueryable<T>(T expression, Func<Type, IQueryable> provider, ITypeResolver? typeResolver)
+            where T : Expression
             => (T)new ResourceDescriptorVisitor(provider, typeResolver).ReplaceResourceDescriptorsByQueryable(expression);
 
         internal Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider? typeInfoProvider)
@@ -30,36 +32,58 @@ namespace Remote.Linq.ExpressionVisitors
 
             internal Expression ReplaceResourceDescriptorsByQueryable(Expression expression) => Visit(expression);
 
-            protected override ConstantExpression VisitConstant(ConstantExpression expression)
+            protected override ConstantExpression VisitConstant(ConstantExpression node)
             {
-                var type = expression.Type.ResolveType(_typeResolver);
+                if (TryGetQueryableByQueryableResourceDescriptor(node.Value, out var queryable))
                 {
-                    if (type == typeof(QueryableResourceDescriptor) && expression.Value is QueryableResourceDescriptor queryableResourceDescriptor)
-                    {
-                        var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
-                        var queryable = _provider(queryableType);
-                        return new ConstantExpression(queryable);
-                    }
+                    return new ConstantExpression(queryable);
                 }
 
-                if (type == typeof(ConstantQueryArgument) && !(expression.Value is null))
+                if (TryResolveQueryableSuorceInConstantQueryArgument(node.Value, out var constantQueryArgument))
                 {
-                    var newConstantQueryArgument = new ConstantQueryArgument((ConstantQueryArgument)expression.Value);
-                    var properties = newConstantQueryArgument.Properties ?? Enumerable.Empty<Property>();
-                    foreach (var property in properties)
+                    return new ConstantExpression(constantQueryArgument, node.Type);
+                }
+
+                return base.VisitConstant(node);
+            }
+
+            private bool TryGetQueryableByQueryableResourceDescriptor(object? value, out IQueryable? queryable)
+            {
+                if (value is QueryableResourceDescriptor queryableResourceDescriptor)
+                {
+                    var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
+                    queryable = _provider(queryableType);
+                    return true;
+                }
+
+                queryable = null;
+                return false;
+            }
+
+            private bool TryResolveQueryableSuorceInConstantQueryArgument(object? value, out ConstantQueryArgument? newConstantQueryArgument)
+            {
+                if (value is ConstantQueryArgument constantQueryArgument)
+                {
+                    var hasChanged = false;
+                    var tempConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument);
+                    foreach (var property in tempConstantQueryArgument.Properties.AsEmptyIfNull())
                     {
-                        if (property.Value is QueryableResourceDescriptor queryableResourceDescriptor)
+                        if (TryGetQueryableByQueryableResourceDescriptor(property.Value, out var queryable))
                         {
-                            var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
-                            var queryable = _provider(queryableType);
                             property.Value = queryable;
+                            hasChanged = true;
                         }
                     }
 
-                    return new ConstantExpression(newConstantQueryArgument);
+                    if (hasChanged)
+                    {
+                        newConstantQueryArgument = tempConstantQueryArgument;
+                        return true;
+                    }
                 }
 
-                return base.VisitConstant(expression);
+                newConstantQueryArgument = null;
+                return false;
             }
         }
 
@@ -75,18 +99,17 @@ namespace Remote.Linq.ExpressionVisitors
             internal Expression ReplaceQueryablesByResourceDescriptors(Expression expression)
                 => Visit(expression);
 
-            protected override ConstantExpression VisitConstant(ConstantExpression expression)
+            protected override ConstantExpression VisitConstant(ConstantExpression node)
             {
-                var queryable = expression.Value.AsQueryableOrNull();
-                if (!(queryable is null))
+                var queryable = node.Value.AsQueryableOrNull();
+                if (queryable != null)
                 {
                     var typeInfo = _typeInfoProvider.Get(queryable.ElementType);
                     var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
                     return new ConstantExpression(queryableResourceDescriptor);
                 }
 
-                var constantQueryArgument = expression.Value as ConstantQueryArgument;
-                if (!(constantQueryArgument is null))
+                if (node.Value is ConstantQueryArgument constantQueryArgument)
                 {
                     var newConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument);
                     var properties = newConstantQueryArgument.Properties ?? Enumerable.Empty<Property>();
@@ -101,10 +124,10 @@ namespace Remote.Linq.ExpressionVisitors
                         }
                     }
 
-                    return new ConstantExpression(newConstantQueryArgument, expression.Type);
+                    return new ConstantExpression(newConstantQueryArgument, node.Type);
                 }
 
-                return base.VisitConstant(expression);
+                return base.VisitConstant(node);
             }
         }
     }

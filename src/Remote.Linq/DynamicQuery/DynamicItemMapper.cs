@@ -16,7 +16,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         [return: MaybeNull]
-        public TResult MapResult<TResult>(DynamicObject? item, Expression expression)
-            => item is null ? default : _mapper.Map<TResult>(item);
+        public TResult MapResult<TResult>(DynamicObject? source, Expression expression)
+            => source is null ? default : _mapper.Map<TResult>(source);
     }
 }

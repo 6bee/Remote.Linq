@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
 {
-    using Remote.Linq;
     using Shouldly;
     using System;
     using System.Linq.Expressions;

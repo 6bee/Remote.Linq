@@ -3,7 +3,9 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
+    [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
     internal interface IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>
         where TDataTranferObject : class
     {

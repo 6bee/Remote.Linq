@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Aqua.Tests" Description=" " ToolsVersion="14.0">
-  <Include Path="Style.NoDoc.ruleset" Action="Default" />
+<RuleSet Name="Remote.Linq.Tests" Description=" " ToolsVersion="16.0">
+  <Include Path="style.nodoc.ruleset" Action="Default" />
+  <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
+    <Rule Id="S101" Action="None" />
+    <Rule Id="S1118" Action="Info" />
+    <Rule Id="S1128" Action="None" />
+    <Rule Id="S1172" Action="None" />
+    <Rule Id="S1481" Action="Info" />
+    <Rule Id="S2326" Action="Info" />
+    <Rule Id="S2376" Action="Info" />
+    <Rule Id="S2933" Action="Info" />
+    <Rule Id="S3218" Action="Info" />
+    <Rule Id="S3459" Action="None" />
+  </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1310" Action="None" />
     <Rule Id="SA1611" Action="None" />

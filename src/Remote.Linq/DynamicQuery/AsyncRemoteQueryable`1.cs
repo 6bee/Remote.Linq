@@ -7,7 +7,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Threading;
     using System.Threading.Tasks;
 
-    internal sealed class AsyncRemoteQueryable<T> : RemoteQueryable<T>, IAsyncRemoteQueryable<T>, IOrderedAsyncRemoteQueryable<T>
+    internal sealed class AsyncRemoteQueryable<T> : RemoteQueryable<T>, IOrderedAsyncRemoteQueryable<T>
     {
         internal AsyncRemoteQueryable(IAsyncRemoteQueryProvider provider, Expression? expression = null)
             : base(provider, expression)
@@ -16,7 +16,7 @@ namespace Remote.Linq.DynamicQuery
 
         public new IAsyncRemoteQueryProvider Provider => (IAsyncRemoteQueryProvider)base.Provider;
 
-        public Task<IEnumerable<T>> ExecuteAsync(CancellationToken cancellationToken)
-            => Provider.ExecuteAsync<IEnumerable<T>>(Expression, cancellationToken);
+        public Task<IEnumerable<T>> ExecuteAsync(CancellationToken cancellation = default)
+            => Provider.ExecuteAsync<IEnumerable<T>>(Expression, cancellation);
     }
 }

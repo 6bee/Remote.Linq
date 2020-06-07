@@ -2,6 +2,9 @@
 
 namespace Remote.Linq.ExpressionExecution
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
     internal interface IExpressionExecutionDecorator<TDataTranferObject>
     {
         Remote.Linq.Expressions.Expression Prepare(Remote.Linq.Expressions.Expression expression);

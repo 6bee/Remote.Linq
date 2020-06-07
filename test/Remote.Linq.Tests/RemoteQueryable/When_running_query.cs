@@ -13,6 +13,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Numerics;
@@ -150,6 +151,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        [SuppressMessage("Minor Code Smell", "S2219:Runtime type checking should be simplified", Justification = "Intentional test setup")]
         public void Should_return_all_product_using_typeis_filter()
         {
             var result = _productQueryable.Where(p => p is Product).ToList();
@@ -158,6 +160,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
+        [SuppressMessage("Minor Code Smell", "S1905:Redundant casts should not be used", Justification = "Intentional test setup")]
         public void Should_return_all_product_using_typeas_projection()
         {
             var result = _productQueryable.Select(p => p as Product).ToList();
@@ -662,7 +665,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_query_product_categories_filterd_using_inline_nullable_enum_reference_is_null()
+        [SuppressMessage("Major Bug", "S2995:\"Object.ReferenceEquals\" should not be used for value types", Justification = "Intentional test setup")]
+        public void Should_query_product_categories_filterd_using_inline_nullable_enum_reference_equals_null()
         {
             var query =
                 from c in _categoryQueryable
@@ -673,11 +677,11 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_query_product_categories_filterd_using_inline_nullable_enum_equals_reference_is_null()
+        public void Should_query_product_categories_filterd_using_inline_nullable_enum_equals_null()
         {
             var query =
                 from c in _categoryQueryable
-                where ReferenceEquals(null, c.CategorySourceType)
+                where Equals(null, c.CategorySourceType)
                 select c;
             var result = query.ToArray();
             result.Count().ShouldBe(1);
@@ -789,10 +793,12 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_not_try_evaluate_a_subexpression_to_find_queryables_if_it_accesses_any_parameter()
         {
-            _productQueryable
+            var counters = _productQueryable
                 .Select(p => new { ids = _productQueryable.Select(pp => pp.Id) })
                 .Select(a => a.ids.Count())
                 .ToList();
+
+            counters.Count.ShouldBe(5);
         }
 
         [Fact]
@@ -816,12 +822,14 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_allow_filtering_using_invokeexpression()
         {
-            System.Linq.Expressions.Expression<Func<Category, bool>> expression = c => c.Name == "hello";
+            System.Linq.Expressions.Expression<Func<Category, bool>> expression = c => c.Name == "Vehicles";
             var parameter = System.Linq.Expressions.Expression.Parameter(typeof(Category), "c");
 
-            _categoryQueryable.Where(
+            var result = _categoryQueryable.Where(
                 System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
                     System.Linq.Expressions.Expression.Invoke(expression, parameter), parameter)).ToList();
+
+            result.Count.ShouldBe(1);
         }
 
         [SkippableTheory]
@@ -841,7 +849,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
         protected void TestMethodFor_Should_query_primitive_value_injected_as_variable_closure<T>(T value)
         {
-            _productQueryable.Select(x => value).ShouldAllBe(x => Equals(x, value), $"type: {typeof(T).FullName}, value: {value}");
+            _productQueryable.Select(_ => value).ShouldAllBe(x => Equals(x, value), $"type: {typeof(T).FullName}, value: {value}");
         }
 
         [SkippableTheory]
@@ -862,7 +870,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
         protected void TestMethodFor_Should_query_primitive_value_collection_injected_as_variable_closure<T>(IEnumerable<T> collection)
         {
-            _productQueryable.Select(x => collection).ShouldAllBe(x => x.CollectionEquals(collection), $"element type: {typeof(T).FullName}, array: {collection}");
+            _productQueryable.Select(_ => collection).ShouldAllBe(x => x.CollectionEquals(collection), $"element type: {typeof(T).FullName}, array: {collection}");
         }
 
         [SkippableTheory]
@@ -882,7 +890,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
         protected void TestMethodFor_Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure<T>(T value)
             => _productQueryable
-            .Select(x => new { Value = value })
+            .Select(_ => new { Value = value })
             .ShouldAllBe(x => Equals(x.Value, value), $"type: {typeof(T).FullName}, value: {value}");
 
         [SkippableTheory]
@@ -903,7 +911,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
 
         protected void TestMethodFor_Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure<T>(IEnumerable<T> collection)
             => _productQueryable
-            .Select(x => new { Collection = collection })
+            .Select(_ => new { Collection = collection })
             .ShouldAllBe(x => x.Collection.CollectionEquals(collection), $"element type: {typeof(T).FullName}, array: {collection}");
 
         private void RunTestMethod(string methodName, Type genericType, object argument)
@@ -916,7 +924,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         public void Should_query_value_created_using_default_operator()
         {
             _productQueryable
-                .Select(x => default(DateTime))
+                .Select(_ => default(DateTime))
                 .ShouldAllBe(x => Equals(x, default(DateTime)));
         }
 
@@ -938,7 +946,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_return_on_query_first_or_default_on_empty_sequence()
         {
-            _productQueryable.Where(x => false).FirstOrDefault().ShouldBeNull();
+            _productQueryable.Where(_ => false).FirstOrDefault().ShouldBeNull();
         }
 
         [Fact]
@@ -951,7 +959,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_return_null_on_query_first_or_default_with_filter_on_empty_sequence()
         {
-            _productQueryable.FirstOrDefault(x => false).ShouldBeNull();
+            _productQueryable.FirstOrDefault(_ => false).ShouldBeNull();
         }
 
         [Fact]

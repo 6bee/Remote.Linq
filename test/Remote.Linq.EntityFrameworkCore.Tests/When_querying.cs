@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.EntityFrameworkCore.Tests
 {
-    using Remote.Linq;
     using Remote.Linq.EntityFrameworkCore.Tests.Model;
     using Shouldly;
     using System;

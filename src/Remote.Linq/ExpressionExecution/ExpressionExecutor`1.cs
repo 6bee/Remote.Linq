@@ -4,12 +4,13 @@ namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
-    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
+    [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
     public abstract class ExpressionExecutor<TDataTranferObject> : IExpressionExecutionDecorator<TDataTranferObject>
     {
         private readonly Func<Type, IQueryable> _queryableProvider;

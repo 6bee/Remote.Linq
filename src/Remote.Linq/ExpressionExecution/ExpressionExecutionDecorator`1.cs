@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Remote.Linq.Expressions;
+    using System.Diagnostics.CodeAnalysis;
 
     public abstract class ExpressionExecutionDecorator<TDataTranferObject> : ExpressionExecutionDecoratorBase<TDataTranferObject>
     {
@@ -16,6 +17,7 @@ namespace Remote.Linq.ExpressionExecution
         {
         }
 
+        [SuppressMessage("Major Code Smell", "S3442:\"abstract\" classes should not have \"public\" constructors", Justification = "Argument type has internal visibility only")]
         internal ExpressionExecutionDecorator(IExpressionExecutionDecorator<TDataTranferObject> parent)
             : base(parent)
         {

@@ -33,13 +33,13 @@ namespace Remote.Linq.TestSupport
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
             => new AsyncRemoteQueryable<TElement>(this, expression);
 
-        public object Execute(Expression expression)
-            => this.InvokeAndUnwrap<object>(_executeMethod, expression);
-
 #nullable disable
-        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation)
             => Task.FromResult(Execute<TResult>(expression));
 #nullable restore
+
+        public object Execute(Expression expression)
+            => this.InvokeAndUnwrap<object>(_executeMethod, expression);
 
         [return: MaybeNull]
         public TResult Execute<TResult>(Expression expression)

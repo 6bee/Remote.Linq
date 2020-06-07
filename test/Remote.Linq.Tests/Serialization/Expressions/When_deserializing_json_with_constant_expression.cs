@@ -4,7 +4,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using Aqua;
     using global::Newtonsoft.Json;
-    using Remote.Linq;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using Shouldly;

@@ -29,10 +29,12 @@ namespace Remote.Linq.Tests
             return t;
         }
 
-        public static bool TestIs<T>(this object test) where T : class
+        public static bool TestIs<T>(this object test)
+            where T : class
             => test.GetType() == typeof(T);
 
-        public static bool Is<T>(this Type type) where T : struct
+        public static bool Is<T>(this Type type)
+            where T : struct
             => type == typeof(T)
             || type == typeof(T?)
             || typeof(ICollection<T>).IsAssignableFrom(type)

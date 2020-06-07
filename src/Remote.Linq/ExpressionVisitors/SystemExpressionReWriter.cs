@@ -21,7 +21,7 @@ namespace Remote.Linq.ExpressionVisitors
             => new AnonymousTypesReplacer().ReWrite(expression);
 
         public static Expression ResolveDynamicPropertySelectors(this Expression expression, bool throwOnInvalidProperty = false)
-            => new DynamicPropertyResolver(throwOnInvalidProperty).ResolveDynamicPropertySelectors(expression);
+            => new DynamicPropertyResolver(throwOnInvalidProperty).Resolve(expression);
 
         public static LambdaExpression ResolveDynamicPropertySelectors(this LambdaExpression expression, bool throwOnInvalidProperty = false)
             => (LambdaExpression)ResolveDynamicPropertySelectors((Expression)expression, throwOnInvalidProperty);
@@ -59,17 +59,18 @@ namespace Remote.Linq.ExpressionVisitors
                 return Visit(projection);
             }
 
-            protected override Expression VisitMemberAccess(MemberExpression m)
+            protected override Expression VisitMemberAccess(MemberExpression node)
             {
-                if (m.Member.DeclaringType.IsAnonymousType() || (m.Member.DeclaringType.IsGenericType && m.Member.DeclaringType.GetGenericArguments().Any(x => x.IsAnonymousType())))
+                if (node.Member.DeclaringType.IsAnonymousType() ||
+                    (node.Member.DeclaringType.IsGenericType && node.Member.DeclaringType.GetGenericArguments().Any(x => x.IsAnonymousType())))
                 {
-                    var name = m.Member.Name;
-                    var instance = Visit(m.Expression);
+                    var name = node.Member.Name;
+                    var instance = Visit(node.Expression);
                     if (instance.Type == typeof(DynamicObject))
                     {
                         var method = _dynamicObjectGetMethod;
                         var memberAccessCallExpression = Expression.Call(instance, method, Expression.Constant(name));
-                        var type = ReplaceAnonymousType(m.Type);
+                        var type = ReplaceAnonymousType(node.Type);
                         if (type == typeof(object))
                         {
                             return memberAccessCallExpression;
@@ -79,67 +80,67 @@ namespace Remote.Linq.ExpressionVisitors
                         return conversionExpression;
                     }
 
-                    var member = instance.Type.GetMember(name, m.Member.MemberType, (BindingFlags)0xfffffff);
-                    if (member.Count() != 1)
+                    var member = instance.Type.GetMember(name, node.Member.MemberType, (BindingFlags)0xfffffff);
+                    if (member.Length != 1)
                     {
-                        throw new RemoteLinqException($"Failed to bind {m.Member.MemberType.ToString().ToLower()} {name} of type {instance.Type}");
+                        throw new RemoteLinqException($"Failed to bind {node.Member.MemberType.ToString().ToLower()} {name} of type {instance.Type}");
                     }
 
                     return Expression.MakeMemberAccess(instance, member.Single());
                 }
 
-                return base.VisitMemberAccess(m);
+                return base.VisitMemberAccess(node);
             }
 
-            protected override Expression VisitParameter(ParameterExpression p)
+            protected override Expression VisitParameter(ParameterExpression node)
             {
-                if (!_parameterMap.TryGetValue(p, out var parameter))
+                if (!_parameterMap.TryGetValue(node, out var parameter))
                 {
-                    var type = ReplaceAnonymousType(p.Type);
-                    if (ReferenceEquals(type, p.Type))
+                    var type = ReplaceAnonymousType(node.Type);
+                    if (ReferenceEquals(type, node.Type))
                     {
-                        parameter = p;
+                        parameter = node;
                     }
                     else
                     {
-                        parameter = Expression.Parameter(type, p.Name);
+                        parameter = Expression.Parameter(type, node.Name);
                     }
 
-                    _parameterMap[p] = parameter;
+                    _parameterMap[node] = parameter;
                 }
 
                 return parameter;
             }
 
-            protected override Expression VisitMethodCall(MethodCallExpression call)
+            protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                var instance = Visit(call.Object);
-                var arguments = VisitExpressionList(call.Arguments);
-                if (!ReferenceEquals(instance, call.Object) || !ReferenceEquals(arguments, call.Arguments))
+                var instance = Visit(node.Object);
+                var arguments = VisitExpressionList(node.Arguments);
+                if (!ReferenceEquals(instance, node.Object) || !ReferenceEquals(arguments, node.Arguments))
                 {
-                    var method = ReplaceAnonymousType(call.Method);
+                    var method = ReplaceAnonymousType(node.Method);
                     return Expression.Call(instance, method, arguments);
                 }
 
-                return call;
+                return node;
             }
 
-            protected override NewExpression VisitNew(NewExpression newExpression)
+            protected override NewExpression VisitNew(NewExpression node)
             {
-                if (newExpression.Type.IsAnonymousType())
+                if (node.Type.IsAnonymousType())
                 {
-                    if (newExpression.Members?.Any() != true)
+                    if (node.Members?.Any() != true)
                     {
                         throw new RemoteLinqException("Missing members definition for anonymous generic type.");
                     }
 
-                    var args = VisitExpressionList(newExpression.Arguments);
+                    var args = VisitExpressionList(node.Arguments);
                     var arguments = args.Select((a, i) =>
                      {
                          var arg = a.Type == typeof(object) ? a : Expression.Convert(a, typeof(object));
                          return (Expression)Expression.New(
                              _dynamicPropertyContructorInfo,
-                             Expression.Constant(GetMemberName(newExpression.Members[i])),
+                             Expression.Constant(GetMemberName(node.Members[i])),
                              arg);
                      });
 
@@ -147,7 +148,7 @@ namespace Remote.Linq.ExpressionVisitors
                     return Expression.New(_dynamicObjectContructorInfo, argsExpression);
                 }
 
-                return base.VisitNew(newExpression);
+                return base.VisitNew(node);
             }
 
             private static string GetMemberName(MemberInfo memberInfo)
@@ -161,12 +162,12 @@ namespace Remote.Linq.ExpressionVisitors
                 return name;
             }
 
-            protected override Expression VisitLambda(LambdaExpression lambda)
+            protected override Expression VisitLambda(LambdaExpression node)
             {
-                var body = Visit(lambda.Body);
-                var type = ReplaceAnonymousType(lambda.Type);
+                var body = Visit(node.Body);
+                var type = ReplaceAnonymousType(node.Type);
                 var parameters =
-                    from p in lambda.Parameters
+                    from p in node.Parameters
                     select Expression.Parameter(ReplaceAnonymousType(p.Type), p.Name);
                 return Expression.Lambda(type, body, parameters);
             }
@@ -226,13 +227,13 @@ namespace Remote.Linq.ExpressionVisitors
                 _throwOnInvalidProperty = throwOnInvalidProperty;
             }
 
-            internal Expression ResolveDynamicPropertySelectors(Expression expression) => Visit(expression);
+            internal Expression Resolve(Expression expression) => Visit(expression);
 
-            protected override Expression VisitMethodCall(MethodCallExpression m)
+            protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                if (string.Equals(m.Method.Name, "get_Item", StringComparison.Ordinal) && m.Arguments.Count == 1)
+                if (string.Equals(node.Method.Name, "get_Item", StringComparison.Ordinal) && node.Arguments.Count == 1)
                 {
-                    var expression = m.Arguments[0];
+                    var expression = node.Arguments[0];
                     if (expression.Type == typeof(string))
                     {
                         string propertyName;
@@ -250,8 +251,8 @@ namespace Remote.Linq.ExpressionVisitors
 
                         if (propertyName != null)
                         {
-                            var instance = Visit(m.Object);
-                            var propertyInfo = m.Object.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                            var instance = Visit(node.Object);
+                            var propertyInfo = node.Object.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
                             if (propertyInfo != null)
                             {
@@ -260,21 +261,21 @@ namespace Remote.Linq.ExpressionVisitors
 
                             if (_throwOnInvalidProperty)
                             {
-                                throw new RemoteLinqException($"'{propertyName}' is either not a valid or an ambiguous property of type {m.Object.Type.FullName}");
+                                throw new RemoteLinqException($"'{propertyName}' is either not a valid or an ambiguous property of type {node.Object.Type.FullName}");
                             }
                         }
                     }
                 }
 
-                return base.VisitMethodCall(m);
+                return base.VisitMethodCall(node);
             }
 
-            protected override Expression VisitLambda(LambdaExpression lambda)
+            protected override Expression VisitLambda(LambdaExpression node)
             {
-                var body = Visit(lambda.Body);
-                if (body != lambda.Body)
+                var body = Visit(node.Body);
+                if (body != node.Body)
                 {
-                    var type = lambda.Type;
+                    var type = node.Type;
                     if (type.IsGenericType)
                     {
                         var genericTypeDefinition = type.GetGenericTypeDefinition();
@@ -288,10 +289,10 @@ namespace Remote.Linq.ExpressionVisitors
                         }
                     }
 
-                    return Expression.Lambda(type, body, lambda.Parameters);
+                    return Expression.Lambda(type, body, node.Parameters);
                 }
 
-                return lambda;
+                return node;
             }
         }
 
