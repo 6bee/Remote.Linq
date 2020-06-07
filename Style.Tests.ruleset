@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Remote.Linq.Tests" Description=" " ToolsVersion="16.0">
-  <Include Path="style.nodoc.ruleset" Action="Default" />
+  <Include Path="Style.NoDoc.ruleset" Action="Default" />
   <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
     <Rule Id="S101" Action="None" />
     <Rule Id="S1118" Action="Info" />
