@@ -3,11 +3,17 @@
 namespace Remote.Linq.Expressions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
 
     [Serializable]
+    [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "This exception type requires an expression.")]
     public class RemoteLinqExpressionException : RemoteLinqException
     {
+        private RemoteLinqExpressionException()
+        {
+        }
+
         public RemoteLinqExpressionException(Expression expression)
         {
             Expression = expression;
@@ -37,6 +43,6 @@ namespace Remote.Linq.Expressions
             info.AddValue(nameof(Expression), Expression);
         }
 
-        public Expression Expression { get; }
+        public Expression Expression { get; } = null!;
     }
 }

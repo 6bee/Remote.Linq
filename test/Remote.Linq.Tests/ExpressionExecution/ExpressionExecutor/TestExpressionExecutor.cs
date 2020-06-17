@@ -37,7 +37,7 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutor
                 select c)
                 .ToArray();
 
-            expectedCounters.Count().ShouldBe(_callCounters.Count() - skip.Length);
+            expectedCounters.Length.ShouldBe(_callCounters.Length - skip.Length);
             expectedCounters.ShouldAllBe(
                 x => x.Count == 1,
                 $"processor of {nameof(TestExpressionExecutor)} should be called since they are decorated rather then replaced by custom strategy");
@@ -48,7 +48,7 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutor
                 select c)
                 .ToArray();
 
-            unexpectedCounters.Count().ShouldBe(skip.Length);
+            unexpectedCounters.Length.ShouldBe(skip.Length);
             unexpectedCounters.ShouldAllBe(
                 x => x.Count == 0,
                 $"processor of {nameof(TestExpressionExecutor)} should be called since they are replaced rather then decorated with custom strategy");

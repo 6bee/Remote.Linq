@@ -29,18 +29,11 @@ namespace Remote.Linq
         /// Execute the <see cref="IQueryable"/> and return the result without any extra tranformation.
         /// </summary>
         public static TResult Execute<TResult>(this IQueryable source)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return source.Provider.Execute<TResult>(source.Expression);
-        }
+            => source.CheckNotNull(nameof(source)).Provider.Execute<TResult>(source.Expression);
 
         private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression, MethodInfo methodInfo)
         {
-            var exp = lambdaExpression.Body;
+            var exp = lambdaExpression.CheckNotNull(nameof(lambdaExpression)).Body;
             var resultType = exp.Type;
             var funcType = typeof(Func<,>).MakeGenericType(typeof(T), resultType);
             var lambdaExpressionMethodInfo = MethodInfos.Expression.Lambda.MakeGenericMethod(funcType);
@@ -82,12 +75,14 @@ namespace Remote.Linq
         /// </summary>
         public static IQueryable<T> ApplyQuery<T>(this IQueryable<T> queryable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor)
         {
-            var q = Query<T>.CreateFromNonGeneric(query);
+            var q = query.ToGenericQuery<T>();
             return queryable.ApplyQuery(q, expressionVisitor ?? _defaultExpressionVisitor);
         }
 
         private static IQueryable<T> ApplyFilters<T>(this IQueryable<T> queriable, IQuery<T> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor)
         {
+            queriable.CheckNotNull(nameof(queriable));
+            query.CheckNotNull(nameof(query));
             foreach (var filter in query.FilterExpressions ?? Enumerable.Empty<Expressions.LambdaExpression>())
             {
                 var predicate = expressionVisitor(filter).ToLinqExpression<T, bool>();
@@ -143,16 +138,8 @@ namespace Remote.Linq
 
         public static IQueryable<T> Include<T>(this IQueryable<T> queryable, string path)
         {
-            if (queryable is null)
-            {
-                throw new ArgumentNullException(nameof(queryable));
-            }
-
-            if (path is null)
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
-
+            queryable.CheckNotNull(nameof(queryable));
+            path.CheckNotNull(nameof(path));
             if (string.IsNullOrEmpty(path))
             {
                 throw new ArgumentException("path must not be empty", nameof(path));
@@ -173,16 +160,8 @@ namespace Remote.Linq
 
         public static IQueryable<T> Include<T, TProperty>(this IQueryable<T> queryable, Expression<Func<T, TProperty>> path)
         {
-            if (queryable is null)
-            {
-                throw new ArgumentNullException(nameof(queryable));
-            }
-
-            if (path is null)
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
-
+            queryable.CheckNotNull(nameof(queryable));
+            path.CheckNotNull(nameof(path));
             if (TryParsePath(path.Body, out var path1) && path1 != null)
             {
                 return queryable.Include(path1);

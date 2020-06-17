@@ -16,8 +16,8 @@ namespace Remote.Linq.Expressions
 
         public SwitchCase(Expression body, List<Expression> testValues)
         {
-            Body = body ?? throw new ArgumentNullException(nameof(body));
-            TestValues = testValues ?? throw new ArgumentNullException(nameof(testValues));
+            Body = body.CheckNotNull(nameof(body));
+            TestValues = testValues.CheckNotNull(nameof(testValues));
         }
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]

@@ -18,6 +18,7 @@
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>    
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\Style.Samples.ruleset</CodeAnalysisRuleSet>    
     <ApplicationIcon>$(MSBuildThisFileDirectory)..\remotelinq-w.ico</ApplicationIcon>
+    <EnableFxCopAnalyzers>false</EnableFxCopAnalyzers>
     <EnableSonarAnalyzers>false</EnableSonarAnalyzers>
   </PropertyGroup>
 

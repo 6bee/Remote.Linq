@@ -7,9 +7,9 @@ namespace Client
 
     public class QueryTypeMapper : TypeInfoProvider
     {
-        public override TypeInfo Get(Type type, bool? includePropertyInfosOverride = null, bool? setMemberDeclaringTypesOverride = null)
+        public override TypeInfo GetTypeInfo(Type type, bool? includePropertyInfosOverride = null, bool? setMemberDeclaringTypesOverride = null)
         {
-            TypeInfo typeInfo = base.Get(type, includePropertyInfosOverride, setMemberDeclaringTypesOverride);
+            TypeInfo typeInfo = base.GetTypeInfo(type, includePropertyInfosOverride, setMemberDeclaringTypesOverride);
             if (typeInfo?.Namespace == "Client.ClientModel")
             {
                 typeInfo.Namespace = "Common.Model";

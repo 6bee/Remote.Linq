@@ -19,7 +19,7 @@ namespace Remote.Linq.Expressions
         public MemberListBinding(MemberInfo member, IEnumerable<ElementInit> initializers)
             : base(member)
         {
-            Initializers = initializers?.ToList() ?? throw new ArgumentNullException(nameof(initializers));
+            Initializers = initializers.CheckNotNull(nameof(initializers)).ToList();
         }
 
         public override MemberBindingType BindingType => MemberBindingType.ListBinding;

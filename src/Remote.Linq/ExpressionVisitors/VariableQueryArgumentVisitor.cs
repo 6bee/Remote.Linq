@@ -13,26 +13,26 @@ namespace Remote.Linq.ExpressionVisitors
     using MemberTypes = Aqua.TypeSystem.MemberTypes;
     using PropertyInfo = Aqua.TypeSystem.PropertyInfo;
 
-    public class VariableQueryArgumentVisitor
+    public static class VariableQueryArgumentVisitor
     {
-        internal T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(T expression)
+        internal static T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(T expression)
             where T : Expression
-            => (T)new NonGenericVariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
+            => (T)new NonGenericVariableQueryArgumentVisitor().Run(expression);
 
-        internal T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(T expression)
+        internal static T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(T expression)
             where T : Expression
-            => (T)new GenericVariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
+            => (T)new GenericVariableQueryArgumentVisitor().Run(expression);
 
         protected class GenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
             private static readonly PropertyInfo QueryArgumentValuePropertyInfo = new PropertyInfo(typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value)));
             private static readonly PropertyInfo QueryArgumentValueListPropertyInfo = new PropertyInfo(typeof(VariableQueryArgumentList).GetProperty(nameof(VariableQueryArgumentList.Values)));
 
-            internal Expression ReplaceGenericQueryArgumentsByNonGenericArguments(Expression expression) => Visit(expression);
+            internal Expression Run(Expression expression) => Visit(expression);
 
             protected override ConstantExpression VisitConstant(ConstantExpression node)
             {
-                if (IsGenericVariableQueryArgument(node, out var valueType))
+                if (IsGenericVariableQueryArgument(node.CheckNotNull(nameof(node)), out var valueType))
                 {
                     var valueProperty = node.Value?.GetType().GetProperty(nameof(VariableQueryArgument<object>.Value));
                     var value = valueProperty?.GetValue(node.Value);
@@ -71,14 +71,14 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitMemberAccess(MemberExpression node)
             {
-                if (node.Expression?.NodeType == ExpressionType.Constant)
+                if (node.CheckNotNull(nameof(node)).Expression?.NodeType == ExpressionType.Constant)
                 {
                     var member = node.Member;
                     if (member.MemberType == MemberTypes.Property &&
                         member.DeclaringType?.IsGenericType == true &&
                         member.DeclaringType?.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                     {
-                        var instanceExpression = (ConstantExpression)Visit(node.Expression);
+                        var instanceExpression = (ConstantExpression)(Visit(node.Expression) ?? throw new InvalidOperationException("Visit must not return null for non null value."));
 
                         PropertyInfo propertyInfo;
                         if (instanceExpression.Value is VariableQueryArgument)
@@ -107,11 +107,11 @@ namespace Remote.Linq.ExpressionVisitors
             private static readonly System.Reflection.MethodInfo CreateVariableQueryArgumentListMethodInfo =
                 typeof(NonGenericVariableQueryArgumentVisitor).GetMethod(nameof(CreateVariableQueryArgumentList), BindingFlags.Static | BindingFlags.NonPublic);
 
-            internal Expression ReplaceNonGenericQueryArgumentsByGenericArguments(Expression expression) => Visit(expression);
+            internal Expression Run(Expression expression) => Visit(expression);
 
             protected override ConstantExpression VisitConstant(ConstantExpression node)
             {
-                if (node.Value is VariableQueryArgument nonGenericQueryArgument)
+                if (node.CheckNotNull(nameof(node)).Value is VariableQueryArgument nonGenericQueryArgument)
                 {
                     var type = nonGenericQueryArgument.Type.Type;
                     var value = nonGenericQueryArgument.Value;
@@ -139,10 +139,10 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitMemberAccess(MemberExpression node)
             {
-                var member = node.Member;
+                var member = node.CheckNotNull(nameof(node)).Member;
                 if (member.MemberType == MemberTypes.Property &&
-                    (string.Equals(member.DeclaringType?.FullName, typeof(VariableQueryArgument).FullName) ||
-                    string.Equals(member.DeclaringType?.FullName, typeof(VariableQueryArgumentList).FullName)) &&
+                    (string.Equals(member.DeclaringType?.FullName, typeof(VariableQueryArgument).FullName, StringComparison.Ordinal) ||
+                    string.Equals(member.DeclaringType?.FullName, typeof(VariableQueryArgumentList).FullName, StringComparison.Ordinal)) &&
                     Visit(node.Expression) is ConstantExpression instanceExpression)
                 {
                     var instanceType = instanceExpression.Type;

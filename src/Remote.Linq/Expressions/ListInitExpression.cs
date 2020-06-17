@@ -18,8 +18,8 @@ namespace Remote.Linq.Expressions
 
         public ListInitExpression(NewExpression newExpression, IEnumerable<ElementInit> initializers)
         {
-            NewExpression = newExpression ?? throw new ArgumentNullException(nameof(newExpression));
-            Initializers = initializers?.ToList() ?? throw new ArgumentNullException(nameof(initializers));
+            NewExpression = newExpression.CheckNotNull(nameof(newExpression));
+            Initializers = initializers.CheckNotNull(nameof(initializers)).ToList();
         }
 
         public override ExpressionType NodeType => ExpressionType.ListInit;

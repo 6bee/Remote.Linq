@@ -21,7 +21,7 @@ namespace Remote.Linq.Expressions
 
         public DefaultExpression(TypeInfo type)
         {
-            Type = type ?? throw new ArgumentNullException(nameof(type));
+            Type = type.CheckNotNull(nameof(type));
         }
 
         public override ExpressionType NodeType => ExpressionType.Default;

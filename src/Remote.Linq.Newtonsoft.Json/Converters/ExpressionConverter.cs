@@ -16,7 +16,7 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
         {
             if (result is ConstantExpression constantExpression)
             {
-                reader.AssertProperty(nameof(ConstantExpression.Type));
+                reader.CheckNotNull(nameof(reader)).AssertProperty(nameof(ConstantExpression.Type));
                 var typeInfo = reader.Read<TypeInfo>(serializer);
                 constantExpression.Type = typeInfo ?? throw reader.CreateException($"{nameof(ConstantExpression.Type)} must not be null.");
 
@@ -43,8 +43,8 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
         {
             if (instance is ConstantExpression constantExpression)
             {
-                writer.WritePropertyName(nameof(ConstantExpression.Type));
-                serializer.Serialize(writer, constantExpression.Type);
+                writer.CheckNotNull(nameof(writer)).WritePropertyName(nameof(ConstantExpression.Type));
+                serializer.CheckNotNull(nameof(serializer)).Serialize(writer, constantExpression.Type);
 
                 var type = constantExpression.Type?.Type;
                 if (constantExpression.Value != null)

@@ -17,7 +17,7 @@ namespace Remote.Linq.Expressions
         public MemberExpression(Expression? expression, MemberInfo member)
         {
             Expression = expression;
-            Member = member ?? throw new ArgumentNullException(nameof(member));
+            Member = member.CheckNotNull(nameof(member));
         }
 
         public MemberExpression(Expression expression, System.Reflection.MemberInfo member)

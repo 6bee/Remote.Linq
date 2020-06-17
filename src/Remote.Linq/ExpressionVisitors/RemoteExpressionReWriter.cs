@@ -12,17 +12,17 @@ namespace Remote.Linq.ExpressionVisitors
     {
         public static T ReplaceResourceDescriptorsByQueryable<T>(this T expression, Func<Type, System.Linq.IQueryable> provider, ITypeResolver? typeResolver = null)
             where T : Expression
-            => new QueryableResourceVisitor().ReplaceResourceDescriptorsByQueryable(expression, provider, typeResolver);
+            => QueryableResourceVisitor.ReplaceResourceDescriptorsByQueryable(expression, provider, typeResolver);
 
         public static T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(this T expression)
             where T : Expression
-            => new VariableQueryArgumentVisitor().ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
+            => VariableQueryArgumentVisitor.ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
 
         public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeInfoProvider? typeInfoProvider = null)
-            => new QueryableResourceVisitor().ReplaceQueryablesByResourceDescriptors(expression, typeInfoProvider);
+            => QueryableResourceVisitor.ReplaceQueryablesByResourceDescriptors(expression, typeInfoProvider);
 
         public static T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(this T expression)
             where T : Expression
-            => new VariableQueryArgumentVisitor().ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
+            => VariableQueryArgumentVisitor.ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
     }
 }

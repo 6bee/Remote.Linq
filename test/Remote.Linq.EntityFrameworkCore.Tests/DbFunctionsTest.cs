@@ -26,7 +26,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
 
             var result = queryable.Where(p => EF.Functions.Like(p.Name, "1%")).ToList();
 
-            result.Count().ShouldBe(10);
+            result.Count.ShouldBe(10);
         }
     }
 }

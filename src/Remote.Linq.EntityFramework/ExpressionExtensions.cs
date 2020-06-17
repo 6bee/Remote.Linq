@@ -11,12 +11,14 @@ namespace Remote.Linq.EntityFramework
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
+    [SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "CancellationToken as first optional parameter")]
     public static class ExpressionExtensions
     {
         /// <summary>

@@ -293,12 +293,7 @@ namespace Remote.Linq
         /// <returns>The query results.</returns>
         public static IAsyncEnumerable<TSource> AsAsyncEnumerable<TSource>(this IQueryable<TSource> source, CancellationToken cancellation = default)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (source.Provider is IAsyncRemoteStreamProvider asyncRemoteStreamProvider)
+            if (source.CheckNotNull(nameof(source)).Provider is IAsyncRemoteStreamProvider asyncRemoteStreamProvider)
             {
                 return asyncRemoteStreamProvider.ExecuteAsyncRemoteStream<TSource>(source.Expression, cancellation);
             }
@@ -308,12 +303,7 @@ namespace Remote.Linq
 
         public static async Task<TResult> ExecuteAsync<TResult>(this IQueryable source, CancellationToken cancellation = default)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (source.Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
+            if (source.CheckNotNull(nameof(source)).Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
             {
                 return await asyncQueryableProvider.ExecuteAsync<TResult>(source.Expression, cancellation).ConfigureAwait(false);
             }
@@ -332,12 +322,7 @@ namespace Remote.Linq
 
         private static async Task<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, IEnumerable<object?> args, CancellationToken cancellation)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (source.Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
+            if (source.CheckNotNull(nameof(source)).Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
             {
                 if (method.IsGenericMethodDefinition)
                 {

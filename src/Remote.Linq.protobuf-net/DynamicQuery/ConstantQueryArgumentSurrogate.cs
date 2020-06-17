@@ -16,7 +16,8 @@ namespace Remote.Linq.ProtoBuf.DynamicQuery
         [ProtoMember(1)]
         public TypeInfo? Type { get; set; }
 
-        [ProtoMember(2)]
+        [ProtoMember(2, OverwriteList = true)]
+        [SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "Required for serialization")]
         public Dictionary<string, Value?>? Properties { get; set; }
 
         [ProtoConverter]
@@ -43,10 +44,11 @@ namespace Remote.Linq.ProtoBuf.DynamicQuery
             ? null
             : new ConstantQueryArgument(DynamicObjectSurrogate.Convert(surrogate));
 
+        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Surrogate type is not meant for direct usage")]
         public static implicit operator DynamicObjectSurrogate(ConstantQueryArgumentSurrogate surrogate)
             => new DynamicObjectSurrogate
             {
-                Type = surrogate.Type,
+                Type = surrogate.CheckNotNull(nameof(surrogate)).Type,
                 Properties = surrogate.Properties,
             };
     }

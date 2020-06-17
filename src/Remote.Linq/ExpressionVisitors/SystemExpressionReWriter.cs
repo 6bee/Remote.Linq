@@ -7,6 +7,8 @@ namespace Remote.Linq.ExpressionVisitors
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -83,7 +85,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var member = instance.Type.GetMember(name, node.Member.MemberType, (BindingFlags)0xfffffff);
                     if (member.Length != 1)
                     {
-                        throw new RemoteLinqException($"Failed to bind {node.Member.MemberType.ToString().ToLower()} {name} of type {instance.Type}");
+                        throw new RemoteLinqException($"Failed to bind {node.Member.MemberType.ToString().ToLower(CultureInfo.CurrentCulture)} {name} of type {instance.Type}");
                     }
 
                     return Expression.MakeMemberAccess(instance, member.Single());
@@ -154,7 +156,7 @@ namespace Remote.Linq.ExpressionVisitors
             private static string GetMemberName(MemberInfo memberInfo)
             {
                 var name = memberInfo.Name;
-                if (memberInfo.GetMemberType() == MemberTypes.Method && name.Length > 4 && name.StartsWith("get_"))
+                if (memberInfo.GetMemberType() == MemberTypes.Method && name.Length > 4 && name.StartsWith("get_", StringComparison.Ordinal))
                 {
                     name = name.Substring(4);
                 }
@@ -296,6 +298,7 @@ namespace Remote.Linq.ExpressionVisitors
             }
         }
 
+        [SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "Owned disposable type serves special purpose")]
         private sealed class RemoteQueryableVisitor : ExpressionVisitorBase
         {
             private sealed class ParameterScope : IDisposable
@@ -314,7 +317,7 @@ namespace Remote.Linq.ExpressionVisitors
                     _parent = parent;
                     _count = parent?._count ?? 0;
 
-                    _visitor = visitor ?? throw new ArgumentNullException(nameof(visitor));
+                    _visitor = visitor.CheckNotNull(nameof(visitor));
                     _visitor._parameterScope = this;
                 }
 

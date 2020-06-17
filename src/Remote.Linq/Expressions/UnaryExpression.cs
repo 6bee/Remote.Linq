@@ -17,7 +17,7 @@ namespace Remote.Linq.Expressions
         public UnaryExpression(UnaryOperator unaryOperator, Expression operand)
         {
             UnaryOperator = unaryOperator;
-            Operand = operand ?? throw new ArgumentNullException(nameof(operand));
+            Operand = operand.CheckNotNull(nameof(operand));
         }
 
         public UnaryExpression(UnaryOperator unaryOperator, Expression operand, TypeInfo? type, MethodInfo? method)

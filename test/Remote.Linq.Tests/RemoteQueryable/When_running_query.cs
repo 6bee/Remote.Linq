@@ -117,7 +117,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             var result = _productQueryable.ToList();
 
-            result.Count().ShouldBe(5);
+            result.Count.ShouldBe(5);
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             var result = _productQueryable.Where(p => p is Product).ToList();
 
-            result.Count().ShouldBe(5);
+            result.Count.ShouldBe(5);
         }
 
         [Fact]
@@ -165,7 +165,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             var result = _productQueryable.Select(p => p as Product).ToList();
 
-            result.Count().ShouldBe(5);
+            result.Count.ShouldBe(5);
         }
 
         [Fact]
@@ -177,7 +177,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where c.Name == "Vehicles"
                 select p).ToList();
 
-            result.Count().ShouldBe(2);
+            result.Count.ShouldBe(2);
         }
 
         [Fact]
@@ -185,7 +185,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             var result = _productQueryable.GroupBy(p => p.Id).ToList();
 
-            result.Count().ShouldBe(5);
+            result.Count.ShouldBe(5);
             result.ForEach(g => g.Count().ShouldBe(1));
         }
 
@@ -197,7 +197,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 group p by p.CategoryId into g
                 select g).ToList();
 
-            result.Count().ShouldBe(2);
+            result.Count.ShouldBe(2);
             result.ElementAt(0).Count().ShouldBe(3);
             result.ElementAt(1).Count().ShouldBe(2);
         }
@@ -214,7 +214,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 })
                 .ToList();
 
-            result.Count().ShouldBe(2);
+            result.Count.ShouldBe(2);
             result.ElementAt(0).Group.Count().ShouldBe(3);
             result.ElementAt(1).Group.Count().ShouldBe(2);
         }
@@ -227,7 +227,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 .SelectMany(x => x)
                 .ToList();
 
-            result.Count().ShouldBe(5);
+            result.Count.ShouldBe(5);
         }
 
         [Fact]
@@ -241,7 +241,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 select g)
                 .ToList();
 
-            orders.Count().ShouldBe(1);
+            orders.Count.ShouldBe(1);
             orders.ElementAt(0).Count().ShouldBe(2);
         }
 
@@ -445,8 +445,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
                     System.Linq.Expressions.Expression.Constant(PruductTags.BestPrice, typeof(Enum))),
                 lambdaConvertEnum.Parameters);
 
-            _productQueryable.Where(lambdaConvertEnum).ToList().Count().ShouldBe(1);
-            _productQueryable.Where(lambdaConstEnum).ToList().Count().ShouldBe(1);
+            _productQueryable.Where(lambdaConvertEnum).ToList().Count.ShouldBe(1);
+            _productQueryable.Where(lambdaConstEnum).ToList().Count.ShouldBe(1);
         }
 
         [Fact]
@@ -458,7 +458,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where x.Id == id
                 select x;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -470,7 +470,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where x.Id == id
                 select x;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -483,7 +483,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where listOfIds.Contains(p.Id) || new List<string> { "Truck", "Bicycle" }.Contains(p.Name) || p.Id % 3 == 0 || p.Id == oneId
                 select p;
             var result = query.ToArray();
-            result.Count().ShouldBe(4);
+            result.Length.ShouldBe(4);
         }
 
         [Fact]
@@ -496,7 +496,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where listOfIds.Contains(p.Id) || new List<string> { "Truck", "Bicycle" }.Contains(p.Name) || p.Id % 3 == 0 || p.Id == oneId
                 select p;
             var result = query.ToArray();
-            result.Count().ShouldBe(4);
+            result.Length.ShouldBe(4);
         }
 
         private static readonly IQueryable<int?> __listOfIds = new List<int?>() { null, 1, 11, 111 }.AsQueryable(); // <=== EnumerableQuery
@@ -510,7 +510,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where __listOfIds.Contains(p.Id) || new List<string> { "Truck", "Bicycle" }.Contains(p.Name) || p.Id % 3 == 0 || p.Id == oneId
                 select p;
             var result = query.ToArray();
-            result.Count().ShouldBe(4);
+            result.Length.ShouldBe(4);
         }
 
         [Fact]
@@ -522,7 +522,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 from f in factors
                 select p * (f ?? 0);
             var result = query.ToArray();
-            result.Count().ShouldBe(5 * 4);
+            result.Length.ShouldBe(5 * 4);
         }
 
         private static readonly IQueryable<int?> __factors = new List<int?>() { null, 1, 2, 3 }.AsQueryable(); // <=== EnumerableQuery
@@ -535,7 +535,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 from f in __factors
                 select p * (f ?? 0);
             var result = query.ToArray();
-            result.Count().ShouldBe(5 * 4);
+            result.Length.ShouldBe(5 * 4);
         }
 
         [Fact]
@@ -547,7 +547,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where p.Id == oneId
                 select p;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -559,7 +559,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where p.Id == arg.Id
                 select p;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -570,7 +570,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where c.CategoryType == CategoryType.NonFood
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -581,7 +581,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where c.CategoryType.Equals(CategoryType.NonFood)
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -593,7 +593,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where c.CategoryType == categoryType
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -604,7 +604,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where c.CategorySourceType == CategorySourceType.Internal
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -615,7 +615,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where c.CategorySourceType.Equals(CategorySourceType.Internal)
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -627,7 +627,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where c.CategorySourceType == categoryType
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -638,7 +638,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where c.CategorySourceType == null
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -649,7 +649,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where c.CategorySourceType.Equals(null)
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -661,11 +661,12 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where c.CategorySourceType == categoryType
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
         [SuppressMessage("Major Bug", "S2995:\"Object.ReferenceEquals\" should not be used for value types", Justification = "Intentional test setup")]
+        [SuppressMessage("Reliability", "CA2013:Do not use ReferenceEquals with value types", Justification = "Intentional test setup")]
         public void Should_query_product_categories_filterd_using_inline_nullable_enum_reference_equals_null()
         {
             var query =
@@ -673,7 +674,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where ReferenceEquals(null, c.CategorySourceType)
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -684,7 +685,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where Equals(null, c.CategorySourceType)
                 select c;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -695,7 +696,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where p.PruductTags.HasFlag(PruductTags.BestPrice)
                 select p;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -707,7 +708,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 where p.PruductTags.HasFlag(flag)
                 select p;
             var result = query.ToArray();
-            result.Count().ShouldBe(1);
+            result.Length.ShouldBe(1);
         }
 
         [Fact]
@@ -787,7 +788,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
                from c in _categoryQueryable.Take(1)
                select new { p, c }).ToList();
 
-            result.Count().ShouldBe(1);
+            result.Count.ShouldBe(1);
         }
 
         [Fact]
@@ -933,7 +934,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         {
             var result = _productQueryable.Where(p => Db.Functions.Like(p.Name, "%")).ToList();
 
-            result.Count().ShouldBe(5);
+            result.Count.ShouldBe(5);
         }
 
         [Fact]

@@ -18,8 +18,8 @@ namespace Remote.Linq.Expressions
 
         public MemberInitExpression(NewExpression newExpression, IEnumerable<MemberBinding> bindings)
         {
-            NewExpression = newExpression ?? throw new ArgumentNullException(nameof(newExpression));
-            Bindings = bindings?.ToList() ?? throw new ArgumentNullException(nameof(bindings));
+            NewExpression = newExpression.CheckNotNull(nameof(newExpression));
+            Bindings = bindings.CheckNotNull(nameof(bindings)).ToList();
         }
 
         public override ExpressionType NodeType => ExpressionType.MemberInit;

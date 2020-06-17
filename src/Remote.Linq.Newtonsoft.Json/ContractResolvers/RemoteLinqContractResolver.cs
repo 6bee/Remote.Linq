@@ -69,7 +69,7 @@ namespace Remote.Linq.Newtonsoft.Json.ContractResolvers
         }
 
         private static bool IsTypeHandled(Type type)
-            => Equals(type.Assembly, typeof(Expression).Assembly)
+            => Equals(type.CheckNotNull(nameof(type)).Assembly, typeof(Expression).Assembly)
             && type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
 
         private static JsonConverter CreateObjectConverter(Type type)

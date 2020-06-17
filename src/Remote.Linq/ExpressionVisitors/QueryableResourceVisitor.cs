@@ -10,14 +10,14 @@ namespace Remote.Linq.ExpressionVisitors
     using System;
     using System.Linq;
 
-    public class QueryableResourceVisitor
+    public static class QueryableResourceVisitor
     {
-        internal T ReplaceResourceDescriptorsByQueryable<T>(T expression, Func<Type, IQueryable> provider, ITypeResolver? typeResolver)
+        internal static T ReplaceResourceDescriptorsByQueryable<T>(T expression, Func<Type, IQueryable> provider, ITypeResolver? typeResolver)
             where T : Expression
-            => (T)new ResourceDescriptorVisitor(provider, typeResolver).ReplaceResourceDescriptorsByQueryable(expression);
+            => (T)new ResourceDescriptorVisitor(provider, typeResolver).Run(expression);
 
-        internal Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider? typeInfoProvider)
-            => new QueryableVisitor(typeInfoProvider).ReplaceQueryablesByResourceDescriptors(expression);
+        internal static Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider? typeInfoProvider)
+            => new QueryableVisitor(typeInfoProvider).Run(expression);
 
         protected class ResourceDescriptorVisitor : RemoteExpressionVisitorBase
         {
@@ -30,18 +30,21 @@ namespace Remote.Linq.ExpressionVisitors
                 _typeResolver = typeResolver ?? TypeResolver.Instance;
             }
 
-            internal Expression ReplaceResourceDescriptorsByQueryable(Expression expression) => Visit(expression);
+            internal Expression Run(Expression expression) => Visit(expression);
 
             protected override ConstantExpression VisitConstant(ConstantExpression node)
             {
-                if (TryGetQueryableByQueryableResourceDescriptor(node.Value, out var queryable))
+                var value = node.CheckNotNull(nameof(node)).Value;
+                if (TryGetQueryableByQueryableResourceDescriptor(value, out var queryable))
                 {
                     return new ConstantExpression(queryable);
                 }
 
-                if (TryResolveQueryableSuorceInConstantQueryArgument(node.Value, out var constantQueryArgument))
+                if (TryResolveQueryableSuorceInConstantQueryArgument(value, out var constantQueryArgument))
                 {
+#pragma warning disable CA1062 // Validate arguments of public methods -> false positive.
                     return new ConstantExpression(constantQueryArgument, node.Type);
+#pragma warning restore CA1062 // Validate arguments of public methods
                 }
 
                 return base.VisitConstant(node);
@@ -96,15 +99,15 @@ namespace Remote.Linq.ExpressionVisitors
                 _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
             }
 
-            internal Expression ReplaceQueryablesByResourceDescriptors(Expression expression)
+            internal Expression Run(Expression expression)
                 => Visit(expression);
 
             protected override ConstantExpression VisitConstant(ConstantExpression node)
             {
-                var queryable = node.Value.AsQueryableOrNull();
+                var queryable = node.CheckNotNull(nameof(node)).Value.AsQueryableOrNull();
                 if (queryable != null)
                 {
-                    var typeInfo = _typeInfoProvider.Get(queryable.ElementType);
+                    var typeInfo = _typeInfoProvider.GetTypeInfo(queryable.ElementType);
                     var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
                     return new ConstantExpression(queryableResourceDescriptor);
                 }
@@ -118,7 +121,7 @@ namespace Remote.Linq.ExpressionVisitors
                         var value = property.Value.AsQueryableOrNull();
                         if (value != null)
                         {
-                            var typeInfo = _typeInfoProvider.Get(value.ElementType);
+                            var typeInfo = _typeInfoProvider.GetTypeInfo(value.ElementType);
                             var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
                             property.Value = queryableResourceDescriptor;
                         }

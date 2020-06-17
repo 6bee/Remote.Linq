@@ -15,7 +15,7 @@ namespace Remote.Linq.Expressions
 
         public SortExpression(LambdaExpression operand, SortDirection sortDirection)
         {
-            Operand = operand ?? throw new ArgumentNullException(nameof(operand));
+            Operand = operand.CheckNotNull(nameof(operand));
             SortDirection = sortDirection;
         }
 

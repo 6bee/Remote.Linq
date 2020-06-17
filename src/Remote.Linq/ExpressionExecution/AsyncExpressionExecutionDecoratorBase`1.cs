@@ -3,7 +3,6 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Remote.Linq.Expressions;
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
@@ -27,7 +26,7 @@ namespace Remote.Linq.ExpressionExecution
         internal AsyncExpressionExecutionDecoratorBase(IAsyncExpressionExecutionDecorator<TDataTranferObject> parent)
             : base(parent)
         {
-            _parent = parent ?? throw new ArgumentNullException(nameof(parent));
+            _parent = parent.CheckNotNull(nameof(parent));
         }
 
         /// <summary>

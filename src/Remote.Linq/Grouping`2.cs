@@ -5,6 +5,7 @@ namespace Remote.Linq
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -15,6 +16,7 @@ namespace Remote.Linq
 #nullable disable
         public TKey Key { get; set; }
 
+        [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Property serves as serialization contract")]
         public TElement[] Elements { get; set; }
 
         public IEnumerator<TElement> GetEnumerator() => ((IEnumerable<TElement>)Elements).GetEnumerator();

@@ -313,30 +313,25 @@ namespace Remote.Linq
 
             public RLinq.Expression ToRemoteExpression(System.Linq.Expressions.Expression expression)
             {
-                if (expression is null)
-                {
-                    throw new ArgumentNullException(nameof(expression));
-                }
-
-                var partialEvalExpression = expression.PartialEval(_canBeEvaluatedLocally);
+                var partialEvalExpression = expression.CheckNotNull(nameof(expression)).PartialEval(_canBeEvaluatedLocally);
                 var constExpression = Visit(partialEvalExpression);
                 return constExpression.Unwrap();
             }
 
             [return: NotNullIfNotNull("expression")]
-            protected override System.Linq.Expressions.Expression? Visit(System.Linq.Expressions.Expression? expression)
-                => expression?.NodeType switch
+            protected override System.Linq.Expressions.Expression? Visit(System.Linq.Expressions.Expression? node)
+                => node?.NodeType switch
                 {
-                    System.Linq.Expressions.ExpressionType.New => VisitNew((System.Linq.Expressions.NewExpression)expression).Wrap(),
-                    _ => base.Visit(expression),
+                    System.Linq.Expressions.ExpressionType.New => VisitNew((System.Linq.Expressions.NewExpression)node).Wrap(),
+                    _ => base.Visit(node),
                 };
 
-            protected override System.Linq.Expressions.Expression VisitSwitch(System.Linq.Expressions.SwitchExpression switchExpression)
+            protected override System.Linq.Expressions.Expression VisitSwitch(System.Linq.Expressions.SwitchExpression node)
             {
-                var defaultExpression = Visit(switchExpression.DefaultBody).UnwrapNullable();
-                var switchValue = Visit(switchExpression.SwitchValue).Unwrap();
-                var cases = (switchExpression.Cases ?? Enumerable.Empty<System.Linq.Expressions.SwitchCase>()).Select(VisitSwitchCase).ToList();
-                return new RLinq.SwitchExpression(switchValue, switchExpression.Comparison, defaultExpression, cases).Wrap();
+                var defaultExpression = Visit(node.DefaultBody).UnwrapNullable();
+                var switchValue = Visit(node.SwitchValue).Unwrap();
+                var cases = (node.Cases ?? Enumerable.Empty<System.Linq.Expressions.SwitchCase>()).Select(VisitSwitchCase).ToList();
+                return new RLinq.SwitchExpression(switchValue, node.Comparison, defaultExpression, cases).Wrap();
             }
 
             private new RLinq.SwitchCase VisitSwitchCase(System.Linq.Expressions.SwitchCase switchCase)
@@ -346,13 +341,13 @@ namespace Remote.Linq
                 return new RLinq.SwitchCase(body, testValues);
             }
 
-            protected override System.Linq.Expressions.Expression VisitTry(System.Linq.Expressions.TryExpression tryExpression)
+            protected override System.Linq.Expressions.Expression VisitTry(System.Linq.Expressions.TryExpression node)
             {
-                var body = Visit(tryExpression.Body).Unwrap();
-                var fault = Visit(tryExpression.Fault).UnwrapNullable();
-                var @finally = Visit(tryExpression.Finally).UnwrapNullable();
-                var handlers = tryExpression.Handlers?.Select(VisitCatch);
-                return new RLinq.TryExpression(_typeInfoProvider.Get(tryExpression.Type), body, fault, @finally, handlers).Wrap();
+                var body = Visit(node.Body).Unwrap();
+                var fault = Visit(node.Fault).UnwrapNullable();
+                var @finally = Visit(node.Finally).UnwrapNullable();
+                var handlers = node.Handlers?.Select(VisitCatch);
+                return new RLinq.TryExpression(_typeInfoProvider.GetTypeInfo(node.Type), body, fault, @finally, handlers).Wrap();
             }
 
             private new RLinq.CatchBlock VisitCatch(System.Linq.Expressions.CatchBlock catchBlock)
@@ -360,7 +355,7 @@ namespace Remote.Linq
                 var body = Visit(catchBlock.Body).Unwrap();
                 var filter = Visit(catchBlock.Filter).UnwrapNullable();
                 var variable = Visit(catchBlock.Variable).UnwrapNullable() as RLinq.ParameterExpression;
-                return new RLinq.CatchBlock(_typeInfoProvider.Get(catchBlock.Test), variable, body, filter);
+                return new RLinq.CatchBlock(_typeInfoProvider.GetTypeInfo(catchBlock.Test), variable, body, filter);
             }
 
             protected override System.Linq.Expressions.Expression VisitListInit(System.Linq.Expressions.ListInitExpression node)
@@ -392,7 +387,7 @@ namespace Remote.Linq
                 }
 
                 return node.Constructor is null
-                    ? new RLinq.NewExpression(_typeInfoProvider.Get(node.Type))
+                    ? new RLinq.NewExpression(_typeInfoProvider.GetTypeInfo(node.Type))
                     : new RLinq.NewExpression(_typeInfoProvider.GetConstructorInfo(node.Constructor), arguments, node.Members?.Select(x => _typeInfoProvider.GetMemberInfo(x)));
             }
 
@@ -427,11 +422,11 @@ namespace Remote.Linq
 
                     exp = node.Type == constantQueryArgument.Type?.Type
                         ? new RLinq.ConstantExpression(constantQueryArgument, constantQueryArgument.Type)
-                        : new RLinq.ConstantExpression(constantQueryArgument, _typeInfoProvider.Get(node.Type));
+                        : new RLinq.ConstantExpression(constantQueryArgument, _typeInfoProvider.GetTypeInfo(node.Type));
                 }
                 else
                 {
-                    exp = new RLinq.ConstantExpression(node.Value, _typeInfoProvider.Get(node.Type));
+                    exp = new RLinq.ConstantExpression(node.Value, _typeInfoProvider.GetTypeInfo(node.Type));
                 }
 
                 return exp.Wrap();
@@ -443,7 +438,7 @@ namespace Remote.Linq
                 {
                     if (!_parameterExpressionCache.TryGetValue(node, out var exp))
                     {
-                        exp = new RLinq.ParameterExpression(_typeInfoProvider.Get(node.Type), node.Name, _parameterExpressionCache.Count + 1);
+                        exp = new RLinq.ParameterExpression(_typeInfoProvider.GetTypeInfo(node.Type), node.Name, _parameterExpressionCache.Count + 1);
                         _parameterExpressionCache.Add(node, exp);
                     }
 
@@ -463,7 +458,7 @@ namespace Remote.Linq
             protected override System.Linq.Expressions.Expression VisitTypeIs(System.Linq.Expressions.TypeBinaryExpression node)
             {
                 var expression = Visit(node.Expression).Unwrap();
-                return new RLinq.TypeBinaryExpression(expression, _typeInfoProvider.Get(node.TypeOperand)).Wrap();
+                return new RLinq.TypeBinaryExpression(expression, _typeInfoProvider.GetTypeInfo(node.TypeOperand)).Wrap();
             }
 
             protected override System.Linq.Expressions.Expression VisitMemberAccess(System.Linq.Expressions.MemberExpression node)
@@ -529,14 +524,14 @@ namespace Remote.Linq
                 var parameters = node.Parameters
                     .Select(VisitParameter)
                     .Select(Unwrap<RLinq.ParameterExpression>);
-                return new RLinq.LambdaExpression(_typeInfoProvider.Get(node.Type), body, parameters).Wrap();
+                return new RLinq.LambdaExpression(_typeInfoProvider.GetTypeInfo(node.Type), body, parameters).Wrap();
             }
 
             protected override System.Linq.Expressions.Expression VisitUnary(System.Linq.Expressions.UnaryExpression node)
             {
                 var unaryOperator = node.NodeType.ToUnaryOperator();
                 var operand = Visit(node.Operand).Unwrap();
-                return new RLinq.UnaryExpression(unaryOperator, operand, _typeInfoProvider.Get(node.Type), _typeInfoProvider.GetMethodInfo(node.Method)).Wrap();
+                return new RLinq.UnaryExpression(unaryOperator, operand, _typeInfoProvider.GetTypeInfo(node.Type), _typeInfoProvider.GetMethodInfo(node.Method)).Wrap();
             }
 
             protected override System.Linq.Expressions.Expression VisitConditional(System.Linq.Expressions.ConditionalExpression node)
@@ -552,7 +547,7 @@ namespace Remote.Linq
                 var newArrayType = node.NodeType.ToNewArrayType();
                 var expressions = VisitExpressionList(node.Expressions).Select(Unwrap);
                 var elementType = TypeHelper.GetElementType(node.Type) ?? throw new RemoteLinqException($"Failed to get element type of {node.Type}.");
-                return new RLinq.NewArrayExpression(newArrayType, _typeInfoProvider.Get(elementType), expressions).Wrap();
+                return new RLinq.NewArrayExpression(newArrayType, _typeInfoProvider.GetTypeInfo(elementType), expressions).Wrap();
             }
 
             protected override System.Linq.Expressions.Expression VisitInvocation(System.Linq.Expressions.InvocationExpression node)
@@ -573,12 +568,12 @@ namespace Remote.Linq
                 }
 
                 var type = node.Type == node.Result.Type ? null : node.Type;
-                return new RLinq.BlockExpression(_typeInfoProvider.Get(type), variables, expressions).Wrap();
+                return new RLinq.BlockExpression(_typeInfoProvider.GetTypeInfo(type), variables, expressions).Wrap();
             }
 
             protected override System.Linq.Expressions.Expression VisitDefault(System.Linq.Expressions.DefaultExpression node)
             {
-                return new RLinq.DefaultExpression(_typeInfoProvider.Get(node.Type)).Wrap();
+                return new RLinq.DefaultExpression(_typeInfoProvider.GetTypeInfo(node.Type)).Wrap();
             }
 
             protected override System.Linq.Expressions.Expression VisitLabel(System.Linq.Expressions.LabelExpression node)
@@ -602,7 +597,7 @@ namespace Remote.Linq
                 var target = VisitTarget(node.Target);
                 var type = node.Target.Type == node.Type ? null : node.Type;
                 var value = Visit(node.Value).UnwrapNullable();
-                return new RLinq.GotoExpression(kind, target, _typeInfoProvider.Get(type), value).Wrap();
+                return new RLinq.GotoExpression(kind, target, _typeInfoProvider.GetTypeInfo(type), value).Wrap();
             }
 
             [return: NotNullIfNotNull("labelTarget")]
@@ -617,7 +612,7 @@ namespace Remote.Linq
                 {
                     if (!_labelTargetCache.TryGetValue(labelTarget, out var target))
                     {
-                        target = new RLinq.LabelTarget(labelTarget.Name, _typeInfoProvider.Get(labelTarget.Type), _labelTargetCache.Count + 1);
+                        target = new RLinq.LabelTarget(labelTarget.Name, _typeInfoProvider.GetTypeInfo(labelTarget.Type), _labelTargetCache.Count + 1);
                         _labelTargetCache.Add(labelTarget, target);
                     }
 
@@ -639,43 +634,43 @@ namespace Remote.Linq
                 _typeResolver = typeResolver ?? TypeResolver.Instance;
             }
 
-            public System.Linq.Expressions.Expression ToExpression(RLinq.Expression expression) => Visit(expression ?? throw new ArgumentNullException(nameof(expression)));
+            public System.Linq.Expressions.Expression ToExpression(RLinq.Expression expression) => Visit(expression.CheckNotNull(nameof(expression)));
 
-            [return: NotNullIfNotNull("expression")]
-            private System.Linq.Expressions.Expression? Visit(RLinq.Expression? expression)
-                => expression?.NodeType switch
+            [return: NotNullIfNotNull("node")]
+            private System.Linq.Expressions.Expression? Visit(RLinq.Expression? node)
+                => node?.NodeType switch
                 {
                     null => null,
-                    RLinq.ExpressionType.Binary => VisitBinary((RLinq.BinaryExpression)expression),
-                    RLinq.ExpressionType.Block => VisitBlock((RLinq.BlockExpression)expression),
-                    RLinq.ExpressionType.Call => VisitMethodCall((RLinq.MethodCallExpression)expression),
-                    RLinq.ExpressionType.Conditional => VisitConditional((RLinq.ConditionalExpression)expression),
-                    RLinq.ExpressionType.Constant => VisitConstant((RLinq.ConstantExpression)expression),
-                    RLinq.ExpressionType.Default => VisitDefault((RLinq.DefaultExpression)expression),
-                    RLinq.ExpressionType.Invoke => VisitInvoke((RLinq.InvokeExpression)expression),
-                    RLinq.ExpressionType.Goto => VisitGoto((RLinq.GotoExpression)expression),
-                    RLinq.ExpressionType.Label => VisitLabel((RLinq.LabelExpression)expression),
-                    RLinq.ExpressionType.Lambda => VisitLambda((RLinq.LambdaExpression)expression),
-                    RLinq.ExpressionType.ListInit => VisitListInit((RLinq.ListInitExpression)expression),
-                    RLinq.ExpressionType.Loop => VisitLoop((RLinq.LoopExpression)expression),
-                    RLinq.ExpressionType.MemberAccess => VisitMember((RLinq.MemberExpression)expression),
-                    RLinq.ExpressionType.MemberInit => VisitMemberInit((RLinq.MemberInitExpression)expression),
-                    RLinq.ExpressionType.New => VisitNew((RLinq.NewExpression)expression),
-                    RLinq.ExpressionType.NewArray => VisitNewArray((RLinq.NewArrayExpression)expression),
-                    RLinq.ExpressionType.Parameter => VisitParameter((RLinq.ParameterExpression)expression),
-                    RLinq.ExpressionType.Switch => VisitSwitch((RLinq.SwitchExpression)expression),
-                    RLinq.ExpressionType.Try => VisitTry((RLinq.TryExpression)expression),
-                    RLinq.ExpressionType.TypeIs => VisitTypeIs((RLinq.TypeBinaryExpression)expression),
-                    RLinq.ExpressionType.Unary => VisitUnary((RLinq.UnaryExpression)expression),
-                    _ => throw new NotSupportedException($"Unknown expression note type: '{expression.NodeType}'"),
+                    RLinq.ExpressionType.Binary => VisitBinary((RLinq.BinaryExpression)node),
+                    RLinq.ExpressionType.Block => VisitBlock((RLinq.BlockExpression)node),
+                    RLinq.ExpressionType.Call => VisitMethodCall((RLinq.MethodCallExpression)node),
+                    RLinq.ExpressionType.Conditional => VisitConditional((RLinq.ConditionalExpression)node),
+                    RLinq.ExpressionType.Constant => VisitConstant((RLinq.ConstantExpression)node),
+                    RLinq.ExpressionType.Default => VisitDefault((RLinq.DefaultExpression)node),
+                    RLinq.ExpressionType.Invoke => VisitInvoke((RLinq.InvokeExpression)node),
+                    RLinq.ExpressionType.Goto => VisitGoto((RLinq.GotoExpression)node),
+                    RLinq.ExpressionType.Label => VisitLabel((RLinq.LabelExpression)node),
+                    RLinq.ExpressionType.Lambda => VisitLambda((RLinq.LambdaExpression)node),
+                    RLinq.ExpressionType.ListInit => VisitListInit((RLinq.ListInitExpression)node),
+                    RLinq.ExpressionType.Loop => VisitLoop((RLinq.LoopExpression)node),
+                    RLinq.ExpressionType.MemberAccess => VisitMember((RLinq.MemberExpression)node),
+                    RLinq.ExpressionType.MemberInit => VisitMemberInit((RLinq.MemberInitExpression)node),
+                    RLinq.ExpressionType.New => VisitNew((RLinq.NewExpression)node),
+                    RLinq.ExpressionType.NewArray => VisitNewArray((RLinq.NewArrayExpression)node),
+                    RLinq.ExpressionType.Parameter => VisitParameter((RLinq.ParameterExpression)node),
+                    RLinq.ExpressionType.Switch => VisitSwitch((RLinq.SwitchExpression)node),
+                    RLinq.ExpressionType.Try => VisitTry((RLinq.TryExpression)node),
+                    RLinq.ExpressionType.TypeIs => VisitTypeIs((RLinq.TypeBinaryExpression)node),
+                    RLinq.ExpressionType.Unary => VisitUnary((RLinq.UnaryExpression)node),
+                    _ => throw new NotSupportedException($"Unknown expression note type: '{node.NodeType}'"),
                 };
 
-            private System.Linq.Expressions.Expression VisitSwitch(RLinq.SwitchExpression switchExpression)
+            private System.Linq.Expressions.Expression VisitSwitch(RLinq.SwitchExpression node)
             {
-                var defaultExpression = Visit(switchExpression.DefaultExpression);
-                var switchValue = Visit(switchExpression.SwitchValue);
-                var compareMethod = switchExpression.Comparison.ResolveMethod(_typeResolver);
-                var cases = switchExpression.Cases.Select(VisitSwitchCase);
+                var defaultExpression = Visit(node.DefaultExpression);
+                var switchValue = Visit(node.SwitchValue);
+                var compareMethod = node.Comparison.ResolveMethod(_typeResolver);
+                var cases = node.Cases.Select(VisitSwitchCase);
 
                 return System.Linq.Expressions.Expression.Switch(switchValue, defaultExpression, compareMethod, cases);
             }
@@ -687,13 +682,13 @@ namespace Remote.Linq
                 return System.Linq.Expressions.Expression.SwitchCase(body, testCases.Select(Visit));
             }
 
-            private System.Linq.Expressions.Expression VisitTry(RLinq.TryExpression tryExpression)
+            private System.Linq.Expressions.Expression VisitTry(RLinq.TryExpression node)
             {
-                var body = Visit(tryExpression.Body);
-                var type = tryExpression.Type.ResolveType(_typeResolver);
-                var fault = tryExpression.Fault is null ? null : Visit(tryExpression.Fault);
-                var @finally = tryExpression.Finally is null ? null : Visit(tryExpression.Finally);
-                var handlers = tryExpression.Handlers?.Select(VisitCatchBlock) ?? Enumerable.Empty<System.Linq.Expressions.CatchBlock>();
+                var body = Visit(node.Body);
+                var type = node.Type.ResolveType(_typeResolver);
+                var fault = node.Fault is null ? null : Visit(node.Fault);
+                var @finally = node.Finally is null ? null : Visit(node.Finally);
+                var handlers = node.Handlers?.Select(VisitCatchBlock) ?? Enumerable.Empty<System.Linq.Expressions.CatchBlock>();
 
                 return System.Linq.Expressions.Expression.MakeTry(type, body, @finally, fault, handlers);
             }
@@ -708,21 +703,21 @@ namespace Remote.Linq
                 return System.Linq.Expressions.Expression.MakeCatchBlock(exceptionType, exceptionParameter, body, filter);
             }
 
-            private System.Linq.Expressions.NewExpression VisitNew(RLinq.NewExpression newExpression)
+            private System.Linq.Expressions.NewExpression VisitNew(RLinq.NewExpression node)
             {
-                if (newExpression.Constructor is null)
+                if (node.Constructor is null)
                 {
-                    var type = newExpression.Type.ResolveType(_typeResolver);
+                    var type = node.Type.ResolveType(_typeResolver);
                     return System.Linq.Expressions.Expression.New(type);
                 }
 
-                var constructor = newExpression.Constructor.ResolveConstructor(_typeResolver);
-                if (newExpression.Arguments is null)
+                var constructor = node.Constructor.ResolveConstructor(_typeResolver);
+                if (node.Arguments is null)
                 {
-                    if (newExpression.Members?.Any() ?? false)
+                    if (node.Members?.Any() ?? false)
                     {
-                        var members = newExpression.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
-                        return System.Linq.Expressions.Expression.New(constructor, new System.Linq.Expressions.Expression[0], members);
+                        var members = node.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
+                        return System.Linq.Expressions.Expression.New(constructor, Array.Empty<System.Linq.Expressions.Expression>(), members);
                     }
                     else
                     {
@@ -732,11 +727,11 @@ namespace Remote.Linq
                 else
                 {
                     var arguments =
-                        from a in newExpression.Arguments
+                        from a in node.Arguments
                         select Visit(a);
-                    if (newExpression.Members?.Any() ?? false)
+                    if (node.Members?.Any() ?? false)
                     {
-                        var members = newExpression.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
+                        var members = node.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
                         return System.Linq.Expressions.Expression.New(constructor, arguments, members);
                     }
                     else
@@ -746,22 +741,22 @@ namespace Remote.Linq
                 }
             }
 
-            private System.Linq.Expressions.Expression VisitNewArray(RLinq.NewArrayExpression expression)
+            private System.Linq.Expressions.Expression VisitNewArray(RLinq.NewArrayExpression node)
             {
-                var expressions = VisitExpressionList(expression.Expressions);
-                var type = expression.Type.ResolveType(_typeResolver);
-                return expression.NewArrayType switch
+                var expressions = VisitExpressionList(node.Expressions);
+                var type = node.Type.ResolveType(_typeResolver);
+                return node.NewArrayType switch
                 {
                     RLinq.NewArrayType.NewArrayBounds => System.Linq.Expressions.Expression.NewArrayBounds(type, expressions),
                     RLinq.NewArrayType.NewArrayInit => System.Linq.Expressions.Expression.NewArrayInit(type, expressions),
-                    _ => throw new NotSupportedException($"Unhandled new array type {expression.NewArrayType}"),
+                    _ => throw new NotSupportedException($"Unhandled new array type {node.NewArrayType}"),
                 };
             }
 
-            private System.Linq.Expressions.Expression VisitMemberInit(RLinq.MemberInitExpression expression)
+            private System.Linq.Expressions.Expression VisitMemberInit(RLinq.MemberInitExpression node)
             {
-                var n = VisitNew(expression.NewExpression);
-                var bindings = VisitBindingList(expression.Bindings);
+                var n = VisitNew(node.NewExpression);
+                var bindings = VisitBindingList(node.Bindings);
                 return System.Linq.Expressions.Expression.MemberInit(n, bindings);
             }
 
@@ -822,8 +817,8 @@ namespace Remote.Linq
                 return System.Linq.Expressions.Expression.ListBind(m, initializers);
             }
 
-            private IEnumerable<System.Linq.Expressions.ElementInit> VisitElementInitializerList(IEnumerable<RLinq.ElementInit> original)
-                => original
+            private IEnumerable<System.Linq.Expressions.ElementInit> VisitElementInitializerList(IEnumerable<RLinq.ElementInit> list)
+                => list
                 .Select(VisitElementInitializer)
                 .ToArray();
 
@@ -834,66 +829,66 @@ namespace Remote.Linq
                 return System.Linq.Expressions.Expression.ElementInit(m, arguments);
             }
 
-            private IEnumerable<System.Linq.Expressions.Expression> VisitExpressionList(IEnumerable<RLinq.Expression> original)
-                => original
+            private IEnumerable<System.Linq.Expressions.Expression> VisitExpressionList(IEnumerable<RLinq.Expression> list)
+                => list
                 .Select(x => Visit(x))
                 .ToArray();
 
-            private System.Linq.Expressions.Expression VisitListInit(RLinq.ListInitExpression listInitExpression)
+            private System.Linq.Expressions.Expression VisitListInit(RLinq.ListInitExpression node)
             {
-                var n = VisitNew(listInitExpression.NewExpression);
+                var n = VisitNew(node.NewExpression);
                 var initializers =
-                    from i in listInitExpression.Initializers
+                    from i in node.Initializers
                     select System.Linq.Expressions.Expression.ElementInit(i.AddMethod.ResolveMethod(_typeResolver), i.Arguments.Select(Visit));
                 return System.Linq.Expressions.Expression.ListInit(n, initializers);
             }
 
-            private System.Linq.Expressions.ParameterExpression VisitParameter(RLinq.ParameterExpression parameterExpression)
+            private System.Linq.Expressions.ParameterExpression VisitParameter(RLinq.ParameterExpression node)
             {
                 lock (_parameterExpressionCache)
                 {
-                    if (!_parameterExpressionCache.TryGetValue(parameterExpression, out var exp))
+                    if (!_parameterExpressionCache.TryGetValue(node, out var exp))
                     {
-                        var type = parameterExpression.ParameterType.ResolveType(_typeResolver);
-                        exp = System.Linq.Expressions.Expression.Parameter(type, parameterExpression.ParameterName);
-                        _parameterExpressionCache.Add(parameterExpression, exp);
+                        var type = node.ParameterType.ResolveType(_typeResolver);
+                        exp = System.Linq.Expressions.Expression.Parameter(type, node.ParameterName);
+                        _parameterExpressionCache.Add(node, exp);
                     }
 
                     return exp;
                 }
             }
 
-            private System.Linq.Expressions.Expression VisitUnary(RLinq.UnaryExpression unaryExpression)
+            private System.Linq.Expressions.Expression VisitUnary(RLinq.UnaryExpression node)
             {
-                var expressionType = unaryExpression.UnaryOperator.ToExpressionType();
-                var exp = Visit(unaryExpression.Operand);
-                var type = unaryExpression.Type.ResolveType(_typeResolver);
-                var method = unaryExpression.Method.ResolveMethod(_typeResolver);
+                var expressionType = node.UnaryOperator.ToExpressionType();
+                var exp = Visit(node.Operand);
+                var type = node.Type.ResolveType(_typeResolver);
+                var method = node.Method.ResolveMethod(_typeResolver);
                 return System.Linq.Expressions.Expression.MakeUnary(expressionType, exp, type, method);
             }
 
-            private System.Linq.Expressions.Expression VisitMember(RLinq.MemberExpression memberExpression)
+            private System.Linq.Expressions.Expression VisitMember(RLinq.MemberExpression node)
             {
-                var exp = Visit(memberExpression.Expression);
-                var m = memberExpression.Member.ResolveMemberInfo(_typeResolver);
+                var exp = Visit(node.Expression);
+                var m = node.Member.ResolveMemberInfo(_typeResolver);
                 return System.Linq.Expressions.Expression.MakeMemberAccess(exp, m);
             }
 
-            private System.Linq.Expressions.Expression VisitMethodCall(RLinq.MethodCallExpression methodCallExpression)
+            private System.Linq.Expressions.Expression VisitMethodCall(RLinq.MethodCallExpression node)
             {
-                var instance = Visit(methodCallExpression.Instance);
-                var arguments = methodCallExpression.Arguments?
+                var instance = Visit(node.Instance);
+                var arguments = node.Arguments?
                     .Select(x => Visit(x))
                     .ToArray();
-                var methodInfo = methodCallExpression.Method.ResolveMethod(_typeResolver);
+                var methodInfo = node.Method.ResolveMethod(_typeResolver);
                 return System.Linq.Expressions.Expression.Call(instance, methodInfo, arguments);
             }
 
-            private System.Linq.Expressions.Expression VisitConditional(RLinq.ConditionalExpression expression)
+            private System.Linq.Expressions.Expression VisitConditional(RLinq.ConditionalExpression node)
             {
-                var test = Visit(expression.Test);
-                var ifTrue = Visit(expression.IfTrue);
-                var ifFalse = Visit(expression.IfFalse);
+                var test = Visit(node.Test);
+                var ifTrue = Visit(node.IfTrue);
+                var ifFalse = Visit(node.IfFalse);
 
                 if (ifFalse is System.Linq.Expressions.DefaultExpression && ifFalse.Type == typeof(void))
                 {
@@ -903,10 +898,10 @@ namespace Remote.Linq
                 return System.Linq.Expressions.Expression.Condition(test, ifTrue, ifFalse);
             }
 
-            private System.Linq.Expressions.Expression VisitConstant(RLinq.ConstantExpression constantValueExpression)
+            private System.Linq.Expressions.Expression VisitConstant(RLinq.ConstantExpression node)
             {
-                var value = constantValueExpression.Value;
-                var type = constantValueExpression.Type.ResolveType(_typeResolver);
+                var value = node.Value;
+                var type = node.Type.ResolveType(_typeResolver);
 
                 if (type == typeof(Type) && value is Aqua.TypeSystem.TypeInfo typeInfo)
                 {
@@ -938,64 +933,64 @@ namespace Remote.Linq
                 return System.Linq.Expressions.Expression.Constant(value, type);
             }
 
-            private System.Linq.Expressions.Expression VisitBinary(RLinq.BinaryExpression binaryExpression)
+            private System.Linq.Expressions.Expression VisitBinary(RLinq.BinaryExpression node)
             {
-                var p1 = Visit(binaryExpression.LeftOperand);
-                var p2 = Visit(binaryExpression.RightOperand);
-                var conversion = Visit(binaryExpression.Conversion) as System.Linq.Expressions.LambdaExpression;
-                var binaryType = binaryExpression.BinaryOperator.ToExpressionType();
-                var method = binaryExpression.Method.ResolveMethod(_typeResolver);
-                return System.Linq.Expressions.Expression.MakeBinary(binaryType, p1, p2, binaryExpression.IsLiftedToNull, method, conversion);
+                var p1 = Visit(node.LeftOperand);
+                var p2 = Visit(node.RightOperand);
+                var conversion = Visit(node.Conversion) as System.Linq.Expressions.LambdaExpression;
+                var binaryType = node.BinaryOperator.ToExpressionType();
+                var method = node.Method.ResolveMethod(_typeResolver);
+                return System.Linq.Expressions.Expression.MakeBinary(binaryType, p1, p2, node.IsLiftedToNull, method, conversion);
             }
 
-            private System.Linq.Expressions.Expression VisitTypeIs(RLinq.TypeBinaryExpression typeBinaryExpression)
+            private System.Linq.Expressions.Expression VisitTypeIs(RLinq.TypeBinaryExpression node)
             {
-                var expression = Visit(typeBinaryExpression.Expression);
-                var type = typeBinaryExpression.TypeOperand.ResolveType(_typeResolver);
+                var expression = Visit(node.Expression);
+                var type = node.TypeOperand.ResolveType(_typeResolver);
                 return System.Linq.Expressions.Expression.TypeIs(expression, type);
             }
 
-            private System.Linq.Expressions.Expression VisitLambda(RLinq.LambdaExpression lambdaExpression)
+            private System.Linq.Expressions.Expression VisitLambda(RLinq.LambdaExpression node)
             {
-                var body = Visit(lambdaExpression.Expression);
-                var parameters = lambdaExpression.Parameters?.Select(VisitParameter) ?? Enumerable.Empty<System.Linq.Expressions.ParameterExpression>();
+                var body = Visit(node.Expression);
+                var parameters = node.Parameters?.Select(VisitParameter) ?? Enumerable.Empty<System.Linq.Expressions.ParameterExpression>();
 
-                if (lambdaExpression.Type is null)
+                if (node.Type is null)
                 {
                     return System.Linq.Expressions.Expression.Lambda(body, parameters);
                 }
 
-                var delegateType = lambdaExpression.Type.ResolveType(_typeResolver);
+                var delegateType = node.Type.ResolveType(_typeResolver);
                 return System.Linq.Expressions.Expression.Lambda(delegateType, body, parameters);
             }
 
-            private System.Linq.Expressions.Expression VisitDefault(RLinq.DefaultExpression defaultExpression)
+            private System.Linq.Expressions.Expression VisitDefault(RLinq.DefaultExpression node)
             {
-                var type = defaultExpression.Type.ResolveType(_typeResolver);
+                var type = node.Type.ResolveType(_typeResolver);
                 return System.Linq.Expressions.Expression.Default(type);
             }
 
-            private System.Linq.Expressions.Expression VisitGoto(RLinq.GotoExpression gotoExpression)
+            private System.Linq.Expressions.Expression VisitGoto(RLinq.GotoExpression node)
             {
-                var kind = gotoExpression.Kind.ToGotoExpressionKind();
-                var target = VisitTarget(gotoExpression.Target);
-                var value = Visit(gotoExpression.Value);
-                var type = gotoExpression.Type.ResolveType(_typeResolver);
+                var kind = node.Kind.ToGotoExpressionKind();
+                var target = VisitTarget(node.Target);
+                var value = Visit(node.Value);
+                var type = node.Type.ResolveType(_typeResolver);
                 return System.Linq.Expressions.Expression.MakeGoto(kind, target, value, type ?? target.Type);
             }
 
-            private System.Linq.Expressions.Expression VisitLabel(RLinq.LabelExpression labelExpression)
+            private System.Linq.Expressions.Expression VisitLabel(RLinq.LabelExpression node)
             {
-                var target = VisitTarget(labelExpression.Target);
-                var defaultValue = Visit(labelExpression.DefaultValue);
+                var target = VisitTarget(node.Target);
+                var defaultValue = Visit(node.DefaultValue);
                 return System.Linq.Expressions.Expression.Label(target, defaultValue);
             }
 
-            private System.Linq.Expressions.Expression VisitLoop(RLinq.LoopExpression loopExpression)
+            private System.Linq.Expressions.Expression VisitLoop(RLinq.LoopExpression node)
             {
-                var body = Visit(loopExpression.Body);
-                var breakLabel = VisitTarget(loopExpression.BreakLabel);
-                var continueLabel = VisitTarget(loopExpression.ContinueLabel);
+                var body = Visit(node.Body);
+                var breakLabel = VisitTarget(node.BreakLabel);
+                var continueLabel = VisitTarget(node.ContinueLabel);
                 return System.Linq.Expressions.Expression.Loop(body, breakLabel, continueLabel);
             }
 

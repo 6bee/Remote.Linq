@@ -40,7 +40,7 @@ namespace Remote.Linq.Expressions
 
         public ConstantExpression(object? value, TypeInfo type)
         {
-            Type = type ?? throw new ArgumentNullException(nameof(type));
+            Type = type.CheckNotNull(nameof(type));
             Value = value;
         }
 

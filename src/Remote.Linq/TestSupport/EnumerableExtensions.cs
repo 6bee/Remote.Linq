@@ -18,9 +18,7 @@ namespace Remote.Linq.TestSupport
         /// Creates an <see cref="IAsyncRemoteQueryable{T}"/> for given test data.
         /// </summary>
         public static IAsyncRemoteQueryable<T> AsRemoteQueryable<T>(this IEnumerable<T> testData)
-            => testData is null
-            ? throw new ArgumentNullException(nameof(testData))
-            : testData is IAsyncRemoteQueryable<T> remoteQueryable
+            => testData.CheckNotNull(nameof(testData)) is IAsyncRemoteQueryable<T> remoteQueryable
             ? remoteQueryable
             : new AsyncRemoteQueryable<T>(new TaskAsyncQueryProvider(), testData.AsQueryable().Expression);
 
@@ -30,12 +28,7 @@ namespace Remote.Linq.TestSupport
         /// </summary>
         public static IAsyncRemoteStreamQueryable<T> AsAsyncRemoteStreamQueryable<T>(this IEnumerable<T> testData)
         {
-            if (testData is null)
-            {
-                throw new ArgumentNullException(nameof(testData));
-            }
-
-            if (testData is IAsyncRemoteStreamQueryable<T> asyncRemoteStream)
+            if (testData.CheckNotNull(nameof(testData)) is IAsyncRemoteStreamQueryable<T> asyncRemoteStream)
             {
                 return asyncRemoteStream;
             }

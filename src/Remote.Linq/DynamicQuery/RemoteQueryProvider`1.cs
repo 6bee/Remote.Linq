@@ -23,8 +23,8 @@ namespace Remote.Linq.DynamicQuery
 
         internal RemoteQueryProvider(Func<Expressions.Expression, TSource> dataProvider, ITypeInfoProvider? typeInfoProvider, IQueryResultMapper<TSource> resultMapper, Func<Expression, bool>? canBeEvaluatedLocally)
         {
-            _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
-            _resultMapper = resultMapper ?? throw new ArgumentNullException(nameof(resultMapper));
+            _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
+            _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
             _typeInfoProvider = typeInfoProvider;
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
@@ -54,12 +54,7 @@ namespace Remote.Linq.DynamicQuery
 
         internal static Expressions.Expression TranslateExpression(Expression expression, ITypeInfoProvider? typeInfoProvider, Func<Expression, bool>? canBeEvaluatedLocally)
         {
-            if (expression is null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
-
-            var slinq1 = expression.SimplifyIncorporationOfRemoteQueryables();
+            var slinq1 = expression.CheckNotNull(nameof(expression)).SimplifyIncorporationOfRemoteQueryables();
             var rlinq1 = slinq1.ToRemoteLinqExpression(typeInfoProvider, canBeEvaluatedLocally);
             var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors(typeInfoProvider);
             var rlinq3 = rlinq2.ReplaceGenericQueryArgumentsByNonGenericArguments();

@@ -1,20 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Remote.Linq.Tests" Description=" " ToolsVersion="16.0">
   <Include Path="Style.NoDoc.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1063" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
+    <Rule Id="CA1034" Action="None" />
+    <Rule Id="CA1051" Action="None" />
+    <Rule Id="CA1062" Action="None" />
+    <Rule Id="CA1063" Action="None" />
+    <Rule Id="CA1707" Action="None" />
+    <Rule Id="CA1801" Action="None" />
+    <Rule Id="CA1802" Action="None" />
+    <Rule Id="CA1812" Action="None" />
+    <Rule Id="CA1814" Action="None" />
+    <Rule Id="CA1822" Action="None" />
+    <Rule Id="CA1823" Action="None" />
+    <Rule Id="CA2211" Action="None" />
+    <Rule Id="CA2227" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
+    <Rule Id="CA1304" Action="None" />
+    <Rule Id="CA1307" Action="None" />
+    <Rule Id="CA1816" Action="None" />
+    <Rule Id="CA5369" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.NetCore.CSharp.Analyzers" RuleNamespace="Microsoft.NetCore.CSharp.Analyzers">
+    <Rule Id="CA1825" Action="Info" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.NetCore.VisualBasic.Analyzers" RuleNamespace="Microsoft.NetCore.VisualBasic.Analyzers">
+    <Rule Id="CA1825" Action="Info" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.NetFramework.Analyzers" RuleNamespace="Microsoft.NetFramework.Analyzers">
+    <Rule Id="CA3075" Action="None" />
+  </Rules>
   <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
     <Rule Id="S101" Action="None" />
     <Rule Id="S1118" Action="Info" />
     <Rule Id="S1128" Action="None" />
     <Rule Id="S1172" Action="None" />
+    <Rule Id="S125" Action="Info" />
     <Rule Id="S1481" Action="Info" />
     <Rule Id="S2326" Action="Info" />
+    <Rule Id="S2344" Action="Info" />
     <Rule Id="S2376" Action="Info" />
     <Rule Id="S2933" Action="Info" />
     <Rule Id="S3218" Action="Info" />
     <Rule Id="S3459" Action="None" />
+    <Rule Id="S3881" Action="Info" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1306" Action="Info" />
     <Rule Id="SA1310" Action="None" />
+    <Rule Id="SA1401" Action="Info" />
     <Rule Id="SA1611" Action="None" />
     <Rule Id="SA1615" Action="None" />
     <Rule Id="SA1618" Action="None" />

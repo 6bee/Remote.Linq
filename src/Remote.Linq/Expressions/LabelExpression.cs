@@ -15,7 +15,7 @@ namespace Remote.Linq.Expressions
 
         public LabelExpression(LabelTarget target, Expression? defaultValue)
         {
-            Target = target ?? throw new ArgumentNullException(nameof(target));
+            Target = target.CheckNotNull(nameof(target));
             DefaultValue = defaultValue;
         }
 

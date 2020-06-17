@@ -23,10 +23,10 @@ namespace Remote.Linq.DynamicQuery
         private readonly ITypeInfoProvider? _typeInfoProvider;
         private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
 
-        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, CancellationToken, Task<TSource>>? asyncDataProvider, ITypeInfoProvider? typeInfoProvider, IAsyncQueryResultMapper<TSource> resultMapper, Func<Expression, bool>? canBeEvaluatedLocally)
+        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, CancellationToken, Task<TSource>> asyncDataProvider, ITypeInfoProvider? typeInfoProvider, IAsyncQueryResultMapper<TSource> resultMapper, Func<Expression, bool>? canBeEvaluatedLocally)
         {
-            _asyncDataProvider = asyncDataProvider ?? throw new ArgumentNullException(nameof(asyncDataProvider));
-            _resultMapper = resultMapper ?? throw new ArgumentNullException(nameof(resultMapper));
+            _asyncDataProvider = asyncDataProvider.CheckNotNull(nameof(asyncDataProvider));
+            _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
             _typeInfoProvider = typeInfoProvider;
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
@@ -35,12 +35,8 @@ namespace Remote.Linq.DynamicQuery
 
         public IQueryable CreateQuery(Expression expression)
         {
-            if (expression is null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
-
-            var elementType = TypeHelper.GetElementType(expression.Type) ?? throw new RemoteLinqException($"Failed to get element type of {expression.Type}");
+            var elementType = TypeHelper.GetElementType(expression.CheckNotNull(nameof(expression)).Type)
+                ?? throw new RemoteLinqException($"Failed to get element type of {expression.Type}");
             return new RemoteQueryable(elementType, this, expression);
         }
 

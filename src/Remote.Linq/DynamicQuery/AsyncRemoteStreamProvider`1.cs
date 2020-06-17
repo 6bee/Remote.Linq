@@ -22,8 +22,8 @@ namespace Remote.Linq.DynamicQuery
         [SecuritySafeCritical]
         public AsyncRemoteStreamProvider(Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource>> dataProvider, ITypeInfoProvider? typeInfoProvider, Func<Expression, bool>? canBeEvaluatedLocally, IQueryResultMapper<TSource> resultMapper)
         {
-            _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
-            _resultMapper = resultMapper ?? throw new ArgumentNullException(nameof(resultMapper));
+            _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
+            _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
             _typeInfoProvider = typeInfoProvider;
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
@@ -47,12 +47,8 @@ namespace Remote.Linq.DynamicQuery
 
         IQueryable IQueryProvider.CreateQuery(Expression expression)
         {
-            if (expression is null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
-
-            var elementType = TypeHelper.GetElementType(expression.Type) ?? throw new RemoteLinqException($"Failed to get element type of {expression.Type}");
+            var elementType = TypeHelper.GetElementType(expression.CheckNotNull(nameof(expression)).Type)
+                ?? throw new RemoteLinqException($"Failed to get element type of {expression.Type}");
             return new AsyncRemoteStreamQueryable(elementType, this, expression);
         }
 

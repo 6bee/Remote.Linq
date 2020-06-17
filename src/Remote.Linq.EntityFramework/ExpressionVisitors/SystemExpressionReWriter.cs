@@ -22,15 +22,15 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
         {
             internal Expression Run(Expression expression) => Visit(expression);
 
-            [return: NotNullIfNotNull("expression")]
-            protected override Expression? Visit(Expression? expression)
+            [return: NotNullIfNotNull("node")]
+            protected override Expression? Visit(Expression? node)
             {
-                if (expression?.NodeType == ExpressionType.New)
+                if (node?.NodeType == ExpressionType.New)
                 {
-                    return Visit((NewExpression)expression);
+                    return Visit((NewExpression)node);
                 }
 
-                return base.Visit(expression);
+                return base.Visit(node);
             }
 
             private Expression Visit(NewExpression node)

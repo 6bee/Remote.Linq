@@ -17,7 +17,7 @@ namespace Remote.Linq.Expressions
 
         public InvokeExpression(Expression expression, IEnumerable<Expression>? arguments)
         {
-            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+            Expression = expression.CheckNotNull(nameof(expression));
             Arguments = arguments?.Any() ?? false ? arguments.ToList() : null;
         }
 

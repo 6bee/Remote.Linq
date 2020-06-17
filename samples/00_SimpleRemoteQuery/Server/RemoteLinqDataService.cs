@@ -47,7 +47,7 @@ namespace Server
 
         private IEnumerable<T> OpenTypeQuery<T>(IQuery query)
         {
-            Query<T> genericQuery = Query<T>.CreateFromNonGeneric(query);
+            Query<T> genericQuery = query.ToGenericQuery<T>();
             return GetQuerySource<T>()
                 .ApplyQuery(genericQuery)
                 .ToList();

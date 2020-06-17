@@ -20,7 +20,7 @@ namespace Remote.Linq.Expressions
 
         protected MemberBinding(MemberInfo member)
         {
-            Member = member ?? throw new ArgumentNullException(nameof(member));
+            Member = member.CheckNotNull(nameof(member));
         }
 
         public abstract MemberBindingType BindingType { get; }

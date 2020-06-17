@@ -21,8 +21,8 @@ namespace Remote.Linq.Expressions
 
         public TypeBinaryExpression(Expression expression, TypeInfo type)
         {
-            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
-            TypeOperand = type ?? throw new ArgumentNullException(nameof(type));
+            Expression = expression.CheckNotNull(nameof(expression));
+            TypeOperand = type.CheckNotNull(nameof(type));
         }
 
         public override ExpressionType NodeType => ExpressionType.TypeIs;

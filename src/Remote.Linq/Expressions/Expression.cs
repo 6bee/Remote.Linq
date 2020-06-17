@@ -6,6 +6,7 @@ namespace Remote.Linq.Expressions
     using Aqua.TypeSystem;
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
@@ -55,7 +56,7 @@ namespace Remote.Linq.Expressions
         {
             public ExpressionDebugFormatter(Expression expression)
             {
-                Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+                Expression = expression.CheckNotNull(nameof(expression));
             }
 
             protected Expression Expression { get; }
@@ -63,6 +64,7 @@ namespace Remote.Linq.Expressions
             public override string ToString() => Expression.ToString();
 
             // TODO: add indentation and line break formtting
+            [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Pending task...")]
             protected internal string ToString(int level) => ToString();
 
             protected static string Format(Type? t) => Format(t.AsTypeInfo());

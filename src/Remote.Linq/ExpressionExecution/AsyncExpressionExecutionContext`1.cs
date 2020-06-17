@@ -3,7 +3,6 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Remote.Linq.Expressions;
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -12,7 +11,7 @@ namespace Remote.Linq.ExpressionExecution
         private readonly Expression _expression;
 
         public AsyncExpressionExecutionContext(AsyncExpressionExecutionContext<TDataTranferObject> parent)
-            : this(parent ?? throw new ArgumentNullException(nameof(parent)), parent._expression)
+            : this(parent.CheckNotNull(nameof(parent)), parent._expression)
         {
         }
 
@@ -24,7 +23,7 @@ namespace Remote.Linq.ExpressionExecution
         internal AsyncExpressionExecutionContext(IAsyncExpressionExecutionDecorator<TDataTranferObject> parent, Expression expression)
             : base(parent)
         {
-            _expression = expression ?? throw new ArgumentNullException(nameof(expression));
+            _expression = expression.CheckNotNull(nameof(expression));
         }
 
         public TDataTranferObject Execute() => Execute(_expression);

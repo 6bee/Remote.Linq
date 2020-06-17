@@ -60,7 +60,7 @@ namespace Remote.Linq.DynamicQuery
             var arguments = hasPredicate
                 ? new object[] { result, GetTruePredicate(elementType) }
                 : new object[] { result };
-            var method = methodCallExpression.Method.Name.EndsWith("OrDefault")
+            var method = methodCallExpression.Method.Name.EndsWith("OrDefault", StringComparison.Ordinal)
                 ? (hasPredicate ? MethodInfos.Enumerable.SingleOrDefaultWithPredicate : MethodInfos.Enumerable.SingleOrDefault)
                 : (hasPredicate ? MethodInfos.Enumerable.SingleWithPredicate : MethodInfos.Enumerable.Single);
             var single = method.MakeGenericMethod(elementType).InvokeAndUnwrap(null, arguments);

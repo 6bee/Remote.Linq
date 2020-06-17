@@ -74,7 +74,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
             arg.NodeType.ShouldBe(ExpressionType.Call);
             arg.ShouldBeOfType<MethodCallExpression>()
                 .Method.ShouldBeOfType<MethodInfo>()
-                .Method.ReturnType.ShouldBe(typeof(IQueryable<Child>));
+                .ToMethodInfo().ReturnType.ShouldBe(typeof(IQueryable<Child>));
         }
 
         [Fact]

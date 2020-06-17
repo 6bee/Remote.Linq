@@ -196,22 +196,10 @@ namespace Remote.Linq
         /// <summary>
         /// Creates a generic version of the specified query instance.
         /// </summary>
+        [Obsolete("Use extension method IQuery.ToGenericQuery<T>() instead.", true)]
+        [SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "Method being removed in future version")]
         public static Query<T> CreateFromNonGeneric(IQuery query, Func<Query<T>, IEnumerable<T>>? dataProvider = null, Func<LambdaExpression, Expressions.LambdaExpression>? expressionTranslator = null, ITypeResolver? typeResolver = null)
-        {
-            if (query is null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-
-            var type = (typeResolver ?? TypeResolver.Instance).ResolveType(query.Type);
-            if (typeof(T) != type)
-            {
-                throw new RemoteLinqException($"Generic type mismatch: {typeof(T)} vs. {query.Type}");
-            }
-
-            var instance = new Query<T>(dataProvider, expressionTranslator, query.FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
-            return instance;
-        }
+            => query.ToGenericQuery<T>(dataProvider, expressionTranslator, typeResolver);
 
         public override string ToString()
         {

@@ -17,7 +17,7 @@ namespace Remote.Linq.Expressions
         public MemberAssignment(MemberInfo member, Expression expression)
             : base(member)
         {
-            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+            Expression = expression.CheckNotNull(nameof(expression));
         }
 
         public override MemberBindingType BindingType => MemberBindingType.Assignment;

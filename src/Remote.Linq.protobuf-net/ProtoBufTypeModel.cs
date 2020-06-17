@@ -7,7 +7,6 @@ namespace Remote.Linq
     using global::ProtoBuf.Meta;
     using Remote.Linq.ProtoBuf.DynamicQuery;
     using Remote.Linq.ProtoBuf.Expressions;
-    using System;
     using System.ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -17,7 +16,7 @@ namespace Remote.Linq
             => ConfigureRemoteLinq(RuntimeTypeModel.Create(name), configureDefaultSystemTypes);
 
         public static AquaTypeModel ConfigureRemoteLinq(this RuntimeTypeModel typeModel, bool configureDefaultSystemTypes = true)
-            => (typeModel ?? throw new ArgumentNullException(nameof(typeModel)))
+            => typeModel.CheckNotNull(nameof(typeModel))
             .ConfigureAquaTypes(configureDefaultSystemTypes)
             .ConfigureRemoteLinqDynamicQueryTypes()
             .ConfigureRemoteLinqExpressionTypes();

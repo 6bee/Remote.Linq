@@ -31,7 +31,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
         protected override IAsyncEnumerable<object?> ExecuteAsyncStream(System.Linq.Expressions.Expression expression)
         {
-            if (!expression.Type.Implements(typeof(IQueryable<>)))
+            if (!expression.CheckNotNull(nameof(expression)).Type.Implements(typeof(IQueryable<>)))
             {
                 throw new ArgumentException("Expression must be of type IQueryable<>");
             }

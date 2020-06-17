@@ -58,7 +58,7 @@ namespace Remote.Linq.ExpressionExecution
             public ExpressionExecutionContextWithRemoteExpressionTransformer(ExpressionExecutionContext<TDataTranferObject> parent, Func<Expression, Expression> transform)
                 : base(parent)
             {
-                _transform = transform ?? throw new ArgumentNullException(nameof(transform));
+                _transform = transform.CheckNotNull(nameof(transform));
             }
 
             protected override Expression Prepare(Expression expression)
@@ -72,7 +72,7 @@ namespace Remote.Linq.ExpressionExecution
             public ExpressionExecutionContextWithSystemExpressionTransformer(ExpressionExecutionContext<TDataTranferObject> parent, Func<System.Linq.Expressions.Expression, System.Linq.Expressions.Expression> transform)
                 : base(parent)
             {
-                _transform = transform ?? throw new ArgumentNullException(nameof(transform));
+                _transform = transform.CheckNotNull(nameof(transform));
             }
 
             protected override System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression)
@@ -86,7 +86,7 @@ namespace Remote.Linq.ExpressionExecution
             public ExpressionExecutionContextWithExpressionTransformer(ExpressionExecutionContext<TDataTranferObject> parent, Func<Expression, System.Linq.Expressions.Expression> transform)
                 : base(parent)
             {
-                _transform = transform ?? throw new ArgumentNullException(nameof(transform));
+                _transform = transform.CheckNotNull(nameof(transform));
             }
 
             protected override System.Linq.Expressions.Expression Transform(Expression expression)
@@ -100,7 +100,7 @@ namespace Remote.Linq.ExpressionExecution
             public ExpressionExecutionContextWithExpressionExecutor(ExpressionExecutionContext<TDataTranferObject> parent, Func<System.Linq.Expressions.Expression, object?> transform)
                 : base(parent)
             {
-                _transform = transform ?? throw new ArgumentNullException(nameof(transform));
+                _transform = transform.CheckNotNull(nameof(transform));
             }
 
             protected override object? Execute(System.Linq.Expressions.Expression expression)
@@ -114,7 +114,7 @@ namespace Remote.Linq.ExpressionExecution
             public ExpressionExecutionContextWithObjectResultProcessor(ExpressionExecutionContext<TDataTranferObject> parent, Func<object?, object?> transform)
                 : base(parent)
             {
-                _transform = transform ?? throw new ArgumentNullException(nameof(transform));
+                _transform = transform.CheckNotNull(nameof(transform));
             }
 
             protected override object? ProcessResult(object? queryResult)
@@ -128,7 +128,7 @@ namespace Remote.Linq.ExpressionExecution
             public ExpressionExecutionContextWithResultConverter(ExpressionExecutionContext<TDataTranferObject> parent, Func<object?, TDataTranferObject> transform)
                 : base(parent)
             {
-                _transform = transform ?? throw new ArgumentNullException(nameof(transform));
+                _transform = transform.CheckNotNull(nameof(transform));
             }
 
             protected override TDataTranferObject ConvertResult(object? queryResult)
@@ -142,7 +142,7 @@ namespace Remote.Linq.ExpressionExecution
             public ExpressionExecutionContextWithDynamicObjectResultProcessor(ExpressionExecutionContext<TDataTranferObject> parent, Func<TDataTranferObject, TDataTranferObject> transform)
                 : base(parent)
             {
-                _transform = transform ?? throw new ArgumentNullException(nameof(transform));
+                _transform = transform.CheckNotNull(nameof(transform));
             }
 
             protected override TDataTranferObject ProcessResult(TDataTranferObject queryResult)

@@ -34,12 +34,7 @@ namespace Remote.Linq.ExpressionExecution
         /// </returns>
         public async Task<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellation = default)
         {
-            if (expression is null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
-
-            var preparedRemoteExpression = Prepare(expression);
+            var preparedRemoteExpression = Prepare(expression.CheckNotNull(nameof(expression)));
             var linqExpression = Transform(preparedRemoteExpression);
             var preparedLinqExpression = PrepareAsyncQuery(linqExpression, cancellation);
             var queryResult = await ExecuteAsync(preparedLinqExpression, cancellation).ConfigureAwait(false);
@@ -76,6 +71,7 @@ namespace Remote.Linq.ExpressionExecution
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
         protected virtual async Task<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
         {
+            expression.CheckNotNull(nameof(expression));
             try
             {
                 return await ExecuteCoreAsync(expression, cancellation).ConfigureAwait(false);

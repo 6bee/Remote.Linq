@@ -21,7 +21,7 @@ namespace Remote.Linq.DynamicQuery
 
         public QueryableResourceDescriptor(TypeInfo type)
         {
-            Type = type ?? throw new ArgumentNullException(nameof(type));
+            Type = type.CheckNotNull(nameof(type));
         }
 
         [DataMember(Name = "Type", Order = 1, IsRequired = true, EmitDefaultValue = false)]

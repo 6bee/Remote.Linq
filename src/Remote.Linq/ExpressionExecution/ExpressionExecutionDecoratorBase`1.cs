@@ -3,7 +3,6 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Remote.Linq.Expressions;
-    using System;
     using System.Diagnostics.CodeAnalysis;
 
     [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
@@ -24,7 +23,7 @@ namespace Remote.Linq.ExpressionExecution
         [SuppressMessage("Major Code Smell", "S3442:\"abstract\" classes should not have \"public\" constructors", Justification = "Argument type has internal visibility only")]
         internal ExpressionExecutionDecoratorBase(IExpressionExecutionDecorator<TDataTranferObject> parent)
         {
-            _parent = parent ?? throw new ArgumentNullException(nameof(parent));
+            _parent = parent.CheckNotNull(nameof(parent));
         }
 
         protected TDataTranferObject Execute(Expression expression)

@@ -19,7 +19,7 @@ namespace Remote.Linq.Expressions
 
         public LambdaExpression(Expression expression, IEnumerable<ParameterExpression>? parameters)
         {
-            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+            Expression = expression.CheckNotNull(nameof(expression));
             Parameters = parameters.AsNullIfEmpty()?.ToList();
         }
 

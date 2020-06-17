@@ -27,11 +27,7 @@ namespace Remote.Linq.DynamicQuery
 
         public VariableQueryArgumentList(IEnumerable values, TypeInfo? elementType = null)
         {
-            if (values is null)
-            {
-                throw new ArgumentNullException(nameof(values));
-            }
-
+            values.CheckNotNull(nameof(values));
             if (elementType is null)
             {
                 var collectionType = values.GetType();

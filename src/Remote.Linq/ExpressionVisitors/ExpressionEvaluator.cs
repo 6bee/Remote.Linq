@@ -105,23 +105,23 @@ namespace Remote.Linq.ExpressionVisitors
 
             internal Expression Eval(Expression expression) => Visit(expression);
 
-            [return: NotNullIfNotNull("expression")]
-            protected override Expression? Visit(Expression? expression)
+            [return: NotNullIfNotNull("node")]
+            protected override Expression? Visit(Expression? node)
             {
-                if (expression is null)
+                if (node is null)
                 {
                     return null;
                 }
 
-                if (_candidates.Contains(expression))
+                if (_candidates.Contains(node))
                 {
-                    return Evaluate(expression);
+                    return Evaluate(node);
                 }
 
-                return base.Visit(expression);
+                return base.Visit(node);
             }
 
-            private Expression Evaluate(Expression expression)
+            private static Expression Evaluate(Expression expression)
             {
                 if (expression.NodeType == ExpressionType.Constant)
                 {
@@ -189,20 +189,20 @@ namespace Remote.Linq.ExpressionVisitors
             }
 
             [return: NotNullIfNotNull("expression")]
-            protected override Expression? Visit(Expression? expression)
+            protected override Expression? Visit(Expression? node)
             {
-                if (expression != null)
+                if (node != null)
                 {
                     bool saveCannotBeEvaluated = _cannotBeEvaluated;
                     _cannotBeEvaluated = false;
 
-                    base.Visit(expression);
+                    base.Visit(node);
 
                     if (!_cannotBeEvaluated)
                     {
-                        if (_fnCanBeEvaluated(expression))
+                        if (_fnCanBeEvaluated(node))
                         {
-                            _candidates!.Add(expression);
+                            _candidates!.Add(node);
                         }
                         else
                         {
@@ -213,7 +213,7 @@ namespace Remote.Linq.ExpressionVisitors
                     _cannotBeEvaluated |= saveCannotBeEvaluated;
                 }
 
-                return expression;
+                return node;
             }
         }
     }

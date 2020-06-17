@@ -50,7 +50,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         {
             cancellation.ThrowIfCancellationRequested();
 
-            var queryResult = expression.CompileAndInvokeExpression();
+            var queryResult = expression.CheckNotNull(nameof(expression)).CompileAndInvokeExpression();
             if (queryResult is Task task)
             {
                 if (!expression.Type.Implements(typeof(Task<>), out var resultType))
