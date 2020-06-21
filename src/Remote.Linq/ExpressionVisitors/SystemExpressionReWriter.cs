@@ -349,7 +349,7 @@ namespace Remote.Linq.ExpressionVisitors
                     {
                         var lambda = Expression.Lambda<Func<object>>(node);
                         var value = lambda.Compile()();
-                        if (value is IRemoteQueryable)
+                        if (value is IRemoteResource)
                         {
                             return Expression.Constant(value, node.Type);
                         }

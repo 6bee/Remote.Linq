@@ -32,7 +32,7 @@ namespace Remote.Linq.ExpressionVisitors
             if (expression.NodeType == ExpressionType.Constant)
             {
                 var value = ((ConstantExpression)expression).Value;
-                if (value is IRemoteQueryable)
+                if (value is IRemoteResource)
                 {
                     return false;
                 }
@@ -65,7 +65,7 @@ namespace Remote.Linq.ExpressionVisitors
                 var methodDeclaringType = methodCallExpression.Method.DeclaringType;
                 if ((methodDeclaringType == typeof(Queryable) || methodDeclaringType == typeof(Enumerable)) &&
                     methodCallExpression.Arguments.FirstOrDefault() is ConstantExpression argument &&
-                    argument?.Value.AsQueryableOrNull() != null)
+                    argument?.Value.AsQueryableResourceTypeOrNull() != null)
                 {
                     return false;
                 }

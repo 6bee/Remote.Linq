@@ -7,7 +7,7 @@
     <PatchVersion>0</PatchVersion>
     <PreReleaseLabel>alpha-028</PreReleaseLabel>
 
-    <AquaCoreVersion>5.0.0-alpha-016</AquaCoreVersion>
+    <AquaCoreVersion>5.0.0-alpha-017</AquaCoreVersion>
 
   </PropertyGroup>
 
@@ -21,7 +21,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Copyright>Copyright © Christof Senn 2013-2020</Copyright>
+    <CopyrightYear>$([System.DateTime]::Now.ToString("yyyy"))</CopyrightYear>
+    <Copyright>Copyright © Christof Senn 2013-$(CopyrightYear)</Copyright>
     <Authors>Christof Senn</Authors>
     <PackageIcon>remotelinq-small.png</PackageIcon>
     <PackageProjectUrl>https://github.com/6bee/Remote.Linq</PackageProjectUrl>
@@ -59,8 +60,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
     <EnableStyleCopAnalyzers Condition="'$(EnableStyleCopAnalyzers)' == ''">true</EnableStyleCopAnalyzers>
-    <EnableFxCopAnalyzers Condition="'$(EnableFxCopAnalyzers)' == ''">true</EnableFxCopAnalyzers>
-    <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">true</EnableSonarAnalyzers>
+    <EnableFxCopAnalyzers Condition="'$(EnableFxCopAnalyzers)' == ''">false</EnableFxCopAnalyzers>
+    <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">false</EnableSonarAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>

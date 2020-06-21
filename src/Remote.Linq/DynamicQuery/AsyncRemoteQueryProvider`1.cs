@@ -43,7 +43,9 @@ namespace Remote.Linq.DynamicQuery
         [return: MaybeNull]
         public TResult Execute<TResult>(Expression expression)
         {
-            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
+            ExpressionHelper.CheckExpressionResultType<TResult>(expression);
+
+            var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
 
             var task = _asyncDataProvider(rlinq, CancellationToken.None);
 
@@ -80,7 +82,9 @@ namespace Remote.Linq.DynamicQuery
 #nullable disable
         public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation)
         {
-            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
+            ExpressionHelper.CheckExpressionResultType<TResult>(expression);
+
+            var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
 
             var dataRecords = await _asyncDataProvider(rlinq, cancellation).ConfigureAwait(false);
 

@@ -30,8 +30,10 @@ namespace Remote.Linq.DynamicQuery
 
         public async IAsyncEnumerable<TResult> ExecuteAsyncRemoteStream<TResult>(Expression expression, [EnumeratorCancellation] CancellationToken cancellation)
         {
+            ExpressionHelper.CheckExpressionResultType<TResult>(expression);
+
             cancellation.ThrowIfCancellationRequested();
-            var rlinq = RemoteQueryProvider<TSource>.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
+            var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
 
             cancellation.ThrowIfCancellationRequested();
             var asyncEnumerable = _dataProvider(rlinq, cancellation);

@@ -29,10 +29,14 @@ namespace Remote.Linq
         /// Execute the <see cref="IQueryable"/> and return the result without any extra tranformation.
         /// </summary>
         public static TResult Execute<TResult>(this IQueryable source)
-            => source.CheckNotNull(nameof(source)).Provider.Execute<TResult>(source.Expression);
+        {
+            source.CheckNotNull(nameof(source));
+            return source.Provider.Execute<TResult>(source.Expression);
+        }
 
         private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression, MethodInfo methodInfo)
         {
+            queryable.CheckNotNull(nameof(queryable));
             var exp = lambdaExpression.CheckNotNull(nameof(lambdaExpression)).Body;
             var resultType = exp.Type;
             var funcType = typeof(Func<,>).MakeGenericType(typeof(T), resultType);
@@ -142,7 +146,7 @@ namespace Remote.Linq
             path.CheckNotNull(nameof(path));
             if (string.IsNullOrEmpty(path))
             {
-                throw new ArgumentException("path must not be empty", nameof(path));
+                throw new ArgumentException("Path must not be empty", nameof(path));
             }
 
             if (queryable is IRemoteQueryable<T>)
@@ -214,21 +218,25 @@ namespace Remote.Linq
             return expression;
         }
 
-        internal static IQueryable? AsQueryableOrNull(this object? value)
+        internal static Type? AsQueryableResourceTypeOrNull(this object? value)
         {
-            var queryable = value as IQueryable;
-            if (queryable is null)
+            if (value is IRemoteResource remoteResource)
             {
-                return null;
+                return remoteResource.ResourceType;
             }
 
-            var type = queryable.GetType();
-            if (type.IsGenericType && typeof(EnumerableQuery<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+            if (value is IQueryable queryable)
             {
-                return null;
+                var type = queryable.GetType();
+                if (type.IsGenericType && typeof(EnumerableQuery<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+                {
+                    return null;
+                }
+
+                return queryable.ElementType;
             }
 
-            return queryable;
+            return null;
         }
     }
 }

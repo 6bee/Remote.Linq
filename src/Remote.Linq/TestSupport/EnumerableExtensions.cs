@@ -40,19 +40,19 @@ namespace Remote.Linq.TestSupport
         private static Func<Expression, IAsyncEnumerable<TResult>> CreateAsyncRemoteSreamProviderWithTestData<TData, TResult>(IEnumerable<TData> items)
             where TData : TResult
         {
-            static async IAsyncEnumerable<TResult> CreateAsyncStream(IEnumerable<TData> source)
-            {
-                foreach (var item in source)
-                {
-                    yield return await Task.FromResult(item).ConfigureAwait(false);
-                }
-            }
-
             return expression =>
             {
                 var result = expression.Execute<IEnumerable<TData>>(_ => items.AsQueryable());
                 return CreateAsyncStream(result);
             };
+
+            static async IAsyncEnumerable<TResult> CreateAsyncStream(IEnumerable<TData> source)
+            {
+                foreach (var item in source)
+                {
+                    yield return await new ValueTask<TResult>(item).ConfigureAwait(false);
+                }
+            }
         }
     }
 }

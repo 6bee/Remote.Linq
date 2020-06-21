@@ -26,5 +26,7 @@ namespace Remote.Linq.DynamicQuery
         public IRemoteQueryProvider Provider { get; }
 
         IQueryProvider IQueryable.Provider => Provider;
+
+        Type IRemoteResource.ResourceType => ElementType;
     }
 }

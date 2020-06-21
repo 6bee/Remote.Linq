@@ -104,10 +104,10 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override ConstantExpression VisitConstant(ConstantExpression node)
             {
-                var queryable = node.CheckNotNull(nameof(node)).Value.AsQueryableOrNull();
-                if (queryable != null)
+                var resourceType = node.CheckNotNull(nameof(node)).Value.AsQueryableResourceTypeOrNull();
+                if (resourceType != null)
                 {
-                    var typeInfo = _typeInfoProvider.GetTypeInfo(queryable.ElementType);
+                    var typeInfo = _typeInfoProvider.GetTypeInfo(resourceType);
                     var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
                     return new ConstantExpression(queryableResourceDescriptor);
                 }
@@ -118,10 +118,10 @@ namespace Remote.Linq.ExpressionVisitors
                     var properties = newConstantQueryArgument.Properties ?? Enumerable.Empty<Property>();
                     foreach (var property in properties)
                     {
-                        var value = property.Value.AsQueryableOrNull();
-                        if (value != null)
+                        var valueResourceType = property.Value.AsQueryableResourceTypeOrNull();
+                        if (valueResourceType != null)
                         {
-                            var typeInfo = _typeInfoProvider.GetTypeInfo(value.ElementType);
+                            var typeInfo = _typeInfoProvider.GetTypeInfo(valueResourceType);
                             var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
                             property.Value = queryableResourceDescriptor;
                         }
