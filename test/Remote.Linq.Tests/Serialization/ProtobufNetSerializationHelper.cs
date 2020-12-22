@@ -11,7 +11,7 @@ namespace Remote.Linq.Tests.Serialization
 
     public static class ProtobufNetSerializationHelper
     {
-#if COREFX
+#if NETCOREAPP
         private static readonly global::ProtoBuf.Meta.TypeModel _configuration = ProtoBufTypeModel.ConfigureRemoteLinq();
 
         public static T Serialize<T>(this T graph) => Serialize(graph, null);
@@ -38,7 +38,7 @@ namespace Remote.Linq.Tests.Serialization
                 .AddDynamicPropertyType(type)
                 .Compile();
         }
-#endif // COREFX
+#endif // NETCOREAPP
 
         public static void SkipUnsupportedDataType(Type type, object value)
         {

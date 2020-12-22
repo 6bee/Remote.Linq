@@ -279,6 +279,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\03_R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\03_RemoteQueryable_AsyncStream\Server\Server.csproj", "{2A233D95-2FD2-45FC-AA17-591982577FE7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".global", ".global", "{CB574439-B161-4CFC-A7D2-3F1DDF653FBA}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		NuGet.config = NuGet.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".shared", ".shared", "{87246F87-A336-4879-ACA8-CB88406C078D}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Directory.Build.props = samples\Directory.Build.props
+		samples\Directory.Build.targets = samples\Directory.Build.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

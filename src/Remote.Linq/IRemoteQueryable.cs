@@ -6,6 +6,9 @@ namespace Remote.Linq
 
     public interface IRemoteQueryable : IRemoteResource, IQueryable
     {
+        /// <summary>
+        /// Gets the query provider that is associated with this data source.
+        /// </summary>
         new IRemoteQueryProvider Provider { get; }
     }
 }

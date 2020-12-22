@@ -33,7 +33,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_using_InvokeExpression
         {
             public NetDataContractSerializer()
@@ -41,9 +41,9 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif // NETFX
+#endif // NETFRAMEWORK
 
-#if COREFX
+#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_InvokeExpression
         {
             public ProtobufNetSerializer()
@@ -51,7 +51,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif // COREFX
+#endif // NETCOREAPP
 
         public class XmlSerializer : When_using_InvokeExpression
         {

@@ -63,7 +63,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             }
         }
 
-#if NETFX
+#if NETFRAMEWORK
         public class With_net_data_contract_serializer : When_running_query
         {
             public With_net_data_contract_serializer()

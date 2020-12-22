@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ProtoBufMetaExtensions.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="aqua-core-protobuf-net" />
   </ItemGroup>
 

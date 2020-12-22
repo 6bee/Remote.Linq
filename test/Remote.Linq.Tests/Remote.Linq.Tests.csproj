@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for Remote.Linq</Description>
-    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
-    <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">$(DefineConstants);COREFX</DefineConstants>
-    <DefineConstants Condition=" '$(TargetFramework)' == 'net48' ">$(DefineConstants);NETFX</DefineConstants>
+    <TargetFrameworks>net48;net5.0;netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +10,7 @@
     <ProjectReference Include="..\..\src\Remote.Linq.Newtonsoft.Json\Remote.Linq.Newtonsoft.Json.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+  <ItemGroup Condition="$(DefineConstants.Contains('NETCOREAPP'))">
     <ProjectReference Include="..\..\src\Remote.Linq.protobuf-net\Remote.Linq.protobuf-net.csproj" />
   </ItemGroup>
 

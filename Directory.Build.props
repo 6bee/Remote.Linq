@@ -1,14 +1,12 @@
-﻿<Project>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
 
   <PropertyGroup>
-
     <MajorVersion>6</MajorVersion>
     <MinorVersion>3</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-028</PreReleaseLabel>
-
-    <AquaCoreVersion>5.0.0-alpha-017</AquaCoreVersion>
-
+    <PreReleaseLabel>alpha-029</PreReleaseLabel>
+    <AquaCoreVersion>5.0.0-alpha-019</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -55,12 +53,12 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion Condition="'$(LangVersion)' == ''">9.0</LangVersion>
+    <GenerateDocumentationFile Condition="'$(GenerateDocumentationFile)' == ''">true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors Condition="'$(TreatWarningsAsErrors)' == ''">true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
     <EnableStyleCopAnalyzers Condition="'$(EnableStyleCopAnalyzers)' == ''">true</EnableStyleCopAnalyzers>
-    <EnableFxCopAnalyzers Condition="'$(EnableFxCopAnalyzers)' == ''">false</EnableFxCopAnalyzers>
+    <EnableNETAnalyzers Condition="'$(EnableNETAnalyzers)' == ''">true</EnableNETAnalyzers>
     <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">false</EnableSonarAnalyzers>
   </PropertyGroup>
 
@@ -68,10 +66,6 @@
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" Condition="'$(EnableFxCopAnalyzers)' == 'true'">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="SonarAnalyzer.CSharp" Version="8.7.0.17535" Condition="'$(EnableSonarAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>

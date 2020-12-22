@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if COREFX
+#if NETCOREAPP
 
 namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteStream
 {
@@ -113,4 +113,4 @@ namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteStream
     }
 }
 
-#endif // COREFX
+#endif // NETCOREAPP

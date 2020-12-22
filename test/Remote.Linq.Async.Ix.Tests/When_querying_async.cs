@@ -4,8 +4,6 @@ namespace Remote.Linq.Async.Ix.Tests
 {
     using Remote.Linq.Async.Ix.TestSupport;
     using Shouldly;
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
@@ -35,7 +33,7 @@ namespace Remote.Linq.Async.Ix.Tests
         public async Task Should_query_full_set_as_async_stream()
         {
             var count = 0;
-            await foreach (var item in _queryable.AsAsyncEnumerable())
+            await foreach (var item in _queryable)
             {
                 count++;
             }

@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for Remote.Linq.EntityFrameworkCore</Description>
-    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
-    <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">$(DefineConstants);COREFX</DefineConstants>
-    <DefineConstants Condition=" '$(TargetFramework)' == 'net48' ">$(DefineConstants);NETFX</DefineConstants>
+    <TargetFrameworks>net48;net5.0;netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="aqua-core" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.10" Condition="$(DefineConstants.Contains('NETFRAMEWORK'))" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.1" Condition="$(DefineConstants.Contains('NETCOREAPP'))" />
   </ItemGroup>
 
 </Project>

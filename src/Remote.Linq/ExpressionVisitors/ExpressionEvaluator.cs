@@ -25,7 +25,7 @@ namespace Remote.Linq.ExpressionVisitors
         /// <param name="canBeEvaluatedLocally">A function that decides whether a given expression node can be evaluated locally, assumes true if no function defined.</param>
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
         public static Expression PartialEval(this Expression expression, Func<Expression, bool>? canBeEvaluatedLocally = null)
-            => new SubtreeEvaluator(new Nominator(canBeEvaluatedLocally).Nominate(expression)).Eval(expression);
+            => new SubtreeEvaluator(new Nominator(canBeEvaluatedLocally).Nominate(expression.CheckNotNull(nameof(expression)))).Eval(expression);
 
         private static bool CanBeEvaluatedLocally(Expression expression)
         {

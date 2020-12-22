@@ -33,7 +33,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             }
         }
 
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_using_local_variable_query_string_argument_list
         {
             public NetDataContractSerializer()
@@ -41,9 +41,9 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             {
             }
         }
-#endif // NETFX
+#endif // NETFRAMEWORK
 
-#if COREFX
+#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_local_variable_query_string_argument_list
         {
             public ProtobufNetSerializer()
@@ -51,7 +51,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             {
             }
         }
-#endif // COREFX
+#endif // NETCOREAPP
 
         public class XmlSerializer : When_using_local_variable_query_string_argument_list
         {

@@ -1,4 +1,5 @@
-﻿<Project>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
   <ItemGroup>
     <PackageReference Update="Remote.Linq" Version="$(RemoteLinqVersion)" />

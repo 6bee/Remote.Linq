@@ -34,7 +34,7 @@ namespace Remote.Linq.Async.Ix.TestSupport
         {
             return expression =>
             {
-                var result = expression.Execute<IAsyncEnumerable<TData>>(_ => AsyncStreamProvider(items));
+                var result = expression.Execute<IAsyncEnumerable<TData>>(_ => AsyncStreamProvider(items).AsAsyncQueryable());
                 return AsyncItemMapper(result);
             };
 

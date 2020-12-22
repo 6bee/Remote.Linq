@@ -116,20 +116,20 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
         }
 
         [Fact]
-#if COREFX
+#if NETCOREAPP
         [SuppressMessage("Blocker Code Smell", "S2699:Tests should include assertions", Justification = "Cannot assert")]
-#endif // COREFX
+#endif // NETCOREAPP
         public void Should_preserve_action_expression()
         {
             var action = new Action<int>(x => { });
             var newAction = BackAndForth<Expression<Action<int>>>(x => action(x)).Item2.Compile();
             newAction(9);
 
-#if NETFX
+#if NETFRAMEWORK
             newAction.Target
                 .ShouldBeOfType<System.Runtime.CompilerServices.Closure>()
                 .Constants.Single().ShouldBeOfType<Action<int>>().Method.ShouldBeSameAs(action.Method);
-#endif // NETFX
+#endif // NETFRAMEWORK
         }
 
         [Fact]
