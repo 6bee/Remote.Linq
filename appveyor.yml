@@ -29,6 +29,6 @@ test_script:
   - dotnet test test\Remote.Linq.EntityFrameworkCore.Tests
 
 after_test:
-  - dotnet test test\Remote.Linq.Tests                     -f netcoreapp3.1 --collect:"XPlat Code Coverage" --settings coverlet.runsettings        --results-directory TestResults
-  - dotnet test test\Remote.Linq.EntityFrameworkCore.Tests -f netcoreapp3.1 --collect:"XPlat Code Coverage" --settings coverlet.efcore.runsettings --results-directory TestResults
+  - dotnet test test\Remote.Linq.Tests                     -f net5.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings        --results-directory TestResults
+  - dotnet test test\Remote.Linq.EntityFrameworkCore.Tests -f net5.0 --collect:"XPlat Code Coverage" --settings coverlet.efcore.runsettings --results-directory TestResults
   - codecov -f **\coverage.cobertura.xml
