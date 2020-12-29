@@ -1,11 +1,12 @@
 # Remote.Linq
-| branch   | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy            | CodeFactor             | License                     |
-| ---      | ---                              | ---                            | ---                | ---               | ---                    | ---                         |
-| `master` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
+| branch | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy            | CodeFactor             | License                     |
+| ---    | ---                              | ---                            | ---                | ---               | ---                    | ---                         |
+| `main` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
 
 | package                           | nuget                           | myget                          |
 | ---                               | ---                             | ---                            |
 | `Remote.Linq`                     | [![NuGet Badge][13]][14]        | [![MyGet Pre Release][15]][16] |
+| `Remote.Linq.Async.Queryable`     | <!--[![NuGet Badge][33]][34]--> | [![MyGet Pre Release][35]][36] |
 | `Remote.Linq.EntityFramework`     | [![NuGet Badge][17]][18]        | [![MyGet Pre Release][19]][20] |
 | `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][21]][22]        | [![MyGet Pre Release][23]][24] |
 | `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge][25]][26]        | [![MyGet Pre Release][27]][28] |
@@ -145,18 +146,18 @@ public TExpression DeepCopy<TExpression>(TExpression expression)
 }
 ```
 
-[1]: https://ci.appveyor.com/api/projects/status/64kw6dsuvfwyrdtl/branch/master?svg=true
-[2]: https://ci.appveyor.com/project/6bee/remote-linq/branch/master
-[3]: https://travis-ci.org/6bee/Remote.Linq.svg?branch=master
-[4]: https://travis-ci.org/6bee/Remote.Linq?branch=master
-[5]: https://codecov.io/gh/6bee/Remote.Linq/branch/master/graph/badge.svg
+[1]: https://ci.appveyor.com/api/projects/status/64kw6dsuvfwyrdtl/branch/main?svg=true
+[2]: https://ci.appveyor.com/project/6bee/remote-linq/branch/main
+[3]: https://travis-ci.org/6bee/Remote.Linq.svg?branch=main
+[4]: https://travis-ci.org/6bee/Remote.Linq?branch=main
+[5]: https://codecov.io/gh/6bee/Remote.Linq/branch/main/graph/badge.svg
 [6]: https://codecov.io/gh/6bee/Remote.Linq
 [7]: https://api.codacy.com/project/badge/Grade/c00e5959612843a78e23d10b4bad44da
 [8]: https://www.codacy.com/manual/6bee/Remote.Linq
 [9]: https://www.codefactor.io/repository/github/6bee/Remote.Linq/badge
 [10]: https://www.codefactor.io/repository/github/6bee/Remote.Linq
 [11]: https://img.shields.io/github/license/6bee/Remote.Linq.svg
-[12]: https://github.com/6bee/Remote.Linq/blob/master/license.txt
+[12]: https://github.com/6bee/Remote.Linq/blob/main/license.txt
 [13]: https://buildstats.info/nuget/Remote.Linq
 [14]: https://www.nuget.org/packages/Remote.Linq
 [15]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.svg?style=flat-square&label=myget
@@ -177,3 +178,7 @@ public TExpression DeepCopy<TExpression>(TExpression expression)
 [30]: https://www.nuget.org/packages/Remote.Linq.protobuf-net
 [31]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.protobuf-net.svg?style=flat-square&label=myget
 [32]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.protobuf-net
+[33]: https://buildstats.info/nuget/Remote.Linq.Async.Queryable
+[34]: https://www.nuget.org/packages/Remote.Linq.Async.Queryable
+[35]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Async.Queryable.svg?style=flat-square&label=myget
+[36]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Async.Queryable
