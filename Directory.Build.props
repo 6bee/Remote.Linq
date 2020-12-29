@@ -13,9 +13,6 @@
     <VersionPrefix>$(MajorVersion).$(MinorVersion).$(PatchVersion)</VersionPrefix>
     <VersionSuffix>$(PreReleaseLabel)</VersionSuffix>
     <AssemblyVersion>$(MajorVersion).$(MinorVersion).0.0</AssemblyVersion>
-    <AssemblyFileVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).0</AssemblyFileVersion>
-    <Configuration Condition="'$(Configuration)' == '' And '$(PreReleaseLabel)' == ''">Release</Configuration>
-    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -27,6 +24,7 @@
     <PackageLicenseFile>license.txt</PackageLicenseFile>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/6bee/Remote.Linq.git</RepositoryUrl>
+    <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
     <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -38,6 +36,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <EmbedAllSources>true</EmbedAllSources>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageOutputPath Condition="'$(PackageOutputPath)'==''">$(MSBuildThisFileDirectory)artifacts</PackageOutputPath>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Nullable Condition="'$(Nullable)' == ''">enable</Nullable>
     <IncludeGlobalAssemblyInfo Condition="'$(IncludeGlobalAssemblyInfo)' == ''">true</IncludeGlobalAssemblyInfo>

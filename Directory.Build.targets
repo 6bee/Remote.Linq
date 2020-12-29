@@ -5,4 +5,12 @@
     <PackageReference Update="aqua-core-newtonsoft-json" Version="$(AquaCoreVersion)" />
     <PackageReference Update="aqua-core-protobuf-net" Version="$(AquaCoreVersion)" />
   </ItemGroup>
+  <Target Name="InitializeSourceControlInformation" BeforeTargets="AddSourceRevisionToInformationalVersion">
+    <Exec 
+      Command="git describe --long --always --dirty --exclude=* --abbrev=8"
+      ConsoleToMSBuild="True"
+      IgnoreExitCode="False">
+      <Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput"/>
+    </Exec>
+  </Target>
 </Project>
