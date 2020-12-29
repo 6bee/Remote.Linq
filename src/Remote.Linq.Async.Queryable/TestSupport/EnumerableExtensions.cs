@@ -2,12 +2,13 @@
 
 namespace Remote.Linq.Async.Queryable.TestSupport
 {
+    using Remote.Linq.Async.Queryable.Expressions;
+    using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
     using System.Threading.Tasks;
-    using Expression = Remote.Linq.Expressions.Expression;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class EnumerableExtensions
@@ -36,11 +37,11 @@ namespace Remote.Linq.Async.Queryable.TestSupport
 
             IAsyncEnumerable<TResult> ExecuteAsync(Expression expression)
             {
-                var result = items.ToAsyncEnumerable();
+                var result = expression.ExecuteAsyncStream<TData>(_ => items.ToAsyncEnumerable().AsAsyncQueryable());
 
                 return MapItemTypeAsync(result);
 
-                static async IAsyncEnumerable<TResult> MapItemTypeAsync(IAsyncEnumerable<TData> source)
+                static async IAsyncEnumerable<TResult> MapItemTypeAsync(IAsyncEnumerable<TData?> source)
                 {
                     await foreach (var item in source.ConfigureAwait(false))
                     {
