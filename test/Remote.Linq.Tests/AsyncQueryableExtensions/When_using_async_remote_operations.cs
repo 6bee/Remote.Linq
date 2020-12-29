@@ -17,8 +17,7 @@ namespace Remote.Linq.Tests.AsyncEnumerableExtensions
         [Fact]
         public async Task Should_throw_with_enumerable_query()
         {
-            var exception = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.ToListAsync()).ConfigureAwait(false);
-            exception.Message.ShouldBe("The provider for the source IQueryable doesn't implement IAsyncRemoteQueryProvider. Only providers implementing Remote.Linq.IAsyncRemoteQueryProvider can be used for Remote Linq asynchronous operations.");
+            await AssertThrowNotSupportedExceptionAsync(() => _queryable.ToListAsync());
         }
 
         [Fact]
@@ -26,8 +25,7 @@ namespace Remote.Linq.Tests.AsyncEnumerableExtensions
         {
             var remoteQueryable = RemoteQueryable.Factory.CreateQueryable<int>(x => x.Execute(t => _queryable));
 
-            var exception = await Should.ThrowAsync<InvalidOperationException>(() => remoteQueryable.ToListAsync()).ConfigureAwait(false);
-            exception.Message.ShouldBe("The provider for the source IQueryable doesn't implement IAsyncRemoteQueryProvider. Only providers implementing Remote.Linq.IAsyncRemoteQueryProvider can be used for Remote Linq asynchronous operations.");
+            await AssertThrowNotSupportedExceptionAsync(() => remoteQueryable.ToListAsync());
         }
 
         [Fact]
@@ -43,8 +41,7 @@ namespace Remote.Linq.Tests.AsyncEnumerableExtensions
         [Fact]
         public async Task Should_throw_with_enumerable_query_scalar()
         {
-            var exception = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.AverageAsync()).ConfigureAwait(false);
-            exception.Message.ShouldBe("The provider for the source IQueryable doesn't implement IAsyncRemoteQueryProvider. Only providers implementing Remote.Linq.IAsyncRemoteQueryProvider can be used for Remote Linq asynchronous operations.");
+            await AssertThrowNotSupportedExceptionAsync(() => _queryable.AverageAsync());
         }
 
         [Fact]
@@ -52,8 +49,7 @@ namespace Remote.Linq.Tests.AsyncEnumerableExtensions
         {
             var remoteQueryable = RemoteQueryable.Factory.CreateQueryable<int>(x => x.Execute(t => _queryable));
 
-            var exception = await Should.ThrowAsync<InvalidOperationException>(() => remoteQueryable.AverageAsync()).ConfigureAwait(false);
-            exception.Message.ShouldBe("The provider for the source IQueryable doesn't implement IAsyncRemoteQueryProvider. Only providers implementing Remote.Linq.IAsyncRemoteQueryProvider can be used for Remote Linq asynchronous operations.");
+            await AssertThrowNotSupportedExceptionAsync(() => remoteQueryable.AverageAsync());
         }
 
         [Fact]
@@ -64,6 +60,13 @@ namespace Remote.Linq.Tests.AsyncEnumerableExtensions
             var result = await remoteAsyncQueryable.AverageAsync().ConfigureAwait(false);
 
             result.ShouldBe(_queryable.Average());
+        }
+
+        private static async Task AssertThrowNotSupportedExceptionAsync(Func<Task> task)
+        {
+            var ex = await Should.ThrowAsync<NotSupportedException>(task);
+            ex.Message.ShouldBe("The provider for the source IQueryable doesn't implement IAsyncRemoteQueryProvider. " +
+                "Only providers implementing Remote.Linq.IAsyncRemoteQueryProvider can be used for Remote Linq asynchronous operations.");
         }
     }
 }

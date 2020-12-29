@@ -3,7 +3,7 @@
 namespace Remote.Linq
 {
     using Aqua.Dynamic;
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
     using Aqua.Utils;
     using Remote.Linq.DynamicQuery;
@@ -15,6 +15,7 @@ namespace Remote.Linq
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
     using RemoteLinq = Remote.Linq.Expressions;
     using SystemLinq = System.Linq.Expressions;
 
@@ -232,6 +233,7 @@ namespace Remote.Linq
 
             private static readonly Type[] _unmappedTypes = new[]
                 {
+                    typeof(CancellationToken),
                     typeof(ConstantQueryArgument),
                     typeof(VariableQueryArgument),
                     typeof(VariableQueryArgumentList),
@@ -400,7 +402,7 @@ namespace Remote.Linq
                 {
                     exp = new RemoteLinq.ConstantExpression(typeValue.AsTypeInfo(), node.Type);
                 }
-                else if (node.Value != null && ConstantValueMapper.TypeNeedsWrapping(node.Value.GetType()))
+                else if (node.Value is not null && ConstantValueMapper.TypeNeedsWrapping(node.Value.GetType()))
                 {
                     var key = new { node.Value, node.Type };
                     if (!_constantQueryArgumentCache.TryGetValue(key, out var constantQueryArgument))
@@ -422,7 +424,7 @@ namespace Remote.Linq
                         }
                     }
 
-                    exp = node.Type == constantQueryArgument.Type?.Type
+                    exp = node.Type == constantQueryArgument.Type?.ToType()
                         ? new RemoteLinq.ConstantExpression(constantQueryArgument, constantQueryArgument.Type)
                         : new RemoteLinq.ConstantExpression(constantQueryArgument, _typeInfoProvider.GetTypeInfo(node.Type));
                 }
@@ -563,7 +565,7 @@ namespace Remote.Linq
             {
                 var expressions = VisitExpressionList(node.Expressions)?.Select(Unwrap);
                 IEnumerable<RemoteLinq.ParameterExpression>? variables = null;
-                if (node.Variables != null)
+                if (node.Variables is not null)
                 {
                     var nodeVariables = node.Variables.Cast<SystemLinq.Expression>().ToList().AsReadOnly();
                     variables = VisitExpressionList(nodeVariables)?.Select(Unwrap<RemoteLinq.ParameterExpression>);
@@ -909,7 +911,7 @@ namespace Remote.Linq
                 {
                     value = typeInfo.ResolveType(_typeResolver);
                 }
-                else if (value is ConstantQueryArgument oldConstantQueryArgument && oldConstantQueryArgument.Type != null)
+                else if (value is ConstantQueryArgument oldConstantQueryArgument && oldConstantQueryArgument.Type is not null)
                 {
                     var newConstantQueryArgument = new ConstantQueryArgument(oldConstantQueryArgument.Type);
                     foreach (var property in oldConstantQueryArgument.Properties.AsEmptyIfNull())
@@ -925,7 +927,7 @@ namespace Remote.Linq
 
                     value = ConstantValueMapper.ForReconstruction(_typeResolver).Map(newConstantQueryArgument, type);
                 }
-                else if (value is string && type != null && type != typeof(string))
+                else if (value is string && type is not null && type != typeof(string))
                 {
                     var mapper = new DynamicObjectMapper();
                     var obj = mapper.MapObject(value);

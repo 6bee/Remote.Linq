@@ -8,6 +8,10 @@ namespace Remote.Linq
 
     public interface IAsyncRemoteStreamProvider : IRemoteQueryProvider
     {
+        /// <summary>
+        /// Executes the remote query represented by the specified expression tree.
+        /// </summary>
+        /// <returns>An <see cref="IAsyncEnumerable{T}"/> representing the remote stream.</returns>
         IAsyncEnumerable<T> ExecuteAsyncRemoteStream<T>(Expression expression, CancellationToken cancellation);
     }
 }

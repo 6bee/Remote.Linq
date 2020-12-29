@@ -3,24 +3,25 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
-    public abstract class ExpressionExecutor<TDataTranferObject> : IExpressionExecutionDecorator<TDataTranferObject>
+    public abstract class AsyncStreamExpressionExecutor<TQueryable, TDataTranferObject> : IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>
+        where TDataTranferObject : class
     {
-        private readonly Func<Type, IQueryable> _queryableProvider;
+        private readonly Func<Type, TQueryable> _queryableProvider;
         private readonly ITypeResolver? _typeResolver;
         private readonly Func<System.Linq.Expressions.Expression, bool>? _canBeEvaluatedLocally;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExpressionExecutor{TDataTranferObject}"/> class.
+        /// Initializes a new instance of the <see cref="AsyncStreamExpressionExecutor{TQueryable, TDataTranferObject}"/> class.
         /// </summary>
-        protected ExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        protected AsyncStreamExpressionExecutor(Func<Type, TQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
         {
             _queryableProvider = queryableProvider;
             _typeResolver = typeResolver;
@@ -28,16 +29,16 @@ namespace Remote.Linq.ExpressionExecution
         }
 
         /// <summary>
-        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
+        /// Composes and executes the query based on the <see cref="Expression"/>.
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <returns>The mapped result of the query execution.</returns>
-        public TDataTranferObject Execute(Expression expression)
+        public IAsyncEnumerable<TDataTranferObject?> ExecuteAsyncStream(Expression expression)
         {
             var preparedRemoteExpression = Prepare(expression);
             var linqExpression = Transform(preparedRemoteExpression);
             var preparedLinqExpression = Prepare(linqExpression);
-            var queryResult = Execute(preparedLinqExpression);
+            var queryResult = ExecuteAsyncStream(preparedLinqExpression);
             var processedResult = ProcessResult(queryResult);
             var dataTransferObjects = ConvertResult(processedResult);
             var processedDataTransferObjects = ProcessResult(dataTransferObjects);
@@ -71,7 +72,7 @@ namespace Remote.Linq.ExpressionExecution
             => expression.PartialEval(_canBeEvaluatedLocally);
 
         /// <summary>
-        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
+        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw async stream result.
         /// </summary>
         /// <remarks>
         /// <see cref="InvalidOperationException"/> get handled for failing
@@ -85,96 +86,41 @@ namespace Remote.Linq.ExpressionExecution
         /// </remarks>
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected virtual object? Execute(System.Linq.Expressions.Expression expression)
-        {
-            expression.CheckNotNull(nameof(expression));
-            try
-            {
-                return ExecuteCore(expression);
-            }
-            catch (InvalidOperationException ex)
-            {
-                if (string.Equals(ex.Message, "Sequence contains no elements", StringComparison.Ordinal))
-                {
-                    return Array.CreateInstance(expression.Type, 0);
-                }
-
-                if (string.Equals(ex.Message, "Sequence contains no matching element", StringComparison.Ordinal))
-                {
-                    return Array.CreateInstance(expression.Type, 0);
-                }
-
-                if (string.Equals(ex.Message, "Sequence contains more than one element", StringComparison.Ordinal))
-                {
-                    return Array.CreateInstance(expression.Type, 2);
-                }
-
-                if (string.Equals(ex.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
-                {
-                    return Array.CreateInstance(expression.Type, 2);
-                }
-
-                throw;
-            }
-        }
+        protected abstract IAsyncEnumerable<object?> ExecuteAsyncStream(System.Linq.Expressions.Expression expression);
 
         /// <summary>
-        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
-        /// </summary>
-        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
-        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected static object? ExecuteCore(System.Linq.Expressions.Expression expression)
-        {
-            var queryResult = expression.CheckNotNull(nameof(expression)).CompileAndInvokeExpression();
-            if (queryResult is null)
-            {
-                return null;
-            }
-
-            var queryableType = queryResult.GetType();
-            if (queryableType.Implements(typeof(IQueryable<>)))
-            {
-                // force query execution
-                var elementType = TypeHelper.GetElementType(queryableType);
-                queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).InvokeAndUnwrap(null, queryResult);
-            }
-
-            return queryResult;
-        }
-
-        /// <summary>
-        /// If overriden in a derived class processes the raw query result.
+        /// If overriden in a derived class processes the items of the async stream.
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>Processed result.</returns>
-        protected virtual object? ProcessResult(object? queryResult) => queryResult;
+        protected virtual IAsyncEnumerable<object?> ProcessResult(IAsyncEnumerable<object?> queryResult) => queryResult;
 
         /// <summary>
-        /// Converts the raw query result into <typeparamref name="TDataTranferObject"/>.
+        /// Converts the async stream items into <typeparamref name="TDataTranferObject"/>.
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>The mapped query result.</returns>
-        protected abstract TDataTranferObject ConvertResult(object? queryResult);
+        protected abstract IAsyncEnumerable<TDataTranferObject?> ConvertResult(IAsyncEnumerable<object?> queryResult);
 
         /// <summary>
-        /// If overriden in a derived processes the <typeparamref name="TDataTranferObject"/>.
+        /// If overriden in a derived class processes the <typeparamref name="TDataTranferObject"/> items of the async stream.
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>Processed result.</returns>
-        protected virtual TDataTranferObject ProcessResult(TDataTranferObject queryResult) => queryResult;
+        protected virtual IAsyncEnumerable<TDataTranferObject?> ProcessResult(IAsyncEnumerable<TDataTranferObject?> queryResult) => queryResult;
 
-        Expression IExpressionExecutionDecorator<TDataTranferObject>.Prepare(Expression expression) => Prepare(expression);
+        Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Prepare(Expression expression) => Prepare(expression);
 
-        System.Linq.Expressions.Expression IExpressionExecutionDecorator<TDataTranferObject>.Transform(Expression expression) => Transform(expression);
+        System.Linq.Expressions.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Transform(Expression expression) => Transform(expression);
 
-        System.Linq.Expressions.Expression IExpressionExecutionDecorator<TDataTranferObject>.Prepare(System.Linq.Expressions.Expression expression) => Prepare(expression);
+        System.Linq.Expressions.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Prepare(System.Linq.Expressions.Expression expression) => Prepare(expression);
 
-        object? IExpressionExecutionDecorator<TDataTranferObject>.Execute(System.Linq.Expressions.Expression expression) => Execute(expression);
+        IAsyncEnumerable<object?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsyncStream(System.Linq.Expressions.Expression expression) => ExecuteAsyncStream(expression);
 
-        object? IExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(object? queryResult) => ProcessResult(queryResult);
+        IAsyncEnumerable<object?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(IAsyncEnumerable<object?> queryResult) => ProcessResult(queryResult);
 
-        TDataTranferObject IExpressionExecutionDecorator<TDataTranferObject>.ConvertResult(object? queryResult) => ConvertResult(queryResult);
+        IAsyncEnumerable<TDataTranferObject?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ConvertResult(IAsyncEnumerable<object?> queryResult) => ConvertResult(queryResult);
 
-        TDataTranferObject IExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(TDataTranferObject queryResult) => ProcessResult(queryResult);
+        IAsyncEnumerable<TDataTranferObject?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(IAsyncEnumerable<TDataTranferObject?> queryResult) => ProcessResult(queryResult);
     }
 }

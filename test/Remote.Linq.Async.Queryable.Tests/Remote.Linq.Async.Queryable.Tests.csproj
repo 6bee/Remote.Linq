@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Remote.Linq.Async.Ix\Remote.Linq.Async.Ix.csproj" />
+    <ProjectReference Include="..\..\src\Remote.Linq.Async.Queryable\Remote.Linq.Async.Queryable.csproj" />
   </ItemGroup>
 
   <ItemGroup>

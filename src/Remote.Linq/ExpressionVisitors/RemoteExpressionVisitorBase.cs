@@ -2,7 +2,7 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -123,7 +123,7 @@ namespace Remote.Linq.ExpressionVisitors
             for (int i = 0, n = list.Count; i < n; i++)
             {
                 MemberBinding b = VisitBinding(list[i]);
-                if (visited != null)
+                if (visited is not null)
                 {
                     visited.Add(b);
                 }
@@ -196,7 +196,7 @@ namespace Remote.Linq.ExpressionVisitors
             for (int i = 0, n = list.Count; i < n; i++)
             {
                 var init = VisitElementInitializer(list[i]);
-                if (visited != null)
+                if (visited is not null)
                 {
                     visited.Add(init);
                 }
@@ -239,7 +239,7 @@ namespace Remote.Linq.ExpressionVisitors
             for (int i = 0, n = list.Count; i < n; i++)
             {
                 var p = (T)Visit(list[i]);
-                if (visited != null)
+                if (visited is not null)
                 {
                     visited.Add(p);
                 }

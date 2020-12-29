@@ -2,7 +2,7 @@
 
 namespace Remote.Linq.EntityFramework.ExpressionVisitors
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;

@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Async.Ix.TestSupport
+namespace Remote.Linq.Async.Queryable.TestSupport
 {
-    using Remote.Linq.Async.Ix.Expressions;
-    ////using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -19,38 +17,35 @@ namespace Remote.Linq.Async.Ix.TestSupport
         /// Creates an <see cref="IAsyncQueryable{T}"/> for given test data.
         /// </summary>
         public static IAsyncQueryable<T> AsAsyncQueryable<T>(this IEnumerable<T> testData)
+            where T : class
         {
             if (testData.CheckNotNull(nameof(testData)) is IAsyncQueryable<T> asyncQueryable)
             {
                 return asyncQueryable;
             }
 
-            var provider = CreateAsyncQueryableProviderWithTestData<T, object?>(testData);
-            return RemoteQueryable.Factory.CreateQueryable<T>(provider);
+            var provider = CreateAsyncQueryableProviderWithTestData<T, object>(testData);
+            return RemoteQueryable.Factory.CreateQueryable<T>(provider!);
         }
 
         private static Func<Expression, IAsyncEnumerable<TResult>> CreateAsyncQueryableProviderWithTestData<TData, TResult>(IEnumerable<TData> items)
-            where TData : TResult
+            where TData : class, TResult
+            where TResult : class
         {
-            return expression =>
-            {
-                var result = expression.Execute<IAsyncEnumerable<TData>>(_ => AsyncStreamProvider(items).AsAsyncQueryable());
-                return AsyncItemMapper(result);
-            };
+            return ExecuteAsync;
 
-            static async IAsyncEnumerable<TData> AsyncStreamProvider(IEnumerable<TData> source)
+            IAsyncEnumerable<TResult> ExecuteAsync(Expression expression)
             {
-                foreach (var item in source)
-                {
-                    yield return await new ValueTask<TData>(item).ConfigureAwait(false);
-                }
-            }
+                var result = items.ToAsyncEnumerable();
 
-            static async IAsyncEnumerable<TResult> AsyncItemMapper(IAsyncEnumerable<TData> source)
-            {
-                await foreach (var item in source)
+                return MapItemTypeAsync(result);
+
+                static async IAsyncEnumerable<TResult> MapItemTypeAsync(IAsyncEnumerable<TData> source)
                 {
-                    yield return item;
+                    await foreach (var item in source.ConfigureAwait(false))
+                    {
+                        yield return item!;
+                    }
                 }
             }
         }

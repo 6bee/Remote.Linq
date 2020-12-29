@@ -4,6 +4,7 @@ namespace Remote.Linq.ExpressionExecution
 {
     using Remote.Linq.Expressions;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     public abstract class ExpressionExecutionDecorator<TDataTranferObject> : ExpressionExecutionDecoratorBase<TDataTranferObject>
     {
@@ -12,7 +13,7 @@ namespace Remote.Linq.ExpressionExecution
         {
         }
 
-        protected ExpressionExecutionDecorator(ExpressionExecutor<TDataTranferObject> parent)
+        protected ExpressionExecutionDecorator(ExpressionExecutor<IQueryable, TDataTranferObject> parent)
             : base(parent)
         {
         }

@@ -2,7 +2,7 @@
 
 namespace Remote.Linq
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
     using Remote.Linq.Expressions;
     using System;
@@ -201,7 +201,7 @@ namespace Remote.Linq
             var sb = new StringBuilder();
 
             var filterExpressions = FilterExpressions;
-            if (filterExpressions != null)
+            if (filterExpressions is not null)
             {
                 foreach (var expression in filterExpressions)
                 {
@@ -211,7 +211,7 @@ namespace Remote.Linq
             }
 
             var sortExpressions = SortExpressions;
-            if (sortExpressions != null)
+            if (sortExpressions is not null)
             {
                 foreach (var expression in sortExpressions)
                 {

@@ -69,7 +69,7 @@ namespace Remote.Linq.Expressions
 
             protected static string Format(Type? t) => Format(t.AsTypeInfo());
 
-            protected static string Format(TypeInfo? typeInfo) => $"{typeInfo?.NameWithoutNameSpace}{typeInfo?.GetGenericArgumentsString()}";
+            protected static string Format(TypeInfo? typeInfo) => typeInfo?.PrintFriendlyName(false) ?? string.Empty;
         }
 
         protected internal abstract class ExpressionDebugFormatter<T> : ExpressionDebugFormatter

@@ -4,11 +4,10 @@ namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.TypeSystem;
     using System;
-    using System.Linq;
 
-    internal sealed class CastingExpressionExecutor<TResult> : ExpressionExecutor<TResult>
+    internal sealed class CastingExpressionExecutor<TQueryable, TResult> : ExpressionExecutor<TQueryable, TResult>
     {
-        public CastingExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally)
+        public CastingExpressionExecutor(Func<Type, TQueryable> queryableProvider, ITypeResolver? typeResolver, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally)
             : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
         {
         }

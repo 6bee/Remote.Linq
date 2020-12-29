@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Remote.Linq.Expressions;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace Remote.Linq.ExpressionExecution
         {
         }
 
-        public AsyncExpressionExecutionContext(AsyncExpressionExecutor<TDataTranferObject> parent, Expression expression)
+        public AsyncExpressionExecutionContext(AsyncExpressionExecutor<IQueryable, TDataTranferObject> parent, Expression expression)
             : this((IAsyncExpressionExecutionDecorator<TDataTranferObject>)parent, expression)
         {
         }

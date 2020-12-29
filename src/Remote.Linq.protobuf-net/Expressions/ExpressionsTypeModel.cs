@@ -2,8 +2,9 @@
 
 namespace Remote.Linq.ProtoBuf.Expressions
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Aqua.ProtoBuf;
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using Remote.Linq.Expressions;
     using System;

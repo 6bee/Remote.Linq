@@ -12,6 +12,7 @@ namespace Remote.Linq.Expressions
     [DataContract]
     [KnownType(typeof(ConstantQueryArgument)), XmlInclude(typeof(ConstantQueryArgument))]
     [KnownType(typeof(QueryableResourceDescriptor)), XmlInclude(typeof(QueryableResourceDescriptor))]
+    [KnownType(typeof(SubstitutionValue)), XmlInclude(typeof(SubstitutionValue))]
     [KnownType(typeof(VariableQueryArgument)), XmlInclude(typeof(VariableQueryArgument))]
     [KnownType(typeof(VariableQueryArgumentList)), XmlInclude(typeof(VariableQueryArgumentList))]
     public sealed class ConstantExpression : Expression

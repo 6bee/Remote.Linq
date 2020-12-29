@@ -6,7 +6,7 @@
     <MinorVersion>3</MinorVersion>
     <PatchVersion>0</PatchVersion>
     <PreReleaseLabel>alpha-029</PreReleaseLabel>
-    <AquaCoreVersion>5.0.0-alpha-019</AquaCoreVersion>
+    <AquaCoreVersion>5.0.0-alpha-025</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" Condition="'$(IncludeGlobalAssemblyInfo)' == 'true'" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties/GlobalAssemblyInfo.cs" Condition="'$(IncludeGlobalAssemblyInfo)' == 'true'" />
   </ItemGroup>
 
   <PropertyGroup>

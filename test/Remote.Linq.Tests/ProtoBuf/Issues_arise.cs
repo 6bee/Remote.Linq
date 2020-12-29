@@ -19,7 +19,7 @@ namespace Remote.Linq.Tests.ProtoBuf
     public class Issues_arise
     {
         [Fact]
-        public void When_serializing_method_call_expression_with_parameter_and_variable_argument_B()
+        public void When_serializing_method_call_expression_with_parameter_and_variable_argument()
         {
             var m = typeof(Math).GetMethod(nameof(Math.Pow), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
             var v = System.Linq.Expressions.Expression.Constant(new VariableQueryArgument(2.0, typeof(double)));

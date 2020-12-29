@@ -72,7 +72,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
             arg.NodeType.ShouldBe(ExpressionType.Constant);
             arg.ShouldBeOfType<ConstantExpression>()
                 .Value.ShouldBeOfType<QueryableResourceDescriptor>()
-                .Type.Type.ShouldBe(typeof(Parent));
+                .Type.ToType().ShouldBe(typeof(Parent));
         }
 
         [Fact]

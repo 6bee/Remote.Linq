@@ -2,7 +2,7 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
@@ -56,8 +56,8 @@ namespace Remote.Linq.ExpressionVisitors
 
             private static bool IsGenericVariableQueryArgument(ConstantExpression expression, [NotNullWhen(true)] out Type? valueType)
             {
-                var type = expression.Type?.Type ?? expression.Value?.GetType();
-                if (type != null &&
+                var type = expression.Type?.ToType() ?? expression.Value?.GetType();
+                if (type is not null &&
                     type.IsGenericType &&
                     type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                 {
@@ -76,7 +76,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var member = node.Member;
                     if (member.MemberType == MemberTypes.Property &&
                         member.DeclaringType?.IsGenericType == true &&
-                        member.DeclaringType?.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                        member.DeclaringType?.ToType().GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                     {
                         var instanceExpression = (ConstantExpression)(Visit(node.Expression) ?? throw new InvalidOperationException("Visit must not return null for non null value."));
 
@@ -113,7 +113,7 @@ namespace Remote.Linq.ExpressionVisitors
             {
                 if (node.CheckNotNull(nameof(node)).Value is VariableQueryArgument nonGenericQueryArgument)
                 {
-                    var type = nonGenericQueryArgument.Type.Type;
+                    var type = nonGenericQueryArgument.Type.ToType();
                     var value = nonGenericQueryArgument.Value;
                     var queryArgument = Activator.CreateInstance(typeof(VariableQueryArgument<>).MakeGenericType(type), new[] { value });
                     return new ConstantExpression(queryArgument);
@@ -121,7 +121,7 @@ namespace Remote.Linq.ExpressionVisitors
 
                 if (node.Value is VariableQueryArgumentList nonGenericQueryArgumentList)
                 {
-                    var elementType = nonGenericQueryArgumentList.ElementType.Type;
+                    var elementType = nonGenericQueryArgumentList.ElementType.ToType();
                     var values = nonGenericQueryArgumentList.Values;
                     var methodInfo = CreateVariableQueryArgumentListMethodInfo.MakeGenericMethod(elementType);
                     var queryArgument = methodInfo.Invoke(null, new object[] { values });
@@ -146,7 +146,7 @@ namespace Remote.Linq.ExpressionVisitors
                     Visit(node.Expression) is ConstantExpression instanceExpression)
                 {
                     var instanceType = instanceExpression.Type;
-                    if (instanceType.IsGenericType && instanceType.Type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                    if (instanceType.IsGenericType && instanceType.ToType().GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                     {
                         var valueType = instanceType.GenericArguments.Single();
                         var valuePropertyInfo = new PropertyInfo(nameof(VariableQueryArgument.Value), valueType, instanceType);

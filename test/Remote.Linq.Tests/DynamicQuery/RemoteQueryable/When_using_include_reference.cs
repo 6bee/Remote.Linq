@@ -73,7 +73,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
             arg.NodeType.ShouldBe(ExpressionType.Constant);
             arg.ShouldBeOfType<ConstantExpression>()
                 .Value.ShouldBeOfType<QueryableResourceDescriptor>()
-                .Type.Type.ShouldBe(typeof(Child));
+                .Type.ToType().ShouldBe(typeof(Child));
         }
 
         [Fact]
@@ -85,5 +85,5 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
             arg.ShouldBeOfType<ConstantExpression>()
                 .Value.ShouldBe("Parent");
         }
-     }
+    }
 }

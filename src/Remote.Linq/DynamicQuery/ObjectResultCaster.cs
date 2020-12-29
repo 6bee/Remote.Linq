@@ -2,7 +2,7 @@
 
 namespace Remote.Linq.DynamicQuery
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
@@ -12,7 +12,7 @@ namespace Remote.Linq.DynamicQuery
         [return: MaybeNull]
         public TResult MapResult<TResult>(object? source, Expression expression)
         {
-            if (source != null && !(source is TResult) && source.IsCollection(out var enumerable))
+            if (source is not null && !(source is TResult) && source.IsCollection(out var enumerable))
             {
                 var elementType = TypeHelper.GetElementType(enumerable.GetType()) ?? throw new RemoteLinqException($"Failed to get element type of {enumerable.GetType()}.");
                 if (typeof(TResult).IsAssignableFrom(elementType) && expression is MethodCallExpression methodCallExpression)

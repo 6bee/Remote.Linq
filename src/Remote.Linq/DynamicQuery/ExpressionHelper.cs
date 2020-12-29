@@ -2,17 +2,20 @@
 
 namespace Remote.Linq.DynamicQuery
 {
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Linq;
     using RemoteExpression = Remote.Linq.Expressions.Expression;
     using SystemExpression = System.Linq.Expressions.Expression;
 
-    internal static class ExpressionHelper
+    public static class ExpressionHelper
     {
-        internal static void CheckExpressionResultType<TResult>(SystemExpression expression)
+        /// <summary>
+        /// Checks whether the give <see cref="SystemExpression"/> is assignable to the given <typeparamref name="TResult"/> type in any form, throws an <see cref="ArgumentException"/> otherwise.
+        /// </summary>
+        public static void CheckExpressionResultType<TResult>(SystemExpression expression)
         {
             var expressionType = expression.CheckNotNull(nameof(expression)).Type;
             if (typeof(TResult).IsAssignableFrom(expressionType))
@@ -35,7 +38,10 @@ namespace Remote.Linq.DynamicQuery
             throw new ArgumentException("The specified expression is not assignable to the result type.", nameof(expression));
         }
 
-        internal static RemoteExpression TranslateExpression(SystemExpression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemExpression, bool>? canBeEvaluatedLocally)
+        /// <summary>
+        /// Default procedure to translatest a given <see cref="SystemExpression"/> into a <see cref="RemoteExpression"/>.
+        /// </summary>
+        public static RemoteExpression TranslateExpression(SystemExpression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemExpression, bool>? canBeEvaluatedLocally)
         {
             var slinq1 = expression.CheckNotNull(nameof(expression)).SimplifyIncorporationOfRemoteQueryables();
             var rlinq1 = slinq1.ToRemoteLinqExpression(typeInfoProvider, canBeEvaluatedLocally);

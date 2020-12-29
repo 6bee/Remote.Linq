@@ -21,44 +21,44 @@ namespace Client
         {
             using RemoteRepository repo = _repoProvider();
 
-            ////PrintHeader("GET ALL PRODUCTS:");
-            ////var xl = repo.Products.ToArray();
-            ////var list = await repo.Products
-            ////    .ToListAsync()
-            ////    .ConfigureAwait(false);
-            ////foreach (var item in list)
-            ////{
-            ////    PrintLine($"  P#{item.Id}| {item.Name} | {item.Price:C}");
-            ////}
+            PrintHeader("GET ALL PRODUCTS:");
+            var xl = repo.Products.ToArray();
+            var list = await repo.Products
+                .ToListAsync()
+                .ConfigureAwait(false);
+            foreach (var item in list)
+            {
+                PrintLine($"  P#{item.Id}| {item.Name} | {item.Price:C}");
+            }
 
-            ////PrintHeader("SELECT IDs:");
-            ////var productIdsQuery =
-            ////    from p in repo.Products
-            ////    orderby p.Price descending
-            ////    select p.Id;
-            ////var productIds = await productIdsQuery
-            ////    .ToListAsync()
-            ////    .ConfigureAwait(false);
-            ////foreach (int id in productIdsQuery)
-            ////{
-            ////    PrintLine($"  P#{id}");
-            ////}
+            PrintHeader("SELECT IDs:");
+            var productIdsQuery =
+                from p in repo.Products
+                orderby p.Price descending
+                select p.Id;
+            var productIds = await productIdsQuery
+                .ToListAsync()
+                .ConfigureAwait(false);
+            foreach (int id in productIdsQuery)
+            {
+                PrintLine($"  P#{id}");
+            }
 
-            ////PrintHeader("COUNT:");
-            ////var asyncProductCount = repo.Products.CountAsync().ConfigureAwait(false);
-            ////PrintLine($"  Count = {await asyncProductCount}");
+            PrintHeader("COUNT:");
+            var asyncProductCount = repo.Products.CountAsync().ConfigureAwait(false);
+            PrintLine($"  Count = {await asyncProductCount}");
 
-            ////PrintHeader("INVALID OPERATIONS:");
-            ////try
-            ////{
-            ////    _ = await repo.Products
-            ////        .FirstAsync(x => false)
-            ////        .ConfigureAwait(false);
-            ////}
-            ////catch (Exception ex)
-            ////{
-            ////    PrintLine($"  {ex.GetType().Name}: {ex.Message}");
-            ////}
+            PrintHeader("INVALID OPERATIONS:");
+            try
+            {
+                _ = await repo.Products
+                    .FirstAsync(x => false)
+                    .ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                PrintLine($"  {ex.GetType().Name}: {ex.Message}");
+            }
 
             try
             {

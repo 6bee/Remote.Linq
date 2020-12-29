@@ -3,7 +3,7 @@
 namespace Remote.Linq.Tests.RemoteQueryable
 {
     using Aqua.Dynamic;
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
     using Remote.Linq;
     using Remote.Linq.Expressions;
@@ -71,7 +71,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             {
             }
         }
-#endif
+#endif // NETFRAMEWORK
 
         private readonly IQueryable<Category> _categoryQueryable;
         private readonly IQueryable<Product> _productQueryable;

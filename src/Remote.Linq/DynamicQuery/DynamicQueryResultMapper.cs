@@ -3,7 +3,7 @@
 namespace Remote.Linq.DynamicQuery
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem.Extensions;
+    using Aqua.TypeExtensions;
     using System;
     using System.Collections;
     using System.Linq;

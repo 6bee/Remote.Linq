@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using System.ComponentModel;
     using System.Linq;
 
     /// <summary>
@@ -14,5 +15,17 @@ namespace Remote.Linq
         internal RemoteQueryableFactory()
         {
         }
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string? ToString() => base.ToString();
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object? obj) => base.Equals(obj);
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

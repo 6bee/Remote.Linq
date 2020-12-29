@@ -3,14 +3,14 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.Dynamic;
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class DefaultExpressionExecutor : ExpressionExecutor<IEnumerable<DynamicObject?>?>
+    public class DefaultExpressionExecutor : ExpressionExecutor<IQueryable, IEnumerable<DynamicObject?>?>
     {
         private readonly IDynamicObjectMapper _mapper;
         private readonly Func<Type, bool> _setTypeInformation;

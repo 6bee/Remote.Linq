@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C0DCE22E-0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq", "src\Remote.Linq\Remote.Linq.csproj", "{2E2B1850-C328-47C3-BED5-313F6E9DBB01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.Async.Ix", "src\Remote.Linq.Async.Ix\Remote.Linq.Async.Ix.csproj", "{B51864ED-16EC-4D6B-8B54-C568517D8474}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.Async.Queryable", "src\Remote.Linq.Async.Queryable\Remote.Linq.Async.Queryable.csproj", "{B51864ED-16EC-4D6B-8B54-C568517D8474}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.EntityFramework", "src\Remote.Linq.EntityFramework\Remote.Linq.EntityFramework.csproj", "{27CF691E-0FD4-4C61-826D-EA46D256AE78}"
 EndProject
@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.protobuf-net", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.Tests", "test\Remote.Linq.Tests\Remote.Linq.Tests.csproj", "{85AE4778-A174-4C29-90D2-D245A21B299C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.Async.Ix.Tests", "test\Remote.Linq.Async.Ix.Tests\Remote.Linq.Async.Ix.Tests.csproj", "{005D44F6-FCD2-414B-857A-7C218986A0DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.Async.Queryable.Tests", "test\Remote.Linq.Async.Queryable.Tests\Remote.Linq.Async.Queryable.Tests.csproj", "{005D44F6-FCD2-414B-857A-7C218986A0DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.EntityFramework.Tests", "test\Remote.Linq.EntityFramework.Tests\Remote.Linq.EntityFramework.Tests.csproj", "{33B9E510-F853-4897-B8DF-E4D1448D2A94}"
 EndProject

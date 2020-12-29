@@ -66,7 +66,7 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
             serializer.CheckNotNull(nameof(serializer)).Serialize(writer, instance.CheckNotNull(nameof(instance)).ElementType);
 
             writer.WritePropertyName(nameof(VariableQueryArgumentList.Values));
-            serializer.Serialize(writer, instance.Values, instance.ElementType?.Type);
+            serializer.Serialize(writer, instance.Values, instance.ElementType?.ToType());
         }
     }
 }

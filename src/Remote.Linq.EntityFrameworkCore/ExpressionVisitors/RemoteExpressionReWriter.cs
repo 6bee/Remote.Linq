@@ -33,11 +33,11 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
             {
                 if (node.Instance is null &&
                     string.Equals(node.Method?.Name, nameof(QueryFunctions.Include), StringComparison.Ordinal) &&
-                    node.Method?.DeclaringType?.Type == typeof(QueryFunctions) &&
+                    node.Method?.DeclaringType?.ToType() == typeof(QueryFunctions) &&
                     node.Method?.GenericArgumentTypes?.Count == 1 &&
                     node.Arguments?.Count == 2)
                 {
-                    var elementType = node.Method.GenericArgumentTypes.Single().Type;
+                    var elementType = node.Method.GenericArgumentTypes.Single().ToType();
 
                     var queryableExpression = node.Arguments[0];
                     var pathExpression = node.Arguments[1];

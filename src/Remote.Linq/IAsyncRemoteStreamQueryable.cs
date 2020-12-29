@@ -2,8 +2,13 @@
 
 namespace Remote.Linq
 {
-    public interface IAsyncRemoteStreamQueryable : IRemoteQueryable
+    using System.Linq;
+
+    public interface IAsyncRemoteStreamQueryable : IQueryable, IRemoteResource
     {
+        /// <summary>
+        /// Gets the query provider that is associated with this data source.
+        /// </summary>
         new IAsyncRemoteStreamProvider Provider { get; }
     }
 }

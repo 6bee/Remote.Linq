@@ -166,7 +166,7 @@ namespace Remote.Linq
         {
             queryable.CheckNotNull(nameof(queryable));
             path.CheckNotNull(nameof(path));
-            if (TryParsePath(path.Body, out var path1) && path1 != null)
+            if (TryParsePath(path.Body, out var path1) && path1 is not null)
             {
                 return queryable.Include(path1);
             }
@@ -193,10 +193,10 @@ namespace Remote.Linq
                 if (string.Equals(methodCallExpression.Method.Name, "Select", StringComparison.Ordinal) &&
                     methodCallExpression.Arguments.Count == 2 &&
                     TryParsePath(methodCallExpression.Arguments[0], out var path1) &&
-                    path1 != null &&
+                    path1 is not null &&
                     methodCallExpression.Arguments[1] is LambdaExpression lambdaExpression &&
                     TryParsePath(lambdaExpression.Body, out var path2) &&
-                    path2 != null)
+                    path2 is not null)
                 {
                     path = $"{path1}.{path2}";
                     return true;

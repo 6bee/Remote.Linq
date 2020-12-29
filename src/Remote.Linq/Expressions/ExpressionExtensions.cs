@@ -13,8 +13,8 @@ namespace Remote.Linq.Expressions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExpressionExtensions
     {
-        private static CastingExpressionExecutor<TResult> CreateCastExecutor<TResult>(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally)
-            => new CastingExpressionExecutor<TResult>(queryableProvider, typeResolver, canBeEvaluatedLocally);
+        private static CastingExpressionExecutor<TQueryable, TResult> CreateCastExecutor<TQueryable, TResult>(Func<Type, TQueryable> queryableProvider, ITypeResolver? typeResolver, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally)
+            => new CastingExpressionExecutor<TQueryable, TResult>(queryableProvider, typeResolver, canBeEvaluatedLocally);
 
         private static DefaultExpressionExecutor CreateDefaultExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver, IDynamicObjectMapper? mapper, Func<Type, bool>? setTypeInformation, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally)
             => new DefaultExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally);
@@ -41,7 +41,7 @@ namespace Remote.Linq.Expressions
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution on the data source.</param>
         /// <returns>A new instance <see cref="ExpressionExecutionContext{TResult}" />.</returns>
         public static ExpressionExecutionContext<TResult> Executor<TResult>(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            => new ExpressionExecutionContext<TResult>(CreateCastExecutor<TResult>(queryableProvider, typeResolver, canBeEvaluatedLocally), expression);
+            => new ExpressionExecutionContext<TResult>(CreateCastExecutor<IQueryable, TResult>(queryableProvider, typeResolver, canBeEvaluatedLocally), expression);
 
         /// <summary>
         /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
@@ -65,6 +65,6 @@ namespace Remote.Linq.Expressions
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution on the data source.</param>
         /// <returns>The mapped result of the query execution.</returns>
         public static TResult Execute<TResult>(this Expression expression, Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateCastExecutor<TResult>(queryableProvider, typeResolver, canBeEvaluatedLocally).Execute(expression);
+            => CreateCastExecutor<IQueryable, TResult>(queryableProvider, typeResolver, canBeEvaluatedLocally).Execute(expression);
     }
 }

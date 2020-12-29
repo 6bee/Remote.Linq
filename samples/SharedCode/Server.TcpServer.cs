@@ -54,9 +54,13 @@ namespace Server
                                         var response = await asyncRequestHandler(request, cancellation.Token).ConfigureAwait(false);
                                         await stream.WriteAsync(response).ConfigureAwait(false);
                                     }
-                                    catch (Exception ex)
+                                    catch (InvalidOperationException ex)
                                     {
                                         await stream.WriteAsync(ex).ConfigureAwait(false);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        await stream.WriteAsync(new Exception($"{ex.GetType()}: {ex.Message}")).ConfigureAwait(false);
                                     }
 
                                     await stream.FlushAsync().ConfigureAwait(false);

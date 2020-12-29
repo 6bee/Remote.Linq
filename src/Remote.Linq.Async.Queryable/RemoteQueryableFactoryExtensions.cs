@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Async.Ix
+namespace Remote.Linq.Async.Queryable
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
-    using Remote.Linq.Async.Ix.DynamicQuery;
+    using Remote.Linq.Async.Queryable.DynamicQuery;
     using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;

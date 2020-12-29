@@ -2,8 +2,8 @@
 
 namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 {
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using Microsoft.EntityFrameworkCore;
     using Remote.Linq.EntityFrameworkCore.ExpressionVisitors;
     using Remote.Linq.ExpressionExecution;
@@ -12,7 +12,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using System.Linq;
     using System.Security;
 
-    public abstract class EntityFrameworkCoreAsyncStreamExpressionExecutor<TDataTranferObject> : AsyncStreamExpressionExecutor<TDataTranferObject>
+    public abstract class EntityFrameworkCoreAsyncStreamExpressionExecutor<TDataTranferObject> : AsyncStreamExpressionExecutor<IQueryable, TDataTranferObject>
         where TDataTranferObject : class
     {
         [SecuritySafeCritical]
@@ -33,7 +33,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         {
             if (!expression.CheckNotNull(nameof(expression)).Type.Implements(typeof(IQueryable<>)))
             {
-                throw new ArgumentException("Expression must be of type IQueryable<>");
+                throw new ArgumentException("Expression must be of type IQueryable<>", nameof(expression));
             }
 
             var queryable = (IQueryable)expression.CompileAndInvokeExpression() !;

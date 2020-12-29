@@ -9,12 +9,12 @@ namespace Remote.Linq.ExpressionExecution
     using System.Threading;
     using System.Threading.Tasks;
 
-    public abstract class AsyncExpressionExecutor<TDataTranferObject> : ExpressionExecutor<TDataTranferObject>, IAsyncExpressionExecutionDecorator<TDataTranferObject>
+    public abstract class AsyncExpressionExecutor<TQueryable, TDataTranferObject> : ExpressionExecutor<TQueryable, TDataTranferObject>, IAsyncExpressionExecutionDecorator<TDataTranferObject>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncExpressionExecutor{TDataTranferObject}"/> class.
+        /// Initializes a new instance of the <see cref="AsyncExpressionExecutor{TQueryable, TDataTranferObject}"/> class.
         /// </summary>
-        protected AsyncExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        protected AsyncExpressionExecutor(Func<Type, TQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
         {
         }

@@ -31,6 +31,7 @@ namespace Remote.Linq.DynamicQuery
         Type IRemoteResource.ResourceType => ElementType;
 
         internal static Exception QueryOperationNotSupportedException
-            => new InvalidOperationException($"Async remote stream must be executed as IAsyncEnumerable<T>. The {nameof(AsyncQueryableExtensions.AsAsyncEnumerable)}() extension method may be used.");
+            => new NotSupportedException("Async remote stream must be executed as IAsyncEnumerable<T>. " +
+                $"The {nameof(AsyncQueryableExtensions.AsAsyncEnumerable)}() extension method may be used.");
    }
 }

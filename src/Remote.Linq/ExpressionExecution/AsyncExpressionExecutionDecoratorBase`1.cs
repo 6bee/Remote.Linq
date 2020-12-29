@@ -4,6 +4,7 @@ namespace Remote.Linq.ExpressionExecution
 {
     using Remote.Linq.Expressions;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace Remote.Linq.ExpressionExecution
         {
         }
 
-        protected AsyncExpressionExecutionDecoratorBase(AsyncExpressionExecutor<TDataTranferObject> parent)
+        protected AsyncExpressionExecutionDecoratorBase(AsyncExpressionExecutor<IQueryable, TDataTranferObject> parent)
             : this((IAsyncExpressionExecutionDecorator<TDataTranferObject>)parent)
         {
         }

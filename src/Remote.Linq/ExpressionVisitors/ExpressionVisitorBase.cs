@@ -151,7 +151,7 @@ namespace Remote.Linq.ExpressionVisitors
             var conversion = Visit(node.Conversion);
             if (left != node.Left || right != node.Right || conversion != node.Conversion)
             {
-                return node.NodeType == ExpressionType.Coalesce && node.Conversion != null
+                return node.NodeType == ExpressionType.Coalesce && node.Conversion is not null
                     ? Expression.Coalesce(left, right, conversion as LambdaExpression)
                     : Expression.MakeBinary(node.NodeType, left, right, node.IsLiftedToNull, node.Method);
             }
@@ -227,7 +227,7 @@ namespace Remote.Linq.ExpressionVisitors
             for (int i = 0, n = list.Count; i < n; i++)
             {
                 var p = (T)Visit(list[i]);
-                if (visited != null)
+                if (visited is not null)
                 {
                     visited.Add(p);
                 }
@@ -286,7 +286,7 @@ namespace Remote.Linq.ExpressionVisitors
             for (int i = 0, n = list.Count; i < n; i++)
             {
                 var b = VisitMemberBinding(list[i]);
-                if (visited != null)
+                if (visited is not null)
                 {
                     visited.Add(b);
                 }
@@ -312,7 +312,7 @@ namespace Remote.Linq.ExpressionVisitors
             for (int i = 0, n = list.Count; i < n; i++)
             {
                 var init = VisitElementInitializer(list[i]);
-                if (visited != null)
+                if (visited is not null)
                 {
                     visited.Add(init);
                 }

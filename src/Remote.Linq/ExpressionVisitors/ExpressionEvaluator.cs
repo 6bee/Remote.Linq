@@ -10,6 +10,7 @@ namespace Remote.Linq.ExpressionVisitors
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
 
     /// <summary>
     /// Enables the partial evalutation of queries.
@@ -22,7 +23,7 @@ namespace Remote.Linq.ExpressionVisitors
         /// Performs evaluation and replacement of independent sub-trees.
         /// </summary>
         /// <param name="expression">The root of the expression tree.</param>
-        /// <param name="canBeEvaluatedLocally">A function that decides whether a given expression node can be evaluated locally, assumes true if no function defined.</param>
+        /// <param name="canBeEvaluatedLocally">A function that decides whether a given expression node can be evaluated locally, assumes <see langword="true"/> if no function defined.</param>
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
         public static Expression PartialEval(this Expression expression, Func<Expression, bool>? canBeEvaluatedLocally = null)
             => new SubtreeEvaluator(new Nominator(canBeEvaluatedLocally).Nominate(expression.CheckNotNull(nameof(expression)))).Eval(expression);
@@ -52,6 +53,11 @@ namespace Remote.Linq.ExpressionVisitors
                 {
                     return false;
                 }
+
+                if (type == typeof(CancellationToken))
+                {
+                    return false;
+                }
             }
 
             if (expression.NodeType == ExpressionType.Call)
@@ -65,7 +71,7 @@ namespace Remote.Linq.ExpressionVisitors
                 var methodDeclaringType = methodCallExpression.Method.DeclaringType;
                 if ((methodDeclaringType == typeof(Queryable) || methodDeclaringType == typeof(Enumerable)) &&
                     methodCallExpression.Arguments.FirstOrDefault() is ConstantExpression argument &&
-                    argument?.Value.AsQueryableResourceTypeOrNull() != null)
+                    argument?.Value.AsQueryableResourceTypeOrNull() is not null)
                 {
                     return false;
                 }
@@ -191,7 +197,7 @@ namespace Remote.Linq.ExpressionVisitors
             [return: NotNullIfNotNull("expression")]
             protected override Expression? Visit(Expression? node)
             {
-                if (node != null)
+                if (node is not null)
                 {
                     bool saveCannotBeEvaluated = _cannotBeEvaluated;
                     _cannotBeEvaluated = false;

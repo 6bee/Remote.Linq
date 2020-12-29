@@ -22,10 +22,8 @@ namespace Client
             using IRemoteRepository repo = _repoProvider();
 
             PrintHeader("GET ALL PRODUCTS:");
-            var allProducts = repo.Products
-                .AsAsyncEnumerable()
-                .ConfigureAwait(false);
-            await foreach (var item in allProducts)
+            var asyncProductsQueryable = repo.Products.AsAsyncEnumerable();
+            await foreach (var item in asyncProductsQueryable.ConfigureAwait(false))
             {
                 PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
             }
@@ -36,10 +34,8 @@ namespace Client
                 from c in repo.ProductCategories
                 from p in repo.Products
                 select new { Category = "#" + c.Name + sufix("-"), p.Name };
-            var crossJoinResult = crossJoinQuery
-                .AsAsyncEnumerable()
-                .ConfigureAwait(false);
-            await foreach (var item in crossJoinResult)
+            var asyncCrossJoinQuery = crossJoinQuery.AsAsyncEnumerable();
+            await foreach (var item in asyncCrossJoinQuery.ConfigureAwait(false))
             {
                 PrintLine($"  {item}");
             }
@@ -49,10 +45,8 @@ namespace Client
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
                 select new { c.Name, P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
-            var innerJoinResult = innerJoinQuery
-                .AsAsyncEnumerable()
-                .ConfigureAwait(false);
-            await foreach (var item in innerJoinResult)
+            var asyncInnerJoinQuery = innerJoinQuery.AsAsyncEnumerable();
+            await foreach (var item in asyncInnerJoinQuery.ConfigureAwait(false))
             {
                 PrintLine($"  {item}");
             }
@@ -62,10 +56,8 @@ namespace Client
                 from p in repo.Products
                 orderby p.Price descending
                 select p.Id;
-            var productIds = productIdsQuery
-                .AsAsyncEnumerable()
-                .ConfigureAwait(false);
-            await foreach (int id in productIds)
+            var asyncProductIdsQuery = productIdsQuery.AsAsyncEnumerable();
+            await foreach (int id in asyncProductIdsQuery.ConfigureAwait(false))
             {
                 PrintLine($"  {id}");
             }
@@ -85,10 +77,8 @@ namespace Client
                     Amount2 = new { Amount = g.Sum(x => x.i.Quantity * x.p.Price) },
                 };
 
-            var totalAmountByCategroyResult = totalAmountByCategoryQuery
-                .AsAsyncEnumerable()
-                .ConfigureAwait(false);
-            await foreach (var item in totalAmountByCategroyResult)
+            var asyncTotalAmountByCategoryQuery = totalAmountByCategoryQuery.AsAsyncEnumerable();
+            await foreach (var item in asyncTotalAmountByCategoryQuery.ConfigureAwait(false))
             {
                 PrintLine($"  {item}");
             }

@@ -14,7 +14,7 @@ namespace Remote.Linq.TestSupport
     using MethodInfo = System.Reflection.MethodInfo;
 
     /// <summary>
-    /// <see cref="TaskAsyncQueryProvider"/> mimics expression execution as like in a client-server-round-trip using remote linq,
+    /// <see cref="TaskAsyncQueryProvider"/> mimics asynchronous expression execution as in a client-server-round-trip using remote linq,
     /// allowing to wrap local test data in a <see cref="IAsyncRemoteQueryable{T}"/> type.
     /// </summary>
     internal sealed class TaskAsyncQueryProvider : IAsyncRemoteQueryProvider

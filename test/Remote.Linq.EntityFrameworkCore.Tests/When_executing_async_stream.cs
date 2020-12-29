@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NETCOREAPP
-
 namespace Remote.Linq.EntityFrameworkCore.Tests
 {
     using Remote.Linq.EntityFrameworkCore.Tests.Model;
@@ -12,6 +10,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
     using System.Security;
     using System.Threading.Tasks;
     using Xunit;
+    using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtensions;
 
     public class When_executing_async_stream : IDisposable
     {
@@ -41,6 +40,16 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
             }
 
             return list.ToArray();
+        }
+
+        [Fact]
+        public async Task Should_not_evaluate_ef_functions_prematurely()
+        {
+            var asyncResultStream = _queryable
+                .Where(p => DbFunctionsExtensions.Like(null, p.Value, "%e")) // EF.Functions.Like(<property>, <pattern>)
+                .AsAsyncEnumerable();
+            var result = await ToArrayAsync(asyncResultStream).ConfigureAwait(false);
+            result.Length.ShouldBe(2);
         }
 
         [Fact]
@@ -79,10 +88,8 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         [Fact]
         public void Should_throw_for_scalar_query_execution()
         {
-            var ex = Should.Throw<InvalidOperationException>(() => _queryable.SingleOrDefault());
+            var ex = Should.Throw<NotSupportedException>(() => _queryable.SingleOrDefault());
             ex.Message.ShouldBe("Async remote stream must be executed as IAsyncEnumerable<T>. The AsAsyncEnumerable() extension method may be used.");
         }
     }
 }
-
-#endif // NETCOREAPP

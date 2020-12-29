@@ -13,11 +13,13 @@ namespace Remote.Linq
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class AsyncQueryableExtensions
     {
-        private static InvalidOperationException NotAsyncRemoteQueryProviderException
-            => new InvalidOperationException($"The provider for the source IQueryable doesn't implement {nameof(IAsyncRemoteQueryProvider)}. Only providers implementing {typeof(IAsyncRemoteQueryProvider).FullName} can be used for Remote Linq asynchronous operations.");
+        private static NotSupportedException NotAsyncRemoteQueryProviderException
+            => new NotSupportedException($"The provider for the source IQueryable doesn't implement {nameof(IAsyncRemoteQueryProvider)}. " +
+                $"Only providers implementing {typeof(IAsyncRemoteQueryProvider).FullName} can be used for Remote Linq asynchronous operations.");
 
-        private static InvalidOperationException NotAsyncRemoteStreamProviderException
-            => new InvalidOperationException($"The provider for the source IQueryable doesn't implement {nameof(IAsyncRemoteStreamProvider)}. Only providers implementing {typeof(IAsyncRemoteStreamProvider).FullName} can be used for Remote Linq's {nameof(AsAsyncEnumerable)} operation.");
+        private static NotSupportedException NotAsyncRemoteStreamProviderException
+            => new NotSupportedException($"The provider for the source IQueryable doesn't implement {nameof(IAsyncRemoteStreamProvider)}. " +
+                $"Only providers implementing {typeof(IAsyncRemoteStreamProvider).FullName} can be used for Remote Linq's {nameof(AsAsyncEnumerable)} operation.");
 
         public static Task<TSource> AggregateAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, TSource, TSource>> func, CancellationToken cancellation = default)
             => ExecuteAsync<TSource, TSource>(MethodInfos.Queryable.Aggregate, source, func, cancellation);
@@ -342,6 +344,15 @@ namespace Remote.Linq
                 var methodCallExpression = Expression.Call(null, method, arguments);
 
                 return await asyncQueryableProvider.ExecuteAsync<TResult>(methodCallExpression, cancellation).ConfigureAwait(false);
+            }
+
+            if (source.Provider is IAsyncRemoteStreamProvider)
+            {
+                throw new NotSupportedException(
+                    "Async remote stream cannot support the operation invoked. " +
+                    "Consider using Remote Linq extensions for 'Interactive Extensions (Ix.NET)' " +
+                    "or enumerate the stream e.g. by calling AsAsyncEnumerable().",
+                    NotAsyncRemoteQueryProviderException);
             }
 
             throw NotAsyncRemoteQueryProviderException;

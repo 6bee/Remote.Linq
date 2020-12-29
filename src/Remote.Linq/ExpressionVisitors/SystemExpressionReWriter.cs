@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.Dynamic;
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
@@ -251,12 +252,12 @@ namespace Remote.Linq.ExpressionVisitors
                             propertyName = (string)value;
                         }
 
-                        if (propertyName != null)
+                        if (propertyName is not null)
                         {
                             var instance = Visit(node.Object);
                             var propertyInfo = node.Object.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
-                            if (propertyInfo != null)
+                            if (propertyInfo is not null)
                             {
                                 return Expression.MakeMemberAccess(instance, propertyInfo);
                             }

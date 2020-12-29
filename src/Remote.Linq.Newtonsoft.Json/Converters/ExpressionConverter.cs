@@ -46,8 +46,8 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
                 writer.CheckNotNull(nameof(writer)).WritePropertyName(nameof(ConstantExpression.Type));
                 serializer.CheckNotNull(nameof(serializer)).Serialize(writer, constantExpression.Type);
 
-                var type = constantExpression.Type?.Type;
-                if (constantExpression.Value != null)
+                var type = constantExpression.Type?.ToType();
+                if (constantExpression.Value is not null)
                 {
                     var valueType = constantExpression.Value.GetType();
                     if (valueType != type)

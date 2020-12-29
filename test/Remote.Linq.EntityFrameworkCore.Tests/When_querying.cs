@@ -8,6 +8,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
+    using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtensions;
 
     public sealed class When_querying : IDisposable
     {
@@ -26,6 +27,16 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         }
 
         public void Dispose() => _context.Dispose();
+
+        [Fact]
+        public async Task Should_not_evaluate_ef_functions_prematurely()
+        {
+            var result = await _queryable
+                .Where(p => DbFunctionsExtensions.Like(null, p.Value, "%e")) // EF.Functions.Like(<property>, <pattern>)
+                .ToListAsync()
+                .ConfigureAwait(false);
+            result.Count.ShouldBe(2);
+        }
 
         [Fact]
         public void Should_query_single_with_predicate()

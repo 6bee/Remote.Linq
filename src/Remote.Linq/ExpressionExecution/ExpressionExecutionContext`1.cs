@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Remote.Linq.Expressions;
+    using System.Linq;
 
     public class ExpressionExecutionContext<TDataTranferObject> : ExpressionExecutionDecoratorBase<TDataTranferObject>
     {
@@ -13,7 +14,7 @@ namespace Remote.Linq.ExpressionExecution
         {
         }
 
-        public ExpressionExecutionContext(ExpressionExecutor<TDataTranferObject> parent, Expression expression)
+        public ExpressionExecutionContext(ExpressionExecutor<IQueryable, TDataTranferObject> parent, Expression expression)
             : this((IExpressionExecutionDecorator<TDataTranferObject>)parent, expression)
         {
         }

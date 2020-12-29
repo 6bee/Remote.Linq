@@ -3,28 +3,29 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.Dynamic;
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
     using System.Linq;
+    using System.Threading;
 
     public static class QueryableResourceVisitor
     {
-        internal static T ReplaceResourceDescriptorsByQueryable<T>(T expression, Func<Type, IQueryable> provider, ITypeResolver? typeResolver)
-            where T : Expression
-            => (T)new ResourceDescriptorVisitor(provider, typeResolver).Run(expression);
+        internal static TExpression ReplaceResourceDescriptorsByQueryable<TExpression, TQueryable>(TExpression expression, Func<Type, TQueryable> provider, ITypeResolver? typeResolver)
+            where TExpression : Expression
+            => (TExpression)new ResourceDescriptorVisitor<TQueryable>(provider, typeResolver).Run(expression);
 
         internal static Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider? typeInfoProvider)
             => new QueryableVisitor(typeInfoProvider).Run(expression);
 
-        protected class ResourceDescriptorVisitor : RemoteExpressionVisitorBase
+        protected class ResourceDescriptorVisitor<TQueryable> : RemoteExpressionVisitorBase
         {
             private readonly ITypeResolver _typeResolver;
-            private readonly Func<Type, IQueryable> _provider;
+            private readonly Func<Type, TQueryable> _provider;
 
-            internal protected ResourceDescriptorVisitor(Func<Type, IQueryable> provider, ITypeResolver? typeResolver)
+            internal protected ResourceDescriptorVisitor(Func<Type, TQueryable> provider, ITypeResolver? typeResolver)
             {
                 _provider = provider;
                 _typeResolver = typeResolver ?? TypeResolver.Instance;
@@ -47,10 +48,15 @@ namespace Remote.Linq.ExpressionVisitors
 #pragma warning restore CA1062 // Validate arguments of public methods
                 }
 
+                if (TryResolveSubstitutedValue(value, out var substitutedValue))
+                {
+                    return new ConstantExpression(substitutedValue, node.Type);
+                }
+
                 return base.VisitConstant(node);
             }
 
-            private bool TryGetQueryableByQueryableResourceDescriptor(object? value, out IQueryable? queryable)
+            private bool TryGetQueryableByQueryableResourceDescriptor(object? value, out TQueryable? queryable)
             {
                 if (value is QueryableResourceDescriptor queryableResourceDescriptor)
                 {
@@ -59,7 +65,7 @@ namespace Remote.Linq.ExpressionVisitors
                     return true;
                 }
 
-                queryable = null;
+                queryable = default;
                 return false;
             }
 
@@ -88,6 +94,23 @@ namespace Remote.Linq.ExpressionVisitors
                 newConstantQueryArgument = null;
                 return false;
             }
+
+            private bool TryResolveSubstitutedValue(object? value, out object? resubstitutionValue)
+            {
+                if (value is SubstitutionValue substitutionValue)
+                {
+                    var type = substitutionValue.Type.ResolveType(_typeResolver);
+                    if (type == typeof(CancellationToken))
+                    {
+                        // TODO: should/can cancellation token be retrieved from context?
+                        resubstitutionValue = CancellationToken.None;
+                        return true;
+                    }
+                }
+
+                resubstitutionValue = null;
+                return false;
+            }
         }
 
         protected class QueryableVisitor : RemoteExpressionVisitorBase
@@ -105,7 +128,7 @@ namespace Remote.Linq.ExpressionVisitors
             protected override ConstantExpression VisitConstant(ConstantExpression node)
             {
                 var resourceType = node.CheckNotNull(nameof(node)).Value.AsQueryableResourceTypeOrNull();
-                if (resourceType != null)
+                if (resourceType is not null)
                 {
                     var typeInfo = _typeInfoProvider.GetTypeInfo(resourceType);
                     var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
@@ -119,7 +142,7 @@ namespace Remote.Linq.ExpressionVisitors
                     foreach (var property in properties)
                     {
                         var valueResourceType = property.Value.AsQueryableResourceTypeOrNull();
-                        if (valueResourceType != null)
+                        if (valueResourceType is not null)
                         {
                             var typeInfo = _typeInfoProvider.GetTypeInfo(valueResourceType);
                             var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
@@ -128,6 +151,12 @@ namespace Remote.Linq.ExpressionVisitors
                     }
 
                     return new ConstantExpression(newConstantQueryArgument, node.Type);
+                }
+
+                if (node.Value is CancellationToken)
+                {
+                    var substitutionValue = new SubstitutionValue(node.Type);
+                    return new ConstantExpression(substitutionValue, node.Type);
                 }
 
                 return base.VisitConstant(node);

@@ -2,8 +2,8 @@
 
 namespace Remote.Linq.EntityFramework.ExpressionExecution
 {
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using Remote.Linq.EntityFramework.ExpressionVisitors;
     using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
@@ -15,7 +15,7 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
     using System.Threading;
     using System.Threading.Tasks;
 
-    public abstract class EntityFrameworkExpressionExecutor<TDataTranferObject> : AsyncExpressionExecutor<TDataTranferObject>
+    public abstract class EntityFrameworkExpressionExecutor<TDataTranferObject> : AsyncExpressionExecutor<IQueryable, TDataTranferObject>
     {
         [SecuritySafeCritical]
         protected EntityFrameworkExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)

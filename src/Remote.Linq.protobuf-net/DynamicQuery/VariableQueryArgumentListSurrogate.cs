@@ -24,7 +24,7 @@ namespace Remote.Linq.ProtoBuf.DynamicQuery
             : new VariableQueryArgumentListSurrogate
             {
                 ElementType = source.ElementType,
-                Values = Values.Wrap(source.Values, source.ElementType.Type),
+                Values = Values.Wrap(source.Values, source.ElementType.ToType()),
             };
 
         [ProtoConverter]

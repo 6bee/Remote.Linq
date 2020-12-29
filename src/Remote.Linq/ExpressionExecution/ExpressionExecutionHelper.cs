@@ -2,9 +2,11 @@
 
 namespace Remote.Linq.ExpressionExecution
 {
+    using System.ComponentModel;
     using System.Security;
 
-    internal static class ExpressionExecutionHelper
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static class ExpressionExecutionHelper
     {
         [SecuritySafeCritical]
         public static object? CompileAndInvokeExpression(this System.Linq.Expressions.Expression expression)

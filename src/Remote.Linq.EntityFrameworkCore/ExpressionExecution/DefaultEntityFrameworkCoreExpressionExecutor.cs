@@ -3,8 +3,8 @@
 namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 {
     using Aqua.Dynamic;
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using Microsoft.EntityFrameworkCore;
     using Remote.Linq.DynamicQuery;
     using System;

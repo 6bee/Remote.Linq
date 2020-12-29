@@ -6,7 +6,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
-    internal sealed class DynamicItemMapper : IQueryResultMapper<DynamicObject?>
+    public sealed class DynamicItemMapper : IQueryResultMapper<DynamicObject?>
     {
         private readonly IDynamicObjectMapper _mapper;
 

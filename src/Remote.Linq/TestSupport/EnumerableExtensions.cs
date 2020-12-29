@@ -15,9 +15,18 @@ namespace Remote.Linq.TestSupport
     {
         /// <summary>
         /// !!! For unit testing only !!! <br />
+        /// Creates an <see cref="IRemoteQueryable{T}"/> for given test data.
+        /// </summary>
+        public static IRemoteQueryable<T> AsRemoteQueryable<T>(this IEnumerable<T> testData)
+            => testData.CheckNotNull(nameof(testData)) is IRemoteQueryable<T> remoteQueryable
+            ? remoteQueryable
+            : testData.AsAsyncRemoteQueryable();
+
+        /// <summary>
+        /// !!! For unit testing only !!! <br />
         /// Creates an <see cref="IAsyncRemoteQueryable{T}"/> for given test data.
         /// </summary>
-        public static IAsyncRemoteQueryable<T> AsRemoteQueryable<T>(this IEnumerable<T> testData)
+        public static IAsyncRemoteQueryable<T> AsAsyncRemoteQueryable<T>(this IEnumerable<T> testData)
             => testData.CheckNotNull(nameof(testData)) is IAsyncRemoteQueryable<T> remoteQueryable
             ? remoteQueryable
             : new AsyncRemoteQueryable<T>(new TaskAsyncQueryProvider(), testData.AsQueryable().Expression);
@@ -33,26 +42,21 @@ namespace Remote.Linq.TestSupport
                 return asyncRemoteStream;
             }
 
-            var provider = CreateAsyncRemoteSreamProviderWithTestData<T, object?>(testData);
-            return (IAsyncRemoteStreamQueryable<T>)Remote.Linq.RemoteQueryable.Factory.CreateQueryable<T>(provider);
-        }
-
-        private static Func<Expression, IAsyncEnumerable<TResult>> CreateAsyncRemoteSreamProviderWithTestData<TData, TResult>(IEnumerable<TData> items)
-            where TData : TResult
-        {
-            return expression =>
+            Func<Expression, IAsyncEnumerable<object?>> provider = (Expression expression) =>
             {
-                var result = expression.Execute<IEnumerable<TData>>(_ => items.AsQueryable());
+                var result = expression.Execute<IEnumerable<T>>(_ => testData.AsQueryable());
                 return CreateAsyncStream(result);
             };
 
-            static async IAsyncEnumerable<TResult> CreateAsyncStream(IEnumerable<TData> source)
+            static async IAsyncEnumerable<object?> CreateAsyncStream(IEnumerable<T> source)
             {
                 foreach (var item in source)
                 {
-                    yield return await new ValueTask<TResult>(item).ConfigureAwait(false);
+                    yield return await new ValueTask<object?>(item).ConfigureAwait(false);
                 }
             }
+
+            return (IAsyncRemoteStreamQueryable<T>)Remote.Linq.RemoteQueryable.Factory.CreateQueryable<T>(provider);
         }
     }
 }
