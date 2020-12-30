@@ -24,7 +24,10 @@ build_script:
   - dotnet build Remote.Linq.Samples.sln
 
 test_script:
-  - dotnet test Remote.Linq.sln --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+  - dotnet test test/Remote.Linq.Tests                     --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+  - dotnet test test/Remote.Linq.Async.Queryable.Tests     --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+  - dotnet test test/Remote.Linq.EntityFramework.Tests     --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+  - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests --collect:"XPlat Code Coverage" --settings coverlet.runsettings
 
 after_test:
   - codecov -f **\coverage.cobertura.xml
