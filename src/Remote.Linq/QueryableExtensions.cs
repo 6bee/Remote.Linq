@@ -2,8 +2,6 @@
 
 namespace Remote.Linq
 {
-    using Aqua.Dynamic;
-    using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
     using System;
@@ -12,19 +10,12 @@ namespace Remote.Linq
     using System.Linq;
     using System.Linq.Expressions;
     using MethodInfo = System.Reflection.MethodInfo;
+    using RemoteLinq = Remote.Linq.Expressions;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class QueryableExtensions
     {
-        private static readonly Func<Expressions.LambdaExpression, Expressions.LambdaExpression> _defaultExpressionVisitor = RemoteExpressionReWriter.ReplaceNonGenericQueryArgumentsByGenericArguments;
-
-        [Obsolete("Use Remote.Linq.RemoteQueryable.Factory.CreateQueryable() to create remote queryable.", true)]
-        public static IQueryable<T> AsQueryable<T>(this IQueryable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null)
-            => throw new NotImplementedException();
-
-        [Obsolete("Use Remote.Linq.RemoteQueryable.Factory.CreateQueryable() to create remote queryable.", true)]
-        public static IQueryable AsQueryable(this IQueryable resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null)
-            => throw new NotImplementedException();
+        private static readonly Func<RemoteLinq.LambdaExpression, RemoteLinq.LambdaExpression> _defaultExpressionVisitor = RemoteExpressionReWriter.ReplaceNonGenericQueryArgumentsByGenericArguments;
 
         /// <summary>
         /// Execute the <see cref="IQueryable"/> and return the result without any extra tranformation.
@@ -52,21 +43,21 @@ namespace Remote.Linq
         }
 
         public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression)
-            => queryable.Sort<T>(lambdaExpression, MethodInfos.Queryable.OrderBy);
+            => queryable.Sort(lambdaExpression, MethodInfos.Queryable.OrderBy);
 
         public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression)
-            => queryable.Sort<T>(lambdaExpression, MethodInfos.Queryable.OrderByDescending);
+            => queryable.Sort(lambdaExpression, MethodInfos.Queryable.OrderByDescending);
 
         public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> queryable, LambdaExpression lambdaExpression)
-            => queryable.Sort<T>(lambdaExpression, MethodInfos.Queryable.ThenBy);
+            => queryable.Sort(lambdaExpression, MethodInfos.Queryable.ThenBy);
 
         public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> queryable, LambdaExpression lambdaExpression)
-            => queryable.Sort<T>(lambdaExpression, MethodInfos.Queryable.ThenByDescending);
+            => queryable.Sort(lambdaExpression, MethodInfos.Queryable.ThenByDescending);
 
         /// <summary>
         /// Applies this query instance to a queryable.
         /// </summary>
-        public static IQueryable<T> ApplyQuery<T>(this IQueryable<T> queryable, IQuery<T> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor)
+        public static IQueryable<T> ApplyQuery<T>(this IQueryable<T> queryable, IQuery<T> query, Func<RemoteLinq.LambdaExpression, RemoteLinq.LambdaExpression>? expressionVisitor)
         {
             var visitor = expressionVisitor ?? _defaultExpressionVisitor;
             return queryable
@@ -78,17 +69,17 @@ namespace Remote.Linq
         /// <summary>
         /// Applies this query instance to a queryable.
         /// </summary>
-        public static IQueryable<T> ApplyQuery<T>(this IQueryable<T> queryable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor)
+        public static IQueryable<T> ApplyQuery<T>(this IQueryable<T> queryable, IQuery query, Func<RemoteLinq.LambdaExpression, RemoteLinq.LambdaExpression>? expressionVisitor)
         {
             var q = query.ToGenericQuery<T>();
             return queryable.ApplyQuery(q, expressionVisitor ?? _defaultExpressionVisitor);
         }
 
-        private static IQueryable<T> ApplyFilters<T>(this IQueryable<T> queriable, IQuery<T> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor)
+        private static IQueryable<T> ApplyFilters<T>(this IQueryable<T> queriable, IQuery<T> query, Func<RemoteLinq.LambdaExpression, RemoteLinq.LambdaExpression> expressionVisitor)
         {
             queriable.CheckNotNull(nameof(queriable));
             query.CheckNotNull(nameof(query));
-            foreach (var filter in query.FilterExpressions ?? Enumerable.Empty<Expressions.LambdaExpression>())
+            foreach (var filter in query.FilterExpressions ?? Enumerable.Empty<RemoteLinq.LambdaExpression>())
             {
                 var predicate = expressionVisitor(filter).ToLinqExpression<T, bool>();
                 queriable = queriable.Where(predicate);
@@ -97,18 +88,18 @@ namespace Remote.Linq
             return queriable;
         }
 
-        private static IQueryable<T> ApplySorting<T>(this IQueryable<T> queriable, IQuery<T> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression> expressionVisitor)
+        private static IQueryable<T> ApplySorting<T>(this IQueryable<T> queriable, IQuery<T> query, Func<RemoteLinq.LambdaExpression, RemoteLinq.LambdaExpression> expressionVisitor)
         {
             IOrderedQueryable<T>? orderedQueriable = null;
-            foreach (var sort in query.SortExpressions ?? Enumerable.Empty<Expressions.SortExpression>())
+            foreach (var sort in query.SortExpressions ?? Enumerable.Empty<RemoteLinq.SortExpression>())
             {
                 var exp = expressionVisitor(sort.Operand).ToLinqExpression();
                 if (orderedQueriable is null)
                 {
                     orderedQueriable = sort.SortDirection switch
                     {
-                        Expressions.SortDirection.Ascending => queriable.OrderBy(exp),
-                        Expressions.SortDirection.Descending => queriable.OrderByDescending(exp),
+                        RemoteLinq.SortDirection.Ascending => queriable.OrderBy(exp),
+                        RemoteLinq.SortDirection.Descending => queriable.OrderByDescending(exp),
                         _ => throw new RemoteLinqException("not reachable code"),
                     };
                 }
@@ -116,8 +107,8 @@ namespace Remote.Linq
                 {
                     orderedQueriable = sort.SortDirection switch
                     {
-                        Expressions.SortDirection.Ascending => orderedQueriable.ThenBy(exp),
-                        Expressions.SortDirection.Descending => orderedQueriable.ThenByDescending(exp),
+                        RemoteLinq.SortDirection.Ascending => orderedQueriable.ThenBy(exp),
+                        RemoteLinq.SortDirection.Descending => orderedQueriable.ThenByDescending(exp),
                         _ => throw new RemoteLinqException("not reachable code"),
                     };
                 }
