@@ -45,7 +45,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif // NETFRAMEWORK
 
-#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_GotoAndLabelExpressions
         {
             public ProtobufNetSerializer()
@@ -53,7 +52,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif // NETCOREAPP
 
         public class XmlSerializer : When_using_GotoAndLabelExpressions
         {

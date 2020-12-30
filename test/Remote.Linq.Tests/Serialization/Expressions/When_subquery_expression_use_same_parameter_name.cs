@@ -49,7 +49,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif // NETFRAMEWORK
 
-#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_LoopExpressions
         {
             public ProtobufNetSerializer()
@@ -57,7 +56,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif // NETCOREAPP
 
         public class XmlSerializer : When_subquery_expression_use_same_parameter_name
         {

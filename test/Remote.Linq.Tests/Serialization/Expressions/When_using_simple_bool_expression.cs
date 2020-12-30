@@ -42,7 +42,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 #endif // NETFRAMEWORK
 
-#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_simple_bool_expression
         {
             public ProtobufNetSerializer()
@@ -50,7 +49,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
-#endif // NETCOREAPP
 
         public class XmlSerializer : When_using_simple_bool_expression
         {

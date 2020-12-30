@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NETCOREAPP
-
 namespace Remote.Linq.Tests.ProtoBuf
 {
     using global::ProtoBuf;
@@ -10,6 +8,7 @@ namespace Remote.Linq.Tests.ProtoBuf
     using Shouldly;
     using System;
     using System.IO;
+    using System.Reflection;
     using Xunit;
     using static Remote.Linq.Tests.Serialization.ProtobufNetSerializationHelper;
 
@@ -21,7 +20,7 @@ namespace Remote.Linq.Tests.ProtoBuf
         [Fact]
         public void When_serializing_method_call_expression_with_parameter_and_variable_argument()
         {
-            var m = typeof(Math).GetMethod(nameof(Math.Pow), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            var m = typeof(Math).GetMethod(nameof(Math.Pow), BindingFlags.Public | BindingFlags.Static);
             var v = System.Linq.Expressions.Expression.Constant(new VariableQueryArgument(2.0, typeof(double)));
             var b = System.Linq.Expressions.Expression.Convert(
                 System.Linq.Expressions.Expression.MakeMemberAccess(v, typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value))),
@@ -49,5 +48,3 @@ namespace Remote.Linq.Tests.ProtoBuf
         }
     }
 }
-
-#endif // NETCOREAPP

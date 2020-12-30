@@ -43,7 +43,6 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         }
 #endif // NETFRAMEWORK
 
-#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_local_variable_query_argument_list
         {
             public ProtobufNetSerializer()
@@ -51,7 +50,6 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             {
             }
         }
-#endif // NETCOREAPP
 
         public class XmlSerializer : When_using_local_variable_query_argument_list
         {

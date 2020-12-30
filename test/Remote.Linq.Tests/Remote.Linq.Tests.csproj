@@ -8,9 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Remote.Linq\Remote.Linq.csproj" />
     <ProjectReference Include="..\..\src\Remote.Linq.Newtonsoft.Json\Remote.Linq.Newtonsoft.Json.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(DefineConstants.Contains('NETCOREAPP'))">
     <ProjectReference Include="..\..\src\Remote.Linq.protobuf-net\Remote.Linq.protobuf-net.csproj" />
   </ItemGroup>
 
