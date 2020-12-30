@@ -15,7 +15,7 @@ namespace Remote.Linq.Tests.ProtoBuf
     /// <summary>
     /// Rather than actual tests, this class is a documentation of know limitations to <i>Remote.Linq</i>'s support for <i>protobuf-net</i>.
     /// </summary>
-    public class Issues_arise
+    public class Known_issues_arise
     {
         [Fact]
         public void When_serializing_method_call_expression_with_parameter_and_variable_argument()
