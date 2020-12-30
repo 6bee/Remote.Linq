@@ -63,7 +63,7 @@ namespace Common
         public static async Task<T> ReadAsync<T>(this Stream stream)
         {
             var typeInfo = await ReadInternalAsync<TypeInfo>(stream).ConfigureAwait(false);
-            var type = typeInfo.Type;
+            var type = typeInfo.ToType();
 
             T obj = await ReadInternalAsync<T>(stream, type).ConfigureAwait(false);
             return obj;

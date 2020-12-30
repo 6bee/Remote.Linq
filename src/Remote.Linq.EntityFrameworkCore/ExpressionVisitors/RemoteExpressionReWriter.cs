@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
 {
+    using Microsoft.EntityFrameworkCore;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
@@ -12,9 +13,9 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class RemoteExpressionReWriter
     {
-        private static readonly System.Reflection.MethodInfo QueryableIncludeMethod = typeof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions)
+        private static readonly System.Reflection.MethodInfo QueryableIncludeMethod = typeof(EntityFrameworkQueryableExtensions)
             .GetMethods()
-            .Where(x => string.Equals(x.Name, nameof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.Include), StringComparison.Ordinal))
+            .Where(x => string.Equals(x.Name, nameof(EntityFrameworkQueryableExtensions.Include), StringComparison.Ordinal))
             .Single(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1);
 
         /// <summary>
@@ -32,19 +33,16 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
                 if (node.Instance is null &&
-                    string.Equals(node.Method?.Name, nameof(QueryFunctions.Include), StringComparison.Ordinal) &&
                     node.Method?.DeclaringType?.ToType() == typeof(QueryFunctions) &&
+                    string.Equals(node.Method?.Name, nameof(QueryFunctions.Include), StringComparison.Ordinal) &&
                     node.Method?.GenericArgumentTypes?.Count == 1 &&
                     node.Arguments?.Count == 2)
                 {
                     var elementType = node.Method.GenericArgumentTypes.Single().ToType();
 
-                    var queryableExpression = node.Arguments[0];
-                    var pathExpression = node.Arguments[1];
-
                     var efIncludeMethod = QueryableIncludeMethod.MakeGenericMethod(elementType);
 
-                    var callExpression = new MethodCallExpression(null, efIncludeMethod, new[] { queryableExpression, pathExpression });
+                    var callExpression = new MethodCallExpression(null, efIncludeMethod, node.Arguments);
                     node = callExpression;
                 }
 

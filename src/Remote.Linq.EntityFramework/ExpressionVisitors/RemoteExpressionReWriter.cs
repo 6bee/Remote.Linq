@@ -32,19 +32,16 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
                 if (node.Instance is null &&
-                    string.Equals(node.Method?.Name, nameof(QueryFunctions.Include), StringComparison.Ordinal) &&
                     node.Method?.DeclaringType?.ToType() == typeof(QueryFunctions) &&
+                    string.Equals(node.Method?.Name, nameof(QueryFunctions.Include), StringComparison.Ordinal) &&
                     node.Method?.GenericArgumentTypes?.Count == 1 &&
                     node.Arguments?.Count == 2)
                 {
                     var elementType = node.Method.GenericArgumentTypes.Single().ToType();
 
-                    var queryableExpression = node.Arguments[0];
-                    var pathExpression = node.Arguments[1];
-
                     var efIncludeMethod = QueryableIncludeMethod.MakeGenericMethod(elementType);
 
-                    var callExpression = new MethodCallExpression(null, efIncludeMethod, new[] { queryableExpression, pathExpression });
+                    var callExpression = new MethodCallExpression(null, efIncludeMethod, node.Arguments);
                     node = callExpression;
                 }
 

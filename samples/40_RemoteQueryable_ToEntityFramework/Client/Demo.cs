@@ -22,7 +22,6 @@ namespace Client
             using RemoteRepository repo = _repoProvider();
 
             PrintHeader("GET ALL PRODUCTS:");
-            var xl = repo.Products.ToArray();
             var list = await repo.Products
                 .ToListAsync()
                 .ConfigureAwait(false);
@@ -89,7 +88,7 @@ namespace Client
 
             PrintHeader("GET ALL PRODUCTS AND RELATED PRODUCTS OF CORRESPONDING MARKETS:");
             var productMarkets = await repo.Products
-                .Include(x => x.Markets.Select(m => m.Products))
+                .Include(x => x.Markets).ThenInclude(x => x.Products)
                 .ToListAsync()
                 .ConfigureAwait(false);
             foreach (var item in productMarkets)

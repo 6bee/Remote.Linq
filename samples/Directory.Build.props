@@ -15,7 +15,6 @@
   <PropertyGroup>
     <RemoteLinqVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</RemoteLinqVersion>
     <RemoteLinqVersion Condition="'$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</RemoteLinqVersion>
-    <RemoteLinqVersion>6.3.0-alpha-028</RemoteLinqVersion>
     <Nullable>disable</Nullable>
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>    
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\Style.Samples.ruleset</CodeAnalysisRuleSet>    
