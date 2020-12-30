@@ -4,7 +4,7 @@
     <MajorVersion>6</MajorVersion>
     <MinorVersion>3</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-100</PreReleaseLabel>
+    <PreReleaseLabel>beta-001</PreReleaseLabel>
 
     <AquaCoreVersion>4.6.4</AquaCoreVersion>
   </PropertyGroup>
