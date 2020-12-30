@@ -2,7 +2,8 @@
 <RunSettings>
   <RunConfiguration>
     <MaxCpuCount>0</MaxCpuCount>
-	<ResultsDirectory>TestResults</ResultsDirectory>
+    <ResultsDirectory>TestResults</ResultsDirectory>
+    <DisableAppDomain>true</DisableAppDomain>
   </RunConfiguration>
   <DataCollectionRunSettings>
     <DataCollectors>
