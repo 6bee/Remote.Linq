@@ -191,7 +191,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             resourceExpression.ShouldBeOfType<ConstantExpression>()
                 .Value.ShouldBeOfType<QueryableResourceDescriptor>()
-                .Type.Type.ShouldBe(QueryResourceType);
+                .Type.ToType().ShouldBe(QueryResourceType);
         }
 
         [Fact]

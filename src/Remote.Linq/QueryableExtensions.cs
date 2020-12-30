@@ -144,10 +144,10 @@ namespace Remote.Linq
         public static IQueryable<T> Include<T>(this IQueryable<T> queryable, string navigationPropertyPath)
         {
             queryable.CheckNotNull(nameof(queryable));
-            path.CheckNotNull(nameof(path));
+            navigationPropertyPath.CheckNotNull(nameof(navigationPropertyPath));
             if (string.IsNullOrEmpty(navigationPropertyPath))
             {
-                throw new ArgumentException("Path must not be empty", nameof(path));
+                throw new ArgumentException("Navigation property path must not be empty", nameof(navigationPropertyPath));
             }
 
             if (queryable is IRemoteQueryable<T>)
@@ -166,11 +166,6 @@ namespace Remote.Linq
         public static IIncludableRemoteQueryable<T, TProperty> Include<T, TProperty>(this IQueryable<T> queryable, Expression<Func<T, TProperty>> navigationPropertyPath)
         {
             queryable.CheckNotNull(nameof(queryable));
-            path.CheckNotNull(nameof(path));
-            if (TryParsePath(path.Body, out var path1) && path1 is not null)
-            {
-                return queryable.Include(path1);
-            }
 
             if (queryable is IRemoteQueryable<T> remoteQueryable)
             {
@@ -198,7 +193,7 @@ namespace Remote.Linq
                 throw new ArgumentNullException(nameof(navigationPropertyPath));
             }
 
-            if (!TryParsePath(navigationPropertyPath.Body, out string path) || path is null)
+            if (!TryParsePath(navigationPropertyPath.Body, out var path) || path is null)
             {
                 throw new ArgumentException("Invalid include path expression", nameof(navigationPropertyPath));
             }

@@ -2,11 +2,7 @@
 
 namespace Remote.Linq.DynamicQuery
 {
-<<<<<<< HEAD
-    using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
-=======
->>>>>>> 6.3.x
     using System.Linq;
 
     /// <summary>
