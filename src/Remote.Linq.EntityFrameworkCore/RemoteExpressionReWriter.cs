@@ -2,9 +2,11 @@
 
 namespace Remote.Linq.EntityFrameworkCore
 {
-    using Aqua.TypeSystem;
+    using Microsoft.EntityFrameworkCore;
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
+    using System;
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
@@ -12,9 +14,9 @@ namespace Remote.Linq.EntityFrameworkCore
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class RemoteExpressionReWriter
     {
-        private static readonly System.Reflection.MethodInfo QueryableIncludeMethod = typeof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions)
+        private static readonly MethodInfo QueryableIncludeMethod = typeof(EntityFrameworkQueryableExtensions)
             .GetTypeInfo()
-            .GetDeclaredMethods(nameof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.Include))
+            .GetDeclaredMethods(nameof(EntityFrameworkQueryableExtensions.Include))
             .Single(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1);
 
         /// <summary>
@@ -25,29 +27,22 @@ namespace Remote.Linq.EntityFrameworkCore
 
         private sealed class ElementReplacer : RemoteExpressionVisitorBase
         {
-            internal ElementReplacer()
-            {
-            }
-
             internal Expression Run(Expression expression)
                 => Visit(expression);
 
             protected override Expression VisitMethodCall(MethodCallExpression expression)
             {
                 if (expression.Instance is null &&
-                    string.Equals(expression.Method.Name, nameof(Remote.Linq.DynamicQuery.QueryFunctions.Include), System.StringComparison.Ordinal) &&
-                    expression.Method.DeclaringType.Type == typeof(Remote.Linq.DynamicQuery.QueryFunctions) &&
+                    expression.Method.DeclaringType.Type == typeof(QueryFunctions) &&
+                    string.Equals(expression.Method.Name, nameof(QueryFunctions.Include), StringComparison.Ordinal) &&
                     expression.Method.GenericArgumentTypes.Count == 1 &&
                     expression.Arguments.Count == 2)
                 {
                     var elementType = expression.Method.GenericArgumentTypes.Single().Type;
 
-                    var queryableExpression = expression.Arguments[0];
-                    var pathExpression = expression.Arguments[1];
-
                     var efIncludeMethod = QueryableIncludeMethod.MakeGenericMethod(elementType);
 
-                    var callExpression = new MethodCallExpression(null, efIncludeMethod, new[] { queryableExpression, pathExpression });
+                    var callExpression = new MethodCallExpression(null, efIncludeMethod, expression.Arguments);
                     expression = callExpression;
                 }
 

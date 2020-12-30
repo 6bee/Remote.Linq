@@ -87,13 +87,13 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         [Fact]
         public void Should_throw_when_calling_ElementAt()
         {
-            Should.Throw<NotSupportedException>(() => _queryable.ElementAt(0));
+            Should.Throw<InvalidOperationException>(() => _queryable.ElementAt(0));
         }
 
         [Fact]
         public void Should_throw_when_calling_ElementAtOrDefault()
         {
-            Should.Throw<NotSupportedException>(() => _queryable.ElementAtOrDefault(0));
+            Should.Throw<InvalidOperationException>(() => _queryable.ElementAtOrDefault(0));
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Remote.Linq
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
+    using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
@@ -153,84 +154,106 @@ namespace Remote.Linq
             return queriable;
         }
 
-        public static IQueryable<T> Include<T>(this IQueryable<T> queryable, string path)
+        public static IQueryable<T> Include<T>(this IQueryable<T> queryable, string navigationPropertyPath)
         {
             if (queryable is null)
             {
                 throw new ArgumentNullException(nameof(queryable));
             }
 
-            if (path is null)
+            if (navigationPropertyPath is null)
             {
-                throw new ArgumentNullException(nameof(path));
+                throw new ArgumentNullException(nameof(navigationPropertyPath));
             }
 
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(navigationPropertyPath))
             {
-                throw new ArgumentException("path must not be empty", nameof(path));
+                throw new ArgumentException("path must not be empty", nameof(navigationPropertyPath));
             }
 
             if (queryable is IRemoteQueryable<T>)
             {
                 var methodInfo = MethodInfos.QueryFuntion.Include.MakeGenericMethod(typeof(T));
                 var parameter1 = queryable.Expression;
-                var parameter2 = Expression.Constant(path);
+                var parameter2 = Expression.Constant(navigationPropertyPath);
                 var methodCallExpression = Expression.Call(methodInfo, parameter1, parameter2);
                 var newQueryable = queryable.Provider.CreateQuery<T>(methodCallExpression);
-                queryable = newQueryable;
+                return newQueryable;
             }
 
             return queryable;
         }
 
-        public static IQueryable<T> Include<T, TProperty>(this IQueryable<T> queryable, Expression<Func<T, TProperty>> path)
+        public static IIncludableRemoteQueryable<T, TProperty> Include<T, TProperty>(this IQueryable<T> queryable, Expression<Func<T, TProperty>> navigationPropertyPath)
         {
             if (queryable is null)
             {
                 throw new ArgumentNullException(nameof(queryable));
             }
 
-            if (path is null)
+            if (queryable is IRemoteQueryable<T> remoteQueryable)
             {
-                throw new ArgumentNullException(nameof(path));
+                return IncludeCore(remoteQueryable, navigationPropertyPath);
             }
 
-            if (!TryParsePath(path.Body, out string path1) || path1 is null)
+            throw new ArgumentException($"{nameof(Include)} is supported for IRemoteQueryable<> only.", nameof(queryable));
+        }
+
+        public static IIncludableRemoteQueryable<T, TProperty> ThenInclude<T, TPreviousProperty, TProperty>(this IIncludableRemoteQueryable<T, TPreviousProperty> queryable, Expression<Func<TPreviousProperty, TProperty>> navigationPropertyPath)
+            => IncludeCore(queryable, navigationPropertyPath);
+
+        public static IIncludableRemoteQueryable<T, TProperty> ThenInclude<T, TPreviousProperty, TProperty>(this IIncludableRemoteQueryable<T, IEnumerable<TPreviousProperty>> queryable, Expression<Func<TPreviousProperty, TProperty>> navigationPropertyPath)
+            => IncludeCore(queryable, navigationPropertyPath);
+
+        private static IIncludableRemoteQueryable<T, TNavigationProperty> IncludeCore<T, TNavigationSource, TNavigationProperty>(IRemoteQueryable<T> queryable, Expression<Func<TNavigationSource, TNavigationProperty>> navigationPropertyPath)
+        {
+            if (queryable is null)
             {
-                throw new ArgumentException("Invalid include path expression", nameof(path));
+                throw new ArgumentNullException(nameof(queryable));
             }
-            else
+
+            if (navigationPropertyPath is null)
             {
-                return queryable.Include<T>(path1);
+                throw new ArgumentNullException(nameof(navigationPropertyPath));
             }
+
+            if (!TryParsePath(navigationPropertyPath.Body, out string path) || path is null)
+            {
+                throw new ArgumentException("Invalid include path expression", nameof(navigationPropertyPath));
+            }
+
+            var queryableBase = queryable;
+            if (queryable is IStackedIncludableQueryable<T> preceding)
+            {
+                queryableBase = preceding.Parent;
+                path = $"{preceding.IncludePath}.{path}";
+            }
+
+            var includeExpresson = queryableBase.Include(path);
+            return new IncludableRemoteQueryable<T, TNavigationProperty>(queryable.Provider, includeExpresson.Expression, queryableBase, path);
         }
 
         private static bool TryParsePath(Expression expression, out string path)
         {
             path = null;
             var expression1 = RemoveConvert(expression);
-            var memberExpression = expression1 as MemberExpression;
-            var methodCallExpression = expression1 as MethodCallExpression;
 
-            if (memberExpression != null)
+            if (expression1 is MemberExpression memberExpression)
             {
                 var name = memberExpression.Member.Name;
-                string path1;
-                if (!TryParsePath(memberExpression.Expression, out path1))
+                if (!TryParsePath(memberExpression.Expression, out var path1))
                 {
                     return false;
                 }
 
                 path = path1 is null ? name : $"{path1}.{name}";
             }
-            else if (methodCallExpression != null)
+            else if (expression1 is MethodCallExpression methodCallExpression)
             {
-                string path1;
-                if (methodCallExpression.Method.Name == "Select" && methodCallExpression.Arguments.Count == 2 && (TryParsePath(methodCallExpression.Arguments[0], out path1) && path1 != null))
+                if (methodCallExpression.Method.Name == "Select" && methodCallExpression.Arguments.Count == 2 && (TryParsePath(methodCallExpression.Arguments[0], out var path1) && path1 != null))
                 {
                     var lambdaExpression = methodCallExpression.Arguments[1] as LambdaExpression;
-                    string path2;
-                    if (lambdaExpression != null && TryParsePath(lambdaExpression.Body, out path2) && path2 != null)
+                    if (lambdaExpression != null && TryParsePath(lambdaExpression.Body, out var path2) && path2 != null)
                     {
                         path = $"{path1}.{path2}";
                         return true;
