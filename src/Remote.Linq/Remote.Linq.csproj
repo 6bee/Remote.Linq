@@ -13,7 +13,6 @@
   <ItemGroup>
     <PackageReference Include="aqua-core" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
