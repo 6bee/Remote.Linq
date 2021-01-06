@@ -23,7 +23,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
                 Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return new DynamicObject[0];
+                    return Array.Empty<DynamicObject>();
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Parent>(dataProvider);
@@ -35,7 +35,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             protected override Expression Expression => _expression;
 
-            protected override string ExpectedIncludePath => "Children.Parent.Children.Parent";
+            protected override string[] ExpectedIncludePaths => new[] { "Children.Parent.Children.Parent" };
         }
 
         public class With_include_reference_collection : When_using_include
@@ -47,7 +47,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
                 Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return new DynamicObject[0];
+                    return Array.Empty<DynamicObject>();
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Parent>(dataProvider);
@@ -59,7 +59,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             protected override Expression Expression => _expression;
 
-            protected override string ExpectedIncludePath => "Children";
+            protected override string[] ExpectedIncludePaths => new[] { "Children" };
         }
 
         public class With_include_on_subtype : When_using_include
@@ -71,7 +71,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
                 Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return new DynamicObject[0];
+                    return Array.Empty<DynamicObject>();
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Parent>(dataProvider);
@@ -84,7 +84,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             protected override Expression Expression => _expression;
 
-            protected override string ExpectedIncludePath => "Parent";
+            protected override string[] ExpectedIncludePaths => new[] { "Parent" };
         }
 
         public class With_include_reference : When_using_include
@@ -96,7 +96,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
                 Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return new DynamicObject[0];
+                    return Array.Empty<DynamicObject>();
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Child>(dataProvider);
@@ -108,7 +108,35 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             protected override Expression Expression => _expression;
 
-            protected override string ExpectedIncludePath => "Parent";
+            protected override string[] ExpectedIncludePaths => new[] { "Parent" };
+
+            protected override Type QueryResourceType => typeof(Child);
+        }
+
+        public class With_multiple_include : When_using_include
+        {
+            private Expression _expression;
+
+            public With_multiple_include()
+            {
+                Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
+                {
+                    _expression = exp;
+                    return Array.Empty<DynamicObject>();
+                };
+
+                var queryable = RemoteQueryable.Factory.CreateQueryable<Child>(dataProvider);
+
+                queryable
+                    .Include(x => x.Parent).ThenInclude(x => x.Children)
+                    .Include(x => x.Siblings).ThenInclude(x => x.Siblings)
+                    .Include(x => x.Siblings).ThenInclude(x => x.Parent)
+                    .ToList();
+            }
+
+            protected override Expression Expression => _expression;
+
+            protected override string[] ExpectedIncludePaths => new[] { "Parent.Children", "Siblings.Siblings", "Siblings.Parent" };
 
             protected override Type QueryResourceType => typeof(Child);
         }
@@ -122,7 +150,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
                 Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return new DynamicObject[0];
+                    return Array.Empty<DynamicObject>();
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Parent>(dataProvider);
@@ -134,12 +162,14 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             protected override Expression Expression => _expression;
 
-            protected override string ExpectedIncludePath => "Children.Parent.Children.Parent";
+            protected override string[] ExpectedIncludePaths => new[] { "Children.Parent.Children.Parent" };
         }
 
         private class Child
         {
             public Parent Parent { get; set; }
+
+            public IEnumerable<Child> Siblings { get; set; }
         }
 
         private class Parent
@@ -149,7 +179,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
         protected abstract Expression Expression { get; }
 
-        protected abstract string ExpectedIncludePath { get; }
+        protected abstract string[] ExpectedIncludePaths { get; }
 
         protected virtual Type QueryResourceType => typeof(Parent);
 
@@ -197,9 +227,21 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         [Fact]
         public void Second_argument_should_be_constant_expression_with_navigation_property_name()
         {
-            var arg = ((MethodCallExpression)Expression).Arguments[1];
-            arg.NodeType.ShouldBe(ExpressionType.Constant);
-            arg.ShouldBeOfType<ConstantExpression>().Value.ShouldBe(ExpectedIncludePath);
+            var expectedIncludePaths = ExpectedIncludePaths.Reverse().ToArray();
+
+            void AssertIncludePath(MethodCallExpression expression, int index = 0)
+            {
+                if (expression.Arguments[0] is MethodCallExpression baseExpression && baseExpression.Method?.Name == "Include")
+                {
+                    AssertIncludePath(baseExpression, index + 1);
+                }
+
+                var arg = expression.Arguments[1];
+                arg.NodeType.ShouldBe(ExpressionType.Constant);
+                arg.ShouldBeOfType<ConstantExpression>().Value.ShouldBe(expectedIncludePaths[index]);
+            }
+
+            AssertIncludePath((MethodCallExpression)Expression);
         }
     }
 }
