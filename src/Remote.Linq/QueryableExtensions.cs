@@ -193,19 +193,19 @@ namespace Remote.Linq
 
             if (queryable is IRemoteQueryable<T> remoteQueryable)
             {
-                return IncludeCore(remoteQueryable, navigationPropertyPath);
+                return IncludeCore(remoteQueryable, navigationPropertyPath, false);
             }
 
             throw new ArgumentException($"{nameof(Include)} is supported for IRemoteQueryable<> only.", nameof(queryable));
         }
 
         public static IIncludableRemoteQueryable<T, TProperty> ThenInclude<T, TPreviousProperty, TProperty>(this IIncludableRemoteQueryable<T, TPreviousProperty> queryable, Expression<Func<TPreviousProperty, TProperty>> navigationPropertyPath)
-            => IncludeCore(queryable, navigationPropertyPath);
+            => IncludeCore(queryable, navigationPropertyPath, true);
 
         public static IIncludableRemoteQueryable<T, TProperty> ThenInclude<T, TPreviousProperty, TProperty>(this IIncludableRemoteQueryable<T, IEnumerable<TPreviousProperty>> queryable, Expression<Func<TPreviousProperty, TProperty>> navigationPropertyPath)
-            => IncludeCore(queryable, navigationPropertyPath);
+            => IncludeCore(queryable, navigationPropertyPath, true);
 
-        private static IIncludableRemoteQueryable<T, TNavigationProperty> IncludeCore<T, TNavigationSource, TNavigationProperty>(IRemoteQueryable<T> queryable, Expression<Func<TNavigationSource, TNavigationProperty>> navigationPropertyPath)
+        private static IIncludableRemoteQueryable<T, TNavigationProperty> IncludeCore<T, TNavigationSource, TNavigationProperty>(IRemoteQueryable<T> queryable, Expression<Func<TNavigationSource, TNavigationProperty>> navigationPropertyPath, bool isNestedStatement)
         {
             if (queryable is null)
             {
@@ -223,7 +223,7 @@ namespace Remote.Linq
             }
 
             var queryableBase = queryable;
-            if (queryable is IStackedIncludableQueryable<T> preceding)
+            if (isNestedStatement && queryable is IStackedIncludableQueryable<T> preceding)
             {
                 queryableBase = preceding.Parent;
                 path = $"{preceding.IncludePath}.{path}";
