@@ -9,6 +9,6 @@ namespace Remote.Linq.ExpressionExecution
     {
         System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation);
 
-        Task<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation);
+        ValueTask<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation);
     }
 }

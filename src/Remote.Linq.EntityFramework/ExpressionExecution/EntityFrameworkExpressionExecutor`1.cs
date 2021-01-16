@@ -49,11 +49,18 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected override async Task<object?> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+        protected override async ValueTask<object?> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
         {
             cancellation.ThrowIfCancellationRequested();
 
             var queryResult = expression.CheckNotNull(nameof(expression)).CompileAndInvokeExpression();
+
+            if (queryResult is not null && queryResult.GetType().Implements(typeof(ValueTask<>), out var genericArguments))
+            {
+                var m = typeof(ValueTask<>).MakeGenericType(genericArguments!).GetMethod(nameof(ValueTask<int>.AsTask));
+                queryResult = m.Invoke(queryResult, null);
+            }
+
             if (queryResult is Task task)
             {
                 if (!expression.Type.Implements(typeof(Task<>), out var resultType))
@@ -61,7 +68,6 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
                     resultType = task
                         .GetType()
                         .GetGenericArguments()
-                        .Where(x => x != typeof(CancellationToken))
                         .ToArray();
                 }
 
@@ -89,6 +95,8 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 
             return queryResult;
         }
+
+        private static Task<TResult> AsTask<TResult>(ValueTask<TResult> valueTask) => valueTask.AsTask();
 
         private static async Task<object?> GetTaskResultAsync(Task task, Type resultType)
         {

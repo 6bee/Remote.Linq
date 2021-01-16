@@ -40,10 +40,9 @@ namespace Remote.Linq.ExpressionExecution
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>
-        /// A task that represents the asynchronous operation.
-        /// The task result contains the mapped result of the query execution.
+        /// A <see cref="ValueTask{TDataTranferObject}"/> that represents the mapped result of the query execution.
         /// </returns>
-        protected async Task<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellation)
+        protected async ValueTask<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellation)
         {
             var preparedRemoteExpression = Prepare(expression);
             var linqExpression = Transform(preparedRemoteExpression);
@@ -58,13 +57,13 @@ namespace Remote.Linq.ExpressionExecution
         protected virtual System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
            => _parent.PrepareAsyncQuery(expression, cancellation);
 
-        protected virtual Task<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+        protected virtual ValueTask<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
             => _parent.ExecuteAsync(expression, cancellation);
 
         System.Linq.Expressions.Expression IAsyncExpressionExecutionDecorator<TDataTranferObject>.PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
             => PrepareAsyncQuery(expression, cancellation);
 
-        Task<object?> IAsyncExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+        ValueTask<object?> IAsyncExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
             => ExecuteAsync(expression, cancellation);
     }
 }

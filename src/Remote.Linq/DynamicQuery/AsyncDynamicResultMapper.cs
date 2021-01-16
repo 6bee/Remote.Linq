@@ -18,8 +18,8 @@ namespace Remote.Linq.DynamicQuery
         }
 
 #nullable disable
-        public Task<TResult> MapResultAsync<TResult>(IEnumerable<DynamicObject> source, Expression expression, CancellationToken cancellation = default)
-            => Task.Run(() => DynamicResultMapper.MapToType<TResult>(source, _mapper, expression), cancellation);
+        public ValueTask<TResult> MapResultAsync<TResult>(IEnumerable<DynamicObject> source, Expression expression, CancellationToken cancellation = default)
+            => new ValueTask<TResult>(DynamicResultMapper.MapToType<TResult>(source, _mapper, expression));
 #nullable restore
     }
 }

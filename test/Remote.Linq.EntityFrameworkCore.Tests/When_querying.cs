@@ -62,7 +62,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         [Fact]
         public async Task Should_throw_when_calling_single_or_default_with_predicate_on_query_with_multiple_results_async()
         {
-            var ex = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("O"))).ConfigureAwait(false);
+            var ex = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("O")).AsTask()).ConfigureAwait(false);
             ex.Message.ShouldBe("Sequence contains more than one matching element");
         }
 
@@ -74,9 +74,9 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         }
 
         [Fact]
-        public void SingleAsync_with_predicate_should_faile_if_no_match()
+        public async Task SingleAsync_with_predicate_should_faile_if_no_match()
         {
-            var ex = Should.Throw<InvalidOperationException>(() => _queryable.SingleAsync(x => x.Value.ToUpper().Contains("no match")));
+            var ex = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.SingleAsync(x => x.Value.ToUpper().Contains("no match")).AsTask());
             ex.Message.ShouldBe("Sequence contains no matching element");
         }
 

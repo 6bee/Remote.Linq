@@ -16,11 +16,11 @@ namespace Remote.Linq.DynamicQuery
     {
         private readonly Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource>> _dataProvider;
         private readonly ITypeInfoProvider? _typeInfoProvider;
-        private readonly IQueryResultMapper<TSource> _resultMapper;
+        private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
 
         [SecuritySafeCritical]
-        public AsyncRemoteStreamProvider(Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource>> dataProvider, ITypeInfoProvider? typeInfoProvider, Func<Expression, bool>? canBeEvaluatedLocally, IQueryResultMapper<TSource> resultMapper)
+        public AsyncRemoteStreamProvider(Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource>> dataProvider, ITypeInfoProvider? typeInfoProvider, Func<Expression, bool>? canBeEvaluatedLocally, IAsyncQueryResultMapper<TSource> resultMapper)
         {
             _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
@@ -42,7 +42,7 @@ namespace Remote.Linq.DynamicQuery
             await foreach (var resultItem in asyncEnumerable.WithCancellation(cancellation))
             {
                 cancellation.ThrowIfCancellationRequested();
-                var result = _resultMapper.MapResult<TResult>(resultItem, expression);
+                var result = await _resultMapper.MapResultAsync<TResult>(resultItem, expression, cancellation).ConfigureAwait(false);
                 yield return result;
             }
         }

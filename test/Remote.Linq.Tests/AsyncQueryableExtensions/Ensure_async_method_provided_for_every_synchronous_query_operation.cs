@@ -55,7 +55,7 @@ namespace Remote.Linq.Tests.AsyncQueryableExtensions
                     .ToArray();
             }
 
-            var returnType = typeof(Task<>).MakeGenericType(method.ReturnType);
+            var returnType = typeof(ValueTask<>).MakeGenericType(method.ReturnType);
             matchingMethods = matchingMethods
                 .Where(x => x.ReturnType == returnType)
                 .ToArray();

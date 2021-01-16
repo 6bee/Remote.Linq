@@ -16,7 +16,7 @@ namespace Remote.Linq.DynamicQuery
 
         public new IAsyncRemoteQueryProvider Provider => (IAsyncRemoteQueryProvider)base.Provider;
 
-        public Task<IEnumerable<T>> ExecuteAsync(CancellationToken cancellation = default)
+        public ValueTask<IEnumerable<T>> ExecuteAsync(CancellationToken cancellation = default)
             => Provider.ExecuteAsync<IEnumerable<T>>(Expression, cancellation);
     }
 }

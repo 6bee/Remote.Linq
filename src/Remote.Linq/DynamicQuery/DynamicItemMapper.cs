@@ -3,10 +3,11 @@
 namespace Remote.Linq.DynamicQuery
 {
     using Aqua.Dynamic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
+    using System.Threading;
+    using System.Threading.Tasks;
 
-    public sealed class DynamicItemMapper : IQueryResultMapper<DynamicObject?>
+    public sealed class DynamicItemMapper : IAsyncQueryResultMapper<DynamicObject?>
     {
         private readonly IDynamicObjectMapper _mapper;
 
@@ -15,8 +16,9 @@ namespace Remote.Linq.DynamicQuery
             _mapper = mapper ?? new DynamicObjectMapper();
         }
 
-        [return: MaybeNull]
-        public TResult MapResult<TResult>(DynamicObject? source, Expression expression)
-            => source is null ? default : _mapper.Map<TResult>(source);
+        public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject? source, Expression expression, CancellationToken cancellationToken)
+#pragma warning disable CS8604 // Possible null reference argument.
+            => new ValueTask<TResult>(source is null ? default : _mapper.Map<TResult>(source));
+#pragma warning restore CS8604 // Possible null reference argument.
     }
 }

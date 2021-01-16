@@ -8,8 +8,9 @@ namespace Remote.Linq.DynamicQuery
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Expression = System.Linq.Expressions.Expression;
     using MethodInfo = System.Reflection.MethodInfo;
+    using RemoteLinq = Remote.Linq.Expressions;
+    using SystemLinq = System.Linq.Expressions;
 
     [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
     internal sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
@@ -18,12 +19,12 @@ namespace Remote.Linq.DynamicQuery
             .GetMethods()
             .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(Execute), StringComparison.Ordinal));
 
-        private readonly Func<Expressions.Expression, CancellationToken, Task<TSource>> _asyncDataProvider;
+        private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>> _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly ITypeInfoProvider? _typeInfoProvider;
-        private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
+        private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
 
-        internal AsyncRemoteQueryProvider(Func<Expressions.Expression, CancellationToken, Task<TSource>> asyncDataProvider, ITypeInfoProvider? typeInfoProvider, IAsyncQueryResultMapper<TSource> resultMapper, Func<Expression, bool>? canBeEvaluatedLocally)
+        internal AsyncRemoteQueryProvider(Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>> asyncDataProvider, ITypeInfoProvider? typeInfoProvider, IAsyncQueryResultMapper<TSource> resultMapper, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
         {
             _asyncDataProvider = asyncDataProvider.CheckNotNull(nameof(asyncDataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
@@ -31,9 +32,9 @@ namespace Remote.Linq.DynamicQuery
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
 
-        public IQueryable<TElement> CreateQuery<TElement>(Expression expression) => new AsyncRemoteQueryable<TElement>(this, expression);
+        public IQueryable<TElement> CreateQuery<TElement>(SystemLinq.Expression expression) => new AsyncRemoteQueryable<TElement>(this, expression);
 
-        public IQueryable CreateQuery(Expression expression)
+        public IQueryable CreateQuery(SystemLinq.Expression expression)
         {
             var elementType = TypeHelper.GetElementType(expression.CheckNotNull(nameof(expression)).Type)
                 ?? throw new RemoteLinqException($"Failed to get element type of {expression.Type}");
@@ -41,7 +42,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         [return: MaybeNull]
-        public TResult Execute<TResult>(Expression expression)
+        public TResult Execute<TResult>(SystemLinq.Expression expression)
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
@@ -60,7 +61,7 @@ namespace Remote.Linq.DynamicQuery
                 }
                 else
                 {
-                    var mappingTask = _resultMapper.MapResultAsync<TResult>(dataRecords, expression, CancellationToken.None);
+                    var mappingTask = _resultMapper.MapResultAsync<TResult>(dataRecords, expression, CancellationToken.None).AsTask();
                     result = mappingTask.Result;
                 }
             }
@@ -79,8 +80,7 @@ namespace Remote.Linq.DynamicQuery
             return result;
         }
 
-#nullable disable
-        public async Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation)
+        public async ValueTask<TResult> ExecuteAsync<TResult>(SystemLinq.Expression expression, CancellationToken cancellation)
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
@@ -92,8 +92,7 @@ namespace Remote.Linq.DynamicQuery
 
             return result;
         }
-#nullable restore
 
-        public object? Execute(Expression expression) => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
+        public object? Execute(SystemLinq.Expression expression) => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
     }
 }

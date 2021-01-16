@@ -16,7 +16,7 @@ namespace Client
     public partial class RemoteRepository : IRemoteRepository
     {
         private readonly TcpClient _tcpClient;
-        private readonly Func<Expression, Task<IEnumerable<DynamicObject>>> _asyncDataProvider;
+        private readonly Func<Expression, ValueTask<IEnumerable<DynamicObject>>> _asyncDataProvider;
 
         public RemoteRepository(string server, int port)
         {

@@ -34,8 +34,8 @@ namespace Remote.Linq.TestSupport
             => new AsyncRemoteQueryable<TElement>(this, expression);
 
 #nullable disable
-        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation)
-            => Task.FromResult(Execute<TResult>(expression));
+        public ValueTask<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation)
+            => new ValueTask<TResult>(Execute<TResult>(expression));
 #nullable restore
 
         public object Execute(Expression expression)

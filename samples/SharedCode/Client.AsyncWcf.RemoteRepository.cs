@@ -11,13 +11,12 @@ namespace Client
     using System.Collections.Generic;
     using System.Linq;
     using System.ServiceModel;
-    using System.Threading;
     using System.Threading.Tasks;
 
     public sealed class RemoteRepository : IRemoteRepository
     {
         private readonly ChannelFactory<IQueryService> _channelFactory;
-        private readonly Func<Expression, Task<IEnumerable<DynamicObject>>> _asyncDataProvider;
+        private readonly Func<Expression, ValueTask<IEnumerable<DynamicObject>>> _asyncDataProvider;
 
         public RemoteRepository(string uri)
         {

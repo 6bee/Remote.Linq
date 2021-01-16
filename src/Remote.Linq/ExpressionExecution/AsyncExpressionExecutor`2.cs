@@ -32,7 +32,7 @@ namespace Remote.Linq.ExpressionExecution
         /// A task that represents the asynchronous operation.
         /// The task result contains the mapped result of the query execution.
         /// </returns>
-        public async Task<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellation = default)
+        public async ValueTask<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellation = default)
         {
             var preparedRemoteExpression = Prepare(expression.CheckNotNull(nameof(expression)));
             var linqExpression = Transform(preparedRemoteExpression);
@@ -69,7 +69,7 @@ namespace Remote.Linq.ExpressionExecution
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected virtual async Task<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+        protected virtual async ValueTask<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
         {
             expression.CheckNotNull(nameof(expression));
             try
@@ -108,12 +108,12 @@ namespace Remote.Linq.ExpressionExecution
         /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
         /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected abstract Task<object?> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation);
+        protected abstract ValueTask<object?> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation);
 
         System.Linq.Expressions.Expression IAsyncExpressionExecutionDecorator<TDataTranferObject>.PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
             => PrepareAsyncQuery(expression, cancellation);
 
-        Task<object?> IAsyncExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+        ValueTask<object?> IAsyncExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
             => ExecuteAsync(expression, cancellation);
     }
 }

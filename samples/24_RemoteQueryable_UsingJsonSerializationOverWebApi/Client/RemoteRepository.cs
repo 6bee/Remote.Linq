@@ -26,7 +26,7 @@ namespace Client
         };
 
         private readonly HttpClient _httpClient;
-        private readonly Func<Expression, Task<IEnumerable<DynamicObject>>> _dataProvider;
+        private readonly Func<Expression, ValueTask<IEnumerable<DynamicObject>>> _dataProvider;
 
         public RemoteRepository(string server, int port)
         {

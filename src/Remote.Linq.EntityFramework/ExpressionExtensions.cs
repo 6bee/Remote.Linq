@@ -133,7 +133,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The mapped result of the query execution.</returns>
         [SecuritySafeCritical]
-        public static Task<IEnumerable<DynamicObject?>?> ExecuteWithEntityFrameworkAsync(this Expression expression, DbContext dbContext, CancellationToken cancellation = default, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        public static ValueTask<IEnumerable<DynamicObject?>?> ExecuteWithEntityFrameworkAsync(this Expression expression, DbContext dbContext, CancellationToken cancellation = default, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => new DefaultEntityFrameworkExpressionExecutor(dbContext, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsync(expression, cancellation);
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The mapped result of the query execution.</returns>
-        public static Task<IEnumerable<DynamicObject?>?> ExecuteWithEntityFrameworkAsync(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellation = default, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        public static ValueTask<IEnumerable<DynamicObject?>?> ExecuteWithEntityFrameworkAsync(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellation = default, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => new DefaultEntityFrameworkExpressionExecutor(queryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsync(expression, cancellation);
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The result of the query execution.</returns>
         [SecuritySafeCritical]
-        public static Task<TResult> ExecuteWithEntityFrameworkAsync<TResult>(this Expression expression, DbContext dbContext, CancellationToken cancellation = default, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        public static ValueTask<TResult> ExecuteWithEntityFrameworkAsync<TResult>(this Expression expression, DbContext dbContext, CancellationToken cancellation = default, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => new CastingEntityFrameworkExpressionExecutor<TResult>(dbContext, typeResolver, canBeEvaluatedLocally).ExecuteAsync(expression, cancellation);
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Remote.Linq.EntityFramework
         /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution in the database.</param>
         /// <returns>The result of the query execution.</returns>
-        public static Task<TResult> ExecuteWithEntityFrameworkAsync<TResult>(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellation = default, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        public static ValueTask<TResult> ExecuteWithEntityFrameworkAsync<TResult>(this Expression expression, Func<Type, IQueryable> queryableProvider, CancellationToken cancellation = default, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => new CastingEntityFrameworkExpressionExecutor<TResult>(queryableProvider, typeResolver, canBeEvaluatedLocally).ExecuteAsync(expression, cancellation);
     }
 }

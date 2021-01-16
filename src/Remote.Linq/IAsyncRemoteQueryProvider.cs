@@ -11,7 +11,7 @@ namespace Remote.Linq
         /// <summary>
         /// Executes the remote query represented by the specified expression tree.
         /// </summary>
-        /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous result of the remote query.</returns>
-        Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation);
+        /// <returns>A <see cref="ValueTask{TResult}"/> representing the asynchronous result of the remote query.</returns>
+        ValueTask<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation);
     }
 }

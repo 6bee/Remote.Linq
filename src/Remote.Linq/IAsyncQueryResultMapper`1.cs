@@ -8,6 +8,14 @@ namespace Remote.Linq
 
     public interface IAsyncQueryResultMapper<in TSource>
     {
-        Task<TResult> MapResultAsync<TResult>(TSource source, Expression expression, CancellationToken cancellation = default);
+        /// <summary>
+        /// Maps a source value to specified result type.
+        /// </summary>
+        /// <typeparam name="TResult">The of the resulting value.</typeparam>
+        /// <param name="source">Source value to me mapped.</param>
+        /// <param name="expression">The query expression for the source value.</param>
+        /// <param name="cancellation">Cancellation token for the async operation.</param>
+        /// <returns>A <see cref="ValueTask{TResult}"/> representing the mapped source value.</returns>
+        ValueTask<TResult> MapResultAsync<TResult>(TSource source, Expression expression, CancellationToken cancellation = default);
     }
 }

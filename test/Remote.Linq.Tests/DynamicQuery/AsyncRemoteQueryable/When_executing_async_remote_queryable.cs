@@ -87,28 +87,28 @@ namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteQueryable
         [Fact]
         public async Task Should_throw_upon_calling_countasync_on_non_remote_queryable()
         {
-            var ex = await Should.ThrowAsync<NotSupportedException>(() => NonRemoteQueryable.CountAsync());
+            var ex = await Should.ThrowAsync<NotSupportedException>(() => NonRemoteQueryable.CountAsync().AsTask());
             ex.Message.ShouldBe(MustImplemenrtAsyncRemoteQueryProvider);
         }
 
         [Fact]
-        public void Should_throw_upon_calling_singleasync_on_non_remote_queryable()
+        public async Task Should_throw_upon_calling_singleasync_on_non_remote_queryable()
         {
-            var ex = Should.Throw<NotSupportedException>(() => NonRemoteQueryable.SingleAsync(x => x.Id == 1));
+            var ex = await Should.ThrowAsync<NotSupportedException>(() => NonRemoteQueryable.SingleAsync(x => x.Id == 1).AsTask());
             ex.Message.ShouldBe(MustImplemenrtAsyncRemoteQueryProvider);
         }
 
         [Fact]
-        public void Should_throw_upon_calling_tolistasync_on_non_remote_queryable()
+        public async Task Should_throw_upon_calling_tolistasync_on_non_remote_queryable()
         {
-            var ex = Should.Throw<NotSupportedException>(() => NonRemoteQueryable.ToListAsync());
+            var ex = await Should.ThrowAsync<NotSupportedException>(() => NonRemoteQueryable.ToListAsync().AsTask());
             ex.Message.ShouldBe(MustImplemenrtAsyncRemoteQueryProvider);
         }
 
         [Fact]
         public async Task Should_throw_upon_calling_toarrayasync_on_non_remote_queryable()
         {
-            var ex = await Should.ThrowAsync<NotSupportedException>(() => NonRemoteQueryable.ToArrayAsync());
+            var ex = await Should.ThrowAsync<NotSupportedException>(() => NonRemoteQueryable.ToArrayAsync().AsTask());
             ex.Message.ShouldBe(MustImplemenrtAsyncRemoteQueryProvider);
         }
     }
