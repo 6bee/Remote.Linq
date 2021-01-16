@@ -39,7 +39,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             private static readonly ConstructorInfo _dynamicPropertyContructorInfo = typeof(Property).GetConstructor(new[] { typeof(string), typeof(object) });
             private static readonly ConstructorInfo _dynamicObjectContructorInfo = typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<Property>) });
-            private static readonly MethodInfo _dynamicObjectGetMethod = typeof(DynamicObject).GetMethod("Get");
+            private static readonly MethodInfo _dynamicObjectGetMethod = typeof(DynamicObject).GetMethod(nameof(DynamicObject.Get));
 
             private readonly Dictionary<ParameterExpression, ParameterExpression> _parameterMap = new Dictionary<ParameterExpression, ParameterExpression>();
 

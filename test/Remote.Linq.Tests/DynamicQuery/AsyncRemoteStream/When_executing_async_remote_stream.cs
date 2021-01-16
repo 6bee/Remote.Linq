@@ -14,6 +14,9 @@ namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteStream
         private const string MustBeExecutedAsAsyncEnumerable =
             "Async remote stream must be executed as IAsyncEnumerable<T>. The AsAsyncEnumerable() extension method may be used.";
 
+        private const string MustBeExecutedAsyncAsAsyncEnumerable =
+            "Async remote stream cannot support the operation invoked. Consider using Remote Linq extensions for 'Interactive Extensions (Ix.NET)' or enumerate the stream e.g. by calling AsAsyncEnumerable().";
+
         private const string MustImplemenrtAsyncRemoteStreamProvider =
             "The provider for the source IQueryable doesn't implement IAsyncRemoteStreamProvider. " +
             "Only providers implementing Remote.Linq.IAsyncRemoteStreamProvider can be used for Remote Linq's AsAsyncEnumerable operation.";
@@ -57,17 +60,45 @@ namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteStream
         }
 
         [Fact]
-        public void Should_throw_upon_calling_count_on_remote_stream_queryable()
+        public void Should_throw_upon_calling_Count_on_remote_stream_queryable()
         {
             var ex = Should.Throw<NotSupportedException>(() => AsyncRemoteStreamQueryable.Count());
             ex.Message.ShouldBe(MustBeExecutedAsAsyncEnumerable);
         }
 
         [Fact]
-        public void Should_throw_upon_calling_single_on_remote_stream_queryable()
+        public async Task Should_throw_upon_calling_CountAsync_on_remote_stream_queryable()
+        {
+            var ex = await Should.ThrowAsync<NotSupportedException>(async () => await AsyncRemoteStreamQueryable.CountAsync());
+            ex.Message.ShouldBe(MustBeExecutedAsyncAsAsyncEnumerable);
+        }
+
+        [Fact]
+        public void Should_throw_upon_calling_Single_on_remote_stream_queryable()
         {
             var ex = Should.Throw<NotSupportedException>(() => AsyncRemoteStreamQueryable.Single(x => x.Id == 1));
             ex.Message.ShouldBe(MustBeExecutedAsAsyncEnumerable);
+        }
+
+        [Fact]
+        public async Task Should_throw_upon_calling_SingleAsync_on_remote_stream_queryable()
+        {
+            var ex = await Should.ThrowAsync<NotSupportedException>(async () => await AsyncRemoteStreamQueryable.SingleAsync(x => x.Id == 1));
+            ex.Message.ShouldBe(MustBeExecutedAsyncAsAsyncEnumerable);
+        }
+
+        [Fact]
+        public void Should_throw_upon_calling_ToArray_on_remote_stream_queryable()
+        {
+            var ex = Should.Throw<NotSupportedException>(() => AsyncRemoteStreamQueryable.ToArray());
+            ex.Message.ShouldBe(MustBeExecutedAsAsyncEnumerable);
+        }
+
+        [Fact]
+        public async Task Should_throw_upon_calling_ToArrayAsync_on_remote_stream_queryable()
+        {
+            var ex = await Should.ThrowAsync<NotSupportedException>(async () => await AsyncRemoteStreamQueryable.ToArrayAsync());
+            ex.Message.ShouldBe(MustBeExecutedAsyncAsAsyncEnumerable);
         }
 
         [Fact]
@@ -75,6 +106,13 @@ namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteStream
         {
             var ex = Should.Throw<NotSupportedException>(() => AsyncRemoteStreamQueryable.ToList());
             ex.Message.ShouldBe(MustBeExecutedAsAsyncEnumerable);
+        }
+
+        [Fact]
+        public async Task Should_throw_upon_calling_ToListAsync_on_remote_stream_queryable()
+        {
+            var ex = await Should.ThrowAsync<NotSupportedException>(async () => await AsyncRemoteStreamQueryable.ToListAsync());
+            ex.Message.ShouldBe(MustBeExecutedAsyncAsAsyncEnumerable);
         }
 
         [Fact]

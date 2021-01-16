@@ -39,7 +39,7 @@ namespace Remote.Linq.Tests
                 x.MakeArrayType(),
             })
             .Distinct()
-            .Select(x => new Type[] { x });
+            .Select(x => new[] { x });
 
         public static IEnumerable<object[]> PrimitiveValues => new object[]
             {

@@ -19,7 +19,7 @@ namespace Remote.Linq.Tests
         public static T ShouldMatch<T>(this T t1, T t2)
         {
             var isMatch = string.Equals(t1.ToString(), t2.ToString());
-            isMatch.ShouldBeTrue(() => $"NO MATCH - {typeof(T)}: \n{t1}\n{t2}");
+            isMatch.ShouldBeTrue($"NO MATCH - {typeof(T)}: \n{t1}\n{t2}");
             return t1;
         }
 

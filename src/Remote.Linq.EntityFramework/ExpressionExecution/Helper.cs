@@ -12,8 +12,10 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 
     internal static class Helper
     {
+        private const BindingFlags PublicStatic = BindingFlags.Public | BindingFlags.Static;
+
         private static readonly MethodInfo _toListAsync = typeof(QueryableExtensions)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .GetMethods(PublicStatic)
             .Where(m => string.Equals(m.Name, nameof(QueryableExtensions.ToListAsync), StringComparison.Ordinal))
             .Where(m => m.IsGenericMethodDefinition && m.GetParameters().Length == 2)
             .Single();

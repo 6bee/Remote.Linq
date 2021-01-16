@@ -21,6 +21,7 @@ namespace Remote.Linq
         }
 
         private const BindingFlags PublicStatic = BindingFlags.Public | BindingFlags.Static;
+        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
 
         private static MethodInfo GetStaticMethod(Type declaringType, string name, BindingFlags bindingFlags = PublicStatic)
             => GetStaticMethod(declaringType, name, x => true, bindingFlags);
@@ -191,8 +192,8 @@ namespace Remote.Linq
 
         internal static class GroupingFactory
         {
-            internal static readonly MethodInfo MapMany = GetStaticMethod(typeof(GroupingFactory), nameof(InternalMapMany), BindingFlags.Static | BindingFlags.NonPublic);
-            internal static readonly MethodInfo MapOne = GetStaticMethod(typeof(GroupingFactory), nameof(InternalMapOne), BindingFlags.Static | BindingFlags.NonPublic);
+            internal static readonly MethodInfo MapMany = GetStaticMethod(typeof(GroupingFactory), nameof(InternalMapMany), PrivateStatic);
+            internal static readonly MethodInfo MapOne = GetStaticMethod(typeof(GroupingFactory), nameof(InternalMapOne), PrivateStatic);
 
             private static IEnumerable<Grouping<TKey, TElement>> InternalMapMany<TKey, TElement>(IEnumerable<IGrouping<TKey, TElement>> list)
                 => list.Select(InternalMapOne).ToArray();

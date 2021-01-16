@@ -35,7 +35,7 @@ namespace Remote.Linq.TestSupport
         /// !!! For unit testing only !!! <br />
         /// Creates an <see cref="IAsyncRemoteStreamQueryable{T}"/> for given test data.
         /// </summary>
-        public static IAsyncRemoteStreamQueryable<T> AsAsyncRemoteStreamQueryable<T>(this IEnumerable<T> testData)
+        public static IAsyncRemoteStreamQueryable<T> AsAsyncRemoteStreamQueryable<T>(this IEnumerable<T> testData, Action<Expression>? onExecuteQuery = null)
         {
             if (testData.CheckNotNull(nameof(testData)) is IAsyncRemoteStreamQueryable<T> asyncRemoteStream)
             {
@@ -44,6 +44,8 @@ namespace Remote.Linq.TestSupport
 
             Func<Expression, IAsyncEnumerable<object?>> provider = (Expression expression) =>
             {
+                onExecuteQuery?.Invoke(expression);
+
                 var result = expression.Execute<IEnumerable<T>>(_ => testData.AsQueryable());
                 return CreateAsyncStream(result);
             };
@@ -56,7 +58,7 @@ namespace Remote.Linq.TestSupport
                 }
             }
 
-            return (IAsyncRemoteStreamQueryable<T>)Remote.Linq.RemoteQueryable.Factory.CreateQueryable<T>(provider);
+            return Remote.Linq.RemoteQueryable.Factory.CreateQueryable<T>(provider);
         }
     }
 }

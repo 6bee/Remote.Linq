@@ -13,8 +13,11 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
     internal static class Helper
     {
+        private const BindingFlags PublicStatic = BindingFlags.Public | BindingFlags.Static;
+        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+
         private static readonly MethodInfo _toListAsync = typeof(EntityFrameworkQueryableExtensions)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .GetMethods(PublicStatic)
             .Where(m => string.Equals(m.Name, nameof(EntityFrameworkQueryableExtensions.ToListAsync), StringComparison.Ordinal))
             .Where(m => m.IsGenericMethodDefinition && m.GetParameters().Length == 2)
             .Single();
@@ -26,7 +29,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
             .Single(x => x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 0);
 
         private static readonly MethodInfo _executeAsAsyncStream = typeof(Helper)
-            .GetMethod(nameof(ExecuteAsAsyncStream), BindingFlags.NonPublic | BindingFlags.Static);
+            .GetMethod(nameof(ExecuteAsAsyncStream), PrivateStatic);
 
         internal static Task ToListAsync(IQueryable source, CancellationToken cancellation)
             => (Task)_toListAsync
@@ -67,7 +70,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
         private static async IAsyncEnumerable<object?> ExecuteAsAsyncStream<T>(IQueryable<T> queryable)
         {
-            await foreach (var item in queryable.AsAsyncEnumerable())
+            await foreach (var item in queryable.AsAsyncEnumerable().ConfigureAwait(false))
             {
                 yield return item;
             }

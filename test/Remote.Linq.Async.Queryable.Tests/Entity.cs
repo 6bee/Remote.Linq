@@ -2,7 +2,7 @@
 
 namespace Remote.Linq.Async.Queryable.Tests
 {
-    internal class Entity
+    public class Entity
     {
         public Entity(int id)
         {

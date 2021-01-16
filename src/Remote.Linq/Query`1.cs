@@ -3,7 +3,6 @@
 namespace Remote.Linq
 {
     using Aqua.EnumerableExtensions;
-    using Aqua.TypeSystem;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
@@ -192,14 +191,6 @@ namespace Remote.Linq
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
-
-        /// <summary>
-        /// Creates a generic version of the specified query instance.
-        /// </summary>
-        [Obsolete("Use extension method IQuery.ToGenericQuery<T>() instead.", true)]
-        [SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "Method being removed in future version")]
-        public static Query<T> CreateFromNonGeneric(IQuery query, Func<Query<T>, IEnumerable<T>>? dataProvider = null, Func<LambdaExpression, Expressions.LambdaExpression>? expressionTranslator = null, ITypeResolver? typeResolver = null)
-            => query.ToGenericQuery<T>(dataProvider, expressionTranslator, typeResolver);
 
         public override string ToString()
         {
