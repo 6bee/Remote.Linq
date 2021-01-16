@@ -402,7 +402,7 @@ namespace Remote.Linq.ExpressionVisitors
             var parameters = node.Parameters?
                 .Select(i => new { Old = i, New = VisitParameter(i) })
                 .ToList();
-            if (!ReferenceEquals(exp, node.Expression) || parameters?.Any(i => !ReferenceEquals(i.Old, i.New)) == true)
+            if (!ReferenceEquals(exp, node.Expression) || parameters?.Any(i => !ReferenceEquals(i.Old, i.New)) is true)
             {
                 return new LambdaExpression(node.Type, exp, parameters?.Select(i => i.New));
             }

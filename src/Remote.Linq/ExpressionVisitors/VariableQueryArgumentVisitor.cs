@@ -75,7 +75,7 @@ namespace Remote.Linq.ExpressionVisitors
                 {
                     var member = node.Member;
                     if (member.MemberType == MemberTypes.Property &&
-                        member.DeclaringType?.IsGenericType == true &&
+                        member.DeclaringType?.IsGenericType is true &&
                         member.DeclaringType?.ToType().GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                     {
                         var instanceExpression = (ConstantExpression)(Visit(node.Expression) ?? throw new InvalidOperationException("Visit must not return null for non null value."));

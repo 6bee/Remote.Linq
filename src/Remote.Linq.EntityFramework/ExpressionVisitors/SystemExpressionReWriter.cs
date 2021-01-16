@@ -49,7 +49,7 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
 
                 if (type == typeof(VariableQueryArgument) &&
                     node.Constructor?.GetParameters().Length == 2 &&
-                    node.Arguments?.Any() == true)
+                    node.Arguments?.Any() is true)
                 {
                     var valueArgument = node.Arguments.First();
 

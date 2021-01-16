@@ -11,19 +11,17 @@ namespace Remote.Linq
 
     [Serializable]
     [DataContract]
-    public class Grouping<TKey, TElement> : IGrouping<TKey?, TElement?>
+    public class Grouping<TKey, TElement> : IGrouping<TKey, TElement>
     {
-        public TKey? Key { get; set; }
+        public TKey Key { get; set; } = default!;
 
         [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Property serves as serialization contract")]
-#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
-        public TElement?[]? Elements { get; set; }
-#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
+        public TElement[] Elements { get; set; } = default!;
 
-        public IEnumerator<TElement?> GetEnumerator()
+        public IEnumerator<TElement> GetEnumerator()
         {
             var elements = Elements ?? throw new InvalidOperationException($"{nameof(Elements)} property must not be null");
-            return ((IEnumerable<TElement?>)elements).GetEnumerator();
+            return ((IEnumerable<TElement>)elements).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

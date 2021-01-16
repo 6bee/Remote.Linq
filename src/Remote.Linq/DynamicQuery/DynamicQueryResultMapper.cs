@@ -13,7 +13,7 @@ namespace Remote.Linq.DynamicQuery
     {
         private static readonly Func<Type[], MethodInfo> _MapGroupToDynamicObjectGraphMethod = genericTypeArguments =>
              typeof(DynamicQueryResultMapper)
-                 .GetMethod(nameof(MapGroupToDynamicObjectGraph), BindingFlags.NonPublic | BindingFlags.Instance)
+                 .GetMethod(nameof(MapGroupToDynamicObjectGraph), BindingFlags.NonPublic | BindingFlags.Static)
                  .MakeGenericMethod(genericTypeArguments);
 
         protected override bool ShouldMapToDynamicObject(IEnumerable collection)
@@ -22,25 +22,20 @@ namespace Remote.Linq.DynamicQuery
         protected override DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation)
         {
             var genericTypeArguments = default(Type[]);
-            if (obj?.GetType().Implements(typeof(IGrouping<,>), out genericTypeArguments) == true)
+            if (obj?.GetType().Implements(typeof(IGrouping<,>), out genericTypeArguments) is true)
             {
-                return (DynamicObject)_MapGroupToDynamicObjectGraphMethod(genericTypeArguments!)
-                    .Invoke(this, new[] { obj, setTypeInformation });
+                obj = _MapGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
             }
 
             return base.MapToDynamicObjectGraph(obj, setTypeInformation);
         }
 
-        private DynamicObject MapGroupToDynamicObjectGraph<TKey, TElement>(IGrouping<TKey, TElement> group, Func<Type, bool> setTypeInformation)
-        {
-            var remoteLinqGroup = (group as Grouping<TKey, TElement>) ??
+        private static Grouping<TKey, TElement> MapGroupToDynamicObjectGraph<TKey, TElement>(IGrouping<TKey, TElement> group)
+            => (group as Grouping<TKey, TElement>) ??
                 new Grouping<TKey, TElement>
                 {
                     Key = group.Key,
                     Elements = group.ToArray(),
                 };
-
-            return base.MapToDynamicObjectGraph(remoteLinqGroup, setTypeInformation);
-        }
     }
 }
