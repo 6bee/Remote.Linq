@@ -287,12 +287,39 @@ namespace Remote.Linq
         /// <returns>The query results.</returns>
         public static IAsyncEnumerable<TSource> AsAsyncEnumerable<TSource>(this IQueryable<TSource> source, CancellationToken cancellation = default)
         {
-            if (source.CheckNotNull(nameof(source)).Provider is IAsyncRemoteStreamProvider asyncRemoteStreamProvider)
+            source.CheckNotNull(nameof(source));
+
+            if (source is IAsyncEnumerable<TSource> asyncEnumerable)
+            {
+                return asyncEnumerable;
+            }
+
+            if (source.Provider is IAsyncRemoteStreamProvider asyncRemoteStreamProvider)
             {
                 return asyncRemoteStreamProvider.ExecuteAsyncRemoteStream<TSource>(source.Expression, cancellation);
             }
 
-            throw CreateNotAsyncRemoteStreamProviderException();
+            if (source.Provider is IAsyncRemoteQueryProvider asyncRemoteQueryProvider)
+            {
+                var asyncResult = asyncRemoteQueryProvider.ExecuteAsync<IEnumerable<TSource>>(source.Expression, cancellation);
+                return asyncResult.ToAsyncEnumerable();
+            }
+
+            if (source.Provider is IRemoteQueryProvider remoteQueryProvider)
+            {
+                var result = remoteQueryProvider.Execute<IEnumerable<TSource>>(source.Expression);
+                return new ValueTask<IEnumerable<TSource>>(result).ToAsyncEnumerable();
+            }
+
+            return new ValueTask<IEnumerable<TSource>>(source).ToAsyncEnumerable();
+        }
+
+        private static async IAsyncEnumerable<TSource> ToAsyncEnumerable<TSource>(this ValueTask<IEnumerable<TSource>> source)
+        {
+            foreach (var item in await source.ConfigureAwait(false))
+            {
+                yield return item;
+            }
         }
 
         /// <summary>
@@ -306,7 +333,7 @@ namespace Remote.Linq
                 return await asyncQueryableProvider.ExecuteAsync<TResult>(source.Expression, cancellation).ConfigureAwait(false);
             }
 
-            throw CreateNotSupportedException(source.Provider);
+            return source.Provider.Execute<TResult>(source.Expression);
         }
 
         internal static ValueTask<IEnumerable<TSource>> ExecuteAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellation = default)
@@ -320,52 +347,31 @@ namespace Remote.Linq
 
         private static async ValueTask<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, IEnumerable<object?> args, CancellationToken cancellation)
         {
-            if (source.CheckNotNull(nameof(source)).Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
-            {
-                if (method.IsGenericMethodDefinition)
-                {
-                    if (method.GetGenericArguments().Length > 2)
-                    {
-                        throw new RemoteLinqException("Implementation error: expected closed generic method definition.");
-                    }
+            source.CheckNotNull(nameof(source));
 
-                    method = method.GetGenericArguments().Length == 2
-                        ? method.MakeGenericMethod(typeof(TSource), typeof(TResult))
-                        : method.MakeGenericMethod(typeof(TSource));
+            if (method.IsGenericMethodDefinition)
+            {
+                if (method.GetGenericArguments().Length > 2)
+                {
+                    throw new RemoteLinqException("Implementation error: expected closed generic method definition.");
                 }
 
-                var arguments = new[] { source.Expression }
-                    .Concat(args.Select(x => x is Expression exp ? (Expression)Expression.Quote(exp) : Expression.Constant(x)))
-                    .ToArray();
-                var methodCallExpression = Expression.Call(null, method, arguments);
+                method = method.GetGenericArguments().Length == 2
+                    ? method.MakeGenericMethod(typeof(TSource), typeof(TResult))
+                    : method.MakeGenericMethod(typeof(TSource));
+            }
 
+            var arguments = new[] { source.Expression }
+                .Concat(args.Select(x => x is Expression exp ? (Expression)Expression.Quote(exp) : Expression.Constant(x)))
+                .ToArray();
+            var methodCallExpression = Expression.Call(null, method, arguments);
+
+            if (source.Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
+            {
                 return await asyncQueryableProvider.ExecuteAsync<TResult>(methodCallExpression, cancellation).ConfigureAwait(false);
             }
 
-            throw CreateNotSupportedException(source.Provider);
+            return source.Provider.Execute<TResult>(methodCallExpression);
         }
-
-        private static NotSupportedException CreateNotSupportedException(IQueryProvider provider)
-        {
-            var ex = new NotSupportedException(
-                $"The provider for the source IQueryable doesn't implement {nameof(IAsyncRemoteQueryProvider)}. " +
-                $"Only providers implementing {typeof(IAsyncRemoteQueryProvider).FullName} can be used for Remote Linq asynchronous operations.");
-
-            if (provider is IAsyncRemoteStreamProvider)
-            {
-                ex = new NotSupportedException(
-                    "Async remote stream cannot support the operation invoked. " +
-                    "Consider using Remote Linq extensions for 'Interactive Extensions (Ix.NET)' " +
-                    $"or enumerate the stream e.g. by calling {nameof(AsAsyncEnumerable)}().",
-                    ex);
-            }
-
-            return ex;
-        }
-
-        private static NotSupportedException CreateNotAsyncRemoteStreamProviderException()
-            => new NotSupportedException(
-                $"The provider for the source IQueryable doesn't implement {nameof(IAsyncRemoteStreamProvider)}. " +
-                $"Only providers implementing {typeof(IAsyncRemoteStreamProvider).FullName} can be used for Remote Linq's {nameof(AsAsyncEnumerable)} operation.");
     }
 }

@@ -12,10 +12,6 @@ namespace Remote.Linq.Tests.DynamicQuery
             System.Linq.Enumerable.Range(0, 10)
             .Select(x => new Entity(x));
 
-        public static IQueryable<Entity> NonRemoteQueryable =>
-            Enumerable
-            .AsQueryable();
-
         public static IQueryable<Entity> AsyncRemoteQueryable =>
             Enumerable
             .AsAsyncRemoteQueryable();

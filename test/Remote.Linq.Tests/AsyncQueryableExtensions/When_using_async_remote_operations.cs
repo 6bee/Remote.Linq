@@ -1,83 +1,86 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Tests.AsyncEnumerableExtensions
+namespace Remote.Linq.Tests.AsyncQueryableExtensions
 {
     using Aqua.Dynamic;
     using Remote.Linq;
     using Remote.Linq.Expressions;
+    using Remote.Linq.Tests;
     using Shouldly;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
 
-    public class When_using_async_remote_operations
+    public abstract class When_using_async_remote_operations
     {
-        private readonly IQueryable<int> _queryable = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1001, 1002, 1004, -1, -2, -5 }.AsQueryable();
+        public class With_non_async_system_queriable : When_using_async_remote_operations
+        {
+            protected override IQueryable<int> Queryable => Source.AsQueryable();
+        }
+
+        public class With_non_async_remote_queriable : When_using_async_remote_operations
+        {
+            protected override IQueryable<int> Queryable => RemoteQueryable.Factory.CreateQueryable<int>(x => x.Execute(t => Source.AsQueryable()));
+        }
+
+        public class With_async_remote_queriable : When_using_async_remote_operations
+        {
+            protected override IQueryable<int> Queryable => RemoteQueryable.Factory.CreateQueryable<int>(x => new ValueTask<IEnumerable<DynamicObject>>(x.Execute(t => Source.AsQueryable())));
+        }
+
+        protected abstract IQueryable<int> Queryable { get; }
+
+        protected IEnumerable<int> Source => new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1001, 1002, 1004, -1, -2, -5 };
 
         [Fact]
-        public async Task Should_throw_with_enumerable_query()
+        public async Task Should_allow_ToListAsync()
         {
-            await AssertThrowNotSupportedExceptionAsync(() => _queryable.ToListAsync());
+            var result = await Queryable.ToListAsync().ConfigureAwait(false);
+
+            result.ShouldBeSequenceEqual(Source);
         }
 
         [Fact]
-        public async Task Should_throw_with_non_async_remote_queriable()
+        public async Task Should_allow_ToArrayAsync()
         {
-            var remoteQueryable = RemoteQueryable.Factory.CreateQueryable<int>(x => x.Execute(t => _queryable));
+            var result = await Queryable.ToArrayAsync().ConfigureAwait(false);
 
-            await AssertThrowNotSupportedExceptionAsync(() => remoteQueryable.ToListAsync());
+            result.ShouldBeSequenceEqual(Source);
         }
 
         [Fact]
-        public async Task Should_execute_async_remote_queriable()
+        public async Task Should_allow_AverageAsync()
         {
-            var remoteAsyncQueryable = RemoteQueryable.Factory.CreateQueryable<int>(x => new ValueTask<IEnumerable<DynamicObject>>(x.Execute(t => _queryable)));
+            var result = await Queryable.AverageAsync().ConfigureAwait(false);
 
-            var result = await remoteAsyncQueryable.ToListAsync().ConfigureAwait(false);
-
-            result.ShouldMatch(_queryable.ToList());
+            result.ShouldBe(Source.Average());
         }
 
         [Fact]
-        public async Task Should_throw_with_enumerable_query_scalar()
+        public async Task Should_allow_AsAsyncEnumerable()
         {
-            await AssertThrowNotSupportedExceptionAsync(() => _queryable.AverageAsync());
+            var asyncEenumerable = Queryable.Where(x => false).AsAsyncEnumerable();
+
+            var moveNext = await asyncEenumerable.GetAsyncEnumerator().MoveNextAsync().ConfigureAwait(false);
+
+            moveNext.ShouldBeFalse();
         }
 
         [Fact]
-        public async Task Should_throw_with_non_async_remote_queriable_scalar()
+        public async Task Should_allow_CountAsync()
         {
-            var remoteQueryable = RemoteQueryable.Factory.CreateQueryable<int>(x => x.Execute(t => _queryable));
+            var resut = await Queryable.CountAsync().ConfigureAwait(false);
 
-            await AssertThrowNotSupportedExceptionAsync(() => remoteQueryable.AverageAsync());
+            resut.ShouldBe(Source.Count());
         }
 
         [Fact]
-        public async Task Should_execute_async_remote_queriable_scalar()
+        public async Task Should_allow_SingleAsync_with_predicate()
         {
-            var remoteAsyncQueryable = RemoteQueryable.Factory.CreateQueryable<int>(x => new ValueTask<IEnumerable<DynamicObject>>(x.Execute(t => _queryable)));
+            var result = await Queryable.SingleAsync(x => x == 1).ConfigureAwait(false);
 
-            var result = await remoteAsyncQueryable.AverageAsync().ConfigureAwait(false);
-
-            result.ShouldBe(_queryable.Average());
-        }
-
-        private static async Task AssertThrowNotSupportedExceptionAsync<T>(Func<ValueTask<T>> task)
-        {
-            var ex = await Should.ThrowAsync<NotSupportedException>(() => task().AsTask());
-            ex.Message.ShouldBe("The provider for the source IQueryable doesn't implement IAsyncRemoteQueryProvider. " +
-                "Only providers implementing Remote.Linq.IAsyncRemoteQueryProvider can be used for Remote Linq asynchronous operations.");
-        }
-
-        [Fact]
-        public void Should_throw_upon_calling_AsAsyncEnumerable_with_non_remote_queryable()
-        {
-            var source = Enumerable.Empty<int>().AsQueryable();
-            var ex = Should.Throw<NotSupportedException>(() => source.AsAsyncEnumerable());
-            ex.Message.ShouldBe("The provider for the source IQueryable doesn't implement IAsyncRemoteStreamProvider. " +
-                "Only providers implementing Remote.Linq.IAsyncRemoteStreamProvider can be used for Remote Linq's AsAsyncEnumerable operation.");
+            result.ShouldBe(1);
         }
     }
 }

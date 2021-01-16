@@ -7,6 +7,7 @@ namespace Remote.Linq.Tests
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
 
     public static class Helper
     {
@@ -22,6 +23,9 @@ namespace Remote.Linq.Tests
             isMatch.ShouldBeTrue($"NO MATCH - {typeof(T)}: \n{t1}\n{t2}");
             return t1;
         }
+
+        public static void ShouldBeSequenceEqual<T>(this IEnumerable<T> t1, IEnumerable<T> t2)
+            => t1.SequenceEqual(t2).ShouldBeTrue();
 
         public static T With<T>(this T t, Action<T> assertion)
         {

@@ -3,7 +3,6 @@
 namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteQueryable
 {
     using Shouldly;
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
@@ -11,10 +10,6 @@ namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteQueryable
 
     public class When_executing_async_remote_queryable
     {
-        private const string MustImplemenrtAsyncRemoteQueryProvider =
-            "The provider for the source IQueryable doesn't implement IAsyncRemoteQueryProvider. " +
-            "Only providers implementing Remote.Linq.IAsyncRemoteQueryProvider can be used for Remote Linq asynchronous operations.";
-
         [Fact]
         public void Should_query_full_set()
         {
@@ -82,34 +77,6 @@ namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteQueryable
         {
             var result = await FilteredAsyncRemoteQueryable.ToArrayAsync();
             result.Length.ShouldBe(3);
-        }
-
-        [Fact]
-        public async Task Should_throw_upon_calling_countasync_on_non_remote_queryable()
-        {
-            var ex = await Should.ThrowAsync<NotSupportedException>(() => NonRemoteQueryable.CountAsync().AsTask());
-            ex.Message.ShouldBe(MustImplemenrtAsyncRemoteQueryProvider);
-        }
-
-        [Fact]
-        public async Task Should_throw_upon_calling_singleasync_on_non_remote_queryable()
-        {
-            var ex = await Should.ThrowAsync<NotSupportedException>(() => NonRemoteQueryable.SingleAsync(x => x.Id == 1).AsTask());
-            ex.Message.ShouldBe(MustImplemenrtAsyncRemoteQueryProvider);
-        }
-
-        [Fact]
-        public async Task Should_throw_upon_calling_tolistasync_on_non_remote_queryable()
-        {
-            var ex = await Should.ThrowAsync<NotSupportedException>(() => NonRemoteQueryable.ToListAsync().AsTask());
-            ex.Message.ShouldBe(MustImplemenrtAsyncRemoteQueryProvider);
-        }
-
-        [Fact]
-        public async Task Should_throw_upon_calling_toarrayasync_on_non_remote_queryable()
-        {
-            var ex = await Should.ThrowAsync<NotSupportedException>(() => NonRemoteQueryable.ToArrayAsync().AsTask());
-            ex.Message.ShouldBe(MustImplemenrtAsyncRemoteQueryProvider);
         }
     }
 }
