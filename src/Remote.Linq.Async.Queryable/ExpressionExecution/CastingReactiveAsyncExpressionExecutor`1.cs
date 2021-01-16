@@ -7,18 +7,18 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using System.Linq;
     using System.Linq.Expressions;
 
-    internal sealed class CastingReactiveAsyncExpressionExecutor<TResult> : InteractiveAsyncExpressionExecutor<TResult>
+    internal sealed class CastingReactiveAsyncExpressionExecutor<TResult> : InteractiveAsyncExpressionExecutor<TResult?>
     {
         public CastingReactiveAsyncExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, ITypeResolver? typeResolver, Func<Expression, bool>? canBeEvaluatedLocally)
             : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
         {
         }
 
-        protected override TResult ConvertResult(object? queryResult)
+        protected override TResult? ConvertResult(object? queryResult)
         {
             if (queryResult is null)
             {
-                return default!;
+                return default;
             }
 
             if (queryResult is TResult result)

@@ -1,0 +1,15 @@
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+namespace Remote.Linq
+{
+    using System;
+    using System.Linq;
+    using System.Runtime.Serialization;
+
+    [Serializable]
+    [DataContract]
+    public class AsyncGrouping<TKey, TElement> : AsyncEnumerable<TElement>, IAsyncGrouping<TKey, TElement>
+    {
+        public TKey Key { get; set; } = default!;
+    }
+}

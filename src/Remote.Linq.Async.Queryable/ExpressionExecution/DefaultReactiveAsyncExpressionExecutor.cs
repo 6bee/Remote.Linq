@@ -5,12 +5,10 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
-    using Remote.Linq.DynamicQuery;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
-    public class DefaultReactiveAsyncExpressionExecutor : InteractiveAsyncExpressionExecutor<IEnumerable<DynamicObject?>?>
+    public class DefaultReactiveAsyncExpressionExecutor : InteractiveAsyncExpressionExecutor<DynamicObject?>
     {
         private readonly IDynamicObjectMapper _mapper;
         private readonly Func<Type, bool> _setTypeInformation;
@@ -18,7 +16,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
         public DefaultReactiveAsyncExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
         {
-            _mapper = mapper ?? new DynamicQueryResultMapper();
+            _mapper = mapper ?? new DynamicAsyncQueryResultMapper();
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 
@@ -27,7 +25,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>The mapped query result.</returns>
-        protected override IEnumerable<DynamicObject?>? ConvertResult(object? queryResult)
-            => _mapper.MapCollection(queryResult, _setTypeInformation);
+        protected override DynamicObject? ConvertResult(object? queryResult)
+            => _mapper.MapObject(queryResult, _setTypeInformation);
     }
 }

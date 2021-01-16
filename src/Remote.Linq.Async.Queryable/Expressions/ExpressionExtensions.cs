@@ -20,7 +20,7 @@ namespace Remote.Linq.Async.Queryable.Expressions
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="asyncQueryableProvider">Delegate to provide <see cref="IAsyncQueryable"/> instances for given <see cref="Type"/>s.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="mapper">Optional instance of <see cref="IDynamicObjectMapper"/>.</param>
         /// <param name="setTypeInformation">Function to define whether to add type information.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution on the data source.</param>
@@ -29,7 +29,7 @@ namespace Remote.Linq.Async.Queryable.Expressions
             => new DefaultReactiveAsyncStreamExpressionExecutor(asyncQueryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsyncStream(expression);
 
         // TODO: add doc
-        public static ValueTask<IEnumerable<DynamicObject?>?> ExecuteAsync(this Expression expression, Func<Type, IAsyncQueryable> asyncQueryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        public static ValueTask<DynamicObject?> ExecuteAsync(this Expression expression, Func<Type, IAsyncQueryable> asyncQueryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => new DefaultReactiveAsyncExpressionExecutor(asyncQueryableProvider, typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally).ExecuteAsync(expression);
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Remote.Linq.Async.Queryable.Expressions
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="asyncQueryableProvider">Delegate to provide <see cref="IAsyncQueryable"/> instances for given <see cref="Type"/>s.</param>
-        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="Aqua.TypeSystem.TypeInfo"/> into <see cref="Type"/> objects.</param>
+        /// <param name="typeResolver">Optional instance of <see cref="ITypeResolver"/> to be used to translate <see cref="TypeInfo"/> into <see cref="Type"/> objects.</param>
         /// <param name="canBeEvaluatedLocally">Function to define which expressions may be evaluated locally, and which need to be retained for execution on the data source.</param>
         /// <returns>The mapped result of the query execution.</returns>
         public static IAsyncEnumerable<TResult?> ExecuteAsyncStream<TResult>(this Expression expression, Func<Type, IAsyncQueryable> asyncQueryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
@@ -45,7 +45,7 @@ namespace Remote.Linq.Async.Queryable.Expressions
             => new CastingReactiveAsyncStreamExpressionExecutor<TResult>(asyncQueryableProvider, typeResolver, canBeEvaluatedLocally).ExecuteAsyncStream(expression);
 
         // TODO: add doc
-        public static ValueTask<TResult> ExecuteAsync<TResult>(this Expression expression, Func<Type, IAsyncQueryable> asyncQueryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        public static ValueTask<TResult?> ExecuteAsync<TResult>(this Expression expression, Func<Type, IAsyncQueryable> asyncQueryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             where TResult : class
             => new CastingReactiveAsyncExpressionExecutor<TResult>(asyncQueryableProvider, typeResolver, canBeEvaluatedLocally).ExecuteAsync(expression);
     }

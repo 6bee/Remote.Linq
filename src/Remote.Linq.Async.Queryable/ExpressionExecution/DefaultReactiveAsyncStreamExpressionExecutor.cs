@@ -5,7 +5,6 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
-    using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -19,7 +18,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
         public DefaultReactiveAsyncStreamExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<Expression, bool>? canBeEvaluatedLocally = null)
             : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
         {
-            _mapper = mapper ?? new DynamicQueryResultMapper();
+            _mapper = mapper ?? new DynamicAsyncQueryResultMapper();
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 

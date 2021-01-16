@@ -13,12 +13,24 @@ namespace Remote.Linq.Async.Queryable.Tests
     {
         public class With_stream_provider_and_data_provider : When_querying_async
         {
+            public With_stream_provider_and_data_provider(bool useDynamicObjectConversion = false)
+                : base(useDynamicObjectConversion: useDynamicObjectConversion)
+            {
+            }
+        }
+
+        public class With_dynamic_object_stream_provider_and_data_provider : With_stream_provider_and_data_provider
+        {
+            public With_dynamic_object_stream_provider_and_data_provider()
+                : base(useDynamicObjectConversion: true)
+            {
+            }
         }
 
         public class With_stream_provider_only : When_querying_async, IDisposable
         {
-            public With_stream_provider_only()
-                : base(createAsyncDataProvider: false)
+            public With_stream_provider_only(bool useDynamicObjectConversion = false)
+                : base(createAsyncDataProvider: false, useDynamicObjectConversion: useDynamicObjectConversion)
             {
             }
 
@@ -29,10 +41,18 @@ namespace Remote.Linq.Async.Queryable.Tests
             }
         }
 
+        public class With_dynamic_object_stream_provider_only : With_stream_provider_only
+        {
+            public With_dynamic_object_stream_provider_only()
+                : base(useDynamicObjectConversion: true)
+            {
+            }
+        }
+
         public class With_async_data_provider_only : When_querying_async, IDisposable
         {
-            public With_async_data_provider_only()
-                : base(createAsyncStreamProvider: false)
+            public With_async_data_provider_only(bool useDynamicObjectConversion = false)
+                : base(createAsyncStreamProvider: false, useDynamicObjectConversion: useDynamicObjectConversion)
             {
             }
 
@@ -43,10 +63,18 @@ namespace Remote.Linq.Async.Queryable.Tests
             }
         }
 
+        public class With_async_dynamic_object_data_provider_only : With_async_data_provider_only
+        {
+            public With_async_dynamic_object_data_provider_only()
+                : base(useDynamicObjectConversion: true)
+            {
+            }
+        }
+
         private readonly bool _hasStreamProviderSupport;
         private readonly bool _hasDataProviderSupport;
 
-        public When_querying_async(bool createAsyncStreamProvider = true, bool createAsyncDataProvider = true)
+        public When_querying_async(bool createAsyncStreamProvider = true, bool createAsyncDataProvider = true, bool useDynamicObjectConversion = true)
         {
             _hasStreamProviderSupport = createAsyncStreamProvider;
             _hasDataProviderSupport = createAsyncDataProvider;
@@ -55,6 +83,7 @@ namespace Remote.Linq.Async.Queryable.Tests
                 .AsAsyncQueryable(
                     createAsyncStreamProvider,
                     createAsyncDataProvider,
+                    useDynamicObjectConversion,
                     _ => AsyncStreamProviderInvocationCount++,
                     _ => AsyncDataProviderInvocationCount++);
         }

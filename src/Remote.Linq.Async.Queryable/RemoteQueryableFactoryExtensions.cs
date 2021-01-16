@@ -25,7 +25,7 @@ namespace Remote.Linq.Async.Queryable
         public static IAsyncQueryable<T> CreateAsyncQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, IAsyncEnumerable<DynamicObject?>>? asyncStreamProvider,
-            Func<RemoteLinq.Expression, ValueTask<DynamicObject>>? asyncDataProvider,
+            Func<RemoteLinq.Expression, ValueTask<DynamicObject?>>? asyncDataProvider,
             IDynamicObjectMapper? mapper = null,
             ITypeInfoProvider? typeInfoProvider = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
@@ -38,7 +38,7 @@ namespace Remote.Linq.Async.Queryable
         public static IAsyncQueryable<T> CreateAsyncQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, IAsyncEnumerable<object?>>? asyncStreamProvider,
-            Func<RemoteLinq.Expression, ValueTask<object>>? asyncDataProvider,
+            Func<RemoteLinq.Expression, ValueTask<object?>>? asyncDataProvider,
             IAsyncQueryResultMapper<object?>? resultMapper = null,
             ITypeInfoProvider? typeInfoProvider = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
@@ -52,7 +52,7 @@ namespace Remote.Linq.Async.Queryable
         public static IAsyncQueryable<T> CreateAsyncQueryable<T, TSource>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, IAsyncEnumerable<TSource?>>? asyncStreamProvider,
-            Func<RemoteLinq.Expression, ValueTask<TSource>>? asyncDataProvider,
+            Func<RemoteLinq.Expression, ValueTask<TSource?>>? asyncDataProvider,
             IAsyncQueryResultMapper<TSource?> resultMapper,
             ITypeInfoProvider? typeInfoProvider = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
