@@ -10,7 +10,7 @@ namespace DemoStartUp
     {
         private static void Main()
         {
-            Title("Async Stream");
+            Title("Ix.NET");
             PrintNote("This demo uses a random delay on server side to simulate data item retrieval/generation.");
             const string host = "localhost";
             const int port = 8899;

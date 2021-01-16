@@ -133,6 +133,20 @@ namespace Client
             {
                 PrintLine($"  P#{item.Id}| {item.Name} | {string.Join("; ", item.Markets)}");
             }
+
+            PrintHeader("GROUP BY:");
+            var grouped =
+                from p in repo.Products
+                group p.Name by p.ProductCategory.Name into g
+                select g;
+            foreach (var g in await grouped.ToListAsync().ConfigureAwait(false))
+            {
+                PrintLine($"  {g.Key}");
+                foreach (var p in g)
+                {
+                    PrintLine($"      {p}");
+                }
+            }
         }
     }
 }

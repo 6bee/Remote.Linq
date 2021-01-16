@@ -28,11 +28,16 @@ namespace Client
             }
 
             PrintHeader("CROSS JOIN:");
-            Func<object, string> sufix = (x) => x + "ending";
+            var vowels = new[] { 'a', 'e', 'i', 'o', 'u' };
             var crossJoinQuery =
                 from c in repo.ProductCategories
                 from p in repo.Products
-                select $"A {p.Name.ToLower()} is {(c.Id == p.ProductCategoryId ? null : "not ")}a {c.Name.ToLower().TrimEnd('s')}";
+                let @particle = vowels.Contains(p.Name.Substring(0, 1).ToLower().Single()) ? "An" : "A"
+                let @subject = p.Name.ToLower()
+                let @verb = $"is{(c.Id == p.ProductCategoryId ? null : " not")} a"
+                let @object = c.Name.ToLower().TrimEnd('s')
+                orderby @subject, @object
+                select $"{@particle} {@subject} {@verb} {@object}";
             await foreach (var item in crossJoinQuery.ConfigureAwait(false))
             {
                 PrintLine($"  {item}");
@@ -42,7 +47,7 @@ namespace Client
             var innerJoinQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
-                select new { Category = c.Name, Price = $"{p.Price:C}", X = new { Y = string.Concat(c.Name, "-", p.Name) } };
+                select new { Product = new { Description = string.Concat(c.Name, "-", p.Name), Price = $"{p.Price:C}" } };
             await foreach (var item in innerJoinQuery.ConfigureAwait(false))
             {
                 PrintLine($"  {item}");
@@ -58,10 +63,11 @@ namespace Client
                 PrintLine($"  {id}");
             }
 
-            PrintHeader("SELECT GOUPING:");
+            PrintHeader("GROUP BY:");
             var grouped =
                 from p in repo.Products
                 join c in repo.ProductCategories on p.ProductCategoryId equals c.Id
+                orderby c.Name descending, p.Name ascending
                 group p.Name by c.Name into g
                 select g;
             await foreach (var g in grouped.ConfigureAwait(false))

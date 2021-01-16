@@ -104,6 +104,22 @@ namespace Client
             {
                 PrintLine($"  {ex.GetType().Name}: {ex.Message}");
             }
+
+            PrintHeader("GROUP BY:");
+            var grouped =
+                from p in repo.Products
+                join c in repo.ProductCategories on p.ProductCategoryId equals c.Id
+                orderby c.Name descending, p.Name ascending
+                group p.Name by c.Name into g
+                select g;
+            foreach (var g in await grouped.ToListAsync().ConfigureAwait(false))
+            {
+                PrintLine($"  {g.Key}");
+                foreach (var p in g)
+                {
+                    PrintLine($"      {p}");
+                }
+            }
         }
     }
 }

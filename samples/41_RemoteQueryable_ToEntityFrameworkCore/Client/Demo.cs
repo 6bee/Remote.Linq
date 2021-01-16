@@ -134,6 +134,20 @@ namespace Client
             {
                 PrintLine($"  P#{item.Id}| {item.Name} | {string.Join("; ", item.Markets)}");
             }
+
+            PrintHeader("GROUP BY:");
+            var grouped =
+                from p in repo.Products
+                group p.Name by p.ProductCategory.Name into g
+                select new
+                {
+                    Category = g.Key,
+                    NumberOfProducts = g.Count(),
+                };
+            foreach (var g in await grouped.ToListAsync().ConfigureAwait(false))
+            {
+                PrintLine($"  {g.NumberOfProducts} {g.Category.ToLower()}");
+            }
         }
     }
 }
