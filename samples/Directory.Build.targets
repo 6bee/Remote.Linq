@@ -3,6 +3,7 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
   <ItemGroup>
     <PackageReference Update="Remote.Linq" Version="$(RemoteLinqVersion)" />
+    <PackageReference Update="Remote.Linq.Async.Queryable" Version="$(RemoteLinqVersion)" />
     <PackageReference Update="Remote.Linq.EntityFramework" Version="$(RemoteLinqVersion)" />
     <PackageReference Update="Remote.Linq.EntityFrameworkCore" Version="$(RemoteLinqVersion)" />
     <PackageReference Update="Remote.Linq.Newtonsoft.Json" Version="$(RemoteLinqVersion)" />

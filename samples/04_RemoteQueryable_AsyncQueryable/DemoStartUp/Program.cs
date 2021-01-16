@@ -17,11 +17,11 @@ namespace DemoStartUp
 
             PrintSetup("Starting TCP service...");
             using var serviceHost = new TcpServer(port);
-            serviceHost.RunAsyncStreamQueryService(new QueryService().ExecuteAsyncStreamQuery);
+            serviceHost.RunAsyncStreamQueryService(new AsyncQueryService().ExecuteAsyncStreamQuery);
 
             PrintSetup("Staring client demo...");
             PrintSetup("-------------------------------------------------");
-            new AsyncStreamDemo(() => new RemoteAsyncStreamRepository(host, port)).RunAsync().Wait();
+            new AsyncStreamDemo(() => new AsyncRemoteRepository(host, port)).RunAsync().AsTask().Wait();
 
             PrintSetup();
             PrintSetup("-------------------------------------------------");

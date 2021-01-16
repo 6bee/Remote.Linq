@@ -2,18 +2,16 @@
 
 namespace Server
 {
-    using Common.ServiceContracts;
     using static CommonHelper;
 
     internal static class Program
     {
         private static void Main()
         {
-            Title("Async [Server]");
-            using var serviceHost = WcfHelper.CreateServiceHost<QueryService>()
-                .IncludeExceptionDetailInFaults()
-                .AddNetNamedPipeEndpoint<IQueryService>("net.pipe://localhost/8080/query")
-                .OpenService();
+            Title("Async Stream [Server]");
+            PrintNote("This demo uses a random delay on server side to simulate data item retrieval/generation.");
+            using var serviceHost = new TcpServer(8899);
+            serviceHost.RunAsyncStreamQueryService(new AsyncQueryService().ExecuteAsyncStreamQuery);
 
             PrintServerReady();
             WaitForEnterKey();

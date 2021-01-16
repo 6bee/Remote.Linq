@@ -7,6 +7,7 @@ namespace Client
     using Common.Model;
     using Common.SimpleAsyncStreamProtocol;
     using Remote.Linq;
+    using Remote.Linq.Async.Queryable;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Client
     using System.Threading;
     using System.Threading.Tasks;
 
-    public partial class RemoteAsyncStreamRepository : IRemoteRepository
+    public partial class AsyncRemoteRepository : IAsyncRemoteRepository
     {
         private sealed class AsyncTcpClientEnumerator<T> : IAsyncEnumerator<T>
         {
@@ -58,7 +59,7 @@ namespace Client
             {
                 if (_ownsTcpClient && _tcpClient.IsValueCreated)
                 {
-                    await new ValueTask(Task.Run(_tcpClient.Value.Dispose));
+                    await Task.Run(_tcpClient.Value.Dispose).ConfigureAwait(false);
                 }
             }
 
@@ -117,21 +118,23 @@ namespace Client
 
         private readonly TcpClient _tcpClient;
         private readonly Func<Expression, CancellationToken, IAsyncEnumerable<DynamicObject>> _asyncStreamDataProvider;
+        private readonly Func<Expression, CancellationToken, ValueTask<DynamicObject>> _asyncQueryDataProvider;
 
-        public RemoteAsyncStreamRepository(string server, int port)
+        public AsyncRemoteRepository(string server, int port)
         {
             _tcpClient = new TcpClient(server, port);
             _asyncStreamDataProvider = (expression, cancellation) => new AsyncTcpClientEnumerator<DynamicObject>(() => _tcpClient, expression, cancellation, false).GetAsyncStream();
+            _asyncQueryDataProvider = null;
         }
 
-        public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ProductCategory>(_asyncStreamDataProvider);
+        public IAsyncQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateAsyncQueryable<ProductCategory>(_asyncStreamDataProvider, _asyncQueryDataProvider);
 
-        public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateQueryable<ProductGroup>(_asyncStreamDataProvider);
+        public IAsyncQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateAsyncQueryable<ProductGroup>(_asyncStreamDataProvider, _asyncQueryDataProvider);
 
-        public IQueryable<Product> Products => RemoteQueryable.Factory.CreateQueryable<Product>(_asyncStreamDataProvider);
+        public IAsyncQueryable<Product> Products => RemoteQueryable.Factory.CreateAsyncQueryable<Product>(_asyncStreamDataProvider, _asyncQueryDataProvider);
 
-        public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<OrderItem>(_asyncStreamDataProvider);
+        public IAsyncQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateAsyncQueryable<OrderItem>(_asyncStreamDataProvider, _asyncQueryDataProvider);
 
-        public void Dispose() => _tcpClient.Dispose();
+        public async ValueTask DisposeAsync() => await Task.Run(_tcpClient.Dispose).ConfigureAwait(false);
     }
 }

@@ -33,6 +33,8 @@ namespace DemoStartUp
             PrintLine("such as virtualization, containers, or user accounts, for running processes");
             PrintLine("with the minimum set of privileges.");
 
+            WaitForEnterKey("\n\nHit enter to continue...");
+
             const string ip = "127.0.0.1";
             const int port = 1234;
 
