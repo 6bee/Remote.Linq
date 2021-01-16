@@ -17,7 +17,12 @@ namespace Remote.Linq.Async.Queryable.TestSupport
         /// !!! For unit testing only !!! <br />
         /// Creates an <see cref="IAsyncQueryable{T}"/> for given test data.
         /// </summary>
-        public static IAsyncQueryable<T> AsAsyncQueryable<T>(this IEnumerable<T> testData)
+        public static IAsyncQueryable<T> AsAsyncQueryable<T>(
+            this IEnumerable<T> testData,
+            bool createAsyncStreamProvider = true,
+            bool createAsyncDataProvider = true,
+            Action<Expression>? onExecuteAsyncStream = null,
+            Action<Expression>? onExecuteAsyncQuery = null)
             where T : class
         {
             if (testData.CheckNotNull(nameof(testData)) is IAsyncQueryable<T> asyncQueryable)
@@ -25,29 +30,38 @@ namespace Remote.Linq.Async.Queryable.TestSupport
                 return asyncQueryable;
             }
 
-            var provider = CreateAsyncQueryableProviderWithTestData<T, object>(testData);
-            return RemoteQueryable.Factory.CreateQueryable<T>(provider!);
+            var asyncStreamProvider = createAsyncStreamProvider ? CreateAsyncStreamProviderWithTestData<T, object>(testData, onExecuteAsyncStream) : null;
+            var asyncDataProvider = createAsyncDataProvider ? CreateAsyncDataProviderWithTestData<T, object>(testData, onExecuteAsyncQuery) : null;
+
+            return RemoteQueryable.Factory.CreateAsyncQueryable<T>(asyncStreamProvider, asyncDataProvider);
         }
 
-        private static Func<Expression, IAsyncEnumerable<TResult>> CreateAsyncQueryableProviderWithTestData<TData, TResult>(IEnumerable<TData> items)
+        private static Func<Expression, IAsyncEnumerable<TResult?>> CreateAsyncStreamProviderWithTestData<TData, TResult>(IEnumerable<TData> items, Action<Expression>? onExecuteAsyncStream)
             where TData : class, TResult
             where TResult : class
         {
-            return ExecuteAsync;
+            return ExecuteAsyncStream;
 
-            IAsyncEnumerable<TResult> ExecuteAsync(Expression expression)
+            IAsyncEnumerable<TResult?> ExecuteAsyncStream(Expression expression)
             {
-                var result = expression.ExecuteAsyncStream<TData>(_ => items.ToAsyncEnumerable().AsAsyncQueryable());
+                onExecuteAsyncStream?.Invoke(expression);
 
-                return MapItemTypeAsync(result);
+                var result = expression.ExecuteAsyncStream<TResult>(_ => items.ToAsyncEnumerable().AsAsyncQueryable());
+                return result;
+            }
+        }
 
-                static async IAsyncEnumerable<TResult> MapItemTypeAsync(IAsyncEnumerable<TData?> source)
-                {
-                    await foreach (var item in source.ConfigureAwait(false))
-                    {
-                        yield return item!;
-                    }
-                }
+        private static Func<Expression, ValueTask<TResult>> CreateAsyncDataProviderWithTestData<TData, TResult>(IEnumerable<TData> items, Action<Expression>? onExecuteAsyncQuery)
+            where TResult : class
+        {
+            return ExecuteAsyncQuery;
+
+            async ValueTask<TResult> ExecuteAsyncQuery(Expression expression)
+            {
+                onExecuteAsyncQuery?.Invoke(expression);
+
+                var result = await expression.ExecuteAsync<TResult>(_ => items.ToAsyncEnumerable().AsAsyncQueryable());
+                return result;
             }
         }
     }

@@ -10,7 +10,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using System.Collections.Generic;
     using System.Linq;
 
-    public class DefaultReactiveAsyncExpressionExecutor : ReactiveAsyncExpressionExecutor<IEnumerable<DynamicObject?>?>
+    public class DefaultReactiveAsyncExpressionExecutor : InteractiveAsyncExpressionExecutor<IEnumerable<DynamicObject?>?>
     {
         private readonly IDynamicObjectMapper _mapper;
         private readonly Func<Type, bool> _setTypeInformation;

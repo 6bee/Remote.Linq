@@ -9,47 +9,123 @@ namespace Remote.Linq.Async.Queryable.Tests
     using System.Threading.Tasks;
     using Xunit;
 
-    public sealed class When_querying_async
+    public abstract class When_querying_async
     {
-        private static IAsyncQueryable<Entity> AsyncQueryable =
-            Enumerable.Range(0, 10)
-            .Select(x => new Entity(x))
-            .AsAsyncQueryable();
+        public class With_stream_provider_and_data_provider : When_querying_async
+        {
+        }
+
+        public class With_stream_provider_only : When_querying_async, IDisposable
+        {
+            public With_stream_provider_only()
+                : base(createAsyncDataProvider: false)
+            {
+            }
+
+            public void Dispose()
+            {
+                AsyncDataProviderInvocationCount.ShouldBe(0);
+                AsyncStreamProviderInvocationCount.ShouldBe(1);
+            }
+        }
+
+        public class With_async_data_provider_only : When_querying_async, IDisposable
+        {
+            public With_async_data_provider_only()
+                : base(createAsyncStreamProvider: false)
+            {
+            }
+
+            public void Dispose()
+            {
+                AsyncStreamProviderInvocationCount.ShouldBe(0);
+                AsyncDataProviderInvocationCount.ShouldBe(1);
+            }
+        }
+
+        private readonly bool _hasStreamProviderSupport;
+        private readonly bool _hasDataProviderSupport;
+
+        public When_querying_async(bool createAsyncStreamProvider = true, bool createAsyncDataProvider = true)
+        {
+            _hasStreamProviderSupport = createAsyncStreamProvider;
+            _hasDataProviderSupport = createAsyncDataProvider;
+            AsyncStream = Enumerable.Range(0, 10)
+                .Select(x => new Entity(x))
+                .AsAsyncQueryable(
+                    createAsyncStreamProvider,
+                    createAsyncDataProvider,
+                    _ => AsyncStreamProviderInvocationCount++,
+                    _ => AsyncDataProviderInvocationCount++);
+        }
+
+        protected int AsyncStreamProviderInvocationCount { get; private set; }
+
+        protected int AsyncDataProviderInvocationCount { get; private set; }
+
+        protected IAsyncQueryable<Entity> AsyncStream { get; }
 
         [Fact]
-        public async Task Should_query_full_set_via_async_stream()
+        public async Task Should_query_full_set_via_async_foreach_stream()
         {
             var count = 0;
-            await foreach (var item in AsyncQueryable)
+            await foreach (var item in AsyncStream)
             {
                 count++;
             }
 
             count.ShouldBe(10);
+
+            AssertProviderInvocationForStream();
         }
 
         [Fact]
-        public async Task Should_query_full_set_via_foreach_async()
+        public async Task Should_query_full_set_via_ForEachAsync()
         {
             var count = 0;
-            await AsyncQueryable.ForEachAsync(_ => count++);
+            await AsyncStream.ForEachAsync(_ => count++);
 
             count.ShouldBe(10);
+
+            AssertProviderInvocationForStream();
         }
 
         [Fact]
-        public async Task Should_get_count_via_async_stream()
+        public async Task Should_query_async_enumerable_stream_via_ForEachAsync()
         {
-            var count = await AsyncQueryable.AsAsyncEnumerable().CountAsync();
+            var count = 0;
+            await AsyncStream.AsAsyncEnumerable().ForEachAsync(_ => count++);
 
             count.ShouldBe(10);
+
+            AssertProviderInvocationForStream();
         }
 
         [Fact]
-        public async Task Should_query_filtered_set_as_async_stream()
+        public async Task Should_query_async_enumerable_streaming_CountAsync()
+        {
+            var count = await AsyncStream.AsAsyncEnumerable().CountAsync();
+
+            count.ShouldBe(10);
+
+            AssertProviderInvocationForStream();
+        }
+
+        [Fact]
+        public async Task Should_query_non_streaming_CountAsync()
+        {
+            var count = await AsyncStream.CountAsync();
+
+            count.ShouldBe(10);
+
+            AssertProviderInvocationForNonStream();
+        }
+
+        [Fact]
+        public async Task Should_query_filtered_set_via_async_foreach_stream()
         {
             var query =
-                from x in AsyncQueryable
+                from x in AsyncStream
                 where x.Id >= 5 && x.Id <= 7
                 select x;
 
@@ -60,57 +136,112 @@ namespace Remote.Linq.Async.Queryable.Tests
             }
 
             count.ShouldBe(3);
+
+            AssertProviderInvocationForStream();
         }
 
         [Fact]
-        public async Task Should_query_async_single_item()
+        public async Task Should_query_async_enumerable_streaming_single_item()
         {
-            var single = await AsyncQueryable
+            var single = await AsyncStream
                 .AsAsyncEnumerable()
                 .SingleAsync(x => x.Id == 5)
                 .ConfigureAwait(false);
+
             single.Id.ShouldBe(5);
+
+            AssertProviderInvocationForStream();
         }
 
         [Fact]
-        public async Task Should_query_async_count()
+        public async Task Should_query_async_enumerable_streaming_AverageAsync()
         {
-            var count = await AsyncQueryable.AsAsyncEnumerable().CountAsync();
-            count.ShouldBe(10);
+            var average = await AsyncStream.AsAsyncEnumerable().Select(x => x.Id).AverageAsync();
+
+            average.ShouldBe(4.5);
+
+            AssertProviderInvocationForStream();
         }
 
         [Fact]
-        public async Task Should_throw_upon_calling_single_linq_extension()
+        public async Task Should_query_non_streaming_SingleAsync()
         {
-            await AssertThrowNotSupportedExceptionAsync(async () => await AsyncQueryable.SingleAsync(x => x.Id == 1));
+            var single = await AsyncStream.SingleAsync(x => x.Id == 5);
+
+            single.Id.ShouldBe(5);
+
+            AssertProviderInvocationForNonStream();
         }
 
         [Fact]
-        public async Task Should_throw_upon_calling_tolist_linq_extension()
+        public async Task Should_query_non_streaming_ToListAsync()
         {
-            await AssertThrowNotSupportedExceptionAsync(async () => await AsyncQueryable.ToListAsync());
+            var list = await AsyncStream.ToListAsync();
+
+            list.Count.ShouldBe(10);
+
+            AssertProviderInvocationForNonStream();
         }
 
         [Fact]
-        public async Task Should_throw_upon_calling_toarrayasync_linq_extension()
+        public async Task Should_query_non_streaming_ToArrayAsync()
         {
-            await AssertThrowNotSupportedExceptionAsync(async () => await AsyncQueryable.ToArrayAsync());
-        }
+            var array = await AsyncStream.ToArrayAsync();
 
-        private static async Task AssertThrowNotSupportedExceptionAsync(Func<Task> task)
-        {
-            var ex = await Should.ThrowAsync<NotSupportedException>(task);
-            ex.Message.ShouldBe("Async remote stream may only be executed as IAsyncEnumerable<>. " +
-                "Consider calling AsAsyncEnumerable() extension method before enumerating.");
+            array.Length.ShouldBe(10);
+
+            AssertProviderInvocationForNonStream();
         }
 
         [Fact]
-        public void Should_throw_upon_calling_AsAsyncEnumerable_with_non_remote_queryable()
+        public async Task Should_query_non_streaming_AverageAsync()
         {
-            var source = Enumerable.Empty<Entity>().AsQueryable();
-            var ex = Should.Throw<NotSupportedException>(() => source.AsAsyncEnumerable());
-            ex.Message.ShouldBe("The provider for the source IQueryable doesn't implement IAsyncRemoteStreamProvider. " +
-                "Only providers implementing Remote.Linq.IAsyncRemoteStreamProvider can be used for Remote Linq's AsAsyncEnumerable operation.");
+            var average = await AsyncStream.Select(x => x.Id).AverageAsync();
+
+            average.ShouldBe(4.5);
+
+            AssertProviderInvocationForNonStream();
+        }
+
+        [Fact]
+        public async Task Should_query_non_streaming_GroupBy()
+        {
+            var groupedResult = await AsyncStream
+                .GroupBy(x => x.Id)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            groupedResult.Count.ShouldBe(10);
+
+            AssertProviderInvocationForNonStream();
+        }
+
+        private void AssertProviderInvocationForStream()
+        {
+            if (_hasStreamProviderSupport)
+            {
+                AsyncDataProviderInvocationCount.ShouldBe(0);
+                AsyncStreamProviderInvocationCount.ShouldBe(1);
+            }
+            else
+            {
+                AsyncStreamProviderInvocationCount.ShouldBe(0);
+                AsyncDataProviderInvocationCount.ShouldBe(1);
+            }
+        }
+
+        private void AssertProviderInvocationForNonStream()
+        {
+            if (_hasDataProviderSupport)
+            {
+                AsyncStreamProviderInvocationCount.ShouldBe(0);
+                AsyncDataProviderInvocationCount.ShouldBe(1);
+            }
+            else
+            {
+                AsyncDataProviderInvocationCount.ShouldBe(0);
+                AsyncStreamProviderInvocationCount.ShouldBe(1);
+            }
         }
     }
 }

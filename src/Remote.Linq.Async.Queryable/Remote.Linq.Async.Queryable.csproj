@@ -7,16 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ExpressionExecution\CastingReactiveAsyncExpressionExecutor`1.cs" />
-    <Compile Remove="ExpressionExecution\DefaultReactiveAsyncExpressionExecutor.cs" />
-    <Compile Remove="ExpressionExecution\ReactiveAsyncExpressionExecutor`1.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Remove="aqua.tool.Nullable" />
     <PackageReference Include="System.Linq.Async.Queryable" Version="5.0.0" />
   </ItemGroup>
 
