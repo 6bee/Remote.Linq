@@ -39,7 +39,6 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
             {
                 if (!reader.TryRead(elementTypeInfo!, serializer, out value))
                 {
-                    // TODO: is max length quota required?
                     if (reader.TokenType == JsonToken.EndArray)
                     {
                         return false;

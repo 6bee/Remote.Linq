@@ -47,7 +47,7 @@ namespace Remote.Linq.Expressions
         [Unmapped]
         internal string DebugView => DebugFormatter.ToString(0);
 
-        // TODO: make DebugFormatter property abstract and have every expression implement its own formatter
+        // TODO: [expression string formatter] make DebugFormatter property abstract and have every expression implement its own formatter
         [Unmapped]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected internal virtual ExpressionDebugFormatter DebugFormatter => new ExpressionDebugFormatter(this);
@@ -63,7 +63,7 @@ namespace Remote.Linq.Expressions
 
             public override string ToString() => Expression.ToString();
 
-            // TODO: add indentation and line break formtting
+            // TODO: [expression string formatter] add indentation and line break formtting
             [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Pending task...")]
             protected internal string ToString(int level) => ToString();
 
