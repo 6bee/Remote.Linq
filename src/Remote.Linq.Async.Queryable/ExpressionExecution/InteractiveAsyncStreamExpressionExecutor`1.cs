@@ -13,7 +13,6 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using System.Threading.Tasks;
 
     public abstract class InteractiveAsyncStreamExpressionExecutor<TDataTranferObject> : AsyncStreamExpressionExecutor<IAsyncQueryable, TDataTranferObject>
-        where TDataTranferObject : class
     {
         protected InteractiveAsyncStreamExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<Expression, bool>? canBeEvaluatedLocally = null)
             : base(queryableProvider, typeResolver, canBeEvaluatedLocally)

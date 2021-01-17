@@ -74,8 +74,6 @@ namespace Remote.Linq.Async.Queryable.TestSupport
         }
 
         private static Func<Expression, IAsyncEnumerable<TResult?>> CreateAsyncStreamProviderWithTestData<TData, TResult>(IEnumerable<TData> items, Action<Expression>? onExecuteAsyncStream)
-            where TData : class, TResult
-            where TResult : class
         {
             return ExecuteAsyncStream;
 
@@ -89,7 +87,6 @@ namespace Remote.Linq.Async.Queryable.TestSupport
         }
 
         private static Func<Expression, ValueTask<TResult?>> CreateAsyncDataProviderWithTestData<TData, TResult>(IEnumerable<TData> items, Action<Expression>? onExecuteAsyncQuery)
-            where TResult : class
         {
             return ExecuteAsyncQuery;
 

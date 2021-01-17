@@ -12,7 +12,6 @@ namespace Remote.Linq.ExpressionExecution
 
     [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
     public abstract class AsyncStreamExpressionExecutor<TQueryable, TDataTranferObject> : IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>
-        where TDataTranferObject : class
     {
         private readonly Func<Type, TQueryable> _queryableProvider;
         private readonly ITypeResolver? _typeResolver;

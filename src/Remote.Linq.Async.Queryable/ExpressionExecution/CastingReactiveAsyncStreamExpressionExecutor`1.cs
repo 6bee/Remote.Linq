@@ -9,7 +9,6 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using System.Linq.Expressions;
 
     internal sealed class CastingReactiveAsyncStreamExpressionExecutor<TResult> : InteractiveAsyncStreamExpressionExecutor<TResult>
-        where TResult : class
     {
         public CastingReactiveAsyncStreamExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, ITypeResolver? typeResolver, Func<Expression, bool>? canBeEvaluatedLocally)
             : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
