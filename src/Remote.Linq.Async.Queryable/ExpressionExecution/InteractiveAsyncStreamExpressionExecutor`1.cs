@@ -10,6 +10,8 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public abstract class InteractiveAsyncStreamExpressionExecutor<TDataTranferObject> : AsyncStreamExpressionExecutor<IAsyncQueryable, TDataTranferObject>
@@ -19,7 +21,16 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
         {
         }
 
-        protected override IAsyncEnumerable<object?> ExecuteAsyncStream(Expression expression)
+        protected override async IAsyncEnumerable<object?> ExecuteAsyncStream(Expression expression, [EnumeratorCancellation] CancellationToken cancellation)
+        {
+            var asyncEnumerable = ExecuteAsyncStreamCore(expression);
+            await foreach (var item in asyncEnumerable.WithCancellation(cancellation).ConfigureAwait(false))
+            {
+                yield return item;
+            }
+        }
+
+        private IAsyncEnumerable<object?> ExecuteAsyncStreamCore(Expression expression)
         {
             var queryResult = expression.CheckNotNull(nameof(expression)).CompileAndInvokeExpression();
             if (queryResult is IAsyncEnumerable<object?> asyncEnumerable)

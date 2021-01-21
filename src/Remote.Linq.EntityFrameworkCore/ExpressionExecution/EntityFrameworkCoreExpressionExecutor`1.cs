@@ -7,46 +7,47 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using Microsoft.EntityFrameworkCore;
     using Remote.Linq.EntityFrameworkCore.ExpressionVisitors;
     using Remote.Linq.ExpressionExecution;
-    using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
+    using RemoteLinq = Remote.Linq.Expressions;
+    using SystemLinq = System.Linq.Expressions;
 
     public abstract class EntityFrameworkCoreExpressionExecutor<TDataTranferObject> : AsyncExpressionExecutor<IQueryable, TDataTranferObject>
     {
         [SecuritySafeCritical]
-        protected EntityFrameworkCoreExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        protected EntityFrameworkCoreExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
             : this(dbContext.GetQueryableSetProvider(), typeResolver, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))
         {
         }
 
-        protected EntityFrameworkCoreExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        protected EntityFrameworkCoreExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
             : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
         {
         }
 
-        protected override Expression Prepare(Expression expression)
+        protected override RemoteLinq.Expression Prepare(RemoteLinq.Expression expression)
             => base.Prepare(expression).ReplaceIncludeMethodCall();
 
         /// <summary>
-        /// Prepares the query <see cref="System.Linq.Expressions.Expression"/> to be able to be executed.
+        /// Prepares the query <see cref="SystemLinq.Expression"/> to be able to be executed.
         /// </summary>
-        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> returned by the Transform method.</param>
+        /// <param name="expression">The <see cref="SystemLinq.Expression"/> returned by the Transform method.</param>
         /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution.</returns>
-        protected override System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+        /// <returns>A <see cref="SystemLinq.Expression"/> ready for execution.</returns>
+        protected override SystemLinq.Expression PrepareAsyncQuery(SystemLinq.Expression expression, CancellationToken cancellation)
             => Prepare(expression).ScalarQueryToAsyncExpression(cancellation);
 
         /// <summary>
-        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw result.
+        /// Executes the <see cref="SystemLinq.Expression"/> and returns the raw result.
         /// </summary>
-        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
+        /// <param name="expression">The <see cref="SystemLinq.Expression"/> to be executed.</param>
         /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
-        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected override async ValueTask<object?> ExecuteCoreAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
+        /// <returns>Execution result of the <see cref="SystemLinq.Expression"/> specified.</returns>
+        protected override async ValueTask<object?> ExecuteCoreAsync(SystemLinq.Expression expression, CancellationToken cancellation)
         {
             cancellation.ThrowIfCancellationRequested();
 

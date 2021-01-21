@@ -7,6 +7,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
@@ -63,14 +64,14 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
             }
         }
 
-        public static IAsyncEnumerable<object?> ExecuteAsAsyncStream(this IQueryable queryable)
+        public static IAsyncEnumerable<object?> ExecuteAsAsyncStreamWithCancellation(this IQueryable queryable, CancellationToken cancellation)
             => (IAsyncEnumerable<object?>)_executeAsAsyncStream
             .MakeGenericMethod(queryable.ElementType)
-            .Invoke(null, new object[] { queryable });
+            .Invoke(null, new object[] { queryable, cancellation });
 
-        private static async IAsyncEnumerable<object?> ExecuteAsAsyncStream<T>(IQueryable<T> queryable)
+        private static async IAsyncEnumerable<object?> ExecuteAsAsyncStream<T>(IQueryable<T> queryable, [EnumeratorCancellation] CancellationToken cancellation)
         {
-            await foreach (var item in queryable.AsAsyncEnumerable().ConfigureAwait(false))
+            await foreach (var item in queryable.AsAsyncEnumerable().WithCancellation(cancellation).ConfigureAwait(false))
             {
                 yield return item;
             }

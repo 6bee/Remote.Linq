@@ -8,17 +8,18 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
+    using SystemLinq = System.Linq.Expressions;
 
     internal sealed class CastingEntityFrameworkCoreAsyncStreamExpressionExecutor<TResult> : EntityFrameworkCoreAsyncStreamExpressionExecutor<TResult>
         where TResult : class
     {
         [SecuritySafeCritical]
-        public CastingEntityFrameworkCoreAsyncStreamExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally)
+        public CastingEntityFrameworkCoreAsyncStreamExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
             : base(dbContext, typeResolver, canBeEvaluatedLocally)
         {
         }
 
-        public CastingEntityFrameworkCoreAsyncStreamExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally)
+        public CastingEntityFrameworkCoreAsyncStreamExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
             : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
         {
         }

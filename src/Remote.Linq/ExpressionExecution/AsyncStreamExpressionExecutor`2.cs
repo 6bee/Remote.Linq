@@ -3,24 +3,26 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.TypeSystem;
-    using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Threading;
+    using RemoteLinq = Remote.Linq.Expressions;
+    using SystemLinq = System.Linq.Expressions;
 
     [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
     public abstract class AsyncStreamExpressionExecutor<TQueryable, TDataTranferObject> : IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>
     {
         private readonly Func<Type, TQueryable> _queryableProvider;
         private readonly ITypeResolver? _typeResolver;
-        private readonly Func<System.Linq.Expressions.Expression, bool>? _canBeEvaluatedLocally;
+        private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncStreamExpressionExecutor{TQueryable, TDataTranferObject}"/> class.
         /// </summary>
-        protected AsyncStreamExpressionExecutor(Func<Type, TQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        protected AsyncStreamExpressionExecutor(Func<Type, TQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
         {
             _queryableProvider = queryableProvider;
             _typeResolver = typeResolver;
@@ -28,16 +30,17 @@ namespace Remote.Linq.ExpressionExecution
         }
 
         /// <summary>
-        /// Composes and executes the query based on the <see cref="Expression"/>.
+        /// Composes and executes the query based on the <see cref="RemoteLinq.Expression"/>.
         /// </summary>
-        /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
+        /// <param name="expression">The <see cref="RemoteLinq.Expression"/> to be executed.</param>
+        /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the async operation to complete.</param>
         /// <returns>The mapped result of the query execution.</returns>
-        public IAsyncEnumerable<TDataTranferObject?> ExecuteAsyncStream(Expression expression)
+        public IAsyncEnumerable<TDataTranferObject?> ExecuteAsyncStream(RemoteLinq.Expression expression, CancellationToken cancellation = default)
         {
             var preparedRemoteExpression = Prepare(expression);
             var linqExpression = Transform(preparedRemoteExpression);
             var preparedLinqExpression = Prepare(linqExpression);
-            var queryResult = ExecuteAsyncStream(preparedLinqExpression);
+            var queryResult = ExecuteAsyncStream(preparedLinqExpression, cancellation);
             var processedResult = ProcessResult(queryResult);
             var dataTransferObjects = ConvertResult(processedResult);
             var processedDataTransferObjects = ProcessResult(dataTransferObjects);
@@ -45,47 +48,48 @@ namespace Remote.Linq.ExpressionExecution
         }
 
         /// <summary>
-        /// Prepares the <see cref="Expression"/> befor being transformed.<para/>
+        /// Prepares the <see cref="RemoteLinq.Expression"/> befor being transformed.<para/>
         /// </summary>
-        /// <param name="expression">The <see cref="Expression"/>.</param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/>.</returns>
-        protected virtual Expression Prepare(Expression expression)
+        /// <param name="expression">The <see cref="RemoteLinq.Expression"/>.</param>
+        /// <returns>A <see cref="SystemLinq.Expression"/>.</returns>
+        protected virtual RemoteLinq.Expression Prepare(RemoteLinq.Expression expression)
             => expression
             .ReplaceNonGenericQueryArgumentsByGenericArguments()
             .ReplaceResourceDescriptorsByQueryable(_queryableProvider, _typeResolver);
 
         /// <summary>
-        /// Transforms the <see cref="Expression"/> to a <see cref="System.Linq.Expressions.Expression"/>.
+        /// Transforms the <see cref="RemoteLinq.Expression"/> to a <see cref="SystemLinq.Expression"/>.
         /// </summary>
-        /// <param name="expression">The <see cref="Expression"/> to be transformed.</param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/>.</returns>
-        protected virtual System.Linq.Expressions.Expression Transform(Expression expression)
+        /// <param name="expression">The <see cref="RemoteLinq.Expression"/> to be transformed.</param>
+        /// <returns>A <see cref="SystemLinq.Expression"/>.</returns>
+        protected virtual SystemLinq.Expression Transform(RemoteLinq.Expression expression)
             => expression.ToLinqExpression(_typeResolver);
 
         /// <summary>
-        /// Prepares the query <see cref="System.Linq.Expressions.Expression"/> to be able to be executed.
+        /// Prepares the query <see cref="SystemLinq.Expression"/> to be able to be executed.
         /// </summary>
-        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> returned by the Transform method.</param>
-        /// <returns>A <see cref="System.Linq.Expressions.Expression"/> ready for execution.</returns>
-        protected virtual System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression)
+        /// <param name="expression">The <see cref="SystemLinq.Expression"/> returned by the Transform method.</param>
+        /// <returns>A <see cref="SystemLinq.Expression"/> ready for execution.</returns>
+        protected virtual SystemLinq.Expression Prepare(SystemLinq.Expression expression)
             => expression.PartialEval(_canBeEvaluatedLocally);
 
         /// <summary>
-        /// Executes the <see cref="System.Linq.Expressions.Expression"/> and returns the raw async stream result.
+        /// Executes the <see cref="SystemLinq.Expression"/> and returns the raw async stream result.
         /// </summary>
         /// <remarks>
         /// <see cref="InvalidOperationException"/> get handled for failing
         /// <see cref="Queryable.Single{TSource}(IQueryable{TSource})"/> and
-        /// <see cref="Queryable.Single{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>,
+        /// <see cref="Queryable.Single{TSource}(IQueryable{TSource}, SystemLinq.Expression{Func{TSource, bool}})"/>,
         /// <see cref="Queryable.First{TSource}(IQueryable{TSource})"/>,
-        /// <see cref="Queryable.First{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>,
+        /// <see cref="Queryable.First{TSource}(IQueryable{TSource}, SystemLinq.Expression{Func{TSource, bool}})"/>,
         /// <see cref="Queryable.Last{TSource}(IQueryable{TSource})"/>,
-        /// <see cref="Queryable.Last{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{Func{TSource, bool}})"/>.
+        /// <see cref="Queryable.Last{TSource}(IQueryable{TSource}, SystemLinq.Expression{Func{TSource, bool}})"/>.
         /// Instead of throwing an exception, an array with the length of zero respectively two elements is returned.
         /// </remarks>
-        /// <param name="expression">The <see cref="System.Linq.Expressions.Expression"/> to be executed.</param>
-        /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
-        protected abstract IAsyncEnumerable<object?> ExecuteAsyncStream(System.Linq.Expressions.Expression expression);
+        /// <param name="expression">The <see cref="SystemLinq.Expression"/> to be executed.</param>
+        /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the async operation to complete.</param>
+        /// <returns>Execution result of the <see cref="SystemLinq.Expression"/> specified.</returns>
+        protected abstract IAsyncEnumerable<object?> ExecuteAsyncStream(SystemLinq.Expression expression, CancellationToken cancellation);
 
         /// <summary>
         /// If overriden in a derived class processes the items of the async stream.
@@ -108,13 +112,13 @@ namespace Remote.Linq.ExpressionExecution
         /// <returns>Processed result.</returns>
         protected virtual IAsyncEnumerable<TDataTranferObject?> ProcessResult(IAsyncEnumerable<TDataTranferObject?> queryResult) => queryResult;
 
-        Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Prepare(Expression expression) => Prepare(expression);
+        RemoteLinq.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Prepare(RemoteLinq.Expression expression) => Prepare(expression);
 
-        System.Linq.Expressions.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Transform(Expression expression) => Transform(expression);
+        SystemLinq.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Transform(RemoteLinq.Expression expression) => Transform(expression);
 
-        System.Linq.Expressions.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Prepare(System.Linq.Expressions.Expression expression) => Prepare(expression);
+        SystemLinq.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Prepare(SystemLinq.Expression expression) => Prepare(expression);
 
-        IAsyncEnumerable<object?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsyncStream(System.Linq.Expressions.Expression expression) => ExecuteAsyncStream(expression);
+        IAsyncEnumerable<object?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsyncStream(SystemLinq.Expression expression, CancellationToken cancellation) => ExecuteAsyncStream(expression, cancellation);
 
         IAsyncEnumerable<object?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(IAsyncEnumerable<object?> queryResult) => ProcessResult(queryResult);
 
