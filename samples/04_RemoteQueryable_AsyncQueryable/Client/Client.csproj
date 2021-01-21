@@ -12,6 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Client.IAsyncRemoteRepository.cs" Visible="false" />
+    <Compile Include="..\..\SharedCode\Client.AsyncTcpQueryClient.cs" Link="AsyncTcpQueryClient" />
+    <Compile Include="..\..\SharedCode\Client.AsyncStreamEnumerator.cs" Link="AsyncStreamEnumerator" />
     <Compile Include="..\..\SharedCode\CommonHelper.cs" Visible="false" />
   </ItemGroup>
 </Project>

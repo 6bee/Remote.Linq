@@ -4,7 +4,7 @@ namespace Server
 {
     using Aqua.Dynamic;
     using Common;
-    using Common.SimpleAsyncStreamProtocol;
+    using Common.SimpleAsyncQueryProtocol;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;

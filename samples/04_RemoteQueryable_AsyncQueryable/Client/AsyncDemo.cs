@@ -2,7 +2,6 @@
 
 namespace Client
 {
-    using Remote.Linq;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -12,7 +11,7 @@ namespace Client
     {
         private readonly Func<IAsyncRemoteRepository> _repoProvider;
 
-        public AsyncStreamDemo(Func<AsyncRemoteRepository> repoProvider)
+        public AsyncStreamDemo(Func<IAsyncRemoteRepository> repoProvider)
         {
             _repoProvider = repoProvider;
         }

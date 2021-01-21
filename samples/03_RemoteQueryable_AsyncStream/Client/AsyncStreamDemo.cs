@@ -12,7 +12,7 @@ namespace Client
     {
         private readonly Func<IRemoteRepository> _repoProvider;
 
-        public AsyncStreamDemo(Func<RemoteAsyncStreamRepository> repoProvider)
+        public AsyncStreamDemo(Func<AsyncRemoteStreamRepository> repoProvider)
         {
             _repoProvider = repoProvider;
         }
@@ -29,13 +29,17 @@ namespace Client
             }
 
             PrintHeader("CROSS JOIN:");
-            Func<object, string> sufix = (x) => x + "ending";
+            var vowels = new[] { 'a', 'e', 'i', 'o', 'u' };
             var crossJoinQuery =
                 from c in repo.ProductCategories
                 from p in repo.Products
-                select new { Category = "#" + c.Name + sufix("-"), p.Name };
-            var asyncCrossJoinQuery = crossJoinQuery.AsAsyncEnumerable();
-            await foreach (var item in asyncCrossJoinQuery.ConfigureAwait(false))
+                let @particle = vowels.Contains(p.Name.Substring(0, 1).ToLower().Single()) ? "An" : "A"
+                let @subject = p.Name.ToLower()
+                let @verb = $"is{(c.Id == p.ProductCategoryId ? null : " not")} a"
+                let @object = c.Name.ToLower().TrimEnd('s')
+                orderby @subject, @object
+                select $"{@particle} {@subject} {@verb} {@object}";
+            await foreach (var item in crossJoinQuery.AsAsyncEnumerable().ConfigureAwait(false))
             {
                 PrintLine($"  {item}");
             }
@@ -44,9 +48,8 @@ namespace Client
             var innerJoinQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
-                select new { c.Name, P = new { p.Price }, X = new { Y = string.Concat(c.Name, "-", p.Name) } };
-            var asyncInnerJoinQuery = innerJoinQuery.AsAsyncEnumerable();
-            await foreach (var item in asyncInnerJoinQuery.ConfigureAwait(false))
+                select new { Product = new { Description = string.Concat(c.Name, "-", p.Name), Price = $"{p.Price:C}" } };
+            await foreach (var item in innerJoinQuery.AsAsyncEnumerable().ConfigureAwait(false))
             {
                 PrintLine($"  {item}");
             }
@@ -65,20 +68,15 @@ namespace Client
             PrintHeader("TOTAL AMOUNT BY CATEGORY:");
             var totalAmountByCategoryQuery =
                 from c in repo.ProductCategories
-                join p in repo.Products
-                    on c.Id equals p.ProductCategoryId
-                join i in repo.OrderItems
-                    on p.Id equals i.ProductId
+                join p in repo.Products on c.Id equals p.ProductCategoryId
+                join i in repo.OrderItems on p.Id equals i.ProductId
                 group new { c, p, i } by c.Name into g
                 select new
                 {
                     Category = g.Key,
                     Amount = g.Sum(x => x.i.Quantity * x.p.Price),
-                    Amount2 = new { Amount = g.Sum(x => x.i.Quantity * x.p.Price) },
                 };
-
-            var asyncTotalAmountByCategoryQuery = totalAmountByCategoryQuery.AsAsyncEnumerable();
-            await foreach (var item in asyncTotalAmountByCategoryQuery.ConfigureAwait(false))
+            await foreach (var item in totalAmountByCategoryQuery.AsAsyncEnumerable().ConfigureAwait(false))
             {
                 PrintLine($"  {item}");
             }

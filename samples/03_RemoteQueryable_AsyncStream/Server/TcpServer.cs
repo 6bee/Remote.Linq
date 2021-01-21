@@ -3,7 +3,7 @@
 namespace Server
 {
     using Common;
-    using Common.SimpleAsyncStreamProtocol;
+    using Common.SimpleAsyncQueryProtocol;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;
@@ -47,7 +47,7 @@ namespace Server
                                 while (true)
                                 {
                                     using var cancellation = new CancellationTokenSource();
-                                    var initiate = await stream.ReadAsync<InitializeStream<TRequest>>().ConfigureAwait(false);
+                                    var initiate = await stream.ReadAsync<AsyncStreamQuery<TRequest>>().ConfigureAwait(false);
                                     var asyncEnumerator = asyncRequestHandler(initiate.Request, cancellation.Token).GetAsyncEnumerator();
                                     try
                                     {

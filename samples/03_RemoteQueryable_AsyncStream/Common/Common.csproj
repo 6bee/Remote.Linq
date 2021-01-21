@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Remote.Linq.Newtonsoft.Json" />
@@ -11,6 +11,10 @@
     <Compile Include="..\..\SharedCode\Common.Model.Product.cs" Link="Model\Product.cs" />
     <Compile Include="..\..\SharedCode\Common.Model.ProductCategory.cs" Link="Model\ProductCategory.cs" />
     <Compile Include="..\..\SharedCode\Common.Model.ProductGroup.cs" Link="Model\ProductGroup.cs" />
+    <Compile Include="..\..\SharedCode\Common.SimpleAsyncQueryProtocol.AsyncStreamQuery`1.cs" Link="SimpleAsyncQueryProtocol\AsyncStreamQuery`1.cs" />
+    <Compile Include="..\..\SharedCode\Common.SimpleAsyncQueryProtocol.IQuery`1.cs" Link="SimpleAsyncQueryProtocol\IQuery`1.cs" />
+    <Compile Include="..\..\SharedCode\Common.SimpleAsyncQueryProtocol.NextRequest.cs" Link="SimpleAsyncQueryProtocol\NextRequest.cs" />
+    <Compile Include="..\..\SharedCode\Common.SimpleAsyncQueryProtocol.NextResponse`1.cs" Link="SimpleAsyncQueryProtocol\NextResponse`1.cs" />
     <Compile Include="..\..\SharedCode\Common.JsonFormatter.cs" Link="JsonFormatter.cs" />
   </ItemGroup>
 </Project>

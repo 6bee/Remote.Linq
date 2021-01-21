@@ -5,7 +5,7 @@ namespace Client
     using Aqua.Dynamic;
     using Common;
     using Common.Model;
-    using Common.SimpleAsyncStreamProtocol;
+    using Common.SimpleAsyncQueryProtocol;
     using Remote.Linq;
     using Remote.Linq.Expressions;
     using System;
@@ -15,7 +15,7 @@ namespace Client
     using System.Threading;
     using System.Threading.Tasks;
 
-    public partial class RemoteAsyncStreamRepository : IRemoteRepository
+    public partial class AsyncRemoteStreamRepository : IRemoteRepository
     {
         private sealed class AsyncTcpClientEnumerator<T> : IAsyncDisposable
         {
@@ -34,7 +34,7 @@ namespace Client
                 {
                     var tcpClient = tcpClientProvider();
                     var stream = tcpClient.GetStream();
-                    await stream.WriteAsync(new InitializeStream<Expression> { Request = expression }).ConfigureAwait(false);
+                    await stream.WriteAsync(new AsyncStreamQuery<Expression> { Request = expression }).ConfigureAwait(false);
                     await stream.FlushAsync().ConfigureAwait(false);
                     return tcpClient;
                 }));
@@ -118,7 +118,7 @@ namespace Client
         private readonly TcpClient _tcpClient;
         private readonly Func<Expression, CancellationToken, IAsyncEnumerable<DynamicObject>> _asyncStreamDataProvider;
 
-        public RemoteAsyncStreamRepository(string server, int port)
+        public AsyncRemoteStreamRepository(string server, int port)
         {
             _tcpClient = new TcpClient(server, port);
             _asyncStreamDataProvider = (expression, cancellation) => new AsyncTcpClientEnumerator<DynamicObject>(() => _tcpClient, expression, cancellation, false).GetAsyncStream();
