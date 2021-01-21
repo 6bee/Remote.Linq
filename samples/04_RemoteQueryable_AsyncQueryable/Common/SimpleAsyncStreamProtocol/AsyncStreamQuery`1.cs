@@ -2,12 +2,8 @@
 
 namespace Common.SimpleAsyncStreamProtocol
 {
-    public readonly struct NextResponse<T>
+    public readonly struct AsyncStreamQuery<T> : IQuery<T>
     {
-        public long SequenceNumber { get; init; }
-
-        public bool HasNext { get; init; }
-
-        public T Item { get; init; }
+        public T Request { get; init; }
     }
 }

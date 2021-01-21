@@ -17,7 +17,7 @@ namespace Client
 
     public partial class RemoteAsyncStreamRepository : IRemoteRepository
     {
-        private sealed class AsyncTcpClientEnumerator<T> : IAsyncEnumerator<T>
+        private sealed class AsyncTcpClientEnumerator<T> : IAsyncDisposable
         {
             private readonly Lazy<Task<TcpClient>> _tcpClient;
             private readonly CancellationToken _cancellation;
@@ -52,17 +52,9 @@ namespace Client
                 _current = new Lazy<T>(() => current);
             }
 
-            public T Current => _current.Value;
+            private T Current => _current.Value;
 
-            public async ValueTask DisposeAsync()
-            {
-                if (_ownsTcpClient && _tcpClient.IsValueCreated)
-                {
-                    await new ValueTask(Task.Run(_tcpClient.Value.Dispose));
-                }
-            }
-
-            public async ValueTask<bool> MoveNextAsync()
+            private async ValueTask<bool> MoveNextAsync()
             {
                 try
                 {
@@ -96,6 +88,14 @@ namespace Client
                 {
                     SetError(ex);
                     throw;
+                }
+            }
+
+            public async ValueTask DisposeAsync()
+            {
+                if (_ownsTcpClient && _tcpClient.IsValueCreated)
+                {
+                    await new ValueTask(Task.Run(_tcpClient.Value.Dispose));
                 }
             }
 

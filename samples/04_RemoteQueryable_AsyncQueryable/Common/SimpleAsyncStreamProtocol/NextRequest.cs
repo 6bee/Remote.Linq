@@ -2,8 +2,8 @@
 
 namespace Common.SimpleAsyncStreamProtocol
 {
-    public struct NextRequest
+    public readonly struct NextRequest
     {
-        public long SequenceNumber { get; set; }
+        public long SequenceNumber { get; init; }
     }
 }

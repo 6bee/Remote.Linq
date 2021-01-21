@@ -2,8 +2,8 @@
 
 namespace Common.SimpleAsyncStreamProtocol
 {
-    public struct InitializeStream<T>
+    public interface IQuery<T>
     {
-        public T Request { get; set; }
+        T Request { get; }
     }
 }

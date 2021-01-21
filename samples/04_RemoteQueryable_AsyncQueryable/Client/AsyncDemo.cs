@@ -21,13 +21,13 @@ namespace Client
         {
             await using IAsyncRemoteRepository repo = _repoProvider();
 
-            PrintHeader("GET ALL PRODUCTS:");
+            PrintHeader("GET ALL PRODUCTS [ASYNC STREAM]:");
             await foreach (var item in repo.Products.ConfigureAwait(false))
             {
                 PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
             }
 
-            PrintHeader("CROSS JOIN:");
+            PrintHeader("CROSS JOIN [ASYNC STREAM]:");
             var vowels = new[] { 'a', 'e', 'i', 'o', 'u' };
             var crossJoinQuery =
                 from c in repo.ProductCategories
@@ -43,7 +43,13 @@ namespace Client
                 PrintLine($"  {item}");
             }
 
-            PrintHeader("INNER JOIN:");
+            PrintHeader("CROSS JOIN [ASYNC QUERY]:");
+            foreach (var item in await crossJoinQuery.ToListAsync().ConfigureAwait(false))
+            {
+                PrintLine($"  {item}");
+            }
+
+            PrintHeader("INNER JOIN [ASYNC STREAM]:");
             var innerJoinQuery =
                 from c in repo.ProductCategories
                 join p in repo.Products on c.Id equals p.ProductCategoryId
@@ -53,7 +59,7 @@ namespace Client
                 PrintLine($"  {item}");
             }
 
-            PrintHeader("SELECT IDs:");
+            PrintHeader("SELECT IDs [ASYNC STREAM]:");
             var productIdsQuery =
                 from p in repo.Products
                 orderby p.Price descending
@@ -63,7 +69,7 @@ namespace Client
                 PrintLine($"  {id}");
             }
 
-            PrintHeader("GROUP BY:");
+            PrintHeader("GROUP BY [ASYNC STREAM]:");
             var grouped =
                 from p in repo.Products
                 join c in repo.ProductCategories on p.ProductCategoryId equals c.Id

@@ -10,19 +10,18 @@ namespace Server
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
     using System.Threading;
+    using System.Threading.Tasks;
 
     public class AsyncQueryService
     {
         private Func<Type, IAsyncQueryable> AsyncQueryableByTypeProvider => new AsyncQueryableByTypeProviderWrapper(InMemoryDataStore.Instance.QueryableByTypeProvider).GetAsyncQueryableByType;
 
+        public ValueTask<DynamicObject> ExecuteQueryAsync(Expression queryExpression, CancellationToken cancellation)
+            => queryExpression.ExecuteAsync(AsyncQueryableByTypeProvider, cancellation: cancellation);
+
         public IAsyncEnumerable<DynamicObject> ExecuteAsyncStreamQuery(Expression queryExpression, CancellationToken cancellation)
-        {
-            // DEMO: for demo purpose we fetch query result into memory
-            // and use test-support extension method to return an asyn stream
-            return queryExpression.ExecuteAsyncStream(AsyncQueryableByTypeProvider);
-        }
+            => queryExpression.ExecuteAsyncStream(AsyncQueryableByTypeProvider, cancellation: cancellation);
 
         private sealed class AsyncQueryableByTypeProviderWrapper
         {

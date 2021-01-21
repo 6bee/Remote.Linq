@@ -16,8 +16,9 @@ namespace DemoStartUp
             const int port = 8899;
 
             PrintSetup("Starting TCP service...");
-            using var serviceHost = new TcpServer(port);
-            serviceHost.RunAsyncStreamQueryService(new AsyncQueryService().ExecuteAsyncStreamQuery);
+            using var asyncStreamServiceHost = new TcpStreamServer(port);
+            var asyncQueryService = new AsyncQueryService();
+            asyncStreamServiceHost.RunAsyncStreamQueryService(asyncQueryService.ExecuteAsyncStreamQuery, asyncQueryService.ExecuteQueryAsync);
 
             PrintSetup("Staring client demo...");
             PrintSetup("-------------------------------------------------");

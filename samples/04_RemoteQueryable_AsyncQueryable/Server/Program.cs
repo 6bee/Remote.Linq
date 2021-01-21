@@ -10,8 +10,9 @@ namespace Server
         {
             Title("Ix.NET [Server]");
             PrintNote("This demo uses a random delay on server side to simulate data item retrieval/generation.");
-            using var serviceHost = new TcpServer(8899);
-            serviceHost.RunAsyncStreamQueryService(new AsyncQueryService().ExecuteAsyncStreamQuery);
+            using var asyncStreamServiceHost = new TcpStreamServer(8899);
+            var asyncQueryService = new AsyncQueryService();
+            asyncStreamServiceHost.RunAsyncStreamQueryService(asyncQueryService.ExecuteAsyncStreamQuery, asyncQueryService.ExecuteQueryAsync);
 
             PrintServerReady();
             WaitForEnterKey();

@@ -13,30 +13,68 @@ namespace Client
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Sockets;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
 
     public partial class AsyncRemoteRepository : IAsyncRemoteRepository
     {
-        private sealed class AsyncTcpClientEnumerator<T> : IAsyncEnumerator<T>
+        private sealed class AsyncTcpQueryClient : IAsyncDisposable
+        {
+            private readonly string _server;
+            private readonly int _port;
+
+            public AsyncTcpQueryClient(string server, int port)
+            {
+                _server = server;
+                _port = port;
+            }
+
+            public async ValueTask<DynamicObject> ExecuteAsync(Expression expression, CancellationToken cancellation)
+            {
+                using var tcpClient = new TcpClient();
+                await tcpClient.ConnectAsync(_server, _port, cancellation);
+
+                using var stream = tcpClient.GetStream();
+                await stream.WriteAsync(new AsyncQuery<Expression> { Request = expression }, cancellation).ConfigureAwait(false);
+                await stream.FlushAsync(cancellation).ConfigureAwait(false);
+
+                var result = await stream.ReadAsync<DynamicObject>(cancellation).ConfigureAwait(false);
+                return result;
+            }
+
+            public async IAsyncEnumerable<DynamicObject> ExecuteAsyncStream(Expression expression, [EnumeratorCancellation] CancellationToken cancellation)
+            {
+                using var tcpClient = new TcpClient();
+                await tcpClient.ConnectAsync(_server, _port, cancellation);
+
+                await using var asyncTcpClientEnumerator = new AsyncTcpStreamEnumerator<DynamicObject>(tcpClient, expression, cancellation);
+
+                while (await asyncTcpClientEnumerator.MoveNextAsync().ConfigureAwait(false))
+                {
+                    yield return asyncTcpClientEnumerator.Current;
+                }
+            }
+
+            public async ValueTask DisposeAsync() => await Task.Yield();
+        }
+
+        private sealed class AsyncTcpStreamEnumerator<T> : IAsyncEnumerator<T>
         {
             private readonly Lazy<Task<TcpClient>> _tcpClient;
             private readonly CancellationToken _cancellation;
-            private readonly bool _ownsTcpClient;
             private Lazy<T> _current;
             private long _sequence = 0;
 
-            public AsyncTcpClientEnumerator(Func<TcpClient> tcpClientProvider, Expression expression, CancellationToken cancellation, bool ownsTcpClient = true)
+            public AsyncTcpStreamEnumerator(TcpClient tcpClient, Expression expression, CancellationToken cancellation)
             {
                 SetError($"{nameof(MoveNextAsync)} has not completed yet.");
                 _cancellation = cancellation;
-                _ownsTcpClient = ownsTcpClient;
                 _tcpClient = new Lazy<Task<TcpClient>>(() => Task.Run(async () =>
                 {
-                    var tcpClient = tcpClientProvider();
                     var stream = tcpClient.GetStream();
-                    await stream.WriteAsync(new InitializeStream<Expression> { Request = expression }).ConfigureAwait(false);
-                    await stream.FlushAsync().ConfigureAwait(false);
+                    await stream.WriteAsync(new AsyncStreamQuery<Expression> { Request = expression }, cancellation).ConfigureAwait(false);
+                    await stream.FlushAsync(cancellation).ConfigureAwait(false);
                     return tcpClient;
                 }));
             }
@@ -57,7 +95,7 @@ namespace Client
 
             public async ValueTask DisposeAsync()
             {
-                if (_ownsTcpClient && _tcpClient.IsValueCreated)
+                if (_tcpClient.IsValueCreated)
                 {
                     await Task.Run(_tcpClient.Value.Dispose).ConfigureAwait(false);
                 }
@@ -71,10 +109,10 @@ namespace Client
 
                     var stream = (await _tcpClient.Value.ConfigureAwait(false)).GetStream();
 
-                    await stream.WriteAsync(new NextRequest { SequenceNumber = Interlocked.Increment(ref _sequence) }).ConfigureAwait(false);
-                    await stream.FlushAsync().ConfigureAwait(false);
+                    await stream.WriteAsync(new NextRequest { SequenceNumber = Interlocked.Increment(ref _sequence) }, _cancellation).ConfigureAwait(false);
+                    await stream.FlushAsync(_cancellation).ConfigureAwait(false);
 
-                    var response = await stream.ReadAsync<NextResponse<T>>().ConfigureAwait(false);
+                    var response = await stream.ReadAsync<NextResponse<T>>(_cancellation).ConfigureAwait(false);
                     if (response.SequenceNumber != _sequence)
                     {
                         var exception = new InvalidOperationException("Async stream is out of bound.");
@@ -99,42 +137,26 @@ namespace Client
                     throw;
                 }
             }
-
-            public async IAsyncEnumerable<T> GetAsyncStream()
-            {
-                try
-                {
-                    while (await MoveNextAsync().ConfigureAwait(false))
-                    {
-                        yield return Current;
-                    }
-                }
-                finally
-                {
-                    await DisposeAsync().ConfigureAwait(false);
-                }
-            }
         }
 
-        private readonly TcpClient _tcpClient;
-        private readonly Func<Expression, CancellationToken, IAsyncEnumerable<DynamicObject>> _asyncStreamDataProvider;
-        private readonly Func<Expression, CancellationToken, ValueTask<DynamicObject>> _asyncQueryDataProvider;
+        private readonly AsyncTcpQueryClient _client;
 
         public AsyncRemoteRepository(string server, int port)
         {
-            _tcpClient = new TcpClient(server, port);
-            _asyncStreamDataProvider = (expression, cancellation) => new AsyncTcpClientEnumerator<DynamicObject>(() => _tcpClient, expression, cancellation, false).GetAsyncStream();
-            _asyncQueryDataProvider = null;
+            _client = new AsyncTcpQueryClient(server, port);
         }
 
-        public IAsyncQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateAsyncQueryable<ProductCategory>(_asyncStreamDataProvider, _asyncQueryDataProvider);
+        public IAsyncQueryable<ProductCategory> ProductCategories => CreateAsyncQueryable<ProductCategory>();
 
-        public IAsyncQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateAsyncQueryable<ProductGroup>(_asyncStreamDataProvider, _asyncQueryDataProvider);
+        public IAsyncQueryable<ProductGroup> ProductGroups => CreateAsyncQueryable<ProductGroup>();
 
-        public IAsyncQueryable<Product> Products => RemoteQueryable.Factory.CreateAsyncQueryable<Product>(_asyncStreamDataProvider, _asyncQueryDataProvider);
+        public IAsyncQueryable<Product> Products => CreateAsyncQueryable<Product>();
 
-        public IAsyncQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateAsyncQueryable<OrderItem>(_asyncStreamDataProvider, _asyncQueryDataProvider);
+        public IAsyncQueryable<OrderItem> OrderItems => CreateAsyncQueryable<OrderItem>();
 
-        public async ValueTask DisposeAsync() => await Task.Run(_tcpClient.Dispose).ConfigureAwait(false);
+        public ValueTask DisposeAsync() => _client.DisposeAsync();
+
+        // NOTE: One of `asyncStreamProvider` or `asyncDataProvider` parameter may also be set null in which case all queries are always fetched via stream or via batch query accordingly.
+        private IAsyncQueryable<T> CreateAsyncQueryable<T>() => RemoteQueryable.Factory.CreateAsyncQueryable<T>(_client.ExecuteAsyncStream, _client.ExecuteAsync);
     }
 }
