@@ -189,8 +189,8 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutionDecorator
             var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
-                .With(new Func<object, IEnumerable<DynamicObject>>(x => throw ShouldHaveBeenReplacedException))
-                .With(new Func<object, IEnumerable<DynamicObject>>(x => throw ShouldHaveBeenReplacedException))
+                .With(new Func<object, DynamicObject>(x => throw ShouldHaveBeenReplacedException))
+                .With(new Func<object, DynamicObject>(x => throw ShouldHaveBeenReplacedException))
                 .With((object x) =>
                 {
                     callCounter[0]++;
@@ -207,27 +207,27 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutionDecorator
         [Fact]
         public void Should_apply_dynamic_object_result_processing_decorator()
         {
-            var customResult1 = new[] { new DynamicObject("result1") };
-            var customResult2 = new[] { new DynamicObject("result2") };
+            var customResult1 = new DynamicObject("result1");
+            var customResult2 = new DynamicObject("result2");
 
             var callCounter = new int[3];
 
             var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
 
             decorator
-                .With((IEnumerable<DynamicObject> x) =>
+                .With((DynamicObject x) =>
                 {
                     callCounter[0]++;
                     x.ShouldBeSameAs(TestExpressionExecutionDecorator.Step7_Result);
                     return customResult1;
                 })
-                .With((IEnumerable<DynamicObject> x) =>
+                .With((DynamicObject x) =>
                 {
                     callCounter[1]++;
                     x.ShouldBeSameAs(customResult1);
                     return customResult2;
                 })
-                .With((IEnumerable<DynamicObject> x) =>
+                .With((DynamicObject x) =>
                 {
                     callCounter[2]++;
                     x.ShouldBeSameAs(customResult2);

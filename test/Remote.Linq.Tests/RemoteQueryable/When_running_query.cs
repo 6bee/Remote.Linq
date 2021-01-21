@@ -84,7 +84,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
             Store dataStore = new Store();
-            Func<Expression, IEnumerable<DynamicObject>> execute = expression =>
+            Func<Expression, DynamicObject> execute = expression =>
                 {
                     Interlocked.Increment(ref _roundtripCount);
                     return serialize(expression).Execute(queryableProvider: dataStore.Get);
@@ -735,7 +735,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         public void Nested_query_using_local_remote_queryables_should_not_cause_multiple_roundtrips()
         {
             var count = 0;
-            Func<Expression, IEnumerable<DynamicObject>> execute = exp =>
+            Func<Expression, DynamicObject> execute = exp =>
             {
                 Interlocked.Increment(ref count);
                 var dataprovider = new Dictionary<Type, System.Collections.IEnumerable>()

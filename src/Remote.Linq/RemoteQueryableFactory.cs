@@ -18,7 +18,7 @@ namespace Remote.Linq
 
         /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override string? ToString() => base.ToString();
+        public override string ToString() => $"{typeof(RemoteQueryable)}.{nameof(RemoteQueryable.Factory)}";
 
         /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]

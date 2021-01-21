@@ -12,7 +12,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using System.Linq;
     using System.Security;
 
-    public class DefaultEntityFrameworkCoreExpressionExecutor : EntityFrameworkCoreExpressionExecutor<IEnumerable<DynamicObject?>?>
+    public class DefaultEntityFrameworkCoreExpressionExecutor : EntityFrameworkCoreExpressionExecutor<DynamicObject?>
     {
         private readonly IDynamicObjectMapper _mapper;
         private readonly Func<Type, bool> _setTypeInformation;
@@ -35,7 +35,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>The mapped query result.</returns>
-        protected override IEnumerable<DynamicObject?>? ConvertResult(object? queryResult)
-            => _mapper.MapCollection(queryResult, _setTypeInformation);
+        protected override DynamicObject? ConvertResult(object? queryResult)
+            => _mapper.MapObject(queryResult, _setTypeInformation);
     }
 }

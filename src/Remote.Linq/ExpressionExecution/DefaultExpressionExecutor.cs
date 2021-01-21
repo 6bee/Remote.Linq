@@ -7,10 +7,9 @@ namespace Remote.Linq.ExpressionExecution
     using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
-    public class DefaultExpressionExecutor : ExpressionExecutor<IQueryable, IEnumerable<DynamicObject?>?>
+    public class DefaultExpressionExecutor : ExpressionExecutor<IQueryable, DynamicObject?>
     {
         private readonly IDynamicObjectMapper _mapper;
         private readonly Func<Type, bool> _setTypeInformation;
@@ -30,7 +29,7 @@ namespace Remote.Linq.ExpressionExecution
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>The mapped query result.</returns>
-        protected override IEnumerable<DynamicObject?>? ConvertResult(object? queryResult)
-            => _mapper.MapCollection(queryResult, _setTypeInformation);
+        protected override DynamicObject? ConvertResult(object? queryResult)
+            => _mapper.MapObject(queryResult, _setTypeInformation);
     }
 }

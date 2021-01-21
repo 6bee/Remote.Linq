@@ -6,7 +6,6 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutor
     using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
     using Shouldly;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -19,8 +18,8 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutor
         public static readonly System.Linq.Expressions.Expression Step3_Expression = System.Linq.Expressions.Expression.Constant("step3");
         public static readonly object Step4_Result = "step4";
         public static readonly object Step5_Result = "step5";
-        public static readonly IEnumerable<DynamicObject> Step6_Result = new[] { new DynamicObject("step6") };
-        public static readonly IEnumerable<DynamicObject> Step7_Result = new[] { new DynamicObject("step7") };
+        public static readonly DynamicObject Step6_Result = new DynamicObject("step6");
+        public static readonly DynamicObject Step7_Result = new DynamicObject("step7");
 
         private readonly int[] _callCounters = new int[7];
 
@@ -89,14 +88,14 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutor
             return Step5_Result;
         }
 
-        protected override IEnumerable<DynamicObject> ConvertResult(object queryResult)
+        protected override DynamicObject ConvertResult(object queryResult)
         {
             _callCounters[5]++;
             queryResult.ShouldBeSameAs(Step5_Result);
             return Step6_Result;
         }
 
-        protected override IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult)
+        protected override DynamicObject ProcessResult(DynamicObject queryResult)
         {
             _callCounters[6]++;
             queryResult.ShouldBeSameAs(Step6_Result);

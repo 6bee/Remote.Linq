@@ -11,7 +11,7 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutionDecorator
     using System.Linq;
 
     [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
-    public class TestExpressionExecutionDecorator : ExpressionExecutionDecorator<IEnumerable<DynamicObject>>
+    public class TestExpressionExecutionDecorator : ExpressionExecutionDecorator<DynamicObject>
     {
         public static readonly Expression Step0_Expression = new ConstantExpression("step0");
         public static readonly Expression Step1_Expression = new ConstantExpression("step1");
@@ -19,8 +19,8 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutionDecorator
         public static readonly System.Linq.Expressions.Expression Step3_Expression = System.Linq.Expressions.Expression.Constant("step3");
         public static readonly object Step4_Result = "step4";
         public static readonly object Step5_Result = "step5";
-        public static readonly IEnumerable<DynamicObject> Step6_Result = new[] { new DynamicObject("step6") };
-        public static readonly IEnumerable<DynamicObject> Step7_Result = new[] { new DynamicObject("step7") };
+        public static readonly DynamicObject Step6_Result = new DynamicObject("step6");
+        public static readonly DynamicObject Step7_Result = new DynamicObject("step7");
 
         private readonly int[] _callCounters = new int[7];
 
@@ -89,14 +89,14 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutionDecorator
             return Step5_Result;
         }
 
-        protected override IEnumerable<DynamicObject> ConvertResult(object queryResult)
+        protected override DynamicObject ConvertResult(object queryResult)
         {
             _callCounters[5]++;
             queryResult.ShouldBeSameAs(Step5_Result);
             return Step6_Result;
         }
 
-        protected override IEnumerable<DynamicObject> ProcessResult(IEnumerable<DynamicObject> queryResult)
+        protected override DynamicObject ProcessResult(DynamicObject queryResult)
         {
             _callCounters[6]++;
             queryResult.ShouldBeSameAs(Step6_Result);

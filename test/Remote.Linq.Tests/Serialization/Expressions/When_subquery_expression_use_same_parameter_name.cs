@@ -88,7 +88,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             public override int GetHashCode() => Value;
         }
 
-        private readonly Func<Expression, Func<Type, IQueryable>, IEnumerable<DynamicObject>> _execute;
+        private readonly Func<Expression, Func<Type, IQueryable>, DynamicObject> _execute;
 
         protected When_subquery_expression_use_same_parameter_name(Func<Expression, Expression> serialize)
         {

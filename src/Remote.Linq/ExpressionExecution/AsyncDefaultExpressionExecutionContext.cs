@@ -4,12 +4,11 @@ namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.Dynamic;
     using Remote.Linq.Expressions;
-    using System.Collections.Generic;
     using System.Linq;
 
-    public class AsyncDefaultExpressionExecutionContext : AsyncExpressionExecutionContext<IEnumerable<DynamicObject?>?>
+    public class AsyncDefaultExpressionExecutionContext : AsyncExpressionExecutionContext<DynamicObject?>
     {
-        public AsyncDefaultExpressionExecutionContext(AsyncExpressionExecutor<IQueryable, IEnumerable<DynamicObject?>?> parent, Expression expression)
+        public AsyncDefaultExpressionExecutionContext(AsyncExpressionExecutor<IQueryable, DynamicObject?> parent, Expression expression)
             : base(parent, expression)
         {
         }

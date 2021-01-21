@@ -28,13 +28,23 @@ namespace Client
             }
 
             PrintHeader("CROSS JOIN:");
-            Func<object, string> sufix = (x) => x + "ending";
+            var vowels = new[] { 'a', 'e', 'i', 'o', 'u' };
             var crossJoinQuery =
                 from c in repo.ProductCategories
                 from p in repo.Products
-                select new { Category = "#" + c.Name + sufix("-"), p.Name };
-            var crossJoinResult = await crossJoinQuery.ToListAsync().ConfigureAwait(false);
-            foreach (var item in crossJoinResult)
+                let @particle = vowels.Contains(p.Name.Substring(0, 1).ToLower().Single()) ? "An" : "A"
+                let @subject = p.Name.ToLower()
+                let @verb = $"is{(c.Id == p.ProductCategoryId ? null : " not")} a"
+                let @object = c.Name.ToLower().TrimEnd('s')
+                orderby @subject, @object
+                select $"{@particle} {@subject} {@verb} {@object}";
+            foreach (var item in await crossJoinQuery.ToListAsync().ConfigureAwait(false))
+            {
+                PrintLine($"  {item}");
+            }
+
+            PrintHeader("CROSS JOIN [ASYNC STREAM]:");
+            await foreach (var item in crossJoinQuery.AsAsyncEnumerable().ConfigureAwait(false))
             {
                 PrintLine($"  {item}");
             }

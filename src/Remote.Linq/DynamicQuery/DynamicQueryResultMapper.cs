@@ -17,7 +17,8 @@ namespace Remote.Linq.DynamicQuery
                  .MakeGenericMethod(genericTypeArguments);
 
         protected override bool ShouldMapToDynamicObject(IEnumerable collection)
-            => collection.CheckNotNull(nameof(collection)).GetType().Implements(typeof(IGrouping<,>));
+            => collection.CheckNotNull(nameof(collection)).GetType().Implements(typeof(IGrouping<,>))
+            || base.ShouldMapToDynamicObject(collection);
 
         protected override DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation)
         {

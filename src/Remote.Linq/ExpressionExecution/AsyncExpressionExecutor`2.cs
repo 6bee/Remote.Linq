@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.ExpressionExecution
 {
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using Remote.Linq.Expressions;
     using System;
@@ -71,6 +72,21 @@ namespace Remote.Linq.ExpressionExecution
         /// <returns>Execution result of the <see cref="System.Linq.Expressions.Expression"/> specified.</returns>
         protected virtual async ValueTask<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation)
         {
+            static Type GetResultType(Type type)
+            {
+                if (type.Implements(typeof(Task<>), out var taskResultType))
+                {
+                    return taskResultType[0];
+                }
+
+                if (type.Implements(typeof(ValueTask<>), out var valueTaskResultType))
+                {
+                    return valueTaskResultType[0];
+                }
+
+                return type;
+            }
+
             expression.CheckNotNull(nameof(expression));
             try
             {
@@ -80,22 +96,22 @@ namespace Remote.Linq.ExpressionExecution
             {
                 if (string.Equals(ex.Message, "Sequence contains no elements", StringComparison.Ordinal))
                 {
-                    return Array.CreateInstance(expression.Type, 0);
+                    return Array.CreateInstance(GetResultType(expression.Type), 0);
                 }
 
                 if (string.Equals(ex.Message, "Sequence contains no matching element", StringComparison.Ordinal))
                 {
-                    return Array.CreateInstance(expression.Type, 0);
+                    return Array.CreateInstance(GetResultType(expression.Type), 0);
                 }
 
                 if (string.Equals(ex.Message, "Sequence contains more than one element", StringComparison.Ordinal))
                 {
-                    return Array.CreateInstance(expression.Type, 2);
+                    return Array.CreateInstance(GetResultType(expression.Type), 2);
                 }
 
                 if (string.Equals(ex.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
                 {
-                    return Array.CreateInstance(expression.Type, 2);
+                    return Array.CreateInstance(GetResultType(expression.Type), 2);
                 }
 
                 throw;

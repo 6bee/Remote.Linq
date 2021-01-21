@@ -20,10 +20,10 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             public With_include_path()
             {
-                Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
+                Func<Expression, DynamicObject> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return Array.Empty<DynamicObject>();
+                    return new DynamicObject(Array.Empty<Parent>());
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Parent>(dataProvider);
@@ -44,15 +44,15 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             public With_include_reference_collection()
             {
-                Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
+                Func<Expression, DynamicObject> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return Array.Empty<DynamicObject>();
+                    return new DynamicObject(Array.Empty<Parent>());
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Parent>(dataProvider);
 
-                queryable
+                _ = queryable
                     .Include(x => x.Children)
                     .ToList();
             }
@@ -68,15 +68,15 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             public With_include_on_subtype()
             {
-                Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
+                Func<Expression, DynamicObject> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return Array.Empty<DynamicObject>();
+                    return new DynamicObject(Array.Empty<Child>());
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Parent>(dataProvider);
 
-                queryable
+                _ = queryable
                     .SelectMany(x => x.Children)
                     .Include(x => x.Parent)
                     .ToList();
@@ -93,15 +93,15 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             public With_include_reference()
             {
-                Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
+                Func<Expression, DynamicObject> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return Array.Empty<DynamicObject>();
+                    return new DynamicObject(Array.Empty<Child>());
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Child>(dataProvider);
 
-                queryable
+                _ = queryable
                     .Include(x => x.Parent)
                     .ToList();
             }
@@ -119,15 +119,15 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             public With_multiple_include()
             {
-                Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
+                Func<Expression, DynamicObject> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return Array.Empty<DynamicObject>();
+                    return new DynamicObject(Array.Empty<Child>());
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Child>(dataProvider);
 
-                queryable
+                _ = queryable
                     .Include(x => x.Parent).ThenInclude(x => x.Children)
                     .Include(x => x.Siblings).ThenInclude(x => x.Siblings)
                     .Include(x => x.Siblings).ThenInclude(x => x.Parent)
@@ -147,10 +147,10 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 
             public With_then_include()
             {
-                Func<Expression, IEnumerable<DynamicObject>> dataProvider = exp =>
+                Func<Expression, DynamicObject> dataProvider = exp =>
                 {
                     _expression = exp;
-                    return Array.Empty<DynamicObject>();
+                    return new DynamicObject(Array.Empty<Parent>());
                 };
 
                 var queryable = RemoteQueryable.Factory.CreateQueryable<Parent>(dataProvider);

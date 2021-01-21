@@ -9,7 +9,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
-    internal sealed class DynamicResultMapper : IQueryResultMapper<IEnumerable<DynamicObject>>
+    internal sealed class DynamicResultMapper : IQueryResultMapper<DynamicObject>
     {
         private readonly IDynamicObjectMapper? _mapper;
 
@@ -19,11 +19,11 @@ namespace Remote.Linq.DynamicQuery
         }
 
         [return: MaybeNull]
-        public TResult MapResult<TResult>(IEnumerable<DynamicObject?>? source, Expression expression)
+        public TResult MapResult<TResult>(DynamicObject? source, Expression expression)
             => MapToType<TResult>(source, _mapper, expression);
 
         [return: MaybeNull]
-        internal static TResult MapToType<TResult>(IEnumerable<DynamicObject?>? dataRecords, IDynamicObjectMapper? mapper, Expression expression)
+        internal static TResult MapToType<TResult>(DynamicObject? dataRecords, IDynamicObjectMapper? mapper, Expression expression)
         {
             if (dataRecords is null)
             {
@@ -32,22 +32,30 @@ namespace Remote.Linq.DynamicQuery
 
             mapper ??= new DynamicQueryResultMapper();
 
-            var elementType = TypeHelper.GetElementType(typeof(TResult)) ?? throw new RemoteLinqException($"Failed to get element type of {typeof(TResult)}.");
+            var result = dataRecords?.Type is null
+                ? mapper.Map(dataRecords, typeof(TResult))
+                : mapper.Map(dataRecords);
 
-            var result = mapper.Map(dataRecords, elementType);
             if (result is null)
             {
                 return default;
             }
 
-            if (result is TResult || typeof(TResult).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
+            if (result is TResult)
             {
                 return (TResult)result;
             }
 
-            if (typeof(TResult).IsAssignableFrom(elementType) && expression is MethodCallExpression methodCallExpression)
+            var elementType = TypeHelper.GetElementType(typeof(TResult)) ?? throw new RemoteLinqException($"Failed to get element type of {typeof(TResult)}.");
+
+            if (typeof(TResult).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
             {
-                return MapToSingleResult<TResult>(elementType, result, methodCallExpression);
+                return (TResult)result;
+            }
+
+            if (result is System.Collections.IEnumerable enumerable && typeof(TResult).IsAssignableFrom(elementType) && expression is MethodCallExpression methodCallExpression)
+            {
+                return MapToSingleResult<TResult>(elementType, enumerable, methodCallExpression);
             }
 
             throw new RemoteLinqException($"Failed to cast result of type '{result.GetType()}' to '{typeof(TResult)}'");
