@@ -385,10 +385,10 @@ namespace Remote.Linq.ExpressionVisitors
         protected virtual Expression VisitMethodCall(MethodCallExpression node)
         {
             var instance = Visit(node.CheckNotNull(nameof(node)).Instance);
-            var argumements = node.Arguments
+            var argumements = node.Arguments?
                 .Select(i => new { Old = i, New = Visit(i) })
                 .ToList();
-            if (!ReferenceEquals(instance, node.Instance) || argumements.Any(i => !ReferenceEquals(i.Old, i.New)))
+            if (!ReferenceEquals(instance, node.Instance) || argumements?.Any(i => !ReferenceEquals(i.Old, i.New)) is true)
             {
                 return new MethodCallExpression(instance, node.Method, argumements.Select(i => i.New));
             }

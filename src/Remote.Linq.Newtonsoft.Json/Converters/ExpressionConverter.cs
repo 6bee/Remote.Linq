@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Newtonsoft.Json.Converters
 {
+    using Aqua.Newtonsoft.Json;
     using Aqua.Newtonsoft.Json.Converters;
     using Aqua.TypeSystem;
     using global::Newtonsoft.Json;
@@ -11,6 +12,11 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
     public sealed class ExpressionConverter : ObjectConverter<Expression>
     {
         private const string ValueTypePropertyName = "ValueType";
+
+        public ExpressionConverter(KnownTypesRegistry knownTypeRegistry)
+            : base(knownTypeRegistry)
+        {
+        }
 
         protected override void ReadObjectProperties(JsonReader reader, Expression result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {

@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Newtonsoft.Json.Converters
 {
+    using Aqua.Newtonsoft.Json;
     using Aqua.Newtonsoft.Json.Converters;
     using Aqua.TypeSystem;
     using global::Newtonsoft.Json;
@@ -10,6 +11,11 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
 
     public sealed class VariableQueryArgumentListConverter : ObjectConverter<VariableQueryArgumentList>
     {
+        public VariableQueryArgumentListConverter(KnownTypesRegistry knownTypeRegistry)
+            : base(knownTypeRegistry)
+        {
+        }
+
         protected override void ReadObjectProperties(JsonReader reader, VariableQueryArgumentList result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
             TypeInfo? elementTypeInfo;

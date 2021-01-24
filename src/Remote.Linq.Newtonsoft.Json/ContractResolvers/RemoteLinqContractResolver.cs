@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Newtonsoft.Json.ContractResolvers
 {
+    using Aqua.Newtonsoft.Json;
     using Aqua.Newtonsoft.Json.ContractResolvers;
     using Aqua.Newtonsoft.Json.Converters;
     using global::Newtonsoft.Json;
@@ -16,24 +17,26 @@ namespace Remote.Linq.Newtonsoft.Json.ContractResolvers
 
     public sealed class RemoteLinqContractResolver : DefaultContractResolver
     {
-        private static readonly Dictionary<Type, JsonConverter> _converters = new Dictionary<Type, JsonConverter>
-        {
-            { typeof(Expression), new ExpressionConverter() },
-            { typeof(ConstantQueryArgument), new ConstantQueryArgumentConverter() },
-            { typeof(VariableQueryArgument), new VariableQueryArgumentConverter() },
-            { typeof(VariableQueryArgumentList), new VariableQueryArgumentListConverter() },
-        };
-
         private readonly IContractResolver _decorated;
+        private readonly KnownTypesRegistry _knownTypeRegistry;
+        private readonly Dictionary<Type, JsonConverter> _converters;
 
-        public RemoteLinqContractResolver(IContractResolver? decorated = null)
+        public RemoteLinqContractResolver(KnownTypesRegistry knownTypeRegistry, IContractResolver? decorated = null)
         {
             if (decorated is RemoteLinqContractResolver self)
             {
                 decorated = self._decorated;
             }
 
-            _decorated = (decorated as AquaContractResolver) ?? new AquaContractResolver(decorated);
+            _knownTypeRegistry = knownTypeRegistry.CheckNotNull(nameof(knownTypeRegistry));
+            _decorated = (decorated as AquaContractResolver) ?? new AquaContractResolver(_knownTypeRegistry, decorated);
+            _converters = new Dictionary<Type, JsonConverter>
+            {
+                { typeof(Expression), new ExpressionConverter(_knownTypeRegistry) },
+                { typeof(ConstantQueryArgument), new ConstantQueryArgumentConverter(_knownTypeRegistry) },
+                { typeof(VariableQueryArgument), new VariableQueryArgumentConverter(_knownTypeRegistry) },
+                { typeof(VariableQueryArgumentList), new VariableQueryArgumentListConverter(_knownTypeRegistry) },
+            };
         }
 
         public override JsonContract ResolveContract(Type type)
@@ -58,7 +61,7 @@ namespace Remote.Linq.Newtonsoft.Json.ContractResolvers
                     .Where(x => x.Key.IsAssignableFrom(objectType))
                     .Select(x => x.Value)
                     .FirstOrDefault();
-                contract.Converter = converter ?? CreateObjectConverter(objectType);
+                contract.Converter = converter ?? CreateObjectConverter(objectType, _knownTypeRegistry);
                 foreach (var property in contract.Properties.Where(x => !x.Writable || !x.Readable))
                 {
                     property.Ignored = true;
@@ -72,7 +75,7 @@ namespace Remote.Linq.Newtonsoft.Json.ContractResolvers
             => Equals(type.CheckNotNull(nameof(type)).Assembly, typeof(Expression).Assembly)
             && type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
 
-        private static JsonConverter CreateObjectConverter(Type type)
-            => (JsonConverter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(type));
+        private static JsonConverter CreateObjectConverter(Type type, KnownTypesRegistry knownTypeRegistry)
+            => (JsonConverter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(type), knownTypeRegistry);
     }
 }

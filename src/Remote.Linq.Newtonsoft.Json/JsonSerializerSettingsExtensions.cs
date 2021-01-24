@@ -3,10 +3,16 @@
 namespace Remote.Linq
 {
     using Aqua;
+    using Aqua.Newtonsoft.Json;
     using global::Newtonsoft.Json;
     using global::Newtonsoft.Json.Serialization;
+    using Remote.Linq.Newtonsoft.Json;
     using Remote.Linq.Newtonsoft.Json.ContractResolvers;
+    using System;
     using System.ComponentModel;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using RemoteLinq = Remote.Linq.Expressions;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class JsonSerializerSettingsExtensions
@@ -15,16 +21,54 @@ namespace Remote.Linq
         /// Sets the <see cref="RemoteLinqContractResolver"/> in <see cref="JsonSerializerSettings"/>,
         /// decorating a previousely set <see cref="IContractResolver"/> if required.
         /// </summary>
-        public static JsonSerializerSettings ConfigureRemoteLinq(this JsonSerializerSettings jsonSerializerSettings)
+        public static T ConfigureRemoteLinq<T>(this T settings, KnownTypesRegistry? knownTypesRegistry = null)
+            where T : JsonSerializerSettings
         {
-            jsonSerializerSettings = jsonSerializerSettings.CheckNotNull(nameof(jsonSerializerSettings)).ConfigureAqua();
+            knownTypesRegistry ??= new KnownTypesRegistry();
 
-            if (jsonSerializerSettings.ContractResolver?.GetType() != typeof(RemoteLinqContractResolver))
+            settings = settings.CheckNotNull(nameof(settings)).ConfigureAqua(knownTypesRegistry);
+
+            RegisterKnownTypes(knownTypesRegistry);
+
+            if (settings.ContractResolver is not RemoteLinqContractResolver)
             {
-                jsonSerializerSettings.ContractResolver = new RemoteLinqContractResolver(jsonSerializerSettings.ContractResolver);
+                settings.ContractResolver = new RemoteLinqContractResolver(knownTypesRegistry, settings.ContractResolver);
             }
 
-            return jsonSerializerSettings;
+            return settings;
+        }
+
+        /// <summary>
+        /// Create a new instance of <see cref="RemoteLinqJsonSerializerSettings"/>, based on the <see cref="JsonSerializerSettings"/> speficied.
+        /// </summary>
+        public static RemoteLinqJsonSerializerSettings CreateRemoteLinqConfiguration(this JsonSerializerSettings settings, KnownTypesRegistry? knownTypesRegistry = null)
+        {
+            var remoteLinqSettings = new RemoteLinqJsonSerializerSettings(settings, knownTypesRegistry);
+            return remoteLinqSettings.ConfigureRemoteLinq(remoteLinqSettings.KnownTypesRegistry);
+        }
+
+        private static void RegisterKnownTypes(KnownTypesRegistry knownTypesRegistry)
+        {
+            var types = typeof(RemoteLinq.Expression).Assembly
+                .GetExportedTypes()
+                .Except(new[]
+                {
+                    typeof(Query),
+                })
+                .Where(x => !x.IsGenericType)
+                .Where(x =>
+                {
+                    var attributes = x.GetCustomAttributes(true);
+                    return attributes.Any(a => a is SerializableAttribute)
+                        || attributes.Any(a => a is DataContractAttribute);
+                });
+            foreach (var type in types)
+            {
+                if (!knownTypesRegistry.TryRegister(type, type.Name))
+                {
+                    throw new InvalidOperationException($"Filed to register '{type}' as known type.");
+                }
+            }
         }
     }
 }
