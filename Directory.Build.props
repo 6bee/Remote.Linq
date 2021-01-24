@@ -2,11 +2,11 @@
 <Project>
 
   <PropertyGroup>
-    <MajorVersion>6</MajorVersion>
-    <MinorVersion>4</MinorVersion>
+    <MajorVersion>7</MajorVersion>
+    <MinorVersion>0</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-011</PreReleaseLabel>
-    <AquaCoreVersion>5.0.0-alpha-026</AquaCoreVersion>
+    <PreReleaseLabel>alpha-016</PreReleaseLabel>
+    <AquaCoreVersion>5.0.0-alpha-032</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
