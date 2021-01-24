@@ -26,7 +26,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
             _context.Lookup.Add(new LookupItem { Key = "3", Value = "Three" });
             _context.SaveChanges();
 
-            _queryable = RemoteQueryable.Factory.CreateQueryable<LookupItem>(expression => expression.ExecuteAsyncStreamWithEntityFrameworkCore(_context));
+            _queryable = RemoteQueryable.Factory.CreateAsyncStreamQueryable<LookupItem>(expression => expression.ExecuteAsyncStreamWithEntityFrameworkCore(_context));
         }
 
         public void Dispose() => _context.Dispose();

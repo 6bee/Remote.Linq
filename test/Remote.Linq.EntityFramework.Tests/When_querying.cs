@@ -27,7 +27,7 @@ namespace Remote.Linq.EntityFramework.Tests
             _context = new ContextMock<TestContext>()
                 .WithSet(x => x.Items, data)
                 .Object;
-            _queryable = RemoteQueryable.Factory.CreateQueryable<LookupItem>(x => x.ExecuteWithEntityFrameworkAsync(_context));
+            _queryable = RemoteQueryable.Factory.CreateAsyncQueryable<LookupItem>(x => x.ExecuteWithEntityFrameworkAsync(_context));
         }
 
         public void Dispose() => _context.Dispose();

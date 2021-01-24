@@ -42,7 +42,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         public async Task Should_return_the_untransformed_instance_async()
         {
             var instance = new Entity();
-            var queryable = RemoteQueryable.Factory.CreateQueryable<Entity>(exp => new ValueTask<object>(instance));
+            var queryable = RemoteQueryable.Factory.CreateAsyncQueryable<Entity>(exp => new ValueTask<object>(instance));
             var result = await queryable.ExecuteAsync<Entity>().ConfigureAwait(false);
             result.ShouldBeSameAs(instance);
         }
@@ -51,7 +51,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         public async Task Should_return_collection_with_the_the_untransformed_instance_async()
         {
             var instance = new Entity();
-            var queryable = RemoteQueryable.Factory.CreateQueryable<Entity>(exp => new ValueTask<object>(new[] { instance }));
+            var queryable = RemoteQueryable.Factory.CreateAsyncQueryable<Entity>(exp => new ValueTask<object>(new[] { instance }));
             var result = await queryable.ExecuteAsync<Entity[]>().ConfigureAwait(false);
             result.Single().ShouldBeSameAs(instance);
         }
@@ -78,7 +78,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         public async Task Should_return_the_untransformed_instance_from_untyped_queryable_async()
         {
             var instance = new Entity();
-            var queryable = RemoteQueryable.Factory.CreateQueryable(typeof(object), exp => new ValueTask<object>(instance));
+            var queryable = RemoteQueryable.Factory.CreateAsyncQueryable(typeof(object), exp => new ValueTask<object>(instance));
             var result = await queryable.ExecuteAsync<Entity>().ConfigureAwait(false);
             result.ShouldBeSameAs(instance);
         }
@@ -87,7 +87,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         public async Task Should_return_collection_with_the_the_untransformed_instance_from_untyped_queryable_async()
         {
             var instance = new Entity();
-            var queryable = RemoteQueryable.Factory.CreateQueryable(typeof(object), exp => new ValueTask<object>(new[] { instance }));
+            var queryable = RemoteQueryable.Factory.CreateAsyncQueryable(typeof(object), exp => new ValueTask<object>(new[] { instance }));
             var result = await queryable.ExecuteAsync<IEnumerable<Entity>>().ConfigureAwait(false);
             result.Single().ShouldBeSameAs(instance);
         }

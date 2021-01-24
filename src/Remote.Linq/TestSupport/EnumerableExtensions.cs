@@ -58,7 +58,7 @@ namespace Remote.Linq.TestSupport
                 }
             }
 
-            return Remote.Linq.RemoteQueryable.Factory.CreateQueryable<T>(provider);
+            return Remote.Linq.RemoteQueryable.Factory.CreateAsyncStreamQueryable<T>(provider);
         }
     }
 }

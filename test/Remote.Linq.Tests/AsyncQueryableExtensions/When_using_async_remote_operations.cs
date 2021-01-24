@@ -26,7 +26,7 @@ namespace Remote.Linq.Tests.AsyncQueryableExtensions
 
         public class With_async_remote_queriable : When_using_async_remote_operations
         {
-            protected override IQueryable<int> Queryable => RemoteQueryable.Factory.CreateQueryable<int>(x => new ValueTask<DynamicObject>(x.Execute(t => Source.AsQueryable())));
+            protected override IQueryable<int> Queryable => RemoteQueryable.Factory.CreateAsyncQueryable<int>(x => new ValueTask<DynamicObject>(x.Execute(t => Source.AsQueryable())));
         }
 
         protected abstract IQueryable<int> Queryable { get; }
