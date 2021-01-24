@@ -15,6 +15,7 @@ namespace Server
 
     public sealed class TcpStreamServer : IDisposable
     {
+        private const int MAX_DELAY = 500;
         private readonly TcpListener _server;
 
         public TcpStreamServer(int port)
@@ -111,7 +112,7 @@ namespace Server
                 while (hasNext)
                 {
                     // DEMO: for demo purpose we're using random delay simulating data item generation
-                    await Task.Delay(random.Next(0, 2000), cancellation).ConfigureAwait(false);
+                    await Task.Delay(random.Next(0, MAX_DELAY), cancellation).ConfigureAwait(false);
 
                     var next = await stream.ReadAsync<NextRequest>(cancellation).ConfigureAwait(false);
                     try

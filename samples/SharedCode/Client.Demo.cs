@@ -100,13 +100,15 @@ namespace Client
 
             var totalAmountByCategroyResult = totalAmountByCategoryQuery
 #if KNOWN_TYPES_ONLY
-                .Select(x => new Common.Model.TotalAmountByCategoryDto { Category = x.Category, Amount = x.Amount })
+                .Select(x => new Common.Model.TotalAmountByCategoryDto { Category = x.Category, Amount = x.Amount });
+#else
+                .Select(x => new { x.Category, x.Amount });
 #endif
-                .ToDictionary(x => x.Category, x => x.Amount);
 
             foreach (var i in totalAmountByCategroyResult)
             {
-                PrintLine($"  {i.Key}: {i.Value:C}");
+                ////PrintLine($"  {i.Key}: {i.Value:C}");
+                PrintLine($"  {i.Category}: {i.Amount:C}");
             }
 
             PrintHeader("GET PRODUCT GROUPS:");

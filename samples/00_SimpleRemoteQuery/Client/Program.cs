@@ -15,24 +15,25 @@ namespace Client
     {
         private static readonly ModelFormatter _formatter = new ModelFormatter();
 
-        static Program()
-        {
-            Title("Simple Remote Query [Client]");
-            PrintSetup("This sample client retrieves data from the backend by using:");
-            PrintSetup(" a) traditional data services (get by id/name), and");
-            PrintSetup(" b) typed remote linq data services (dynamic filtering, sorting, and paging), and");
-            PrintSetup(" c) a single generic remote linq data service (dynamic filtering, sorting, and paging).");
-            PrintSetup();
-        }
-
         private static void Main()
         {
+            Title("Simple Remote Query [Client]");
+            PrintDemoDescription();
             WaitForEnterKey("Launch the server and then press <ENTER> to run the queries.");
 
             RunQueries();
 
             PrintSetup("Done");
             WaitForEnterKey("Press <ENTER> to terminate the client.");
+        }
+
+        public static void PrintDemoDescription()
+        {
+            PrintSetup("This sample client retrieves data from the backend by using:");
+            PrintSetup(" a) traditional data services (get by id/name)");
+            PrintSetup(" b) typed remote linq data services (dynamic filtering, sorting, and paging)");
+            PrintSetup(" c) a single generic remote linq data service (dynamic filtering, sorting, and paging)");
+            PrintSetup();
         }
 
         public static void RunQueries()
@@ -49,7 +50,7 @@ namespace Client
 
         private static void TraditionalQuery()
         {
-            PrintHeader("a) QUERY PRODUCTS AND ORDERS THE TRADITIONAL WAY", true, 2);
+            PrintHeader("a) QUERY PRODUCTS AND ORDERS THE TRADITIONAL WAY");
 
             PrintNote("Retrieve orders for product 'Car' having an order quantity bigger than one.");
             PrintNote("ATTENTION: Filtering based on items count is performed on the client.");
@@ -83,7 +84,7 @@ namespace Client
 
         private static void LinqQuery()
         {
-            PrintHeader("b) QUERY PRODUCTS AND ORDERS THE LINQified WAY", true, 2);
+            PrintHeader("b) QUERY PRODUCTS AND ORDERS THE LINQified WAY");
             PrintNote("Retrieve orders for product 'Car' having an order quantity bigger than one:");
 
             using var serviceProxy = new ServiceProxy<IRemoteLinqDataService>("net.tcp://localhost:8080/remotelinqdataservice");
@@ -120,7 +121,7 @@ namespace Client
 
         private static void LinqQueryWithOpenType()
         {
-            PrintHeader("c) QUERY AN OPEN TYPED DATA SERVICE THE LINQified WAY", true, 2);
+            PrintHeader("c) QUERY AN OPEN TYPED DATA SERVICE THE LINQified WAY");
             PrintNote("Retrieve orders for product 'Car' having an order quantity bigger than one:");
 
             using var serviceProxy = new ServiceProxy<IRemoteLinqDataService>("net.tcp://localhost:8080/remotelinqdataservice");

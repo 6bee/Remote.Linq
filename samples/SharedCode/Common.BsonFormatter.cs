@@ -9,22 +9,24 @@ namespace Common
     using System;
     using System.Collections;
     using System.IO;
+    using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public static class BsonFormatter
     {
         private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
 
-        public static async Task WriteAsync(this Stream stream, object obj)
+        public static async ValueTask WriteAsync(this Stream stream, object obj, CancellationToken cancellaction = default)
         {
             var typeInfo = new TypeInfo(obj.GetType(), false, false);
 
-            await WriteInternalAsync(stream, typeInfo).ConfigureAwait(false);
+            await WriteInternalAsync(stream, new[] { typeInfo }, cancellaction).ConfigureAwait(false);
 
-            await WriteInternalAsync(stream, obj).ConfigureAwait(false);
+            await WriteInternalAsync(stream, obj, cancellaction).ConfigureAwait(false);
         }
 
-        private static async Task WriteInternalAsync(this Stream stream, object obj)
+        private static async ValueTask WriteInternalAsync(this Stream stream, object obj, CancellationToken cancellaction)
         {
             byte[] data;
             using (var dataStream = new MemoryStream())
@@ -56,20 +58,20 @@ namespace Common
             }
 
             stream.WriteByte(datatype);
-            await stream.WriteAsync(sizeData, 0, sizeData.Length).ConfigureAwait(false);
-            await stream.WriteAsync(data, 0, data.Length).ConfigureAwait(false);
+            await stream.WriteAsync(sizeData, 0, sizeData.Length, cancellaction).ConfigureAwait(false);
+            await stream.WriteAsync(data, 0, data.Length, cancellaction).ConfigureAwait(false);
         }
 
-        public static async Task<T> ReadAsync<T>(this Stream stream)
+        public static async ValueTask<T> ReadAsync<T>(this Stream stream, CancellationToken cancellation = default)
         {
-            var typeInfo = await ReadInternalAsync<TypeInfo>(stream).ConfigureAwait(false);
-            var type = typeInfo.ToType();
+            var typeInfo = await ReadInternalAsync<TypeInfo[]>(stream, null, cancellation).ConfigureAwait(false);
+            var type = typeInfo.Single().ToType();
 
-            T obj = await ReadInternalAsync<T>(stream, type).ConfigureAwait(false);
+            T obj = await ReadInternalAsync<T>(stream, type, cancellation).ConfigureAwait(false);
             return obj;
         }
 
-        public static async Task<T> ReadInternalAsync<T>(this Stream stream, Type type = null)
+        private static async ValueTask<T> ReadInternalAsync<T>(this Stream stream, Type type, CancellationToken cancellation)
         {
             int datatye = stream.ReadByte();
             if (datatye < 0)
@@ -98,10 +100,10 @@ namespace Common
                         ? (int)(size - count)
                         : bytes.Length;
 
-                    int i = await stream.ReadAsync(bytes, 0, length).ConfigureAwait(false);
+                    int i = await stream.ReadAsync(bytes, 0, length, cancellation).ConfigureAwait(false);
                     count += i;
 
-                    dataStream.Write(bytes, 0, i);
+                    await dataStream.WriteAsync(bytes, 0, i, cancellation);
                 }
                 while (count < size);
 

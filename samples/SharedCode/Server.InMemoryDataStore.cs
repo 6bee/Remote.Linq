@@ -11,6 +11,7 @@ namespace Server
 
     public sealed partial class InMemoryDataStore
     {
+        private readonly ProductGroup[] _productGroups;
         private readonly ProductCategory[] _productCategories;
         private readonly Product[] _products;
         private readonly OrderItem[] _orderItems;
@@ -44,14 +45,7 @@ namespace Server
                 orderItem.UnitPrice = _products.Single(x => x.Id == orderItem.ProductId).Price;
             }
 
-            OnInitialize();
-        }
-
-        partial void OnInitialize();
-
-        public static InMemoryDataStore Instance { get; } = new InMemoryDataStore();
-
-        public IEnumerable<ProductGroup> ProductGroups => new[]
+            _productGroups = new[]
             {
                 new ProductGroup
                 {
@@ -73,33 +67,42 @@ namespace Server
                 },
             };
 
-        public IEnumerable<ProductCategory> ProductCategories => _productCategories.ToArray();
+            OnInitialize();
+        }
 
-        public IEnumerable<Product> Products => _products.ToArray();
+        partial void OnInitialize();
 
-        public IEnumerable<OrderItem> OrderItems => _orderItems.ToArray();
+        public static InMemoryDataStore Instance { get; } = new InMemoryDataStore();
+
+        public IQueryable<ProductGroup> ProductGroups => _productGroups.AsQueryable();
+
+        public IQueryable<ProductCategory> ProductCategories => _productCategories.AsQueryable();
+
+        public IQueryable<Product> Products => _products.AsQueryable();
+
+        public IQueryable<OrderItem> OrderItems => _orderItems.AsQueryable();
 
         public Func<Type, IQueryable> QueryableByTypeProvider => (Type type) =>
         {
             // return wellknown entity sets
             if (type == typeof(ProductGroup))
             {
-                return ProductGroups.AsQueryable();
+                return ProductGroups;
             }
 
             if (type == typeof(ProductCategory))
             {
-                return ProductCategories.AsQueryable();
+                return ProductCategories;
             }
 
             if (type == typeof(Product))
             {
-                return Products.AsQueryable();
+                return Products;
             }
 
             if (type == typeof(OrderItem))
             {
-                return OrderItems.AsQueryable();
+                return OrderItems;
             }
 
             // return entity sets possibly declared in partial class

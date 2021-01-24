@@ -7,7 +7,6 @@ namespace Client
     using Remote.Linq;
     using Remote.Linq.Expressions;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.ServiceModel;
 
@@ -15,7 +14,7 @@ namespace Client
     {
         private readonly ChannelFactory<IQueryService> _channelFactory;
 
-        private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
+        private readonly Func<Expression, DynamicObject> _dataProvider;
 
         public RemoteRepository(string uri)
         {
@@ -26,7 +25,8 @@ namespace Client
             {
                 using var proxy = _channelFactory.CreateServiceProxy();
 
-                IEnumerable<DynamicObject> result = proxy.Service.ExecuteQuery(expression);
+                DynamicObject result = proxy.Service.ExecuteQuery(expression);
+
                 return result;
             };
         }

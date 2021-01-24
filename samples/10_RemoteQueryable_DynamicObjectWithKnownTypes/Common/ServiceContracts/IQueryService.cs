@@ -5,7 +5,6 @@ namespace Common.ServiceContracts
     using Aqua.Dynamic;
     using Common.Model;
     using Remote.Linq.Expressions;
-    using System.Collections.Generic;
     using System.ServiceModel;
 
     [ServiceContract]
@@ -14,6 +13,6 @@ namespace Common.ServiceContracts
         [OperationContract]
         [ServiceKnownType(typeof(Product))]
         [ServiceKnownType(typeof(ProductGroup))]
-        IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression);
+        DynamicObject ExecuteQuery(Expression queryExpression);
     }
 }

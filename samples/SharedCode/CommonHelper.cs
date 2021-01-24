@@ -6,19 +6,29 @@ using System.Globalization;
 internal static class CommonHelper
 {
     private const string TitleBase = "(⌐■_■)  Remote.Linq Demo";
+    private const char NewLine = '\n';
 
     static CommonHelper()
     {
         Console.ForegroundColor = ConsoleColor.White;
     }
 
-    public static void Title(string title) => Console.Title = $"{TitleBase} | {title}";
+    public static void Title(string title)
+    {
+        var text = $"{TitleBase} | {title}";
+        Console.Title = text;
+
+        var line = new string('*', text.Length);
+        PrintHeader(line);
+        PrintHeader(text);
+        PrintHeader(line);
+    }
 
     /// <summary>
     /// Writest a section header to std out.
     /// </summary>
     public static void PrintHeader(string header, bool underline = false, int linebreaks = 1)
-        => PrintSection("\n" + header, underline, ConsoleColor.Blue, linebreaks);
+        => PrintSection(NewLine + header, underline, ConsoleColor.Blue, linebreaks);
 
     /// <summary>
     /// Writest a note std out.
@@ -32,10 +42,10 @@ internal static class CommonHelper
         Print(text);
         if (!string.IsNullOrEmpty(text) && underline)
         {
-            Print("\n" + new string('>', text.Length));
+            Print(NewLine + new string('>', text.Length));
         }
 
-        Print(new string('\n', linebreaks));
+        Print(new string(NewLine, linebreaks));
     }
 
     /// <summary>
@@ -73,13 +83,13 @@ internal static class CommonHelper
     /// <summary>
     /// Writest the text to std out.
     /// </summary>
-    public static void PrintLine(string text = null) => Print(text + "\n");
+    public static void PrintLine(string text = null) => Print(text + NewLine);
 
     /// <summary>
     /// Writest the text to std out.
     /// </summary>
     public static void PrintLine(IFormatProvider formatProvider, FormattableString formattable)
-        => Print(Format(formatProvider, formattable) + "\n");
+        => Print(Format(formatProvider, formattable) + NewLine);
 
     public static void Print(IFormatProvider formatProvider, FormattableString formattable)
         => Print(Format(formatProvider, formattable));

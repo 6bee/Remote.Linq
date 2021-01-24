@@ -5,7 +5,6 @@ namespace Server
     using Aqua.Dynamic;
     using Remote.Linq.Expressions;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Security;
@@ -23,7 +22,7 @@ namespace Server
         };
 
         [SecuritySafeCritical]
-        public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
+        public DynamicObject ExecuteQuery(Expression queryExpression)
             => queryExpression.Execute(_queryableProvider);
     }
 }

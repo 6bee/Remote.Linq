@@ -8,7 +8,6 @@ namespace Client
     using Remote.Linq;
     using Remote.Linq.Expressions;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.ServiceModel;
     using System.Threading.Tasks;
@@ -16,29 +15,27 @@ namespace Client
     public sealed class RemoteRepository : IRemoteRepository
     {
         private readonly ChannelFactory<IQueryService> _channelFactory;
-        private readonly Func<Expression, ValueTask<IEnumerable<DynamicObject>>> _asyncDataProvider;
+        private readonly Func<Expression, ValueTask<DynamicObject>> _asyncDataProvider;
 
         public RemoteRepository(string uri)
         {
             var binding = new NetNamedPipeBinding { MaxReceivedMessageSize = 10240 }.WithDebugSetting();
             _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
-
             _asyncDataProvider = async expression =>
                 {
                     using var proxy = _channelFactory.CreateServiceProxy();
-
-                    IEnumerable<DynamicObject> result = await proxy.Service.ExecuteQueryAsync(expression).ConfigureAwait(false);
+                    var result = await proxy.Service.ExecuteQueryAsync(expression).ConfigureAwait(false);
                     return result;
                 };
         }
 
-        public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ProductCategory>(_asyncDataProvider);
+        public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateAsyncQueryable<ProductCategory>(_asyncDataProvider);
 
-        public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateQueryable<ProductGroup>(_asyncDataProvider);
+        public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateAsyncQueryable<ProductGroup>(_asyncDataProvider);
 
-        public IQueryable<Product> Products => RemoteQueryable.Factory.CreateQueryable<Product>(_asyncDataProvider);
+        public IQueryable<Product> Products => RemoteQueryable.Factory.CreateAsyncQueryable<Product>(_asyncDataProvider);
 
-        public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<OrderItem>(_asyncDataProvider);
+        public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateAsyncQueryable<OrderItem>(_asyncDataProvider);
 
         public void Dispose() => _channelFactory.Close();
     }

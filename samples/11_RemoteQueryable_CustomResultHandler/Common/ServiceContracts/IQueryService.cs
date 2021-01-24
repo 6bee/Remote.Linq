@@ -4,7 +4,6 @@ namespace Common.ServiceContracts
 {
     using Common.Model;
     using Remote.Linq.Expressions;
-    using System;
     using System.ServiceModel;
 
     [ServiceContract]

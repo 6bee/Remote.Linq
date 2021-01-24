@@ -16,8 +16,22 @@ namespace Server
         {
             // DEMO: for demo purpose we fetch query result into memory
             // and use test-support extension method to return an asyn stream
+            var resultSet = ExecuteQuery(queryExpression);
+
+            return resultSet.AsAsyncRemoteStreamQueryable().ExecuteAsyncRemoteStream(cancellation);
+        }
+
+        private IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
+        {
             var result = queryExpression.Execute(DataStore.QueryableByTypeProvider);
-            return result.AsAsyncRemoteStreamQueryable().ExecuteAsyncRemoteStream(cancellation);
+            return ReMapCollection(result);
+        }
+
+        private static IEnumerable<DynamicObject> ReMapCollection(DynamicObject dynamicObject)
+        {
+            var mapper = new DynamicObjectMapper();
+            var items = mapper.Map(dynamicObject);
+            return mapper.MapCollection(items);
         }
     }
 }

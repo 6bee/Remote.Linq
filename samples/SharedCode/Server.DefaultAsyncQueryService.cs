@@ -4,7 +4,6 @@ namespace Server
 {
     using Aqua.Dynamic;
     using Remote.Linq.Expressions;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -12,7 +11,7 @@ namespace Server
     {
         private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
-        public Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression, CancellationToken cancellation)
-            => Task.Run(() => queryExpression.Execute(DataStore.QueryableByTypeProvider), cancellation);
+        public async ValueTask<DynamicObject> ExecuteQueryAsync(Expression queryExpression, CancellationToken cancellation)
+            => await Task.Run(() => queryExpression.Execute(DataStore.QueryableByTypeProvider), cancellation).ConfigureAwait(false);
     }
 }

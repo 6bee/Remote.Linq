@@ -3,13 +3,13 @@
 namespace Server
 {
     using Common.Model;
-    using System.Collections.Generic;
     using System.Linq;
 
     partial class InMemoryDataStore
     {
-        public IEnumerable<IEntity> All
+        public IQueryable<IEntity> All
             => Enumerable.Empty<IEntity>()
+            .AsQueryable()
             .Concat(Products)
             .Concat(ProductGroups)
             .Concat(ProductCategories)

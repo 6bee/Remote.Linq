@@ -28,11 +28,11 @@ namespace Client
             }
 
             PrintHeader("CROSS JOIN:");
-            var vowels = new[] { 'a', 'e', 'i', 'o', 'u' };
+            var vowels = new[] { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
             var crossJoinQuery =
                 from c in repo.ProductCategories
                 from p in repo.Products
-                let @particle = vowels.Contains(p.Name.Substring(0, 1).ToLower().Single()) ? "An" : "A"
+                let @particle = vowels.Contains(p.Name.First()) ? "An" : "A"
                 let @subject = p.Name.ToLower()
                 let @verb = $"is{(c.Id == p.ProductCategoryId ? null : " not")} a"
                 let @object = c.Name.ToLower().TrimEnd('s')
@@ -91,7 +91,6 @@ namespace Client
                 {
                     Category = g.Key,
                     Amount = g.Sum(x => x.i.Quantity * x.p.Price),
-                    Amount2 = new { Amount = g.Sum(x => x.i.Quantity * x.p.Price) },
                 };
 
             var totalAmountByCategroyResult = await totalAmountByCategoryQuery

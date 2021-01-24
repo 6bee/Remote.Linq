@@ -4,7 +4,6 @@ namespace Common.ServiceContracts
 {
     using Aqua.Dynamic;
     using Remote.Linq.Expressions;
-    using System.Collections.Generic;
     using System.ServiceModel;
     using System.Threading.Tasks;
 
@@ -12,6 +11,6 @@ namespace Common.ServiceContracts
     public interface IQueryService
     {
         [OperationContract]
-        Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression);
+        Task<DynamicObject> ExecuteQueryAsync(Expression queryExpression);
     }
 }

@@ -6,22 +6,23 @@ namespace Common
     using Remote.Linq;
     using System;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public static class ProtobufNetFormatter
     {
         private static readonly ProtoBuf.Meta.RuntimeTypeModel _configuration = ProtoBufTypeModel.ConfigureRemoteLinq();
 
-        public static async Task WriteAsync(this Stream stream, object obj)
+        public static async ValueTask WriteAsync(this Stream stream, object obj, CancellationToken cancellation = default)
         {
             var typeInfo = new TypeInfo(obj.GetType(), false, false);
 
-            await WriteInternalAsync(stream, typeInfo).ConfigureAwait(false);
+            await WriteInternalAsync(stream, typeInfo, cancellation).ConfigureAwait(false);
 
-            await WriteInternalAsync(stream, obj).ConfigureAwait(false);
+            await WriteInternalAsync(stream, obj, cancellation).ConfigureAwait(false);
         }
 
-        private static async Task WriteInternalAsync(this Stream stream, object obj)
+        private static async ValueTask WriteInternalAsync(this Stream stream, object obj, CancellationToken cancellation)
         {
             byte[] data;
             using (var dataStream = new MemoryStream())
@@ -37,20 +38,20 @@ namespace Common
             var datatype = obj is Exception ? (byte)1 : (byte)0;
 
             stream.WriteByte(datatype);
-            await stream.WriteAsync(sizeData, 0, sizeData.Length).ConfigureAwait(false);
-            await stream.WriteAsync(data, 0, data.Length).ConfigureAwait(false);
+            await stream.WriteAsync(sizeData, 0, sizeData.Length, cancellation).ConfigureAwait(false);
+            await stream.WriteAsync(data, 0, data.Length, cancellation).ConfigureAwait(false);
         }
 
-        public static async Task<T> ReadAsync<T>(this Stream stream)
+        public static async ValueTask<T> ReadAsync<T>(this Stream stream, CancellationToken cancellation = default)
         {
-            var typeInfo = await ReadInternalAsync<TypeInfo>(stream).ConfigureAwait(false);
+            var typeInfo = await ReadInternalAsync<TypeInfo>(stream, null, cancellation).ConfigureAwait(false);
             var type = typeInfo.ToType();
 
-            T obj = await ReadInternalAsync<T>(stream, type).ConfigureAwait(false);
+            T obj = await ReadInternalAsync<T>(stream, type, cancellation).ConfigureAwait(false);
             return obj;
         }
 
-        public static async Task<T> ReadInternalAsync<T>(this Stream stream, Type type = null)
+        private static async ValueTask<T> ReadInternalAsync<T>(this Stream stream, Type type, CancellationToken cancellation)
         {
             int datatye = stream.ReadByte();
             if (datatye < 0)
@@ -61,7 +62,7 @@ namespace Common
             bool isException = datatye == 1;
             byte[] bytes = new byte[256];
 
-            await stream.ReadAsync(bytes, 0, 8).ConfigureAwait(false);
+            await stream.ReadAsync(bytes, 0, 8, cancellation).ConfigureAwait(false);
             long size = BitConverter.ToInt64(bytes, 0);
 
             object obj;
@@ -76,7 +77,7 @@ namespace Common
                             ? (int)(size - count)
                             : bytes.Length;
 
-                        int i = await stream.ReadAsync(bytes, 0, length).ConfigureAwait(false);
+                        int i = await stream.ReadAsync(bytes, 0, length, cancellation).ConfigureAwait(false);
                         count += i;
 
                         dataStream.Write(bytes, 0, i);

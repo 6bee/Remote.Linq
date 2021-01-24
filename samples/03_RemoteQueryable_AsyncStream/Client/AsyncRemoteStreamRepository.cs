@@ -124,13 +124,13 @@ namespace Client
             _asyncStreamDataProvider = (expression, cancellation) => new AsyncTcpClientEnumerator<DynamicObject>(() => _tcpClient, expression, cancellation, false).GetAsyncStream();
         }
 
-        public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ProductCategory>(_asyncStreamDataProvider);
+        public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateAsyncStreamQueryable<ProductCategory>(_asyncStreamDataProvider);
 
-        public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateQueryable<ProductGroup>(_asyncStreamDataProvider);
+        public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateAsyncStreamQueryable<ProductGroup>(_asyncStreamDataProvider);
 
-        public IQueryable<Product> Products => RemoteQueryable.Factory.CreateQueryable<Product>(_asyncStreamDataProvider);
+        public IQueryable<Product> Products => RemoteQueryable.Factory.CreateAsyncStreamQueryable<Product>(_asyncStreamDataProvider);
 
-        public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<OrderItem>(_asyncStreamDataProvider);
+        public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateAsyncStreamQueryable<OrderItem>(_asyncStreamDataProvider);
 
         public void Dispose() => _tcpClient.Dispose();
     }

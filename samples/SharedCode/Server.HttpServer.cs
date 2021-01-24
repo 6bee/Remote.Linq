@@ -20,7 +20,7 @@ namespace Server
             _server.Prefixes.Add($"http://+:{port}/queryservice/");
         }
 
-        public void RunService<TRequest, TResponse>(Func<TRequest, CancellationToken, Task<TResponse>> asyncRequestHandler)
+        public void RunService<TRequest, TResponse>(Func<TRequest, CancellationToken, ValueTask<TResponse>> asyncRequestHandler)
         {
             _server.Start();
 
@@ -55,7 +55,7 @@ namespace Server
             });
         }
 
-        public void RunQueryService<TResult>(Func<Expression, CancellationToken, Task<TResult>> asyncRequestHandler) => RunService(asyncRequestHandler);
+        public void RunQueryService<TResult>(Func<Expression, CancellationToken, ValueTask<TResult>> asyncRequestHandler) => RunService(asyncRequestHandler);
 
         public void Dispose() => _server.Stop();
     }

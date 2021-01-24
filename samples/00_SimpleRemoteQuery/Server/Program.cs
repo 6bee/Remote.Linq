@@ -5,7 +5,7 @@ namespace Server
     using Common.ServiceContract;
     using static CommonHelper;
 
-    public class Host
+    public class Program
     {
         public static void Main()
         {

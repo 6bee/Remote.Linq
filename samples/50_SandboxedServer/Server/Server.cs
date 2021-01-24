@@ -2,10 +2,10 @@
 
 namespace Server
 {
+    using Aqua.Dynamic;
     using Common;
     using Remote.Linq.Expressions;
     using System;
-    using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
     using System.Security;
@@ -38,7 +38,7 @@ namespace Server
                 try
                 {
                     QueryService queryService = new QueryService();
-                    IEnumerable<Aqua.Dynamic.DynamicObject> result = queryService.ExecuteQuery(queryExpression);
+                    DynamicObject result = queryService.ExecuteQuery(queryExpression);
                     stream.Write(result);
                 }
                 catch (Exception ex)

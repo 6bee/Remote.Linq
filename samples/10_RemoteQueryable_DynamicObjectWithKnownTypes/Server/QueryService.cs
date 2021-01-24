@@ -7,7 +7,6 @@ namespace Server
     using Common.ServiceContracts;
     using Remote.Linq;
     using Remote.Linq.Expressions;
-    using System.Collections.Generic;
 
     public class QueryService : IQueryService
     {
@@ -15,7 +14,7 @@ namespace Server
 
         private DynamicObjectMapper Mapper => new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
 
-        public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
+        public DynamicObject ExecuteQuery(Expression queryExpression)
             => queryExpression.Execute(DataStore.QueryableByTypeProvider, mapper: Mapper);
     }
 }

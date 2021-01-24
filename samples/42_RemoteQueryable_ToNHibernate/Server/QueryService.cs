@@ -4,16 +4,15 @@ namespace Server
 {
     using Aqua.Dynamic;
     using Remote.Linq.Expressions;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
     public class QueryService
     {
-        public Task<IEnumerable<DynamicObject>> ExecuteQueryAsync(Expression queryExpression, CancellationToken cancellation)
+        public ValueTask<DynamicObject> ExecuteQueryAsync(Expression queryExpression, CancellationToken cancellation)
         {
             using NHContext nhContext = new NHContext();
-            return Task.FromResult(queryExpression.Execute(nhContext.GetQueryable));
+            return new ValueTask<DynamicObject>(queryExpression.Execute(nhContext.GetQueryable));
         }
     }
 }

@@ -15,11 +15,11 @@ namespace Common
     {
         private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
 
-        public static void Write(this Stream stream, object obj) => stream.WriteAsync(obj, CancellationToken.None).Wait();
+        public static void Write(this Stream stream, object obj) => stream.WriteAsync(obj).AsTask().Wait();
 
-        public static T Read<T>(this Stream stream) => stream.ReadAsync<T>(CancellationToken.None).Result;
+        public static T Read<T>(this Stream stream) => stream.ReadAsync<T>().Result;
 
-        public static async Task WriteAsync(this Stream stream, object obj, CancellationToken cancellation = default)
+        public static async ValueTask WriteAsync(this Stream stream, object obj, CancellationToken cancellation = default)
         {
             var typeInfo = new TypeInfo(obj.GetType(), false, false);
 
@@ -28,7 +28,7 @@ namespace Common
             await WriteInternalAsync(stream, obj, cancellation).ConfigureAwait(false);
         }
 
-        private static async Task WriteInternalAsync(Stream stream, object obj, CancellationToken cancellation)
+        private static async ValueTask WriteInternalAsync(Stream stream, object obj, CancellationToken cancellation)
         {
             string json = JsonConvert.SerializeObject(obj, Formatting.Indented, _jsonSerializerSettings);
 
@@ -42,7 +42,7 @@ namespace Common
             await stream.WriteAsync(data, 0, data.Length, cancellation).ConfigureAwait(false);
         }
 
-        public static async Task<T> ReadAsync<T>(this Stream stream, CancellationToken cancellation = default)
+        public static async ValueTask<T> ReadAsync<T>(this Stream stream, CancellationToken cancellation = default)
         {
             var typeInfo = await ReadInternalAsync<TypeInfo>(stream, null, cancellation).ConfigureAwait(false);
             var type = typeInfo.ToType();
@@ -51,7 +51,7 @@ namespace Common
             return obj;
         }
 
-        private static async Task<T> ReadInternalAsync<T>(Stream stream, Type type, CancellationToken cancellation)
+        private static async ValueTask<T> ReadInternalAsync<T>(Stream stream, Type type, CancellationToken cancellation)
         {
             byte[] bytes = new byte[256];
 
@@ -78,7 +78,7 @@ namespace Common
                     i = await stream.ReadAsync(bytes, 0, length, cancellation).ConfigureAwait(false);
                     count += i;
 
-                    dataStream.Write(bytes, 0, i);
+                    await dataStream.WriteAsync(bytes, 0, i, cancellation).ConfigureAwait(false);
                 }
                 while (count < size);
 

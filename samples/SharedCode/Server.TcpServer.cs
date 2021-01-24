@@ -26,9 +26,9 @@ namespace Server
         }
 
         public void RunService<TRequest, TResponse>(Func<TRequest, TResponse> requestHandler)
-            => RunAsyncService<TRequest, TResponse>((request, cancellation) => Task.FromResult(requestHandler(request)));
+            => RunAsyncService<TRequest, TResponse>((request, cancellation) => new ValueTask<TResponse>(requestHandler(request)));
 
-        public void RunAsyncService<TRequest, TResponse>(Func<TRequest, CancellationToken, Task<TResponse>> asyncRequestHandler)
+        public void RunAsyncService<TRequest, TResponse>(Func<TRequest, CancellationToken, ValueTask<TResponse>> asyncRequestHandler)
         {
             _server.Start();
 
@@ -48,22 +48,22 @@ namespace Server
                                 using var cancellation = new CancellationTokenSource();
                                 while (true)
                                 {
-                                    var request = await stream.ReadAsync<TRequest>().ConfigureAwait(false);
+                                    var request = await stream.ReadAsync<TRequest>(cancellation.Token).ConfigureAwait(false);
                                     try
                                     {
                                         var response = await asyncRequestHandler(request, cancellation.Token).ConfigureAwait(false);
-                                        await stream.WriteAsync(response).ConfigureAwait(false);
+                                        await stream.WriteAsync(response, cancellation.Token).ConfigureAwait(false);
                                     }
                                     catch (InvalidOperationException ex)
                                     {
-                                        await stream.WriteAsync(ex).ConfigureAwait(false);
+                                        await stream.WriteAsync(ex, cancellation.Token).ConfigureAwait(false);
                                     }
                                     catch (Exception ex)
                                     {
-                                        await stream.WriteAsync(new Exception($"{ex.GetType()}: {ex.Message}")).ConfigureAwait(false);
+                                        await stream.WriteAsync(new Exception($"{ex.GetType()}: {ex.Message}"), cancellation.Token).ConfigureAwait(false);
                                     }
 
-                                    await stream.FlushAsync().ConfigureAwait(false);
+                                    await stream.FlushAsync(cancellation.Token).ConfigureAwait(false);
                                 }
                             }
                             catch (OperationCanceledException)
@@ -83,7 +83,7 @@ namespace Server
 
         public void RunQueryService<TResult>(Func<Expression, TResult> requestHandler) => RunService(requestHandler);
 
-        public void RunAsyncQueryService<TResult>(Func<Expression, CancellationToken, Task<TResult>> asyncRequestHandler) => RunAsyncService(asyncRequestHandler);
+        public void RunAsyncQueryService<TResult>(Func<Expression, CancellationToken, ValueTask<TResult>> asyncRequestHandler) => RunAsyncService(asyncRequestHandler);
 
         public void Dispose() => _server.Stop();
     }

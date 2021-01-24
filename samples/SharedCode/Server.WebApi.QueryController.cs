@@ -6,7 +6,6 @@ namespace Server
     using Common.Model;
     using Microsoft.AspNetCore.Mvc;
     using Remote.Linq.Expressions;
-    using System.Collections.Generic;
 
     [ApiController]
     [Route("api")]
@@ -15,7 +14,7 @@ namespace Server
         private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
         [Route("query")]
-        public IEnumerable<DynamicObject> Query([FromBody] Query query)
+        public DynamicObject Query([FromBody] Query query)
             => query.Expression.Execute(DataStore.QueryableByTypeProvider);
     }
 }

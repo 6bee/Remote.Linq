@@ -7,7 +7,6 @@ namespace Client
     using Remote.Linq;
     using Remote.Linq.Expressions;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -20,7 +19,7 @@ namespace Client
     public class RemoteRepository : IRemoteRepository
     {
         private readonly HttpClient _httpClient;
-        private readonly Func<Expression, ValueTask<IEnumerable<DynamicObject>>> _dataProvider;
+        private readonly Func<Expression, ValueTask<DynamicObject>> _dataProvider;
 
         public RemoteRepository(string server, int port)
         {
@@ -41,7 +40,7 @@ namespace Client
 
                     response.EnsureSuccessStatusCode();
 
-                    IEnumerable<DynamicObject> result = await response.Content.ReadAsAsync<IEnumerable<DynamicObject>>().ConfigureAwait(false);
+                    var result = await response.Content.ReadAsAsync<DynamicObject>().ConfigureAwait(false);
                     return result;
                 }
                 catch (SocketException ex)
@@ -52,11 +51,11 @@ namespace Client
             };
         }
 
-        public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ProductCategory>(_dataProvider);
+        public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateAsyncQueryable<ProductCategory>(_dataProvider);
 
-        public IQueryable<Product> Products => RemoteQueryable.Factory.CreateQueryable<Product>(_dataProvider);
+        public IQueryable<Product> Products => RemoteQueryable.Factory.CreateAsyncQueryable<Product>(_dataProvider);
 
-        public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<OrderItem>(_dataProvider);
+        public IQueryable<OrderItem> OrderItems => RemoteQueryable.Factory.CreateAsyncQueryable<OrderItem>(_dataProvider);
 
         public IQueryable<ProductGroup> ProductGroups => throw new NotImplementedException();
 

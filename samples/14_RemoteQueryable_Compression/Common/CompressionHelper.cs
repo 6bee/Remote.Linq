@@ -3,14 +3,13 @@
 namespace Common
 {
     using Aqua.Dynamic;
-    using System.Collections.Generic;
     using System.IO;
     using System.IO.Compression;
     using System.Runtime.Serialization.Formatters.Binary;
 
     public class CompressionHelper
     {
-        public IEnumerable<DynamicObject> Decompress(byte[] compressedData)
+        public DynamicObject Decompress(byte[] compressedData)
         {
             using var decompressedStream = new MemoryStream();
             using (var compressedStream = new MemoryStream())
@@ -26,10 +25,10 @@ namespace Common
 
             var formatter = new BinaryFormatter();
             object obj = formatter.Deserialize(decompressedStream);
-            return (IEnumerable<DynamicObject>)obj;
+            return (DynamicObject)obj;
         }
 
-        public byte[] Compress(IEnumerable<DynamicObject> graph)
+        public byte[] Compress(DynamicObject graph)
         {
             using var compressedStream = new MemoryStream();
             using (var compressionStream = new GZipStream(compressedStream, CompressionMode.Compress))

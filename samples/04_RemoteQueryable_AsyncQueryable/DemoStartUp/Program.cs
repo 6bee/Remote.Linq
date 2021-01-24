@@ -11,7 +11,7 @@ namespace DemoStartUp
         private static void Main()
         {
             Title("Ix.NET");
-            PrintNote("This demo uses a random delay on server side to simulate data item retrieval/generation.");
+            PrintNote("This demo uses a random delay on server side to simulate data item retrieval/generation via async stream.");
             const string host = "localhost";
             const int port = 8899;
 

@@ -9,6 +9,7 @@ namespace DemoStartUp
         private static void Main()
         {
             Title("Simple Remote Query [Server]");
+            Client.Program.PrintDemoDescription();
 
             PrintSetup("Starting WCF service...");
             using var dataServiceHost = WcfHelper.CreateServiceHost<Server.TraditionalDataService>()
@@ -20,11 +21,9 @@ namespace DemoStartUp
                 .OpenService();
 
             PrintSetup("Staring client demo...");
-            PrintSetup("-------------------------------------------------");
             Client.Program.RunQueries();
 
             PrintSetup();
-            PrintSetup("-------------------------------------------------");
             PrintSetup("Done.");
             WaitForEnterKey();
         }

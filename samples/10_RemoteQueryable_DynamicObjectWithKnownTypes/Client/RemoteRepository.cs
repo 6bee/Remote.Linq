@@ -9,16 +9,13 @@ namespace Client
     using Remote.Linq;
     using Remote.Linq.Expressions;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.ServiceModel;
 
     public sealed class RemoteRepository : IRemoteRepository
     {
-        private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
-
+        private readonly Func<Expression, DynamicObject> _dataProvider;
         private readonly IDynamicObjectMapper _mapper;
-
         private readonly ChannelFactory<IQueryService> _channelFactory;
 
         public RemoteRepository(string uri)
@@ -27,12 +24,10 @@ namespace Client
 
             var binding = new NetNamedPipeBinding { MaxReceivedMessageSize = 10240 }.WithDebugSetting();
             _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
-
             _dataProvider = expression =>
                 {
                     using var proxy = _channelFactory.CreateServiceProxy();
-
-                    IEnumerable<DynamicObject> result = proxy.Service.ExecuteQuery(expression);
+                    var result = proxy.Service.ExecuteQuery(expression);
                     return result;
                 };
         }

@@ -10,4 +10,7 @@
     <Compile Include="..\..\SharedCode\Common.Model.ProductGroup.cs" Link="Model\ProductGroup.cs" />
     <Compile Include="..\..\SharedCode\Common.BinaryDataFormatter.cs" Link="BinaryDataFormatter.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+  </ItemGroup>
 </Project>

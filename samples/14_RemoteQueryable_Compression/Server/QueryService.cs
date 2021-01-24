@@ -2,10 +2,10 @@
 
 namespace Server
 {
+    using Aqua.Dynamic;
     using Common;
     using Common.ServiceContracts;
     using Remote.Linq.Expressions;
-    using System.Collections.Generic;
 
     public class QueryService : IQueryService
     {
@@ -13,7 +13,7 @@ namespace Server
 
         public byte[] ExecuteQuery(Expression queryExpression)
         {
-            IEnumerable<Aqua.Dynamic.DynamicObject> result = queryExpression.Execute(DataStore.QueryableByTypeProvider);
+            DynamicObject result = queryExpression.Execute(DataStore.QueryableByTypeProvider);
 
             byte[] compressedData = new CompressionHelper().Compress(result);
 

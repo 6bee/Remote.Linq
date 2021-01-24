@@ -7,13 +7,12 @@ namespace Client
     using Remote.Linq;
     using Remote.Linq.Expressions;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Net.Sockets;
 
     internal class RemoteRepository
     {
-        private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
+        private readonly Func<Expression, DynamicObject> _dataProvider;
 
         public RemoteRepository(string ip, int port)
         {
@@ -23,7 +22,8 @@ namespace Client
                 using NetworkStream stream = client.GetStream();
                 stream.Write(expression);
                 stream.Flush();
-                IEnumerable<DynamicObject> result = stream.Read<IEnumerable<DynamicObject>>();
+
+                DynamicObject result = stream.Read<DynamicObject>();
                 stream.Close();
                 client.Close();
                 return result;
