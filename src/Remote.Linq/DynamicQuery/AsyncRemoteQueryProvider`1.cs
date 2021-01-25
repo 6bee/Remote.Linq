@@ -67,9 +67,9 @@ namespace Remote.Linq.DynamicQuery
             }
             catch (AggregateException ex)
             {
-                if (ex.InnerExceptions.Count > 0)
+                if (ex.InnerException is not null)
                 {
-                    throw ex.InnerException;
+                    throw ex.InnerException!;
                 }
                 else
                 {

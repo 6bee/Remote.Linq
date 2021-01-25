@@ -132,11 +132,10 @@ namespace Remote.Linq.ExpressionExecution
             }
 
             var queryableType = queryResult.GetType();
-            if (queryableType.Implements(typeof(IQueryable<>)))
+            if (queryableType.Implements(typeof(IQueryable<>), out var genericType))
             {
                 // force query execution
-                var elementType = TypeHelper.GetElementType(queryableType);
-                queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).InvokeAndUnwrap(null, queryResult);
+                queryResult = MethodInfos.Enumerable.ToArray.MakeGenericMethod(genericType[0]).InvokeAndUnwrap(null, queryResult);
             }
 
             return queryResult;

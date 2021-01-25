@@ -589,7 +589,7 @@ namespace Remote.Linq
 
             protected override SystemLinq.Expression VisitLoop(SystemLinq.LoopExpression node)
             {
-                var body = Visit(node.Body).UnwrapNullable();
+                var body = Visit(node.Body).Unwrap();
                 var breakLabel = VisitTarget(node.BreakLabel);
                 var continueLabel = VisitTarget(node.ContinueLabel);
                 return new RemoteLinq.LoopExpression(body, breakLabel, continueLabel).Wrap();
@@ -669,12 +669,16 @@ namespace Remote.Linq
                     _ => throw new NotSupportedException($"Unknown expression note type: '{node.NodeType}'"),
                 };
 
+            private System.Reflection.MethodInfo ResolveMethod(Aqua.TypeSystem.MethodInfo method)
+                => method.ResolveMethod(_typeResolver)
+                ?? throw new RemoteLinqException($"Failed to resolve method '{method}'");
+
             private SystemLinq.Expression VisitSwitch(RemoteLinq.SwitchExpression node)
             {
                 var defaultExpression = Visit(node.DefaultExpression);
                 var switchValue = Visit(node.SwitchValue);
                 var compareMethod = node.Comparison.ResolveMethod(_typeResolver);
-                var cases = node.Cases.Select(VisitSwitchCase);
+                var cases = node.Cases?.Select(VisitSwitchCase);
 
                 return SystemLinq.Expression.Switch(switchValue, defaultExpression, compareMethod, cases);
             }
@@ -682,8 +686,8 @@ namespace Remote.Linq
             private SystemLinq.SwitchCase VisitSwitchCase(RemoteLinq.SwitchCase switchCase)
             {
                 var body = Visit(switchCase.Body);
-                var testCases = switchCase.TestValues ?? Enumerable.Empty<RemoteLinq.Expression>();
-                return SystemLinq.Expression.SwitchCase(body, testCases.Select(Visit));
+                var testCases = switchCase.TestValues.AsEmptyIfNull().Select(Visit);
+                return SystemLinq.Expression.SwitchCase(body, testCases!);
             }
 
             private SystemLinq.Expression VisitTry(RemoteLinq.TryExpression node)
@@ -692,7 +696,7 @@ namespace Remote.Linq
                 var type = node.Type.ResolveType(_typeResolver);
                 var fault = node.Fault is null ? null : Visit(node.Fault);
                 var @finally = node.Finally is null ? null : Visit(node.Finally);
-                var handlers = node.Handlers?.Select(VisitCatchBlock) ?? Enumerable.Empty<SystemLinq.CatchBlock>();
+                var handlers = node.Handlers.AsEmptyIfNull().Select(VisitCatchBlock);
 
                 return SystemLinq.Expression.MakeTry(type, body, @finally, fault, handlers);
             }
@@ -701,7 +705,7 @@ namespace Remote.Linq
             {
                 var exceptionType = catchBlock.Test.ResolveType(_typeResolver);
                 var exceptionParameter = catchBlock.Variable is null ? null : VisitParameter(catchBlock.Variable);
-                var body = catchBlock.Body is null ? null : Visit(catchBlock.Body);
+                var body = Visit(catchBlock.Body);
                 var filter = catchBlock.Filter is null ? null : Visit(catchBlock.Filter);
 
                 return SystemLinq.Expression.MakeCatchBlock(exceptionType, exceptionParameter, body, filter);
@@ -715,7 +719,7 @@ namespace Remote.Linq
                     return SystemLinq.Expression.New(type);
                 }
 
-                var constructor = node.Constructor.ResolveConstructor(_typeResolver);
+                var constructor = node.Constructor.ResolveConstructor(_typeResolver) !;
                 if (node.Arguments is null)
                 {
                     if (node.Members?.Any() ?? false)
@@ -776,11 +780,11 @@ namespace Remote.Linq
             private SystemLinq.Expression VisitBlock(RemoteLinq.BlockExpression node)
             {
                 var type = node.Type.ResolveType(_typeResolver);
-                var variables = node.Variables?.Select(VisitParameter).AsEmptyIfNull();
-                var expressions = node.Expressions?.Select(Visit).AsEmptyIfNull();
+                var variables = node.Variables.AsEmptyIfNull().Select(VisitParameter);
+                var expressions = node.Expressions.AsEmptyIfNull().Select(Visit);
                 return type is null
-                    ? SystemLinq.Expression.Block(variables, expressions)
-                    : SystemLinq.Expression.Block(type, variables, expressions);
+                    ? SystemLinq.Expression.Block(variables, expressions!)
+                    : SystemLinq.Expression.Block(type, variables, expressions!);
             }
 
             private IEnumerable<SystemLinq.MemberBinding> VisitBindingList(IEnumerable<RemoteLinq.MemberBinding> original)
@@ -829,7 +833,7 @@ namespace Remote.Linq
             private SystemLinq.ElementInit VisitElementInitializer(RemoteLinq.ElementInit initializer)
             {
                 var arguments = VisitExpressionList(initializer.Arguments);
-                var m = initializer.AddMethod.ResolveMethod(_typeResolver);
+                var m = initializer.AddMethod.ResolveMethod(_typeResolver) ?? throw new RemoteLinqException($"Failed to resolve method '{initializer.AddMethod}'");
                 return SystemLinq.Expression.ElementInit(m, arguments);
             }
 
@@ -843,7 +847,9 @@ namespace Remote.Linq
                 var n = VisitNew(node.NewExpression);
                 var initializers =
                     from i in node.Initializers
-                    select SystemLinq.Expression.ElementInit(i.AddMethod.ResolveMethod(_typeResolver), i.Arguments.Select(Visit));
+                    select SystemLinq.Expression.ElementInit(
+                        ResolveMethod(i.AddMethod),
+                        i.Arguments.Select(Visit) !);
                 return SystemLinq.Expression.ListInit(n, initializers);
             }
 
@@ -884,7 +890,7 @@ namespace Remote.Linq
                 var arguments = node.Arguments?
                     .Select(x => Visit(x))
                     .ToArray();
-                var methodInfo = node.Method.ResolveMethod(_typeResolver);
+                var methodInfo = ResolveMethod(node.Method);
                 return SystemLinq.Expression.Call(instance, methodInfo, arguments);
             }
 
@@ -934,7 +940,9 @@ namespace Remote.Linq
                     value = mapper.Map(obj, type);
                 }
 
-                return SystemLinq.Expression.Constant(value, type);
+                return type is null
+                    ? SystemLinq.Expression.Constant(value)
+                    : SystemLinq.Expression.Constant(value, type);
             }
 
             private SystemLinq.Expression VisitBinary(RemoteLinq.BinaryExpression node)
@@ -1010,7 +1018,7 @@ namespace Remote.Linq
                 {
                     if (!_labelTargetCache.TryGetValue(labelTarget, out var target))
                     {
-                        var targetType = labelTarget.Type.ResolveType(_typeResolver);
+                        var targetType = labelTarget.Type.ResolveType(_typeResolver) ?? throw new RemoteLinqException($"Failed to resolve label target type '{labelTarget.Type}'");
                         target = SystemLinq.Expression.Label(targetType, labelTarget.Name);
                         _labelTargetCache.Add(labelTarget, target);
                     }
@@ -1019,20 +1027,15 @@ namespace Remote.Linq
                 }
             }
 
-            bool IEqualityComparer<RemoteLinq.ParameterExpression>.Equals(RemoteLinq.ParameterExpression x, RemoteLinq.ParameterExpression y)
+            bool IEqualityComparer<RemoteLinq.ParameterExpression>.Equals(RemoteLinq.ParameterExpression? x, RemoteLinq.ParameterExpression? y)
             {
                 if (ReferenceEquals(x, y))
                 {
                     return true;
                 }
 
-                if (x is null)
+                if (x is null || y is null)
                 {
-                    if (y is null)
-                    {
-                        return true;
-                    }
-
                     return false;
                 }
 
@@ -1041,20 +1044,15 @@ namespace Remote.Linq
 
             int IEqualityComparer<RemoteLinq.ParameterExpression>.GetHashCode(RemoteLinq.ParameterExpression obj) => obj?.InstanceId ?? 0;
 
-            bool IEqualityComparer<RemoteLinq.LabelTarget>.Equals(RemoteLinq.LabelTarget x, RemoteLinq.LabelTarget y)
+            bool IEqualityComparer<RemoteLinq.LabelTarget>.Equals(RemoteLinq.LabelTarget? x, RemoteLinq.LabelTarget? y)
             {
                 if (ReferenceEquals(x, y))
                 {
                     return true;
                 }
 
-                if (x is null)
+                if (x is null || y is null)
                 {
-                    if (y is null)
-                    {
-                        return true;
-                    }
-
                     return false;
                 }
 

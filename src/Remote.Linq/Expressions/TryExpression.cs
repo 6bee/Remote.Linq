@@ -17,14 +17,14 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public TryExpression(Type? type, Expression body, Expression? fault, Expression? @finally, List<CatchBlock>? handlers)
+        public TryExpression(Type type, Expression body, Expression? fault, Expression? @finally, List<CatchBlock>? handlers)
             : this(type.AsTypeInfo(), body, fault, @finally, handlers)
         {
         }
 
-        public TryExpression(TypeInfo? type, Expression body, Expression? fault, Expression? @finally, IEnumerable<CatchBlock>? handlers)
+        public TryExpression(TypeInfo type, Expression body, Expression? fault, Expression? @finally, IEnumerable<CatchBlock>? handlers)
         {
-            Type = type;
+            Type = type.CheckNotNull(nameof(body));
             Body = body.CheckNotNull(nameof(body));
             Handlers = handlers?.ToList();
             Finally = @finally;
@@ -46,7 +46,7 @@ namespace Remote.Linq.Expressions
         public Expression? Fault { get; set; }
 
         [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo? Type { get; set; }
+        public TypeInfo Type { get; set; } = null!;
 
         public override string ToString()
             => $"try({Type}) {{{Body}}}" +

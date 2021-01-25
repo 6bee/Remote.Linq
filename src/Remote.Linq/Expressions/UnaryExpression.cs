@@ -14,20 +14,15 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public UnaryExpression(UnaryOperator unaryOperator, Expression operand)
+        public UnaryExpression(UnaryOperator unaryOperator, Expression operand, TypeInfo type, MethodInfo? method)
         {
             UnaryOperator = unaryOperator;
             Operand = operand.CheckNotNull(nameof(operand));
-        }
-
-        public UnaryExpression(UnaryOperator unaryOperator, Expression operand, TypeInfo? type, MethodInfo? method)
-            : this(unaryOperator, operand)
-        {
-            Type = type;
+            Type = type.CheckNotNull(nameof(type));
             Method = method;
         }
 
-        public UnaryExpression(UnaryOperator unaryOperator, Expression operand, Type? type, System.Reflection.MethodInfo? method)
+        public UnaryExpression(UnaryOperator unaryOperator, Expression operand, Type type, System.Reflection.MethodInfo? method)
             : this(unaryOperator, operand, type.AsTypeInfo(), method.AsMethodInfo())
         {
         }
@@ -41,14 +36,14 @@ namespace Remote.Linq.Expressions
         public Expression Operand { get; set; } = null!;
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo? Type { get; set; }
+        public TypeInfo Type { get; set; } = null!;
 
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public MethodInfo? Method { get; set; }
 
         protected internal override ExpressionDebugFormatter DebugFormatter => new UnaryExpressionDebugView(this);
 
-        public override string ToString() => DebugFormatter.ToString();
+        public override string? ToString() => DebugFormatter.ToString();
 
         private sealed class UnaryExpressionDebugView : ExpressionDebugFormatter<UnaryExpression>
         {

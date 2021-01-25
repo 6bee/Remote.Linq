@@ -43,24 +43,28 @@ namespace Remote.Linq
         }
 
         public static async ValueTask<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(this IQueryable<TSource> source, Func<TSource, TKey> keySelector, CancellationToken cancellation = default)
+            where TKey : notnull
         {
             var enumerator = await ExecuteAsync(source, cancellation).ConfigureAwait(false);
             return enumerator.ToDictionary(keySelector);
         }
 
         public static async ValueTask<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(this IQueryable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer, CancellationToken cancellation = default)
+            where TKey : notnull
         {
             var enumerator = await ExecuteAsync(source, cancellation).ConfigureAwait(false);
             return enumerator.ToDictionary(keySelector, comparer);
         }
 
         public static async ValueTask<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, CancellationToken cancellation = default)
+            where TKey : notnull
         {
             var enumerator = await ExecuteAsync(source, cancellation).ConfigureAwait(false);
             return enumerator.ToDictionary(keySelector, elementSelector);
         }
 
         public static async ValueTask<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer, CancellationToken cancellation = default)
+            where TKey : notnull
         {
             var enumerator = await ExecuteAsync(source, cancellation).ConfigureAwait(false);
             return enumerator.ToDictionary(keySelector, elementSelector, comparer);

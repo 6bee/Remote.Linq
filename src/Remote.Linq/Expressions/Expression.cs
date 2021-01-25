@@ -45,7 +45,7 @@ namespace Remote.Linq.Expressions
         public abstract ExpressionType NodeType { get; }
 
         [Unmapped]
-        internal string DebugView => DebugFormatter.ToString(0);
+        internal string? DebugView => DebugFormatter.ToString(0);
 
         // TODO: [expression string formatter] make DebugFormatter property abstract and have every expression implement its own formatter
         [Unmapped]
@@ -61,11 +61,11 @@ namespace Remote.Linq.Expressions
 
             protected Expression Expression { get; }
 
-            public override string ToString() => Expression.ToString();
+            public override string? ToString() => Expression.ToString();
 
             // TODO: [expression string formatter] add indentation and line break formtting
             [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Pending task...")]
-            protected internal string ToString(int level) => ToString();
+            protected internal string? ToString(int level) => ToString();
 
             protected static string Format(Type? t) => Format(t.AsTypeInfo());
 

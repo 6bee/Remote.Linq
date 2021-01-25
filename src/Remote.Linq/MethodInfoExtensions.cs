@@ -9,18 +9,18 @@ namespace Remote.Linq
     internal static class MethodInfoExtensions
     {
         public static object? InvokeAndUnwrap(this MethodInfo methodInfo, object? instance, params object?[] args)
-            => methodInfo.InvokeAndUnwrap<object?>(instance, args);
-
-        public static TResult InvokeAndUnwrap<TResult>(this MethodInfo methodInfo, object? instance, params object?[] args)
         {
             try
             {
-                return (TResult)methodInfo.Invoke(instance, args);
+                return methodInfo.Invoke(instance, args);
             }
             catch (TargetInvocationException ex)
             {
-                throw ex.InnerException;
+                throw ex.InnerException!;
             }
         }
+
+        public static TResult? InvokeAndUnwrap<TResult>(this MethodInfo methodInfo, object? instance, params object?[] args)
+            => (TResult?)methodInfo.InvokeAndUnwrap(instance, args);
     }
 }

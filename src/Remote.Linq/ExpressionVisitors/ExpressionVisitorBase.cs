@@ -77,7 +77,7 @@ namespace Remote.Linq.ExpressionVisitors
             var testValues = switchCase.TestValues.Select(Visit).ToList();
             if (body != switchCase.Body || !switchCase.TestValues.SequenceEqual(testValues))
             {
-                return Expression.SwitchCase(body, testValues);
+                return Expression.SwitchCase(body, testValues!);
             }
 
             return switchCase;
@@ -104,7 +104,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             var body = Visit(catchBlock.CheckNotNull(nameof(catchBlock)).Body);
             var filter = Visit(catchBlock.Filter);
-            var variable = (ParameterExpression)VisitParameter(catchBlock.Variable);
+            var variable = catchBlock.Variable is null ? null : (ParameterExpression)VisitParameter(catchBlock.Variable);
             if (body != catchBlock.Body || filter != catchBlock.Filter || variable != catchBlock.Variable)
             {
                 return Expression.MakeCatchBlock(catchBlock.Test, variable, body, filter);
@@ -392,9 +392,10 @@ namespace Remote.Linq.ExpressionVisitors
             var exprs = VisitExpressionList(node.CheckNotNull(nameof(node)).Expressions);
             if (exprs != node.Expressions)
             {
+                var elementType = node.Type.GetElementType() !;
                 return node.NodeType == ExpressionType.NewArrayInit
-                    ? Expression.NewArrayInit(node.Type.GetElementType(), exprs)
-                    : Expression.NewArrayBounds(node.Type.GetElementType(), exprs);
+                    ? Expression.NewArrayInit(elementType, exprs)
+                    : Expression.NewArrayBounds(elementType, exprs);
             }
 
             return node;

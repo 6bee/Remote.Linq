@@ -11,10 +11,13 @@ namespace Remote.Linq.DynamicQuery
 
     public class DynamicQueryResultMapper : DynamicObjectMapper
     {
-        private static readonly Func<Type[], MethodInfo> _MapGroupToDynamicObjectGraphMethod = genericTypeArguments =>
-             typeof(DynamicQueryResultMapper)
-                 .GetMethod(nameof(MapGroupToDynamicObjectGraph), BindingFlags.NonPublic | BindingFlags.Static)
-                 .MakeGenericMethod(genericTypeArguments);
+        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+
+        private static readonly MethodInfo _mapGroupToDynamicObjectGraphMethodDefinition =
+            typeof(DynamicQueryResultMapper).GetMethod(nameof(MapGroupToDynamicObjectGraph), PrivateStatic) !;
+
+        private static readonly Func<Type[], MethodInfo> _mapGroupToDynamicObjectGraphMethod =
+            genericTypeArguments => _mapGroupToDynamicObjectGraphMethodDefinition.MakeGenericMethod(genericTypeArguments);
 
         protected override bool ShouldMapToDynamicObject(IEnumerable collection)
             => collection.CheckNotNull(nameof(collection)).GetType().Implements(typeof(IGrouping<,>))
@@ -25,7 +28,7 @@ namespace Remote.Linq.DynamicQuery
             var genericTypeArguments = default(Type[]);
             if (obj?.GetType().Implements(typeof(IGrouping<,>), out genericTypeArguments) is true)
             {
-                obj = _MapGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
+                obj = _mapGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
             }
 
             return base.MapToDynamicObjectGraph(obj, setTypeInformation);

@@ -34,7 +34,7 @@ namespace Remote.Linq.Expressions
         protected RemoteLinqExpressionException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            Expression = (Expression)info.GetValue(nameof(Expression), typeof(Expression));
+            Expression = (Expression)info.GetValue(nameof(Expression), typeof(Expression)) !;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.Nullable" Version="1.0.0-alpha-006" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Nullable" Version="1.0.0-alpha-007" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

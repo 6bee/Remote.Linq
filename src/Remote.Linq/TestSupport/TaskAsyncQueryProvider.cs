@@ -28,7 +28,7 @@ namespace Remote.Linq.TestSupport
             .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(CreateQuery), StringComparison.Ordinal));
 
         public IQueryable CreateQuery(Expression expression)
-            => this.InvokeAndUnwrap<IQueryable>(_createQueryMethod, expression);
+            => this.InvokeAndUnwrap<IQueryable>(_createQueryMethod, expression) !;
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
             => new AsyncRemoteQueryable<TElement>(this, expression);
@@ -38,7 +38,7 @@ namespace Remote.Linq.TestSupport
             => new ValueTask<TResult>(Execute<TResult>(expression));
 #nullable restore
 
-        public object Execute(Expression expression)
+        public object? Execute(Expression expression)
             => this.InvokeAndUnwrap<object>(_executeMethod, expression);
 
         [return: MaybeNull]

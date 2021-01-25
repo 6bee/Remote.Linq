@@ -162,7 +162,7 @@ namespace Remote.Linq.ExpressionVisitors
 
                 return Expression.Property(
                     Expression.New(
-                        typeof(VariableQueryArgument<>).MakeGenericType(expression.Type).GetConstructor(new[] { expression.Type }),
+                        typeof(VariableQueryArgument<>).MakeGenericType(expression.Type).GetConstructor(new[] { expression.Type }) !,
                         Expression.Constant(value, expression.Type)),
                     nameof(VariableQueryArgument<object>.Value));
             }

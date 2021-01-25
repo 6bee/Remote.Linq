@@ -17,7 +17,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         IEnumerator IEnumerable.GetEnumerator()
-            => ((IEnumerable)Provider.Execute(Expression)).GetEnumerator();
+            => ((IEnumerable)Provider.Execute(Expression) !).GetEnumerator();
 
         public Type ElementType { get; }
 

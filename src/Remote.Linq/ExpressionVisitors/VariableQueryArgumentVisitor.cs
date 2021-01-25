@@ -25,8 +25,8 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class GenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
-            private static readonly PropertyInfo QueryArgumentValuePropertyInfo = new PropertyInfo(typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value)));
-            private static readonly PropertyInfo QueryArgumentValueListPropertyInfo = new PropertyInfo(typeof(VariableQueryArgumentList).GetProperty(nameof(VariableQueryArgumentList.Values)));
+            private static readonly PropertyInfo QueryArgumentValuePropertyInfo = new PropertyInfo(typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value)) !);
+            private static readonly PropertyInfo QueryArgumentValueListPropertyInfo = new PropertyInfo(typeof(VariableQueryArgumentList).GetProperty(nameof(VariableQueryArgumentList.Values)) !);
 
             internal Expression Run(Expression expression) => Visit(expression);
 
@@ -105,7 +105,7 @@ namespace Remote.Linq.ExpressionVisitors
         protected class NonGenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
             private static readonly System.Reflection.MethodInfo CreateVariableQueryArgumentListMethodInfo =
-                typeof(NonGenericVariableQueryArgumentVisitor).GetMethod(nameof(CreateVariableQueryArgumentList), BindingFlags.Static | BindingFlags.NonPublic);
+                typeof(NonGenericVariableQueryArgumentVisitor).GetMethod(nameof(CreateVariableQueryArgumentList), BindingFlags.Static | BindingFlags.NonPublic) !;
 
             internal Expression Run(Expression expression) => Visit(expression);
 
@@ -148,7 +148,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var instanceType = instanceExpression.Type;
                     if (instanceType.IsGenericType && instanceType.ToType().GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                     {
-                        var valueType = instanceType.GenericArguments.Single();
+                        var valueType = instanceType.GenericArguments!.Single();
                         var valuePropertyInfo = new PropertyInfo(nameof(VariableQueryArgument.Value), valueType, instanceType);
 
                         return new MemberExpression(instanceExpression, valuePropertyInfo);

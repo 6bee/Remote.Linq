@@ -10,17 +10,14 @@ namespace Remote.Linq
     internal static class DelegateExtensions
     {
         public static object? DynamicInvokeAndUnwrap(this Delegate @delegate, params object?[] args)
-            => @delegate.DynamicInvokeAndUnwrap<object?>(args);
-
-        public static TResult DynamicInvokeAndUnwrap<TResult>(this Delegate @delegate, params object?[] args)
         {
             try
             {
-                return (TResult)@delegate.DynamicInvoke(args);
+                return @delegate.DynamicInvoke(args);
             }
             catch (TargetInvocationException ex)
             {
-                throw ex.InnerException;
+                throw ex.InnerException!;
             }
         }
     }

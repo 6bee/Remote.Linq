@@ -57,7 +57,7 @@ namespace Remote.Linq.Expressions
         public List<MemberInfo>? Members { get; set; }
 
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo? Type { get; set; }
+        public TypeInfo Type { get; set; } = null!;
 
         public override string ToString() => $"new {Constructor?.DeclaringType ?? Type}({Arguments.StringJoin(", ")})";
     }

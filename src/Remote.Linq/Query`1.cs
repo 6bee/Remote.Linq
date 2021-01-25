@@ -116,7 +116,8 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery<T> IOrderedQuery<T>.ThenBy<TKey>(Expression<Func<T, TKey>> keySelector)
         {
-            if (!SortExpressions.Any())
+            var sortExpressions = SortExpressions.AsEmptyIfNull().ToList();
+            if (!sortExpressions.Any())
             {
                 throw new InvalidOperationException($"No sorting defined yet, use {nameof(OrderBy)} or {nameof(OrderByDescending)} first.");
             }
@@ -124,7 +125,6 @@ namespace Remote.Linq
             var expression = _expressionTranslator(keySelector);
             var sortExpression = new Expressions.SortExpression(expression, Expressions.SortDirection.Ascending);
 
-            var sortExpressions = SortExpressions.ToList();
             sortExpressions.Add(sortExpression);
 
             var query = new Query<T>(_dataProvider, _expressionTranslator, FilterExpressions, sortExpressions, SkipValue, TakeValue);
@@ -139,7 +139,8 @@ namespace Remote.Linq
         /// <returns>A new query instance containing all specified query parameters.</returns>
         IOrderedQuery<T> IOrderedQuery<T>.ThenByDescending<TKey>(Expression<Func<T, TKey>> keySelector)
         {
-            if (!SortExpressions.Any())
+            var sortExpressions = SortExpressions.AsEmptyIfNull().ToList();
+            if (!sortExpressions.Any())
             {
                 throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
             }
@@ -147,7 +148,6 @@ namespace Remote.Linq
             var expression = _expressionTranslator(keySelector);
             var sortExpression = new Expressions.SortExpression(expression, Expressions.SortDirection.Descending);
 
-            var sortExpressions = SortExpressions.ToList();
             sortExpressions.Add(sortExpression);
 
             var query = new Query<T>(_dataProvider, _expressionTranslator, FilterExpressions, sortExpressions, SkipValue, TakeValue);

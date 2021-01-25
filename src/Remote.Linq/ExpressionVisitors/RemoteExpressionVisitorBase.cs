@@ -47,7 +47,7 @@ namespace Remote.Linq.ExpressionVisitors
             var cases = node.Cases.AsEmptyIfNull().Select(VisitSwitchCase).ToList();
             if (defaultExpression != node.DefaultExpression ||
                 switchValue != node.SwitchValue ||
-                !cases.SequenceEqual(node.Cases))
+                !(node.Cases is not null && cases.SequenceEqual(node.Cases)))
             {
                 return new SwitchExpression(switchValue, node.Comparison, defaultExpression, cases);
             }
@@ -77,7 +77,7 @@ namespace Remote.Linq.ExpressionVisitors
             if (@finally != node.Finally ||
                 body != node.Body ||
                 fault != node.Fault ||
-                !handlers.SequenceEqual(node.Handlers))
+                !(node.Handlers is not null && handlers.SequenceEqual(node.Handlers)))
             {
                 return new TryExpression(node.Type, body, fault, @finally, handlers);
             }
@@ -390,7 +390,7 @@ namespace Remote.Linq.ExpressionVisitors
                 .ToList();
             if (!ReferenceEquals(instance, node.Instance) || argumements?.Any(i => !ReferenceEquals(i.Old, i.New)) is true)
             {
-                return new MethodCallExpression(instance, node.Method, argumements.Select(i => i.New));
+                return new MethodCallExpression(instance, node.Method, argumements.AsEmptyIfNull().Select(i => i.New));
             }
 
             return node;

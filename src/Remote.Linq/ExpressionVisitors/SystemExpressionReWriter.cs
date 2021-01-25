@@ -37,9 +37,9 @@ namespace Remote.Linq.ExpressionVisitors
 
         private sealed class AnonymousTypesReplacer : ExpressionVisitorBase
         {
-            private static readonly ConstructorInfo _dynamicPropertyContructorInfo = typeof(Property).GetConstructor(new[] { typeof(string), typeof(object) });
-            private static readonly ConstructorInfo _dynamicObjectContructorInfo = typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<Property>) });
-            private static readonly MethodInfo _dynamicObjectGetMethod = typeof(DynamicObject).GetMethod(nameof(DynamicObject.Get));
+            private static readonly ConstructorInfo _dynamicPropertyContructorInfo = typeof(Property).GetConstructor(new[] { typeof(string), typeof(object) }) !;
+            private static readonly ConstructorInfo _dynamicObjectContructorInfo = typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<Property>) }) !;
+            private static readonly MethodInfo _dynamicObjectGetMethod = typeof(DynamicObject).GetMethod(nameof(DynamicObject.Get)) !;
 
             private readonly Dictionary<ParameterExpression, ParameterExpression> _parameterMap = new Dictionary<ParameterExpression, ParameterExpression>();
 
@@ -52,7 +52,7 @@ namespace Remote.Linq.ExpressionVisitors
                 }
                 else
                 {
-                    var elementType = TypeHelper.GetElementType(expression.Type);
+                    var elementType = TypeHelper.GetElementType(expression.Type) ?? throw new RemoteLinqException($"Failed to retrieve element type of '{expression.Type}'");
                     var projectionMethod = MethodInfos.Queryable.Select.MakeGenericMethod(elementType, elementType);
                     var parameter = Expression.Parameter(elementType, "x");
                     var lambda = Expression.Lambda(parameter, parameter);
@@ -64,32 +64,36 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitMemberAccess(MemberExpression node)
             {
-                if (node.Member.DeclaringType.IsAnonymousType() ||
-                    (node.Member.DeclaringType.IsGenericType && node.Member.DeclaringType.GetGenericArguments().Any(x => x.IsAnonymousType())))
+                var declaringType = node.Member.DeclaringType;
+                if (declaringType is not null && node.Expression is not null)
                 {
-                    var name = node.Member.Name;
-                    var instance = Visit(node.Expression);
-                    if (instance.Type == typeof(DynamicObject))
+                    if (declaringType.IsAnonymousType() ||
+                        (declaringType.IsGenericType && declaringType.GetGenericArguments().Any(x => x.IsAnonymousType())))
                     {
-                        var method = _dynamicObjectGetMethod;
-                        var memberAccessCallExpression = Expression.Call(instance, method, Expression.Constant(name));
-                        var type = ReplaceAnonymousType(node.Type);
-                        if (type == typeof(object))
+                        var name = node.Member.Name;
+                        var instance = Visit(node.Expression);
+                        if (instance.Type == typeof(DynamicObject))
                         {
-                            return memberAccessCallExpression;
+                            var method = _dynamicObjectGetMethod;
+                            var memberAccessCallExpression = Expression.Call(instance, method, Expression.Constant(name));
+                            var type = ReplaceAnonymousType(node.Type);
+                            if (type == typeof(object))
+                            {
+                                return memberAccessCallExpression;
+                            }
+
+                            var conversionExpression = Expression.Convert(memberAccessCallExpression, type);
+                            return conversionExpression;
                         }
 
-                        var conversionExpression = Expression.Convert(memberAccessCallExpression, type);
-                        return conversionExpression;
-                    }
+                        var member = instance.Type.GetMember(name, node.Member.MemberType, (BindingFlags)0xfffffff);
+                        if (member.Length != 1)
+                        {
+                            throw new RemoteLinqException($"Failed to bind {node.Member.MemberType.ToString().ToLower(CultureInfo.CurrentCulture)} {name} of type {instance.Type}");
+                        }
 
-                    var member = instance.Type.GetMember(name, node.Member.MemberType, (BindingFlags)0xfffffff);
-                    if (member.Length != 1)
-                    {
-                        throw new RemoteLinqException($"Failed to bind {node.Member.MemberType.ToString().ToLower(CultureInfo.CurrentCulture)} {name} of type {instance.Type}");
+                        return Expression.MakeMemberAccess(instance, member.Single());
                     }
-
-                    return Expression.MakeMemberAccess(instance, member.Single());
                 }
 
                 return base.VisitMemberAccess(node);
@@ -147,7 +151,7 @@ namespace Remote.Linq.ExpressionVisitors
                              arg);
                      });
 
-                    var argsExpression = Expression.NewArrayInit(_dynamicPropertyContructorInfo.DeclaringType, arguments);
+                    var argsExpression = Expression.NewArrayInit(_dynamicPropertyContructorInfo.DeclaringType!, arguments);
                     return Expression.New(_dynamicObjectContructorInfo, argsExpression);
                 }
 
@@ -234,7 +238,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                if (string.Equals(node.Method.Name, "get_Item", StringComparison.Ordinal) && node.Arguments.Count == 1)
+                if (node.Object is not null && string.Equals(node.Method.Name, "get_Item", StringComparison.Ordinal) && node.Arguments.Count == 1)
                 {
                     var expression = node.Arguments[0];
                     if (expression.Type == typeof(string))
@@ -243,7 +247,7 @@ namespace Remote.Linq.ExpressionVisitors
                         if (expression.NodeType == ExpressionType.Constant)
                         {
                             var exp = (ConstantExpression)expression;
-                            propertyName = (string)exp.Value;
+                            propertyName = (string)(exp.Value ?? throw new RemoteLinqException("Missing property name"));
                         }
                         else
                         {

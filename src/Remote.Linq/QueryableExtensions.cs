@@ -37,9 +37,9 @@ namespace Remote.Linq
             var funcExpression = lambdaExpressionMethodInfo.Invoke(null, new object[] { exp, lambdaExpression.Parameters.ToArray() });
 
             var method = methodInfo.MakeGenericMethod(typeof(T), resultType);
-            var result = method.Invoke(null, new object[] { queryable, funcExpression });
+            var result = method.Invoke(null, new object[] { queryable, funcExpression! });
 
-            return (IOrderedQueryable<T>)result;
+            return (IOrderedQueryable<T>)result!;
         }
 
         public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression)
@@ -206,6 +206,11 @@ namespace Remote.Linq
             var expression1 = RemoveConvert(expression);
             if (expression1 is MemberExpression memberExpression)
             {
+                if (memberExpression.Expression is null)
+                {
+                    return false;
+                }
+
                 var name = memberExpression.Member.Name;
                 if (!TryParsePath(memberExpression.Expression, out var path1))
                 {

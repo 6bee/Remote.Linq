@@ -13,9 +13,9 @@ namespace Remote.Linq.Expressions
         {
         }
 
-        public LoopExpression(Expression? body, LabelTarget? breakLabel, LabelTarget? continueLabel)
+        public LoopExpression(Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel)
         {
-            Body = body;
+            Body = body.CheckNotNull(nameof(body));
             BreakLabel = breakLabel;
             ContinueLabel = continueLabel;
         }
@@ -23,7 +23,7 @@ namespace Remote.Linq.Expressions
         public override ExpressionType NodeType => ExpressionType.Loop;
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public Expression? Body { get; set; }
+        public Expression Body { get; set; } = null!;
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
         public LabelTarget? BreakLabel { get; set; }
