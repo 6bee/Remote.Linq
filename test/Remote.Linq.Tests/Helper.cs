@@ -45,10 +45,17 @@ namespace Remote.Linq.Tests
             || typeof(ICollection<T?>).IsAssignableFrom(type);
 
         public static bool IsEnum(this Type type)
-            => type.IsEnum
-            || (type.IsCollection() && TypeHelper.GetElementType(type).IsEnum)
-            || (type.IsGenericType && typeof(Nullable<>) == type.GetGenericTypeDefinition() && type.GetGenericArguments()[0].IsEnum)
-            || (type.IsCollection() && TypeHelper.GetElementType(type).IsGenericType && typeof(Nullable<>) == TypeHelper.GetElementType(type).GetGenericTypeDefinition() && TypeHelper.GetElementType(type).GetGenericArguments()[0].IsEnum);
+        {
+            if (type.IsEnum)
+            {
+                return true;
+            }
+
+            var elementType = TypeHelper.GetElementType(type);
+            return (type.IsCollection() && elementType.IsEnum)
+                || (type.IsGenericType && typeof(Nullable<>) == type.GetGenericTypeDefinition() && type.GetGenericArguments()[0].IsEnum)
+                || (type.IsCollection() && elementType.IsGenericType && typeof(Nullable<>) == elementType.GetGenericTypeDefinition() && elementType.GetGenericArguments()[0].IsEnum);
+        }
 
         public static bool IsCollection(this Type type)
             => typeof(IEnumerable).IsAssignableFrom(type)

@@ -27,7 +27,7 @@ namespace Remote.Linq.ProtoBuf.Expressions
 
             void CollectType(Type t)
             {
-                t = TypeHelper.GetElementType(t) ?? t;
+                t = TypeHelper.GetElementType(t);
 
                 if (resiteredTypes.Contains(t) || pendingTypes.Contains(t))
                 {

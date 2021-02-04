@@ -27,7 +27,7 @@ namespace Remote.Linq.Tests.ProtoBuf
             var property = new Property("p1", value);
 
             var config = ProtoBufTypeModel.ConfigureRemoteLinq(configureDefaultSystemTypes: false)
-                .AddDynamicPropertyType(TypeHelper.GetElementType(type) ?? type)
+                .AddDynamicPropertyType(TypeHelper.GetElementType(type))
                 .Compile();
             var copy = property.Serialize(config);
 
@@ -65,7 +65,7 @@ namespace Remote.Linq.Tests.ProtoBuf
             };
 
             var config = ProtoBufTypeModel.ConfigureRemoteLinq(configureDefaultSystemTypes: false)
-                .AddDynamicPropertyType(TypeHelper.GetElementType(type) ?? type)
+                .AddDynamicPropertyType(TypeHelper.GetElementType(type))
                 .Compile();
             var copy = propertySet.Serialize(config);
 

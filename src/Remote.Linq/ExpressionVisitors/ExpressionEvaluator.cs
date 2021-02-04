@@ -146,7 +146,7 @@ namespace Remote.Linq.ExpressionVisitors
                 if (value is System.Collections.IEnumerable)
                 {
                     var collectionType = value.GetType();
-                    var elementType = TypeHelper.GetElementType(collectionType) ?? throw new RemoteLinqException($"Failed to find element type of {collectionType}");
+                    var elementType = TypeHelper.GetElementType(collectionType);
                     if (expression.Type.IsAssignableFrom(elementType.MakeArrayType()))
                     {
                         var enumerated = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { value });

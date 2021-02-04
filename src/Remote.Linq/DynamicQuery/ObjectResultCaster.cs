@@ -12,9 +12,9 @@ namespace Remote.Linq.DynamicQuery
         [return: MaybeNull]
         public TResult MapResult<TResult>(object? source, Expression expression)
         {
-            if (source is not null && !(source is TResult) && source.IsCollection(out var enumerable))
+            if (source is not null && source is not TResult && source.IsCollection(out var enumerable))
             {
-                var elementType = TypeHelper.GetElementType(enumerable.GetType()) ?? throw new RemoteLinqException($"Failed to get element type of {enumerable.GetType()}.");
+                var elementType = TypeHelper.GetElementType(enumerable.GetType());
                 if (typeof(TResult).IsAssignableFrom(elementType) && expression is MethodCallExpression methodCallExpression)
                 {
                     return DynamicResultMapper.MapToSingleResult<TResult>(elementType, enumerable, methodCallExpression);
