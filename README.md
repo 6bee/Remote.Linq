@@ -35,7 +35,7 @@ Implement a repository class to set-up server connection and expose the queryabl
 ```C#
 public class ClientDataRepository
 {
-    private readonly Func<Expression, IEnumerable<DynamicObject>> _dataProvider;
+    private readonly Func<Expression, DynamicObject> _dataProvider;
 
     public RemoteRepository(string uri)
     {
@@ -44,7 +44,7 @@ public class ClientDataRepository
                 // setup service connectivity
                 IQueryService service = CreateServerConnection(uri);
                 // send expression to service and get back results
-                IEnumerable<DynamicObject> result = service.ExecuteQuery(expression);
+                DynamicObject result = service.ExecuteQuery(expression);
                 return result;
             };
     }
@@ -79,7 +79,7 @@ Implement the backend service to handle the client's query expression by applyin
 ```C#
 public interface IQueryService
 {
-    IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression);
+    DynamicObject ExecuteQuery(Expression queryExpression);
 }
 
 public class QueryService : IQueryService, IDisposable
@@ -90,7 +90,7 @@ public class QueryService : IQueryService, IDisposable
     // you need to be able to retrieve an IQueryable by type
     private Func<Type, IQueryable> _queryableProvider = type => _datastore.GetQueryableByType(type);
 
-    public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
+    public DynamicObject ExecuteQuery(Expression queryExpression)
     {
         // `Execute` is an extension method provided by Remote.Linq
         // it applies an expression to a data source and returns the result
