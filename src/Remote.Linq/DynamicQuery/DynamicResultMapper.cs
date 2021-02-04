@@ -7,6 +7,7 @@ namespace Remote.Linq.DynamicQuery
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Linq.Expressions;
 
     internal sealed class DynamicResultMapper : IQueryResultMapper<DynamicObject>
@@ -32,21 +33,19 @@ namespace Remote.Linq.DynamicQuery
 
             mapper ??= new DynamicQueryResultMapper();
 
-            var result = dataRecords?.Type is null
-                ? mapper.Map(dataRecords, typeof(TResult))
-                : mapper.Map(dataRecords);
+            var elementType = TypeHelper.GetElementType(typeof(TResult));
+
+            var result = GetResultFromDynamocObject<TResult>(dataRecords, elementType, mapper);
 
             if (result is null)
             {
                 return default;
             }
 
-            if (result is TResult)
+            if (result is TResult r)
             {
-                return (TResult)result;
+                return r;
             }
-
-            var elementType = TypeHelper.GetElementType(typeof(TResult)) ?? throw new RemoteLinqException($"Failed to get element type of {typeof(TResult)}.");
 
             if (typeof(TResult).IsAssignableFrom(typeof(IEnumerable<>).MakeGenericType(elementType)))
             {
@@ -59,6 +58,35 @@ namespace Remote.Linq.DynamicQuery
             }
 
             throw new RemoteLinqException($"Failed to cast result of type '{result.GetType()}' to '{typeof(TResult)}'");
+        }
+
+        private static object? GetResultFromDynamocObject<TResult>(DynamicObject dataRecords, Type elementType, IDynamicObjectMapper mapper)
+        {
+            if (elementType == typeof(TResult))
+            {
+                // handle special case of single item query from too small or too large result set.
+                if (dataRecords.Properties.Count == 1)
+                {
+                    var p = dataRecords.Properties.Single();
+                    if (string.IsNullOrEmpty(p.Name))
+                    {
+                        if (p.Value is object[] objectArray)
+                        {
+                            if (objectArray.Length == 0)
+                            {
+                                return Enumerable.Empty<TResult>();
+                            }
+
+                            if (objectArray.Length == 2 && objectArray.All(x => x is null))
+                            {
+                                return new TResult[2];
+                            }
+                        }
+                    }
+                }
+            }
+
+            return mapper.Map(dataRecords, typeof(TResult));
         }
 
         [return: MaybeNull]

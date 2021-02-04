@@ -87,7 +87,15 @@ namespace Remote.Linq.Tests.RemoteQueryable
             Func<Expression, DynamicObject> execute = expression =>
                 {
                     Interlocked.Increment(ref _roundtripCount);
-                    return serialize(expression).Execute(queryableProvider: dataStore.Get);
+                    var dynamicObject = serialize(expression).Execute(queryableProvider: dataStore.Get);
+
+                    // set anonymous root type to unknown type to simulate dynamically emitted type
+                    if (dynamicObject?.Type?.IsAnonymousType is true)
+                    {
+                        dynamicObject.Type.Name = $"DYNAMICALLY_EMITTED_{dynamicObject.Type.Name}";
+                    }
+
+                    return dynamicObject;
                 };
 
             _categoryQueryable = RemoteQueryable.Factory.CreateQueryable<Category>(execute, canBeEvaluatedLocally: CanBeEvaluated);
