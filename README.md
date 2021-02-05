@@ -148,8 +148,8 @@ public TExpression DeepCopy<TExpression>(TExpression expression)
 
 [1]: https://ci.appveyor.com/api/projects/status/64kw6dsuvfwyrdtl/branch/main?svg=true
 [2]: https://ci.appveyor.com/project/6bee/remote-linq/branch/main
-[3]: https://travis-ci.org/6bee/Remote.Linq.svg?branch=main
-[4]: https://travis-ci.org/6bee/Remote.Linq?branch=main
+[3]: https://travis-ci.com/6bee/Remote.Linq.svg?branch=main
+[4]: https://travis-ci.com/6bee/Remote.Linq?branch=main
 [5]: https://codecov.io/gh/6bee/Remote.Linq/branch/main/graph/badge.svg
 [6]: https://codecov.io/gh/6bee/Remote.Linq
 [7]: https://api.codacy.com/project/badge/Grade/c00e5959612843a78e23d10b4bad44da
