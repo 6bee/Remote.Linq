@@ -42,7 +42,7 @@ public class ClientDataRepository
         _dataProvider = expression =>
             {
                 // setup service connectivity
-                IQueryService service = CreateServerConnection(uri);
+                using IQueryService service = CreateServerConnection(uri);
                 // send expression to service and get back results
                 DynamicObject result = service.ExecuteQuery(expression);
                 return result;
@@ -59,7 +59,7 @@ public class ClientDataRepository
 
 Use your repository to compose LINQ query and let the data be retrieved from the backend service
 ```C#
-var repository = new ClientDataRepository();
+var repository = new ClientDataRepository("https://myserver/queryservice");
 
 var myBlogPosts = (
     from blog in repository.Blogs
@@ -77,12 +77,12 @@ var myBlogPosts = (
 **Server**
 Implement the backend service to handle the client's query expression by applying it to a data source e.g. an ORM
 ```C#
-public interface IQueryService
+public interface IQueryService : IDisposable
 {
     DynamicObject ExecuteQuery(Expression queryExpression);
 }
 
-public class QueryService : IQueryService, IDisposable
+public class QueryService : IQueryService
 {
     // any linq provider e.g. entity framework, nhibernate, ...
     private IDataProvider _datastore = new ObjectRelationalMapper();
@@ -124,7 +124,7 @@ var blogs = repository.Blogs
 **Server**
 Execute query on database via EF Core
 ```C#
-public IEnumerable<DynamicObject> ExecuteQuery(Expression queryExpression)
+public DynamicObject ExecuteQuery(Expression queryExpression)
 {
     using var dbContext = new DbContext();
     return queryExpression.ExecuteWithEntityFrameworkCore(dbContext);
