@@ -100,7 +100,7 @@ namespace Remote.Linq
                     {
                         RemoteLinq.SortDirection.Ascending => queriable.OrderBy(exp),
                         RemoteLinq.SortDirection.Descending => queriable.OrderByDescending(exp),
-                        _ => throw new RemoteLinqException("not reachable code"),
+                        _ => throw new InvalidOperationException($"Invalid {nameof(RemoteLinq.SortDirection)} '{sort.SortDirection}'"),
                     };
                 }
                 else
@@ -109,7 +109,7 @@ namespace Remote.Linq
                     {
                         RemoteLinq.SortDirection.Ascending => orderedQueriable.ThenBy(exp),
                         RemoteLinq.SortDirection.Descending => orderedQueriable.ThenByDescending(exp),
-                        _ => throw new RemoteLinqException("not reachable code"),
+                        _ => throw new InvalidOperationException($"Invalid {nameof(RemoteLinq.SortDirection)} '{sort.SortDirection}'"),
                     };
                 }
             }
