@@ -10,7 +10,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Linq;
     using System.Linq.Expressions;
 
-    internal sealed class DynamicResultMapper : IQueryResultMapper<DynamicObject>
+    public sealed class DynamicResultMapper : IQueryResultMapper<DynamicObject>
     {
         private readonly IDynamicObjectMapper? _mapper;
 
