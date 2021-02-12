@@ -35,7 +35,7 @@ namespace Remote.Linq.DynamicQuery
 
             var elementType = TypeHelper.GetElementType(typeof(TResult));
 
-            var result = GetResultFromDynamocObject<TResult>(dataRecords, elementType, mapper);
+            var result = GetResultFromDynamicObject<TResult>(dataRecords, elementType, mapper);
 
             if (result is null)
             {
@@ -60,7 +60,7 @@ namespace Remote.Linq.DynamicQuery
             throw new RemoteLinqException($"Failed to cast result of type '{result.GetType()}' to '{typeof(TResult)}'");
         }
 
-        private static object? GetResultFromDynamocObject<TResult>(DynamicObject dataRecords, Type elementType, IDynamicObjectMapper mapper)
+        private static object? GetResultFromDynamicObject<TResult>(DynamicObject dataRecords, Type elementType, IDynamicObjectMapper mapper)
         {
             if (elementType == typeof(TResult))
             {
