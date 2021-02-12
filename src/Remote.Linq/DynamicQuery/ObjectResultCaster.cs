@@ -7,7 +7,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
-    public sealed class ObjectResultCaster : IQueryResultMapper<object?>
+    public sealed class ObjectResultCaster : IQueryResultMapper<object>
     {
         [return: MaybeNull]
         public TResult MapResult<TResult>(object? source, Expression expression)
