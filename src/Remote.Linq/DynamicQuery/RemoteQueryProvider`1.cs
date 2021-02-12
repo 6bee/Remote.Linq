@@ -44,10 +44,7 @@ namespace Remote.Linq.DynamicQuery
 
             var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
             var dataRecords = _dataProvider(rlinq);
-            var result = Equals(default(TSource), dataRecords)
-                ? default
-                : _resultMapper.MapResult<TResult>(dataRecords, expression);
-            return result;
+            return _resultMapper.MapResult<TResult>(dataRecords, expression);
         }
 
         public object? Execute(Expression expression)
