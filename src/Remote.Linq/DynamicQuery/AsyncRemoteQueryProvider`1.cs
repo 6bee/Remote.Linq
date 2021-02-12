@@ -19,12 +19,12 @@ namespace Remote.Linq.DynamicQuery
             .GetMethods()
             .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(Execute), StringComparison.Ordinal));
 
-        private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>> _asyncDataProvider;
+        private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>> _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly ITypeInfoProvider? _typeInfoProvider;
         private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
 
-        internal AsyncRemoteQueryProvider(Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>> asyncDataProvider, ITypeInfoProvider? typeInfoProvider, IAsyncQueryResultMapper<TSource> resultMapper, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
+        internal AsyncRemoteQueryProvider(Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>> asyncDataProvider, ITypeInfoProvider? typeInfoProvider, IAsyncQueryResultMapper<TSource> resultMapper, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
         {
             _asyncDataProvider = asyncDataProvider.CheckNotNull(nameof(asyncDataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
@@ -80,7 +80,7 @@ namespace Remote.Linq.DynamicQuery
             return result;
         }
 
-        public async ValueTask<TResult> ExecuteAsync<TResult>(SystemLinq.Expression expression, CancellationToken cancellation)
+        public async ValueTask<TResult?> ExecuteAsync<TResult>(SystemLinq.Expression expression, CancellationToken cancellation)
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 

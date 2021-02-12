@@ -26,7 +26,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
 
         private readonly Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? _asyncStreamProvider;
         private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>>? _asyncDataProvider;
-        private readonly IAsyncQueryResultMapper<TSource?> _resultMapper;
+        private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly ITypeInfoProvider? _typeInfoProvider;
         private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
 
@@ -34,7 +34,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
         public RemoteLinqAsyncQueryProvider(
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? asyncStreamProvider,
             Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>>? asyncDataProvider,
-            IAsyncQueryResultMapper<TSource?> resultMapper,
+            IAsyncQueryResultMapper<TSource> resultMapper,
             ITypeInfoProvider? typeInfoProvider,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
         {

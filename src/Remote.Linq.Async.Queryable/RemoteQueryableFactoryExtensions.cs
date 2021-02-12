@@ -39,7 +39,7 @@ namespace Remote.Linq.Async.Queryable
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, IAsyncEnumerable<object?>>? asyncStreamProvider,
             Func<RemoteLinq.Expression, ValueTask<object?>>? asyncDataProvider,
-            IAsyncQueryResultMapper<object?>? resultMapper = null,
+            IAsyncQueryResultMapper<object>? resultMapper = null,
             ITypeInfoProvider? typeInfoProvider = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
             => CreateAsyncQueryable<T, object>(factory, asyncStreamProvider, asyncDataProvider, resultMapper ?? new AsyncObjectResultCaster(), typeInfoProvider, canBeEvaluatedLocally);
@@ -53,7 +53,7 @@ namespace Remote.Linq.Async.Queryable
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, IAsyncEnumerable<TSource?>>? asyncStreamProvider,
             Func<RemoteLinq.Expression, ValueTask<TSource?>>? asyncDataProvider,
-            IAsyncQueryResultMapper<TSource?> resultMapper,
+            IAsyncQueryResultMapper<TSource> resultMapper,
             ITypeInfoProvider? typeInfoProvider = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
             => CreateAsyncQueryable<T, TSource>(
@@ -85,7 +85,7 @@ namespace Remote.Linq.Async.Queryable
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<object?>>? asyncStreamProvider,
             Func<RemoteLinq.Expression, CancellationToken, ValueTask<object>>? asyncDataProvider,
-            IAsyncQueryResultMapper<object?>? resultMapper = null,
+            IAsyncQueryResultMapper<object>? resultMapper = null,
             ITypeInfoProvider? typeInfoProvider = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
             => CreateAsyncQueryable<T, object>(factory, asyncStreamProvider, asyncDataProvider, resultMapper ?? new AsyncObjectResultCaster(), typeInfoProvider, canBeEvaluatedLocally);
@@ -99,7 +99,7 @@ namespace Remote.Linq.Async.Queryable
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? asyncStreamProvider,
             Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>>? asyncDataProvider,
-            IAsyncQueryResultMapper<TSource?> resultMapper,
+            IAsyncQueryResultMapper<TSource> resultMapper,
             ITypeInfoProvider? typeInfoProvider = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
         {

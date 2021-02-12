@@ -6,9 +6,11 @@ namespace Remote.Linq.DynamicQuery
     using System.Threading;
     using System.Threading.Tasks;
 
-    internal sealed class AsyncObjectResultCaster : IAsyncQueryResultMapper<object?>
+    internal sealed class AsyncObjectResultCaster : IAsyncQueryResultMapper<object>
     {
-        public ValueTask<TResult?> MapResultAsync<TResult>(object? source, Expression expression, CancellationToken cancellation = default)
-            => new ValueTask<TResult?>((TResult?)source);
+        private readonly ObjectResultCaster _objectResultCaster = new ObjectResultCaster();
+
+        public ValueTask<TResult> MapResultAsync<TResult>(object? source, Expression expression, CancellationToken cancellation = default)
+            => new ValueTask<TResult>(_objectResultCaster.MapResult<TResult>(source, expression) !);
     }
 }

@@ -16,9 +16,9 @@ namespace Remote.Linq.DynamicQuery
             _mapper = mapper;
         }
 
-#nullable disable
-        public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject source, Expression expression, CancellationToken cancellation = default)
+        public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject? source, Expression expression, CancellationToken cancellation = default)
+#pragma warning disable CS8604 // Possible null reference argument.
             => new ValueTask<TResult>(DynamicResultMapper.MapToType<TResult>(source, _mapper, expression));
-#nullable restore
+#pragma warning restore CS8604 // Possible null reference argument.
     }
 }

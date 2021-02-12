@@ -14,13 +14,13 @@ namespace Remote.Linq.DynamicQuery
 
     internal sealed class AsyncRemoteStreamProvider<TSource> : IAsyncRemoteStreamProvider
     {
-        private readonly Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource>> _dataProvider;
+        private readonly Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource?>> _dataProvider;
         private readonly ITypeInfoProvider? _typeInfoProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
 
         [SecuritySafeCritical]
-        public AsyncRemoteStreamProvider(Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource>> dataProvider, ITypeInfoProvider? typeInfoProvider, Func<Expression, bool>? canBeEvaluatedLocally, IAsyncQueryResultMapper<TSource> resultMapper)
+        public AsyncRemoteStreamProvider(Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource?>> dataProvider, ITypeInfoProvider? typeInfoProvider, Func<Expression, bool>? canBeEvaluatedLocally, IAsyncQueryResultMapper<TSource> resultMapper)
         {
             _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));

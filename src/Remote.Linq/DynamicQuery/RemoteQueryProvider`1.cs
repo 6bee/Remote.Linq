@@ -15,12 +15,16 @@ namespace Remote.Linq.DynamicQuery
             .GetMethods()
             .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(Execute), StringComparison.Ordinal));
 
-        private readonly Func<Expressions.Expression, TSource> _dataProvider;
+        private readonly Func<Expressions.Expression, TSource?> _dataProvider;
         private readonly IQueryResultMapper<TSource> _resultMapper;
         private readonly ITypeInfoProvider? _typeInfoProvider;
         private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
 
-        internal RemoteQueryProvider(Func<Expressions.Expression, TSource> dataProvider, ITypeInfoProvider? typeInfoProvider, IQueryResultMapper<TSource> resultMapper, Func<Expression, bool>? canBeEvaluatedLocally)
+        internal RemoteQueryProvider(
+            Func<Expressions.Expression, TSource?> dataProvider,
+            ITypeInfoProvider? typeInfoProvider,
+            IQueryResultMapper<TSource> resultMapper,
+            Func<Expression, bool>? canBeEvaluatedLocally)
         {
             _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
@@ -33,7 +37,8 @@ namespace Remote.Linq.DynamicQuery
 
         public IQueryable CreateQuery(Expression expression)
         {
-            var elementType = TypeHelper.GetElementType(expression.Type) ?? throw new RemoteLinqException($"Cannot get element type based on expression's type {expression.Type}");
+            var elementType = TypeHelper.GetElementType(expression.Type)
+                ?? throw new RemoteLinqException($"Cannot get element type based on expression's type {expression.Type}");
             return new RemoteQueryable(elementType, this, expression);
         }
 

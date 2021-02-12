@@ -16,6 +16,6 @@ namespace Remote.Linq
         /// <param name="expression">The query expression for the source value.</param>
         /// <param name="cancellation">Cancellation token for the async operation.</param>
         /// <returns>A <see cref="ValueTask{TResult}"/> representing the mapped source value.</returns>
-        ValueTask<TResult> MapResultAsync<TResult>(TSource source, Expression expression, CancellationToken cancellation = default);
+        ValueTask<TResult> MapResultAsync<TResult>(TSource? source, Expression expression, CancellationToken cancellation = default);
     }
 }
