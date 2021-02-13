@@ -12,13 +12,9 @@ namespace Remote.Linq.DynamicQuery
         private readonly IDynamicObjectMapper? _mapper;
 
         public AsyncDynamicResultMapper(IDynamicObjectMapper? mapper)
-        {
-            _mapper = mapper;
-        }
+            => _mapper = mapper;
 
         public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject? source, Expression expression, CancellationToken cancellation = default)
-#pragma warning disable CS8604 // Possible null reference argument.
-            => new ValueTask<TResult>(DynamicResultMapper.MapToType<TResult>(source, _mapper, expression));
-#pragma warning restore CS8604 // Possible null reference argument.
+            => new ValueTask<TResult>(DynamicResultMapper.MapToType<TResult>(source, _mapper, expression) !);
     }
 }

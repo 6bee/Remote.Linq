@@ -65,9 +65,10 @@ namespace Remote.Linq.DynamicQuery
             if (elementType == typeof(TResult))
             {
                 // handle special case of single item query from too small or too large result set.
-                if (dataRecords.Properties.Count == 1)
+                var properties = dataRecords.Properties;
+                if (properties?.Count == 1)
                 {
-                    var p = dataRecords.Properties.Single();
+                    var p = properties.Single();
                     if (string.IsNullOrEmpty(p.Name))
                     {
                         if (p.Value is object[] objectArray)

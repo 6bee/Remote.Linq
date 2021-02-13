@@ -12,11 +12,9 @@ namespace Remote.Linq.DynamicQuery
         private readonly IDynamicObjectMapper _mapper;
 
         public DynamicItemMapper(IDynamicObjectMapper? mapper)
-        {
-            _mapper = mapper ?? new DynamicObjectMapper();
-        }
+            => _mapper = mapper ?? new DynamicObjectMapper();
 
         public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject? source, Expression expression, CancellationToken cancellationToken)
-            => new ValueTask<TResult>(source is null ? default! : _mapper.Map<TResult>(source));
+            => new ValueTask<TResult>(_mapper.Map<TResult>(source));
     }
 }
