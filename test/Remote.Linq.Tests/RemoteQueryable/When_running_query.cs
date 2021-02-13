@@ -845,10 +845,13 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
         {
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+#if NET5_0
+            Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
+#endif // NET5_0
 
             RunTestMethod(
                 nameof(TestMethodFor_Should_query_primitive_value_injected_as_variable_closure),
@@ -866,10 +869,13 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.PrimitiveValueLists), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_collection_injected_as_variable_closure(Type type, object value)
         {
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+#if NET5_0
+            Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
+#endif // NET5_0
 
             RunTestMethod(
                 nameof(TestMethodFor_Should_query_primitive_value_collection_injected_as_variable_closure),
@@ -886,10 +892,13 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure(Type type, object value)
         {
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+#if NET5_0
+            Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
+#endif // NET5_0
 
             RunTestMethod(
                 nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure),
@@ -907,10 +916,13 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.PrimitiveValueLists), MemberType = typeof(TestData))]
         public void Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure(Type type, object value)
         {
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), "Data type not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), "Data type not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+#if NET5_0
+            Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
+#endif // NET5_0
 
             RunTestMethod(
                 nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure),

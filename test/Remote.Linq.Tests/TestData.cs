@@ -93,6 +93,11 @@ namespace Remote.Linq.Tests
                 new Complex(-87654, 234),
                 new Complex(double.MinValue, double.MinValue),
                 new Complex(double.MaxValue, double.MaxValue),
+#if NET5_0
+                (Half)Math.PI,
+                Half.MinValue,
+                Half.MaxValue,
+#endif // NET5_0
             }
             .SelectMany(x => new Tuple<Type, object>[]
             {
