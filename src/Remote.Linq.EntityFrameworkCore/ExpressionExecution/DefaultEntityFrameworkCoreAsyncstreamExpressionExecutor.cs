@@ -30,11 +30,12 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 
-        protected override async IAsyncEnumerable<DynamicObject?> ConvertResult(IAsyncEnumerable<object?> queryResult)
+        protected override async IAsyncEnumerable<DynamicObject> ConvertResult(IAsyncEnumerable<object?> queryResult)
         {
             await foreach (var item in queryResult.CheckNotNull(nameof(queryResult)))
             {
-                yield return _mapper.MapObject(item, _setTypeInformation);
+                yield return _mapper.MapObject(item, _setTypeInformation)
+                    ?? DynamicObject.CreateDefault(Context.SystemExpression?.Type);
             }
         }
     }

@@ -78,9 +78,9 @@ namespace Remote.Linq.DynamicQuery
                                 return Enumerable.Empty<TResult>();
                             }
 
-                            if (objectArray.Length == 2 && objectArray.All(x => x is null))
+                            if (objectArray.All(x => x is null || (x is DynamicObject dyn && dyn.IsNull)))
                             {
-                                return new TResult[2];
+                                return new TResult[objectArray.Length];
                             }
                         }
                     }

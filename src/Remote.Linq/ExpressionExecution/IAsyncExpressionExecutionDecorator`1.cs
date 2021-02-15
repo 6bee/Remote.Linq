@@ -4,11 +4,12 @@ namespace Remote.Linq.ExpressionExecution
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using SystemLinq = System.Linq.Expressions;
 
     internal interface IAsyncExpressionExecutionDecorator<TDataTranferObject> : IExpressionExecutionDecorator<TDataTranferObject>
     {
-        System.Linq.Expressions.Expression PrepareAsyncQuery(System.Linq.Expressions.Expression expression, CancellationToken cancellation);
+        SystemLinq.Expression PrepareAsyncQuery(SystemLinq.Expression expression, CancellationToken cancellation);
 
-        ValueTask<object?> ExecuteAsync(System.Linq.Expressions.Expression expression, CancellationToken cancellation);
+        ValueTask<object?> ExecuteAsync(SystemLinq.Expression expression, CancellationToken cancellation);
     }
 }

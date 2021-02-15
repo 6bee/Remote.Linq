@@ -5,22 +5,26 @@ namespace Remote.Linq.ExpressionExecution
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
+    using RemoteLinq = Remote.Linq.Expressions;
+    using SystemLinq = System.Linq.Expressions;
 
     [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
     internal interface IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>
     {
-        Remote.Linq.Expressions.Expression Prepare(Remote.Linq.Expressions.Expression expression);
+        ExecutionContext Context { get; }
 
-        System.Linq.Expressions.Expression Transform(Remote.Linq.Expressions.Expression expression);
+        RemoteLinq.Expression Prepare(RemoteLinq.Expression expression);
 
-        System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression);
+        SystemLinq.Expression Transform(RemoteLinq.Expression expression);
 
-        IAsyncEnumerable<object?> ExecuteAsyncStream(System.Linq.Expressions.Expression expression, CancellationToken cancellation);
+        SystemLinq.Expression Prepare(SystemLinq.Expression expression);
+
+        IAsyncEnumerable<object?> ExecuteAsyncStream(SystemLinq.Expression expression, CancellationToken cancellation);
 
         IAsyncEnumerable<object?> ProcessResult(IAsyncEnumerable<object?> queryResult);
 
-        IAsyncEnumerable<TDataTranferObject?> ConvertResult(IAsyncEnumerable<object?> queryResult);
+        IAsyncEnumerable<TDataTranferObject> ConvertResult(IAsyncEnumerable<object?> queryResult);
 
-        IAsyncEnumerable<TDataTranferObject?> ProcessResult(IAsyncEnumerable<TDataTranferObject?> queryResult);
+        IAsyncEnumerable<TDataTranferObject> ProcessResult(IAsyncEnumerable<TDataTranferObject> queryResult);
     }
 }

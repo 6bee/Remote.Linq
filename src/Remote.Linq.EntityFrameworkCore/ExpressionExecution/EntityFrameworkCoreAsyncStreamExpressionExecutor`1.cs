@@ -16,7 +16,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using SystemLinq = System.Linq.Expressions;
 
     public abstract class EntityFrameworkCoreAsyncStreamExpressionExecutor<TDataTranferObject> : AsyncStreamExpressionExecutor<IQueryable, TDataTranferObject>
-        where TDataTranferObject : class
     {
         [SecuritySafeCritical]
         protected EntityFrameworkCoreAsyncStreamExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)

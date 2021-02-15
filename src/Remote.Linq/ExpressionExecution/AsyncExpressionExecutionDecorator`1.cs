@@ -26,8 +26,10 @@ namespace Remote.Linq.ExpressionExecution
         {
         }
 
-        public new TDataTranferObject Execute(Expression expression) => base.Execute(expression);
+        public new TDataTranferObject Execute(Expression expression)
+            => base.Execute(expression);
 
-        public new ValueTask<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellation = default) => base.ExecuteAsync(expression, cancellation);
+        public new ValueTask<TDataTranferObject> ExecuteAsync(Expression expression, CancellationToken cancellation = default)
+            => base.ExecuteAsync(expression, cancellation);
     }
 }

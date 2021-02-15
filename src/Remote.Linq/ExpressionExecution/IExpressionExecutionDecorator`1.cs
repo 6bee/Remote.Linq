@@ -3,17 +3,21 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using System.Diagnostics.CodeAnalysis;
+    using RemoteLinq = Remote.Linq.Expressions;
+    using SystemLinq = System.Linq.Expressions;
 
     [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
     internal interface IExpressionExecutionDecorator<TDataTranferObject>
     {
-        Remote.Linq.Expressions.Expression Prepare(Remote.Linq.Expressions.Expression expression);
+        ExecutionContext Context { get; }
 
-        System.Linq.Expressions.Expression Transform(Remote.Linq.Expressions.Expression expression);
+        RemoteLinq.Expression Prepare(RemoteLinq.Expression expression);
 
-        System.Linq.Expressions.Expression Prepare(System.Linq.Expressions.Expression expression);
+        SystemLinq.Expression Transform(RemoteLinq.Expression expression);
 
-        object? Execute(System.Linq.Expressions.Expression expression);
+        SystemLinq.Expression Prepare(SystemLinq.Expression expression);
+
+        object? Execute(SystemLinq.Expression expression);
 
         object? ProcessResult(object? queryResult);
 

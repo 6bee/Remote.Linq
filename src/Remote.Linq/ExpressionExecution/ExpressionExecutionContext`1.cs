@@ -21,10 +21,9 @@ namespace Remote.Linq.ExpressionExecution
 
         internal ExpressionExecutionContext(IExpressionExecutionDecorator<TDataTranferObject> parent, Expression expression)
             : base(parent)
-        {
-            _expression = expression.CheckNotNull(nameof(expression));
-        }
+            => _expression = expression.CheckNotNull(nameof(expression));
 
-        public TDataTranferObject Execute() => Execute(_expression);
+        public TDataTranferObject Execute()
+            => Execute(_expression);
     }
 }

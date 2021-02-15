@@ -12,6 +12,7 @@ namespace Remote.Linq.ExpressionExecution
         {
         }
 
-        protected override TResult ConvertResult(object? queryResult) => (TResult)queryResult!;
+        protected override TResult ConvertResult(object? queryResult)
+            => (TResult)queryResult!;
     }
 }

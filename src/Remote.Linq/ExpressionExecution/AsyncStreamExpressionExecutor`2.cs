@@ -29,20 +29,34 @@ namespace Remote.Linq.ExpressionExecution
             _canBeEvaluatedLocally = canBeEvaluatedLocally;
         }
 
+        ExecutionContext IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Context => Context;
+
+        protected ExecutionContext Context { get; } = new ExecutionContext();
+
         /// <summary>
         /// Composes and executes the query based on the <see cref="RemoteLinq.Expression"/>.
         /// </summary>
         /// <param name="expression">The <see cref="RemoteLinq.Expression"/> to be executed.</param>
         /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the async operation to complete.</param>
         /// <returns>The mapped result of the query execution.</returns>
-        public IAsyncEnumerable<TDataTranferObject?> ExecuteAsyncStream(RemoteLinq.Expression expression, CancellationToken cancellation = default)
+        public IAsyncEnumerable<TDataTranferObject> ExecuteAsyncStream(RemoteLinq.Expression expression, CancellationToken cancellation = default)
         {
+            var ctx = Context;
+
             var preparedRemoteExpression = Prepare(expression);
+            ctx.RemoteExpression = preparedRemoteExpression;
+
             var linqExpression = Transform(preparedRemoteExpression);
+
             var preparedLinqExpression = Prepare(linqExpression);
+            ctx.SystemExpression = preparedLinqExpression;
+
             var queryResult = ExecuteAsyncStream(preparedLinqExpression, cancellation);
+
             var processedResult = ProcessResult(queryResult);
+
             var dataTransferObjects = ConvertResult(processedResult);
+
             var processedDataTransferObjects = ProcessResult(dataTransferObjects);
             return processedDataTransferObjects;
         }
@@ -103,27 +117,35 @@ namespace Remote.Linq.ExpressionExecution
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>The mapped query result.</returns>
-        protected abstract IAsyncEnumerable<TDataTranferObject?> ConvertResult(IAsyncEnumerable<object?> queryResult);
+        protected abstract IAsyncEnumerable<TDataTranferObject> ConvertResult(IAsyncEnumerable<object?> queryResult);
 
         /// <summary>
         /// If overriden in a derived class processes the <typeparamref name="TDataTranferObject"/> items of the async stream.
         /// </summary>
         /// <param name="queryResult">The reult of the query execution.</param>
         /// <returns>Processed result.</returns>
-        protected virtual IAsyncEnumerable<TDataTranferObject?> ProcessResult(IAsyncEnumerable<TDataTranferObject?> queryResult) => queryResult;
+        protected virtual IAsyncEnumerable<TDataTranferObject> ProcessResult(IAsyncEnumerable<TDataTranferObject> queryResult)
+            => queryResult;
 
-        RemoteLinq.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Prepare(RemoteLinq.Expression expression) => Prepare(expression);
+        RemoteLinq.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Prepare(RemoteLinq.Expression expression)
+            => Prepare(expression);
 
-        SystemLinq.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Transform(RemoteLinq.Expression expression) => Transform(expression);
+        SystemLinq.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Transform(RemoteLinq.Expression expression)
+            => Transform(expression);
 
-        SystemLinq.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Prepare(SystemLinq.Expression expression) => Prepare(expression);
+        SystemLinq.Expression IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Prepare(SystemLinq.Expression expression)
+            => Prepare(expression);
 
-        IAsyncEnumerable<object?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsyncStream(SystemLinq.Expression expression, CancellationToken cancellation) => ExecuteAsyncStream(expression, cancellation);
+        IAsyncEnumerable<object?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ExecuteAsyncStream(SystemLinq.Expression expression, CancellationToken cancellation)
+            => ExecuteAsyncStream(expression, cancellation);
 
-        IAsyncEnumerable<object?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(IAsyncEnumerable<object?> queryResult) => ProcessResult(queryResult);
+        IAsyncEnumerable<object?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(IAsyncEnumerable<object?> queryResult)
+            => ProcessResult(queryResult);
 
-        IAsyncEnumerable<TDataTranferObject?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ConvertResult(IAsyncEnumerable<object?> queryResult) => ConvertResult(queryResult);
+        IAsyncEnumerable<TDataTranferObject> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ConvertResult(IAsyncEnumerable<object?> queryResult)
+            => ConvertResult(queryResult);
 
-        IAsyncEnumerable<TDataTranferObject?> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(IAsyncEnumerable<TDataTranferObject?> queryResult) => ProcessResult(queryResult);
+        IAsyncEnumerable<TDataTranferObject> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(IAsyncEnumerable<TDataTranferObject> queryResult)
+            => ProcessResult(queryResult);
     }
 }

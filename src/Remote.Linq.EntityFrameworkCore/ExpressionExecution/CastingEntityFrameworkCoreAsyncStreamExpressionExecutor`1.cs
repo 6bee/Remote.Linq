@@ -10,7 +10,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using System.Security;
     using SystemLinq = System.Linq.Expressions;
 
-    internal sealed class CastingEntityFrameworkCoreAsyncStreamExpressionExecutor<TResult> : EntityFrameworkCoreAsyncStreamExpressionExecutor<TResult>
+    internal sealed class CastingEntityFrameworkCoreAsyncStreamExpressionExecutor<TResult> : EntityFrameworkCoreAsyncStreamExpressionExecutor<TResult?>
         where TResult : class
     {
         [SecuritySafeCritical]

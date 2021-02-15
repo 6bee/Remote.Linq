@@ -6,9 +6,9 @@ namespace Remote.Linq.ExpressionExecution
     using Remote.Linq.Expressions;
     using System.Linq;
 
-    public class DefaultExpressionExecutionContext : ExpressionExecutionContext<DynamicObject?>
+    public class DefaultExpressionExecutionContext : ExpressionExecutionContext<DynamicObject>
     {
-        public DefaultExpressionExecutionContext(ExpressionExecutor<IQueryable, DynamicObject?> parent, Expression expression)
+        public DefaultExpressionExecutionContext(ExpressionExecutor<IQueryable, DynamicObject> parent, Expression expression)
             : base(parent, expression)
         {
         }

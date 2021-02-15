@@ -15,11 +15,11 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
         {
         }
 
-        protected override async IAsyncEnumerable<TResult?> ConvertResult(IAsyncEnumerable<object?> queryResult)
+        protected override async IAsyncEnumerable<TResult> ConvertResult(IAsyncEnumerable<object?> queryResult)
         {
             await foreach (var item in queryResult)
             {
-                yield return (TResult?)item;
+                yield return (TResult)item!;
             }
         }
     }
