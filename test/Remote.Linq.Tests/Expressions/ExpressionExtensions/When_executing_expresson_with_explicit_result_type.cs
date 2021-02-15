@@ -45,7 +45,7 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExtensions
         }
 
         [Theory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
         public void Should_cast_any_result_to_object_and_return_value(Type type, object value)
         {
             var exp = new ConstantExpression(value);

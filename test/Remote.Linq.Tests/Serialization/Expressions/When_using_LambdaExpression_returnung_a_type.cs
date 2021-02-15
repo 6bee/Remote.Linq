@@ -81,7 +81,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         }
 
         [Theory]
-        [MemberData(nameof(TestData.Types), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestTypes), MemberType = typeof(TestData))]
         public void Should_support_lambda_returning_type(Type type)
         {
             Expression<Func<Type>> transform = () => type;

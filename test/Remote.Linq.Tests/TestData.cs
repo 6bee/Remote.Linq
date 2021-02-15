@@ -5,43 +5,23 @@ namespace Remote.Linq.Tests
     using Aqua.Dynamic;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Numerics;
     using System.Reflection;
 
     public static class TestData
     {
+        private const BindingFlags PublicStatic = BindingFlags.Public | BindingFlags.Static;
+
         public enum Custom
         {
             Foo,
             Bar,
         }
 
-        public static IEnumerable<object[]> Types => new Type[]
-            {
-                typeof(byte),
-                typeof(int),
-                typeof(ulong),
-                typeof(string),
-                typeof(DateTime),
-                typeof(Custom),
-                new { Text = string.Empty, Timestamp = default(DateTime?) }.GetType(),
-            }
-            .SelectMany(x => new[]
-            {
-                x,
-                x.IsClass ? x : typeof(Nullable<>).MakeGenericType(x),
-            })
-            .SelectMany(x => new[]
-            {
-                x,
-                typeof(List<>).MakeGenericType(x),
-                x.MakeArrayType(),
-            })
-            .Distinct()
-            .Select(x => new[] { x });
-
-        public static IEnumerable<object[]> PrimitiveValues => new object[]
+        private static IEnumerable<(Type Type, object Value)> CreateTestValues()
+            => new object[]
             {
                 $"Test values treated as native types in {nameof(DynamicObjectMapper)}",
                 byte.MinValue,
@@ -98,46 +78,78 @@ namespace Remote.Linq.Tests
                 Half.MinValue,
                 Half.MaxValue,
 #endif // NET5_0
+                new { Text = string.Empty, Timestamp = default(DateTime?) },
             }
-            .SelectMany(x => new Tuple<Type, object>[]
+            .SelectMany(x => new (Type Type, object Value)[]
             {
-                Tuple.Create(x.GetType(), x),
-                Tuple.Create(x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
-                Tuple.Create(x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), default(object)),
+                (x.GetType(), x),
+                (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
+                (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), default(object)),
             })
+            .Distinct();
+
+        private static IEnumerable<string> CreateTestCultureNames()
+            => new[]
+            {
+                string.Empty,
+                "da-DK",
+                "de-DE",
+                "en-US",
+                "tzm-Arab-MA",
+                "zh-CHS",
+            };
+
+        public static IEnumerable<object[]> TestCultureNames
+            => CreateTestCultureNames()
+            .Select(x => new[] { x });
+
+        public static IEnumerable<object[]> TestCultures
+            => CreateTestCultureNames()
+            .Select(CultureInfo.GetCultureInfo)
+            .Select(x => new[] { x });
+
+        public static IEnumerable<object[]> TestTypes
+            => CreateTestValues()
+            .Select(x => x.Type)
             .Distinct()
+            .Select(x => new[] { x });
+
+        public static IEnumerable<object[]> TestValues
+            => CreateTestValues()
             .Select(x => new object[] { x.Item1, x.Item2 });
 
-        public static IEnumerable<object[]> PrimitiveValueArrays => PrimitiveValues
+        public static IEnumerable<object[]> TestValueArrays
+            => CreateTestValues()
             .Select(x => new[]
             {
-                ((Type)x[0]).MakeArrayType(),
-                CreateArray((Type)x[0], x[1]),
+                x.Type.MakeArrayType(),
+                CreateArray(x.Type, x.Value),
             });
 
-        public static IEnumerable<object[]> PrimitiveValueLists => PrimitiveValues
+        public static IEnumerable<object[]> TestValueLists
+            => CreateTestValues()
             .Select(x => new[]
             {
-                typeof(List<>).MakeGenericType((Type)x[0]),
-                CreateList((Type)x[0], x[1]),
+                typeof(List<>).MakeGenericType(x.Type),
+                CreateList(x.Type, x.Value),
             });
 
         private static object CreateArray(Type type, object item)
         {
-            var toArrayMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
+            var toArrayMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray), PublicStatic).MakeGenericMethod(type);
             return toArrayMethod.Invoke(null, new[] { CreateEnumerable(type, item) });
         }
 
         private static object CreateList(Type type, object item)
         {
-            var toListMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
+            var toListMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList), PublicStatic).MakeGenericMethod(type);
             return toListMethod.Invoke(null, new[] { CreateEnumerable(type, item) });
         }
 
         private static object CreateEnumerable(Type type, object item)
         {
             var array = new[] { item, item };
-            var castMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
+            var castMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), PublicStatic).MakeGenericMethod(type);
             return castMethod.Invoke(null, new[] { array });
         }
     }

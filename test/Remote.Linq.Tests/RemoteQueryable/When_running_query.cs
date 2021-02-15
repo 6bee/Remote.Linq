@@ -842,7 +842,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
         {
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
@@ -865,8 +865,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_collection_injected_as_variable_closure(Type type, object value)
         {
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
@@ -889,7 +889,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
         public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure(Type type, object value)
         {
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
@@ -912,8 +912,8 @@ namespace Remote.Linq.Tests.RemoteQueryable
             .ShouldAllBe(x => Equals(x.Value, value), $"type: {typeof(T).FullName}, value: {value}");
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure(Type type, object value)
         {
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
@@ -970,9 +970,12 @@ namespace Remote.Linq.Tests.RemoteQueryable
             _productQueryable.Where(_ => false).FirstOrDefault().ShouldBeNull();
         }
 
-        [Fact]
-        public void Should_throw_on_query_first_with_filter_on_empty_sequence()
+        [Theory]
+        [MemberData(nameof(TestData.TestCultureNames), MemberType = typeof(TestData))]
+        public void Should_throw_on_query_first_with_filter_on_empty_sequence(string culture)
         {
+            using var cultureContext = TestHelper.CreateCultureContext(culture);
+
             var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.First(x => false));
             ex.Message.ShouldBe("Sequence contains no matching element");
         }
@@ -983,9 +986,12 @@ namespace Remote.Linq.Tests.RemoteQueryable
             _productQueryable.FirstOrDefault(_ => false).ShouldBeNull();
         }
 
-        [Fact]
-        public void Should_throw_on_query_last_on_empty_sequence()
+        [Theory]
+        [MemberData(nameof(TestData.TestCultureNames), MemberType = typeof(TestData))]
+        public void Should_throw_on_query_last_on_empty_sequence(string culture)
         {
+            using var cultureContext = TestHelper.CreateCultureContext(culture);
+
             var ex = Assert.Throws<InvalidOperationException>(() => _productQueryable.Where(x => false).Last());
             ex.Message.ShouldBe("Sequence contains no elements");
         }

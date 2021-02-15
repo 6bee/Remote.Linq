@@ -17,9 +17,9 @@ namespace Remote.Linq.Tests.ProtoBuf
     public class When_serializing_remote_linq_types_with_protobuf_net
     {
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_property(Type type, object value)
         {
             SkipUnsupportedDataType(type, value);
@@ -52,9 +52,9 @@ namespace Remote.Linq.Tests.ProtoBuf
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_property_set_2(Type type, object value)
         {
             SkipUnsupportedDataType(type, value);
@@ -73,7 +73,7 @@ namespace Remote.Linq.Tests.ProtoBuf
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
         public void Should_serialize_dynamic_object(Type type, object value)
         {
             SkipUnsupportedDataType(type, value);
@@ -90,8 +90,8 @@ namespace Remote.Linq.Tests.ProtoBuf
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_dynamic_object_collection(Type type, IEnumerable value)
         {
             SkipUnsupportedDataType(type, value);

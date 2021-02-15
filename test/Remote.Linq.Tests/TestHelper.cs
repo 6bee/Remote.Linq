@@ -7,9 +7,10 @@ namespace Remote.Linq.Tests
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
 
-    public static class Helper
+    public static class TestHelper
     {
         public static Tuple<T, T> ShouldMatch<T>(this Tuple<T, T> tuple)
         {
@@ -44,6 +45,10 @@ namespace Remote.Linq.Tests
             || typeof(ICollection<T>).IsAssignableFrom(type)
             || typeof(ICollection<T?>).IsAssignableFrom(type);
 
+        public static bool IsNotPublic(this Type type)
+            => type.IsNotPublic
+            || TypeHelper.GetElementType(type).IsNotPublic;
+
         public static bool IsEnum(this Type type)
         {
             if (type.IsEnum)
@@ -60,6 +65,26 @@ namespace Remote.Linq.Tests
         public static bool IsCollection(this Type type)
             => typeof(IEnumerable).IsAssignableFrom(type)
             && type != typeof(string);
+
+        public static IDisposable CreateCultureContext(string culture) => CultureInfo.GetCultureInfo(culture).CreateContext();
+
+        public static IDisposable CreateContext(this CultureInfo culture) => new CultureContext(culture);
+
+        private sealed class CultureContext : IDisposable
+        {
+            private readonly CultureInfo _culture;
+
+            public CultureContext(CultureInfo culture)
+            {
+                _culture = CultureInfo.CurrentCulture;
+                CultureInfo.CurrentCulture = culture;
+            }
+
+            public void Dispose()
+            {
+                CultureInfo.CurrentCulture = _culture;
+            }
+        }
 
         public static Type AsNonNullableType(this Type type)
         {
