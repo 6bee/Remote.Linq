@@ -62,7 +62,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.Nullable" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="aqua.tool.Validation" Version="1.0.0" PrivateAssets="all" />
   </ItemGroup>

@@ -24,7 +24,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Remove="aqua.tool.Nullable" />
     <PackageReference Remove="aqua.tool.polyfill.IsExternalInit" />
     <PackageReference Remove="aqua.tool.Validation" />
   </ItemGroup>
