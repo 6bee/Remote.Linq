@@ -6,7 +6,6 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutionDecorator
     using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
     using Shouldly;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 

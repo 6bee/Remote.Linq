@@ -7,7 +7,6 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutor
     using Remote.Linq.Expressions;
     using Shouldly;
     using System;
-    using System.Collections.Generic;
     using Xunit;
     using Xunit.Sdk;
 

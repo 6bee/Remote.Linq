@@ -8,7 +8,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using Microsoft.EntityFrameworkCore;
     using Remote.Linq.DynamicQuery;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Security;
 

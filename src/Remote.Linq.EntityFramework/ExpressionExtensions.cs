@@ -8,7 +8,6 @@ namespace Remote.Linq.EntityFramework
     using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity;
     using System.Diagnostics.CodeAnalysis;
