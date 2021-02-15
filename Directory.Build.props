@@ -5,8 +5,8 @@
     <MajorVersion>7</MajorVersion>
     <MinorVersion>0</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-020</PreReleaseLabel>
-    <AquaCoreVersion>5.0.0-alpha-040</AquaCoreVersion>
+    <PreReleaseLabel>alpha-024</PreReleaseLabel>
+    <AquaCoreVersion>5.0.0-alpha-044</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -60,6 +60,12 @@
     <EnableNETAnalyzers Condition="'$(EnableNETAnalyzers)' == ''">true</EnableNETAnalyzers>
     <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">false</EnableSonarAnalyzers>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="aqua.tool.Nullable" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="1.0.0" PrivateAssets="all" />
+  </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />

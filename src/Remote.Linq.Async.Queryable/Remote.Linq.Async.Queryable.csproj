@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <PackageReference Remove="aqua.tool.Nullable" />
+    <PackageReference Remove="aqua.tool.polyfill.IsExternalInit" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Remove="aqua.tool.Validation" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="System.Linq.Async.Queryable" Version="5.0.0" />
   </ItemGroup>
 
