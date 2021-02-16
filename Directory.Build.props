@@ -61,6 +61,13 @@
     <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">false</EnableSonarAnalyzers>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <SignAssembly Condition="'$(SignAssembly)' == ''">true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
+    <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="aqua.tool.Validation" Version="1.0.0" PrivateAssets="all" />

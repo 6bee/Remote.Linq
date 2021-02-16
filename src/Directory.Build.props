@@ -3,11 +3,4 @@
 
   <Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
 
-  <PropertyGroup>
-    <SignAssembly Condition=" '$(SignAssembly)' == '' ">true</SignAssembly>
-    <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)../key.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-  </PropertyGroup>
-
 </Project>

@@ -4,13 +4,13 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 {
     using Aqua.Dynamic;
     using Remote.Linq;
-    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using Shouldly;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
+    using QueryableResourceDescriptor = Remote.Linq.DynamicQuery.QueryableResourceDescriptor;
 
     public abstract class When_using_include
     {

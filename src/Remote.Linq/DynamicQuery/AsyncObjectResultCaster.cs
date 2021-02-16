@@ -6,7 +6,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Threading;
     using System.Threading.Tasks;
 
-    internal sealed class AsyncObjectResultCaster : IAsyncQueryResultMapper<object>
+    public sealed class AsyncObjectResultCaster : IAsyncQueryResultMapper<object>
     {
         private readonly ObjectResultCaster _objectResultCaster = new ObjectResultCaster();
 
