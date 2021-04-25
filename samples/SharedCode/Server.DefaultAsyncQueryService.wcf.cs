@@ -11,7 +11,7 @@ namespace Server
     {
         private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
-        public async ValueTask<DynamicObject> ExecuteQueryAsync(Expression queryExpression)
-            => await Task.Run(() => queryExpression.Execute(DataStore.QueryableByTypeProvider));
+        public Task<DynamicObject> ExecuteQueryAsync(Expression queryExpression)
+            => Task.Run(() => queryExpression.Execute(DataStore.QueryableByTypeProvider));
     }
 }

@@ -11,6 +11,6 @@ namespace Common.ServiceContracts
     public interface IQueryService
     {
         [OperationContract]
-        ValueTask<DynamicObject> ExecuteQueryAsync(Expression queryExpression);
+        Task<DynamicObject> ExecuteQueryAsync(Expression queryExpression);
     }
 }
