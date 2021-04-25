@@ -4,13 +4,11 @@ namespace Remote.Linq.DynamicQuery
 {
     using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
     public sealed class ObjectResultCaster : IQueryResultMapper<object>
     {
-        [return: MaybeNull]
-        public TResult MapResult<TResult>(object? source, Expression expression)
+        public TResult? MapResult<TResult>(object? source, Expression expression)
         {
             if (source is not null && source is not TResult && source.IsCollection(out var enumerable))
             {
@@ -21,7 +19,9 @@ namespace Remote.Linq.DynamicQuery
                 }
             }
 
-            return (TResult)source;
+            return source is TResult result
+                ? result
+                : default;
         }
     }
 }

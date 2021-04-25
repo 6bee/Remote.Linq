@@ -19,8 +19,7 @@ namespace Remote.Linq.DynamicQuery
             _mapper = mapper;
         }
 
-        [return: MaybeNull]
-        public TResult MapResult<TResult>(DynamicObject? source, Expression expression)
+        public TResult? MapResult<TResult>(DynamicObject? source, Expression expression)
             => MapToType<TResult>(source, _mapper, expression);
 
         [return: MaybeNull]
@@ -101,7 +100,7 @@ namespace Remote.Linq.DynamicQuery
                 ? (hasPredicate ? MethodInfos.Enumerable.SingleOrDefaultWithPredicate : MethodInfos.Enumerable.SingleOrDefault)
                 : (hasPredicate ? MethodInfos.Enumerable.SingleWithPredicate : MethodInfos.Enumerable.Single);
             var single = method.MakeGenericMethod(elementType).InvokeAndUnwrap(null, arguments);
-            return (TResult)single;
+            return (TResult)single!;
         }
 
         private static object GetTruePredicate(Type t)

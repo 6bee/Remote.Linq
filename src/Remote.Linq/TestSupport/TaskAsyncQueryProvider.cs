@@ -6,7 +6,6 @@ namespace Remote.Linq.TestSupport
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -33,15 +32,12 @@ namespace Remote.Linq.TestSupport
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
             => new AsyncRemoteQueryable<TElement>(this, expression);
 
-#nullable disable
         public ValueTask<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation)
-            => new ValueTask<TResult>(Execute<TResult>(expression));
-#nullable restore
+            => new ValueTask<TResult>(Execute<TResult>(expression) !);
 
         public object? Execute(Expression expression)
             => this.InvokeAndUnwrap<object>(_executeMethod, expression);
 
-        [return: MaybeNull]
         public TResult Execute<TResult>(Expression expression)
         {
             var systemlinq = expression.SimplifyIncorporationOfRemoteQueryables();
@@ -50,7 +46,7 @@ namespace Remote.Linq.TestSupport
                 .ReplaceGenericQueryArgumentsByNonGenericArguments();
             var queryresult = remotelinq.Execute(null!);
             var result = DynamicResultMapper.MapToType<TResult>(queryresult, null, expression);
-            return result;
+            return result!;
         }
     }
 }

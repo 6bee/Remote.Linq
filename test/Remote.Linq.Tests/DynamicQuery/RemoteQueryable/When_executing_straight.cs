@@ -42,9 +42,9 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
         public async Task Should_return_the_untransformed_instance_async()
         {
             var instance = new Entity();
-            var queryable = RemoteQueryable.Factory.CreateAsyncQueryable<Entity>(exp => new ValueTask<object>(instance));
+            var queryable = RemoteQueryable.Factory.CreateAsyncQueryable<Entity>(exp => new ValueTask<object>(new[] { instance }));
             var result = await queryable.ExecuteAsync<Entity>().ConfigureAwait(false);
-            result.ShouldBeSameAs(instance);
+            result.Single().ShouldBeSameAs(instance);
         }
 
         [Fact]

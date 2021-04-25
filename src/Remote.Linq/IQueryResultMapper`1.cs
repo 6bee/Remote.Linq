@@ -2,12 +2,10 @@
 
 namespace Remote.Linq
 {
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
     public interface IQueryResultMapper<in TSource>
     {
-        [return: MaybeNull]
-        TResult MapResult<TResult>(TSource? source, Expression expression);
+        TResult? MapResult<TResult>(TSource? source, Expression expression);
     }
 }

@@ -28,7 +28,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         {
             await foreach (var item in queryResult)
             {
-                yield return (TResult?)item;
+                yield return item as TResult;
             }
         }
     }

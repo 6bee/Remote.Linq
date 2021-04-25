@@ -4,7 +4,6 @@ namespace Remote.Linq.DynamicQuery
 {
     using Aqua.TypeSystem;
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Expression = System.Linq.Expressions.Expression;
     using MethodInfo = System.Reflection.MethodInfo;
@@ -42,14 +41,13 @@ namespace Remote.Linq.DynamicQuery
             return new RemoteQueryable(elementType, this, expression);
         }
 
-        [return: MaybeNull]
         public TResult Execute<TResult>(Expression expression)
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
             var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
             var dataRecords = _dataProvider(rlinq);
-            return _resultMapper.MapResult<TResult>(dataRecords, expression);
+            return _resultMapper.MapResult<TResult>(dataRecords, expression) !;
         }
 
         public object? Execute(Expression expression)

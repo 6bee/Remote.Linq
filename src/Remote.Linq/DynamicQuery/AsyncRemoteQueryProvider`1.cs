@@ -41,7 +41,6 @@ namespace Remote.Linq.DynamicQuery
             return new RemoteQueryable(elementType, this, expression);
         }
 
-        [return: MaybeNull]
         public TResult Execute<TResult>(SystemLinq.Expression expression)
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
@@ -57,7 +56,7 @@ namespace Remote.Linq.DynamicQuery
 
                 if (Equals(default(TSource), dataRecords))
                 {
-                    result = default;
+                    result = default!;
                 }
                 else
                 {
@@ -80,7 +79,7 @@ namespace Remote.Linq.DynamicQuery
             return result;
         }
 
-        public async ValueTask<TResult?> ExecuteAsync<TResult>(SystemLinq.Expression expression, CancellationToken cancellation)
+        public async ValueTask<TResult> ExecuteAsync<TResult>(SystemLinq.Expression expression, CancellationToken cancellation)
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
