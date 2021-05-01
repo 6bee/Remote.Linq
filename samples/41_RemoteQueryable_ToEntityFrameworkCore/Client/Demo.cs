@@ -7,6 +7,7 @@ namespace Client
     using System.Linq;
     using System.Threading.Tasks;
     using static CommonHelper;
+    using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtensions;
 
     public class Demo
     {
@@ -70,10 +71,10 @@ namespace Client
                 PrintLine($"  {ex.GetType().Name}: {ex.Message}");
             }
 
-            PrintHeader("GET MARKETS WITH PRODUCTS:");
+            PrintHeader("GET MARKETS WITH APPLES:");
             var marketsWithProducts = repo.Markets
                 .Include(x => x.Products).ThenInclude(x => x.Product)
-                .Where(x => x.Products.Any())
+                .Where(x => x.Products.Any(r => DbFunctionsExtensions.Like(null, r.Product.Name, "app%")))
                 .ToListAsync()
                 .ConfigureAwait(false);
             foreach (var market in await marketsWithProducts)
