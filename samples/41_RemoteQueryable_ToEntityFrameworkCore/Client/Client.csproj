@@ -9,6 +9,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Remote.Linq" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Client.AsyncTcp.RemoteRepository.cs" Link="RemoteRepository.cs" />
