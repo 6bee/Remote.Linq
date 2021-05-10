@@ -15,7 +15,7 @@ namespace Remote.Linq
         /// </summary>
         public static RemoteQueryableFactory Factory { get; } = new RemoteQueryableFactory();
 
-        internal static ExpressionTranslatorContext? GetExpressionTRanslatorContextOrNull(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
+        internal static ExpressionTranslatorContext? GetExpressionTranslatorContextOrNull(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
             => typeInfoProvider is null && canBeEvaluatedLocally is null ? null : new ExpressionTranslatorContext(typeInfoProvider, canBeEvaluatedLocally);
     }
 }

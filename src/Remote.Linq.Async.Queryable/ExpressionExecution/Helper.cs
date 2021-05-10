@@ -33,9 +33,12 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 
         private static async IAsyncEnumerable<object?> MapAsyncEnumerableInternal<T>(IAsyncEnumerable<T> asyncEnumerable)
         {
-            await foreach (var item in asyncEnumerable.ConfigureAwait(false))
+            if (asyncEnumerable is not null)
             {
-                yield return item;
+                await foreach (var item in asyncEnumerable.ConfigureAwait(false))
+                {
+                    yield return item;
+                }
             }
         }
 

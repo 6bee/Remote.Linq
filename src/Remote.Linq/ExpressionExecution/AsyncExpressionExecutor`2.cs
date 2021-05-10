@@ -3,7 +3,6 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.TypeExtensions;
-    using Aqua.TypeSystem;
     using System;
     using System.Linq;
     using System.Threading;
@@ -16,8 +15,8 @@ namespace Remote.Linq.ExpressionExecution
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncExpressionExecutor{TQueryable, TDataTranferObject}"/> class.
         /// </summary>
-        protected AsyncExpressionExecutor(Func<Type, TQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
+        protected AsyncExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+            : base(queryableProvider, context)
         {
         }
 

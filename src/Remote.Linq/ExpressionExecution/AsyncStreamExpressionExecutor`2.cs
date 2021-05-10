@@ -22,11 +22,12 @@ namespace Remote.Linq.ExpressionExecution
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncStreamExpressionExecutor{TQueryable, TDataTranferObject}"/> class.
         /// </summary>
-        protected AsyncStreamExpressionExecutor(Func<Type, TQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
+        protected AsyncStreamExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
         {
-            _queryableProvider = queryableProvider;
-            _typeResolver = typeResolver;
-            _canBeEvaluatedLocally = canBeEvaluatedLocally;
+            _queryableProvider = queryableProvider.CheckNotNull(nameof(queryableProvider));
+            context ??= new ExpressionTranslatorContext();
+            _typeResolver = context.TypeResolver;
+            _canBeEvaluatedLocally = context.CanBeEvaluatedLocally;
         }
 
         ExecutionContext IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Context => Context;

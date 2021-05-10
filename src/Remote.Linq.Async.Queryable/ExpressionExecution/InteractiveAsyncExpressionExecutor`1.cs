@@ -3,7 +3,6 @@
 namespace Remote.Linq.Async.Queryable.ExpressionExecution
 {
     using Aqua.TypeExtensions;
-    using Aqua.TypeSystem;
     using Remote.Linq.ExpressionExecution;
     using System;
     using System.Collections.Generic;
@@ -14,8 +13,8 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 
     public abstract class InteractiveAsyncExpressionExecutor<TDataTranferObject> : AsyncExpressionExecutor<IAsyncQueryable, TDataTranferObject>
     {
-        protected InteractiveAsyncExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<Expression, bool>? canBeEvaluatedLocally = null)
-            : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
+        protected InteractiveAsyncExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+            : base(queryableProvider, context)
         {
         }
 

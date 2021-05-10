@@ -3,7 +3,6 @@
 namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.TypeExtensions;
-    using Aqua.TypeSystem;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -15,17 +14,15 @@ namespace Remote.Linq.ExpressionExecution
     public abstract class ExpressionExecutor<TQueryable, TDataTranferObject> : IExpressionExecutionDecorator<TDataTranferObject>
     {
         private readonly Func<Type, TQueryable> _queryableProvider;
-        private readonly ITypeResolver? _typeResolver;
-        private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
+        private readonly IExpressionFromRemoteLinqContext? _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionExecutor{TQueryable, TDataTranferObject}"/> class.
         /// </summary>
-        protected ExpressionExecutor(Func<Type, TQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
+        protected ExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
         {
             _queryableProvider = queryableProvider;
-            _typeResolver = typeResolver;
-            _canBeEvaluatedLocally = canBeEvaluatedLocally;
+            _context = context;
         }
 
         ExecutionContext IExpressionExecutionDecorator<TDataTranferObject>.Context => Context;
@@ -67,7 +64,7 @@ namespace Remote.Linq.ExpressionExecution
         protected virtual RemoteLinq.Expression Prepare(RemoteLinq.Expression expression)
             => expression
             .ReplaceNonGenericQueryArgumentsByGenericArguments()
-            .ReplaceResourceDescriptorsByQueryable(_queryableProvider, _typeResolver);
+            .ReplaceResourceDescriptorsByQueryable(_queryableProvider, _context?.TypeResolver);
 
         /// <summary>
         /// Transforms the <see cref="RemoteLinq.Expression"/> to a <see cref="SystemLinq.Expression"/>.
@@ -75,7 +72,7 @@ namespace Remote.Linq.ExpressionExecution
         /// <param name="expression">The <see cref="RemoteLinq.Expression"/> to be transformed.</param>
         /// <returns>A <see cref="SystemLinq.Expression"/>.</returns>
         protected virtual SystemLinq.Expression Transform(RemoteLinq.Expression expression)
-            => expression.ToLinqExpression(_typeResolver);
+            => expression.ToLinqExpression(_context?.TypeResolver);
 
         /// <summary>
         /// Prepares the query <see cref="SystemLinq.Expression"/> to be able to be executed.
@@ -83,7 +80,7 @@ namespace Remote.Linq.ExpressionExecution
         /// <param name="expression">The <see cref="SystemLinq.Expression"/> returned by the Transform method.</param>
         /// <returns>A <see cref="SystemLinq.Expression"/> ready for execution.</returns>
         protected virtual SystemLinq.Expression Prepare(SystemLinq.Expression expression)
-            => expression.PartialEval(_canBeEvaluatedLocally);
+            => expression.PartialEval(_context?.CanBeEvaluatedLocally);
 
         /// <summary>
         /// Executes the <see cref="SystemLinq.Expression"/> and returns the raw result.

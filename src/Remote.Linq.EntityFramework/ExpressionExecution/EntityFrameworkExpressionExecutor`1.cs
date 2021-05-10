@@ -3,7 +3,6 @@
 namespace Remote.Linq.EntityFramework.ExpressionExecution
 {
     using Aqua.TypeExtensions;
-    using Aqua.TypeSystem;
     using Remote.Linq.EntityFramework.ExpressionVisitors;
     using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
@@ -18,13 +17,13 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
     public abstract class EntityFrameworkExpressionExecutor<TDataTranferObject> : AsyncExpressionExecutor<IQueryable, TDataTranferObject>
     {
         [SecuritySafeCritical]
-        protected EntityFrameworkExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            : this(dbContext.GetQueryableSetProvider(), typeResolver, canBeEvaluatedLocally)
+        protected EntityFrameworkExpressionExecutor(DbContext dbContext, IExpressionFromRemoteLinqContext? context = null)
+            : this(dbContext.GetQueryableSetProvider(), context)
         {
         }
 
-        protected EntityFrameworkExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
+        protected EntityFrameworkExpressionExecutor(Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+            : base(queryableProvider, context)
         {
         }
 

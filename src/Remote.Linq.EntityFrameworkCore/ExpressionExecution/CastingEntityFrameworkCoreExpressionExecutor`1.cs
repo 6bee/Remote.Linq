@@ -2,23 +2,21 @@
 
 namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 {
-    using Aqua.TypeSystem;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
     using System.Security;
-    using SystemLinq = System.Linq.Expressions;
 
     internal sealed class CastingEntityFrameworkCoreExpressionExecutor<TResult> : EntityFrameworkCoreExpressionExecutor<TResult>
     {
         [SecuritySafeCritical]
-        public CastingEntityFrameworkCoreExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
-            : base(dbContext, typeResolver, canBeEvaluatedLocally)
+        public CastingEntityFrameworkCoreExpressionExecutor(DbContext dbContext, IExpressionFromRemoteLinqContext? context = null)
+            : base(dbContext, context)
         {
         }
 
-        public CastingEntityFrameworkCoreExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
-            : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
+        public CastingEntityFrameworkCoreExpressionExecutor(Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+            : base(queryableProvider, context)
         {
         }
 

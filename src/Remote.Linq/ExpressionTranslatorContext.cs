@@ -3,12 +3,15 @@
 namespace Remote.Linq
 {
     using Aqua.Dynamic;
-    using Aqua.EnumerableExtensions;
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using System;
+    using System.Collections;
     using System.Linq;
+    using System.Reflection;
     using System.Threading;
+    using MethodInfo = System.Reflection.MethodInfo;
     using SystemLinq = System.Linq.Expressions;
 
     public class ExpressionTranslatorContext : DynamicObjectMapper, IExpressionTranslatorContext
@@ -37,6 +40,14 @@ namespace Remote.Linq
                     && !_excludeFromUnmappedTypes.Any(x => x.IsAssignableFrom(t));
             }
         }
+
+        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+
+        private static readonly MethodInfo _mapGroupToDynamicObjectGraphMethodDefinition =
+            typeof(ExpressionTranslatorContext).GetMethod(nameof(MapGroupToDynamicObjectGraph), PrivateStatic) !;
+
+        private static readonly Func<Type[], MethodInfo> _mapGroupToDynamicObjectGraphMethod =
+            genericTypeArguments => _mapGroupToDynamicObjectGraphMethodDefinition.MakeGenericMethod(genericTypeArguments);
 
         private static readonly Func<Type, bool> _isPrimitiveType = new[]
             {
@@ -85,28 +96,36 @@ namespace Remote.Linq
 
         private readonly IIsKnownTypeProvider _isKnownTypeProvider;
 
-        internal ExpressionTranslatorContext(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
-            : this(null, typeInfoProvider, null)
-            => CanBeEvaluatedLocally = canBeEvaluatedLocally;
-
-        internal ExpressionTranslatorContext(ITypeResolver typeResolver)
-            : this(typeResolver, null, null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpressionTranslatorContext"/> class.
+        /// </summary>
+        public ExpressionTranslatorContext(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
+            : this(null, typeInfoProvider, null, canBeEvaluatedLocally)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTranslatorContext"/> class.
         /// </summary>
-        public ExpressionTranslatorContext(ITypeResolver? typeResolver = null, ITypeInfoProvider? typeInfoProvider = null, IIsKnownTypeProvider? isKnownTypeProvider = null)
+        public ExpressionTranslatorContext(ITypeResolver? typeResolver, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
+            : this(typeResolver, null, null, canBeEvaluatedLocally)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpressionTranslatorContext"/> class.
+        /// </summary>
+        public ExpressionTranslatorContext(ITypeResolver? typeResolver = null, ITypeInfoProvider? typeInfoProvider = null, IIsKnownTypeProvider? isKnownTypeProvider = null, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
             : this(
                 0,
                 typeResolver ?? Aqua.TypeSystem.TypeResolver.Instance,
                 typeInfoProvider ?? new TypeInfoProvider(false, false),
-                isKnownTypeProvider ?? new IsKnownTypeProvider())
+                isKnownTypeProvider ?? new IsKnownTypeProvider(),
+                canBeEvaluatedLocally)
         {
         }
 
-        private ExpressionTranslatorContext(int n, ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
+        private ExpressionTranslatorContext(int n, ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
             : base(
                 typeResolver,
                 typeInfoProvider,
@@ -116,6 +135,7 @@ namespace Remote.Linq
             TypeInfoProvider = typeInfoProvider;
             _isKnownTypeProvider = isKnownTypeProvider;
             NeedsMapping = value => !_isKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
+            CanBeEvaluatedLocally = canBeEvaluatedLocally;
         }
 
         public ITypeResolver TypeResolver { get; }
@@ -127,5 +147,28 @@ namespace Remote.Linq
         public virtual Func<object, bool> NeedsMapping { get; }
 
         public virtual Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally { get; }
+
+        protected override bool ShouldMapToDynamicObject(IEnumerable collection)
+            => collection.CheckNotNull(nameof(collection)).GetType().Implements(typeof(IGrouping<,>))
+            || base.ShouldMapToDynamicObject(collection);
+
+        protected override DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation)
+        {
+            var genericTypeArguments = default(Type[]);
+            if (obj?.GetType().Implements(typeof(IGrouping<,>), out genericTypeArguments) is true)
+            {
+                obj = _mapGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
+            }
+
+            return base.MapToDynamicObjectGraph(obj, setTypeInformation);
+        }
+
+        private static Grouping<TKey, TElement> MapGroupToDynamicObjectGraph<TKey, TElement>(IGrouping<TKey, TElement> group)
+            => (group as Grouping<TKey, TElement>) ??
+                new Grouping<TKey, TElement>
+                {
+                    Key = group.Key,
+                    Elements = group.ToArray(),
+                };
     }
 }

@@ -4,30 +4,43 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 {
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
-    using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
 
     internal sealed class DefaultReactiveAsyncStreamExpressionExecutor : InteractiveAsyncStreamExpressionExecutor<DynamicObject>
     {
         private readonly IDynamicObjectMapper _mapper;
         private readonly Func<Type, bool> _setTypeInformation;
 
-        public DefaultReactiveAsyncStreamExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<Expression, bool>? canBeEvaluatedLocally = null)
-            : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
+        public DefaultReactiveAsyncStreamExpressionExecutor(
+            Func<Type, IAsyncQueryable> queryableProvider,
+            IExpressionFromRemoteLinqContext? context = null,
+            Func<Type, bool>? setTypeInformation = null)
+            : this(0, queryableProvider, context ?? new DynamicAsyncQueryResultMapper(), setTypeInformation)
         {
-            _mapper = mapper ?? new DynamicAsyncQueryResultMapper();
+        }
+
+        private DefaultReactiveAsyncStreamExpressionExecutor(
+            int n,
+            Func<Type, IAsyncQueryable> queryableProvider,
+            IExpressionFromRemoteLinqContext context,
+            Func<Type, bool>? setTypeInformation = null)
+            : base(queryableProvider, context)
+        {
+            _mapper = context.ValueMapper;
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 
         protected override async IAsyncEnumerable<DynamicObject> ConvertResult(IAsyncEnumerable<object?> queryResult)
         {
-            await foreach (var item in queryResult.CheckNotNull(nameof(queryResult)))
+            if (queryResult is not null)
             {
-                yield return _mapper.MapObject(item, _setTypeInformation)
-                    ?? DynamicObject.CreateDefault(Context.SystemExpression?.Type);
+                await foreach (var item in queryResult)
+                {
+                    yield return _mapper.MapObject(item, _setTypeInformation)
+                        ?? DynamicObject.CreateDefault(Context.SystemExpression?.Type);
+                }
             }
         }
     }

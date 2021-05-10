@@ -4,9 +4,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 {
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
-    using Aqua.TypeSystem;
     using Microsoft.EntityFrameworkCore;
-    using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -18,15 +16,20 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         private readonly Func<Type, bool> _setTypeInformation;
 
         [SecuritySafeCritical]
-        public DefaultEntityFrameworkCoreAsyncStreamExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            : this(dbContext.GetQueryableSetProvider(), typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))
+        public DefaultEntityFrameworkCoreAsyncStreamExpressionExecutor(DbContext dbContext, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
+            : this(dbContext.GetQueryableSetProvider(), context, setTypeInformation)
         {
         }
 
-        public DefaultEntityFrameworkCoreAsyncStreamExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
+        public DefaultEntityFrameworkCoreAsyncStreamExpressionExecutor(Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
+            : this(0, queryableProvider, context ?? new EntityFrameworkCoreExpressionTranslatorContext(), setTypeInformation)
         {
-            _mapper = mapper ?? new DynamicQueryResultMapper();
+        }
+
+        private DefaultEntityFrameworkCoreAsyncStreamExpressionExecutor(int n, Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext context, Func<Type, bool>? setTypeInformation = null)
+            : base(queryableProvider, context)
+        {
+            _mapper = context.ValueMapper;
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 

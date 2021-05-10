@@ -51,9 +51,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
             [SecuritySafeCritical]
             public QueryableSetProvider(DbContext dbContext)
-            {
-                _dbContext = dbContext;
-            }
+                => _dbContext = dbContext.CheckNotNull(nameof(dbContext));
 
             [SecuritySafeCritical]
             public IQueryable GetQueryableSet(Type type)

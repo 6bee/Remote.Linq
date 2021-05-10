@@ -4,7 +4,6 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 {
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
-    using Aqua.TypeSystem;
     using System;
     using System.Linq;
 
@@ -13,10 +12,10 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
         private readonly IDynamicObjectMapper _mapper;
         private readonly Func<Type, bool> _setTypeInformation;
 
-        public DefaultReactiveAsyncExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
+        public DefaultReactiveAsyncExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
+            : base(queryableProvider, context)
         {
-            _mapper = mapper ?? new DynamicAsyncQueryResultMapper();
+            _mapper = context?.ValueMapper ?? new DynamicAsyncQueryResultMapper();
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 

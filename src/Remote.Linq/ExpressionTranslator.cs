@@ -46,7 +46,7 @@ namespace Remote.Linq
         /// Translates a given expression into a remote linq expression.
         /// </summary>
         public static RemoteLinq.Expression ToRemoteLinqExpression(this SystemLinq.Expression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => ToRemoteLinqExpression(expression, typeInfoProvider is null && canBeEvaluatedLocally is null ? null : new ExpressionTranslatorContext(typeInfoProvider, canBeEvaluatedLocally));
+            => ToRemoteLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Translates a given lambda expression into a remote linq expression.
@@ -61,7 +61,7 @@ namespace Remote.Linq
         /// Translates a given lambda expression into a remote linq expression.
         /// </summary>
         public static RemoteLinq.LambdaExpression ToRemoteLinqExpression(this SystemLinq.LambdaExpression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => ToRemoteLinqExpression(expression, typeInfoProvider is null && canBeEvaluatedLocally is null ? null : new ExpressionTranslatorContext(typeInfoProvider, canBeEvaluatedLocally));
+            => ToRemoteLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Translates a given remote linq expression into an system linq expression.
@@ -73,7 +73,7 @@ namespace Remote.Linq
         /// Translates a given remote linq expression into an system linq expression.
         /// </summary>
         public static SystemLinq.Expression ToLinqExpression(this RemoteLinq.Expression expression, ITypeResolver? typeResolver)
-            => ToLinqExpression(expression, typeResolver is null ? null : new ExpressionTranslatorContext(typeResolver));
+            => ToLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeResolver));
 
         /// <summary>
         /// Translates a given query expression into a lambda expression.
@@ -105,7 +105,7 @@ namespace Remote.Linq
         /// Translates a given remote linq expression into a lambda expression.
         /// </summary>
         public static SystemLinq.LambdaExpression ToLinqExpression(this RemoteLinq.LambdaExpression expression, ITypeResolver? typeResolver)
-            => ToLinqExpression(expression, typeResolver is null ? null : new ExpressionTranslatorContext(typeResolver));
+            => ToLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeResolver));
 
         private static SystemLinq.ExpressionType ToExpressionType(this RemoteLinq.BinaryOperator binaryOperator)
             => (SystemLinq.ExpressionType)(int)binaryOperator;
@@ -154,5 +154,15 @@ namespace Remote.Linq
             => expression is ResultWrapperExpression resultWrapperExpression
             ? resultWrapperExpression.Result
             : null;
+
+        private static IExpressionTranslatorContext? GetExpressionTranslatorContextOrNull(ITypeResolver? typeResolver)
+            => typeResolver is null
+            ? null
+            : new ExpressionTranslatorContext(typeResolver);
+
+        private static IExpressionTranslatorContext? GetExpressionTranslatorContextOrNull(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
+            => typeInfoProvider is null && canBeEvaluatedLocally is null
+            ? null
+            : new ExpressionTranslatorContext(typeInfoProvider, canBeEvaluatedLocally);
     }
 }

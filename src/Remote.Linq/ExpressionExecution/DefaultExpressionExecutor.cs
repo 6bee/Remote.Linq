@@ -4,7 +4,6 @@ namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
-    using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using System;
     using System.Linq;
@@ -25,10 +24,10 @@ namespace Remote.Linq.ExpressionExecution
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultExpressionExecutor"/> class.
         /// </summary>
-        public DefaultExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
+        public DefaultExpressionExecutor(Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
+            : base(queryableProvider, context)
         {
-            _mapper = mapper ?? new DynamicQueryResultMapper();
+            _mapper = context?.ValueMapper ?? new DynamicQueryResultMapper();
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 

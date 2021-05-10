@@ -4,7 +4,6 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 {
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
-    using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using System;
     using System.Data.Entity;
@@ -17,15 +16,21 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
         private readonly Func<Type, bool> _setTypeInformation;
 
         [SecuritySafeCritical]
-        public DefaultEntityFrameworkExpressionExecutor(DbContext dbContext, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            : this(dbContext.GetQueryableSetProvider(), typeResolver, mapper, setTypeInformation, canBeEvaluatedLocally)
+        public DefaultEntityFrameworkExpressionExecutor(
+            DbContext dbContext,
+            IExpressionTranslatorContext? context = null,
+            Func<Type, bool>? setTypeInformation = null)
+            : this(dbContext.GetQueryableSetProvider(), context, setTypeInformation)
         {
         }
 
-        public DefaultEntityFrameworkExpressionExecutor(Func<Type, IQueryable> queryableProvider, ITypeResolver? typeResolver = null, IDynamicObjectMapper? mapper = null, Func<Type, bool>? setTypeInformation = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            : base(queryableProvider, typeResolver, canBeEvaluatedLocally)
+        public DefaultEntityFrameworkExpressionExecutor(
+            Func<Type, IQueryable> queryableProvider,
+            IExpressionTranslatorContext? context = null,
+            Func<Type, bool>? setTypeInformation = null)
+            : base(queryableProvider, context)
         {
-            _mapper = mapper ?? new DynamicQueryResultMapper();
+            _mapper = context?.ValueMapper ?? new DynamicQueryResultMapper();
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 

@@ -22,9 +22,8 @@ namespace Remote.Linq
         public static IAsyncRemoteStreamQueryable<T> CreateAsyncStreamQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, IAsyncEnumerable<DynamicObject>> dataProvider,
-            IDynamicObjectMapper? mapper = null,
             IExpressionToRemoteLinqContext? context = null)
-            => CreateAsyncStreamQueryable<T, DynamicObject>(factory, dataProvider, new DynamicItemMapper(mapper), context);
+            => CreateAsyncStreamQueryable<T, DynamicObject>(factory, dataProvider, new DynamicItemMapper(context?.ValueMapper), context);
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteStreamQueryable{T}" /> that utilizes the async stream provider specified.
@@ -33,10 +32,9 @@ namespace Remote.Linq
         public static IAsyncRemoteStreamQueryable<T> CreateAsyncStreamQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, IAsyncEnumerable<DynamicObject>> dataProvider,
-            IDynamicObjectMapper? mapper,
             ITypeInfoProvider? typeInfoProvider,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateAsyncStreamQueryable<T>(factory, dataProvider, mapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateAsyncStreamQueryable<T>(factory, dataProvider, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteStreamQueryable{T}" /> that utilizes the async stream provider specified.
@@ -45,9 +43,8 @@ namespace Remote.Linq
         public static IAsyncRemoteStreamQueryable<T> CreateAsyncStreamQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<DynamicObject>> dataProvider,
-            IDynamicObjectMapper? mapper = null,
             IExpressionToRemoteLinqContext? context = null)
-            => CreateAsyncStreamQueryable<T, DynamicObject>(factory, dataProvider, new DynamicItemMapper(mapper), context);
+            => CreateAsyncStreamQueryable<T, DynamicObject>(factory, dataProvider, new DynamicItemMapper(context?.ValueMapper), context);
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteStreamQueryable{T}" /> that utilizes the async stream provider specified.
@@ -56,10 +53,9 @@ namespace Remote.Linq
         public static IAsyncRemoteStreamQueryable<T> CreateAsyncStreamQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<DynamicObject>> dataProvider,
-            IDynamicObjectMapper? mapper,
             ITypeInfoProvider? typeInfoProvider,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateAsyncStreamQueryable<T>(factory, dataProvider, mapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateAsyncStreamQueryable<T>(factory, dataProvider, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteStreamQueryable{T}" /> that utilizes the async stream provider specified.
@@ -82,7 +78,7 @@ namespace Remote.Linq
             IAsyncQueryResultMapper<object>? resultMapper,
             ITypeInfoProvider? typeInfoProvider,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateAsyncStreamQueryable<T>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateAsyncStreamQueryable<T>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteStreamQueryable{T}" /> that utilizes the async stream provider specified.
@@ -105,7 +101,7 @@ namespace Remote.Linq
             IAsyncQueryResultMapper<object>? resultMapper,
             ITypeInfoProvider? typeInfoProvider,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateAsyncStreamQueryable<T>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateAsyncStreamQueryable<T>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteStreamQueryable{T}" /> that utilizes the async stream provider specified.
@@ -130,7 +126,7 @@ namespace Remote.Linq
             IAsyncQueryResultMapper<TSource> resultMapper,
             ITypeInfoProvider? typeInfoProvider,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateAsyncStreamQueryable<T, TSource>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateAsyncStreamQueryable<T, TSource>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteStreamQueryable{T}" /> that utilizes the async stream provider specified.
@@ -158,6 +154,6 @@ namespace Remote.Linq
             IAsyncQueryResultMapper<TSource> resultMapper,
             ITypeInfoProvider? typeInfoProvider,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateAsyncStreamQueryable<T, TSource>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateAsyncStreamQueryable<T, TSource>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
     }
 }

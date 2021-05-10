@@ -3,7 +3,6 @@
 namespace Remote.Linq.Async.Queryable.DynamicQuery
 {
     using Aqua.TypeExtensions;
-    using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;
@@ -27,16 +26,14 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
         private readonly Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? _asyncStreamProvider;
         private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>>? _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
-        private readonly ITypeInfoProvider? _typeInfoProvider;
-        private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
+        private readonly IExpressionToRemoteLinqContext? _context;
 
         [SecuritySafeCritical]
         public RemoteLinqAsyncQueryProvider(
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? asyncStreamProvider,
             Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>>? asyncDataProvider,
             IAsyncQueryResultMapper<TSource> resultMapper,
-            ITypeInfoProvider? typeInfoProvider,
-            Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
+            IExpressionToRemoteLinqContext? context = null)
         {
             if (asyncStreamProvider is null && asyncDataProvider is null)
             {
@@ -48,8 +45,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
             _asyncStreamProvider = asyncStreamProvider;
             _asyncDataProvider = asyncDataProvider;
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
-            _typeInfoProvider = typeInfoProvider;
-            _canBeEvaluatedLocally = canBeEvaluatedLocally;
+            _context = context;
         }
 
         public IAsyncQueryable<TElement> CreateQuery<TElement>(SystemLinq.Expression expression)
@@ -64,7 +60,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
                 ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
                 cancellation.ThrowIfCancellationRequested();
-                var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
+                var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
 
                 cancellation.ThrowIfCancellationRequested();
 
@@ -84,7 +80,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
                 ExpressionHelper.CheckExpressionResultType<ValueTask<TResult>>(expression);
 
                 cancellation.ThrowIfCancellationRequested();
-                var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
+                var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
 
                 if (_asyncDataProvider is not null)
                 {

@@ -58,7 +58,7 @@ namespace Remote.Linq
             ITypeInfoProvider? typeInfoProvider,
             IDynamicObjectMapper? mapper = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateQueryable(factory, elementType, dataProvider, mapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateQueryable(factory, elementType, dataProvider, mapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IRemoteQueryable{T}" /> that utilizes the data provider specified.
@@ -81,7 +81,7 @@ namespace Remote.Linq
             ITypeInfoProvider? typeInfoProvider,
             IDynamicObjectMapper? mapper = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateQueryable<T>(factory, dataProvider, mapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateQueryable<T>(factory, dataProvider, mapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IRemoteQueryable" /> that utilizes the data provider specified.
@@ -104,7 +104,7 @@ namespace Remote.Linq
             ITypeInfoProvider? typeInfoProvider,
             IQueryResultMapper<object>? resultMapper = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateQueryable(factory, elementType, dataProvider, resultMapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateQueryable(factory, elementType, dataProvider, resultMapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IRemoteQueryable{T}" /> that utilizes the data provider specified.
@@ -127,7 +127,7 @@ namespace Remote.Linq
             ITypeInfoProvider? typeInfoProvider,
             IQueryResultMapper<object>? resultMapper = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateQueryable<T>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateQueryable<T>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IRemoteQueryable" /> that utilizes the data provider specified.
@@ -155,7 +155,7 @@ namespace Remote.Linq
             IQueryResultMapper<TSource> resultMapper,
             ITypeInfoProvider? typeInfoProvider,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateQueryable<TSource>(factory, elementType, dataProvider, resultMapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateQueryable<TSource>(factory, elementType, dataProvider, resultMapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IRemoteQueryable{T}" /> that utilizes the data provider specified.
@@ -183,6 +183,6 @@ namespace Remote.Linq
             IQueryResultMapper<TSource> resultMapper,
             ITypeInfoProvider? typeInfoProvider,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateQueryable<T, TSource>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTRanslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateQueryable<T, TSource>(factory, dataProvider, resultMapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
     }
 }
