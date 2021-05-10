@@ -26,6 +26,11 @@ namespace Remote.Linq.TestSupport
             .GetMethods()
             .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(CreateQuery), StringComparison.Ordinal));
 
+        private readonly IExpressionTranslatorContext? _context;
+
+        public TaskAsyncQueryProvider(IExpressionTranslatorContext? context = null)
+            => _context = context;
+
         public IQueryable CreateQuery(Expression expression)
             => this.InvokeAndUnwrap<IQueryable>(_createQueryMethod, expression) !;
 
@@ -42,9 +47,9 @@ namespace Remote.Linq.TestSupport
         {
             var systemlinq = expression.SimplifyIncorporationOfRemoteQueryables();
             var remotelinq = systemlinq
-                .ToRemoteLinqExpression()
+                .ToRemoteLinqExpression(_context)
                 .ReplaceGenericQueryArgumentsByNonGenericArguments();
-            var queryresult = remotelinq.Execute(null!);
+            var queryresult = remotelinq.Execute(null!, _context);
             var result = DynamicResultMapper.MapToType<TResult>(queryresult, null, expression);
             return result!;
         }

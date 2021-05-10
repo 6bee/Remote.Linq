@@ -72,7 +72,7 @@ namespace Remote.Linq.ExpressionExecution
         /// <param name="expression">The <see cref="RemoteLinq.Expression"/> to be transformed.</param>
         /// <returns>A <see cref="SystemLinq.Expression"/>.</returns>
         protected virtual SystemLinq.Expression Transform(RemoteLinq.Expression expression)
-            => expression.ToLinqExpression(_context?.TypeResolver);
+            => expression.ToLinqExpression(_context);
 
         /// <summary>
         /// Prepares the query <see cref="SystemLinq.Expression"/> to be able to be executed.

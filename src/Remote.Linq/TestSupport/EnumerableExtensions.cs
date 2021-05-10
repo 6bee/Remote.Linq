@@ -17,19 +17,19 @@ namespace Remote.Linq.TestSupport
         /// !!! For unit testing only !!! <br />
         /// Creates an <see cref="IRemoteQueryable{T}"/> for given test data.
         /// </summary>
-        public static IRemoteQueryable<T> AsRemoteQueryable<T>(this IEnumerable<T> testData)
+        public static IRemoteQueryable<T> AsRemoteQueryable<T>(this IEnumerable<T> testData, IExpressionTranslatorContext? context = null)
             => testData.CheckNotNull(nameof(testData)) is IRemoteQueryable<T> remoteQueryable
             ? remoteQueryable
-            : testData.AsAsyncRemoteQueryable();
+            : testData.AsAsyncRemoteQueryable(context);
 
         /// <summary>
         /// !!! For unit testing only !!! <br />
         /// Creates an <see cref="IAsyncRemoteQueryable{T}"/> for given test data.
         /// </summary>
-        public static IAsyncRemoteQueryable<T> AsAsyncRemoteQueryable<T>(this IEnumerable<T> testData)
+        public static IAsyncRemoteQueryable<T> AsAsyncRemoteQueryable<T>(this IEnumerable<T> testData, IExpressionTranslatorContext? context = null)
             => testData.CheckNotNull(nameof(testData)) is IAsyncRemoteQueryable<T> remoteQueryable
             ? remoteQueryable
-            : new AsyncRemoteQueryable<T>(new TaskAsyncQueryProvider(), testData.AsQueryable().Expression);
+            : new AsyncRemoteQueryable<T>(new TaskAsyncQueryProvider(context), testData.AsQueryable().Expression);
 
         /// <summary>
         /// !!! For unit testing only !!! <br />
