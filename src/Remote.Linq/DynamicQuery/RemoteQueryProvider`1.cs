@@ -16,19 +16,16 @@ namespace Remote.Linq.DynamicQuery
 
         private readonly Func<Expressions.Expression, TSource?> _dataProvider;
         private readonly IQueryResultMapper<TSource> _resultMapper;
-        private readonly ITypeInfoProvider? _typeInfoProvider;
-        private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
+        private readonly IExpressionToRemoteLinqContext? _context;
 
-        internal RemoteQueryProvider(
+        public RemoteQueryProvider(
             Func<Expressions.Expression, TSource?> dataProvider,
-            ITypeInfoProvider? typeInfoProvider,
             IQueryResultMapper<TSource> resultMapper,
-            Func<Expression, bool>? canBeEvaluatedLocally)
+            IExpressionToRemoteLinqContext? context)
         {
             _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
-            _typeInfoProvider = typeInfoProvider;
-            _canBeEvaluatedLocally = canBeEvaluatedLocally;
+            _context = context;
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
@@ -45,7 +42,7 @@ namespace Remote.Linq.DynamicQuery
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
-            var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
+            var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
             var dataRecords = _dataProvider(rlinq);
             return _resultMapper.MapResult<TResult>(dataRecords, expression) !;
         }

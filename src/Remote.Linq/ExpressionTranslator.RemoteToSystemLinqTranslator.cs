@@ -59,12 +59,21 @@ namespace Remote.Linq
             private readonly Dictionary<RemoteLinq.ParameterExpression, SystemLinq.ParameterExpression> _parameterExpressionCache;
             private readonly Dictionary<RemoteLinq.LabelTarget, SystemLinq.LabelTarget> _labelTargetCache;
             private readonly ITypeResolver _typeResolver;
+            private readonly IDynamicObjectMapper _dynamicObjectMapper;
 
-            public RemoteToSystemLinqTranslator(ITypeResolver? typeResolver)
+            public RemoteToSystemLinqTranslator(IExpressionFromRemoteLinqContext? expressionTranslatorContext)
             {
+                expressionTranslatorContext ??= new ExpressionTranslatorContext();
+
                 _parameterExpressionCache = new Dictionary<RemoteLinq.ParameterExpression, SystemLinq.ParameterExpression>(ExpressionComparer.Default);
+
                 _labelTargetCache = new Dictionary<RemoteLinq.LabelTarget, SystemLinq.LabelTarget>(ExpressionComparer.Default);
-                _typeResolver = typeResolver ?? TypeResolver.Instance;
+
+                _typeResolver = expressionTranslatorContext.TypeResolver
+                    ?? throw new ArgumentException($"{nameof(expressionTranslatorContext.TypeResolver)} property must not be null.", nameof(expressionTranslatorContext));
+
+                _dynamicObjectMapper = expressionTranslatorContext.ValueMapper
+                    ?? throw new ArgumentException($"{nameof(expressionTranslatorContext.ValueMapper)} property must not be null.", nameof(expressionTranslatorContext));
             }
 
             public SystemLinq.Expression ToExpression(RemoteLinq.Expression expression) => Visit(expression.CheckNotNull(nameof(expression)));
@@ -362,7 +371,7 @@ namespace Remote.Linq
                         newConstantQueryArgument.Add(property.Name, propertyValue);
                     }
 
-                    value = ConstantValueMapper.ForReconstruction(_typeResolver).Map(newConstantQueryArgument, type);
+                    value = _dynamicObjectMapper.Map(newConstantQueryArgument, type);
                 }
                 else if (value is string && type is not null && type != typeof(string))
                 {

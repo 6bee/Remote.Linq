@@ -98,10 +98,10 @@ namespace Remote.Linq.Tests.RemoteQueryable
                     return dynamicObject;
                 };
 
-            _categoryQueryable = RemoteQueryable.Factory.CreateQueryable<Category>(execute, canBeEvaluatedLocally: CanBeEvaluated);
-            _productQueryable = RemoteQueryable.Factory.CreateQueryable<Product>(execute, canBeEvaluatedLocally: CanBeEvaluated);
-            _orderQueryable = RemoteQueryable.Factory.CreateQueryable<Order>(execute, canBeEvaluatedLocally: CanBeEvaluated);
-            _orderItemQueryable = RemoteQueryable.Factory.CreateQueryable<OrderItem>(execute, canBeEvaluatedLocally: CanBeEvaluated);
+            _categoryQueryable = RemoteQueryable.Factory.CreateQueryable<Category>(execute, null, canBeEvaluatedLocally: CanBeEvaluated);
+            _productQueryable = RemoteQueryable.Factory.CreateQueryable<Product>(execute, null, canBeEvaluatedLocally: CanBeEvaluated);
+            _orderQueryable = RemoteQueryable.Factory.CreateQueryable<Order>(execute, null, canBeEvaluatedLocally: CanBeEvaluated);
+            _orderItemQueryable = RemoteQueryable.Factory.CreateQueryable<OrderItem>(execute, null, canBeEvaluatedLocally: CanBeEvaluated);
         }
 
         private static bool CanBeEvaluated(System.Linq.Expressions.Expression expression)

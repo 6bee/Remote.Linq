@@ -41,13 +41,21 @@ namespace Remote.Linq.DynamicQuery
         /// <summary>
         /// Default procedure to translatest a given <see cref="SystemExpression"/> into a <see cref="RemoteExpression"/>.
         /// </summary>
-        public static RemoteExpression TranslateExpression(SystemExpression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemExpression, bool>? canBeEvaluatedLocally)
+        public static RemoteExpression TranslateExpression(SystemExpression expression, IExpressionToRemoteLinqContext? context = null)
         {
             var slinq1 = expression.CheckNotNull(nameof(expression)).SimplifyIncorporationOfRemoteQueryables();
-            var rlinq1 = slinq1.ToRemoteLinqExpression(typeInfoProvider, canBeEvaluatedLocally);
-            var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors(typeInfoProvider);
+            var rlinq1 = slinq1.ToRemoteLinqExpression(context);
+            var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors(context?.TypeInfoProvider);
             var rlinq3 = rlinq2.ReplaceGenericQueryArgumentsByNonGenericArguments();
             return rlinq3;
         }
+
+        /// <summary>
+        /// Default procedure to translatest a given <see cref="SystemExpression"/> into a <see cref="RemoteExpression"/>.
+        /// </summary>
+        public static RemoteExpression TranslateExpression(SystemExpression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemExpression, bool>? canBeEvaluatedLocally)
+            => TranslateExpression(
+                expression,
+                typeInfoProvider is null && canBeEvaluatedLocally is null ? null : new ExpressionTranslatorContext(typeInfoProvider, canBeEvaluatedLocally));
     }
 }

@@ -6,9 +6,9 @@ namespace Remote.Linq
     using System.Linq;
 
     /// <summary>
-    /// Provides factory methods for creating <see cref="IQueryable{T}"/>
+    /// Provides factory methods for creating <see cref="IQueryable{T}"/> types
     /// (or <see cref="IQueryable"/> respectively) suited for remote execution.
-    /// The methods on this class are accessed via Remote.Linq.RemoteQueryable.Factory.
+    /// Extension methods on this type are accessed via <see cref="RemoteQueryable.Factory"/>.
     /// </summary>
     public sealed class RemoteQueryableFactory
     {
@@ -22,10 +22,10 @@ namespace Remote.Linq
 
         /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object? obj) => base.Equals(obj);
+        public override bool Equals(object? obj) => obj is RemoteQueryableFactory;
 
         /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode() => base.GetHashCode();
+        public override int GetHashCode() => 0;
     }
 }

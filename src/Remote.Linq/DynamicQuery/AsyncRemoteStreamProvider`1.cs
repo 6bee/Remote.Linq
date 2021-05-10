@@ -15,17 +15,18 @@ namespace Remote.Linq.DynamicQuery
     internal sealed class AsyncRemoteStreamProvider<TSource> : IAsyncRemoteStreamProvider
     {
         private readonly Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource?>> _dataProvider;
-        private readonly ITypeInfoProvider? _typeInfoProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
-        private readonly Func<Expression, bool>? _canBeEvaluatedLocally;
+        private readonly IExpressionToRemoteLinqContext? _context;
 
         [SecuritySafeCritical]
-        public AsyncRemoteStreamProvider(Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource?>> dataProvider, ITypeInfoProvider? typeInfoProvider, Func<Expression, bool>? canBeEvaluatedLocally, IAsyncQueryResultMapper<TSource> resultMapper)
+        public AsyncRemoteStreamProvider(
+            Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource?>> dataProvider,
+            IAsyncQueryResultMapper<TSource> resultMapper,
+            IExpressionToRemoteLinqContext? context)
         {
             _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
-            _typeInfoProvider = typeInfoProvider;
-            _canBeEvaluatedLocally = canBeEvaluatedLocally;
+            _context = context;
         }
 
         public async IAsyncEnumerable<TResult> ExecuteAsyncRemoteStream<TResult>(Expression expression, [EnumeratorCancellation] CancellationToken cancellation)
@@ -33,7 +34,7 @@ namespace Remote.Linq.DynamicQuery
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
             cancellation.ThrowIfCancellationRequested();
-            var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
+            var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
 
             cancellation.ThrowIfCancellationRequested();
             var asyncEnumerable = _dataProvider(rlinq, cancellation);

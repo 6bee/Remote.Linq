@@ -21,15 +21,16 @@ namespace Remote.Linq.DynamicQuery
 
         private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>> _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
-        private readonly ITypeInfoProvider? _typeInfoProvider;
-        private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
+        private readonly IExpressionToRemoteLinqContext? _context;
 
-        internal AsyncRemoteQueryProvider(Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>> asyncDataProvider, ITypeInfoProvider? typeInfoProvider, IAsyncQueryResultMapper<TSource> resultMapper, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
+        public AsyncRemoteQueryProvider(
+            Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>> asyncDataProvider,
+            IAsyncQueryResultMapper<TSource> resultMapper,
+            IExpressionToRemoteLinqContext? context)
         {
             _asyncDataProvider = asyncDataProvider.CheckNotNull(nameof(asyncDataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
-            _typeInfoProvider = typeInfoProvider;
-            _canBeEvaluatedLocally = canBeEvaluatedLocally;
+            _context = context;
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(SystemLinq.Expression expression) => new AsyncRemoteQueryable<TElement>(this, expression);
@@ -43,26 +44,10 @@ namespace Remote.Linq.DynamicQuery
 
         public TResult Execute<TResult>(SystemLinq.Expression expression)
         {
-            ExpressionHelper.CheckExpressionResultType<TResult>(expression);
-
-            var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
-
-            var task = _asyncDataProvider(rlinq, CancellationToken.None);
-
-            TResult result;
             try
             {
-                var dataRecords = task.Result;
-
-                if (Equals(default(TSource), dataRecords))
-                {
-                    result = default!;
-                }
-                else
-                {
-                    var mappingTask = _resultMapper.MapResultAsync<TResult>(dataRecords, expression, CancellationToken.None).AsTask();
-                    result = mappingTask.Result;
-                }
+                var task = ExecuteAsync<TResult>(expression, CancellationToken.None).AsTask();
+                return task.Result;
             }
             catch (AggregateException ex)
             {
@@ -75,15 +60,13 @@ namespace Remote.Linq.DynamicQuery
                     throw;
                 }
             }
-
-            return result;
         }
 
         public async ValueTask<TResult> ExecuteAsync<TResult>(SystemLinq.Expression expression, CancellationToken cancellation)
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
-            var rlinq = ExpressionHelper.TranslateExpression(expression, _typeInfoProvider, _canBeEvaluatedLocally);
+            var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
 
             var dataRecords = await _asyncDataProvider(rlinq, cancellation).ConfigureAwait(false);
 

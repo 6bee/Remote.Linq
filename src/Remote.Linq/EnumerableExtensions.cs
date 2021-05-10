@@ -30,7 +30,10 @@ namespace Remote.Linq
         /// <summary>
         /// Applies this query instance to an enumerable.
         /// </summary>
-        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery<TEntity> query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor = null)
+        public static IEnumerable<TEntity> ApplyQuery<TEntity>(
+            this IEnumerable<TEntity> enumerable,
+            IQuery<TEntity> query,
+            Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor = null)
             => enumerable
             .AsQueryable()
             .ApplyQuery(query, expressionVisitor);
@@ -38,7 +41,10 @@ namespace Remote.Linq
         /// <summary>
         /// Applies this query instance to an enumerable.
         /// </summary>
-        public static IEnumerable<TEntity> ApplyQuery<TEntity>(this IEnumerable<TEntity> enumerable, IQuery query, Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor = null)
+        public static IEnumerable<TEntity> ApplyQuery<TEntity>(
+            this IEnumerable<TEntity> enumerable,
+            IQuery query,
+            Func<Expressions.LambdaExpression, Expressions.LambdaExpression>? expressionVisitor = null)
             => enumerable
             .AsQueryable()
             .ApplyQuery(query, expressionVisitor);

@@ -10,7 +10,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
     using System.Linq.Expressions;
     using Xunit;
 
-    public class When_translating_expression_back_and_forth
+    public class When_translating_expression_back_and_forth : ExpressionTranslatorTestBase
     {
         private class A
         {
@@ -141,14 +141,6 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
         private int Method(int i)
         {
             return i;
-        }
-
-        private static Tuple<T, T> BackAndForth<T>(T expression)
-            where T : Expression
-        {
-            var remoteExpression = expression.ToRemoteLinqExpression();
-            var linqExpression = remoteExpression.ToLinqExpression();
-            return Tuple.Create(expression, (T)linqExpression);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.Dynamic;
     using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
     using Aqua.Utils;
@@ -30,12 +31,35 @@ namespace Remote.Linq
                 new Dictionary<object, ConstantQueryArgument>(ReferenceEqualityComparer<object>.Default);
 
             private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
+            private readonly Func<object, bool> _needsMapping;
             private readonly ITypeInfoProvider _typeInfoProvider;
+            private readonly IDynamicObjectMapper _dynamicObjectMapper;
 
-            public SystemToRemoteLinqTranslator(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
+            public SystemToRemoteLinqTranslator(IExpressionToRemoteLinqContext? expressionTranslatorContext)
             {
-                _canBeEvaluatedLocally = canBeEvaluatedLocally.And(KeepMarkerFunctions);
-                _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
+                expressionTranslatorContext ??= new ExpressionTranslatorContext();
+
+                _canBeEvaluatedLocally = expressionTranslatorContext.CanBeEvaluatedLocally.And(KeepMarkerFunctions);
+
+                _needsMapping = expressionTranslatorContext.NeedsMapping;
+
+                _typeInfoProvider = expressionTranslatorContext.TypeInfoProvider
+                    ?? throw new ArgumentException($"{nameof(expressionTranslatorContext.TypeInfoProvider)} property must not be null.", nameof(expressionTranslatorContext));
+
+                _dynamicObjectMapper = expressionTranslatorContext.ValueMapper
+                    ?? throw new ArgumentException($"{nameof(expressionTranslatorContext.ValueMapper)} property must not be null.", nameof(expressionTranslatorContext));
+            }
+
+            private static bool KeepMarkerFunctions(SystemLinq.Expression expression)
+            {
+                if (expression is SystemLinq.MethodCallExpression methodCallExpression &&
+                    methodCallExpression.Method.IsGenericMethod &&
+                    methodCallExpression.Method.GetGenericMethodDefinition() == MethodInfos.QueryFuntion.Include)
+                {
+                    return false;
+                }
+
+                return true;
             }
 
             public RemoteLinq.Expression ToRemoteExpression(SystemLinq.Expression expression)
@@ -125,13 +149,13 @@ namespace Remote.Linq
                 {
                     exp = new RemoteLinq.ConstantExpression(typeValue.AsTypeInfo(), node.Type);
                 }
-                else if (node.Value is not null && ConstantValueMapper.TypeNeedsWrapping(node.Value.GetType()))
+                else if (node.Value is not null && _needsMapping(node.Value))
                 {
                     var key = new { node.Value, node.Type };
                     if (!_constantQueryArgumentCache.TryGetValue(key, out var constantQueryArgument))
                     {
-                        var dynamicObject = ConstantValueMapper.ForSubstitution(_typeInfoProvider).MapObject(node.Value);
-                        constantQueryArgument = new ConstantQueryArgument(dynamicObject.Type);
+                        var dynamicObject = _dynamicObjectMapper.MapObject(node.Value);
+                        constantQueryArgument = new ConstantQueryArgument(dynamicObject.Type ?? _typeInfoProvider.GetTypeInfo(node.Type, false, false));
 
                         _constantQueryArgumentCache.Add(key, constantQueryArgument);
 

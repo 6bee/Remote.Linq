@@ -18,6 +18,12 @@ namespace Remote.Linq.Tests
             return tuple;
         }
 
+        public static (T, T) ShouldMatch<T>(this (T, T) tuple)
+        {
+            ShouldMatch(tuple.Item1, tuple.Item2);
+            return tuple;
+        }
+
         public static T ShouldMatch<T>(this T t1, T t2)
         {
             var isMatch = string.Equals(t1.ToString(), t2.ToString());
