@@ -25,7 +25,7 @@ namespace Remote.Linq
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("This method will be removed in a future version. Use one of the factory methods based on RemoteQueryable.", false)]
         public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, DynamicObject> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null)
-            => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeInfoProvider, mapper);
+            => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeInfoProvider);
 
         /// <summary>
         /// Applies this query instance to an enumerable.

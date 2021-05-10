@@ -34,22 +34,53 @@ namespace Remote.Linq.EntityFramework
         public static IAsyncRemoteQueryable<T> CreateEntityFrameworkQueryable<T>(this RemoteQueryableFactory factory, Func<Expressions.Expression, ValueTask<IEnumerable<DynamicObject>>> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => throw new NotSupportedException(EnumerableOfDynamicObjectBasedMethodObsolete);
 
-        public static IRemoteQueryable CreateEntityFrameworkQueryable(this RemoteQueryableFactory factory, Type elementType, Func<Expressions.Expression, DynamicObject> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            => factory.CreateQueryable(elementType, dataProvider, typeInfoProvider, mapper, canBeEvaluatedLocally);
+        public static IRemoteQueryable CreateEntityFrameworkQueryable(
+            this RemoteQueryableFactory factory,
+            Type elementType,
+            Func<Expressions.Expression, DynamicObject> dataProvider,
+            ITypeInfoProvider? typeInfoProvider = null,
+            Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+            => factory.CreateQueryable(elementType, dataProvider, typeInfoProvider, canBeEvaluatedLocally);
 
-        public static IRemoteQueryable<T> CreateEntityFrameworkQueryable<T>(this RemoteQueryableFactory factory, Func<Expressions.Expression, DynamicObject> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
-            => factory.CreateQueryable<T>(dataProvider, typeInfoProvider, mapper, canBeEvaluatedLocally);
+        public static IRemoteQueryable<T> CreateEntityFrameworkQueryable<T>(
+            this RemoteQueryableFactory factory,
+            Func<Expressions.Expression, DynamicObject> dataProvider,
+            ITypeInfoProvider? typeInfoProvider = null,
+            Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+            => factory.CreateQueryable<T>(dataProvider, typeInfoProvider, canBeEvaluatedLocally);
 
-        public static IRemoteQueryable CreateEntityFrameworkQueryable(this RemoteQueryableFactory factory, Type elementType, Func<Expressions.Expression, object?> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IQueryResultMapper<object>? resultMapper = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        public static IRemoteQueryable CreateEntityFrameworkQueryable(
+            this RemoteQueryableFactory factory,
+            Type elementType,
+            Func<Expressions.Expression, object?> dataProvider,
+            ITypeInfoProvider? typeInfoProvider = null,
+            IQueryResultMapper<object>? resultMapper = null,
+            Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => factory.CreateQueryable(elementType, dataProvider, typeInfoProvider, resultMapper, canBeEvaluatedLocally);
 
-        public static IRemoteQueryable<T> CreateEntityFrameworkQueryable<T>(this RemoteQueryableFactory factory, Func<Expressions.Expression, object?> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IQueryResultMapper<object>? resultMapper = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        public static IRemoteQueryable<T> CreateEntityFrameworkQueryable<T>(
+            this RemoteQueryableFactory factory,
+            Func<Expressions.Expression, object?> dataProvider,
+            ITypeInfoProvider? typeInfoProvider = null,
+            IQueryResultMapper<object>? resultMapper = null,
+            Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => factory.CreateQueryable<T>(dataProvider, typeInfoProvider, resultMapper, canBeEvaluatedLocally);
 
-        public static IRemoteQueryable CreateEntityFrameworkQueryable<TSource>(this RemoteQueryableFactory factory, Type elementType, Func<Expressions.Expression, TSource?> dataProvider, IQueryResultMapper<TSource> resultMapper, ITypeInfoProvider? typeInfoProvider = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        public static IRemoteQueryable CreateEntityFrameworkQueryable<TSource>(
+            this RemoteQueryableFactory factory,
+            Type elementType,
+            Func<Expressions.Expression, TSource?> dataProvider,
+            IQueryResultMapper<TSource> resultMapper,
+            ITypeInfoProvider? typeInfoProvider = null,
+            Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => factory.CreateQueryable(elementType, dataProvider, resultMapper, typeInfoProvider, canBeEvaluatedLocally);
 
-        public static IRemoteQueryable<T> CreateEntityFrameworkQueryable<T, TSource>(this RemoteQueryableFactory factory, Func<Expressions.Expression, TSource?> dataProvider, IQueryResultMapper<TSource> resultMapper, ITypeInfoProvider? typeInfoProvider = null, Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
+        public static IRemoteQueryable<T> CreateEntityFrameworkQueryable<T, TSource>(
+            this RemoteQueryableFactory factory,
+            Func<Expressions.Expression, TSource?> dataProvider,
+            IQueryResultMapper<TSource> resultMapper,
+            ITypeInfoProvider? typeInfoProvider = null,
+            Func<System.Linq.Expressions.Expression, bool>? canBeEvaluatedLocally = null)
             => factory.CreateQueryable<T, TSource>(dataProvider, resultMapper, typeInfoProvider, canBeEvaluatedLocally);
     }
 }

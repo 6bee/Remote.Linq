@@ -125,9 +125,8 @@ namespace Remote.Linq
             this RemoteQueryableFactory factory,
             Type elementType,
             Func<RemoteLinq.Expression, ValueTask<DynamicObject>> dataProvider,
-            IDynamicObjectMapper? mapper = null,
             IExpressionToRemoteLinqContext? context = null)
-            => CreateAsyncQueryable<DynamicObject>(factory, elementType, dataProvider!, new AsyncDynamicResultMapper(mapper), context);
+            => CreateAsyncQueryable<DynamicObject>(factory, elementType, dataProvider!, new AsyncDynamicResultMapper(context?.ValueMapper), context);
 
         /// <summary>
         /// Creates an instance of <see cref="IRemoteQueryable" /> that utilizes the data provider specified.
@@ -137,9 +136,8 @@ namespace Remote.Linq
             Type elementType,
             Func<RemoteLinq.Expression, ValueTask<DynamicObject>> dataProvider,
             ITypeInfoProvider? typeInfoProvider,
-            IDynamicObjectMapper? mapper = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateAsyncQueryable(factory, elementType, dataProvider, mapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateAsyncQueryable(factory, elementType, dataProvider, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IRemoteQueryable" /> that utilizes the data provider specified.
@@ -148,9 +146,8 @@ namespace Remote.Linq
             this RemoteQueryableFactory factory,
             Type elementType,
             Func<RemoteLinq.Expression, CancellationToken, ValueTask<DynamicObject>> dataProvider,
-            IDynamicObjectMapper? mapper = null,
             IExpressionToRemoteLinqContext? context = null)
-            => CreateAsyncQueryable<DynamicObject>(factory, elementType, dataProvider!, new AsyncDynamicResultMapper(mapper), context);
+            => CreateAsyncQueryable<DynamicObject>(factory, elementType, dataProvider!, new AsyncDynamicResultMapper(context?.ValueMapper), context);
 
         /// <summary>
         /// Creates an instance of <see cref="IRemoteQueryable" /> that utilizes the data provider specified.
@@ -160,9 +157,8 @@ namespace Remote.Linq
             Type elementType,
             Func<RemoteLinq.Expression, CancellationToken, ValueTask<DynamicObject>> dataProvider,
             ITypeInfoProvider? typeInfoProvider,
-            IDynamicObjectMapper? mapper = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateAsyncQueryable(factory, elementType, dataProvider, mapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateAsyncQueryable(factory, elementType, dataProvider, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteQueryable{T}" /> that utilizes the data provider specified.
@@ -171,9 +167,8 @@ namespace Remote.Linq
         public static IAsyncRemoteQueryable<T> CreateAsyncQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, ValueTask<DynamicObject>> dataProvider,
-            IDynamicObjectMapper? mapper = null,
             IExpressionToRemoteLinqContext? context = null)
-            => CreateAsyncQueryable<T, DynamicObject>(factory, dataProvider!, new AsyncDynamicResultMapper(mapper), context);
+            => CreateAsyncQueryable<T, DynamicObject>(factory, dataProvider!, new AsyncDynamicResultMapper(context?.ValueMapper), context);
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteQueryable{T}" /> that utilizes the data provider specified.
@@ -183,9 +178,8 @@ namespace Remote.Linq
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, ValueTask<DynamicObject>> dataProvider,
             ITypeInfoProvider? typeInfoProvider,
-            IDynamicObjectMapper? mapper = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateAsyncQueryable<T>(factory, dataProvider, mapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateAsyncQueryable<T>(factory, dataProvider, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteQueryable{T}" /> that utilizes the data provider specified.
@@ -194,9 +188,8 @@ namespace Remote.Linq
         public static IAsyncRemoteQueryable<T> CreateAsyncQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, ValueTask<DynamicObject>> dataProvider,
-            IDynamicObjectMapper? mapper = null,
             IExpressionToRemoteLinqContext? context = null)
-            => CreateAsyncQueryable<T, DynamicObject>(factory, dataProvider!, new AsyncDynamicResultMapper(mapper), context);
+            => CreateAsyncQueryable<T, DynamicObject>(factory, dataProvider!, new AsyncDynamicResultMapper(context?.ValueMapper), context);
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteQueryable{T}" /> that utilizes the data provider specified.
@@ -206,9 +199,8 @@ namespace Remote.Linq
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, ValueTask<DynamicObject>> dataProvider,
             ITypeInfoProvider? typeInfoProvider,
-            IDynamicObjectMapper? mapper = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateAsyncQueryable<T>(factory, dataProvider, mapper, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateAsyncQueryable<T>(factory, dataProvider, RemoteQueryable.GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
         /// <summary>
         /// Creates an instance of <see cref="IRemoteQueryable" /> that utilizes the data provider specified.

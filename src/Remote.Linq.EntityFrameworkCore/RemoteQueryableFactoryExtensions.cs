@@ -5,6 +5,7 @@ namespace Remote.Linq.EntityFrameworkCore
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using static Remote.Linq.EntityFrameworkCore.Helper;
     using RemoteLinq = Remote.Linq.Expressions;
@@ -29,33 +30,29 @@ namespace Remote.Linq.EntityFrameworkCore
             this RemoteQueryableFactory factory,
             Type elementType,
             Func<RemoteLinq.Expression, DynamicObject> dataProvider,
-            IDynamicObjectMapper? mapper = null,
             IExpressionToRemoteLinqContext? context = null)
-            => factory.CreateQueryable(elementType, dataProvider, mapper, GetOrCreateContext(context));
+            => factory.CreateQueryable(elementType, dataProvider, GetOrCreateContext(context));
 
         public static IRemoteQueryable CreateEntityFrameworkCoreQueryable(
             this RemoteQueryableFactory factory,
             Type elementType,
             Func<RemoteLinq.Expression, DynamicObject> dataProvider,
             ITypeInfoProvider? typeInfoProvider = null,
-            IDynamicObjectMapper? mapper = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateEntityFrameworkCoreQueryable(factory, elementType, dataProvider, mapper, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateEntityFrameworkCoreQueryable(factory, elementType, dataProvider, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally));
 
         public static IRemoteQueryable<T> CreateEntityFrameworkCoreQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, DynamicObject> dataProvider,
-            IDynamicObjectMapper? mapper = null,
             IExpressionToRemoteLinqContext? context = null)
-            => factory.CreateQueryable<T>(dataProvider, mapper, GetOrCreateContext(context));
+            => factory.CreateQueryable<T>(dataProvider, GetOrCreateContext(context));
 
         public static IRemoteQueryable<T> CreateEntityFrameworkCoreQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, DynamicObject> dataProvider,
             ITypeInfoProvider? typeInfoProvider = null,
-            IDynamicObjectMapper? mapper = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateEntityFrameworkCoreQueryable<T>(factory, dataProvider, mapper, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateEntityFrameworkCoreQueryable<T>(factory, dataProvider, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally));
 
         public static IRemoteQueryable CreateEntityFrameworkCoreQueryable(
             this RemoteQueryableFactory factory,
