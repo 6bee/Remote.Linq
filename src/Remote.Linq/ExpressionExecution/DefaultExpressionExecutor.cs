@@ -27,7 +27,7 @@ namespace Remote.Linq.ExpressionExecution
         public DefaultExpressionExecutor(Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
             : base(queryableProvider, context)
         {
-            _mapper = context?.ValueMapper ?? new DynamicQueryResultMapper();
+            _mapper = context?.ValueMapper ?? new DynamicQueryResultMapper().ValueMapper;
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 

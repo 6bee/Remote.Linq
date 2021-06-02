@@ -3,6 +3,7 @@
 namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
 {
     using Aqua.Dynamic;
+    using Aqua.TypeSystem;
     using Shouldly;
     using System;
     using System.Linq.Expressions;
@@ -61,25 +62,36 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
 
         private sealed class CustomExpressionTranslatorContext : ExpressionTranslatorContext
         {
-            protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
+            private sealed class ObjectMapper : ExpressionTranslatorContextObjectMapper
             {
-                if (obj is Date date)
+                public ObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
+                    : base(typeResolver, typeInfoProvider, isKnownTypeProvider)
                 {
-                    return DateHelper.ToDynamicObject(date);
                 }
 
-                return base.MapToDynamicObjectGraph(obj, setTypeInformation);
-            }
-
-            protected override object MapFromDynamicObjectGraph(object obj, Type targetType)
-            {
-                if (targetType == typeof(Date) && obj is DynamicObject date)
+                protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
                 {
-                    return DateHelper.ToDate(date);
+                    if (obj is Date date)
+                    {
+                        return DateHelper.ToDynamicObject(date);
+                    }
+
+                    return base.MapToDynamicObjectGraph(obj, setTypeInformation);
                 }
 
-                return base.MapFromDynamicObjectGraph(obj, targetType);
+                protected override object MapFromDynamicObjectGraph(object obj, Type targetType)
+                {
+                    if (targetType == typeof(Date) && obj is DynamicObject date)
+                    {
+                        return DateHelper.ToDate(date);
+                    }
+
+                    return base.MapFromDynamicObjectGraph(obj, targetType);
+                }
             }
+
+            protected override IDynamicObjectMapper CreateObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
+                => new ObjectMapper(typeResolver, typeInfoProvider, isKnownTypeProvider);
         }
 
         [Fact]

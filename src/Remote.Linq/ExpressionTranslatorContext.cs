@@ -14,7 +14,7 @@ namespace Remote.Linq
     using MethodInfo = System.Reflection.MethodInfo;
     using SystemLinq = System.Linq.Expressions;
 
-    public class ExpressionTranslatorContext : DynamicObjectMapper, IExpressionTranslatorContext
+    public class ExpressionTranslatorContext : IExpressionTranslatorContext
     {
         private sealed class IsKnownTypeProvider : IIsKnownTypeProvider
         {
@@ -38,6 +38,29 @@ namespace Remote.Linq
                 var t = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
                 return _unmappedTypes.Any(x => x.IsAssignableFrom(t))
                     && !_excludeFromUnmappedTypes.Any(x => x.IsAssignableFrom(t));
+            }
+        }
+
+        protected class ExpressionTranslatorContextObjectMapper : DynamicObjectMapper
+        {
+            public ExpressionTranslatorContextObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
+                : base(typeResolver, typeInfoProvider, isKnownTypeProvider: isKnownTypeProvider)
+            {
+            }
+
+            protected override bool ShouldMapToDynamicObject(IEnumerable collection)
+                => collection.CheckNotNull(nameof(collection)).GetType().Implements(typeof(IGrouping<,>))
+                || base.ShouldMapToDynamicObject(collection);
+
+            protected override DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation)
+            {
+                var genericTypeArguments = default(Type[]);
+                if (obj?.GetType().Implements(typeof(IGrouping<,>), out genericTypeArguments) is true)
+                {
+                    obj = _mapGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
+                }
+
+                return base.MapToDynamicObjectGraph(obj, setTypeInformation);
             }
         }
 
@@ -115,53 +138,52 @@ namespace Remote.Linq
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTranslatorContext"/> class.
         /// </summary>
-        public ExpressionTranslatorContext(ITypeResolver? typeResolver = null, ITypeInfoProvider? typeInfoProvider = null, IIsKnownTypeProvider? isKnownTypeProvider = null, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
+        public ExpressionTranslatorContext(
+            ITypeResolver? typeResolver = null,
+            ITypeInfoProvider? typeInfoProvider = null,
+            IIsKnownTypeProvider? isKnownTypeProvider = null,
+            Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
+            IDynamicObjectMapper? valueMapper = null)
             : this(
                 0,
                 typeResolver ?? Aqua.TypeSystem.TypeResolver.Instance,
                 typeInfoProvider ?? new TypeInfoProvider(false, false),
                 isKnownTypeProvider ?? new IsKnownTypeProvider(),
-                canBeEvaluatedLocally)
+                canBeEvaluatedLocally,
+                valueMapper)
         {
         }
 
-        private ExpressionTranslatorContext(int n, ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
-            : base(
-                typeResolver,
-                typeInfoProvider,
-                isKnownTypeProvider: isKnownTypeProvider)
+        private ExpressionTranslatorContext(
+            byte n,
+            ITypeResolver typeResolver,
+            ITypeInfoProvider typeInfoProvider,
+            IIsKnownTypeProvider isKnownTypeProvider,
+            Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally,
+            IDynamicObjectMapper? valueMapper)
         {
             TypeResolver = typeResolver;
             TypeInfoProvider = typeInfoProvider;
             _isKnownTypeProvider = isKnownTypeProvider;
-            NeedsMapping = value => !_isKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
             CanBeEvaluatedLocally = canBeEvaluatedLocally;
+            ValueMapper = valueMapper
+                ?? CreateObjectMapper(typeResolver, typeInfoProvider, isKnownTypeProvider)
+                ?? throw new RemoteLinqException($"Method {nameof(CreateObjectMapper)} must not return null.");
+            NeedsMapping = value => !_isKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
         }
+
+        protected virtual IDynamicObjectMapper CreateObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
+            => new ExpressionTranslatorContextObjectMapper(typeResolver, typeInfoProvider, isKnownTypeProvider);
 
         public ITypeResolver TypeResolver { get; }
 
         public ITypeInfoProvider TypeInfoProvider { get; }
 
-        public IDynamicObjectMapper ValueMapper => this;
+        public IDynamicObjectMapper ValueMapper { get; }
 
-        public virtual Func<object, bool> NeedsMapping { get; }
+        public Func<object, bool> NeedsMapping { get; }
 
-        public virtual Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally { get; }
-
-        protected override bool ShouldMapToDynamicObject(IEnumerable collection)
-            => collection.CheckNotNull(nameof(collection)).GetType().Implements(typeof(IGrouping<,>))
-            || base.ShouldMapToDynamicObject(collection);
-
-        protected override DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation)
-        {
-            var genericTypeArguments = default(Type[]);
-            if (obj?.GetType().Implements(typeof(IGrouping<,>), out genericTypeArguments) is true)
-            {
-                obj = _mapGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
-            }
-
-            return base.MapToDynamicObjectGraph(obj, setTypeInformation);
-        }
+        public Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally { get; }
 
         private static Grouping<TKey, TElement> MapGroupToDynamicObjectGraph<TKey, TElement>(IGrouping<TKey, TElement> group)
             => (group as Grouping<TKey, TElement>) ??

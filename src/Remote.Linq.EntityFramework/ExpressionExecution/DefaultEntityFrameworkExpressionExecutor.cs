@@ -30,7 +30,7 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
             Func<Type, bool>? setTypeInformation = null)
             : base(queryableProvider, context)
         {
-            _mapper = context?.ValueMapper ?? new DynamicQueryResultMapper();
+            _mapper = context?.ValueMapper ?? new DynamicQueryResultMapper().ValueMapper;
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 

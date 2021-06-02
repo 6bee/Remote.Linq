@@ -4,6 +4,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 {
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
+    using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections;
@@ -11,9 +12,37 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
+    using MethodInfo = System.Reflection.MethodInfo;
 
     public class DynamicAsyncQueryResultMapper : DynamicQueryResultMapper
     {
+        protected class DynamicAsyncQueryResultObjectMapper : ExpressionTranslatorContextObjectMapper
+        {
+            public DynamicAsyncQueryResultObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
+                : base(typeResolver, typeInfoProvider, isKnownTypeProvider)
+            {
+            }
+
+            protected override bool ShouldMapToDynamicObject(IEnumerable collection)
+                => collection.CheckNotNull(nameof(collection)).GetType().Implements(typeof(IAsyncGrouping<,>))
+                || base.ShouldMapToDynamicObject(collection);
+
+            protected override DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation)
+            {
+                var genericTypeArguments = default(Type[]);
+                if (obj?.GetType().Implements(typeof(IAsyncGrouping<,>), out genericTypeArguments) is true)
+                {
+                    obj = _MapGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
+                }
+                else if (obj?.GetType().Implements(typeof(IAsyncEnumerable<>), out genericTypeArguments) is true)
+                {
+                    obj = _MapAsyncEnumerableMethod(genericTypeArguments!).Invoke(null, new[] { obj });
+                }
+
+                return base.MapToDynamicObjectGraph(obj, setTypeInformation);
+            }
+        }
+
         private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
 
         private static readonly Func<Type[], MethodInfo> _MapGroupToDynamicObjectGraphMethod = genericTypeArguments =>
@@ -25,25 +54,6 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
              typeof(DynamicAsyncQueryResultMapper)
                  .GetMethod(nameof(MapAsyncEnumerable), PrivateStatic)
                  .MakeGenericMethod(genericTypeArguments);
-
-        protected override bool ShouldMapToDynamicObject(IEnumerable collection)
-            => collection.CheckNotNull(nameof(collection)).GetType().Implements(typeof(IAsyncGrouping<,>))
-            || base.ShouldMapToDynamicObject(collection);
-
-        protected override DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation)
-        {
-            var genericTypeArguments = default(Type[]);
-            if (obj?.GetType().Implements(typeof(IAsyncGrouping<,>), out genericTypeArguments) is true)
-            {
-                obj = _MapGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
-            }
-            else if (obj?.GetType().Implements(typeof(IAsyncEnumerable<>), out genericTypeArguments) is true)
-            {
-                obj = _MapAsyncEnumerableMethod(genericTypeArguments!).Invoke(null, new[] { obj });
-            }
-
-            return base.MapToDynamicObjectGraph(obj, setTypeInformation);
-        }
 
         private static AsyncEnumerable<T> MapAsyncEnumerable<T>(IAsyncEnumerable<T> source)
             => source is AsyncEnumerable<T> asyncEnumerable
@@ -75,5 +85,8 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 
             return list;
         }
+
+        protected override IDynamicObjectMapper CreateObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
+            => new DynamicAsyncQueryResultObjectMapper(typeResolver, typeInfoProvider, isKnownTypeProvider);
     }
 }

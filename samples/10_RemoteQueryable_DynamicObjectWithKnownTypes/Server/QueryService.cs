@@ -12,9 +12,9 @@ namespace Server
     {
         private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
-        private DynamicObjectMapper Mapper => new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
+        private IExpressionTranslatorContext Context => new ExpressionTranslatorContext(isKnownTypeProvider: new IsKnownTypeProvider());
 
         public DynamicObject ExecuteQuery(Expression queryExpression)
-            => queryExpression.Execute(DataStore.QueryableByTypeProvider, mapper: Mapper);
+            => queryExpression.Execute(DataStore.QueryableByTypeProvider, Context);
     }
 }

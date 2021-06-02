@@ -13,14 +13,14 @@ namespace Client
     public sealed class RemoteRepository : IRemoteRepository
     {
         private readonly ChannelFactory<IQueryService> _channelFactory;
-
         private readonly Func<Expression, DynamicObject> _dataProvider;
+        private readonly IExpressionTranslatorContext _context;
 
         public RemoteRepository(string uri)
         {
             var binding = new NetNamedPipeBinding { MaxReceivedMessageSize = 10240 }.WithDebugSetting();
             _channelFactory = new ChannelFactory<IQueryService>(binding, uri);
-
+            _context = new ExpressionTranslatorContext(new ResultTypeMapper(), new QueryTypeMapper());
             _dataProvider = expression =>
             {
                 using var proxy = _channelFactory.CreateServiceProxy();
@@ -31,19 +31,13 @@ namespace Client
             };
         }
 
-        public IQueryable<ClientModel.ProductCategory> ProductCategories => CreateQueryable<ClientModel.ProductCategory>();
+        public IQueryable<ClientModel.ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ClientModel.ProductCategory>(_dataProvider, _context);
 
-        public IQueryable<ClientModel.ProductGroup> ProductGroups => CreateQueryable<ClientModel.ProductGroup>();
+        public IQueryable<ClientModel.ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateQueryable<ClientModel.ProductGroup>(_dataProvider, _context);
 
-        public IQueryable<ClientModel.Product> Products => CreateQueryable<ClientModel.Product>();
+        public IQueryable<ClientModel.Product> Products => RemoteQueryable.Factory.CreateQueryable<ClientModel.Product>(_dataProvider, _context);
 
-        public IQueryable<ClientModel.OrderItem> OrderItems => CreateQueryable<ClientModel.OrderItem>();
-
-        private IQueryable<T> CreateQueryable<T>()
-            => RemoteQueryable.Factory.CreateQueryable<T>(
-                _dataProvider,
-                typeInfoProvider: new QueryTypeMapper(),
-                mapper: new DynamicObjectMapper(typeResolver: new ResultTypeMapper()));
+        public IQueryable<ClientModel.OrderItem> OrderItems => RemoteQueryable.Factory.CreateQueryable<ClientModel.OrderItem>(_dataProvider, _context);
 
         public void Dispose() => _channelFactory.Close();
     }

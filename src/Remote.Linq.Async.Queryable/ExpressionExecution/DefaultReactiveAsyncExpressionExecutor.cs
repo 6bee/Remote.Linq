@@ -15,7 +15,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
         public DefaultReactiveAsyncExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
             : base(queryableProvider, context)
         {
-            _mapper = context?.ValueMapper ?? new DynamicAsyncQueryResultMapper();
+            _mapper = context?.ValueMapper ?? new DynamicAsyncQueryResultMapper().ValueMapper;
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 
