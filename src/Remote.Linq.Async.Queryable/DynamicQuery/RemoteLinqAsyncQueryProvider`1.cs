@@ -24,14 +24,14 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
         private static readonly MethodInfo _mapSingleElementStreamMethodInfo = typeof(RemoteLinqAsyncQueryProvider<TSource>).GetMethod(nameof(MapSingleElementStreamInternal), PrivateStatic);
 
         private readonly Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? _asyncStreamProvider;
-        private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>>? _asyncDataProvider;
+        private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>>? _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly IExpressionToRemoteLinqContext? _context;
 
         [SecuritySafeCritical]
         public RemoteLinqAsyncQueryProvider(
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? asyncStreamProvider,
-            Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>>? asyncDataProvider,
+            Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>>? asyncDataProvider,
             IAsyncQueryResultMapper<TSource> resultMapper,
             IExpressionToRemoteLinqContext? context = null)
         {

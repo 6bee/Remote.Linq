@@ -64,7 +64,7 @@ namespace Remote.Linq.Async.Queryable
         public static IAsyncQueryable<T> CreateAsyncQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<DynamicObject?>>? asyncStreamProvider,
-            Func<RemoteLinq.Expression, CancellationToken, ValueTask<DynamicObject>>? asyncDataProvider,
+            Func<RemoteLinq.Expression, CancellationToken, ValueTask<DynamicObject?>>? asyncDataProvider,
             IDynamicObjectMapper? mapper = null,
             IExpressionToRemoteLinqContext? context = null)
             => CreateAsyncQueryable<T, DynamicObject>(factory, asyncStreamProvider, asyncDataProvider, new DynamicItemMapper(mapper), context);
@@ -76,7 +76,7 @@ namespace Remote.Linq.Async.Queryable
         public static IAsyncQueryable<T> CreateAsyncQueryable<T>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<object?>>? asyncStreamProvider,
-            Func<RemoteLinq.Expression, CancellationToken, ValueTask<object>>? asyncDataProvider,
+            Func<RemoteLinq.Expression, CancellationToken, ValueTask<object?>>? asyncDataProvider,
             IAsyncQueryResultMapper<object>? resultMapper = null,
             IExpressionToRemoteLinqContext? context = null)
             => CreateAsyncQueryable<T, object>(factory, asyncStreamProvider, asyncDataProvider, resultMapper ?? new AsyncObjectResultCaster(), context);
@@ -89,7 +89,7 @@ namespace Remote.Linq.Async.Queryable
         public static IAsyncQueryable<T> CreateAsyncQueryable<T, TSource>(
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? asyncStreamProvider,
-            Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource>>? asyncDataProvider,
+            Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>>? asyncDataProvider,
             IAsyncQueryResultMapper<TSource> resultMapper,
             IExpressionToRemoteLinqContext? context = null)
         {
