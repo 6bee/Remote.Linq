@@ -63,6 +63,14 @@ namespace Remote.Linq.Tests.RemoteQueryable
             }
         }
 
+        public class With_protobuf_net_serializer : When_running_query
+        {
+            public With_protobuf_net_serializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+
 #if NETFRAMEWORK
         public class With_net_data_contract_serializer : When_running_query
         {
@@ -849,6 +857,10 @@ namespace Remote.Linq.Tests.RemoteQueryable
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+            if (this.TestIs<With_protobuf_net_serializer>())
+            {
+                ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
 #if NET5_0
             Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
 #endif // NET5_0
@@ -873,6 +885,10 @@ namespace Remote.Linq.Tests.RemoteQueryable
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+            if (this.TestIs<With_protobuf_net_serializer>())
+            {
+                ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
 #if NET5_0
             Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
 #endif // NET5_0
@@ -896,6 +912,10 @@ namespace Remote.Linq.Tests.RemoteQueryable
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+            if (this.TestIs<With_protobuf_net_serializer>())
+            {
+                ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
 #if NET5_0
             Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
 #endif // NET5_0
@@ -920,6 +940,10 @@ namespace Remote.Linq.Tests.RemoteQueryable
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+            if (this.TestIs<With_protobuf_net_serializer>())
+            {
+                ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
 #if NET5_0
             Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
 #endif // NET5_0
