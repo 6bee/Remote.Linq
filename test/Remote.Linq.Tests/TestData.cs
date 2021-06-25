@@ -83,10 +83,20 @@ namespace Remote.Linq.Tests
             .SelectMany(x => new (Type Type, object Value)[]
             {
                 (x.GetType(), x),
+                (x.GetType(), CreateDefault(x.GetType())),
                 (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
                 (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), default(object)),
             })
             .Distinct();
+
+        private static object CreateDefault(Type t)
+            => typeof(TestData).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            .Single(x => string.Equals(x.Name, nameof(CreateDefault), StringComparison.Ordinal) && x.IsGenericMethodDefinition)
+            .MakeGenericMethod(t)
+            .Invoke(null, null);
+
+        private static object CreateDefault<T>()
+            => default(T);
 
         private static IEnumerable<string> CreateTestCultureNames()
             => new[]
