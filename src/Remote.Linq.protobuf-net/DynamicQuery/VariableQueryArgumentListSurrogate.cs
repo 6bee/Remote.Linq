@@ -29,8 +29,8 @@ namespace Remote.Linq.ProtoBuf.DynamicQuery
 
         [ProtoConverter]
         public static VariableQueryArgumentList? Convert(VariableQueryArgumentListSurrogate? surrogate)
-            => surrogate is null
-            ? null
-            : new VariableQueryArgumentList((IEnumerable)surrogate.Values.ObjectValue, surrogate.ElementType);
+            => surrogate?.Values.ObjectValue is IEnumerable enumerable
+            ? new VariableQueryArgumentList(enumerable, surrogate.ElementType)
+            : null;
     }
 }
