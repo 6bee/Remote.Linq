@@ -4,7 +4,7 @@ dotnet: 5.0.102
 
 branches:
   except:
-  - experimental
+  - /^experimental.*$/
 
 matrix:
   include:
