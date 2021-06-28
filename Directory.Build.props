@@ -5,8 +5,8 @@
     <MajorVersion>7</MajorVersion>
     <MinorVersion>0</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-030</PreReleaseLabel>
-    <AquaCoreVersion>5.0.0-alpha-050</AquaCoreVersion>
+    <PreReleaseLabel>alpha-031</PreReleaseLabel>
+    <AquaCoreVersion>5.0.0-alpha-051</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
