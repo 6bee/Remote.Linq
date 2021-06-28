@@ -7,21 +7,22 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
+    using static MethodInfos;
     using MethodInfo = System.Reflection.MethodInfo;
     using RemoteLinq = Remote.Linq.Expressions;
     using SystemLinq = System.Linq.Expressions;
 
     internal sealed class RemoteLinqAsyncQueryProvider<TSource> : IRemoteLinqAsyncQueryProvider
     {
-        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+        private static readonly MethodInfo _mapAsyncEnumerableMethodInfo =
+            GetMethod<RemoteLinqAsyncQueryProvider<TSource>>(nameof(MapAsyncEnumerableInternal));
 
-        private static readonly MethodInfo _mapAsyncEnumerableMethodInfo = typeof(RemoteLinqAsyncQueryProvider<TSource>).GetMethod(nameof(MapAsyncEnumerableInternal), PrivateStatic);
-        private static readonly MethodInfo _mapSingleElementStreamMethodInfo = typeof(RemoteLinqAsyncQueryProvider<TSource>).GetMethod(nameof(MapSingleElementStreamInternal), PrivateStatic);
+        private static readonly MethodInfo _mapSingleElementStreamMethodInfo =
+            GetMethod<RemoteLinqAsyncQueryProvider<TSource>>(nameof(MapSingleElementStreamInternal));
 
         private readonly Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? _asyncStreamProvider;
         private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>>? _asyncDataProvider;
@@ -99,14 +100,14 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
         {
             var method = _mapAsyncEnumerableMethodInfo.MakeGenericMethod(elementType);
             var result = method.Invoke(null, new object[] { source, _resultMapper, cancellation });
-            return (TResult)result;
+            return (TResult)result!;
         }
 
         private ValueTask<TResult> MapSingleElementStream<TResult>(IAsyncEnumerable<TSource?> source, CancellationToken cancellation)
         {
             var method = _mapSingleElementStreamMethodInfo.MakeGenericMethod(typeof(TResult));
             var result = method.Invoke(null, new object[] { source, _resultMapper, cancellation });
-            return (ValueTask<TResult>)result;
+            return (ValueTask<TResult>)result!;
         }
 
         private static async IAsyncEnumerable<T> MapAsyncEnumerableInternal<T>(IAsyncEnumerable<TSource?> source, IAsyncQueryResultMapper<TSource?> resultMapper, [EnumeratorCancellation] CancellationToken cancellation)

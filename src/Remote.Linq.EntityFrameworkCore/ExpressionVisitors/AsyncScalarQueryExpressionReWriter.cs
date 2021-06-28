@@ -75,7 +75,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
             if (expression is MethodCallExpression methodCallExpression)
             {
                 var methodDefinition = methodCallExpression.Method.GetGenericMethodDefinition();
-                if (_methods.TryGetValue(methodDefinition, out MethodInfo mappedMethodDefinition))
+                if (_methods.TryGetValue(methodDefinition, out var mappedMethodDefinition))
                 {
                     var mappedMethod = mappedMethodDefinition.MakeGenericMethod(methodCallExpression.Method.GetGenericArguments());
                     var arguments = methodCallExpression.Arguments.Concat(new[] { Expression.Constant(cancellation) }).ToArray();

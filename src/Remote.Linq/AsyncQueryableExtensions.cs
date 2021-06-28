@@ -256,34 +256,34 @@ namespace Remote.Linq
             => ExecuteAsync<decimal?, decimal?>(MethodInfos.Queryable.AverageNullableDecimal, source, cancellation);
 
         public static ValueTask<double> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, int>> selector, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, double>(MethodInfos.Queryable.AverageWithInt32Selector, source, selector, cancellation);
+            => ExecuteAsync<TSource, double>(MethodInfos.Queryable.AverageInt32WithSelector, source, selector, cancellation);
 
         public static ValueTask<double?> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, double?>(MethodInfos.Queryable.AverageWithNullableInt32Selector, source, selector, cancellation);
+            => ExecuteAsync<TSource, double?>(MethodInfos.Queryable.AverageNullableInt32WithSelector, source, selector, cancellation);
 
         public static ValueTask<double> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, long>> selector, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, double>(MethodInfos.Queryable.AverageWithInt64Selector, source, selector, cancellation);
+            => ExecuteAsync<TSource, double>(MethodInfos.Queryable.AverageInt64WithSelector, source, selector, cancellation);
 
         public static ValueTask<double?> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, double?>(MethodInfos.Queryable.AverageWithNullableInt64Selector, source, selector, cancellation);
+            => ExecuteAsync<TSource, double?>(MethodInfos.Queryable.AverageNullableInt64WithSelector, source, selector, cancellation);
 
         public static ValueTask<float> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, float>> selector, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, float>(MethodInfos.Queryable.AverageWithSingleSelector, source, selector, cancellation);
+            => ExecuteAsync<TSource, float>(MethodInfos.Queryable.AverageSingleWithSelector, source, selector, cancellation);
 
         public static ValueTask<float?> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, float?>(MethodInfos.Queryable.AverageWithNullableSingleSelector, source, selector, cancellation);
+            => ExecuteAsync<TSource, float?>(MethodInfos.Queryable.AverageNullableSingleWithSelector, source, selector, cancellation);
 
         public static ValueTask<double> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, double>> selector, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, double>(MethodInfos.Queryable.AverageWithDoubleSelector, source, selector, cancellation);
+            => ExecuteAsync<TSource, double>(MethodInfos.Queryable.AverageDoubleWithSelector, source, selector, cancellation);
 
         public static ValueTask<double?> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, double?>(MethodInfos.Queryable.AverageWithNullableDoubleSelector, source, selector, cancellation);
+            => ExecuteAsync<TSource, double?>(MethodInfos.Queryable.AverageNullableDoubleWithSelector, source, selector, cancellation);
 
         public static ValueTask<decimal> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, decimal>(MethodInfos.Queryable.AverageWithDecimalSelector, source, selector, cancellation);
+            => ExecuteAsync<TSource, decimal>(MethodInfos.Queryable.AverageDecimalWithSelector, source, selector, cancellation);
 
         public static ValueTask<decimal?> AverageAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, decimal?>(MethodInfos.Queryable.AverageWithNullableDecimalSelector, source, selector, cancellation);
+            => ExecuteAsync<TSource, decimal?>(MethodInfos.Queryable.AverageNullableDecimalWithSelector, source, selector, cancellation);
 
         /// <summary>Returns an <see cref="IAsyncEnumerable{TSource}" /> which can be enumerated asynchronously.</summary>
         /// <param name="source">An <see cref="IQueryable{TSource}" /> to enumerate.</param>
@@ -355,12 +355,13 @@ namespace Remote.Linq
 
             if (method.IsGenericMethodDefinition)
             {
-                if (method.GetGenericArguments().Length > 2)
+                var genericArgumentCount = method.GetGenericArguments().Length;
+                if (genericArgumentCount > 2)
                 {
                     throw new RemoteLinqException("Implementation error: expected closed generic method definition.");
                 }
 
-                method = method.GetGenericArguments().Length == 2
+                method = genericArgumentCount == 2
                     ? method.MakeGenericMethod(typeof(TSource), typeof(TResult))
                     : method.MakeGenericMethod(typeof(TSource));
             }

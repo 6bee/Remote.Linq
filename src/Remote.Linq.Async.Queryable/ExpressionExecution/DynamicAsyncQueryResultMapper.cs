@@ -10,8 +10,8 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
+    using static MethodInfos;
     using MethodInfo = System.Reflection.MethodInfo;
 
     public class DynamicAsyncQueryResultMapper : DynamicQueryResultMapper
@@ -32,28 +32,25 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
                 var genericTypeArguments = default(Type[]);
                 if (obj?.GetType().Implements(typeof(IAsyncGrouping<,>), out genericTypeArguments) is true)
                 {
-                    obj = _MapGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
+                    obj = MapAsyncGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
                 }
                 else if (obj?.GetType().Implements(typeof(IAsyncEnumerable<>), out genericTypeArguments) is true)
                 {
-                    obj = _MapAsyncEnumerableMethod(genericTypeArguments!).Invoke(null, new[] { obj });
+                    obj = MapAsyncEnumerableMethod(genericTypeArguments!).Invoke(null, new[] { obj });
                 }
 
                 return base.MapToDynamicObjectGraph(obj, setTypeInformation);
             }
         }
 
-        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+        private static readonly MethodInfo _mapAsyncGroupToDynamicObjectGraph = GetMethod<DynamicAsyncQueryResultMapper>(nameof(MapAsyncGroupToDynamicObjectGraph));
+        private static readonly MethodInfo _mapAsyncEnumerable = GetMethod<DynamicAsyncQueryResultMapper>(nameof(MapAsyncEnumerable));
 
-        private static readonly Func<Type[], MethodInfo> _MapGroupToDynamicObjectGraphMethod = genericTypeArguments =>
-             typeof(DynamicAsyncQueryResultMapper)
-                 .GetMethod(nameof(MapAsyncGroupToDynamicObjectGraph), PrivateStatic)
-                 .MakeGenericMethod(genericTypeArguments);
+        private static readonly Func<Type[], MethodInfo> MapAsyncGroupToDynamicObjectGraphMethod =
+            genericArguments => _mapAsyncGroupToDynamicObjectGraph.MakeGenericMethod(genericArguments);
 
-        private static readonly Func<Type[], MethodInfo> _MapAsyncEnumerableMethod = genericTypeArguments =>
-             typeof(DynamicAsyncQueryResultMapper)
-                 .GetMethod(nameof(MapAsyncEnumerable), PrivateStatic)
-                 .MakeGenericMethod(genericTypeArguments);
+        private static readonly Func<Type[], MethodInfo> MapAsyncEnumerableMethod =
+            genericArguments => _mapAsyncEnumerable.MakeGenericMethod(genericArguments);
 
         private static AsyncEnumerable<T> MapAsyncEnumerable<T>(IAsyncEnumerable<T> source)
             => source is AsyncEnumerable<T> asyncEnumerable

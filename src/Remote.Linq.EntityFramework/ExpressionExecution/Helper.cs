@@ -4,37 +4,64 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 {
     using System;
     using System.Data.Entity;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
+    using static MethodInfos;
 
     internal static class Helper
     {
-        private const BindingFlags PublicStatic = BindingFlags.Public | BindingFlags.Static;
+        /// <summary>
+        /// Type definition used in generic type filters.
+        /// </summary>
+        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+        private sealed class TSource
+        {
+            private TSource()
+            {
+            }
+        }
 
-        private static readonly MethodInfo _toListAsync = typeof(QueryableExtensions)
-            .GetMethods(PublicStatic)
-            .Where(m => string.Equals(m.Name, nameof(QueryableExtensions.ToListAsync), StringComparison.Ordinal))
-            .Where(m => m.IsGenericMethodDefinition && m.GetParameters().Length == 2)
-            .Single();
+        /// <summary>
+        /// Type definition used in generic type filters.
+        /// </summary>
+        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+        private sealed class TEntity
+        {
+            private TEntity()
+            {
+            }
+        }
 
-        private static readonly MethodInfo DbContextSetMethod = typeof(DbContext)
-            .GetMethods()
-            .Single(x => x.Name == nameof(DbContext.Set) && x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 0);
+        private static readonly MethodInfo QueryableToListAsyncMethod = GetMethod(
+            typeof(QueryableExtensions),
+            nameof(QueryableExtensions.ToListAsync),
+            new[] { typeof(TSource) },
+            typeof(IQueryable<TSource>),
+            typeof(CancellationToken));
+
+        private static readonly MethodInfo DbContextSetMethod = GetMethod<DbContext>(
+            nameof(DbContext.Set),
+            new[] { typeof(TEntity) });
 
         internal static Task ToListAsync(IQueryable source, CancellationToken cancellation)
-            => (Task)_toListAsync
-            .MakeGenericMethod(source.ElementType)
-            .Invoke(null, new object[] { source, cancellation });
+        {
+            source.AssertNotNull(nameof(source));
+            var method = QueryableToListAsyncMethod.MakeGenericMethod(source.ElementType);
+            var task = method.Invoke(null, new object[] { source, cancellation });
+            return (Task)task!;
+        }
 
         /// <summary>
         /// Returns the generic <see cref="DbSet{T}"/> for the type specified.
         /// </summary>
         /// <returns>Returns an instance of type <see cref="DbSet{T}"/>.</returns>
         [SecuritySafeCritical]
-        internal static Func<Type, IQueryable> GetQueryableSetProvider(this DbContext dbContext) => new QueryableSetProvider(dbContext).GetQueryableSet;
+        internal static Func<Type, IQueryable> GetQueryableSetProvider(this DbContext dbContext)
+            => new QueryableSetProvider(dbContext).GetQueryableSet;
 
         [SecuritySafeCritical]
         private sealed class QueryableSetProvider
@@ -43,16 +70,14 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 
             [SecuritySafeCritical]
             public QueryableSetProvider(DbContext dbContext)
-            {
-                _dbContext = dbContext;
-            }
+                => _dbContext = dbContext.CheckNotNull(nameof(dbContext));
 
             [SecuritySafeCritical]
             public IQueryable GetQueryableSet(Type type)
             {
                 var method = DbContextSetMethod.MakeGenericMethod(type);
                 var set = method.Invoke(_dbContext, null);
-                return (IQueryable)set;
+                return (IQueryable)set!;
             }
         }
     }

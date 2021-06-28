@@ -52,9 +52,9 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 
                 if (queryResultType.Implements(typeof(ValueTask<>), out genericArguments))
                 {
-                    var m = typeof(ValueTask<>).MakeGenericType(genericArguments).GetMethod(nameof(ValueTask<int>.AsTask));
-                    queryResult = m.Invoke(queryResult, null);
-                    queryResultType = queryResult.GetType();
+                    var m = typeof(ValueTask<>).MakeGenericType(genericArguments).GetMethod(nameof(ValueTask<int>.AsTask)) !;
+                    queryResult = m.Invoke(queryResult, null) !;
+                    queryResultType = queryResult!.GetType();
                 }
 
                 if (queryResultType.Implements(typeof(Task<>), out genericArguments))

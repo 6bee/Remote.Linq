@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\Remote.Linq\MethodInfos.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
   </ItemGroup>

@@ -76,6 +76,6 @@ namespace Remote.Linq.Newtonsoft.Json.ContractResolvers
             && type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
 
         private static JsonConverter CreateObjectConverter(Type type, KnownTypesRegistry knownTypeRegistry)
-            => (JsonConverter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(type), knownTypeRegistry);
+            => (JsonConverter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(type), knownTypeRegistry) !;
     }
 }

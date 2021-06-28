@@ -54,7 +54,7 @@ namespace Remote.Linq
             {
                 if (expression is SystemLinq.MethodCallExpression methodCallExpression &&
                     methodCallExpression.Method.IsGenericMethod &&
-                    methodCallExpression.Method.GetGenericMethodDefinition() == MethodInfos.QueryFuntion.Include)
+                    methodCallExpression.Method.GetGenericMethodDefinition() == MethodInfos.QueryFunction.Include)
                 {
                     return false;
                 }

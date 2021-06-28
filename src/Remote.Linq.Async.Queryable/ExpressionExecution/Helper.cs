@@ -6,30 +6,39 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using System.Collections.Generic;
     using System.Reflection;
     using System.Threading.Tasks;
+    using static MethodInfos;
 
     internal static class Helper
     {
-        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+        private static readonly MethodInfo _toSingleElementStreamMethod = GetMethod(typeof(Helper), nameof(ToSingleElementStream));
+        private static readonly MethodInfo _mapAsyncEnumerableMethod = GetMethod(typeof(Helper), nameof(MapAsyncEnumerableInternal));
+        private static readonly MethodInfo _mapTaskAsyncMethod = GetMethod(typeof(Helper), nameof(MapAsyncResultInternal));
 
-        private static readonly MethodInfo _toSingleElementStreamMethodInfo = typeof(Helper).GetMethod(nameof(ToSingleElementStream), PrivateStatic);
-        private static readonly MethodInfo _mapAsyncEnumerableMethodInfo = typeof(Helper).GetMethod(nameof(MapAsyncEnumerableInternal), PrivateStatic);
-        private static readonly MethodInfo _mapTaskAsyncMethodInfo = typeof(Helper).GetMethod(nameof(MapAsyncResultInternal), PrivateStatic);
+        private static readonly Func<Type, MethodInfo> ToSingleElementStreamMethod = args => _toSingleElementStreamMethod.MakeGenericMethod(args);
+        private static readonly Func<Type, MethodInfo> MapAsyncEnumerableMethod = args => _mapAsyncEnumerableMethod.MakeGenericMethod(args);
+        private static readonly Func<Type, MethodInfo> MapTaskAsyncMethod = args => _mapTaskAsyncMethod.MakeGenericMethod(args);
 
         public static IAsyncEnumerable<object?> TaskResultToSingleElementStream(object task, Type resultType)
-            => (IAsyncEnumerable<object?>)_toSingleElementStreamMethodInfo
-            .MakeGenericMethod(resultType)
-            .Invoke(null, new[] { task });
+        {
+            task.AssertNotNull(nameof(task));
+            resultType.AssertNotNull(nameof(resultType));
+            var result = ToSingleElementStreamMethod(resultType).Invoke(null, new[] { task });
+            return (IAsyncEnumerable<object?>)result!;
+        }
 
         private static async IAsyncEnumerable<object?> ToSingleElementStream<T>(Task<T> task)
         {
+            task.AssertNotNull(nameof(task));
             var result = await task.ConfigureAwait(false);
             yield return result;
         }
 
         public static IAsyncEnumerable<object?> MapAsyncEnumerable(object asyncEnumerable, Type itemType)
-            => (IAsyncEnumerable<object?>)_mapAsyncEnumerableMethodInfo
-            .MakeGenericMethod(itemType)
-            .Invoke(null, new[] { asyncEnumerable });
+        {
+            itemType.AssertNotNull(nameof(itemType));
+            var result = MapAsyncEnumerableMethod(itemType).Invoke(null, new[] { asyncEnumerable });
+            return (IAsyncEnumerable<object?>)result!;
+        }
 
         private static async IAsyncEnumerable<object?> MapAsyncEnumerableInternal<T>(IAsyncEnumerable<T> asyncEnumerable)
         {
@@ -44,8 +53,10 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 
         public static ValueTask<object?> MapTaskResultAsync(object task, Type resultType)
         {
-            var method = _mapTaskAsyncMethodInfo.MakeGenericMethod(resultType);
-            return (ValueTask<object?>)method.Invoke(null, new[] { task });
+            task.AssertNotNull(nameof(task));
+            resultType.AssertNotNull(nameof(resultType));
+            var result = MapTaskAsyncMethod(resultType).Invoke(null, new[] { task });
+            return (ValueTask<object?>)result!;
         }
 
         private static async ValueTask<object?> MapAsyncResultInternal<T>(Task<T> task)

@@ -14,17 +14,17 @@ namespace Remote.Linq.Tests.AsyncQueryableExtensions
 
     public abstract class When_using_async_remote_operations
     {
-        public class With_non_async_system_queriable : When_using_async_remote_operations
+        public class With_non_async_system_queryable : When_using_async_remote_operations
         {
             protected override IQueryable<int> Queryable => Source.AsQueryable();
         }
 
-        public class With_non_async_remote_queriable : When_using_async_remote_operations
+        public class With_non_async_remote_queryable : When_using_async_remote_operations
         {
             protected override IQueryable<int> Queryable => RemoteQueryable.Factory.CreateQueryable<int>(x => x.Execute(t => Source.AsQueryable()));
         }
 
-        public class With_async_remote_queriable : When_using_async_remote_operations
+        public class With_async_remote_queryable : When_using_async_remote_operations
         {
             protected override IQueryable<int> Queryable => RemoteQueryable.Factory.CreateAsyncQueryable<int>(x => new ValueTask<DynamicObject>(x.Execute(t => Source.AsQueryable())));
         }
@@ -55,6 +55,14 @@ namespace Remote.Linq.Tests.AsyncQueryableExtensions
             var result = await Queryable.AverageAsync().ConfigureAwait(false);
 
             result.ShouldBe(Source.Average());
+        }
+
+        [Fact]
+        public async Task Should_allow_SumAsync()
+        {
+            var result = await Queryable.SumAsync().ConfigureAwait(false);
+
+            result.ShouldBe(Source.Sum());
         }
 
         [Fact]

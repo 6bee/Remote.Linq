@@ -56,7 +56,7 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 
             if (queryResult is not null && queryResult.GetType().Implements(typeof(ValueTask<>), out var genericArguments))
             {
-                var m = typeof(ValueTask<>).MakeGenericType(genericArguments!).GetMethod(nameof(ValueTask<int>.AsTask));
+                var m = typeof(ValueTask<>).MakeGenericType(genericArguments!).GetMethod(nameof(ValueTask<int>.AsTask)) !;
                 queryResult = m.Invoke(queryResult, null);
             }
 
@@ -103,8 +103,8 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
             return TaskResultProperty(resultType).GetValue(task);
         }
 
-        private static System.Reflection.PropertyInfo TaskResultProperty(Type resultType) =>
-            typeof(Task<>).MakeGenericType(resultType)
-                .GetProperty(nameof(Task<object?>.Result));
+        private static System.Reflection.PropertyInfo TaskResultProperty(Type resultType)
+            => typeof(Task<>).MakeGenericType(resultType)
+            .GetProperty(nameof(Task<object?>.Result)) !;
     }
 }

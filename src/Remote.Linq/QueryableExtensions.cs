@@ -143,7 +143,7 @@ namespace Remote.Linq
 
             if (queryable is IRemoteQueryable<T>)
             {
-                var methodInfo = MethodInfos.QueryFuntion.Include.MakeGenericMethod(typeof(T));
+                var methodInfo = MethodInfos.QueryFunction.Include.MakeGenericMethod(typeof(T));
                 var parameter1 = queryable.Expression;
                 var parameter2 = Expression.Constant(navigationPropertyPath);
                 var methodCallExpression = Expression.Call(methodInfo, parameter1, parameter2);

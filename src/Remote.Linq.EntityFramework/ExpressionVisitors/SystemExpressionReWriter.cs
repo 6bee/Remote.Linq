@@ -44,7 +44,7 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
                     var argument = node.Arguments.Single();
                     return Expression.MemberInit(
                         Expression.New(type),
-                        Expression.Bind(type.GetProperty(nameof(VariableQueryArgument<object>.Value)), argument));
+                        Expression.Bind(type.GetProperty(nameof(VariableQueryArgument<object>.Value)) !, argument));
                 }
 
                 if (type == typeof(VariableQueryArgument) &&
@@ -56,7 +56,7 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
                     // Note: optional second type argument is omitted since it would not be supported by EF anyway
                     return Expression.MemberInit(
                         Expression.New(type),
-                        Expression.Bind(type.GetProperty(nameof(VariableQueryArgument.Value)), valueArgument));
+                        Expression.Bind(type.GetProperty(nameof(VariableQueryArgument.Value)) !, valueArgument));
                 }
 
                 return VisitNew(node);
