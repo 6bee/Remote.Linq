@@ -22,6 +22,7 @@
       </DataCollector>
     </DataCollectors>
   </DataCollectionRunSettings>
+  <!--
   <InProcDataCollectionRunSettings>
     <InProcDataCollectors>
       <InProcDataCollector
@@ -31,4 +32,5 @@
         codebase="coverlet.collector.dll" />
     </InProcDataCollectors>
   </InProcDataCollectionRunSettings>
+  -->
 </RunSettings>

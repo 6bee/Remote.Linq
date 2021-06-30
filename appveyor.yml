@@ -15,8 +15,6 @@ environment:
 
 before_build:
   - dotnet --info
-  - dotnet restore Remote.Linq.sln
-  - dotnet restore Remote.Linq.Samples.sln
   - dotnet tool install --global codecov.tool
 
 build_script:
@@ -24,10 +22,10 @@ build_script:
   - dotnet build Remote.Linq.Samples.sln
 
 test_script:
-  - dotnet test test/Remote.Linq.Tests                     --collect:"XPlat Code Coverage" --settings coverlet.runsettings
-  - dotnet test test/Remote.Linq.Async.Queryable.Tests     --collect:"XPlat Code Coverage" --settings coverlet.runsettings
-  - dotnet test test/Remote.Linq.EntityFramework.Tests     --collect:"XPlat Code Coverage" --settings coverlet.runsettings
-  - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+  - dotnet test test/Remote.Linq.Tests                     --settings coverlet.runsettings
+  - dotnet test test/Remote.Linq.Async.Queryable.Tests     --settings coverlet.runsettings
+  - dotnet test test/Remote.Linq.EntityFramework.Tests     --settings coverlet.runsettings
+  - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests --settings coverlet.runsettings
 
 after_test:
   - codecov -f **\coverage.cobertura.xml
