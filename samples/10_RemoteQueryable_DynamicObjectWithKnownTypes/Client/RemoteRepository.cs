@@ -34,7 +34,7 @@ namespace Client
 
         public IQueryable<ProductCategory> ProductCategories => RemoteQueryable.Factory.CreateQueryable<ProductCategory>(_dataProvider, _context);
 
-        public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateQueryable<ProductGroup>(_dataProvider);
+        public IQueryable<ProductGroup> ProductGroups => RemoteQueryable.Factory.CreateQueryable<ProductGroup>(_dataProvider, _context);
 
         public IQueryable<Product> Products => RemoteQueryable.Factory.CreateQueryable<Product>(_dataProvider, _context);
 

@@ -16,8 +16,15 @@ namespace Remote.Linq
 
     public class ExpressionTranslatorContext : IExpressionTranslatorContext
     {
-        private sealed class IsKnownTypeProvider : IIsKnownTypeProvider
+        private sealed class IsKnownTypeProviderDecorator : IIsKnownTypeProvider
         {
+            private readonly Func<Type, bool> _parent;
+
+            public IsKnownTypeProviderDecorator(IIsKnownTypeProvider? parent)
+                => _parent = parent is null
+                ? _ => false
+                : parent.IsKnownType;
+
             public bool IsKnownType(Type type)
             {
                 if (_isPrimitiveType(type))
@@ -26,6 +33,11 @@ namespace Remote.Linq
                 }
 
                 if (IsUnmappedType(type))
+                {
+                    return true;
+                }
+
+                if (_parent(type))
                 {
                     return true;
                 }
@@ -96,8 +108,8 @@ namespace Remote.Linq
                 typeof(System.Numerics.Complex),
             }
             .SelectMany(x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
-            .ToDictionary(x => x, x => (object?)null)
-            .ContainsKey;
+            .ToHashSet()
+            .Contains;
 
         private static readonly Type[] _unmappedTypes = new[]
             {
@@ -148,7 +160,7 @@ namespace Remote.Linq
                 0,
                 typeResolver ?? Aqua.TypeSystem.TypeResolver.Instance,
                 typeInfoProvider ?? new TypeInfoProvider(false, false),
-                isKnownTypeProvider ?? new IsKnownTypeProvider(),
+                new IsKnownTypeProviderDecorator(isKnownTypeProvider),
                 canBeEvaluatedLocally,
                 valueMapper)
         {

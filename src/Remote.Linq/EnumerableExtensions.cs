@@ -48,5 +48,10 @@ namespace Remote.Linq
             => enumerable
             .AsQueryable()
             .ApplyQuery(query, expressionVisitor);
+
+#if NETSTANDARD2_0
+        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source)
+            => new HashSet<T>(source);
+#endif // NETSTANDARD2_0
     }
 }
