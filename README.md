@@ -1,4 +1,7 @@
 # Remote.Linq
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/261f2b106c66492688c658c510bbe0cd)](https://app.codacy.com/gh/6bee/Remote.Linq?utm_source=github.com&utm_medium=referral&utm_content=6bee/Remote.Linq&utm_campaign=Badge_Grade_Settings)
+
 | branch | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy            | CodeFactor             | License                     |
 | ---    | ---                              | ---                            | ---                | ---               | ---                    | ---                         |
 | `main` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
