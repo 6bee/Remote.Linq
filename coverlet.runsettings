@@ -22,4 +22,13 @@
       </DataCollector>
     </DataCollectors>
   </DataCollectionRunSettings>
+  <InProcDataCollectionRunSettings>
+    <InProcDataCollectors>
+      <InProcDataCollector
+        assemblyQualifiedName="Coverlet.Collector.DataCollection.CoverletInProcDataCollector, coverlet.collector, Version=3.0.0.0, Culture=neutral, PublicKeyToken=4beb1ad7f05a1c71"
+        friendlyName="XPlat Code Coverage"
+        enabled="True"
+        codebase="coverlet.collector.dll" />
+    </InProcDataCollectors>
+  </InProcDataCollectionRunSettings>
 </RunSettings>
