@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua-core" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.14" Condition="$(DefineConstants.Contains('NETFRAMEWORK'))" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.5" Condition="$(DefineConstants.Contains('NETCOREAPP'))" />
   </ItemGroup>
