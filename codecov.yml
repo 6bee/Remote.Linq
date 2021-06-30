@@ -8,3 +8,7 @@ flags:
   test:
     paths:
       - test/
+
+codecov:
+  ci:
+    - appveyor
