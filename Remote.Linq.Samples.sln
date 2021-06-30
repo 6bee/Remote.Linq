@@ -312,6 +312,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\30_R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\30_RemoteQueryable_UsingServiceModelGrpc\Server\Server.csproj", "{D43EC92B-5C31-4576-A9A9-9F66D918D181}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "31_RemoteQueryable_UsingMessagePackSerializationOverTcp", "31_RemoteQueryable_UsingMessagePackSerializationOverTcp", "{C92BA4B1-069E-4A9D-8EA6-F5E5B01FE6C3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\31_RemoteQueryable_UsingMessagePackSerializationOverTcp\Common\Common.csproj", "{45059A9C-B0E4-4C1A-8FD2-0BA966F87F9F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\31_RemoteQueryable_UsingMessagePackSerializationOverTcp\Client\Client.csproj", "{9DFC844E-4284-48FA-9F72-5B8573B1F5B7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\31_RemoteQueryable_UsingMessagePackSerializationOverTcp\Server\Server.csproj", "{157926E3-9097-4330-B4DF-1C7347640C38}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\31_RemoteQueryable_UsingMessagePackSerializationOverTcp\DemoStartUp\DemoStartUp.csproj", "{41E35159-ED90-405D-9D8D-0F04D8BC10A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -734,6 +744,22 @@ Global
 		{D43EC92B-5C31-4576-A9A9-9F66D918D181}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D43EC92B-5C31-4576-A9A9-9F66D918D181}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D43EC92B-5C31-4576-A9A9-9F66D918D181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45059A9C-B0E4-4C1A-8FD2-0BA966F87F9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45059A9C-B0E4-4C1A-8FD2-0BA966F87F9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45059A9C-B0E4-4C1A-8FD2-0BA966F87F9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45059A9C-B0E4-4C1A-8FD2-0BA966F87F9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DFC844E-4284-48FA-9F72-5B8573B1F5B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DFC844E-4284-48FA-9F72-5B8573B1F5B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DFC844E-4284-48FA-9F72-5B8573B1F5B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DFC844E-4284-48FA-9F72-5B8573B1F5B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{157926E3-9097-4330-B4DF-1C7347640C38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{157926E3-9097-4330-B4DF-1C7347640C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{157926E3-9097-4330-B4DF-1C7347640C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{157926E3-9097-4330-B4DF-1C7347640C38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41E35159-ED90-405D-9D8D-0F04D8BC10A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41E35159-ED90-405D-9D8D-0F04D8BC10A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41E35159-ED90-405D-9D8D-0F04D8BC10A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41E35159-ED90-405D-9D8D-0F04D8BC10A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -846,6 +872,10 @@ Global
 		{F51706FD-8911-4B84-AA05-3A76602BDFF2} = {B2D07A88-AED5-4E2A-A1A7-212F4D1F4700}
 		{E84F80C3-0DFB-4374-BF3F-C517DAF8266B} = {B2D07A88-AED5-4E2A-A1A7-212F4D1F4700}
 		{D43EC92B-5C31-4576-A9A9-9F66D918D181} = {B2D07A88-AED5-4E2A-A1A7-212F4D1F4700}
+		{45059A9C-B0E4-4C1A-8FD2-0BA966F87F9F} = {C92BA4B1-069E-4A9D-8EA6-F5E5B01FE6C3}
+		{9DFC844E-4284-48FA-9F72-5B8573B1F5B7} = {C92BA4B1-069E-4A9D-8EA6-F5E5B01FE6C3}
+		{157926E3-9097-4330-B4DF-1C7347640C38} = {C92BA4B1-069E-4A9D-8EA6-F5E5B01FE6C3}
+		{41E35159-ED90-405D-9D8D-0F04D8BC10A3} = {C92BA4B1-069E-4A9D-8EA6-F5E5B01FE6C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7222E3B1-7D71-4663-8F49-6EFBF1019E06}

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Remote.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedCode\CommonHelper.cs" Visible="false" />
+    <Compile Include="..\..\SharedCode\Server.DefaultAsyncQueryService.cs" Link="QueryService.cs" />
+    <Compile Include="..\..\SharedCode\Server.InMemoryDataStore.cs" Link="InMemoryDataStore.cs" />
+    <Compile Include="..\..\SharedCode\Server.TcpServer.cs" Link="TcpServer.cs" />
+  </ItemGroup>
+</Project>
