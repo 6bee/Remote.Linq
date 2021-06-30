@@ -15,7 +15,6 @@ matrix:
 
 before_script:
   - dotnet --info
-  - dotnet tool install --global codecov.tool
 
 script:
   - travis_wait 20 dotnet test test/Remote.Linq.Tests      -c $CONFIGURATION -f net5.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings
@@ -24,4 +23,6 @@ script:
   - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests -c $CONFIGURATION -f net5.0
 
 after_script:
+  - dotnet tool install --global codecov.tool
+  - dotnet tool list --global
   - codecov -f **\coverage.cobertura.xml
