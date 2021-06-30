@@ -6,8 +6,9 @@ namespace DemoStartUp
 
     internal static class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
+            ParseContextArgs(args);
             Title("Xml Serialization over Web API");
             const string host = "localhost";
             const int port = 8089;

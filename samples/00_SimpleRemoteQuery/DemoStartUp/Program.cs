@@ -6,8 +6,9 @@ namespace DemoStartUp
 
     internal static class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
+            ParseContextArgs(args);
             Title("Simple Remote Query [Server]");
             Client.Program.PrintDemoDescription();
 

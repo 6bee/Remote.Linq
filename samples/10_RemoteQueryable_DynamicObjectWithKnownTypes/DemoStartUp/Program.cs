@@ -10,8 +10,9 @@ namespace DemoStartUp
 
     internal static class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
+            ParseContextArgs(args);
             Title("Dynamic Object with known types");
             const string url = "net.pipe://localhost/8080/query";
 

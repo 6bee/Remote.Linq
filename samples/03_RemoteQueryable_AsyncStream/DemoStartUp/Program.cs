@@ -8,8 +8,9 @@ namespace DemoStartUp
 
     internal static class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
+            ParseContextArgs(args);
             Title("Async Stream");
             PrintNote("This demo uses a random delay on server side to simulate data item retrieval/generation via async stream.");
             const string host = "localhost";

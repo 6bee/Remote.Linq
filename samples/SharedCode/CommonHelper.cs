@@ -2,15 +2,22 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 
 internal static class CommonHelper
 {
     private const string TitleBase = "(⌐■_■)  Remote.Linq Demo";
     private const char NewLine = '\n';
+    private static bool _isInteractive = true;
 
     static CommonHelper()
     {
         Console.ForegroundColor = ConsoleColor.White;
+    }
+
+    public static void ParseContextArgs(string[] args)
+    {
+        _isInteractive = args?.Any(x => string.Equals(x, "--non-interactive", StringComparison.OrdinalIgnoreCase)) is not true;
     }
 
     public static void Title(string title)
@@ -101,6 +108,11 @@ internal static class CommonHelper
 
     public static void WaitForEnterKey(string message = "Press <ENTER> to terminate.")
     {
+        if (!_isInteractive)
+        {
+            return;
+        }
+
         if (message != null)
         {
             using (BackgroundColor(ConsoleColor.Yellow))

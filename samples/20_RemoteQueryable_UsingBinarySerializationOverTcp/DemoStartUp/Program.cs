@@ -6,8 +6,9 @@ namespace DemoStartUp
 
     internal static class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
+            ParseContextArgs(args);
             Title("Binary Serialization over TCP/IP");
             const string host = "localhost";
             const int port = 8899;
