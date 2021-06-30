@@ -152,8 +152,8 @@ public TExpression DeepCopy<TExpression>(TExpression expression)
 [4]: https://travis-ci.com/6bee/Remote.Linq?branch=main
 [5]: https://codecov.io/gh/6bee/Remote.Linq/branch/main/graph/badge.svg
 [6]: https://codecov.io/gh/6bee/Remote.Linq
-[7]: https://api.codacy.com/project/badge/Grade/c00e5959612843a78e23d10b4bad44da
-[8]: https://www.codacy.com/manual/6bee/Remote.Linq
+[7]: https://app.codacy.com/project/badge/Grade/e13355ef6833454daa3860963025f270
+[8]: https://www.codacy.com/gh/6bee/Remote.Linq/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=6bee/Remote.Linq&amp;utm_campaign=Badge_Grade
 [9]: https://www.codefactor.io/repository/github/6bee/Remote.Linq/badge
 [10]: https://www.codefactor.io/repository/github/6bee/Remote.Linq
 [11]: https://img.shields.io/github/license/6bee/Remote.Linq.svg
