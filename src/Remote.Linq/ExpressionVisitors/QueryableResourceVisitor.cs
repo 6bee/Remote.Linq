@@ -127,8 +127,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override ConstantExpression VisitConstant(ConstantExpression node)
             {
-                var resourceType = node.CheckNotNull(nameof(node)).Value.AsQueryableResourceTypeOrNull();
-                if (resourceType is not null)
+                if (node.CheckNotNull(nameof(node)).Value.AsQueryableResourceTypeOrNull() is Type resourceType)
                 {
                     var typeInfo = _typeInfoProvider.GetTypeInfo(resourceType);
                     var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
@@ -137,20 +136,18 @@ namespace Remote.Linq.ExpressionVisitors
 
                 if (node.Value is ConstantQueryArgument constantQueryArgument)
                 {
-                    var newConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument.Value);
-                    var properties = newConstantQueryArgument.Value.Properties ?? Enumerable.Empty<Property>();
-                    foreach (var property in properties)
+                    var copy = new DynamicObject(constantQueryArgument.Value);
+                    foreach (var property in copy.Properties.AsEmptyIfNull())
                     {
-                        var valueResourceType = property.Value.AsQueryableResourceTypeOrNull();
-                        if (valueResourceType is not null)
+                        if (property.Value.AsQueryableResourceTypeOrNull() is Type resourceTypePropertyValue)
                         {
-                            var typeInfo = _typeInfoProvider.GetTypeInfo(valueResourceType);
+                            var typeInfo = _typeInfoProvider.GetTypeInfo(resourceTypePropertyValue);
                             var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
                             property.Value = queryableResourceDescriptor;
                         }
                     }
 
-                    return new ConstantExpression(newConstantQueryArgument, node.Type);
+                    return new ConstantExpression(new ConstantQueryArgument(copy), node.Type);
                 }
 
                 if (node.Value is CancellationToken)
