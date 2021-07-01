@@ -74,7 +74,7 @@ namespace Remote.Linq.Async.Queryable.Tests
         private readonly bool _hasStreamProviderSupport;
         private readonly bool _hasDataProviderSupport;
 
-        public When_querying_async(bool createAsyncStreamProvider = true, bool createAsyncDataProvider = true, bool useDynamicObjectConversion = true)
+        protected When_querying_async(bool createAsyncStreamProvider = true, bool createAsyncDataProvider = true, bool useDynamicObjectConversion = true)
         {
             _hasStreamProviderSupport = createAsyncStreamProvider;
             _hasDataProviderSupport = createAsyncDataProvider;

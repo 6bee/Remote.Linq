@@ -14,7 +14,7 @@ namespace Remote.Linq.DynamicQuery
         public DynamicItemMapper(IDynamicObjectMapper? mapper)
             => _mapper = mapper ?? new DynamicQueryResultMapper().ValueMapper;
 
-        public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject? source, Expression expression, CancellationToken cancellationToken)
+        public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject? source, Expression expression, CancellationToken cancellation = default)
             => new ValueTask<TResult>(_mapper.Map<TResult>(source));
     }
 }

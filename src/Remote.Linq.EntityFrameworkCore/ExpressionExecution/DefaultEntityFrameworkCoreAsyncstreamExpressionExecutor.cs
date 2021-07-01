@@ -22,12 +22,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         }
 
         public DefaultEntityFrameworkCoreAsyncStreamExpressionExecutor(Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
-            : this(0, queryableProvider, context ?? new EntityFrameworkCoreExpressionTranslatorContext(), setTypeInformation)
-        {
-        }
-
-        private DefaultEntityFrameworkCoreAsyncStreamExpressionExecutor(int n, Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext context, Func<Type, bool>? setTypeInformation = null)
-            : base(queryableProvider, context)
+            : base(queryableProvider, context ??= new EntityFrameworkCoreExpressionTranslatorContext())
         {
             _mapper = context.ValueMapper;
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());

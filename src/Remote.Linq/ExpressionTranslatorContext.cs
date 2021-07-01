@@ -156,30 +156,13 @@ namespace Remote.Linq
             IIsKnownTypeProvider? isKnownTypeProvider = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
             IDynamicObjectMapper? valueMapper = null)
-            : this(
-                0,
-                typeResolver ?? Aqua.TypeSystem.TypeResolver.Instance,
-                typeInfoProvider ?? new TypeInfoProvider(false, false),
-                new IsKnownTypeProviderDecorator(isKnownTypeProvider),
-                canBeEvaluatedLocally,
-                valueMapper)
         {
-        }
-
-        private ExpressionTranslatorContext(
-            byte n,
-            ITypeResolver typeResolver,
-            ITypeInfoProvider typeInfoProvider,
-            IIsKnownTypeProvider isKnownTypeProvider,
-            Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally,
-            IDynamicObjectMapper? valueMapper)
-        {
-            TypeResolver = typeResolver;
-            TypeInfoProvider = typeInfoProvider;
-            _isKnownTypeProvider = isKnownTypeProvider;
+            TypeResolver = typeResolver ?? Aqua.TypeSystem.TypeResolver.Instance;
+            TypeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
+            _isKnownTypeProvider = new IsKnownTypeProviderDecorator(isKnownTypeProvider);
             CanBeEvaluatedLocally = canBeEvaluatedLocally;
             ValueMapper = valueMapper
-                ?? CreateObjectMapper(typeResolver, typeInfoProvider, isKnownTypeProvider)
+                ?? CreateObjectMapper(TypeResolver, TypeInfoProvider, _isKnownTypeProvider)
                 ?? throw new RemoteLinqException($"Method {nameof(CreateObjectMapper)} must not return null.");
             NeedsMapping = value => !_isKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
         }

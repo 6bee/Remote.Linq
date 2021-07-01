@@ -52,12 +52,13 @@ namespace Remote.Linq.Expressions
             {
             }
 
-            public override string ToString() => Expression.UnaryOperator switch
-            {
-                // TODO: [expression string formatter] add operation specific info/format
-                UnaryOperator.Convert => $"{Expression.UnaryOperator}({Expression.Operand?.DebugFormatter}, {Format(Expression.Type)})",
-                _ => $"{Expression.UnaryOperator}({Expression.Operand?.DebugFormatter})",
-            };
+            public override string ToString()
+                => Expression.UnaryOperator switch
+                {
+                    // TODO: [expression string formatter] add operation specific info/format
+                    UnaryOperator.Convert => $"{Expression.UnaryOperator}({Expression.Operand?.DebugFormatter}, {Format(Expression.Type)})",
+                    _ => $"{Expression.UnaryOperator}({Expression.Operand?.DebugFormatter})",
+                };
         }
     }
 }

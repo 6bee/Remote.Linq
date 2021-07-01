@@ -68,19 +68,16 @@ namespace Remote.Linq.DynamicQuery
                 if (properties?.Count == 1)
                 {
                     var p = properties.Single();
-                    if (string.IsNullOrEmpty(p.Name))
+                    if (string.IsNullOrEmpty(p.Name) && p.Value is object[] objectArray)
                     {
-                        if (p.Value is object[] objectArray)
+                        if (objectArray.Length == 0)
                         {
-                            if (objectArray.Length == 0)
-                            {
-                                return Enumerable.Empty<TResult>();
-                            }
+                            return Enumerable.Empty<TResult>();
+                        }
 
-                            if (objectArray.All(x => x is null || (x is DynamicObject dyn && dyn.IsNull)))
-                            {
-                                return new TResult[objectArray.Length];
-                            }
+                        if (objectArray.All(x => x is null || (x is DynamicObject dyn && dyn.IsNull)))
+                        {
+                            return new TResult[objectArray.Length];
                         }
                     }
                 }
