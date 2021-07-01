@@ -56,7 +56,7 @@ namespace Remote.Linq
         internal static MethodInfo GetMethod(Type declaringType, string name, Type[] genericArguments, params Type[] parameters)
             => GetMethodCore(declaringType, name, x => ParametersMatch(x, genericArguments, parameters), Any);
 
-        private static MethodInfo GetMethodCore(Type declaringType, string name, Func<MethodInfo, bool> filter, BindingFlags bindingFlags = Any)
+        private static MethodInfo GetMethodCore(Type declaringType, string name, Func<MethodInfo, bool> filter, BindingFlags bindingFlags)
         {
             try
             {
