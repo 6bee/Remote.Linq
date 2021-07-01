@@ -111,6 +111,7 @@ namespace Remote.Linq
                 typeof(DateTimeOffset),
                 typeof(System.Numerics.BigInteger),
                 typeof(System.Numerics.Complex),
+                typeof(byte[]),
             }
             .SelectMany(x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
             .ToHashSet()
