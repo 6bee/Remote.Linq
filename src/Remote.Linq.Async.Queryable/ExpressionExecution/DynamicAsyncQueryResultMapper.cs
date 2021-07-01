@@ -13,11 +13,17 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using System.Threading.Tasks;
     using static MethodInfos;
     using MethodInfo = System.Reflection.MethodInfo;
+    using SystemLinq = System.Linq.Expressions;
 
     public class DynamicAsyncQueryResultMapper : DynamicQueryResultMapper
     {
         protected class DynamicAsyncQueryResultObjectMapper : ExpressionTranslatorContextObjectMapper
         {
+            public DynamicAsyncQueryResultObjectMapper(ExpressionTranslatorContext dynamicQueryResultMapper)
+                : base(dynamicQueryResultMapper)
+            {
+            }
+
             public DynamicAsyncQueryResultObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
                 : base(typeResolver, typeInfoProvider, isKnownTypeProvider)
             {
@@ -52,6 +58,16 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
         private static readonly Func<Type[], MethodInfo> MapAsyncEnumerableMethod =
             genericArguments => _mapAsyncEnumerable.MakeGenericMethod(genericArguments);
 
+        public DynamicAsyncQueryResultMapper(
+            ITypeResolver? typeResolver = null,
+            ITypeInfoProvider? typeInfoProvider = null,
+            IIsKnownTypeProvider? isKnownTypeProvider = null,
+            Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
+            : base(typeResolver, typeInfoProvider, isKnownTypeProvider, canBeEvaluatedLocally)
+            => ValueMapper = new DynamicAsyncQueryResultObjectMapper(this);
+
+        public override IDynamicObjectMapper ValueMapper { get; }
+
         private static AsyncEnumerable<T> MapAsyncEnumerable<T>(IAsyncEnumerable<T> source)
             => source is AsyncEnumerable<T> asyncEnumerable
             ? asyncEnumerable
@@ -82,8 +98,5 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 
             return list;
         }
-
-        protected override IDynamicObjectMapper CreateObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
-            => new DynamicAsyncQueryResultObjectMapper(typeResolver, typeInfoProvider, isKnownTypeProvider);
     }
 }

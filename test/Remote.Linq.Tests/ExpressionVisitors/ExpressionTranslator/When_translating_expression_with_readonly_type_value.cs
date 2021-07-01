@@ -64,8 +64,8 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
         {
             private sealed class ObjectMapper : ExpressionTranslatorContextObjectMapper
             {
-                public ObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
-                    : base(typeResolver, typeInfoProvider, isKnownTypeProvider)
+                public ObjectMapper(ExpressionTranslatorContext expressionTranslatorContext)
+                    : base(expressionTranslatorContext)
                 {
                 }
 
@@ -90,8 +90,10 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
                 }
             }
 
-            protected override IDynamicObjectMapper CreateObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
-                => new ObjectMapper(typeResolver, typeInfoProvider, isKnownTypeProvider);
+            public CustomExpressionTranslatorContext()
+                => ValueMapper = new ObjectMapper(this);
+
+            public override IDynamicObjectMapper ValueMapper { get; }
         }
 
         [Fact]

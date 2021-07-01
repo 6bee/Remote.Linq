@@ -55,6 +55,11 @@ namespace Remote.Linq
 
         protected class ExpressionTranslatorContextObjectMapper : DynamicObjectMapper
         {
+            public ExpressionTranslatorContextObjectMapper(ExpressionTranslatorContext expressionTranslatorContext)
+                : base(expressionTranslatorContext.TypeResolver, expressionTranslatorContext.TypeInfoProvider, isKnownTypeProvider: expressionTranslatorContext.IsKnownTypeProvider)
+            {
+            }
+
             public ExpressionTranslatorContextObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
                 : base(typeResolver, typeInfoProvider, isKnownTypeProvider: isKnownTypeProvider)
             {
@@ -129,8 +134,6 @@ namespace Remote.Linq
                 typeof(EnumerableQuery),
             };
 
-        private readonly IIsKnownTypeProvider _isKnownTypeProvider;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTranslatorContext"/> class.
         /// </summary>
@@ -157,35 +160,33 @@ namespace Remote.Linq
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
             IDynamicObjectMapper? valueMapper = null)
         {
+            IsKnownTypeProvider = new IsKnownTypeProviderDecorator(isKnownTypeProvider);
             TypeResolver = typeResolver ?? Aqua.TypeSystem.TypeResolver.Instance;
             TypeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
-            _isKnownTypeProvider = new IsKnownTypeProviderDecorator(isKnownTypeProvider);
             CanBeEvaluatedLocally = canBeEvaluatedLocally;
-            ValueMapper = valueMapper
-                ?? CreateObjectMapper(TypeResolver, TypeInfoProvider, _isKnownTypeProvider)
-                ?? throw new RemoteLinqException($"Method {nameof(CreateObjectMapper)} must not return null.");
-            NeedsMapping = value => !_isKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
+            ValueMapper = valueMapper ?? new ExpressionTranslatorContextObjectMapper(this);
+            NeedsMapping = value => !IsKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
         }
 
-        protected virtual IDynamicObjectMapper CreateObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, IIsKnownTypeProvider isKnownTypeProvider)
-            => new ExpressionTranslatorContextObjectMapper(typeResolver, typeInfoProvider, isKnownTypeProvider);
+        protected IIsKnownTypeProvider IsKnownTypeProvider { get; }
 
         public ITypeResolver TypeResolver { get; }
 
         public ITypeInfoProvider TypeInfoProvider { get; }
 
-        public IDynamicObjectMapper ValueMapper { get; }
+        public virtual IDynamicObjectMapper ValueMapper { get; }
 
         public Func<object, bool> NeedsMapping { get; }
 
         public Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally { get; }
 
         private static Grouping<TKey, TElement> MapGroupToDynamicObjectGraph<TKey, TElement>(IGrouping<TKey, TElement> group)
-            => (group as Grouping<TKey, TElement>) ??
-                new Grouping<TKey, TElement>
-                {
-                    Key = group.Key,
-                    Elements = group.ToArray(),
-                };
+            => group is Grouping<TKey, TElement> grouping
+            ? grouping
+            : new Grouping<TKey, TElement>
+            {
+                Key = group.Key,
+                Elements = group.ToArray(),
+            };
     }
 }

@@ -19,8 +19,13 @@ namespace Remote.Linq.EntityFrameworkCore
         {
         }
 
-        public EntityFrameworkCoreExpressionTranslatorContext(ITypeResolver? typeResolver = null, ITypeInfoProvider? typeInfoProvider = null, IIsKnownTypeProvider? isKnownTypeProvider = null, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            : base(typeResolver, typeInfoProvider, isKnownTypeProvider, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated))
+        public EntityFrameworkCoreExpressionTranslatorContext(
+            ITypeResolver? typeResolver = null,
+            ITypeInfoProvider? typeInfoProvider = null,
+            IIsKnownTypeProvider? isKnownTypeProvider = null,
+            Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
+            IDynamicObjectMapper? valueMapper = null)
+            : base(typeResolver, typeInfoProvider, isKnownTypeProvider, canBeEvaluatedLocally.And(ExpressionEvaluator.CanBeEvaluated), valueMapper)
         {
         }
     }
