@@ -149,12 +149,12 @@ namespace Remote.Linq
                 {
                     exp = new RemoteLinq.ConstantExpression(typeValue.AsTypeInfo(), node.Type);
                 }
-                else if (node.Value is not null && _needsMapping(node.Value))
+                else if (node.Value is object value && _needsMapping(value))
                 {
-                    var key = new { node.Value, node.Type };
+                    var key = new { value, node.Type };
                     if (!_constantQueryArgumentCache.TryGetValue(key, out var constantQueryArgument))
                     {
-                        var dynamicObject = _dynamicObjectMapper.MapObject(node.Value);
+                        var dynamicObject = _dynamicObjectMapper.MapObject(value);
                         var copy = new DynamicObject(dynamicObject.Type ?? _typeInfoProvider.GetTypeInfo(node.Type, false, false));
 
                         foreach (var property in dynamicObject.Properties.AsEmptyIfNull())
