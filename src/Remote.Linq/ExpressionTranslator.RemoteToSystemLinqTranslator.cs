@@ -357,10 +357,12 @@ namespace Remote.Linq
                 {
                     value = typeInfo.ResolveType(_typeResolver);
                 }
-                else if (value is ConstantQueryArgument oldConstantQueryArgument && oldConstantQueryArgument.Type is not null)
+                else if (value is ConstantQueryArgument constantQueryArgument
+                    && constantQueryArgument.Value is DynamicObject dynamicObject
+                    && dynamicObject.Type is not null)
                 {
-                    var newConstantQueryArgument = new ConstantQueryArgument(oldConstantQueryArgument.Type);
-                    foreach (var property in oldConstantQueryArgument.Properties.AsEmptyIfNull())
+                    var copy = new DynamicObject(dynamicObject.Type);
+                    foreach (var property in dynamicObject.Properties.AsEmptyIfNull())
                     {
                         var propertyValue = property.Value;
                         if (propertyValue is RemoteLinq.Expression expressionValue)
@@ -368,10 +370,10 @@ namespace Remote.Linq
                             propertyValue = Visit(expressionValue);
                         }
 
-                        newConstantQueryArgument.Add(property.Name, propertyValue);
+                        copy.Add(property.Name, propertyValue);
                     }
 
-                    value = _dynamicObjectMapper.Map(newConstantQueryArgument, type);
+                    value = _dynamicObjectMapper.Map(copy, type);
                 }
                 else if (value is string && type is not null && type != typeof(string))
                 {

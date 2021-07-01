@@ -14,11 +14,9 @@ namespace Remote.Linq.DynamicQuery
     [DataContract]
     public sealed class VariableQueryArgument<T>
     {
-#nullable disable
         public VariableQueryArgument()
         {
         }
-#nullable restore
 
         public VariableQueryArgument(T value)
         {
@@ -26,7 +24,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
-        public T Value { get; set; }
+        public T Value { get; set; } = default!;
 
         public override string ToString() => $"{new TypeInfo(typeof(VariableQueryArgument<T>))}({Value.QuoteValue()})";
     }

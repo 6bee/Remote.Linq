@@ -24,8 +24,8 @@ namespace Remote.Linq.DynamicQuery
             Type = type.CheckNotNull(nameof(type));
         }
 
-        [DataMember(Name = "Type", Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; } = null!;
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public TypeInfo Type { get; set; } = default!;
 
         public override string ToString() => $"{nameof(QueryableResourceDescriptor)}({Type})";
     }

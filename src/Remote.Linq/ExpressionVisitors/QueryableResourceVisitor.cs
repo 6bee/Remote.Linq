@@ -74,8 +74,8 @@ namespace Remote.Linq.ExpressionVisitors
                 if (value is ConstantQueryArgument constantQueryArgument)
                 {
                     var hasChanged = false;
-                    var tempConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument);
-                    foreach (var property in tempConstantQueryArgument.Properties.AsEmptyIfNull())
+                    var tempConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument.Value);
+                    foreach (var property in tempConstantQueryArgument.Value.Properties.AsEmptyIfNull())
                     {
                         if (TryGetQueryableByQueryableResourceDescriptor(property.Value, out var queryable))
                         {
@@ -137,8 +137,8 @@ namespace Remote.Linq.ExpressionVisitors
 
                 if (node.Value is ConstantQueryArgument constantQueryArgument)
                 {
-                    var newConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument);
-                    var properties = newConstantQueryArgument.Properties ?? Enumerable.Empty<Property>();
+                    var newConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument.Value);
+                    var properties = newConstantQueryArgument.Value.Properties ?? Enumerable.Empty<Property>();
                     foreach (var property in properties)
                     {
                         var valueResourceType = property.Value.AsQueryableResourceTypeOrNull();

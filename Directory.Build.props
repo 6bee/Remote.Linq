@@ -6,7 +6,7 @@
     <MinorVersion>0</MinorVersion>
     <PatchVersion>0</PatchVersion>
     <PreReleaseLabel>alpha-032</PreReleaseLabel>
-    <AquaCoreVersion>5.0.0-alpha-051</AquaCoreVersion>
+    <AquaCoreVersion>5.0.0-alpha-055</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -70,7 +70,7 @@
 
   <ItemGroup>
     <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.0.0" PrivateAssets="all" />
-    <PackageReference Include="aqua.tool.Validation" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="1.1.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

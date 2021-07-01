@@ -9,7 +9,7 @@ namespace Remote.Linq.ProtoBuf.DynamicQuery
     {
         public static AquaTypeModel ConfigureRemoteLinqDynamicQueryTypes(this AquaTypeModel typeModel)
             => typeModel
-            .AddTypeSurrogate<ConstantQueryArgument, ConstantQueryArgumentSurrogate>()
+            .AddType<ConstantQueryArgument>()
             .AddType<QueryableResourceDescriptor>()
             .AddTypeSurrogate<VariableQueryArgument, VariableQueryArgumentSurrogate>()
             .AddTypeSurrogate<VariableQueryArgumentList, VariableQueryArgumentListSurrogate>();

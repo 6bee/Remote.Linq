@@ -96,7 +96,7 @@ namespace Remote.Linq.Tests.ProtoBuf
         {
             SkipUnsupportedDataType(type, value);
 
-            var dynamicObjects = new DynamicObjectMapper().MapCollection(value);
+            var dynamicObjects = new DynamicObjectMapper(new DynamicObjectMapperSettings { WrapNullAsDynamicObject = true }).MapCollection(value);
 
             var config = CreateModelFor(type);
             var copy = dynamicObjects.Serialize(config);

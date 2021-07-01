@@ -155,9 +155,7 @@ namespace Remote.Linq
                     if (!_constantQueryArgumentCache.TryGetValue(key, out var constantQueryArgument))
                     {
                         var dynamicObject = _dynamicObjectMapper.MapObject(node.Value);
-                        constantQueryArgument = new ConstantQueryArgument(dynamicObject.Type ?? _typeInfoProvider.GetTypeInfo(node.Type, false, false));
-
-                        _constantQueryArgumentCache.Add(key, constantQueryArgument);
+                        var copy = new DynamicObject(dynamicObject.Type ?? _typeInfoProvider.GetTypeInfo(node.Type, false, false));
 
                         foreach (var property in dynamicObject.Properties.AsEmptyIfNull())
                         {
@@ -167,12 +165,15 @@ namespace Remote.Linq
                                 propertyValue = Visit(expressionValue).UnwrapNullable();
                             }
 
-                            constantQueryArgument.Add(property.Name, propertyValue);
+                            copy.Add(property.Name, propertyValue);
                         }
+
+                        constantQueryArgument = new ConstantQueryArgument(copy);
+                        _constantQueryArgumentCache.Add(key, constantQueryArgument);
                     }
 
-                    exp = node.Type == constantQueryArgument.Type?.ToType()
-                        ? new RemoteLinq.ConstantExpression(constantQueryArgument, constantQueryArgument.Type)
+                    exp = node.Type == constantQueryArgument.Value.Type?.ToType()
+                        ? new RemoteLinq.ConstantExpression(constantQueryArgument, constantQueryArgument.Value.Type)
                         : new RemoteLinq.ConstantExpression(constantQueryArgument, _typeInfoProvider.GetTypeInfo(node.Type));
                 }
                 else

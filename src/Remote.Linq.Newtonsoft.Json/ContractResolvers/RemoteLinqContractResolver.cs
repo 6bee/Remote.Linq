@@ -33,7 +33,6 @@ namespace Remote.Linq.Newtonsoft.Json.ContractResolvers
             _converters = new Dictionary<Type, JsonConverter>
             {
                 { typeof(Expression), new ExpressionConverter(_knownTypeRegistry) },
-                { typeof(ConstantQueryArgument), new ConstantQueryArgumentConverter(_knownTypeRegistry) },
                 { typeof(VariableQueryArgument), new VariableQueryArgumentConverter(_knownTypeRegistry) },
                 { typeof(VariableQueryArgumentList), new VariableQueryArgumentListConverter(_knownTypeRegistry) },
             };

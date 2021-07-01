@@ -2,11 +2,9 @@
 
 namespace Remote.Linq.DynamicQuery
 {
+    using Aqua.Dynamic;
     using System;
     using System.Runtime.Serialization;
-    using System.Xml.Serialization;
-    using DynamicObject = Aqua.Dynamic.DynamicObject;
-    using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
     /// <summary>
     /// This type is used to wrap complex constant query argument values in <see cref="Expressions.ConstantExpression"/>.
@@ -15,26 +13,16 @@ namespace Remote.Linq.DynamicQuery
     [Serializable]
     [DataContract]
     [KnownType(typeof(DynamicObject))]
-    [XmlInclude(typeof(TimeSpan))]
-    public sealed class ConstantQueryArgument : DynamicObject
+    public sealed class ConstantQueryArgument
     {
         public ConstantQueryArgument()
         {
         }
 
-        public ConstantQueryArgument(Type? type)
-            : base(type)
-        {
-        }
+        public ConstantQueryArgument(DynamicObject value)
+            => Value = value.CheckNotNull(nameof(value));
 
-        public ConstantQueryArgument(TypeInfo? type)
-            : base(type)
-        {
-        }
-
-        public ConstantQueryArgument(DynamicObject constantQueryArgument)
-            : base(constantQueryArgument.CheckNotNull(nameof(constantQueryArgument)), true)
-        {
-        }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+        public DynamicObject Value { get; set; } = default!;
     }
 }
