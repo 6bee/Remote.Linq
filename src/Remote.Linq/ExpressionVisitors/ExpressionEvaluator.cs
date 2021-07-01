@@ -92,6 +92,9 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.Quote:
                 case ExpressionType.Throw:
                     return false;
+
+                default:
+                    break;
             }
 
             return true;
