@@ -492,7 +492,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_query_products_filterd_using_local_variables_closure_inline_mix()
         {
-            IEnumerable<int?> listOfIds = new List<int?>() { null, 1, 11, 111 };
+            IEnumerable<int?> listOfIds = new List<int?> { null, 1, 11, 111 };
             int oneId = 10;
             var query =
                 from p in _productQueryable
@@ -515,7 +515,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             result.Length.ShouldBe(4);
         }
 
-        private static readonly IQueryable<int?> __listOfIds = new List<int?>() { null, 1, 11, 111 }.AsQueryable(); // <=== EnumerableQuery
+        private static readonly IQueryable<int?> __listOfIds = new List<int?> { null, 1, 11, 111 }.AsQueryable(); // <=== EnumerableQuery
 
         [Fact]
         public void Should_query_products_filterd_using_local_variables_closure_inline_mix_with_EnumerableQuery2()
@@ -532,7 +532,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_join_remote_query_with_EnumerableQuery()
         {
-            IQueryable<int?> factors = new List<int?>() { null, 1, 2, 3 }.AsQueryable(); // <=== EnumerableQuery
+            IQueryable<int?> factors = new List<int?> { null, 1, 2, 3 }.AsQueryable(); // <=== EnumerableQuery
             var query =
                 from p in _productQueryable.Select(x => x.Price)
                 from f in factors
@@ -541,7 +541,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             result.Length.ShouldBe(5 * 4);
         }
 
-        private static readonly IQueryable<int?> __factors = new List<int?>() { null, 1, 2, 3 }.AsQueryable(); // <=== EnumerableQuery
+        private static readonly IQueryable<int?> __factors = new List<int?> { null, 1, 2, 3 }.AsQueryable(); // <=== EnumerableQuery
 
         [Fact]
         public void Should_join_remote_query_with_EnumerableQuery2()
@@ -754,7 +754,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             Func<Expression, DynamicObject> execute = exp =>
             {
                 Interlocked.Increment(ref count);
-                var dataprovider = new Dictionary<Type, System.Collections.IEnumerable>()
+                var dataprovider = new Dictionary<Type, IEnumerable>
                 {
                     { typeof(Category), new[] { new Category() } },
                     { typeof(Product), new[] { new Product { Id = 0 }, new Product { Id = 1 }, new Product { Id = 2 } } },

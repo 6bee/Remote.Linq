@@ -338,9 +338,7 @@ namespace Remote.Linq.ExpressionVisitors
             private ParameterScope _parameterScope;
 
             public RemoteQueryableVisitor()
-            {
-                _parameterScope = new ParameterScope(this);
-            }
+                => _parameterScope = new ParameterScope(this);
 
             public Expression Simplify(Expression expression) => Visit(expression);
 
