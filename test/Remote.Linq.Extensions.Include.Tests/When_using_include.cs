@@ -5,6 +5,7 @@ namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
     using Aqua.Dynamic;
     using Remote.Linq;
     using Remote.Linq.Expressions;
+    using Remote.Linq.Extensions.Include;
     using Shouldly;
     using System;
     using System.Collections.Generic;

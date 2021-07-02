@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.DynamicQuery
+namespace Remote.Linq.Extensions.Include
 {
+    using Remote.Linq.DynamicQuery;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -15,9 +16,10 @@ namespace Remote.Linq.DynamicQuery
     ///     given such implementations exists with the given linq provider.
     ///   </para>
     /// </summary>
-    public static class QueryFunctions
+    public static class IncludeQueryFunctions
     {
         [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Path argument needed as expression template")]
+        [QueryMarkerFunction]
         public static IQueryable<T> Include<T>(IQueryable<T> queryable, string path) => queryable;
     }
 }

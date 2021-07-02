@@ -7,7 +7,7 @@ namespace Remote.Linq.DynamicQuery
     using System.Threading;
     using System.Threading.Tasks;
 
-    internal sealed class AsyncDynamicResultMapper : IAsyncQueryResultMapper<DynamicObject>
+    public sealed class AsyncDynamicResultMapper : IAsyncQueryResultMapper<DynamicObject>
     {
         private readonly IDynamicObjectMapper? _mapper;
 

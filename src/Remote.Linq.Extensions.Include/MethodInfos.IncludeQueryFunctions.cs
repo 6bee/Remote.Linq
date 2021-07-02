@@ -4,13 +4,13 @@ namespace Remote.Linq
 {
     using System.Reflection;
 
-    internal static partial class MethodInfos
+    partial class MethodInfos
     {
-        internal static class QueryFunction
+        internal static class IncludeQueryFunctions
         {
             internal static readonly MethodInfo Include = GetMethod(
-                typeof(Remote.Linq.DynamicQuery.QueryFunctions),
-                nameof(Remote.Linq.DynamicQuery.QueryFunctions.Include));
+                typeof(Remote.Linq.Extensions.Include.IncludeQueryFunctions),
+                nameof(Remote.Linq.Extensions.Include.IncludeQueryFunctions.Include));
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.DynamicQuery
+namespace Remote.Linq.Extensions.Include
 {
+    using Remote.Linq.DynamicQuery;
     using System.Linq.Expressions;
 
     internal class IncludableRemoteQueryable<T, TProperty> : RemoteQueryable<T>, IIncludableRemoteQueryable<T, TProperty>, IStackedIncludableQueryable<T>

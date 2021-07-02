@@ -24,6 +24,7 @@ build_script:
 test_script:
   - dotnet test test/Remote.Linq.Tests                     --settings coverlet.runsettings
   - dotnet test test/Remote.Linq.Async.Queryable.Tests     --settings coverlet.runsettings
+  - dotnet test test/Remote.Linq.Extensions.Include.Tests  --settings coverlet.runsettings
   - dotnet test test/Remote.Linq.EntityFramework.Tests     --settings coverlet.runsettings
   - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests --settings coverlet.runsettings
 

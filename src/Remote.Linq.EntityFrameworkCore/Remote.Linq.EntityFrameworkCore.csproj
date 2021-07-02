@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Remote.Linq.Extensions.Include\Remote.Linq.Extensions.Include.csproj" />
     <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj" />
   </ItemGroup>
 

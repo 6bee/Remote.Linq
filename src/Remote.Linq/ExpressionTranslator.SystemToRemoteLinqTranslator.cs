@@ -53,8 +53,7 @@ namespace Remote.Linq
             private static bool KeepMarkerFunctions(SystemLinq.Expression expression)
             {
                 if (expression is SystemLinq.MethodCallExpression methodCallExpression &&
-                    methodCallExpression.Method.IsGenericMethod &&
-                    methodCallExpression.Method.GetGenericMethodDefinition() == MethodInfos.QueryFunction.Include)
+                    methodCallExpression.Method.GetCustomAttribute<QueryMarkerFunctionAttribute>() is not null)
                 {
                     return false;
                 }

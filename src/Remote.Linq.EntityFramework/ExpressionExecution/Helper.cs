@@ -43,9 +43,10 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
             typeof(IQueryable<TSource>),
             typeof(CancellationToken));
 
-        private static readonly MethodInfo DbContextSetMethod = GetMethod<DbContext>(
+        private static readonly MethodInfo DbContextSetMethod = GetMethod(
+            typeof(DbContext),
             nameof(DbContext.Set),
-            new[] { typeof(TEntity) });
+            genericArguments: new[] { typeof(TEntity) });
 
         internal static Task ToListAsync(IQueryable source, CancellationToken cancellation)
         {

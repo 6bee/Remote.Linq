@@ -8,7 +8,7 @@ namespace Remote.Linq.DynamicQuery
     using Expression = System.Linq.Expressions.Expression;
     using MethodInfo = System.Reflection.MethodInfo;
 
-    internal sealed class RemoteQueryProvider<TSource> : IRemoteQueryProvider
+    public sealed class RemoteQueryProvider<TSource> : IRemoteQueryProvider
     {
         private static readonly MethodInfo _executeMethod = typeof(RemoteQueryProvider<TSource>)
             .GetMethods()

@@ -13,7 +13,7 @@ namespace Remote.Linq.DynamicQuery
     using SystemLinq = System.Linq.Expressions;
 
     [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
-    internal sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
+    public sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
     {
         private static readonly MethodInfo _executeMethod = typeof(AsyncRemoteQueryProvider<TSource>)
             .GetMethods()

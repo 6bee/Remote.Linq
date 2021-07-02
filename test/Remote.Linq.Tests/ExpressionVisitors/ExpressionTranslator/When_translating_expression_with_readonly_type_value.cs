@@ -3,7 +3,6 @@
 namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem;
     using Shouldly;
     using System;
     using System.Linq.Expressions;

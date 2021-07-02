@@ -8,7 +8,7 @@ namespace Remote.Linq.DynamicQuery
     using MethodInfo = System.Reflection.MethodInfo;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    internal static class RemoteQueryProviderExtensions
+    public static class RemoteQueryProviderExtensions
     {
         public static TResult? InvokeAndUnwrap<TResult>(this IRemoteQueryProvider queryProvider, MethodInfo method, Expression expression)
             => method

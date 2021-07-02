@@ -8,7 +8,7 @@ namespace Remote.Linq
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
 
-    static partial class MethodInfos
+    partial class MethodInfos
     {
         internal static class Enumerable
         {

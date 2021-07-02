@@ -7,9 +7,9 @@ namespace Remote.Linq.DynamicQuery
     using System.Linq;
     using System.Linq.Expressions;
 
-    internal class AsyncRemoteStreamQueryable : IOrderedAsyncRemoteStreamQueryable
+    public class AsyncRemoteStreamQueryable : IOrderedAsyncRemoteStreamQueryable
     {
-        internal AsyncRemoteStreamQueryable(Type elementType, IAsyncRemoteStreamProvider provider, Expression? expression)
+        public AsyncRemoteStreamQueryable(Type elementType, IAsyncRemoteStreamProvider provider, Expression? expression)
         {
             ElementType = elementType.CheckNotNull(nameof(elementType));
             Provider = provider.CheckNotNull(nameof(provider));
@@ -30,7 +30,7 @@ namespace Remote.Linq.DynamicQuery
 
         Type IRemoteResource.ResourceType => ElementType;
 
-        internal static Exception QueryOperationNotSupportedException
+        protected internal static Exception QueryOperationNotSupportedException
             => new NotSupportedException(
                 "Async remote stream must be executed as IAsyncEnumerable<T>. " +
                 $"The {nameof(AsyncQueryableExtensions.AsAsyncEnumerable)}() extension method may be used.");

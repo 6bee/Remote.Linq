@@ -6,9 +6,9 @@ namespace Remote.Linq.DynamicQuery
     using System.Linq.Expressions;
     using System.Threading;
 
-    internal sealed class AsyncRemoteStreamQueryable<T> : AsyncRemoteStreamQueryable, IOrderedAsyncRemoteStreamQueryable<T>
+    public sealed class AsyncRemoteStreamQueryable<T> : AsyncRemoteStreamQueryable, IOrderedAsyncRemoteStreamQueryable<T>
     {
-        internal AsyncRemoteStreamQueryable(IAsyncRemoteStreamProvider provider, Expression? expression = null)
+        public AsyncRemoteStreamQueryable(IAsyncRemoteStreamProvider provider, Expression? expression = null)
             : base(typeof(T), provider, expression)
         {
         }

@@ -6,7 +6,7 @@ namespace Remote.Linq
     using System.Linq;
     using System.Reflection;
 
-    internal static partial class MethodInfos
+    partial class MethodInfos
     {
         internal static class GroupingFactory
         {

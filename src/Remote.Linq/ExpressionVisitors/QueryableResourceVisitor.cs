@@ -8,7 +8,6 @@ namespace Remote.Linq.ExpressionVisitors
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
-    using System.Linq;
     using System.Threading;
 
     public static class QueryableResourceVisitor

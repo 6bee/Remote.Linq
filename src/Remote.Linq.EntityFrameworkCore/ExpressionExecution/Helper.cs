@@ -45,9 +45,10 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
             typeof(IQueryable<TSource>),
             typeof(CancellationToken));
 
-        private static readonly MethodInfo _dbContextSetMethod = GetMethod<DbContext>(
+        private static readonly MethodInfo _dbContextSetMethod = GetMethod(
+            typeof(DbContext),
             nameof(DbContext.Set),
-            new[] { typeof(TEntity) });
+            genericArguments: new[] { typeof(TEntity) });
 
         private static readonly MethodInfo _executeAsAsyncStreamMethod =
             GetMethod(typeof(Helper), nameof(ExecuteAsAsyncStream));

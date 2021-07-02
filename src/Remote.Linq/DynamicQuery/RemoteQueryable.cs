@@ -7,9 +7,9 @@ namespace Remote.Linq.DynamicQuery
     using System.Linq;
     using System.Linq.Expressions;
 
-    internal class RemoteQueryable : IOrderedRemoteQueryable
+    public class RemoteQueryable : IOrderedRemoteQueryable
     {
-        internal RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression? expression = null)
+        public RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression? expression = null)
         {
             ElementType = elemntType.CheckNotNull(nameof(elemntType));
             Provider = provider.CheckNotNull(nameof(provider));

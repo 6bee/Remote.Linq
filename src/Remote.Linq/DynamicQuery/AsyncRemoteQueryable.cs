@@ -5,9 +5,9 @@ namespace Remote.Linq.DynamicQuery
     using System;
     using System.Linq.Expressions;
 
-    internal class AsyncRemoteQueryable : RemoteQueryable, IAsyncRemoteQueryable, IOrderedAsyncRemoteQueryable
+    public class AsyncRemoteQueryable : RemoteQueryable, IAsyncRemoteQueryable, IOrderedAsyncRemoteQueryable
     {
-        internal AsyncRemoteQueryable(Type elemntType, IAsyncRemoteQueryProvider provider, Expression? expression = null)
+        public AsyncRemoteQueryable(Type elemntType, IAsyncRemoteQueryProvider provider, Expression? expression = null)
             : base(elemntType, provider, expression)
         {
         }

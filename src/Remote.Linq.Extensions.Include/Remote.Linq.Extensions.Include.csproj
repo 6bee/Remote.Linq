@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Remote linq extensions for include.
+Use this package to apply eager-loading (i.e. using `Include`-expressions).</Description>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <PackageTags>LINQ,expression-tree,lambda,dynamic,remote,remote-query,n-tier,fluent-interface,include</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Remote.Linq\MethodInfos.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -4,13 +4,13 @@ namespace Remote.Linq
 {
     using System.Reflection;
 
-    internal static partial class MethodInfos
+    partial class MethodInfos
     {
         internal static class String
         {
-            internal static readonly MethodInfo StartsWith = typeof(string).GetMethod(nameof(string.StartsWith), new[] { typeof(string) }) !;
-            internal static readonly MethodInfo EndsWith = typeof(string).GetMethod(nameof(string.EndsWith), new[] { typeof(string) }) !;
-            internal static readonly MethodInfo Contains = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) }) !;
+            internal static readonly MethodInfo StartsWith = GetMethod(typeof(string), nameof(string.StartsWith), typeof(string));
+            internal static readonly MethodInfo EndsWith = GetMethod(typeof(string), nameof(string.EndsWith), typeof(string));
+            internal static readonly MethodInfo Contains = GetMethod(typeof(string), nameof(string.Contains), typeof(string));
         }
     }
 }

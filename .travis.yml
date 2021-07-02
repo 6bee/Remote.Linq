@@ -19,5 +19,6 @@ before_script:
 script:
   - travis_wait 20 dotnet test test/Remote.Linq.Tests      -c $CONFIGURATION -f net5.0
   - dotnet test test/Remote.Linq.Async.Queryable.Tests     -c $CONFIGURATION -f net5.0
+  - dotnet test test/Remote.Linq.Extensions.Include.Tests  -c $CONFIGURATION -f net5.0
   - dotnet test test/Remote.Linq.EntityFramework.Tests     -c $CONFIGURATION -f net5.0
   - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests -c $CONFIGURATION -f net5.0

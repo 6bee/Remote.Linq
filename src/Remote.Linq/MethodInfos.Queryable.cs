@@ -9,7 +9,7 @@ namespace Remote.Linq
     using System.Linq.Expressions;
     using System.Reflection;
 
-    internal static partial class MethodInfos
+    partial class MethodInfos
     {
         internal static class Queryable
         {

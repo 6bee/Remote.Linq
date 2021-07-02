@@ -2,9 +2,9 @@
 
 namespace Remote.Linq.EntityFramework.ExpressionVisitors
 {
-    using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
+    using Remote.Linq.Extensions.Include;
     using System;
     using System.ComponentModel;
     using System.Linq;
@@ -32,8 +32,8 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
                 if (node.Instance is null &&
-                    node.Method?.DeclaringType?.ToType() == typeof(QueryFunctions) &&
-                    string.Equals(node.Method?.Name, nameof(QueryFunctions.Include), StringComparison.Ordinal) &&
+                    node.Method?.DeclaringType?.ToType() == typeof(IncludeQueryFunctions) &&
+                    string.Equals(node.Method?.Name, nameof(IncludeQueryFunctions.Include), StringComparison.Ordinal) &&
                     node.Method?.GenericArgumentTypes?.Count == 1 &&
                     node.Arguments?.Count == 2)
                 {
