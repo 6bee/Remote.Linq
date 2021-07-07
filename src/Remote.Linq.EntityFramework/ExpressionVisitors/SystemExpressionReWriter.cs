@@ -48,7 +48,7 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
                         Expression.Bind(type.GetProperty(nameof(VariableQueryArgument<object>.Value)), argument));
                 }
 
-                return VisitNew(node);
+                return base.VisitNew(node);
             }
         }
     }
