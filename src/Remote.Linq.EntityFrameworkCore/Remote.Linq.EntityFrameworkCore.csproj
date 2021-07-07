@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Remote linq extensions for entity framework core. Use this package to apply eager-loading (i.e. using Include-expressions) to EF Core queries or make use of DB functions.</Description>
+    <Description>Remote linq extensions for entity framework core. Use this package to execute remote queries using EF Core.</Description>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageTags>LINQ,expression-tree,lambda,dynamic,remote,remote-query,multi-tier,n-tier,fluent-interface,entity-framework-core,entity-framework,ef-core,ef</PackageTags>
   </PropertyGroup>
