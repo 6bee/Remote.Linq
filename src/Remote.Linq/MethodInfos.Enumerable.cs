@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.TypeExtensions;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -34,58 +35,49 @@ namespace Remote.Linq
                 }
             }
 
-            internal static readonly MethodInfo Cast = GetMethod(
-                typeof(System.Linq.Enumerable),
+            internal static readonly MethodInfo Cast = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.Cast),
                 new[] { typeof(TResult) },
                 typeof(IEnumerable));
 
-            internal static readonly MethodInfo OfType = GetMethod(
-                typeof(System.Linq.Enumerable),
+            internal static readonly MethodInfo OfType = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.OfType),
                 new[] { typeof(TResult) },
                 typeof(IEnumerable));
 
-            internal static readonly MethodInfo ToArray = GetMethod(
-                typeof(System.Linq.Enumerable),
+            internal static readonly MethodInfo ToArray = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.ToArray),
                 new[] { typeof(TSource) },
                 typeof(IEnumerable<TSource>));
 
-            internal static readonly MethodInfo ToList = GetMethod(
-                typeof(System.Linq.Enumerable),
+            internal static readonly MethodInfo ToList = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.ToList),
                 new[] { typeof(TSource) },
                 typeof(IEnumerable<TSource>));
 
-            internal static readonly MethodInfo Contains = GetMethod(
-                typeof(System.Linq.Enumerable),
+            internal static readonly MethodInfo Contains = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.Contains),
                 new[] { typeof(TSource) },
                 typeof(IEnumerable<TSource>),
                 typeof(TSource));
 
-            internal static readonly MethodInfo Single = GetMethod(
-                typeof(System.Linq.Enumerable),
+            internal static readonly MethodInfo Single = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.Single),
                 new[] { typeof(TSource) },
                 typeof(IEnumerable<TSource>));
 
-            internal static readonly MethodInfo SingleWithPredicate = GetMethod(
-                typeof(System.Linq.Enumerable),
+            internal static readonly MethodInfo SingleWithPredicate = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.Single),
                 new[] { typeof(TSource) },
                 typeof(IEnumerable<TSource>),
                 typeof(Func<TSource, bool>));
 
-            internal static readonly MethodInfo SingleOrDefault = GetMethod(
-                typeof(System.Linq.Enumerable),
+            internal static readonly MethodInfo SingleOrDefault = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.SingleOrDefault),
                 new[] { typeof(TSource) },
                 typeof(IEnumerable<TSource>));
 
-            internal static readonly MethodInfo SingleOrDefaultWithPredicate = GetMethod(
-                typeof(System.Linq.Enumerable),
+            internal static readonly MethodInfo SingleOrDefaultWithPredicate = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.SingleOrDefault),
                 new[] { typeof(TSource) },
                 typeof(IEnumerable<TSource>),

@@ -56,13 +56,9 @@ namespace Remote.Linq.ExpressionVisitors
                 SubSelect,
             }
 
-            private static readonly MethodInfo EliminateStackedIncludableQueryableMethodInfo = MethodInfos.GetMethod(
-                typeof(StackedQueryableCleaner),
-                nameof(EliminateStackedIncludableQueryable));
+            private static readonly MethodInfo EliminateStackedIncludableQueryableMethodInfo = typeof(StackedQueryableCleaner).GetMethodEx(nameof(EliminateStackedIncludableQueryable));
 
-            private static readonly MethodInfo SubselectStackedIncludableQueryableMethodInfo = MethodInfos.GetMethod(
-                typeof(StackedQueryableCleaner),
-                nameof(SubselectStackedIncludableQueryable));
+            private static readonly MethodInfo SubselectStackedIncludableQueryableMethodInfo = typeof(StackedQueryableCleaner).GetMethodEx(nameof(SubselectStackedIncludableQueryable));
 
             private readonly Strategy _strategy;
 
@@ -111,17 +107,11 @@ namespace Remote.Linq.ExpressionVisitors
 
         private sealed class QueryMethodMapper : RemoteExpressionVisitorBase
         {
-            private static readonly MethodInfo IncludeMethodInfo = MethodInfos.GetMethod(
-                typeof(QueryMethodMapper),
-                nameof(Include));
+            private static readonly MethodInfo IncludeMethodInfo = typeof(QueryMethodMapper).GetMethodEx(nameof(Include));
 
-            private static readonly MethodInfo ThenIncludeAfterReferenceMethodInfo = MethodInfos.GetMethod(
-                typeof(QueryMethodMapper),
-                nameof(ThenIncludeAfterReference));
+            private static readonly MethodInfo ThenIncludeAfterReferenceMethodInfo = typeof(QueryMethodMapper).GetMethodEx(nameof(ThenIncludeAfterReference));
 
-            private static readonly MethodInfo ThenIncludeAfterEnumerableMethodInfo = MethodInfos.GetMethod(
-                typeof(QueryMethodMapper),
-                nameof(ThenIncludeAfterEnumerable));
+            private static readonly MethodInfo ThenIncludeAfterEnumerableMethodInfo = typeof(QueryMethodMapper).GetMethodEx(nameof(ThenIncludeAfterEnumerable));
 
             private readonly Func<Type, MethodInfo> _stringIncludeMethodInfo;
 

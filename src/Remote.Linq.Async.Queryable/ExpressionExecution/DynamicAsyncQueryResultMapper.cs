@@ -11,7 +11,6 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using static MethodInfos;
     using MethodInfo = System.Reflection.MethodInfo;
     using SystemLinq = System.Linq.Expressions;
 
@@ -49,8 +48,8 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
             }
         }
 
-        private static readonly MethodInfo _mapAsyncGroupToDynamicObjectGraph = GetMethod(typeof(DynamicAsyncQueryResultMapper), nameof(MapAsyncGroupToDynamicObjectGraph));
-        private static readonly MethodInfo _mapAsyncEnumerable = GetMethod(typeof(DynamicAsyncQueryResultMapper), nameof(MapAsyncEnumerable));
+        private static readonly MethodInfo _mapAsyncGroupToDynamicObjectGraph = typeof(DynamicAsyncQueryResultMapper).GetMethodEx(nameof(MapAsyncGroupToDynamicObjectGraph));
+        private static readonly MethodInfo _mapAsyncEnumerable = typeof(DynamicAsyncQueryResultMapper).GetMethodEx(nameof(MapAsyncEnumerable));
 
         private static readonly Func<Type[], MethodInfo> MapAsyncGroupToDynamicObjectGraphMethod =
             genericArguments => _mapAsyncGroupToDynamicObjectGraph.MakeGenericMethod(genericArguments);

@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Remote.Linq\MethodInfos.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Remote.Linq.Extensions.Include\Remote.Linq.Extensions.Include.csproj" />
     <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj" />
   </ItemGroup>

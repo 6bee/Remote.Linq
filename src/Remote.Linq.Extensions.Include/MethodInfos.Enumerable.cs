@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.TypeExtensions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -33,8 +34,7 @@ namespace Remote.Linq
                 }
             }
 
-            internal static readonly MethodInfo SelectMethodInfo = GetMethod(
-                typeof(System.Linq.Enumerable),
+            internal static readonly MethodInfo SelectMethodInfo = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.Select),
                 new[] { typeof(TSource), typeof(TResult) },
                 typeof(IEnumerable<TSource>),

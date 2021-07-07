@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.TypeExtensions;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -10,8 +11,8 @@ namespace Remote.Linq
     {
         internal static class GroupingFactory
         {
-            internal static readonly MethodInfo MapMany = GetMethod(typeof(GroupingFactory), nameof(InternalMapMany));
-            internal static readonly MethodInfo MapOne = GetMethod(typeof(GroupingFactory), nameof(InternalMapOne));
+            internal static readonly MethodInfo MapMany = typeof(GroupingFactory).GetMethodEx(nameof(InternalMapMany));
+            internal static readonly MethodInfo MapOne = typeof(GroupingFactory).GetMethodEx(nameof(InternalMapOne));
 
             private static IEnumerable<Grouping<TKey, TElement>> InternalMapMany<TKey, TElement>(IEnumerable<IGrouping<TKey, TElement>> list)
                 => list.Select(InternalMapOne).ToArray();

@@ -11,7 +11,6 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
-    using static MethodInfos;
     using MethodInfo = System.Reflection.MethodInfo;
     using RemoteLinq = Remote.Linq.Expressions;
     using SystemLinq = System.Linq.Expressions;
@@ -19,10 +18,10 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
     public class RemoteLinqAsyncQueryProvider<TSource> : IRemoteLinqAsyncQueryProvider
     {
         private static readonly MethodInfo _mapAsyncEnumerableMethodInfo =
-            GetMethod(typeof(RemoteLinqAsyncQueryProvider<TSource>), nameof(MapAsyncEnumerableInternal));
+            typeof(RemoteLinqAsyncQueryProvider<TSource>).GetMethodEx(nameof(MapAsyncEnumerableInternal));
 
         private static readonly MethodInfo _mapSingleElementStreamMethodInfo =
-            GetMethod(typeof(RemoteLinqAsyncQueryProvider<TSource>), nameof(MapSingleElementStreamInternal));
+            typeof(RemoteLinqAsyncQueryProvider<TSource>).GetMethodEx(nameof(MapSingleElementStreamInternal));
 
         private readonly Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? _asyncStreamProvider;
         private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>>? _asyncDataProvider;

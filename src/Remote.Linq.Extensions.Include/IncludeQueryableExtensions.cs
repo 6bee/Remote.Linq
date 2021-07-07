@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.TypeExtensions;
     using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections;
@@ -49,29 +50,25 @@ namespace Remote.Linq
             }
         }
 
-        public static readonly MethodInfo StringIncludeMethodInfo = MethodInfos.GetMethod(
-            typeof(IncludeQueryableExtensions),
+        public static readonly MethodInfo StringIncludeMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
             nameof(IncludeQueryableExtensions.Include),
             new[] { typeof(T) },
             typeof(IQueryable<T>),
             typeof(string));
 
-        public static readonly MethodInfo IncludeMethodInfo = MethodInfos.GetMethod(
-            typeof(IncludeQueryableExtensions),
+        public static readonly MethodInfo IncludeMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
             nameof(IncludeQueryableExtensions.Include),
             new[] { typeof(T), typeof(TProperty) },
             typeof(IQueryable<T>),
             typeof(Expression<Func<T, TProperty>>));
 
-        public static readonly MethodInfo ThenIncludeAfterEnumerableMethodInfo = MethodInfos.GetMethod(
-            typeof(IncludeQueryableExtensions),
+        public static readonly MethodInfo ThenIncludeAfterEnumerableMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
             nameof(IncludeQueryableExtensions.ThenInclude),
             new[] { typeof(T), typeof(TPreviousProperty), typeof(TProperty) },
             typeof(IIncludableQueryable<T, IEnumerable<TPreviousProperty>>),
             typeof(Expression<Func<TPreviousProperty, TProperty>>));
 
-        public static readonly MethodInfo ThenIncludeAfterReferenceMethodInfo = MethodInfos.GetMethod(
-            typeof(IncludeQueryableExtensions),
+        public static readonly MethodInfo ThenIncludeAfterReferenceMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
             nameof(IncludeQueryableExtensions.ThenInclude),
             new[] { typeof(T), typeof(TPreviousProperty), typeof(TProperty) },
             typeof(IIncludableQueryable<T, TPreviousProperty>),

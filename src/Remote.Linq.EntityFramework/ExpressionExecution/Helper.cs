@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.EntityFramework.ExpressionExecution
 {
+    using Aqua.TypeExtensions;
     using System;
     using System.Data.Entity;
     using System.Diagnostics.CodeAnalysis;
@@ -10,7 +11,6 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
-    using static MethodInfos;
 
     internal static class Helper
     {
@@ -36,15 +36,13 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
             }
         }
 
-        private static readonly MethodInfo QueryableToListAsyncMethod = GetMethod(
-            typeof(QueryableExtensions),
+        private static readonly MethodInfo QueryableToListAsyncMethod = typeof(QueryableExtensions).GetMethodEx(
             nameof(QueryableExtensions.ToListAsync),
             new[] { typeof(TSource) },
             typeof(IQueryable<TSource>),
             typeof(CancellationToken));
 
-        private static readonly MethodInfo DbContextSetMethod = GetMethod(
-            typeof(DbContext),
+        private static readonly MethodInfo DbContextSetMethod = typeof(DbContext).GetMethodEx(
             nameof(DbContext.Set),
             genericArguments: new[] { typeof(TEntity) });
 

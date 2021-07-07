@@ -2,7 +2,7 @@
 
 namespace Remote.Linq.EntityFramework
 {
-    using Remote.Linq;
+    using Aqua.TypeExtensions;
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -33,15 +33,13 @@ namespace Remote.Linq.EntityFramework
             }
         }
 
-        internal static readonly MethodInfo StringIncludeMethodInfo = MethodInfos.GetMethod(
-            typeof(System.Data.Entity.QueryableExtensions),
+        internal static readonly MethodInfo StringIncludeMethodInfo = typeof(System.Data.Entity.QueryableExtensions).GetMethodEx(
             nameof(System.Data.Entity.QueryableExtensions.Include),
             new[] { typeof(T) },
             typeof(IQueryable<T>),
             typeof(string));
 
-        internal static readonly MethodInfo IncludeMethodInfo = MethodInfos.GetMethod(
-            typeof(System.Data.Entity.QueryableExtensions),
+        internal static readonly MethodInfo IncludeMethodInfo = typeof(System.Data.Entity.QueryableExtensions).GetMethodEx(
             nameof(System.Data.Entity.QueryableExtensions.Include),
             new[] { typeof(T), typeof(TProperty) },
             typeof(IQueryable<T>),

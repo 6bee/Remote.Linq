@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.TypeExtensions;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -21,8 +22,7 @@ namespace Remote.Linq
                 }
             }
 
-            internal static readonly MethodInfo Lambda = GetMethod(
-                typeof(System.Linq.Expressions.Expression),
+            internal static readonly MethodInfo Lambda = typeof(System.Linq.Expressions.Expression).GetMethodEx(
                 nameof(System.Linq.Expressions.Expression.Lambda),
                 new[] { typeof(TDelegate) },
                 typeof(System.Linq.Expressions.Expression),

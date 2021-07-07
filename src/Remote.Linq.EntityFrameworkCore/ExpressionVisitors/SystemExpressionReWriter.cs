@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
 {
+    using Aqua.TypeExtensions;
     using Microsoft.EntityFrameworkCore;
     using Remote.Linq;
     using Remote.Linq.ExpressionVisitors;
@@ -62,29 +63,25 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
                     }
                 }
 
-                internal static readonly MethodInfo StringIncludeMethodInfo = MethodInfos.GetMethod(
-                    typeof(EntityFrameworkQueryableExtensions),
+                internal static readonly MethodInfo StringIncludeMethodInfo = typeof(EntityFrameworkQueryableExtensions).GetMethodEx(
                     nameof(EntityFrameworkQueryableExtensions.Include),
                     new[] { typeof(TEntity) },
                     typeof(IQueryable<TEntity>),
                     typeof(string));
 
-                internal static readonly MethodInfo IncludeMethodInfo = MethodInfos.GetMethod(
-                    typeof(EntityFrameworkQueryableExtensions),
+                internal static readonly MethodInfo IncludeMethodInfo = typeof(EntityFrameworkQueryableExtensions).GetMethodEx(
                     nameof(EntityFrameworkQueryableExtensions.Include),
                     new[] { typeof(TEntity), typeof(TProperty) },
                     typeof(IQueryable<TEntity>),
                     typeof(Expression<Func<TEntity, TProperty>>));
 
-                internal static readonly MethodInfo ThenIncludeAfterEnumerableMethodInfo = MethodInfos.GetMethod(
-                    typeof(EntityFrameworkQueryableExtensions),
+                internal static readonly MethodInfo ThenIncludeAfterEnumerableMethodInfo = typeof(EntityFrameworkQueryableExtensions).GetMethodEx(
                     nameof(EntityFrameworkQueryableExtensions.ThenInclude),
                     new[] { typeof(TEntity), typeof(TPreviousProperty), typeof(TProperty) },
                     typeof(Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<TEntity, IEnumerable<TPreviousProperty>>),
                     typeof(Expression<Func<TPreviousProperty, TProperty>>));
 
-                internal static readonly MethodInfo ThenIncludeAfterReferenceMethodInfo = MethodInfos.GetMethod(
-                    typeof(EntityFrameworkQueryableExtensions),
+                internal static readonly MethodInfo ThenIncludeAfterReferenceMethodInfo = typeof(EntityFrameworkQueryableExtensions).GetMethodEx(
                     nameof(EntityFrameworkQueryableExtensions.ThenInclude),
                     new[] { typeof(TEntity), typeof(TPreviousProperty), typeof(TProperty) },
                     typeof(Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<TEntity, TPreviousProperty>),

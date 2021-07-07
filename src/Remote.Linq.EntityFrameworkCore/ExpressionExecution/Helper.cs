@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 {
+    using Aqua.TypeExtensions;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -12,7 +13,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
-    using static MethodInfos;
 
     internal static class Helper
     {
@@ -38,20 +38,17 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
             }
         }
 
-        private static readonly MethodInfo _entityFrameworkQueryableToListAsyncMethod = GetMethod(
-            typeof(EntityFrameworkQueryableExtensions),
+        private static readonly MethodInfo _entityFrameworkQueryableToListAsyncMethod = typeof(EntityFrameworkQueryableExtensions).GetMethodEx(
             nameof(EntityFrameworkQueryableExtensions.ToListAsync),
             new[] { typeof(TSource) },
             typeof(IQueryable<TSource>),
             typeof(CancellationToken));
 
-        private static readonly MethodInfo _dbContextSetMethod = GetMethod(
-            typeof(DbContext),
+        private static readonly MethodInfo _dbContextSetMethod = typeof(DbContext).GetMethodEx(
             nameof(DbContext.Set),
             genericArguments: new[] { typeof(TEntity) });
 
-        private static readonly MethodInfo _executeAsAsyncStreamMethod =
-            GetMethod(typeof(Helper), nameof(ExecuteAsAsyncStream));
+        private static readonly MethodInfo _executeAsAsyncStreamMethod = typeof(Helper).GetMethodEx(nameof(ExecuteAsAsyncStream));
 
         internal static Task ToListAsync(IQueryable source, CancellationToken cancellation)
         {

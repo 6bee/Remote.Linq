@@ -2,17 +2,17 @@
 
 namespace Remote.Linq.Async.Queryable.ExpressionExecution
 {
+    using Aqua.TypeExtensions;
     using System;
     using System.Collections.Generic;
     using System.Reflection;
     using System.Threading.Tasks;
-    using static MethodInfos;
 
     internal static class Helper
     {
-        private static readonly MethodInfo _toSingleElementStreamMethod = GetMethod(typeof(Helper), nameof(ToSingleElementStream));
-        private static readonly MethodInfo _mapAsyncEnumerableMethod = GetMethod(typeof(Helper), nameof(MapAsyncEnumerableInternal));
-        private static readonly MethodInfo _mapTaskAsyncMethod = GetMethod(typeof(Helper), nameof(MapAsyncResultInternal));
+        private static readonly MethodInfo _toSingleElementStreamMethod = typeof(Helper).GetMethodEx(nameof(ToSingleElementStream));
+        private static readonly MethodInfo _mapAsyncEnumerableMethod = typeof(Helper).GetMethodEx(nameof(MapAsyncEnumerableInternal));
+        private static readonly MethodInfo _mapTaskAsyncMethod = typeof(Helper).GetMethodEx(nameof(MapAsyncResultInternal));
 
         private static readonly Func<Type, MethodInfo> ToSingleElementStreamMethod = args => _toSingleElementStreamMethod.MakeGenericMethod(args);
         private static readonly Func<Type, MethodInfo> MapAsyncEnumerableMethod = args => _mapAsyncEnumerableMethod.MakeGenericMethod(args);

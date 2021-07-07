@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.TypeExtensions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -317,7 +318,7 @@ namespace Remote.Linq
                 => GetQueryableMethod(name, new[] { typeof(TSource) }, parameterTypes);
 
             private static MethodInfo GetQueryableMethod(string name, Type[] genericArgumentTypes, params Type[] parameterTypes)
-                => GetMethod(typeof(System.Linq.Queryable), name, genericArgumentTypes, parameterTypes);
+                => typeof(System.Linq.Queryable).GetMethodEx(name, genericArgumentTypes, parameterTypes);
         }
     }
 }
