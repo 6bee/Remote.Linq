@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.TypeExtensions;
     using System;
     using System.Linq;
     using System.Reflection;
@@ -48,7 +49,7 @@ namespace Remote.Linq
             }
             catch (Exception ex)
             {
-                static string TypesToSzring(Type[] types) => string.Join(", ", types.Select(x => x.Name));
+                static string TypesToSzring(Type[] types) => string.Join(", ", types.Select(x => x.PrintFriendlyName(false, false)));
 
                 var genericArgumentString = TypesToSzring(genericArguments);
                 if (!string.IsNullOrEmpty(genericArgumentString))

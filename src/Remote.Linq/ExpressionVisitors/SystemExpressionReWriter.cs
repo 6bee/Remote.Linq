@@ -56,7 +56,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var projectionMethod = MethodInfos.Queryable.Select.MakeGenericMethod(elementType, elementType);
                     var parameter = Expression.Parameter(elementType, "x");
                     var lambda = Expression.Lambda(parameter, parameter);
-                    projection = Expression.Call(null, projectionMethod, expression, lambda);
+                    projection = Expression.Call(projectionMethod, expression, lambda);
                 }
 
                 return Visit(projection);
@@ -132,7 +132,7 @@ namespace Remote.Linq.ExpressionVisitors
                 return node;
             }
 
-            protected override NewExpression VisitNew(NewExpression node)
+            protected override Expression VisitNew(NewExpression node)
             {
                 if (node.Type.IsAnonymousType())
                 {
@@ -352,7 +352,7 @@ namespace Remote.Linq.ExpressionVisitors
                     {
                         var lambda = Expression.Lambda<Func<object>>(node);
                         var value = lambda.Compile()();
-                        if (value is IRemoteResource)
+                        if (value is IRemoteLinqQueryable)
                         {
                             return Expression.Constant(value, node.Type);
                         }

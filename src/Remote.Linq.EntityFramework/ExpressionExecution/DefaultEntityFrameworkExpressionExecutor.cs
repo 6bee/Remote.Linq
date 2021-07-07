@@ -4,7 +4,6 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 {
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
-    using Remote.Linq.DynamicQuery;
     using System;
     using System.Data.Entity;
     using System.Linq;
@@ -28,9 +27,9 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
             Func<Type, IQueryable> queryableProvider,
             IExpressionTranslatorContext? context = null,
             Func<Type, bool>? setTypeInformation = null)
-            : base(queryableProvider, context)
+            : base(queryableProvider, context ??= new EntityFrameworkExpressionTranslatorContext())
         {
-            _mapper = context?.ValueMapper ?? new DynamicQueryResultMapper().ValueMapper;
+            _mapper = context.ValueMapper;
             _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
         }
 

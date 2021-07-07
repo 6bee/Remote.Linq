@@ -10,6 +10,7 @@ namespace Remote.Linq
     [DataContract]
     public class AsyncGrouping<TKey, TElement> : AsyncEnumerable<TElement>, IAsyncGrouping<TKey, TElement>
     {
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public TKey Key { get; set; } = default!;
     }
 }

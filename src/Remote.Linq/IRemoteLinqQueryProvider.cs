@@ -2,7 +2,10 @@
 
 namespace Remote.Linq
 {
-    public interface IIncludableRemoteQueryable<out T, out TProperty> : IRemoteQueryable<T>
+    /// <summary>
+    /// Marker interface for <i>Remote.Linq</i> provider.
+    /// </summary>
+    public interface IRemoteLinqQueryProvider
     {
     }
 }

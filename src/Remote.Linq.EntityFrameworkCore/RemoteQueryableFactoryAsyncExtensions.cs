@@ -152,7 +152,7 @@ namespace Remote.Linq.EntityFrameworkCore
             IAsyncQueryResultMapper<TSource> resultMapper,
             ITypeInfoProvider? typeInfoProvider = null,
             Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => CreateEntityFrameworkCoreAsyncQueryable<TSource>(factory, elementType, dataProvider, resultMapper, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally));
+            => CreateEntityFrameworkCoreAsyncQueryable(factory, elementType, dataProvider, resultMapper, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally));
 
         public static IAsyncRemoteQueryable<T> CreateEntityFrameworkCoreAsyncQueryable<T, TSource>(
             this RemoteQueryableFactory factory,

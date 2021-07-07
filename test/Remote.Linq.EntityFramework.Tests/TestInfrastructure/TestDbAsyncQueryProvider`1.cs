@@ -13,20 +13,24 @@ namespace Remote.Linq.EntityFramework.Tests.TestInfrastructure
         private readonly IQueryProvider _inner;
 
         internal TestDbAsyncQueryProvider(IQueryProvider inner)
-        {
-            _inner = inner;
-        }
+            => _inner = inner;
 
-        public IQueryable CreateQuery(Expression expression) => new TestDbAsyncEnumerable<TEntity>(expression);
+        public IQueryable CreateQuery(Expression expression)
+            => new TestDbAsyncEnumerable<TEntity>(expression);
 
-        public IQueryable<TElement> CreateQuery<TElement>(Expression expression) => new TestDbAsyncEnumerable<TElement>(expression);
+        public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
+            => new TestDbAsyncEnumerable<TElement>(expression);
 
-        public object Execute(Expression expression) => _inner.Execute(expression);
+        public object Execute(Expression expression)
+            => _inner.Execute(expression);
 
-        public TResult Execute<TResult>(Expression expression) => _inner.Execute<TResult>(expression);
+        public TResult Execute<TResult>(Expression expression)
+            => _inner.Execute<TResult>(expression);
 
-        public Task<object> ExecuteAsync(Expression expression, CancellationToken cancellationToken) => Task.FromResult(Execute(expression));
+        public Task<object> ExecuteAsync(Expression expression, CancellationToken cancellationToken)
+            => Task.FromResult(Execute(expression));
 
-        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken) => Task.FromResult(Execute<TResult>(expression));
+        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+            => Task.FromResult(Execute<TResult>(expression));
     }
 }

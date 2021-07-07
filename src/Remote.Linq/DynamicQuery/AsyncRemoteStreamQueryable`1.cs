@@ -13,8 +13,10 @@ namespace Remote.Linq.DynamicQuery
         {
         }
 
-        public IAsyncEnumerable<T> ExecuteAsyncRemoteStream(CancellationToken cancellation = default) => Provider.ExecuteAsyncRemoteStream<T>(Expression, cancellation);
+        public IAsyncEnumerable<T> ExecuteAsyncRemoteStream(CancellationToken cancellation = default)
+            => Provider.ExecuteAsyncRemoteStream<T>(Expression, cancellation);
 
-        public IEnumerator<T> GetEnumerator() => throw QueryOperationNotSupportedException;
+        public IEnumerator<T> GetEnumerator()
+            => throw QueryOperationNotSupportedException;
     }
 }

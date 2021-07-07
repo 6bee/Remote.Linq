@@ -19,6 +19,21 @@ namespace Remote.Linq
 
     partial class ExpressionTranslator
     {
+        /// <summary>
+        /// Function that can be chained with `PartialEval` predicate to prevent local evaluation of <see cref="SystemLinq.MethodCallExpression"/>s
+        /// for methods marked with <see cref="QueryMarkerFunctionAttribute"/>.
+        /// </summary>
+        public static bool KeepQueryMarkerFunctions(SystemLinq.Expression expression)
+        {
+            if (expression is SystemLinq.MethodCallExpression methodCallExpression &&
+                methodCallExpression.Method.GetCustomAttribute<QueryMarkerFunctionAttribute>() is not null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private sealed class SystemToRemoteLinqTranslator : ExpressionVisitorBase
         {
             private readonly Dictionary<SystemLinq.ParameterExpression, RemoteLinq.ParameterExpression> _parameterExpressionCache =
@@ -35,11 +50,11 @@ namespace Remote.Linq
             private readonly ITypeInfoProvider _typeInfoProvider;
             private readonly IDynamicObjectMapper _dynamicObjectMapper;
 
-            public SystemToRemoteLinqTranslator(IExpressionToRemoteLinqContext? expressionTranslatorContext)
+            public SystemToRemoteLinqTranslator(IExpressionToRemoteLinqContext expressionTranslatorContext)
             {
-                expressionTranslatorContext ??= new ExpressionTranslatorContext();
+                expressionTranslatorContext.AssertNotNull(nameof(expressionTranslatorContext));
 
-                _canBeEvaluatedLocally = expressionTranslatorContext.CanBeEvaluatedLocally.And(KeepMarkerFunctions);
+                _canBeEvaluatedLocally = expressionTranslatorContext.CanBeEvaluatedLocally.And(KeepQueryMarkerFunctions);
 
                 _needsMapping = expressionTranslatorContext.NeedsMapping;
 
@@ -50,17 +65,6 @@ namespace Remote.Linq
                     ?? throw new ArgumentException($"{nameof(expressionTranslatorContext.ValueMapper)} property must not be null.", nameof(expressionTranslatorContext));
             }
 
-            private static bool KeepMarkerFunctions(SystemLinq.Expression expression)
-            {
-                if (expression is SystemLinq.MethodCallExpression methodCallExpression &&
-                    methodCallExpression.Method.GetCustomAttribute<QueryMarkerFunctionAttribute>() is not null)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-
             public RemoteLinq.Expression ToRemoteExpression(SystemLinq.Expression expression)
             {
                 var partialEvalExpression = expression.CheckNotNull(nameof(expression)).PartialEval(_canBeEvaluatedLocally);
@@ -68,7 +72,7 @@ namespace Remote.Linq
                 return constExpression.Unwrap();
             }
 
-            [return: NotNullIfNotNull("expression")]
+            [return: NotNullIfNotNull("node")]
             protected override SystemLinq.Expression? Visit(SystemLinq.Expression? node)
                 => node?.NodeType switch
                 {

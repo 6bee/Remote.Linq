@@ -222,7 +222,7 @@ namespace Remote.Linq.ExpressionVisitors
         protected virtual ReadOnlyCollection<T> VisitExpressionList<T>(ReadOnlyCollection<T> list)
             where T : Expression
         {
-            list.CheckNotNull(nameof(list));
+            list.AssertNotNull(nameof(list));
             List<T>? visited = null;
             for (int i = 0, n = list.Count; i < n; i++)
             {
@@ -281,7 +281,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual IEnumerable<MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> list)
         {
-            list.CheckNotNull(nameof(list));
+            list.AssertNotNull(nameof(list));
             List<MemberBinding>? visited = null;
             for (int i = 0, n = list.Count; i < n; i++)
             {
@@ -307,7 +307,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> list)
         {
-            list.CheckNotNull(nameof(list));
+            list.AssertNotNull(nameof(list));
             List<ElementInit>? visited = null;
             for (int i = 0, n = list.Count; i < n; i++)
             {
@@ -342,7 +342,7 @@ namespace Remote.Linq.ExpressionVisitors
             return node;
         }
 
-        protected virtual NewExpression VisitNew(NewExpression node)
+        protected virtual Expression VisitNew(NewExpression node)
         {
             var args = VisitExpressionList(node.CheckNotNull(nameof(node)).Arguments);
             if (args != node.Arguments)
@@ -367,9 +367,9 @@ namespace Remote.Linq.ExpressionVisitors
         {
             var n = VisitNew(node.CheckNotNull(nameof(node)).NewExpression);
             var bindings = VisitBindingList(node.Bindings);
-            if (n != node.NewExpression || bindings != node.Bindings)
+            if (n is NewExpression newExpression && (newExpression != node.NewExpression || bindings != node.Bindings))
             {
-                return Expression.MemberInit(n, bindings);
+                return Expression.MemberInit(newExpression, bindings);
             }
 
             return node;
@@ -379,9 +379,9 @@ namespace Remote.Linq.ExpressionVisitors
         {
             var n = VisitNew(node.CheckNotNull(nameof(node)).NewExpression);
             var initializers = VisitElementInitializerList(node.Initializers);
-            if (n != node.NewExpression || initializers != node.Initializers)
+            if (n is NewExpression newExpression && (newExpression != node.NewExpression || initializers != node.Initializers))
             {
-                return Expression.ListInit(n, initializers);
+                return Expression.ListInit(newExpression, initializers);
             }
 
             return node;

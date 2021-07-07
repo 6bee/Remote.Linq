@@ -4,7 +4,7 @@ namespace Remote.Linq
 {
     using System.Linq;
 
-    public interface IRemoteQueryable : IRemoteResource, IQueryable
+    public interface IRemoteQueryable : IRemoteLinqQueryable, IQueryable
     {
         /// <summary>
         /// Gets the query provider that is associated with this data source.

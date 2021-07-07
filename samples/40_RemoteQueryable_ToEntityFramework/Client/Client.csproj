@@ -8,7 +8,7 @@
     <Compile Remove="Demo - Copy.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Remote.Linq" />
+    <PackageReference Include="Remote.Linq.Extensions.Include" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />

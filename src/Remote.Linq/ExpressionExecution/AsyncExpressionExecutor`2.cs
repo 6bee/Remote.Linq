@@ -35,9 +35,11 @@ namespace Remote.Linq.ExpressionExecution
         /// </returns>
         public async ValueTask<TDataTranferObject> ExecuteAsync(RemoteLinq.Expression expression, CancellationToken cancellation = default)
         {
+            expression.AssertNotNull(nameof(expression));
+
             var ctx = Context;
 
-            var preparedRemoteExpression = Prepare(expression.CheckNotNull(nameof(expression)));
+            var preparedRemoteExpression = Prepare(expression);
             ctx.RemoteExpression = preparedRemoteExpression;
 
             var linqExpression = Transform(preparedRemoteExpression);

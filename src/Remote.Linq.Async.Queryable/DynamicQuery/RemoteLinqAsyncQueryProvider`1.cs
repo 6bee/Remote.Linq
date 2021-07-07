@@ -16,7 +16,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
     using RemoteLinq = Remote.Linq.Expressions;
     using SystemLinq = System.Linq.Expressions;
 
-    internal sealed class RemoteLinqAsyncQueryProvider<TSource> : IRemoteLinqAsyncQueryProvider
+    public class RemoteLinqAsyncQueryProvider<TSource> : IRemoteLinqAsyncQueryProvider
     {
         private static readonly MethodInfo _mapAsyncEnumerableMethodInfo =
             GetMethod(typeof(RemoteLinqAsyncQueryProvider<TSource>), nameof(MapAsyncEnumerableInternal));

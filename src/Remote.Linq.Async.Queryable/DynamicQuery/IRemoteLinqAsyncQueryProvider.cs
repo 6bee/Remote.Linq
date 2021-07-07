@@ -4,7 +4,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
 {
     using System.Linq;
 
-    internal interface IRemoteLinqAsyncQueryProvider : IAsyncQueryProvider
+    public interface IRemoteLinqAsyncQueryProvider : IAsyncQueryProvider, IRemoteLinqQueryProvider
     {
     }
 }

@@ -291,7 +291,7 @@ namespace Remote.Linq
         /// <returns>The query results.</returns>
         public static IAsyncEnumerable<TSource> AsAsyncEnumerable<TSource>(this IQueryable<TSource> source, CancellationToken cancellation = default)
         {
-            source.CheckNotNull(nameof(source));
+            source.AssertNotNull(nameof(source));
 
             if (source is IAsyncEnumerable<TSource> asyncEnumerable)
             {
@@ -351,7 +351,7 @@ namespace Remote.Linq
 
         private static async ValueTask<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, IEnumerable<object?> args, CancellationToken cancellation)
         {
-            source.CheckNotNull(nameof(source));
+            source.AssertNotNull(nameof(source));
 
             if (method.IsGenericMethodDefinition)
             {
@@ -369,7 +369,7 @@ namespace Remote.Linq
             var arguments = new[] { source.Expression }
                 .Concat(args.Select(x => x is Expression exp ? (Expression)Expression.Quote(exp) : Expression.Constant(x)))
                 .ToArray();
-            var methodCallExpression = Expression.Call(null, method, arguments);
+            var methodCallExpression = Expression.Call(method, arguments);
 
             if (source.Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
             {

@@ -105,7 +105,13 @@ namespace Remote.Linq.ExpressionVisitors
 
             if (n != node.NewExpression || bindings != node.Bindings)
             {
-                return new MemberInitExpression(n, bindings);
+                if (n is not NewExpression newExpression)
+                {
+                    throw new InvalidOperationException(
+                        $"{nameof(MemberInitExpression)} can only be created with {nameof(NewExpression)} but got a {n?.GetType().ToString() ?? "null"} instead");
+                }
+
+                return new MemberInitExpression(newExpression, bindings);
             }
 
             return node;
@@ -258,7 +264,7 @@ namespace Remote.Linq.ExpressionVisitors
             return visited ?? list;
         }
 
-        protected virtual NewExpression VisitNew(NewExpression node)
+        protected virtual Expression VisitNew(NewExpression node)
         {
             var args = VisitExpressionList(node.CheckNotNull(nameof(node)).Arguments);
             if (!ReferenceEquals(args, node.Arguments))
@@ -284,9 +290,15 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitListInit(ListInitExpression node)
         {
-            var newExpression = VisitNew(node.CheckNotNull(nameof(node)).NewExpression);
-            if (!ReferenceEquals(newExpression, node.NewExpression))
+            var n = VisitNew(node.CheckNotNull(nameof(node)).NewExpression);
+            if (!ReferenceEquals(n, node.NewExpression))
             {
+                if (n is not NewExpression newExpression)
+                {
+                    throw new InvalidOperationException(
+                        $"{nameof(ListInitExpression)} can only be created with {nameof(NewExpression)} but got a {n?.GetType().ToString() ?? "null"} instead");
+                }
+
                 return new ListInitExpression(newExpression, node.Initializers);
             }
 
@@ -354,7 +366,7 @@ namespace Remote.Linq.ExpressionVisitors
             return node;
         }
 
-        protected virtual ConstantExpression VisitConstant(ConstantExpression node)
+        protected virtual Expression VisitConstant(ConstantExpression node)
             => node;
 
         protected virtual ParameterExpression VisitParameter(ParameterExpression node)

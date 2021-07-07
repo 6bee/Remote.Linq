@@ -14,9 +14,7 @@ namespace Client
         private readonly Func<RemoteRepository> _repoProvider;
 
         public Demo(Func<RemoteRepository> repoProvider)
-        {
-            _repoProvider = repoProvider;
-        }
+            => _repoProvider = repoProvider;
 
         public async Task RunAsync()
         {
@@ -73,8 +71,8 @@ namespace Client
 
             PrintHeader("GET MARKETS WITH APPLES:");
             var marketsWithProducts = repo.Markets
-                .Include(x => x.Products).ThenInclude(x => x.Product)
                 .Where(x => x.Products.Any(r => DbFunctionsExtensions.Like(null, r.Product.Name, "app%")))
+                .Include(x => x.Products.Where(xp => DbFunctionsExtensions.Like(null, xp.Product.Name, "app%"))).ThenInclude(x => x.Product)
                 .ToListAsync()
                 .ConfigureAwait(false);
             foreach (var market in await marketsWithProducts)

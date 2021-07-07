@@ -6,19 +6,22 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading;
+    using System.Threading.Tasks;
 
-    internal sealed class RemoteLinqAsyncQueryable<T> : RemoteLinqAsyncQueryable, IOrderedAsyncQueryable<T>
+    public class RemoteLinqAsyncQueryable<T> : RemoteLinqAsyncQueryable, IOrderedAsyncQueryable<T>
     {
-        internal RemoteLinqAsyncQueryable(IRemoteLinqAsyncQueryProvider provider, Expression? expression = null)
+        public RemoteLinqAsyncQueryable(IRemoteLinqAsyncQueryProvider provider, Expression? expression = null)
             : base(typeof(T), provider, expression)
         {
         }
 
+        public ValueTask<IAsyncEnumerable<T>> ExecuteAsync(CancellationToken cancellation = default)
+            => ((IRemoteLinqAsyncQueryProvider)Provider).ExecuteAsync<IAsyncEnumerable<T>>(Expression, cancellation);
+
         public async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
-            var remoteLinqAsyncQueryProvider = (IRemoteLinqAsyncQueryProvider)Provider;
-            var result = await remoteLinqAsyncQueryProvider.ExecuteAsync<IAsyncEnumerable<T>>(Expression, cancellationToken).ConfigureAwait(false);
-            await foreach (var item in result)
+            var result = await ExecuteAsync(cancellationToken).ConfigureAwait(false);
+            await foreach (var item in result.WithCancellation(cancellationToken))
             {
                 yield return item;
             }

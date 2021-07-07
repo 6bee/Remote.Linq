@@ -4,18 +4,9 @@ namespace Server
 {
     using Common.Model;
     using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Linq;
 
     public class EFContext : DbContext
     {
-        internal IQueryable Set(Type type)
-        {
-            System.Reflection.MethodInfo genericSetMethod = GetType().GetMethods().Single(x => x.Name == "Set" && x.IsGenericMethod).MakeGenericMethod(type);
-
-            return (IQueryable)genericSetMethod.Invoke(this, null);
-        }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);

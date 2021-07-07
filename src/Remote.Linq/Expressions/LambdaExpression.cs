@@ -48,9 +48,8 @@ namespace Remote.Linq.Expressions
         public override string ToString()
         {
             var parameters = Parameters;
-            var open = parameters?.Count == 1 ? null : "(";
-            var close = parameters?.Count == 1 ? null : ")";
-            var parameterList = parameters.StringJoin("; ");
+            var (open, close) = parameters?.Count == 1 ? (null, null) : ("(", ")");
+            var parameterList = parameters.StringJoin(", ");
             return $"{open}{parameterList}{close} => {Expression}";
         }
     }

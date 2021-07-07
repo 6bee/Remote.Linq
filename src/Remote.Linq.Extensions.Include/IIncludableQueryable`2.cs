@@ -2,10 +2,9 @@
 
 namespace Remote.Linq
 {
-    using System;
+    using System.Linq;
 
-    public interface IRemoteResource
+    public interface IIncludableQueryable<out T, out TProperty> : IQueryable<T>
     {
-        Type ResourceType { get; }
     }
 }

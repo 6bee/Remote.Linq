@@ -30,7 +30,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             internal Expression Run(Expression expression) => Visit(expression);
 
-            protected override ConstantExpression VisitConstant(ConstantExpression node)
+            protected override Expression VisitConstant(ConstantExpression node)
             {
                 if (IsGenericVariableQueryArgument(node.CheckNotNull(nameof(node)), out var valueType))
                 {
@@ -109,7 +109,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             internal Expression Run(Expression expression) => Visit(expression);
 
-            protected override ConstantExpression VisitConstant(ConstantExpression node)
+            protected override Expression VisitConstant(ConstantExpression node)
             {
                 if (node.CheckNotNull(nameof(node)).Value is VariableQueryArgument nonGenericQueryArgument)
                 {

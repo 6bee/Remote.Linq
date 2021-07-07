@@ -38,34 +38,35 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(FieldInfo)), XmlInclude(typeof(FieldInfo))]
     [KnownType(typeof(PropertyInfo)), XmlInclude(typeof(PropertyInfo))]
     [KnownType(typeof(MethodInfo)), XmlInclude(typeof(MethodInfo))]
-    [DebuggerDisplay("{DebugFormatter}")]
+    [DebuggerDisplay("{DebugFormatter,nq}")]
     public abstract class Expression
     {
         [Unmapped]
         public abstract ExpressionType NodeType { get; }
 
         [Unmapped]
-        internal string? DebugView => DebugFormatter.ToString(0);
+        internal string DebugView => DebugFormatter.ToString(0);
 
         // TODO: [expression string formatter] make DebugFormatter property abstract and have every expression implement its own formatter
         [Unmapped]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected internal virtual ExpressionDebugFormatter DebugFormatter => new ExpressionDebugFormatter(this);
 
+        [DebuggerDisplay(@"\{{FormattedString,nq}\}")]
         protected internal class ExpressionDebugFormatter
         {
             public ExpressionDebugFormatter(Expression expression)
-            {
-                Expression = expression.CheckNotNull(nameof(expression));
-            }
+                => Expression = expression.CheckNotNull(nameof(expression));
 
             protected Expression Expression { get; }
 
-            public override string? ToString() => Expression.ToString();
+            private string FormattedString => ToString();
+
+            public override string ToString() => Expression.ToString();
 
             // TODO: [expression string formatter] add indentation and line break formtting
             [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Pending task...")]
-            protected internal string? ToString(int level) => ToString();
+            protected internal string ToString(int level) => ToString();
 
             protected static string Format(Type? t) => Format(t.AsTypeInfo());
 

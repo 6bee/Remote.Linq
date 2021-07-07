@@ -14,6 +14,7 @@ namespace Remote.Linq
     public class AsyncEnumerable<T> : IAsyncEnumerable<T>
     {
         [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Property serves as serialization contract")]
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public T[] Elements { get; set; } = null!;
 
         public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)

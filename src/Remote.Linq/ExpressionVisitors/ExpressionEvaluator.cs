@@ -33,7 +33,7 @@ namespace Remote.Linq.ExpressionVisitors
             if (expression.NodeType == ExpressionType.Constant)
             {
                 var value = ((ConstantExpression)expression).Value;
-                if (value is IRemoteResource)
+                if (value is IRemoteLinqQueryable)
                 {
                     return false;
                 }
@@ -174,15 +174,13 @@ namespace Remote.Linq.ExpressionVisitors
         /// </summary>
         private sealed class Nominator : ExpressionVisitorBase
         {
-            private readonly object _lock = new object();
+            private readonly object _lock = new ();
             private readonly Func<Expression, bool> _fnCanBeEvaluated;
             private HashSet<Expression>? _candidates;
             private bool _cannotBeEvaluated;
 
             internal Nominator(Func<Expression, bool>? fnCanBeEvaluated)
-            {
-                _fnCanBeEvaluated = fnCanBeEvaluated.And(CanBeEvaluatedLocally) !;
-            }
+                => _fnCanBeEvaluated = fnCanBeEvaluated.And(CanBeEvaluatedLocally) !;
 
             internal HashSet<Expression> Nominate(Expression expression)
             {

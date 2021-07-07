@@ -20,13 +20,13 @@ namespace Remote.Linq
         /// </summary>
         public static TResult Execute<TResult>(this IQueryable source)
         {
-            source.CheckNotNull(nameof(source));
+            source.AssertNotNull(nameof(source));
             return source.Provider.Execute<TResult>(source.Expression);
         }
 
         private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression, MethodInfo methodInfo)
         {
-            queryable.CheckNotNull(nameof(queryable));
+            queryable.AssertNotNull(nameof(queryable));
             var exp = lambdaExpression.CheckNotNull(nameof(lambdaExpression)).Body;
             var resultType = exp.Type;
             var funcType = typeof(Func<,>).MakeGenericType(typeof(T), resultType);
@@ -75,8 +75,8 @@ namespace Remote.Linq
 
         private static IQueryable<T> ApplyFilters<T>(this IQueryable<T> queriable, IQuery<T> query, Func<RemoteLinq.LambdaExpression, RemoteLinq.LambdaExpression> expressionVisitor)
         {
-            queriable.CheckNotNull(nameof(queriable));
-            query.CheckNotNull(nameof(query));
+            queriable.AssertNotNull(nameof(queriable));
+            query.AssertNotNull(nameof(query));
             foreach (var filter in query.FilterExpressions ?? Enumerable.Empty<RemoteLinq.LambdaExpression>())
             {
                 var predicate = expressionVisitor(filter).ToLinqExpression<T, bool>();
@@ -132,7 +132,7 @@ namespace Remote.Linq
 
         internal static Type? AsQueryableResourceTypeOrNull(this object? value)
         {
-            if (value is IRemoteResource remoteResource)
+            if (value is IRemoteLinqQueryable remoteResource)
             {
                 return remoteResource.ResourceType;
             }

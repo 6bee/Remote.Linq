@@ -17,6 +17,9 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class AsyncScalarQueryExpressionReWriter
     {
+        /// <summary>
+        /// Type definition used in generic type filters.
+        /// </summary>
         [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
         private sealed class ProbingType
         {
@@ -25,13 +28,11 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
             }
         }
 
-        private static readonly Dictionary<MethodInfo, MethodInfo> _methods = GetScalarQueryMethods().ToDictionary(x => x.Item1, x => x.Item2);
+        private static readonly Dictionary<MethodInfo, MethodInfo> _methods = GetScalarQueryMethods();
 
-        private static IEnumerable<Tuple<MethodInfo, MethodInfo>> GetScalarQueryMethods()
+        private static Dictionary<MethodInfo, MethodInfo> GetScalarQueryMethods()
         {
-            static Type[] CreateGenericArguments(MethodInfo m) => Enumerable.Range(0, m.GetGenericArguments().Length)
-                .Select(x => typeof(ProbingType))
-                .ToArray();
+            static Type[] CreateGenericArguments(MethodInfo m) => Enumerable.Repeat(typeof(ProbingType), m.GetGenericArguments().Length).ToArray();
 
             static MethodInfo CreateClosedGenericTypeIfRequired(MethodInfo m) => m.IsGenericMethodDefinition ? m.MakeGenericMethod(CreateGenericArguments(m)) : m;
 
@@ -63,8 +64,8 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
                 from m1 in g1
                 from m2 in g2
                 where IsMatch(m1, m2)
-                select Tuple.Create(m1, m2);
-            return list;
+                select (m1, m2);
+            return list.ToDictionary(x => x.m1, x => x.m2);
         }
 
         /// <summary>

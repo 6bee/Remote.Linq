@@ -2,50 +2,100 @@
 
 namespace Remote.Linq.EntityFramework.ExpressionVisitors
 {
+    using Aqua.TypeSystem;
+    using Remote.Linq;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
-    using Remote.Linq.Extensions.Include;
     using System;
     using System.ComponentModel;
     using System.Linq;
+    using SystemLinq = System.Linq.Expressions;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    internal static class RemoteExpressionReWriter
+    public static class RemoteExpressionReWriter
     {
-        private static readonly System.Reflection.MethodInfo QueryableIncludeMethod = typeof(System.Data.Entity.QueryableExtensions)
-            .GetMethods()
-            .Where(x => string.Equals(x.Name, nameof(System.Data.Entity.QueryableExtensions.Include), StringComparison.Ordinal))
-            .Single(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1);
+        /// <summary>
+        /// Map include query methods for entity framework.
+        /// </summary>
+        /// <remarks>
+        ///   <para>
+        ///     1:
+        ///     Replaces method <see cref="IncludeQueryableExtensions.ThenInclude{T, TPreviousProperty, TProperty}(IIncludableQueryable{T, TPreviousProperty}, SystemLinq.Expression{Func{TPreviousProperty, TProperty}})"/>
+        ///     and <see cref="IncludeQueryableExtensions.ThenInclude{T, TPreviousProperty, TProperty}(IIncludableQueryable{T, TPreviousProperty}, SystemLinq.Expression{Func{TPreviousProperty, TProperty}})"/>
+        ///     by <see cref="IncludeQueryableExtensions.Include{T}(IQueryable{T}, string)"/> with sub-selects.
+        ///   </para>
+        ///   <para>
+        ///     2:
+        ///     Replaces include query methods by entity framework's include methods.
+        ///   </para>
+        /// </remarks>
+        public static Expression MapIncludeQueryMethods(this Expression expression)
+            => expression
+            .ReplaceIncludeQueryMethodsByStringInclude()
+            .ReplaceIncludeQueryMethods();
 
         /// <summary>
-        /// Replaces resource descriptors by queryable and replaces include method call with entity framework's include methods.
+        /// Replaces include query methods by entity framework's include methods.
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be examined.</param>
-        /// <returns>A new expression tree with the EF's version of the include method if any call the an include methods was contained in the original expression,
+        /// <returns>A new expression tree with the EF's version of the include method if any method calls to include was contained in the original expression,
         /// otherwise the original expression tree is returned.</returns>
-        internal static Expression ReplaceIncludeMethodCall(this Expression expression) => new ElementReplacer().Run(expression);
+        private static Expression ReplaceIncludeQueryMethods(this Expression expression)
+            => new QueryMethodMapper().Run(expression);
 
-        private sealed class ElementReplacer : RemoteExpressionVisitorBase
+        private sealed class QueryMethodMapper : RemoteExpressionVisitorBase
         {
             internal Expression Run(Expression expression) => Visit(expression);
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                if (node.Instance is null &&
-                    node.Method?.DeclaringType?.ToType() == typeof(IncludeQueryFunctions) &&
-                    string.Equals(node.Method?.Name, nameof(IncludeQueryFunctions.Include), StringComparison.Ordinal) &&
-                    node.Method?.GenericArgumentTypes?.Count == 1 &&
-                    node.Arguments?.Count == 2)
+                if (MapRemoteLinqToEntityFrameworkMethod(node.Method) is MethodInfo mappedMethod)
                 {
-                    var elementType = node.Method.GenericArgumentTypes.Single().ToType();
-
-                    var efIncludeMethod = QueryableIncludeMethod.MakeGenericMethod(elementType);
-
-                    var callExpression = new MethodCallExpression(null, efIncludeMethod, node.Arguments);
-                    node = callExpression;
+                    var arguments = node.Arguments?.Select(Visit).ToArray();
+                    node = new MethodCallExpression(null, mappedMethod, arguments!);
                 }
 
                 return base.VisitMethodCall(node);
+
+                MethodInfo? MapRemoteLinqToEntityFrameworkMethod(MethodInfo source)
+                {
+                    if (source is null)
+                    {
+                        return null;
+                    }
+
+                    if (!string.Equals(source.DeclaringType?.FullName, typeof(IncludeQueryableExtensions).FullName))
+                    {
+                        return null;
+                    }
+
+                    var method = source.ToMethodInfo();
+                    var target = MapMethod(method);
+                    if (target is null)
+                    {
+                        return null;
+                    }
+
+                    var genericArguments = method.GetGenericArguments();
+                    return new MethodInfo(target.MakeGenericMethod(genericArguments));
+
+                    static System.Reflection.MethodInfo? MapMethod(System.Reflection.MethodInfo source)
+                    {
+                        var method = source.GetGenericMethodDefinition();
+
+                        if (method == IncludeQueryableExtensions.IncludeMethodInfo)
+                        {
+                            return EntityFrameworkMethodInfos.IncludeMethodInfo;
+                        }
+
+                        if (method == IncludeQueryableExtensions.StringIncludeMethodInfo)
+                        {
+                            return EntityFrameworkMethodInfos.StringIncludeMethodInfo;
+                        }
+
+                        return null;
+                    }
+                }
             }
         }
     }

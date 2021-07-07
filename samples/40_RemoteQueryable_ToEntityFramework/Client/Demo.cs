@@ -4,6 +4,7 @@ namespace Client
 {
     using Remote.Linq;
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using static CommonHelper;
@@ -13,9 +14,7 @@ namespace Client
         private readonly Func<RemoteRepository> _repoProvider;
 
         public Demo(Func<RemoteRepository> repoProvider)
-        {
-            _repoProvider = repoProvider;
-        }
+            => _repoProvider = repoProvider;
 
         public async Task RunAsync()
         {

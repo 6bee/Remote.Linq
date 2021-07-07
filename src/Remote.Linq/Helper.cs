@@ -35,7 +35,7 @@ namespace Remote.Linq
         internal static string QuoteValue(this object? value, string nullValue = "null")
             => string.Format(
                 "{1}{0}{1}",
-                value ?? nullValue,
+                value is null ? nullValue : value.ToString() ?? value.GetType().ToString(),
                 value is string ? @"""" : value is char ? "'" : null);
     }
 }

@@ -9,7 +9,9 @@ namespace Remote.Linq.EntityFrameworkCore
     internal static class Helper
     {
         internal static IExpressionToRemoteLinqContext? GetExpressionToRemoteLinqContext(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
-            => typeInfoProvider is null && canBeEvaluatedLocally is null ? null : new EntityFrameworkCoreExpressionTranslatorContext(typeInfoProvider, canBeEvaluatedLocally);
+            => typeInfoProvider is null && canBeEvaluatedLocally is null
+            ? null
+            : new EntityFrameworkCoreExpressionTranslatorContext(typeInfoProvider, canBeEvaluatedLocally);
 
         internal static IExpressionToRemoteLinqContext GetOrCreateContext(IExpressionToRemoteLinqContext? context)
             => context ?? new EntityFrameworkCoreExpressionTranslatorContext();

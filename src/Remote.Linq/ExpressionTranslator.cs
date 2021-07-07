@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using Aqua.Dynamic;
     using Aqua.TypeSystem;
     using System;
     using System.ComponentModel;
@@ -36,15 +37,37 @@ namespace Remote.Linq
             private static Exception Exception => throw new RemoteLinqException($"{nameof(ResultWrapperExpression)} is meant for internal usage and must not be exposed externally.");
         }
 
-        /// <summary>
-        /// Translates a given expression into a remote linq expression.
-        /// </summary>
-        public static RemoteLinq.Expression ToRemoteLinqExpression(this SystemLinq.Expression expression, IExpressionToRemoteLinqContext? context = null)
-            => new SystemToRemoteLinqTranslator(context).ToRemoteExpression(expression);
+        // TODO: make private and use as default
+        public static IExpressionToRemoteLinqContext NoMappingContext => new NoMappingContextImpl();
+
+        private sealed class NoMappingContextImpl : IExpressionToRemoteLinqContext, IDynamicObjectMapper
+        {
+            public ITypeInfoProvider TypeInfoProvider => new TypeInfoProvider();
+
+            public Func<object, bool> NeedsMapping => _ => false;
+
+            public IDynamicObjectMapper ValueMapper => this;
+
+            public Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally => _ => false;
+
+            object? IDynamicObjectMapper.Map(DynamicObject? obj, Type? targetType) => throw NotSupportedException;
+
+            DynamicObject? IDynamicObjectMapper.MapObject(object? obj, Func<Type, bool>? setTypeInformation) => throw NotSupportedException;
+
+            private NotSupportedException NotSupportedException => new NotSupportedException("operation must not be called as no value mapping should occure");
+        }
 
         /// <summary>
         /// Translates a given expression into a remote linq expression.
         /// </summary>
+        public static RemoteLinq.Expression ToRemoteLinqExpression(this SystemLinq.Expression expression, IExpressionToRemoteLinqContext? context = null)
+            => new SystemToRemoteLinqTranslator(context ?? new ExpressionTranslatorContext()).ToRemoteExpression(expression);
+
+        /// <summary>
+        /// Translates a given expression into a remote linq expression.
+        /// </summary>
+        [Obsolete("Method will be removed in futur version, use overload instaed.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static RemoteLinq.Expression ToRemoteLinqExpression(this SystemLinq.Expression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
             => ToRemoteLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
@@ -53,13 +76,15 @@ namespace Remote.Linq
         /// </summary>
         public static RemoteLinq.LambdaExpression ToRemoteLinqExpression(this SystemLinq.LambdaExpression expression, IExpressionToRemoteLinqContext? context = null)
         {
-            var lambdaExpression = new SystemToRemoteLinqTranslator(context).ToRemoteExpression(expression);
+            var lambdaExpression = new SystemToRemoteLinqTranslator(context ?? new ExpressionTranslatorContext()).ToRemoteExpression(expression);
             return (RemoteLinq.LambdaExpression)lambdaExpression;
         }
 
         /// <summary>
         /// Translates a given lambda expression into a remote linq expression.
         /// </summary>
+        [Obsolete("Method will be removed in futur version, use overload instaed.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static RemoteLinq.LambdaExpression ToRemoteLinqExpression(this SystemLinq.LambdaExpression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
             => ToRemoteLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 

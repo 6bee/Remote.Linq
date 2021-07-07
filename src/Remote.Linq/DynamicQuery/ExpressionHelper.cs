@@ -23,7 +23,7 @@ namespace Remote.Linq.DynamicQuery
                 return;
             }
 
-            if (typeof(IRemoteResource).IsAssignableFrom(expressionType))
+            if (typeof(IRemoteLinqQueryable).IsAssignableFrom(expressionType))
             {
                 return;
             }

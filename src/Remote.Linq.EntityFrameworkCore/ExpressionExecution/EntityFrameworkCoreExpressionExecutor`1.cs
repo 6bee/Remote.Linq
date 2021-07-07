@@ -12,7 +12,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
-    using RemoteLinq = Remote.Linq.Expressions;
     using SystemLinq = System.Linq.Expressions;
 
     public abstract class EntityFrameworkCoreExpressionExecutor<TDataTranferObject> : AsyncExpressionExecutor<IQueryable, TDataTranferObject>
@@ -28,8 +27,8 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         {
         }
 
-        protected override RemoteLinq.Expression Prepare(RemoteLinq.Expression expression)
-            => base.Prepare(expression).ReplaceIncludeMethodCall();
+        protected override SystemLinq.Expression Prepare(SystemLinq.Expression expression)
+            => base.Prepare(expression.ReplaceIncludeQueryMethods());
 
         /// <summary>
         /// Prepares the query <see cref="SystemLinq.Expression"/> to be able to be executed.

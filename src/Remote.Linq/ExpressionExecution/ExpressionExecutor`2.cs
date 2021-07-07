@@ -21,7 +21,7 @@ namespace Remote.Linq.ExpressionExecution
         /// </summary>
         protected ExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
         {
-            _queryableProvider = queryableProvider;
+            _queryableProvider = queryableProvider ?? (_ => throw new NotSupportedException("No queryable provider has been specified"));
             _context = context;
         }
 

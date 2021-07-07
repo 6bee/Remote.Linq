@@ -6,9 +6,9 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
     using System.Linq;
     using System.Linq.Expressions;
 
-    internal class RemoteLinqAsyncQueryable : IRemoteResource, IOrderedAsyncQueryable
+    public class RemoteLinqAsyncQueryable : IRemoteLinqQueryable, IOrderedAsyncQueryable
     {
-        protected RemoteLinqAsyncQueryable(Type elementType, IRemoteLinqAsyncQueryProvider provider, Expression? expression)
+        public RemoteLinqAsyncQueryable(Type elementType, IRemoteLinqAsyncQueryProvider provider, Expression? expression)
         {
             ElementType = elementType.CheckNotNull(nameof(elementType));
             Provider = provider.CheckNotNull(nameof(provider));
@@ -21,6 +21,6 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
 
         public IAsyncQueryProvider Provider { get; }
 
-        Type IRemoteResource.ResourceType => ElementType;
+        Type IRemoteLinqQueryable.ResourceType => ElementType;
     }
 }

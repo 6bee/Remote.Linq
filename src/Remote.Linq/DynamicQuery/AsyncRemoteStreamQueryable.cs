@@ -28,7 +28,7 @@ namespace Remote.Linq.DynamicQuery
 
         IEnumerator IEnumerable.GetEnumerator() => throw QueryOperationNotSupportedException;
 
-        Type IRemoteResource.ResourceType => ElementType;
+        Type IRemoteLinqQueryable.ResourceType => ElementType;
 
         protected internal static Exception QueryOperationNotSupportedException
             => new NotSupportedException(

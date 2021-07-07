@@ -2,9 +2,10 @@
 
 namespace Remote.Linq
 {
-    using System.Linq;
+    using System;
 
-    public interface IRemoteQueryProvider : IQueryProvider, IRemoteLinqQueryProvider
+    public interface IRemoteLinqQueryable
     {
+        Type ResourceType { get; }
     }
 }
