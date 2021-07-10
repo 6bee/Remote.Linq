@@ -12,7 +12,7 @@ namespace Client
             PrintNote("This demo uses a random delay on server side to simulate data item retrieval/generation.");
             WaitForEnterKey("Launch the query service, then press <ENTER> to start the client.");
 
-            new AsyncStreamDemo(() => new AsyncTcpRemoteRepository("localhost", 8899)).RunAsync().AsTask().Wait();
+            new AsyncStreamDemo(() => new AsyncTcpRemoteRepository("localhost", 8899)).RunAsyncDemo();
 
             WaitForEnterKey();
         }

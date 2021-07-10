@@ -22,7 +22,7 @@ namespace DemoStartUp
                 .OpenService();
 
             PrintSetup("Staring client demo...");
-            Client.Program.RunQueries();
+            new Client.Demo().RunDemo();
 
             PrintSetup();
             PrintSetup("Done.");

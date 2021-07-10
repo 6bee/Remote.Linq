@@ -8,14 +8,12 @@ namespace Client
     using System.Threading.Tasks;
     using static CommonHelper;
 
-    public class AsyncDemo
+    public class AsyncDemo : IAsyncDemo
     {
         private readonly Func<IRemoteRepository> _repoProvider;
 
         public AsyncDemo(Func<IRemoteRepository> repoProvider)
-        {
-            _repoProvider = repoProvider;
-        }
+            => _repoProvider = repoProvider;
 
         public async Task RunAsync()
         {

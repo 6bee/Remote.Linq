@@ -20,7 +20,7 @@ namespace DemoStartUp
 
             PrintSetup("Staring client demo...");
             PrintSetup("-------------------------------------------------");
-            new AsyncDemo(() => new RemoteRepository("localhost", port)).RunAsync().Wait();
+            new AsyncDemo(() => new RemoteRepository("localhost", port)).RunAsyncDemo();
 
             PrintSetup();
             PrintSetup("-------------------------------------------------");

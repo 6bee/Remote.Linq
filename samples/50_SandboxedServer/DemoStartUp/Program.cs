@@ -43,7 +43,7 @@ namespace DemoStartUp
             using (Server server = new Server(ip, port))
             {
                 server.Start();
-                new Client(ip, port).Run();
+                new Client(ip, port).RunDemo();
             }
 
             PrintHeader("\n\n2nd demo: running server in restricted app domain (partial-trust)");
@@ -53,7 +53,7 @@ namespace DemoStartUp
             using (Server server = Create<Server>(serverDomain, ip, port))
             {
                 server.Start();
-                new Client(ip, port).Run();
+                new Client(ip, port).RunDemo();
             }
 
             WaitForEnterKey("\n\nHit enter to exit");

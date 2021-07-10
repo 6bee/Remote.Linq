@@ -11,7 +11,7 @@ namespace Client
             Title("Xml Serialization over Http [Client]");
             WaitForEnterKey("Launch the query service, then press <ENTER> to start the client.");
 
-            new AsyncDemo(() => new RemoteRepository("http://localhost:8089/queryservice")).RunAsync().Wait();
+            new AsyncDemo(() => new RemoteRepository("http://localhost:8089/queryservice")).RunAsyncDemo();
 
             WaitForEnterKey();
         }

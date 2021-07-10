@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Client.Demo.cs" Link="Demo.cs" />
+    <Compile Include="..\..\SharedCode\Client.IDemo.cs" Visible="false" />
     <Compile Include="..\..\SharedCode\Client.IRemoteRepository.cs" Visible="false" />
     <Compile Include="..\..\SharedCode\CommonHelper.cs" Visible="false" />
     <Compile Include="..\..\SharedCode\WcfHelper.cs" Visible="false" />

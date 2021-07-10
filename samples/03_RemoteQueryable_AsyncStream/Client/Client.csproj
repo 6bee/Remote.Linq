@@ -11,6 +11,7 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedCode\Client.IAsyncDemo.cs" Visible="false" />
     <Compile Include="..\..\SharedCode\Client.IRemoteRepository.cs" Visible="false" />
     <Compile Include="..\..\SharedCode\CommonHelper.cs" Visible="false" />
   </ItemGroup>

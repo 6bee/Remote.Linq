@@ -7,14 +7,12 @@ namespace Client
     using System.Linq;
     using static CommonHelper;
 
-    public class Demo
+    public class Demo : IDemo
     {
         private readonly Func<IRemoteRepository> _repoProvider;
 
         public Demo(Func<IRemoteRepository> repoProvider)
-        {
-            _repoProvider = repoProvider;
-        }
+            => _repoProvider = repoProvider;
 
         public void Run()
         {

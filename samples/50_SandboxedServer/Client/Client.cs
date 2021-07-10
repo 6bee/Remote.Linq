@@ -9,14 +9,12 @@ namespace Client
     using System.Security;
     using static CommonHelper;
 
-    public class Client
+    public class Client : IDemo
     {
         private readonly RemoteRepository _repo;
 
         public Client(string ip, int port)
-        {
-            _repo = new RemoteRepository(ip, port);
-        }
+            => _repo = new RemoteRepository(ip, port);
 
         public void Run()
         {

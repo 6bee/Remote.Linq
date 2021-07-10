@@ -11,7 +11,7 @@ namespace Client
             Title("Server Defined Projection [Client]");
             WaitForEnterKey("Launch the query service, then press <ENTER> to start the client.");
 
-            new Demo(() => new RemoteRepository("net.pipe://localhost/8080/query", accessToken: "secure1234")).Run();
+            new Demo(() => new RemoteRepository("net.pipe://localhost/8080/query", accessToken: "secure1234")).RunDemo();
 
             WaitForEnterKey();
         }

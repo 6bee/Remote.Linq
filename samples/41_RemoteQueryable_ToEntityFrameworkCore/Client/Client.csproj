@@ -13,6 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Client.AsyncTcp.RemoteRepository.cs" Link="RemoteRepository.cs" />
+    <Compile Include="..\..\SharedCode\Client.IAsyncDemo.cs" Visible="false" />
     <Compile Include="..\..\SharedCode\Client.IRemoteRepository.cs" Visible="false" />
     <Compile Include="..\..\SharedCode\CommonHelper.cs" Visible="false" />
   </ItemGroup>

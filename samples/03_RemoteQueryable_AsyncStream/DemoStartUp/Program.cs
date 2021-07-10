@@ -22,7 +22,7 @@ namespace DemoStartUp
 
             PrintSetup("Staring client demo...");
             PrintSetup("-------------------------------------------------");
-            new AsyncStreamDemo(() => new AsyncRemoteStreamRepository(host, port)).RunAsync().Wait();
+            new AsyncStreamDemo(() => new AsyncRemoteStreamRepository(host, port)).RunAsyncDemo();
 
             PrintSetup();
             PrintSetup("-------------------------------------------------");

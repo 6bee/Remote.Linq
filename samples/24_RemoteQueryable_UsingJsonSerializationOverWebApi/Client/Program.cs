@@ -11,7 +11,7 @@ namespace Client
             Title("JSON Serialization over Web API async [Client]");
             WaitForEnterKey("Launch the query service, then press <ENTER> to start the client.");
 
-            new AsyncDemo(() => new RemoteRepository("localhost", 8089)).RunAsync().Wait();
+            new AsyncDemo(() => new RemoteRepository("localhost", 8089)).RunAsyncDemo();
 
             WaitForEnterKey();
         }

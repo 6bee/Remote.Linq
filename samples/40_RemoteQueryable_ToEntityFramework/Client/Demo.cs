@@ -4,12 +4,11 @@ namespace Client
 {
     using Remote.Linq;
     using System;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using static CommonHelper;
 
-    public class Demo
+    public class Demo : IAsyncDemo
     {
         private readonly Func<RemoteRepository> _repoProvider;
 

@@ -7,16 +7,14 @@ namespace Client
     using System.Threading.Tasks;
     using static CommonHelper;
 
-    public class AsyncStreamDemo
+    public class AsyncStreamDemo : IAsyncDemo
     {
         private readonly Func<IAsyncRemoteRepository> _repoProvider;
 
         public AsyncStreamDemo(Func<IAsyncRemoteRepository> repoProvider)
-        {
-            _repoProvider = repoProvider;
-        }
+            => _repoProvider = repoProvider;
 
-        public async ValueTask RunAsync()
+        public async Task RunAsync()
         {
             await using IAsyncRemoteRepository repo = _repoProvider();
 

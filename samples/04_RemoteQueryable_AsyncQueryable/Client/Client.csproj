@@ -11,6 +11,7 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedCode\Client.IAsyncDemo.cs" Visible="false" />
     <Compile Include="..\..\SharedCode\Client.IAsyncRemoteRepository.cs" Visible="false" />
     <Compile Include="..\..\SharedCode\Client.AsyncTcpQueryClient.cs" Link="AsyncTcpQueryClient" />
     <Compile Include="..\..\SharedCode\Client.AsyncStreamEnumerator.cs" Link="AsyncStreamEnumerator" />

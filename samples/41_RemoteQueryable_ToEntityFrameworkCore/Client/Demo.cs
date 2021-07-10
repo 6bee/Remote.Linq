@@ -9,7 +9,7 @@ namespace Client
     using static CommonHelper;
     using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtensions;
 
-    public class Demo
+    public class Demo : IAsyncDemo
     {
         private readonly Func<RemoteRepository> _repoProvider;
 

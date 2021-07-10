@@ -22,7 +22,7 @@ namespace DemoStartUp
 
             PrintSetup("Staring client demo...");
             PrintSetup("-------------------------------------------------");
-            new Demo(() => new RemoteRepository(url)).Run();
+            new Demo(() => new RemoteRepository(url)).RunDemo();
 
             PrintSetup();
             PrintSetup("-------------------------------------------------");

@@ -21,7 +21,7 @@ namespace DemoStartUp
             PrintSetup("Staring client demo...");
             PrintSetup("-------------------------------------------------");
             string url = $"http://{host}:{port}/queryservice/";
-            new Client.AsyncDemo(() => new Client.RemoteRepository(url)).RunAsync().Wait();
+            new Client.AsyncDemo(() => new Client.RemoteRepository(url)).RunAsyncDemo();
 
             PrintSetup();
             PrintSetup("-------------------------------------------------");
