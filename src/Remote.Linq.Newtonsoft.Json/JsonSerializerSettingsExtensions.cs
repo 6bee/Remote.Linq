@@ -8,6 +8,7 @@ namespace Remote.Linq
     using global::Newtonsoft.Json.Serialization;
     using Remote.Linq.Newtonsoft.Json;
     using Remote.Linq.Newtonsoft.Json.ContractResolvers;
+    using Remote.Linq.SimpleQuery;
     using System;
     using System.ComponentModel;
     using System.Linq;

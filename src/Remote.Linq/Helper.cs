@@ -2,10 +2,12 @@
 
 namespace Remote.Linq
 {
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using System;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class Helper
@@ -21,6 +23,27 @@ namespace Remote.Linq
         /// </summary>
         [return: NotNullIfNotNull("method")]
         public static MethodInfo? AsMethodInfo(this System.Reflection.MethodInfo? method) => method is null ? null : new MethodInfo(method);
+
+        internal static Type? AsQueryableResourceTypeOrNull(this object? value)
+        {
+            if (value is IRemoteLinqQueryable remoteResource)
+            {
+                return remoteResource.ResourceType;
+            }
+
+            if (value is IQueryable queryable)
+            {
+                var type = queryable.GetType();
+                if (type.Implements(typeof(EnumerableQuery<>)))
+                {
+                    return null;
+                }
+
+                return queryable.ElementType;
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Returns <see langword="null"/> if either the value is <see langword="null"/> or the value matches the predicate. The original value is returned otherwise.

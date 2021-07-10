@@ -1,16 +1,18 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq
+namespace Remote.Linq.SimpleQuery
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
+    using Remote.Linq;
+    using Remote.Linq.SimpleQuery;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class EnumerableExtensions
+    public static class SimpleQueryEnumerableExtensions
     {
         private const string EnumerableOfDynamicObjectBasedMethodObsolete = "This method can no longer be used and will be removed in a future version. Make sure to create data provider returning DynamicObject rather than IEnumerable<DynamicObject>.";
 

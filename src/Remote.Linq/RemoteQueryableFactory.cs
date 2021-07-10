@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using System;
     using System.ComponentModel;
     using System.Linq;
 
@@ -10,6 +11,7 @@ namespace Remote.Linq
     /// (or <see cref="IQueryable"/> respectively) suited for remote execution.
     /// Extension methods on this type are accessed via <see cref="RemoteQueryable.Factory"/>.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public sealed class RemoteQueryableFactory
     {
         internal RemoteQueryableFactory()
@@ -27,5 +29,8 @@ namespace Remote.Linq
         /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => 0;
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType() => base.GetType();
     }
 }

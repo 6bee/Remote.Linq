@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.ExpressionVisitors
+namespace Remote.Linq.Include
 {
     using Aqua.TypeExtensions;
     using Remote.Linq;
     using Remote.Linq.ExpressionExecution;
+    using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var selector = Expression.MakeMemberAccess(x, p);
                     var navigation = Subselect(selector, segments.Skip(1), i);
                     return Expression.Call(
-                        MethodInfos.Enumerable.SelectMethodInfo.MakeGenericMethod(x.Type, navigation.Type),
+                        MethodInfos.Enumerable.Select.MakeGenericMethod(x.Type, navigation.Type),
                         expression,
                         Expression.Lambda(navigation, x));
                 }

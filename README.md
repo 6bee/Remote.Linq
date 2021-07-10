@@ -116,8 +116,7 @@ Query blogs including posts and owner
 ```C#
 using var repository = new RemoteRepository();
 var blogs = repository.Blogs
-    .Include("Posts")
-    .Include("Owner")
+    .Include(x => x.Posts).ThenInclude(x => x.Owner)
     .ToList();
 ```
 

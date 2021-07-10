@@ -1,17 +1,18 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq
+namespace Remote.Linq.SimpleQuery
 {
+    using Remote.Linq;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.ComponentModel;
     using System.Linq;
-    using System.Linq.Expressions;
     using MethodInfo = System.Reflection.MethodInfo;
     using RemoteLinq = Remote.Linq.Expressions;
+    using SystemLinq = System.Linq.Expressions;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class QueryableExtensions
+    public static class SimpleQueryQueryableExtensions
     {
         private static readonly Func<RemoteLinq.LambdaExpression, RemoteLinq.LambdaExpression> _defaultExpressionVisitor = RemoteExpressionReWriter.ReplaceNonGenericQueryArgumentsByGenericArguments;
 
@@ -24,7 +25,7 @@ namespace Remote.Linq
             return source.Provider.Execute<TResult>(source.Expression);
         }
 
-        private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression, MethodInfo methodInfo)
+        private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, SystemLinq.LambdaExpression lambdaExpression, MethodInfo methodInfo)
         {
             queryable.AssertNotNull(nameof(queryable));
             var exp = lambdaExpression.CheckNotNull(nameof(lambdaExpression)).Body;
@@ -40,16 +41,16 @@ namespace Remote.Linq
             return (IOrderedQueryable<T>)result!;
         }
 
-        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression)
+        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> queryable, SystemLinq.LambdaExpression lambdaExpression)
             => queryable.Sort(lambdaExpression, MethodInfos.Queryable.OrderBy);
 
-        public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> queryable, LambdaExpression lambdaExpression)
+        public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> queryable, SystemLinq.LambdaExpression lambdaExpression)
             => queryable.Sort(lambdaExpression, MethodInfos.Queryable.OrderByDescending);
 
-        public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> queryable, LambdaExpression lambdaExpression)
+        public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> queryable, SystemLinq.LambdaExpression lambdaExpression)
             => queryable.Sort(lambdaExpression, MethodInfos.Queryable.ThenBy);
 
-        public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> queryable, LambdaExpression lambdaExpression)
+        public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> queryable, SystemLinq.LambdaExpression lambdaExpression)
             => queryable.Sort(lambdaExpression, MethodInfos.Queryable.ThenByDescending);
 
         /// <summary>
@@ -128,27 +129,6 @@ namespace Remote.Linq
             }
 
             return queriable;
-        }
-
-        internal static Type? AsQueryableResourceTypeOrNull(this object? value)
-        {
-            if (value is IRemoteLinqQueryable remoteResource)
-            {
-                return remoteResource.ResourceType;
-            }
-
-            if (value is IQueryable queryable)
-            {
-                var type = queryable.GetType();
-                if (type.IsGenericType && typeof(EnumerableQuery<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
-                {
-                    return null;
-                }
-
-                return queryable.ElementType;
-            }
-
-            return null;
         }
     }
 }

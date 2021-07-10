@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
+namespace Remote.Linq.Tests.Include
 {
     using Aqua.Dynamic;
     using Remote.Linq;
     using Remote.Linq.Expressions;
-    using Remote.Linq.ExpressionVisitors;
+    using Remote.Linq.Include;
     using Shouldly;
     using System;
     using System.Collections.Generic;

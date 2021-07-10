@@ -4,6 +4,7 @@ namespace Remote.Linq.Tests.AsyncQueryableExtensions
 {
     using Aqua.Dynamic;
     using Remote.Linq;
+    using Remote.Linq.Async;
     using Remote.Linq.Expressions;
     using Remote.Linq.Tests;
     using Shouldly;

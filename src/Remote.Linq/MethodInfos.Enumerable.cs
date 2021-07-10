@@ -61,6 +61,12 @@ namespace Remote.Linq
                 typeof(IEnumerable<TSource>),
                 typeof(TSource));
 
+            internal static readonly MethodInfo Select = typeof(System.Linq.Enumerable).GetMethodEx(
+                nameof(System.Linq.Enumerable.Select),
+                new[] { typeof(TSource), typeof(TResult) },
+                typeof(IEnumerable<TSource>),
+                typeof(Func<TSource, TResult>));
+
             internal static readonly MethodInfo Single = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.Single),
                 new[] { typeof(TSource) },

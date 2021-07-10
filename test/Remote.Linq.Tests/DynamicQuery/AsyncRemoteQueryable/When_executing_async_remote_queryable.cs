@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteQueryable
 {
+    using Remote.Linq.Async;
     using Shouldly;
     using System.Linq;
     using System.Threading.Tasks;

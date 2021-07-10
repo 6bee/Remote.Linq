@@ -6,6 +6,7 @@ namespace Remote.Linq
     using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
+    using Remote.Linq.SimpleQuery;
     using System;
     using System.Collections;
     using System.Linq;

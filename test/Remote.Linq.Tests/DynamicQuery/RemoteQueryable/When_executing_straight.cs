@@ -3,6 +3,8 @@
 namespace Remote.Linq.Tests.DynamicQuery.RemoteQueryable
 {
     using Remote.Linq;
+    using Remote.Linq.Async;
+    using Remote.Linq.SimpleQuery;
     using Shouldly;
     using System.Collections.Generic;
     using System.Linq;
