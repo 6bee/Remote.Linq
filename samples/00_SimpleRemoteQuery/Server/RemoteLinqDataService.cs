@@ -4,7 +4,7 @@ namespace Server
 {
     using Common.Model;
     using Common.ServiceContract;
-    using Remote.Linq;
+    using Remote.Linq.SimpleQuery;
     using System;
     using System.Collections.Generic;
     using System.Linq;

@@ -3,6 +3,7 @@
 namespace Client
 {
     using Remote.Linq;
+    using Remote.Linq.Async;
     using System;
     using System.Linq;
     using System.Threading.Tasks;

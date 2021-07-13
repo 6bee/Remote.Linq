@@ -6,6 +6,7 @@ namespace Client
     using Common.ServiceContract;
     using Remote.Linq;
     using Remote.Linq.ExpressionVisitors;
+    using Remote.Linq.SimpleQuery;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -84,7 +85,7 @@ namespace Client
 
                 List<Order> orders = orderQuery.ToList();
 
-                PrintLine($"  Orders ({orders.Count()}):");
+                PrintLine($"  Orders ({orders.Count}):");
                 foreach (Order order in orders)
                 {
                     PrintLine(_formatter, $"    {order}");
