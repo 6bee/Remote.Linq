@@ -218,7 +218,6 @@ namespace Remote.Linq.Include
                 return new StackedIncludableQueryable<T, TProperty>(
                     stringIncludeExpression,
                     source,
-                    ////queryable.Provider,
                     path);
             }
 
@@ -287,13 +286,12 @@ namespace Remote.Linq.Include
                 return expression;
             }
 
-            private sealed class StackedIncludableQueryable<T, TProperty> : /*IIncludableQueryable<T, TProperty>,*/ IStackedIncludableQueryable<T>
+            private sealed class StackedIncludableQueryable<T, TProperty> : IStackedIncludableQueryable<T>
             {
-                public StackedIncludableQueryable(Expression expression, Expression parent/*, IQueryProvider provider*/, string includePath)
+                public StackedIncludableQueryable(Expression expression, Expression parent, string includePath)
                 {
                     Expression = expression.CheckNotNull(nameof(expression));
                     Parent = parent.CheckNotNull(nameof(parent));
-                    ////Provider = provider.CheckNotNull(nameof(provider));
                     IncludePath = includePath.CheckNotNullOrEmpty(nameof(includePath));
                 }
 
@@ -302,16 +300,6 @@ namespace Remote.Linq.Include
                 public Expression Expression { get; }
 
                 public Expression Parent { get; }
-
-                ////public Type ElementType => typeof(T);
-
-                ////public IQueryProvider Provider { get; }
-
-                ////public IEnumerator<T> GetEnumerator()
-                ////    => throw new NotSupportedException("This queryable serves as a placeholder and is not meant for execution");
-
-                ////IEnumerator IEnumerable.GetEnumerator()
-                ////    => GetEnumerator();
             }
         }
     }
