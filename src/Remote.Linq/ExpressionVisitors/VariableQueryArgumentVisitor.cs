@@ -13,7 +13,7 @@ namespace Remote.Linq.ExpressionVisitors
     using MemberTypes = Aqua.TypeSystem.MemberTypes;
     using PropertyInfo = Aqua.TypeSystem.PropertyInfo;
 
-    public static class VariableQueryArgumentVisitor
+    public abstract class VariableQueryArgumentVisitor
     {
         internal static T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(T expression)
             where T : Expression

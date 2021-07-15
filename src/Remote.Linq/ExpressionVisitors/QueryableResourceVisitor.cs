@@ -10,7 +10,7 @@ namespace Remote.Linq.ExpressionVisitors
     using System;
     using System.Threading;
 
-    public static class QueryableResourceVisitor
+    public abstract class QueryableResourceVisitor
     {
         internal static TExpression ReplaceResourceDescriptorsByQueryable<TExpression, TQueryable>(TExpression expression, Func<Type, TQueryable> provider, ITypeResolver? typeResolver)
             where TExpression : Expression
