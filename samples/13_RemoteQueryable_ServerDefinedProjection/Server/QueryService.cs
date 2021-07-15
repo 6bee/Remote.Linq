@@ -4,6 +4,7 @@ namespace Server
 {
     using Aqua.Dynamic;
     using Common.ServiceContracts;
+    using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
     using System;
     using System.Linq;

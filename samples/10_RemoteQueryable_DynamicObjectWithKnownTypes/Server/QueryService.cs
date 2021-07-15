@@ -6,6 +6,7 @@ namespace Server
     using Common;
     using Common.ServiceContracts;
     using Remote.Linq;
+    using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
 
     public class QueryService : IQueryService
