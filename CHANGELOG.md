@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
   - Added support for [async queryable (Ix.NET)][async-queryable].
 
-  - Added support for [async streams][asynchronous-stream] ([async-streams][iasyncdisposable]).
+  - Added support for [async streams][async-streams] ([IAsyncDisposable][iasyncdisposable]).
 
   - Added support for [filtered include][ef-filtered-include] queryable extensions.
 
