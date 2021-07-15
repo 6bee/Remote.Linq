@@ -12,6 +12,7 @@ namespace Remote.Linq.DynamicQuery
     /// <typeparam name="T">Type of the query argument.</typeparam>
     [Serializable]
     [DataContract]
+    [QueryArgument]
     public sealed class VariableQueryArgument<T>
     {
         public VariableQueryArgument()

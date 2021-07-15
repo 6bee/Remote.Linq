@@ -165,7 +165,7 @@ namespace Remote.Linq
             IsKnownTypeProvider = new IsKnownTypeProviderDecorator(isKnownTypeProvider);
             TypeResolver = typeResolver ?? Aqua.TypeSystem.TypeResolver.Instance;
             TypeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
-            CanBeEvaluatedLocally = canBeEvaluatedLocally.And(ExpressionTranslator.KeepQueryMarkerFunctions);
+            CanBeEvaluatedLocally = canBeEvaluatedLocally;
             ValueMapper = valueMapper ?? new ExpressionTranslatorContextObjectMapper(this);
             NeedsMapping = value => !IsKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
         }

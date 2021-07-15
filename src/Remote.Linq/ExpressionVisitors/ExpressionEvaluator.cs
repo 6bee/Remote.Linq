@@ -10,6 +10,7 @@ namespace Remote.Linq.ExpressionVisitors
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Reflection;
     using System.Threading;
 
     /// <summary>
@@ -32,24 +33,9 @@ namespace Remote.Linq.ExpressionVisitors
         {
             if (expression.NodeType == ExpressionType.Constant)
             {
-                var value = ((ConstantExpression)expression).Value;
-                if (value is IRemoteLinqQueryable)
-                {
-                    return false;
-                }
-
                 var type = expression.Type;
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
-                {
-                    return false;
-                }
-
-                if (type == typeof(VariableQueryArgument))
-                {
-                    return false;
-                }
-
-                if (type == typeof(VariableQueryArgumentList))
+                if (type.GetCustomAttribute<QueryArgumentAttribute>() is not null ||
+                    type.GetInterfaces().Any(x => x.GetCustomAttribute<QueryArgumentAttribute>() is not null))
                 {
                     return false;
                 }
@@ -68,10 +54,15 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 var methodCallExpression = (MethodCallExpression)expression;
+                if (methodCallExpression.Method.GetCustomAttribute<QueryMarkerFunctionAttribute>() is not null)
+                {
+                    return false;
+                }
+
                 var methodDeclaringType = methodCallExpression.Method.DeclaringType;
                 if ((methodDeclaringType == typeof(Queryable) || methodDeclaringType == typeof(Enumerable)) &&
                     methodCallExpression.Arguments.FirstOrDefault() is ConstantExpression argument &&
-                    argument?.Value.AsQueryableResourceTypeOrNull() is not null)
+                    argument.Value.AsQueryableResourceTypeOrNull() is not null)
                 {
                     return false;
                 }
@@ -105,9 +96,7 @@ namespace Remote.Linq.ExpressionVisitors
             private readonly HashSet<Expression> _candidates;
 
             internal SubtreeEvaluator(HashSet<Expression> candidates)
-            {
-                _candidates = candidates;
-            }
+                => _candidates = candidates;
 
             internal Expression Eval(Expression expression) => Visit(expression);
 

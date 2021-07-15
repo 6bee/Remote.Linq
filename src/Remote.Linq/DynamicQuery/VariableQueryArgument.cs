@@ -15,6 +15,7 @@ namespace Remote.Linq.DynamicQuery
     [KnownType(typeof(DateTimeOffset)), XmlInclude(typeof(DateTimeOffset))]
     [KnownType(typeof(System.Numerics.BigInteger)), XmlInclude(typeof(System.Numerics.BigInteger))]
     [KnownType(typeof(System.Numerics.Complex)), XmlInclude(typeof(System.Numerics.Complex))]
+    [QueryArgument]
     public sealed class VariableQueryArgument
     {
         public VariableQueryArgument()

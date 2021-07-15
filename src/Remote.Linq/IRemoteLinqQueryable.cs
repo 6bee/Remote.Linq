@@ -2,8 +2,10 @@
 
 namespace Remote.Linq
 {
+    using Remote.Linq.DynamicQuery;
     using System;
 
+    [QueryArgument]
     public interface IRemoteLinqQueryable
     {
         Type ResourceType { get; }

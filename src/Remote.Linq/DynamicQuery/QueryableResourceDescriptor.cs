@@ -8,6 +8,7 @@ namespace Remote.Linq.DynamicQuery
 
     [Serializable]
     [DataContract]
+    [QueryArgument]
     public sealed class QueryableResourceDescriptor
     {
         public QueryableResourceDescriptor()

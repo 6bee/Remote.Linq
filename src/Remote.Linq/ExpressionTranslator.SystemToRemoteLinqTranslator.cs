@@ -19,21 +19,6 @@ namespace Remote.Linq
 
     partial class ExpressionTranslator
     {
-        /// <summary>
-        /// Function that can be chained with `PartialEval` predicate to prevent local evaluation of <see cref="SystemLinq.MethodCallExpression"/>s
-        /// for methods marked with <see cref="QueryMarkerFunctionAttribute"/>.
-        /// </summary>
-        public static bool KeepQueryMarkerFunctions(SystemLinq.Expression expression)
-        {
-            if (expression is SystemLinq.MethodCallExpression methodCallExpression &&
-                methodCallExpression.Method.GetCustomAttribute<QueryMarkerFunctionAttribute>() is not null)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         private sealed class SystemToRemoteLinqTranslator : ExpressionVisitorBase
         {
             private readonly Dictionary<SystemLinq.ParameterExpression, RemoteLinq.ParameterExpression> _parameterExpressionCache =
@@ -54,7 +39,7 @@ namespace Remote.Linq
             {
                 expressionTranslatorContext.AssertNotNull(nameof(expressionTranslatorContext));
 
-                _canBeEvaluatedLocally = expressionTranslatorContext.CanBeEvaluatedLocally.And(KeepQueryMarkerFunctions);
+                _canBeEvaluatedLocally = expressionTranslatorContext.CanBeEvaluatedLocally;
 
                 _needsMapping = expressionTranslatorContext.NeedsMapping;
 

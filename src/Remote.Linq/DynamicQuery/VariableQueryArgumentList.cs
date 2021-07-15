@@ -14,6 +14,7 @@ namespace Remote.Linq.DynamicQuery
     /// </summary>
     [Serializable]
     [DataContract]
+    [QueryArgument]
     public sealed class VariableQueryArgumentList
     {
         public VariableQueryArgumentList()
