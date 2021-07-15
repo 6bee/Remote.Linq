@@ -4,7 +4,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 {
     using Aqua.Dynamic;
     using Remote.Linq;
-    using Remote.Linq.Expressions;
+    using Remote.Linq.ExpressionExecution;
     using Shouldly;
     using System;
     using System.Linq;

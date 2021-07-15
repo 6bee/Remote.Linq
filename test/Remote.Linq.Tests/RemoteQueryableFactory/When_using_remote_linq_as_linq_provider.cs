@@ -3,7 +3,7 @@
 namespace Remote.Linq.Tests.RemoteQueryableFactory
 {
     using Remote.Linq;
-    using Remote.Linq.Expressions;
+    using Remote.Linq.ExpressionExecution;
     using Shouldly;
     using System.Linq;
     using Xunit;

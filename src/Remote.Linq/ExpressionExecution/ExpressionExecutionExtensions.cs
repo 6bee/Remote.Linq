@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Expressions
+namespace Remote.Linq.ExpressionExecution
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
-    using Remote.Linq.ExpressionExecution;
+    using Remote.Linq.Expressions;
     using System;
     using System.ComponentModel;
     using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class ExpressionExtensions
+    public static class ExpressionExecutionExtensions
     {
         private static CastingExpressionExecutor<TQueryable, TResult> CreateCastExecutor<TQueryable, TResult>(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context)
             => new CastingExpressionExecutor<TQueryable, TResult>(queryableProvider, context);

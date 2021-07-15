@@ -6,6 +6,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
     using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
     using Remote.Linq;
+    using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
     using Remote.Linq.Tests.RemoteQueryable.QueryTestData;
     using Remote.Linq.Tests.Serialization;

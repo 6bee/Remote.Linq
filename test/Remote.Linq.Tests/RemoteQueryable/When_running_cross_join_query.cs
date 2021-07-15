@@ -3,7 +3,7 @@
 namespace Remote.Linq.Tests.RemoteQueryable
 {
     using Remote.Linq;
-    using Remote.Linq.Expressions;
+    using Remote.Linq.ExpressionExecution;
     using Shouldly;
     using System;
     using System.Linq;

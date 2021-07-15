@@ -3,6 +3,7 @@
 namespace Remote.Linq.TestSupport
 {
     using Remote.Linq.DynamicQuery;
+    using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
     using System;
     using System.Collections.Generic;

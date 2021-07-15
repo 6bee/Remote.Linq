@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Tests.Expressions.ExpressionExtensions
 {
+    using Remote.Linq.ExpressionExecution;
     using Remote.Linq.Expressions;
     using Shouldly;
     using System;
