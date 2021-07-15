@@ -75,10 +75,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
             Expression<Func<decimal, string>> expression = Expression.Lambda<Func<decimal, string>>(
                 Expression.Block(
-                    new ParameterExpression[]
-                    {
-                        formattedDecimalString,
-                    },
+                    new[] { formattedDecimalString },
                     Expression.Assign(
                         decimalInputParameter,
                         Expression.Add(decimalInputParameter, Expression.Constant(1m))),

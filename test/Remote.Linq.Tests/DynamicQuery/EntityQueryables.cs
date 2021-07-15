@@ -21,11 +21,11 @@ namespace Remote.Linq.Tests.DynamicQuery
             where item.Id >= 5 && item.Id <= 7
             select item;
 
-        public static IAsyncRemoteStreamQueryable<Entity> AsyncRemoteStreamQueryable =
+        public static IAsyncRemoteStreamQueryable<Entity> AsyncRemoteStreamQueryable =>
             Enumerable
             .AsAsyncRemoteStreamQueryable();
 
-        public static IQueryable<Entity> FilteredAsyncRemoteStreamQueryable =
+        public static IQueryable<Entity> FilteredAsyncRemoteStreamQueryable =>
             from x in AsyncRemoteStreamQueryable
             where x.Id >= 5 && x.Id <= 7
             select x;
