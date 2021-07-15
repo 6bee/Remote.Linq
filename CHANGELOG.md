@@ -9,31 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased 7.0.0][Unreleased]
 
 ### Added
-- Added support for [async queryable (Ix.NET)][async-queryable].
-- Added support for [async streams][asynchronous-stream] ([async-streams][iasyncdisposable]).
-- Added support for [filtered include][ef-filtered-include] queryable extensions.
-- Added support for [protobuf-net v2][protobuf-net-v2] serialization.
-- Introduced `IExpressionTranslatorContext` interface to bundle parameterization options.
-- Introduced `QueryArgumentAttribute` to annotate types to prevent local evaluation (i.e. substitution of constant expression value) when translating expressions.
-- Introduced `QueryMarkerFunctionAttribute` to annotate methods to prevent local evaluation (i.e. execution of the method) when translating expressions.
+  - Added support for [async queryable (Ix.NET)][async-queryable].
+  - Added support for [async streams][asynchronous-stream] ([async-streams][iasyncdisposable]).
+  - Added support for [filtered include][ef-filtered-include] queryable extensions.
+  - Added support for [protobuf-net v2][protobuf-net-v2] serialization.
+  - Introduced `IExpressionTranslatorContext` interface to bundle parameterization options.
+  - Introduced `QueryArgumentAttribute` to annotate types to prevent local evaluation (i.e. substitution of constant expression value) when translating expressions.
+  - Introduced `QueryMarkerFunctionAttribute` to annotate methods to prevent local evaluation (i.e. execution of the method) when translating expressions.
 
 ### Changed
-- Migrated to [nullable reference types][nullable-references].
-- Moved _async_ queryable extension methods to namespace _Remote.Linq.Async_.
-- Moved expression _execute_ extension methods to namespace _Remote.Linq.ExpressionExecution_.
-- Moved `Include` and `ThenInclude` queryable extensions to namespace _Remote.Linq.Include_.
-- Moved types `Query` and `Query<T>` to namespace _Remote.Linq.SimpleQuery_.
-- Revised `RemoteQueryable.Factory` methods:
-  - Renamed methods to `CreateQueryable`, `CreateAsyncQueryable`, `CreateAsyncStreamQueryable`, etc.
-  - Allow `IExpressionToRemoteLinqContext` argument for parameterization.
-- Revised expression execution methods and types (
+  - Migrated to [nullable reference types][nullable-references].
+  - Moved _async_ queryable extension methods to namespace _Remote.Linq.Async_.
+  - Moved expression _execute_ extension methods to namespace _Remote.Linq.ExpressionExecution_.
+  - Moved `Include` and `ThenInclude` queryable extensions to namespace _Remote.Linq.Include_.
+  - Moved types `Query` and `Query<T>` to namespace _Remote.Linq.SimpleQuery_.
+  - Revised `RemoteQueryable.Factory` methods:
+    - Renamed methods to `CreateQueryable`, `CreateAsyncQueryable`, `CreateAsyncStreamQueryable`, etc.
+    - Allow `IExpressionToRemoteLinqContext` argument for parameterization.
+  - Revised expression execution methods and types (
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
-- Various minor changes and fixes.
+  - Various minor changes and fixes.
 
 ### Security
 
@@ -42,11 +42,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [6.3.0][6.3.0] - 2021-01-16
 
 ### Added
-- Added target framework `netstandard2.1` for _Remote.Linq.EntityFramework_.
-- Added support for `ThenInclude` queryable extensions (_EF6_ and _EFCore_).
+  - Added target framework `netstandard2.1` for _Remote.Linq.EntityFramework_.
+  - Added support for `ThenInclude` queryable extensions (_EF6_ and _EFCore_).
 
 ### Removed
-- Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
+  - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
 
 
