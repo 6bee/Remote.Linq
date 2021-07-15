@@ -95,7 +95,7 @@ namespace Remote.Linq.Include
             Expression Parent { get; }
         }
 
-        private sealed class StackedQueryableCleaner : ExpressionVisitorBase
+        private sealed class StackedQueryableCleaner : SystemExpressionVisitorBase
         {
             public enum Strategy
             {
@@ -149,7 +149,7 @@ namespace Remote.Linq.Include
             }
         }
 
-        private sealed class QueryMethodMapper : ExpressionVisitorBase
+        private sealed class QueryMethodMapper : SystemExpressionVisitorBase
         {
             private static readonly MethodInfo IncludeMethodInfo =
                 typeof(QueryMethodMapper).GetMethodEx(nameof(Include));

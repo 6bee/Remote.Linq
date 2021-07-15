@@ -19,7 +19,7 @@ namespace Remote.Linq
 
     partial class ExpressionTranslator
     {
-        private sealed class SystemToRemoteLinqTranslator : ExpressionVisitorBase
+        private sealed class SystemToRemoteLinqTranslator : SystemExpressionVisitorBase
         {
             private readonly Dictionary<SystemLinq.ParameterExpression, RemoteLinq.ParameterExpression> _parameterExpressionCache =
                 new Dictionary<SystemLinq.ParameterExpression, RemoteLinq.ParameterExpression>(ReferenceEqualityComparer<SystemLinq.ParameterExpression>.Default);

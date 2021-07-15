@@ -17,7 +17,7 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
         public static Expression ReplaceParameterizedConstructorCallsForVariableQueryArguments(this Expression expression)
             => new VariableQueryArgumentsReWriter().Run(expression);
 
-        private sealed class VariableQueryArgumentsReWriter : ExpressionVisitorBase
+        private sealed class VariableQueryArgumentsReWriter : SystemExpressionVisitorBase
         {
             internal Expression Run(Expression expression) => Visit(expression);
 

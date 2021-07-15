@@ -35,7 +35,7 @@ namespace Remote.Linq.ExpressionVisitors
         public static Expression SimplifyIncorporationOfRemoteQueryables(this Expression expression)
             => new RemoteQueryableVisitor().Simplify(expression);
 
-        private sealed class AnonymousTypesReplacer : ExpressionVisitorBase
+        private sealed class AnonymousTypesReplacer : SystemExpressionVisitorBase
         {
             private static readonly ConstructorInfo _dynamicPropertyContructorInfo = typeof(Property).GetConstructor(new[] { typeof(string), typeof(object) }) !;
             private static readonly ConstructorInfo _dynamicObjectContructorInfo = typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<Property>) }) !;
@@ -225,7 +225,7 @@ namespace Remote.Linq.ExpressionVisitors
             }
         }
 
-        private sealed class DynamicPropertyResolver : ExpressionVisitorBase
+        private sealed class DynamicPropertyResolver : SystemExpressionVisitorBase
         {
             private readonly bool _throwOnInvalidProperty;
 
@@ -304,7 +304,7 @@ namespace Remote.Linq.ExpressionVisitors
         }
 
         [SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "Owned disposable type serves special purpose")]
-        private sealed class RemoteQueryableVisitor : ExpressionVisitorBase
+        private sealed class RemoteQueryableVisitor : SystemExpressionVisitorBase
         {
             private sealed class ParameterScope : IDisposable
             {

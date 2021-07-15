@@ -18,7 +18,7 @@ namespace Remote.Linq.ExpressionVisitors
     /// From http://msdn.microsoft.com/en-us/library/bb546158.aspx.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class ExpressionEvaluator
+    public static class SystemExpressionEvaluator
     {
         /// <summary>
         /// Performs evaluation and replacement of independent sub-trees.
@@ -91,7 +91,7 @@ namespace Remote.Linq.ExpressionVisitors
         /// <summary>
         /// Evaluates and replaces sub-trees when first candidate is reached (top-down).
         /// </summary>
-        private sealed class SubtreeEvaluator : ExpressionVisitorBase
+        private sealed class SubtreeEvaluator : SystemExpressionVisitorBase
         {
             private readonly HashSet<Expression> _candidates;
 
@@ -161,7 +161,7 @@ namespace Remote.Linq.ExpressionVisitors
         /// Performs bottom-up analysis to determine which nodes can possibly
         /// be part of an evaluated sub-tree.
         /// </summary>
-        private sealed class Nominator : ExpressionVisitorBase
+        private sealed class Nominator : SystemExpressionVisitorBase
         {
             private readonly object _lock = new ();
             private readonly Func<Expression, bool> _fnCanBeEvaluated;

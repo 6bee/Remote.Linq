@@ -26,7 +26,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
         public static Expression ReplaceIncludeQueryMethods(this Expression expression)
             => new QueryMethodMapper().Run(expression);
 
-        private sealed class QueryMethodMapper : ExpressionVisitorBase
+        private sealed class QueryMethodMapper : SystemExpressionVisitorBase
         {
             private static class EntityFrameworkMethodInfos
             {
