@@ -15,7 +15,7 @@ namespace Remote.Linq.Async.Queryable.TestSupport
     public static class EnumerableExtensions
     {
         /// <summary>
-        /// !!! For unit testing only !!! <br />
+        /// <b>!!! For unit testing only !!!</b><br />
         /// Creates an <see cref="IAsyncQueryable{T}"/> for given test data.
         /// </summary>
         public static IAsyncQueryable<T> AsAsyncQueryable<T>(

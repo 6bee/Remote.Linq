@@ -15,7 +15,7 @@ namespace Remote.Linq.TestSupport
     public static class EnumerableExtensions
     {
         /// <summary>
-        /// !!! For unit testing only !!! <br />
+        /// <b>!!! For unit testing only !!!</b><br />
         /// Creates an <see cref="IRemoteQueryable{T}"/> for given test data.
         /// </summary>
         public static IRemoteQueryable<T> AsRemoteQueryable<T>(this IEnumerable<T> testData, IExpressionTranslatorContext? context = null)
@@ -24,7 +24,7 @@ namespace Remote.Linq.TestSupport
             : testData.AsAsyncRemoteQueryable(context);
 
         /// <summary>
-        /// !!! For unit testing only !!! <br />
+        /// <b>!!! For unit testing only !!!</b><br />
         /// Creates an <see cref="IAsyncRemoteQueryable{T}"/> for given test data.
         /// </summary>
         public static IAsyncRemoteQueryable<T> AsAsyncRemoteQueryable<T>(this IEnumerable<T> testData, IExpressionTranslatorContext? context = null)
@@ -33,7 +33,7 @@ namespace Remote.Linq.TestSupport
             : new AsyncRemoteQueryable<T>(new TaskAsyncQueryProvider(context), testData.AsQueryable().Expression);
 
         /// <summary>
-        /// !!! For unit testing only !!! <br />
+        /// <b>!!! For unit testing only !!!</b><br />
         /// Creates an <see cref="IAsyncRemoteStreamQueryable{T}"/> for given test data.
         /// </summary>
         public static IAsyncRemoteStreamQueryable<T> AsAsyncRemoteStreamQueryable<T>(this IEnumerable<T> testData, Action<Expression>? onExecuteQuery = null)
