@@ -54,11 +54,11 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
             _context = context;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public IAsyncQueryable<TElement> CreateQuery<TElement>(SystemLinq.Expression expression)
              => new RemoteLinqAsyncQueryable<TElement>(this, expression);
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public async ValueTask<TResult> ExecuteAsync<TResult>(SystemLinq.Expression expression, CancellationToken cancellation)
         {
             if (typeof(TResult).Implements(typeof(IAsyncEnumerable<>), out var genericArguments))

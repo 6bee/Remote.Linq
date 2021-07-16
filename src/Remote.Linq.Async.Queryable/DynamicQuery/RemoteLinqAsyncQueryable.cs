@@ -21,16 +21,16 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
             Expression = expression ?? Expression.Constant(this);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public Type ElementType { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public Expression Expression { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public IAsyncQueryProvider Provider { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         Type IRemoteLinqQueryable.ResourceType => ElementType;
     }
 }

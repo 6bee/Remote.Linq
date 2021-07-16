@@ -8,6 +8,13 @@ namespace Remote.Linq
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class MethodInfoExtensions
     {
+        /// <summary>
+        /// Invokes the method and unwraps potential <see cref="TargetInvocationException"/> in case any gets thrown.
+        /// </summary>
+        /// <param name="methodInfo">The method to be invoked.</param>
+        /// <param name="instance">The instance in case of an instance method or <see langword="null"/> for static methods.</param>
+        /// <param name="args">The argument list.</param>
+        /// <returns>The return value of the method invocation.</returns>
         public static object? InvokeAndUnwrap(this MethodInfo methodInfo, object? instance, params object?[] args)
         {
             try
@@ -20,6 +27,14 @@ namespace Remote.Linq
             }
         }
 
+        /// <summary>
+        /// Invokes the method and unwraps potential <see cref="TargetInvocationException"/> in case any gets thrown.
+        /// </summary>
+        /// <typeparam name="TResult">Type of the result.</typeparam>
+        /// <param name="methodInfo">The method to be invoked.</param>
+        /// <param name="instance">The instance in case of an instance method or <see langword="null"/> for static methods.</param>
+        /// <param name="args">The argument list.</param>
+        /// <returns>The return value of the method invocation.</returns>
         public static TResult? InvokeAndUnwrap<TResult>(this MethodInfo methodInfo, object? instance, params object?[] args)
             => (TResult?)methodInfo.InvokeAndUnwrap(instance, args);
     }

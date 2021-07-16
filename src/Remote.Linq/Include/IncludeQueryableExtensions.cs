@@ -51,30 +51,53 @@ namespace Remote.Linq.Include
             }
         }
 
+        /// <summary>
+        /// Gets the <see cref="MethodInfo"/> of the <see cref="Include{T}(IQueryable{T}, string)"/> method.
+        /// </summary>
         public static readonly MethodInfo StringIncludeMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
             nameof(IncludeQueryableExtensions.Include),
             new[] { typeof(T) },
             typeof(IQueryable<T>),
             typeof(string));
 
+        /// <summary>
+        /// Gets the <see cref="MethodInfo"/> of the <see cref="Include{T, TProperty}(IQueryable{T}, Expression{Func{T, TProperty}})"/> method.
+        /// </summary>
         public static readonly MethodInfo IncludeMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
             nameof(IncludeQueryableExtensions.Include),
             new[] { typeof(T), typeof(TProperty) },
             typeof(IQueryable<T>),
             typeof(Expression<Func<T, TProperty>>));
 
+        /// <summary>
+        /// Gets the <see cref="MethodInfo"/> of the
+        /// <see cref="ThenInclude{T, TPreviousProperty, TProperty}(IIncludableQueryable{T, IEnumerable{TPreviousProperty}}, Expression{Func{TPreviousProperty, TProperty}})"/>
+        /// method.
+        /// </summary>
         public static readonly MethodInfo ThenIncludeAfterEnumerableMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
             nameof(IncludeQueryableExtensions.ThenInclude),
             new[] { typeof(T), typeof(TPreviousProperty), typeof(TProperty) },
             typeof(IIncludableQueryable<T, IEnumerable<TPreviousProperty>>),
             typeof(Expression<Func<TPreviousProperty, TProperty>>));
 
+        /// <summary>
+        /// Gets the <see cref="MethodInfo"/> of the
+        /// <see cref="ThenInclude{T, TPreviousProperty, TProperty}(IIncludableQueryable{T, TPreviousProperty}, Expression{Func{TPreviousProperty, TProperty}})"/>
+        /// method.
+        /// </summary>
         public static readonly MethodInfo ThenIncludeAfterReferenceMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
             nameof(IncludeQueryableExtensions.ThenInclude),
             new[] { typeof(T), typeof(TPreviousProperty), typeof(TProperty) },
             typeof(IIncludableQueryable<T, TPreviousProperty>),
             typeof(Expression<Func<TPreviousProperty, TProperty>>));
 
+        /// <summary>
+        /// Specifies related entities to include in the query results.
+        /// </summary>
+        /// <typeparam name="T">The type of resource being queried.</typeparam>
+        /// <param name="source">The source query.</param>
+        /// <param name="navigationPropertyPath">A string of '.' separated navigation property names to be included.</param>
+        /// <returns>A new query with the related data included.</returns>
         [QueryMarkerFunction]
         public static IQueryable<T> Include<T>(this IQueryable<T> source, string navigationPropertyPath)
         {
@@ -90,6 +113,14 @@ namespace Remote.Linq.Include
                 : source;
         }
 
+        /// <summary>
+        /// Specifies related entities to include in the query results.
+        /// </summary>
+        /// <typeparam name="T">The type of resource being queried.</typeparam>
+        /// <typeparam name="TProperty">The type of the related object to be included.</typeparam>
+        /// <param name="source">The source query.</param>
+        /// <param name="navigationPropertyPath">A lambda expression representing the navigation property to be included.</param>
+        /// <returns>A new query with the related data included.</returns>
         [QueryMarkerFunction]
         public static IIncludableQueryable<T, TProperty> Include<T, TProperty>(this IQueryable<T> source, Expression<Func<T, TProperty>> navigationPropertyPath)
         {
@@ -106,6 +137,15 @@ namespace Remote.Linq.Include
                     : source);
         }
 
+        /// <summary>
+        /// Specifies additional related data to be further included based on a related type that was just included.
+        /// </summary>
+        /// <typeparam name="T">The type of resource being queried.</typeparam>
+        /// <typeparam name="TPreviousProperty">The type of the proeprty that was just included.</typeparam>
+        /// <typeparam name="TProperty">The type of the related object to be included.</typeparam>
+        /// <param name="source">The source query.</param>
+        /// <param name="navigationPropertyPath">A lambda expression representing the navigation property to be included.</param>
+        /// <returns>A new query with the related data included.</returns>
         [QueryMarkerFunction]
         public static IIncludableQueryable<T, TProperty> ThenInclude<T, TPreviousProperty, TProperty>(
             this IIncludableQueryable<T, TPreviousProperty> source,
@@ -124,6 +164,15 @@ namespace Remote.Linq.Include
                     : source);
         }
 
+        /// <summary>
+        /// Specifies additional related data to be further included based on a related type that was just included.
+        /// </summary>
+        /// <typeparam name="T">The type of resource being queried.</typeparam>
+        /// <typeparam name="TPreviousProperty">The type of the proeprty that was just included.</typeparam>
+        /// <typeparam name="TProperty">The type of the related object to be included.</typeparam>
+        /// <param name="source">The source query.</param>
+        /// <param name="navigationPropertyPath">A lambda expression representing the navigation property to be included.</param>
+        /// <returns>A new query with the related data included.</returns>
         [QueryMarkerFunction]
         public static IIncludableQueryable<T, TProperty> ThenInclude<T, TPreviousProperty, TProperty>(
             this IIncludableQueryable<T, IEnumerable<TPreviousProperty>> source,

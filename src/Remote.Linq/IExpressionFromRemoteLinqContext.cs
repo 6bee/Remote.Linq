@@ -3,9 +3,16 @@
 namespace Remote.Linq
 {
     using Aqua.TypeSystem;
+    using System;
 
+    /// <summary>
+    /// Denotes a context for translating <i>Remote.Linq.Expressions</i> to <i>System.Linq</i>.
+    /// </summary>
     public interface IExpressionFromRemoteLinqContext : IExpressionValueMapperProvider
     {
+        /// <summary>
+        /// Gets a type resolver to resolve <see cref="TypeInfo"/> to <see cref="Type"/>.
+        /// </summary>
         ITypeResolver TypeResolver { get; }
     }
 }

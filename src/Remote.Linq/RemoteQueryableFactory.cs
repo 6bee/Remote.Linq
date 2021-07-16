@@ -2,7 +2,6 @@
 
 namespace Remote.Linq
 {
-    using System;
     using System.ComponentModel;
     using System.Linq;
 
@@ -29,8 +28,5 @@ namespace Remote.Linq
         /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => 0;
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public new Type GetType() => base.GetType();
     }
 }

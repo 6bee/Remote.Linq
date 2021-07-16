@@ -15,6 +15,9 @@ namespace Remote.Linq
     using MethodInfo = System.Reflection.MethodInfo;
     using SystemLinq = System.Linq.Expressions;
 
+    /// <summary>
+    /// Context for translating expressions from <i>System.Linq</i> to <i>Remote.Linq</i> and vice versa.
+    /// </summary>
     public class ExpressionTranslatorContext : IExpressionTranslatorContext
     {
         private sealed class IsKnownTypeProviderDecorator : IIsKnownTypeProvider
@@ -170,16 +173,24 @@ namespace Remote.Linq
             NeedsMapping = value => !IsKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
         }
 
+        /// <summary>
+        /// Gets a provider for checking types to be known. Unknown types require mapping (i.e. substitution) on translating expressions.
+        /// </summary>
         protected IIsKnownTypeProvider IsKnownTypeProvider { get; }
 
+        /// <inheritdoc/>
         public ITypeResolver TypeResolver { get; }
 
+        /// <inheritdoc/>
         public ITypeInfoProvider TypeInfoProvider { get; }
 
+        /// <inheritdoc/>
         public virtual IDynamicObjectMapper ValueMapper { get; }
 
+        /// <inheritdoc/>
         public Func<object, bool> NeedsMapping { get; }
 
+        /// <inheritdoc/>
         public Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally { get; }
 
         private static Grouping<TKey, TElement> MapGroupToDynamicObjectGraph<TKey, TElement>(IGrouping<TKey, TElement> group)

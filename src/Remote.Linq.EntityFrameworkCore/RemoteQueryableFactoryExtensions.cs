@@ -4,6 +4,7 @@ namespace Remote.Linq.EntityFrameworkCore
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
+    using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;

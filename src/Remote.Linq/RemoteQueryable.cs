@@ -8,6 +8,9 @@ namespace Remote.Linq
     using System.Linq;
     using SystemLinq = System.Linq.Expressions;
 
+    /// <summary>
+    /// Entry point for creating <see cref="IQueryable{T}"/> instance for remote execution.
+    /// </summary>
     public static class RemoteQueryable
     {
         /// <summary>
@@ -15,6 +18,7 @@ namespace Remote.Linq
         /// (or <see cref="IQueryable"/> respectively) suited for remote execution.
         /// </summary>
         /// <remarks>
+        /// Actual factory methods exist as extention methods.
         /// Make sure to add using for namespace containing targeted factory extension method (e.g. <i>using Remote.Linq;</i>).
         /// </remarks>
         public static RemoteQueryableFactory Factory { get; } = new RemoteQueryableFactory();
