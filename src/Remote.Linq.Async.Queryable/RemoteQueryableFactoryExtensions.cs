@@ -25,7 +25,7 @@ namespace Remote.Linq.Async.Queryable
             Func<RemoteLinq.Expression, IAsyncEnumerable<DynamicObject?>>? asyncStreamProvider,
             Func<RemoteLinq.Expression, ValueTask<DynamicObject?>>? asyncDataProvider,
             IExpressionToRemoteLinqContext? context = null)
-            => CreateAsyncQueryable<T, DynamicObject>(factory, asyncStreamProvider, asyncDataProvider, new DynamicItemMapper(context?.ValueMapper), context);
+            => CreateAsyncQueryable<T, DynamicObject>(factory, asyncStreamProvider, asyncDataProvider, new AsyncDynamicStreamResultMapper(context?.ValueMapper), context);
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncQueryable{T}" /> that utilizes the async stream provider specified.
@@ -65,9 +65,8 @@ namespace Remote.Linq.Async.Queryable
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<DynamicObject?>>? asyncStreamProvider,
             Func<RemoteLinq.Expression, CancellationToken, ValueTask<DynamicObject?>>? asyncDataProvider,
-            IDynamicObjectMapper? mapper = null,
             IExpressionToRemoteLinqContext? context = null)
-            => CreateAsyncQueryable<T, DynamicObject>(factory, asyncStreamProvider, asyncDataProvider, new DynamicItemMapper(mapper), context);
+            => CreateAsyncQueryable<T, DynamicObject>(factory, asyncStreamProvider, asyncDataProvider, new AsyncDynamicStreamResultMapper(context?.ValueMapper), context);
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncQueryable{T}" /> that utilizes the async stream provider specified.

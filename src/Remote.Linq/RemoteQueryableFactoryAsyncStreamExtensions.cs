@@ -23,7 +23,7 @@ namespace Remote.Linq
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, IAsyncEnumerable<DynamicObject>> dataProvider,
             IExpressionToRemoteLinqContext? context = null)
-            => CreateAsyncStreamQueryable<T, DynamicObject>(factory, dataProvider, new DynamicItemMapper(context?.ValueMapper), context);
+            => CreateAsyncStreamQueryable<T, DynamicObject>(factory, dataProvider, new AsyncDynamicStreamResultMapper(context?.ValueMapper), context);
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteStreamQueryable{T}" /> that utilizes the async stream provider specified.
@@ -44,7 +44,7 @@ namespace Remote.Linq
             this RemoteQueryableFactory factory,
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<DynamicObject>> dataProvider,
             IExpressionToRemoteLinqContext? context = null)
-            => CreateAsyncStreamQueryable<T, DynamicObject>(factory, dataProvider, new DynamicItemMapper(context?.ValueMapper), context);
+            => CreateAsyncStreamQueryable<T, DynamicObject>(factory, dataProvider, new AsyncDynamicStreamResultMapper(context?.ValueMapper), context);
 
         /// <summary>
         /// Creates an instance of <see cref="IAsyncRemoteStreamQueryable{T}" /> that utilizes the async stream provider specified.
