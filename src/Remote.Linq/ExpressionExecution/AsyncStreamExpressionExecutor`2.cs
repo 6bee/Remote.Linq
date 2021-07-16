@@ -25,7 +25,7 @@ namespace Remote.Linq.ExpressionExecution
         protected AsyncStreamExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
         {
             _queryableProvider = queryableProvider.CheckNotNull(nameof(queryableProvider));
-            context ??= new ExpressionTranslatorContext();
+            context ??= ExpressionTranslatorContext.Default;
             _typeResolver = context.TypeResolver;
             _canBeEvaluatedLocally = context.CanBeEvaluatedLocally;
         }

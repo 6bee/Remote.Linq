@@ -15,7 +15,7 @@ namespace Remote.Linq.DynamicQuery
         private readonly IDynamicObjectMapper _mapper;
 
         public AsyncDynamicStreamResultMapper(IDynamicObjectMapper? mapper)
-            => _mapper = mapper ?? new ExpressionTranslatorContext().ValueMapper;
+            => _mapper = mapper ?? ExpressionTranslatorContext.Default.ValueMapper;
 
         /// <inheritdoc/>
         public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject? source, Expression expression, CancellationToken cancellation = default)

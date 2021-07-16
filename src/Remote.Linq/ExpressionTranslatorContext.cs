@@ -172,6 +172,8 @@ namespace Remote.Linq
             NeedsMapping = value => !IsKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
         }
 
+        internal static ExpressionTranslatorContext Default => new ExpressionTranslatorContext();
+
         /// <summary>
         /// Gets a provider for checking types to be known. Unknown types require mapping (i.e. substitution) on translating expressions.
         /// </summary>

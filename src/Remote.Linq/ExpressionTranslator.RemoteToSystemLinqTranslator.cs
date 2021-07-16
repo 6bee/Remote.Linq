@@ -61,9 +61,9 @@ namespace Remote.Linq
             private readonly ITypeResolver _typeResolver;
             private readonly IDynamicObjectMapper _dynamicObjectMapper;
 
-            public RemoteToSystemLinqTranslator(IExpressionFromRemoteLinqContext? expressionTranslatorContext)
+            public RemoteToSystemLinqTranslator(IExpressionFromRemoteLinqContext expressionTranslatorContext)
             {
-                expressionTranslatorContext ??= new ExpressionTranslatorContext();
+                expressionTranslatorContext.AssertNotNull(nameof(expressionTranslatorContext));
 
                 _parameterExpressionCache = new Dictionary<RemoteLinq.ParameterExpression, SystemLinq.ParameterExpression>(ExpressionComparer.Default);
 
