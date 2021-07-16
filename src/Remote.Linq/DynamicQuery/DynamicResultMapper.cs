@@ -32,7 +32,7 @@ namespace Remote.Linq.DynamicQuery
                 return default;
             }
 
-            mapper ??= new DynamicQueryResultMapper().ValueMapper;
+            mapper ??= new ExpressionTranslatorContext().ValueMapper;
 
             var elementType = TypeHelper.GetElementType(typeof(TResult));
 
