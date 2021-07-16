@@ -37,10 +37,15 @@ namespace Remote.Linq
             private static Exception Exception => throw new RemoteLinqException($"{nameof(ResultWrapperExpression)} is meant for internal usage and must not be exposed externally.");
         }
 
-        // TODO: make private and use as default
-        public static IExpressionToRemoteLinqContext NoMappingContext => new NoMappingContextImpl();
+        /// <summary>
+        /// Gets an expression translator context that does not perform any value transformation other than expression and type information.
+        /// </summary>
+        /// <remarks>
+        /// This context is typically used for in-memory translation and processing that does not include serialization of expressions.
+        /// </remarks>
+        public static IExpressionTranslatorContext NoMappingContext => new NoMappingContextImpl();
 
-        private sealed class NoMappingContextImpl : IExpressionToRemoteLinqContext, IDynamicObjectMapper
+        private sealed class NoMappingContextImpl : IExpressionTranslatorContext, IDynamicObjectMapper
         {
             public ITypeInfoProvider TypeInfoProvider => new TypeInfoProvider();
 
@@ -54,7 +59,9 @@ namespace Remote.Linq
 
             DynamicObject? IDynamicObjectMapper.MapObject(object? obj, Func<Type, bool>? setTypeInformation) => throw NotSupportedException;
 
-            private NotSupportedException NotSupportedException => new NotSupportedException("operation must not be called as no value mapping should occure");
+            public ITypeResolver TypeResolver => Aqua.TypeSystem.TypeResolver.Instance;
+
+            private NotSupportedException NotSupportedException => new NotSupportedException("Operation must not be called as no value mapping should occure.");
         }
 
         /// <summary>
