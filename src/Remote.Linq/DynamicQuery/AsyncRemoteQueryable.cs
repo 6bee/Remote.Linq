@@ -5,8 +5,14 @@ namespace Remote.Linq.DynamicQuery
     using System;
     using System.Linq.Expressions;
 
+    /// <summary>
+    /// Provides functionality to compose queries for async remote execution.
+    /// </summary>
     public class AsyncRemoteQueryable : RemoteQueryable, IOrderedAsyncRemoteQueryable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncRemoteQueryable"/> class.
+        /// </summary>
         public AsyncRemoteQueryable(Type elemntType, IAsyncRemoteQueryProvider provider, Expression? expression = null)
             : base(elemntType, provider, expression)
         {

@@ -29,6 +29,7 @@ namespace Remote.Linq.DynamicQuery
             _context = context;
         }
 
+        /// <inheritdoc/>
         public async IAsyncEnumerable<TResult> ExecuteAsyncRemoteStream<TResult>(Expression expression, [EnumeratorCancellation] CancellationToken cancellation)
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
@@ -48,6 +49,7 @@ namespace Remote.Linq.DynamicQuery
             }
         }
 
+        /// <inheritdoc/>
         IQueryable IQueryProvider.CreateQuery(Expression expression)
         {
             var elementType = TypeHelper.GetElementType(expression.CheckNotNull(nameof(expression)).Type)
@@ -55,10 +57,22 @@ namespace Remote.Linq.DynamicQuery
             return new AsyncRemoteStreamQueryable(elementType, this, expression);
         }
 
-        IQueryable<TElement> IQueryProvider.CreateQuery<TElement>(Expression expression) => new AsyncRemoteStreamQueryable<TElement>(this, expression);
+        /// <inheritdoc/>
+        IQueryable<TElement> IQueryProvider.CreateQuery<TElement>(Expression expression)
+            => new AsyncRemoteStreamQueryable<TElement>(this, expression);
 
-        object IQueryProvider.Execute(Expression expression) => throw AsyncRemoteStreamQueryable.QueryOperationNotSupportedException;
+        /// <summary>
+        /// This operation must not be used on stream queryable.
+        /// </summary>
+        /// <exception cref="NotSupportedException">Always thrown for stream queryable.</exception>
+        object IQueryProvider.Execute(Expression expression)
+            => throw AsyncRemoteStreamQueryable.QueryOperationNotSupportedException;
 
-        TResult IQueryProvider.Execute<TResult>(Expression expression) => throw AsyncRemoteStreamQueryable.QueryOperationNotSupportedException;
+        /// <summary>
+        /// This operation must not be used on stream queryable.
+        /// </summary>
+        /// <exception cref="NotSupportedException">Always thrown for stream queryable.</exception>
+        TResult IQueryProvider.Execute<TResult>(Expression expression)
+            => throw AsyncRemoteStreamQueryable.QueryOperationNotSupportedException;
     }
 }

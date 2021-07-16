@@ -7,8 +7,14 @@ namespace Remote.Linq.DynamicQuery
     using System.Linq;
     using System.Linq.Expressions;
 
+    /// <summary>
+    /// Provides functionality to compose queries for remote execution.
+    /// </summary>
     public class RemoteQueryable : IOrderedRemoteQueryable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoteQueryable"/> class.
+        /// </summary>
         public RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression? expression = null)
         {
             ElementType = elemntType.CheckNotNull(nameof(elemntType));
@@ -16,6 +22,7 @@ namespace Remote.Linq.DynamicQuery
             Expression = expression ?? Expression.Constant(this);
         }
 
+        /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
             => Provider.Execute(Expression) is IEnumerable enumerable
             ? enumerable.GetEnumerator()

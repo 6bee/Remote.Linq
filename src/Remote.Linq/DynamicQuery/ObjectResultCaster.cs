@@ -6,8 +6,12 @@ namespace Remote.Linq.DynamicQuery
     using Aqua.TypeSystem;
     using System.Linq.Expressions;
 
+    /// <summary>
+    /// Query result mapper using type casting.
+    /// </summary>
     public sealed class ObjectResultCaster : IQueryResultMapper<object>
     {
+        /// <inheritdoc/>
         public TResult? MapResult<TResult>(object? source, Expression expression)
         {
             if (source is not null && source is not TResult && source.IsCollection(out var enumerable))

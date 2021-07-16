@@ -43,7 +43,8 @@ namespace Remote.Linq.DynamicQuery
         /// </summary>
         public static RemoteExpression TranslateExpression(SystemExpression expression, IExpressionToRemoteLinqContext? context = null)
         {
-            var slinq1 = expression.CheckNotNull(nameof(expression)).SimplifyIncorporationOfRemoteQueryables();
+            expression.AssertNotNull(nameof(expression));
+            var slinq1 = expression.SimplifyIncorporationOfRemoteQueryables();
             var rlinq1 = slinq1.ToRemoteLinqExpression(context);
             var rlinq2 = rlinq1.ReplaceQueryableByResourceDescriptors(context?.TypeInfoProvider);
             var rlinq3 = rlinq2.ReplaceGenericQueryArgumentsByNonGenericArguments();

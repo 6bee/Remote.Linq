@@ -14,9 +14,13 @@ namespace Remote.Linq.DynamicQuery
     {
         private readonly IDynamicObjectMapper? _mapper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicResultMapper"/> class.
+        /// </summary>
         public DynamicResultMapper(IDynamicObjectMapper? mapper)
             => _mapper = mapper;
 
+        /// <inheritdoc/>
         public TResult? MapResult<TResult>(DynamicObject? source, Expression expression)
             => MapToType<TResult>(source, _mapper, expression);
 

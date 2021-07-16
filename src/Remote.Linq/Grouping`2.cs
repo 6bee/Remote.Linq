@@ -32,7 +32,7 @@ namespace Remote.Linq
         /// <inheritdoc/>
         public IEnumerator<TElement> GetEnumerator()
         {
-            var elements = Elements ?? throw new InvalidOperationException($"{nameof(Elements)} property must not be null");
+            var elements = Elements ?? throw new InvalidOperationException($"{nameof(Elements)} property must not be null.");
             return ((IEnumerable<TElement>)elements).GetEnumerator();
         }
 

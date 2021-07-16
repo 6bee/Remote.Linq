@@ -7,8 +7,14 @@ namespace Remote.Linq.DynamicQuery
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Provides functionality to compose queries for async remote execution.
+    /// </summary>
     public sealed class AsyncRemoteQueryable<T> : AsyncRemoteQueryable, IOrderedAsyncRemoteQueryable<T>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncRemoteQueryable{T}"/> class.
+        /// </summary>
         public AsyncRemoteQueryable(IAsyncRemoteQueryProvider provider, Expression? expression = null)
             : base(typeof(T), provider, expression)
         {
