@@ -4,6 +4,9 @@ namespace Remote.Linq
 {
     using System.Linq;
 
+    /// <summary>
+    /// Provides functionality to compose queries for remote execution as async stream.
+    /// </summary>
     public interface IAsyncRemoteStreamQueryable : IQueryable, IRemoteLinqQueryable
     {
         /// <summary>

@@ -21,14 +21,19 @@ namespace Remote.Linq.DynamicQuery
             ? enumerable.GetEnumerator()
             : throw new RemoteLinqException($"Expression execution did not return an {typeof(IEnumerable)}");
 
+        /// <inheritdoc />
         public Type ElementType { get; }
 
+        /// <inheritdoc />
         public Expression Expression { get; }
 
+        /// <inheritdoc />
         public IRemoteQueryProvider Provider { get; }
 
+        /// <inheritdoc />
         IQueryProvider IQueryable.Provider => Provider;
 
+        /// <inheritdoc />
         Type IRemoteLinqQueryable.ResourceType => ElementType;
     }
 }

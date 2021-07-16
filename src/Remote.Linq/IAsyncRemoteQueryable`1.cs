@@ -6,6 +6,9 @@ namespace Remote.Linq
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Provides functionality to compose queries for async remote execution.
+    /// </summary>
     public interface IAsyncRemoteQueryable<T> : IAsyncRemoteQueryable, IRemoteQueryable<T>
     {
         /// <summary>

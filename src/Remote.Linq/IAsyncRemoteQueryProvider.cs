@@ -6,6 +6,9 @@ namespace Remote.Linq
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Represents a query provider for <i>Remote.Linq</i> task based async queryable sequences.
+    /// </summary>
     public interface IAsyncRemoteQueryProvider : IRemoteQueryProvider
     {
         /// <summary>

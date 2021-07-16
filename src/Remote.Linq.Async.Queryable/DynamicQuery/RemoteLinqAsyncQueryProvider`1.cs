@@ -15,6 +15,9 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
     using RemoteLinq = Remote.Linq.Expressions;
     using SystemLinq = System.Linq.Expressions;
 
+    /// <summary>
+    /// Represents a query provider for <i>Remote.Linq</i> version of asynchronous queryable sequences.
+    /// </summary>
     public class RemoteLinqAsyncQueryProvider<TSource> : IRemoteLinqAsyncQueryProvider
     {
         private static readonly MethodInfo _mapAsyncEnumerableMethodInfo =
@@ -28,6 +31,9 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
         private readonly IExpressionToRemoteLinqContext? _context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoteLinqAsyncQueryProvider{TSource}"/> class.
+        /// </summary>
         [SecuritySafeCritical]
         public RemoteLinqAsyncQueryProvider(
             Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? asyncStreamProvider,
@@ -48,9 +54,11 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
             _context = context;
         }
 
+        /// <inheritdoc />
         public IAsyncQueryable<TElement> CreateQuery<TElement>(SystemLinq.Expression expression)
              => new RemoteLinqAsyncQueryable<TElement>(this, expression);
 
+        /// <inheritdoc />
         public async ValueTask<TResult> ExecuteAsync<TResult>(SystemLinq.Expression expression, CancellationToken cancellation)
         {
             if (typeof(TResult).Implements(typeof(IAsyncEnumerable<>), out var genericArguments))

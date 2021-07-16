@@ -5,9 +5,15 @@ namespace Remote.Linq
     using Remote.Linq.DynamicQuery;
     using System;
 
+    /// <summary>
+    /// Denotes a <i>Remote.Linq</i> queryable resource.
+    /// </summary>
     [QueryArgument]
     public interface IRemoteLinqQueryable
     {
+        /// <summary>
+        /// Gets the type of the remote queryable resource items.
+        /// </summary>
         Type ResourceType { get; }
     }
 }
