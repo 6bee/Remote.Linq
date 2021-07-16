@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Async
 {
-    using Remote.Linq;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;

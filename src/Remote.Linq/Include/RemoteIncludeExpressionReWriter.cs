@@ -3,11 +3,11 @@
 namespace Remote.Linq.Include
 {
     using Aqua.TypeExtensions;
-    using Remote.Linq;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using SystemLinq = System.Linq.Expressions;
@@ -186,7 +186,14 @@ namespace Remote.Linq.Include
             private StackedIncludableQueryable<T, TProperty> ThenIncludeAfterEnumerable<T, TPreviousProperty, TProperty>(Expression queryable, Expression navigationPropertyPath)
                 => IncludeCore<T, TPreviousProperty, TProperty>(queryable, navigationPropertyPath, true);
 
-            private StackedIncludableQueryable<T, TProperty> IncludeCore<T, TPreviousProperty, TProperty>(Expression queryableExpression, Expression navigationExpression, bool isNestedStatement)
+            [SuppressMessage(
+                "Major Code Smell",
+                "S2326:Unused type parameters should be removed",
+                Justification = "Type parameters according original signatures of 'Include' and 'ThenInclude' methods. ")]
+            private StackedIncludableQueryable<T, TProperty> IncludeCore<T, TPreviousProperty, TProperty>(
+                Expression queryableExpression,
+                Expression navigationExpression,
+                bool isNestedStatement)
             {
                 queryableExpression.AssertNotNull(nameof(queryableExpression));
                 navigationExpression.AssertNotNull(nameof(navigationExpression));
@@ -194,7 +201,7 @@ namespace Remote.Linq.Include
                 var navigationPropertyPath = ToSystemLambdaExpression(navigationExpression);
                 if (!TryParsePath(navigationPropertyPath.Body, out var path) || path is null)
                 {
-                    throw new ArgumentException("Invalid include path expression", nameof(navigationPropertyPath));
+                    throw new ArgumentException("Invalid include path expression", nameof(navigationExpression));
                 }
 
                 Expression source;
@@ -286,6 +293,7 @@ namespace Remote.Linq.Include
                 return expression;
             }
 
+            [SuppressMessage("Major Code Smell", "S2326:Unused type parameters should be removed", Justification = "TProperty type parameter ")]
             private sealed class StackedIncludableQueryable<T, TProperty> : IStackedIncludableQueryable<T>
             {
                 public StackedIncludableQueryable(Expression expression, Expression parent, string includePath)

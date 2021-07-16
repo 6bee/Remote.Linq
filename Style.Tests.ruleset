@@ -46,6 +46,7 @@
     <Rule Id="S2376" Action="Info" />
     <Rule Id="S2933" Action="Info" />
     <Rule Id="S3218" Action="Info" />
+    <Rule Id="S3442" Action="Info" />
     <Rule Id="S3459" Action="None" />
     <Rule Id="S3881" Action="Info" />
   </Rules>

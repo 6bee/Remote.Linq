@@ -5,7 +5,6 @@ namespace Remote.Linq
     using Aqua.TypeExtensions;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -14,50 +13,6 @@ namespace Remote.Linq
     {
         internal static class Queryable
         {
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            internal sealed class TSource
-            {
-                private TSource()
-                {
-                }
-            }
-
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TResult
-            {
-                private TResult()
-                {
-                }
-            }
-
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TKey
-            {
-                private TKey()
-                {
-                }
-            }
-
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TAccumulate
-            {
-                private TAccumulate()
-                {
-                }
-            }
-
             internal static readonly MethodInfo AsQueryable = GetQueryableMethod(
                 nameof(System.Linq.Queryable.AsQueryable),
                 typeof(IEnumerable<TSource>));

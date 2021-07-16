@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.SimpleQuery
 {
-    using Remote.Linq;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.ComponentModel;

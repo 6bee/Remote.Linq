@@ -4,8 +4,6 @@ namespace Remote.Linq.SimpleQuery
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
-    using Remote.Linq;
-    using Remote.Linq.SimpleQuery;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -50,10 +48,5 @@ namespace Remote.Linq.SimpleQuery
             => enumerable
             .AsQueryable()
             .ApplyQuery(query, expressionVisitor);
-
-#if NETSTANDARD2_0
-        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source)
-            => new HashSet<T>(source);
-#endif // NETSTANDARD2_0
     }
 }

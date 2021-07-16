@@ -5,13 +5,14 @@ namespace Remote.Linq.DynamicQuery
     using System;
     using System.Linq.Expressions;
 
-    public class AsyncRemoteQueryable : RemoteQueryable, IAsyncRemoteQueryable, IOrderedAsyncRemoteQueryable
+    public class AsyncRemoteQueryable : RemoteQueryable, IOrderedAsyncRemoteQueryable
     {
         public AsyncRemoteQueryable(Type elemntType, IAsyncRemoteQueryProvider provider, Expression? expression = null)
             : base(elemntType, provider, expression)
         {
         }
 
+        /// <inheritdoc/>
         public new IAsyncRemoteQueryProvider Provider => (IAsyncRemoteQueryProvider)base.Provider;
     }
 }

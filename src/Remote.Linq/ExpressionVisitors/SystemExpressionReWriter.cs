@@ -65,35 +65,35 @@ namespace Remote.Linq.ExpressionVisitors
             protected override Expression VisitMemberAccess(MemberExpression node)
             {
                 var declaringType = node.Member.DeclaringType;
-                if (declaringType is not null && node.Expression is not null)
+                if (declaringType is not null &&
+                    node.Expression is not null &&
+                    (declaringType.IsAnonymousType()
+                    || (declaringType.IsGenericType && declaringType.GetGenericArguments().Any(x => x.IsAnonymousType()))))
                 {
-                    if (declaringType.IsAnonymousType() ||
-                        (declaringType.IsGenericType && declaringType.GetGenericArguments().Any(x => x.IsAnonymousType())))
+                    var name = node.Member.Name;
+                    var instance = Visit(node.Expression);
+                    if (instance.Type == typeof(DynamicObject))
                     {
-                        var name = node.Member.Name;
-                        var instance = Visit(node.Expression);
-                        if (instance.Type == typeof(DynamicObject))
+                        var method = _dynamicObjectGetMethod;
+                        var memberAccessCallExpression = Expression.Call(instance, method, Expression.Constant(name));
+                        var type = ReplaceAnonymousType(node.Type);
+                        if (type == typeof(object))
                         {
-                            var method = _dynamicObjectGetMethod;
-                            var memberAccessCallExpression = Expression.Call(instance, method, Expression.Constant(name));
-                            var type = ReplaceAnonymousType(node.Type);
-                            if (type == typeof(object))
-                            {
-                                return memberAccessCallExpression;
-                            }
-
-                            var conversionExpression = Expression.Convert(memberAccessCallExpression, type);
-                            return conversionExpression;
+                            return memberAccessCallExpression;
                         }
 
-                        var member = instance.Type.GetMember(name, node.Member.MemberType, (BindingFlags)0xfffffff);
-                        if (member.Length != 1)
-                        {
-                            throw new RemoteLinqException($"Failed to bind {node.Member.MemberType.ToString().ToLower(CultureInfo.CurrentCulture)} {name} of type {instance.Type}");
-                        }
-
-                        return Expression.MakeMemberAccess(instance, member.Single());
+                        var conversionExpression = Expression.Convert(memberAccessCallExpression, type);
+                        return conversionExpression;
                     }
+
+                    var member = instance.Type.GetMember(name, node.Member.MemberType, (BindingFlags)0xfffffff);
+                    if (member.Length != 1)
+                    {
+                        throw new RemoteLinqException(
+                            $"Failed to bind {node.Member.MemberType.ToString().ToLower(CultureInfo.CurrentCulture)} {name} of type {instance.Type}");
+                    }
+
+                    return Expression.MakeMemberAccess(instance, member.Single());
                 }
 
                 return base.VisitMemberAccess(node);

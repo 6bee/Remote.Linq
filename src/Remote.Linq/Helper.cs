@@ -60,5 +60,10 @@ namespace Remote.Linq
                 "{1}{0}{1}",
                 value is null ? nullValue : value.ToString() ?? value.GetType().ToString(),
                 value is string ? @"""" : value is char ? "'" : null);
+
+#if NETSTANDARD2_0
+        internal static System.Collections.Generic.HashSet<T> ToHashSet<T>(this System.Collections.Generic.IEnumerable<T> source)
+            => new System.Collections.Generic.HashSet<T>(source);
+#endif // NETSTANDARD2_0
     }
 }

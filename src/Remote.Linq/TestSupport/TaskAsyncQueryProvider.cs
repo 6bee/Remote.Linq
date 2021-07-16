@@ -2,10 +2,10 @@
 
 namespace Remote.Linq.TestSupport
 {
+    using Aqua.TypeExtensions;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionExecution;
     using Remote.Linq.ExpressionVisitors;
-    using System;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -19,30 +19,33 @@ namespace Remote.Linq.TestSupport
     internal sealed class TaskAsyncQueryProvider : IAsyncRemoteQueryProvider
     {
         private static readonly MethodInfo _executeMethod = typeof(TaskAsyncQueryProvider)
-            .GetMethods()
-            .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(Execute), StringComparison.Ordinal));
+            .GetMethodEx(nameof(Execute), new[] { typeof(MethodInfos.TResult) }, typeof(Expression));
 
         private static readonly MethodInfo _createQueryMethod = typeof(TaskAsyncQueryProvider)
-            .GetMethods()
-            .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(CreateQuery), StringComparison.Ordinal));
+            .GetMethodEx(nameof(CreateQuery), new[] { typeof(MethodInfos.TElement) }, typeof(Expression));
 
         private readonly IExpressionTranslatorContext? _context;
 
         public TaskAsyncQueryProvider(IExpressionTranslatorContext? context = null)
             => _context = context;
 
+        /// <inheritdoc/>
         public IQueryable CreateQuery(Expression expression)
-            => this.InvokeAndUnwrap<IQueryable>(_createQueryMethod, expression) !;
+            => this.InvokeAndUnwrap<IQueryable>(_createQueryMethod, expression);
 
+        /// <inheritdoc/>
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
             => new AsyncRemoteQueryable<TElement>(this, expression);
 
+        /// <inheritdoc/>
         public ValueTask<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation)
             => new ValueTask<TResult>(Execute<TResult>(expression) !);
 
+        /// <inheritdoc/>
         public object? Execute(Expression expression)
-            => this.InvokeAndUnwrap<object>(_executeMethod, expression);
+            => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
 
+        /// <inheritdoc/>
         public TResult Execute<TResult>(Expression expression)
         {
             var systemlinq = expression.SimplifyIncorporationOfRemoteQueryables();

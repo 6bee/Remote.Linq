@@ -7,19 +7,22 @@ namespace Remote.Linq.DynamicQuery
     using System.Threading;
     using System.Threading.Tasks;
 
-    public sealed class AsyncRemoteQueryable<T> : AsyncRemoteQueryable, IAsyncRemoteQueryable<T>, IOrderedAsyncRemoteQueryable<T>
+    public sealed class AsyncRemoteQueryable<T> : AsyncRemoteQueryable, IOrderedAsyncRemoteQueryable<T>
     {
         public AsyncRemoteQueryable(IAsyncRemoteQueryProvider provider, Expression? expression = null)
             : base(typeof(T), provider, expression)
         {
         }
 
+        /// <inheritdoc/>
         public ValueTask<IEnumerable<T>> ExecuteAsync(CancellationToken cancellation = default)
             => Provider.ExecuteAsync<IEnumerable<T>>(Expression, cancellation);
 
+        /// <inheritdoc/>
         public IEnumerable<T> Execute()
             => Provider.Execute<IEnumerable<T>>(Expression);
 
+        /// <inheritdoc/>
         public IEnumerator<T> GetEnumerator()
             => Execute().GetEnumerator();
     }

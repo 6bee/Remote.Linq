@@ -6,35 +6,12 @@ namespace Remote.Linq
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
 
     partial class MethodInfos
     {
         internal static class Enumerable
         {
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TSource
-            {
-                private TSource()
-                {
-                }
-            }
-
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TResult
-            {
-                private TResult()
-                {
-                }
-            }
-
             internal static readonly MethodInfo Cast = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.Cast),
                 new[] { typeof(TResult) },

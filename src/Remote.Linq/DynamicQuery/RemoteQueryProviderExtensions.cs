@@ -10,9 +10,9 @@ namespace Remote.Linq.DynamicQuery
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class RemoteQueryProviderExtensions
     {
-        public static TResult? InvokeAndUnwrap<TResult>(this IRemoteQueryProvider queryProvider, MethodInfo method, Expression expression)
+        public static TResult InvokeAndUnwrap<TResult>(this IRemoteQueryProvider queryProvider, MethodInfo method, Expression expression)
             => method
-            .MakeGenericMethod(typeof(IQueryable).IsAssignableFrom(expression.Type) ? typeof(object) : expression.Type) !
+            .MakeGenericMethod(typeof(IQueryable).IsAssignableFrom(expression.Type) ? typeof(object) : expression.Type)
             .InvokeAndUnwrap<TResult>(queryProvider, expression);
     }
 }
