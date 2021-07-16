@@ -87,7 +87,7 @@ namespace Remote.Linq
         private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
 
         private static readonly MethodInfo _mapGroupToDynamicObjectGraphMethodDefinition =
-            typeof(ExpressionTranslatorContext).GetMethod(nameof(MapGroupToDynamicObjectGraph), PrivateStatic) !;
+            typeof(ExpressionTranslatorContext).GetMethodEx(nameof(MapGroupToDynamicObjectGraph));
 
         private static readonly Func<Type[], MethodInfo> _mapGroupToDynamicObjectGraphMethod =
             genericTypeArguments => _mapGroupToDynamicObjectGraphMethodDefinition.MakeGenericMethod(genericTypeArguments);

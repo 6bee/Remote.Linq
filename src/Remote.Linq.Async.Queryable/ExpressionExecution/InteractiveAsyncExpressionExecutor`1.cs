@@ -29,7 +29,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
             var queryResultType = queryResult.GetType();
             if (queryResultType.Implements(typeof(ValueTask<>), out var valueTaskResultType))
             {
-                var m = typeof(ValueTask<>).MakeGenericType(valueTaskResultType).GetMethod(nameof(ValueTask<int>.AsTask)) !;
+                var m = typeof(ValueTask<>).MakeGenericType(valueTaskResultType).GetMethodEx(nameof(ValueTask<object>.AsTask));
                 queryResult = m.Invoke(queryResult, null) !;
                 queryResultType = queryResult.GetType();
             }

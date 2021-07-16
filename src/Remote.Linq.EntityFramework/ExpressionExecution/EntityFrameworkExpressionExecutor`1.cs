@@ -59,7 +59,7 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 
             if (queryResult is not null && queryResult.GetType().Implements(typeof(ValueTask<>), out var genericArguments))
             {
-                var m = typeof(ValueTask<>).MakeGenericType(genericArguments!).GetMethod(nameof(ValueTask<int>.AsTask)) !;
+                var m = typeof(ValueTask<>).MakeGenericType(genericArguments).GetMethodEx(nameof(ValueTask<int>.AsTask));
                 queryResult = m.Invoke(queryResult, null);
             }
 

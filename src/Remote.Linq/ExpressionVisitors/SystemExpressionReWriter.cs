@@ -39,7 +39,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             private static readonly ConstructorInfo _dynamicPropertyContructorInfo = typeof(Property).GetConstructor(new[] { typeof(string), typeof(object) }) !;
             private static readonly ConstructorInfo _dynamicObjectContructorInfo = typeof(DynamicObject).GetConstructor(new[] { typeof(IEnumerable<Property>) }) !;
-            private static readonly MethodInfo _dynamicObjectGetMethod = typeof(DynamicObject).GetMethod(nameof(DynamicObject.Get)) !;
+            private static readonly MethodInfo _dynamicObjectGetMethod = typeof(DynamicObject).GetMethodEx(nameof(DynamicObject.Get), typeof(string));
 
             private readonly Dictionary<ParameterExpression, ParameterExpression> _parameterMap = new Dictionary<ParameterExpression, ParameterExpression>();
 
@@ -74,8 +74,7 @@ namespace Remote.Linq.ExpressionVisitors
                     var instance = Visit(node.Expression);
                     if (instance.Type == typeof(DynamicObject))
                     {
-                        var method = _dynamicObjectGetMethod;
-                        var memberAccessCallExpression = Expression.Call(instance, method, Expression.Constant(name));
+                        var memberAccessCallExpression = Expression.Call(instance, _dynamicObjectGetMethod, Expression.Constant(name));
                         var type = ReplaceAnonymousType(node.Type);
                         if (type == typeof(object))
                         {

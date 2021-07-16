@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.EnumerableExtensions;
+    using Aqua.TypeExtensions;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
@@ -104,8 +105,8 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class NonGenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
-            private static readonly System.Reflection.MethodInfo CreateVariableQueryArgumentListMethodInfo =
-                typeof(NonGenericVariableQueryArgumentVisitor).GetMethod(nameof(CreateVariableQueryArgumentList), BindingFlags.Static | BindingFlags.NonPublic) !;
+            private static readonly MethodInfo CreateVariableQueryArgumentListMethodInfo =
+                typeof(NonGenericVariableQueryArgumentVisitor).GetMethodEx(nameof(CreateVariableQueryArgumentList));
 
             internal Expression Run(Expression expression) => Visit(expression);
 

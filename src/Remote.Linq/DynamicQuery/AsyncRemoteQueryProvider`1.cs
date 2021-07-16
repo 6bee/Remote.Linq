@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.DynamicQuery
 {
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -16,8 +17,7 @@ namespace Remote.Linq.DynamicQuery
     public sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
     {
         private static readonly MethodInfo _executeMethod = typeof(AsyncRemoteQueryProvider<TSource>)
-            .GetMethods()
-            .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(Execute), StringComparison.Ordinal));
+            .GetMethodEx(nameof(Execute), new[] { typeof(MethodInfos.TResult) }, typeof(SystemLinq.Expression));
 
         private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>> _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
@@ -33,8 +33,11 @@ namespace Remote.Linq.DynamicQuery
             _context = context;
         }
 
-        public IQueryable<TElement> CreateQuery<TElement>(SystemLinq.Expression expression) => new AsyncRemoteQueryable<TElement>(this, expression);
+        /// <inheritdoc/>
+        public IQueryable<TElement> CreateQuery<TElement>(SystemLinq.Expression expression)
+            => new AsyncRemoteQueryable<TElement>(this, expression);
 
+        /// <inheritdoc/>
         public IQueryable CreateQuery(SystemLinq.Expression expression)
         {
             var elementType = TypeHelper.GetElementType(expression.CheckNotNull(nameof(expression)).Type)
@@ -42,6 +45,7 @@ namespace Remote.Linq.DynamicQuery
             return new RemoteQueryable(elementType, this, expression);
         }
 
+        /// <inheritdoc/>
         public TResult Execute<TResult>(SystemLinq.Expression expression)
         {
             try
@@ -62,6 +66,7 @@ namespace Remote.Linq.DynamicQuery
             }
         }
 
+        /// <inheritdoc/>
         public async ValueTask<TResult> ExecuteAsync<TResult>(SystemLinq.Expression expression, CancellationToken cancellation)
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
@@ -75,6 +80,8 @@ namespace Remote.Linq.DynamicQuery
             return result;
         }
 
-        public object? Execute(SystemLinq.Expression expression) => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
+        /// <inheritdoc/>
+        public object? Execute(SystemLinq.Expression expression)
+            => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
     }
 }

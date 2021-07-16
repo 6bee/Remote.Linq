@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.DynamicQuery
 {
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using System;
     using System.Linq;
@@ -11,8 +12,7 @@ namespace Remote.Linq.DynamicQuery
     public sealed class RemoteQueryProvider<TSource> : IRemoteQueryProvider
     {
         private static readonly MethodInfo _executeMethod = typeof(RemoteQueryProvider<TSource>)
-            .GetMethods()
-            .Single(x => x.IsGenericMethod && string.Equals(x.Name, nameof(Execute), StringComparison.Ordinal));
+            .GetMethodEx(nameof(Execute), new[] { typeof(MethodInfos.TResult) }, typeof(Expression));
 
         private readonly Func<Expressions.Expression, TSource?> _dataProvider;
         private readonly IQueryResultMapper<TSource> _resultMapper;
@@ -28,9 +28,11 @@ namespace Remote.Linq.DynamicQuery
             _context = context;
         }
 
+        /// <inheritdoc/>
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
             => new RemoteQueryable<TElement>(this, expression);
 
+        /// <inheritdoc/>
         public IQueryable CreateQuery(Expression expression)
         {
             var elementType = TypeHelper.GetElementType(expression.Type)
@@ -38,6 +40,7 @@ namespace Remote.Linq.DynamicQuery
             return new RemoteQueryable(elementType, this, expression);
         }
 
+        /// <inheritdoc/>
         public TResult Execute<TResult>(Expression expression)
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
@@ -47,6 +50,7 @@ namespace Remote.Linq.DynamicQuery
             return _resultMapper.MapResult<TResult>(dataRecords, expression) !;
         }
 
+        /// <inheritdoc/>
         public object? Execute(Expression expression)
             => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
     }
