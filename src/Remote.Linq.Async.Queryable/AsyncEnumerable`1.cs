@@ -19,7 +19,7 @@ namespace Remote.Linq
 
         public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
-            var elements = Elements ?? throw new InvalidOperationException($"{nameof(Elements)} property must not be null");
+            var elements = Elements ?? throw new InvalidOperationException($"{nameof(Elements)} property must not be null.");
             return elements.ToAsyncEnumerable().GetAsyncEnumerator(cancellationToken);
         }
     }

@@ -5,14 +5,16 @@ namespace Remote.Linq.DynamicQuery
     using Aqua.Dynamic;
     using System;
     using System.Runtime.Serialization;
+    using RemoteLinq = Remote.Linq.Expressions;
 
     /// <summary>
-    /// This type is used to wrap complex constant query argument values in <see cref="Expressions.ConstantExpression"/>.
+    /// This type is used to wrap complex constant query argument values in <see cref="RemoteLinq.ConstantExpression"/>.
     /// It is used in particular to substitute anonymous types within linq expressions.
     /// </summary>
     [Serializable]
     [DataContract]
     [KnownType(typeof(DynamicObject))]
+    [QueryArgument]
     public sealed class ConstantQueryArgument
     {
         public ConstantQueryArgument()
