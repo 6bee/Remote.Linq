@@ -5,7 +5,6 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
-    using Remote.Linq.DynamicQuery;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -14,7 +13,10 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
     using MethodInfo = System.Reflection.MethodInfo;
     using SystemLinq = System.Linq.Expressions;
 
-    public class DynamicAsyncQueryResultMapper : DynamicQueryResultMapper
+    /// <summary>
+    /// Context for translating async query expressions from <i>Remote.Linq</i> to <i>System.Linq</i>.
+    /// </summary>
+    public class AsyncQueryExpressionTranslatorContext : ExpressionTranslatorContext
     {
         protected class DynamicAsyncQueryResultObjectMapper : ExpressionTranslatorContextObjectMapper
         {
@@ -48,8 +50,8 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
             }
         }
 
-        private static readonly MethodInfo _mapAsyncGroupToDynamicObjectGraph = typeof(DynamicAsyncQueryResultMapper).GetMethodEx(nameof(MapAsyncGroupToDynamicObjectGraph));
-        private static readonly MethodInfo _mapAsyncEnumerable = typeof(DynamicAsyncQueryResultMapper).GetMethodEx(nameof(MapAsyncEnumerable));
+        private static readonly MethodInfo _mapAsyncGroupToDynamicObjectGraph = typeof(AsyncQueryExpressionTranslatorContext).GetMethodEx(nameof(MapAsyncGroupToDynamicObjectGraph));
+        private static readonly MethodInfo _mapAsyncEnumerable = typeof(AsyncQueryExpressionTranslatorContext).GetMethodEx(nameof(MapAsyncEnumerable));
 
         private static readonly Func<Type[], MethodInfo> MapAsyncGroupToDynamicObjectGraphMethod =
             genericArguments => _mapAsyncGroupToDynamicObjectGraph.MakeGenericMethod(genericArguments);
@@ -57,7 +59,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
         private static readonly Func<Type[], MethodInfo> MapAsyncEnumerableMethod =
             genericArguments => _mapAsyncEnumerable.MakeGenericMethod(genericArguments);
 
-        public DynamicAsyncQueryResultMapper(
+        public AsyncQueryExpressionTranslatorContext(
             ITypeResolver? typeResolver = null,
             ITypeInfoProvider? typeInfoProvider = null,
             IIsKnownTypeProvider? isKnownTypeProvider = null,
@@ -75,7 +77,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
         private static AsyncGrouping<TKey, TElement> MapAsyncGroupToDynamicObjectGraph<TKey, TElement>(IAsyncGrouping<TKey, TElement> group)
             => group is AsyncGrouping<TKey, TElement> remoteLinqGroup
             ? remoteLinqGroup
-            : new AsyncGrouping<TKey, TElement> { Key = group.Key, Elements = EnumerateBlocking(group).ToArray(), };
+            : new AsyncGrouping<TKey, TElement> { Key = group.Key, Elements = EnumerateBlocking(group).ToArray() };
 
         private static IEnumerable<T> EnumerateBlocking<T>(IAsyncEnumerable<T> source)
         {
