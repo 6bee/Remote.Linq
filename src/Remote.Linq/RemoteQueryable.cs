@@ -4,7 +4,6 @@ namespace Remote.Linq
 {
     using Aqua.TypeSystem;
     using System;
-    using System.ComponentModel;
     using System.Linq;
     using SystemLinq = System.Linq.Expressions;
 
@@ -25,13 +24,5 @@ namespace Remote.Linq
 
         internal static ExpressionTranslatorContext? GetExpressionTranslatorContextOrNull(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
             => typeInfoProvider is null && canBeEvaluatedLocally is null ? null : new ExpressionTranslatorContext(typeInfoProvider, canBeEvaluatedLocally);
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static new bool Equals(object? objA, object? objB)
-            => object.Equals(objA, objB);
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static new bool ReferenceEquals(object? objA, object? objB)
-            => object.ReferenceEquals(objA, objB);
     }
 }
