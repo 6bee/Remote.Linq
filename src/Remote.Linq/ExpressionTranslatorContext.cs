@@ -19,6 +19,25 @@ namespace Remote.Linq
     /// </summary>
     public class ExpressionTranslatorContext : IExpressionTranslatorContext
     {
+        private sealed class NoMappingContextImpl : IExpressionTranslatorContext, IDynamicObjectMapper
+        {
+            public ITypeInfoProvider TypeInfoProvider => new TypeInfoProvider();
+
+            public Func<object, bool> NeedsMapping => _ => false;
+
+            public IDynamicObjectMapper ValueMapper => this;
+
+            public Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally => _ => false;
+
+            object? IDynamicObjectMapper.Map(DynamicObject? obj, Type? targetType) => throw NotSupportedException;
+
+            DynamicObject? IDynamicObjectMapper.MapObject(object? obj, Func<Type, bool>? setTypeInformation) => throw NotSupportedException;
+
+            public ITypeResolver TypeResolver => Aqua.TypeSystem.TypeResolver.Instance;
+
+            private NotSupportedException NotSupportedException => new NotSupportedException("Operation must not be called as no value mapping should occure.");
+        }
+
         private sealed class IsKnownTypeProviderDecorator : IIsKnownTypeProvider
         {
             private readonly Func<Type, bool> _parent;
@@ -172,7 +191,18 @@ namespace Remote.Linq
             NeedsMapping = value => !IsKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
         }
 
-        internal static ExpressionTranslatorContext Default => new ExpressionTranslatorContext();
+        /// <summary>
+        /// Gets an defaut expression translator context.
+        /// </summary>
+        internal static IExpressionTranslatorContext Default => new ExpressionTranslatorContext();
+
+        /// <summary>
+        /// Gets an expression translator context that does not perform any value transformation other than expression and type information.
+        /// </summary>
+        /// <remarks>
+        /// This context is typically used for in-memory translation and processing that does not include serialization of expressions.
+        /// </remarks>
+        public static IExpressionTranslatorContext NoMappingContext => new NoMappingContextImpl();
 
         /// <summary>
         /// Gets a provider for checking types to be known. Unknown types require mapping (i.e. substitution) on translating expressions.

@@ -38,33 +38,6 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Gets an expression translator context that does not perform any value transformation other than expression and type information.
-        /// </summary>
-        /// <remarks>
-        /// This context is typically used for in-memory translation and processing that does not include serialization of expressions.
-        /// </remarks>
-        public static IExpressionTranslatorContext NoMappingContext => new NoMappingContextImpl();
-
-        private sealed class NoMappingContextImpl : IExpressionTranslatorContext, IDynamicObjectMapper
-        {
-            public ITypeInfoProvider TypeInfoProvider => new TypeInfoProvider();
-
-            public Func<object, bool> NeedsMapping => _ => false;
-
-            public IDynamicObjectMapper ValueMapper => this;
-
-            public Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally => _ => false;
-
-            object? IDynamicObjectMapper.Map(DynamicObject? obj, Type? targetType) => throw NotSupportedException;
-
-            DynamicObject? IDynamicObjectMapper.MapObject(object? obj, Func<Type, bool>? setTypeInformation) => throw NotSupportedException;
-
-            public ITypeResolver TypeResolver => Aqua.TypeSystem.TypeResolver.Instance;
-
-            private NotSupportedException NotSupportedException => new NotSupportedException("Operation must not be called as no value mapping should occure.");
-        }
-
-        /// <summary>
         /// Translates a given expression into a remote linq expression.
         /// </summary>
         public static RemoteLinq.Expression ToRemoteLinqExpression(this SystemLinq.Expression expression, IExpressionToRemoteLinqContext? context = null)

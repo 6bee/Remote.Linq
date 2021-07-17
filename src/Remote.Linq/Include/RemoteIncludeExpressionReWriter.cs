@@ -95,7 +95,7 @@ namespace Remote.Linq.Include
                 var lambda = SystemIncludeExpressionReWriter.BuildSubSelectNavigation<T>(source.IncludePath);
 
                 var remoteLambda = SystemLinq.Expression.Quote(lambda)
-                    .ToRemoteLinqExpression(ExpressionTranslator.NoMappingContext);
+                    .ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
 
                 var expression = new MethodCallExpression(
                     null,
