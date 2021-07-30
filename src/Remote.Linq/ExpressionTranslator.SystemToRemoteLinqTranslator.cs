@@ -104,9 +104,7 @@ namespace Remote.Linq
             }
 
             private new IEnumerable<RemoteLinq.ElementInit> VisitElementInitializerList(ReadOnlyCollection<SystemLinq.ElementInit> original)
-                => original
-                .Select(VisitElementInitializer)
-                .ToArray();
+                => original.Select(VisitElementInitializer);
 
             private new RemoteLinq.ElementInit VisitElementInitializer(SystemLinq.ElementInit initializer)
             {
@@ -214,9 +212,7 @@ namespace Remote.Linq
             }
 
             private new IEnumerable<RemoteLinq.MemberBinding> VisitBindingList(ReadOnlyCollection<SystemLinq.MemberBinding> original)
-                => original
-                .Select(x => VisitMemberBinding(x))
-                .ToArray();
+                => original.Select(VisitMemberBinding);
 
             private new RemoteLinq.MemberBinding VisitMemberBinding(SystemLinq.MemberBinding binding)
                 => binding.BindingType switch
