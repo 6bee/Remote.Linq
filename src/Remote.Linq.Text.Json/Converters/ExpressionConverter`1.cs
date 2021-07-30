@@ -15,7 +15,12 @@ namespace Remote.Linq.Text.Json.Converters
         private const string ValueTypePropertyName = "ValueType";
 
         public ExpressionConverter(KnownTypesRegistry knownTypesRegistry)
-            : base(knownTypesRegistry)
+            : base(knownTypesRegistry, false)
+        {
+        }
+
+        public ExpressionConverter(KnownTypesRegistry knownTypesRegistry, bool handleSubtypes)
+            : base(knownTypesRegistry, handleSubtypes)
         {
         }
 

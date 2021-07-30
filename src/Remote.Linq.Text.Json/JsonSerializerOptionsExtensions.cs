@@ -61,9 +61,9 @@ namespace Remote.Linq
                 .Where(x => !x.IsAbstract)
                 .Where(typeof(Expression).IsAssignableFrom)
                 .RegisterJsonConverter(typeof(ExpressionConverter<>), options, knownTypesRegistry);
-            if (!options.Converters.Any(x => x is ExpressionConverter))
+            if (!options.Converters.Any(x => x is ExpressionConverter<Expression>))
             {
-                options.Converters.Add(new ExpressionConverter(knownTypesRegistry));
+                options.Converters.Add(new ExpressionConverter<Expression>(knownTypesRegistry, true));
             }
 
             typeof(Expression).Assembly
@@ -71,6 +71,11 @@ namespace Remote.Linq
                 .Where(x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
                 .Where(x => x.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0)
                 .RegisterJsonConverter(typeof(ObjectConverter<>), options, knownTypesRegistry);
+
+            if (!options.Converters.Any(x => x is ObjectConverter<MemberBinding>))
+            {
+                options.Converters.Add(new ObjectConverter<MemberBinding>(knownTypesRegistry, true));
+            }
 
             return options;
         }
