@@ -96,7 +96,7 @@ namespace Remote.Linq
                 var genericTypeArguments = default(Type[]);
                 if (obj?.GetType().Implements(typeof(IGrouping<,>), out genericTypeArguments) is true)
                 {
-                    obj = _mapGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
+                    obj = MapGroupToDynamicObjectGraphMethod(genericTypeArguments!, obj);
                 }
 
                 return base.MapToDynamicObjectGraph(obj, setTypeInformation);
@@ -107,9 +107,6 @@ namespace Remote.Linq
 
         private static readonly MethodInfo _mapGroupToDynamicObjectGraphMethodDefinition =
             typeof(ExpressionTranslatorContext).GetMethodEx(nameof(MapGroupToDynamicObjectGraph));
-
-        private static readonly Func<Type[], MethodInfo> _mapGroupToDynamicObjectGraphMethod =
-            genericTypeArguments => _mapGroupToDynamicObjectGraphMethodDefinition.MakeGenericMethod(genericTypeArguments);
 
         private static readonly Func<Type, bool> _isPrimitiveType = new[]
             {
@@ -160,6 +157,8 @@ namespace Remote.Linq
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTranslatorContext"/> class.
         /// </summary>
+        /// <param name="typeInfoProvider">Type info provider is typically used when translating from <i>System.Linq</i> to <i>Remote.Linq</i>.</param>
+        /// <param name="canBeEvaluatedLocally">Function to check whether expressions or parts thereof are eligibly for local evaluation.</param>
         public ExpressionTranslatorContext(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
             : this(null, typeInfoProvider, null, canBeEvaluatedLocally)
         {
@@ -168,6 +167,8 @@ namespace Remote.Linq
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTranslatorContext"/> class.
         /// </summary>
+        /// <param name="typeResolver">Type resolver is typically used when translating from <i>Remote.Linq</i> to <i>System.Linq</i>.</param>
+        /// <param name="canBeEvaluatedLocally">Function to check whether expressions or parts thereof are eligibly for local evaluation.</param>
         public ExpressionTranslatorContext(ITypeResolver? typeResolver, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
             : this(typeResolver, null, null, canBeEvaluatedLocally)
         {
@@ -176,6 +177,11 @@ namespace Remote.Linq
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTranslatorContext"/> class.
         /// </summary>
+        /// <param name="typeResolver">Type resolver is typically used when translating from <i>Remote.Linq</i> to <i>System.Linq</i>.</param>
+        /// <param name="typeInfoProvider">Type info provider is typically used when translating from <i>System.Linq</i> to <i>Remote.Linq</i>.</param>
+        /// <param name="isKnownTypeProvider">Provider for checking types to be known. Unknown types require mapping (i.e. substitution) on translating expressions.</param>
+        /// <param name="canBeEvaluatedLocally">Function to check whether expressions or parts thereof are eligibly for local evaluation.</param>
+        /// <param name="valueMapper">Mapper to map values from and to <see cref="DynamicObject"/>.</param>
         public ExpressionTranslatorContext(
             ITypeResolver? typeResolver = null,
             ITypeInfoProvider? typeInfoProvider = null,
@@ -192,12 +198,12 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Gets an defaut expression translator context.
+        /// Gets a defaut expression translator context that can be used to translate, process and prepare expressions for serialization.
         /// </summary>
-        internal static IExpressionTranslatorContext Default => new ExpressionTranslatorContext();
+        public static IExpressionTranslatorContext Default => new ExpressionTranslatorContext();
 
         /// <summary>
-        /// Gets an expression translator context that does not perform any value transformation other than expression and type information.
+        /// Gets an expression translator context that does not translates any values other than expression and type information.
         /// </summary>
         /// <remarks>
         /// This context is typically used for in-memory translation and processing that does not include serialization of expressions.
@@ -223,6 +229,11 @@ namespace Remote.Linq
 
         /// <inheritdoc/>
         public Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally { get; }
+
+        private static object MapGroupToDynamicObjectGraphMethod(Type[] genericTypeArguments, object group)
+            => _mapGroupToDynamicObjectGraphMethodDefinition
+            .MakeGenericMethod(genericTypeArguments)
+            .Invoke(null, new[] { group });
 
         private static Grouping<TKey, TElement> MapGroupToDynamicObjectGraph<TKey, TElement>(IGrouping<TKey, TElement> group)
             => group is Grouping<TKey, TElement> grouping
