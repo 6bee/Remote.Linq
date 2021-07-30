@@ -10,4 +10,5 @@ clean ^
   && dotnet pack src\Remote.Linq.EntityFrameworkCore        --configuration %configuration% ^
   && dotnet pack src\Remote.Linq.EntityFramework            --configuration %configuration% ^
   && dotnet pack src\Remote.Linq.Newtonsoft.Json            --configuration %configuration% ^
-  && dotnet pack src\Remote.Linq.protobuf-net               --configuration %configuration%
+  && dotnet pack src\Remote.Linq.protobuf-net               --configuration %configuration% ^
+  && dotnet pack src\Remote.Linq.Text.Json                  --configuration %configuration%

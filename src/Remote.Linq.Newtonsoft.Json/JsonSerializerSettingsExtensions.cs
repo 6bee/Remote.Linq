@@ -67,7 +67,7 @@ namespace Remote.Linq
             {
                 if (!knownTypesRegistry.TryRegister(type, type.Name))
                 {
-                    throw new InvalidOperationException($"Filed to register '{type}' as known type.");
+                    throw new InvalidOperationException($"Failed to register '{type}' as known type.");
                 }
             }
         }

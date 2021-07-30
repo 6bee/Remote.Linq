@@ -11,51 +11,59 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
     public abstract class When_using_GotoAndLabelExpressions
     {
-        public class BinaryFormatter : When_using_GotoAndLabelExpressions
+        public class With_binary_formatter : When_using_GotoAndLabelExpressions
         {
-            public BinaryFormatter()
+            public With_binary_formatter()
                 : base(BinarySerializationHelper.Serialize)
             {
             }
         }
 
-        public class DataContractSerializer : When_using_GotoAndLabelExpressions
+        public class With_data_contract_serializer : When_using_GotoAndLabelExpressions
         {
-            public DataContractSerializer()
+            public With_data_contract_serializer()
                 : base(DataContractSerializationHelper.SerializeExpression)
             {
             }
         }
 
-        public class JsonSerializer : When_using_GotoAndLabelExpressions
+        public class With_newtonsoft_json_serializer : When_using_GotoAndLabelExpressions
         {
-            public JsonSerializer()
-                : base(JsonSerializationHelper.Serialize)
+            public With_newtonsoft_json_serializer()
+                : base(NewtonsoftJsonSerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class With_system_text_json_serializer : When_using_GotoAndLabelExpressions
+        {
+            public With_system_text_json_serializer()
+                : base(SystemTextJsonSerializationHelper.Serialize)
             {
             }
         }
 
 #if NETFRAMEWORK
-        public class NetDataContractSerializer : When_using_GotoAndLabelExpressions
+        public class With_net_data_contract_serializer : When_using_GotoAndLabelExpressions
         {
-            public NetDataContractSerializer()
+            public With_net_data_contract_serializer()
                 : base(NetDataContractSerializationHelper.Serialize)
             {
             }
         }
 #endif // NETFRAMEWORK
 
-        public class ProtobufNetSerializer : When_using_GotoAndLabelExpressions
+        public class With_protobuf_net_serializer : When_using_GotoAndLabelExpressions
         {
-            public ProtobufNetSerializer()
+            public With_protobuf_net_serializer()
                 : base(ProtobufNetSerializationHelper.Serialize)
             {
             }
         }
 
-        public class XmlSerializer : When_using_GotoAndLabelExpressions
+        public class With_xml_serializer : When_using_GotoAndLabelExpressions
         {
-            public XmlSerializer()
+            public With_xml_serializer()
                 : base(XmlSerializationHelper.SerializeExpression)
             {
             }

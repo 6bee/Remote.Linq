@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>[Experimental] Provides protobuf-net configuration for Remote.Linq types.</Description>
+    <Description>Provides protobuf-net configuration for Remote.Linq types.</Description>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageTags>protobuf protobuf-net proto2 proto3 binary serialization</PackageTags>
     <RootNamespace>Remote.Linq.ProtoBuf</RootNamespace>

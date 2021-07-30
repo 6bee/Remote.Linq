@@ -11,6 +11,7 @@
 | `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][21]][22]        | [![MyGet Pre Release][23]][24] |
 | `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge][25]][26]        | [![MyGet Pre Release][27]][28] |
 | `Remote.Linq.protobuf-net`        | <!--[![NuGet Badge][29]][30]--> | [![MyGet Pre Release][31]][32] |
+| `Remote.Linq.Text.Json`           | <!--[![NuGet Badge][37]][38]--> | [![MyGet Pre Release][39]][40] |
 
 ## Description
 Remote Linq is a small and easy to use - yet very powerful - library to translate LINQ expression trees to strongly typed, serializable expression trees and vice versa. It provides functionality to send arbitrary LINQ queries to a remote service to be applied and executed against any enumerable or queryable data collection.
@@ -181,3 +182,7 @@ public TExpression DeepCopy<TExpression>(TExpression expression)
 [34]: https://www.nuget.org/packages/Remote.Linq.Async.Queryable
 [35]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Async.Queryable.svg?style=flat-square&label=myget
 [36]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Async.Queryable
+[37]: https://buildstats.info/nuget/Remote.Linq.Text.Json
+[38]: https://www.nuget.org/packages/Remote.Linq.Text.Json
+[39]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Text.Json.svg?style=flat-square&label=myget
+[40]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Text.Json

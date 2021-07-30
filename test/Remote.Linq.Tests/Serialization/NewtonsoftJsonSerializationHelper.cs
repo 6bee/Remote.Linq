@@ -3,10 +3,9 @@
 namespace Remote.Linq.Tests.Serialization
 {
     using global::Newtonsoft.Json;
-    using Remote.Linq.ExpressionVisitors;
     using System;
 
-    public static class JsonSerializationHelper
+    public static class NewtonsoftJsonSerializationHelper
     {
         private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { Formatting = Formatting.Indented }.ConfigureRemoteLinq();
 
@@ -22,15 +21,6 @@ namespace Remote.Linq.Tests.Serialization
             var json = JsonConvert.SerializeObject(graph, _serializerSettings);
 
             return JsonConvert.DeserializeObject(json, type, _serializerSettings);
-        }
-
-        public static T SerializeExpression<T>(T expression)
-            where T : Remote.Linq.Expressions.Expression
-        {
-            var exp1 = expression.ReplaceGenericQueryArgumentsByNonGenericArguments();
-            var exp2 = Serialize(exp1);
-            var exp3 = exp2.ReplaceNonGenericQueryArgumentsByGenericArguments();
-            return exp3;
         }
     }
 }

@@ -4,6 +4,7 @@
     <PackageReference Update="aqua-core" Version="$(AquaCoreVersion)" />
     <PackageReference Update="aqua-core-newtonsoft-json" Version="$(AquaCoreVersion)" />
     <PackageReference Update="aqua-core-protobuf-net" Version="$(AquaCoreVersion)" />
+    <PackageReference Update="aqua-core-text-json" Version="$(AquaCoreVersion)" />
   </ItemGroup>
   <Target Name="InitializeSourceControlInformation" BeforeTargets="AddSourceRevisionToInformationalVersion">
     <Exec 

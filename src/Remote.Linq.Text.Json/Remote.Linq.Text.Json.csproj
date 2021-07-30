@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Provides System.Text.Json serialization for Remote.Linq types.</Description>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <PackageTags>remote-linq;json;system-text-json</PackageTags>
+    <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="aqua-core-text-json" />
+  </ItemGroup>
+
+</Project>

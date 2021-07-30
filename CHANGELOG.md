@@ -5,13 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased 7.0.0][Unreleased]
+## [Unreleased 7.0.0][unreleased]
 
 ### Added
 - Added support for [async queryable (Ix.NET)][async-queryable].
 - Added support for [async streams][async-streams] ([IAsyncDisposable][iasyncdisposable]).
 - Added support for [filtered include][ef-filtered-include] queryable extensions.
 - Added support for [protobuf-net v2][protobuf-net-v2] serialization.
+- Added support for _System.Text.Json_ serialization.
 - Introduced `IExpressionTranslatorContext` interface to bundle parameterization options.
 - Introduced `QueryArgumentAttribute` to annotate types to prevent local evaluation (i.e. substitution of constant expression value) when translating expressions.
 - Introduced `QueryMarkerFunctionAttribute` to annotate methods to prevent local evaluation (i.e. execution of the method) when translating expressions.
@@ -48,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
 
-[Unreleased]: https://github.com/6bee/Remote.Linq/compare/6.3.0...main
+[unreleased]: https://github.com/6bee/Remote.Linq/compare/6.3.0...main
 [6.3.0]: https://github.com/6bee/Remote.Linq/compare/6.2.3...6.3.0
 
 [async-queryable]: https://www.nuget.org/packages/System.Linq.Async.Queryable/

@@ -19,9 +19,8 @@ namespace Server
             _cancellation = new CancellationTokenSource();
             _webHost = new WebHostBuilder()
                 .ConfigureServices(services => services
-                    .AddMvcCore()
-                    .AddJsonFormatters()
-                    .AddJsonOptions(json => json.SerializerSettings.ConfigureRemoteLinq()))
+                    .AddMvcCore(options => options.EnableEndpointRouting = false)
+                    .AddJsonOptions(options => options.JsonSerializerOptions.ConfigureRemoteLinq())) // add system.text.json options for remote.linq
                 .Configure(application => application.UseMvc())
                 .UseKestrel()
                 .UseUrls($"http://+:{port}")

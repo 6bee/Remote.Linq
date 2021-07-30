@@ -40,10 +40,18 @@ namespace Remote.Linq.Tests.RemoteQueryable
             }
         }
 
-        public class With_json_serializer : When_running_query
+        public class With_newtonsoft_json_serializer : When_running_query
         {
-            public With_json_serializer()
-                : base(x => (Expression)JsonSerializationHelper.Serialize(x, x.GetType()))
+            public With_newtonsoft_json_serializer()
+                : base(x => (Expression)NewtonsoftJsonSerializationHelper.Serialize(x, x.GetType()))
+            {
+            }
+        }
+
+        public class With_system_text_json_serializer : When_running_query
+        {
+            public With_system_text_json_serializer()
+                : base(x => (Expression)SystemTextJsonSerializationHelper.Serialize(x, x.GetType()))
             {
             }
         }
@@ -854,14 +862,21 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
         {
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by With_xml_serializer");
+
             if (this.TestIs<With_protobuf_net_serializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
+
+            if (this.TestIs<With_system_text_json_serializer>())
+            {
+                SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
+
 #if NET5_0
             Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
 #endif // NET5_0
@@ -882,14 +897,21 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_query_primitive_value_collection_injected_as_variable_closure(Type type, object value)
         {
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by With_xml_serializer");
+
             if (this.TestIs<With_protobuf_net_serializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
+
+            if (this.TestIs<With_system_text_json_serializer>())
+            {
+                SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
+
 #if NET5_0
             Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
 #endif // NET5_0
@@ -909,13 +931,19 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
         public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure(Type type, object value)
         {
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by With_xml_serializer");
+
             if (this.TestIs<With_protobuf_net_serializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
+
+            if (this.TestIs<With_system_text_json_serializer>())
+            {
+                SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
             }
 #if NET5_0
             Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
@@ -937,13 +965,19 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure(Type type, object value)
         {
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by XmlSerializer");
-            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by XmlSerializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by With_xml_serializer");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by With_xml_serializer");
+
             if (this.TestIs<With_protobuf_net_serializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
+
+            if (this.TestIs<With_system_text_json_serializer>())
+            {
+                SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
             }
 #if NET5_0
             Skip.If(type.Is<Half>(), $"{type} not supported by serializers");

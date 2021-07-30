@@ -9,51 +9,59 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
 
     public abstract class When_using_local_variable_query_argument_list
     {
-        public class BinaryFormatter : When_using_local_variable_query_argument_list
+        public class With_binary_formatter : When_using_local_variable_query_argument_list
         {
-            public BinaryFormatter()
+            public With_binary_formatter()
                 : base(BinarySerializationHelper.Serialize)
             {
             }
         }
 
-        public class DataContractSerializer : When_using_local_variable_query_argument_list
+        public class With_data_contract_serializer : When_using_local_variable_query_argument_list
         {
-            public DataContractSerializer()
+            public With_data_contract_serializer()
                 : base(x => DataContractSerializationHelper.SerializeExpression(x, new[] { typeof(List<int>) }))
             {
             }
         }
 
-        public class JsonSerializer : When_using_local_variable_query_argument_list
+        public class With_newtonsoft_json_serializer : When_using_local_variable_query_argument_list
         {
-            public JsonSerializer()
-                : base(JsonSerializationHelper.Serialize)
+            public With_newtonsoft_json_serializer()
+                : base(NewtonsoftJsonSerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class With_system_text_json_serializer : When_using_local_variable_query_argument_list
+        {
+            public With_system_text_json_serializer()
+                : base(SystemTextJsonSerializationHelper.Serialize)
             {
             }
         }
 
 #if NETFRAMEWORK
-        public class NetDataContractSerializer : When_using_local_variable_query_argument_list
+        public class With_net_data_contract_serializer : When_using_local_variable_query_argument_list
         {
-            public NetDataContractSerializer()
+            public With_net_data_contract_serializer()
                 : base(NetDataContractSerializationHelper.Serialize)
             {
             }
         }
 #endif // NETFRAMEWORK
 
-        public class ProtobufNetSerializer : When_using_local_variable_query_argument_list
+        public class With_protobuf_net_serializer : When_using_local_variable_query_argument_list
         {
-            public ProtobufNetSerializer()
+            public With_protobuf_net_serializer()
                 : base(ProtobufNetSerializationHelper.Serialize)
             {
             }
         }
 
-        public class XmlSerializer : When_using_local_variable_query_argument_list
+        public class With_xml_serializer : When_using_local_variable_query_argument_list
         {
-            public XmlSerializer()
+            public With_xml_serializer()
                 : base(x => XmlSerializationHelper.SerializeExpression(x, new[] { typeof(List<int>) }))
             {
             }
