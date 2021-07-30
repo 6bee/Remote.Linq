@@ -2,8 +2,10 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
+    using Remote.Linq.ExpressionExecution;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -31,6 +33,23 @@ namespace Remote.Linq.ExpressionVisitors
 
         private static bool CanBeEvaluatedLocally(Expression expression)
         {
+            switch (expression.NodeType)
+            {
+                case ExpressionType.Block:
+                case ExpressionType.Convert:
+                case ExpressionType.ConvertChecked:
+                case ExpressionType.Default:
+                case ExpressionType.Label:
+                case ExpressionType.Goto:
+                case ExpressionType.Lambda:
+                case ExpressionType.Loop:
+                case ExpressionType.New:
+                case ExpressionType.Parameter:
+                case ExpressionType.Quote:
+                case ExpressionType.Throw:
+                    return false;
+            }
+
             if (expression.NodeType == ExpressionType.Constant)
             {
                 var type = expression.Type;
@@ -68,23 +87,6 @@ namespace Remote.Linq.ExpressionVisitors
                 }
             }
 
-            switch (expression.NodeType)
-            {
-                case ExpressionType.Block:
-                case ExpressionType.Convert:
-                case ExpressionType.ConvertChecked:
-                case ExpressionType.Default:
-                case ExpressionType.Label:
-                case ExpressionType.Goto:
-                case ExpressionType.Lambda:
-                case ExpressionType.Loop:
-                case ExpressionType.New:
-                case ExpressionType.Parameter:
-                case ExpressionType.Quote:
-                case ExpressionType.Throw:
-                    return false;
-            }
-
             return true;
         }
 
@@ -118,14 +120,19 @@ namespace Remote.Linq.ExpressionVisitors
 
             private static Expression Evaluate(Expression expression)
             {
-                if (expression.NodeType == ExpressionType.Constant)
+                if (expression is ConstantExpression constantExpression)
                 {
-                    return expression;
+                    var enforceLocalEvaluation =
+                        constantExpression.Type.IsInterface &&
+                        constantExpression.Type.Implements(typeof(IEnumerable<>)) &&
+                        constantExpression.Value?.GetType().DeclaringType == typeof(Enumerable);
+                    if (!enforceLocalEvaluation)
+                    {
+                        return expression;
+                    }
                 }
 
-                var lambda = Expression.Lambda(expression);
-                var func = lambda.Compile();
-                var value = func.DynamicInvokeAndUnwrap();
+                var value = expression.CompileAndInvokeExpression();
 
                 if (value is Expression valueAsExpression)
                 {
