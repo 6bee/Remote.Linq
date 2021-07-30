@@ -12,7 +12,7 @@ namespace Remote.Linq
     public interface IExpressionValueMapperProvider
     {
         /// <summary>
-        /// Gets a <see cref="IDynamicObjectMapper"/> to map values from an to <see cref="DynamicObject"/>.
+        /// Gets a <see cref="IDynamicObjectMapper"/> to map values from and to <see cref="DynamicObject"/>.
         /// </summary>
         IDynamicObjectMapper ValueMapper { get; }
 
