@@ -245,7 +245,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
         }
 
         [Fact]
-        public void Should_return_products_using_groupedby_and_slectmany()
+        public void Should_return_products_using_groupby_and_selectmany()
         {
             var result = _productQueryable
                 .GroupBy(x => x.Id)
@@ -253,6 +253,68 @@ namespace Remote.Linq.Tests.RemoteQueryable
                 .ToList();
 
             result.Count.ShouldBe(5);
+        }
+
+        [Fact]
+        public void Should_project_into_array_using_array_init()
+        {
+            var result = _productQueryable
+                .Select(p => new[] { p })
+                .ToList();
+
+            result.Count.ShouldBe(5);
+            result.ForEach(x => x.ShouldHaveSingleItem().ShouldNotBeNull());
+        }
+
+        [Fact]
+        public void Should_project_into_list_using_list_init()
+        {
+            var result = _productQueryable
+                .Select(p => new List<Product> { p })
+                .ToList();
+
+            result.Count.ShouldBe(5);
+            result.ForEach(x => x.ShouldHaveSingleItem().ShouldNotBeNull());
+        }
+
+        public class MemberBindingTestType
+        {
+            public Product Product { get; set; } = new Product();
+
+            public List<Product> ProductList { get; set; } = new List<Product>() { new Product() };
+        }
+
+        [Fact]
+        public void Should_project_using_member_binding()
+        {
+            var result = _productQueryable
+                .Select(p => new MemberBindingTestType { Product = p })
+                .ToList();
+
+            result.Count.ShouldBe(5);
+            result.ForEach(x => x.Product.Name.ShouldNotBeNullOrWhiteSpace());
+        }
+
+        [Fact]
+        public void Should_project_using_member_member_binding()
+        {
+            var result = _productQueryable
+                .Select(p => new MemberBindingTestType { Product = { Name = p.Name } })
+                .ToList();
+
+            result.Count.ShouldBe(5);
+            result.ForEach(x => x.Product.Name.ShouldNotBeNullOrWhiteSpace());
+        }
+
+        [Fact]
+        public void Should_project_using_member_list_binding()
+        {
+            var result = _productQueryable
+                .Select(p => new MemberBindingTestType { ProductList = { p, p } })
+                .ToList();
+
+            result.Count.ShouldBe(5);
+            result.ForEach(x => x.ProductList.Count.ShouldBe(3));
         }
 
         [Fact]

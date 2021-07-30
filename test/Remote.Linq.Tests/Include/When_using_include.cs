@@ -15,6 +15,20 @@ namespace Remote.Linq.Tests.Include
 
     public abstract class When_using_include
     {
+        public class With_include_path_string : When_using_include
+        {
+            public With_include_path_string()
+            {
+                var queryable = RemoteQueryable.Factory.CreateQueryable<Parent>(DataProvider);
+
+                _ = queryable
+                    .Include("Children.Parent.Children.Parent")
+                    .ToList();
+            }
+
+            protected override string[] ExpectedIncludePaths => new[] { "Children.Parent.Children.Parent" };
+        }
+
         public class With_include_path : When_using_include
         {
             public With_include_path()
