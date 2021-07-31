@@ -172,7 +172,7 @@ namespace Remote.Linq.Async
             => ExecuteAsync<int?, int?>(MethodInfos.Queryable.SumNullableInt32, source, cancellation);
 
         public static ValueTask<long> SumAsync(this IQueryable<long> source, CancellationToken cancellation = default)
-            => ExecuteAsync<long, long>(MethodInfos.Queryable.SumNullableInt64, source, cancellation);
+            => ExecuteAsync<long, long>(MethodInfos.Queryable.SumInt64, source, cancellation);
 
         public static ValueTask<long?> SumAsync(this IQueryable<long?> source, CancellationToken cancellation = default)
             => ExecuteAsync<long?, long?>(MethodInfos.Queryable.SumNullableInt64, source, cancellation);
