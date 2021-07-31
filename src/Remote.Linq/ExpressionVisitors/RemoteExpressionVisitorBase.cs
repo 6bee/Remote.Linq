@@ -122,7 +122,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             if (list is null)
             {
-                return list;
+                return null;
             }
 
             List<MemberBinding>? visited = null;
@@ -195,7 +195,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             if (list is null)
             {
-                return list;
+                return null;
             }
 
             List<ElementInit>? visited = null;
@@ -238,7 +238,7 @@ namespace Remote.Linq.ExpressionVisitors
         {
             if (list is null)
             {
-                return list;
+                return null;
             }
 
             List<T>? visited = null;
