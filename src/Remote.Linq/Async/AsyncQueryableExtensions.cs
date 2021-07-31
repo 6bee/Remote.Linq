@@ -123,7 +123,7 @@ namespace Remote.Linq.Async
                 cancellation);
 
         public static ValueTask<bool> SequenceEqualAsync<TSource>(this IQueryable<TSource> source1, IEnumerable<TSource> source2, CancellationToken cancellation = default)
-            => ExecuteAsync<TSource, bool>(MethodInfos.Queryable.SequenceEqualWithComparer, source1, source2, cancellation);
+            => ExecuteAsync<TSource, bool>(MethodInfos.Queryable.SequenceEqual, source1, source2, cancellation);
 
         public static ValueTask<bool> SequenceEqualAsync<TSource>(this IQueryable<TSource> source1, IEnumerable<TSource> source2, IEqualityComparer<TSource> comparer, CancellationToken cancellation = default)
             => ExecuteAsync<TSource, bool>(
