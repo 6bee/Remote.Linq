@@ -6,7 +6,6 @@ namespace Remote.Linq.Tests.AsyncQueryableExtensions
     using Remote.Linq;
     using Remote.Linq.Async;
     using Remote.Linq.ExpressionExecution;
-    using Remote.Linq.Tests;
     using Shouldly;
     using System;
     using System.Collections.Generic;
