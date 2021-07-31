@@ -48,46 +48,51 @@ namespace Remote.Linq.ExpressionVisitors
                 case ExpressionType.Quote:
                 case ExpressionType.Throw:
                     return false;
+
+                case ExpressionType.Constant:
+                    {
+                        var type = expression.Type;
+                        if (type.GetCustomAttribute<QueryArgumentAttribute>() is not null ||
+                            type.GetInterfaces().Any(x => x.GetCustomAttribute<QueryArgumentAttribute>() is not null))
+                        {
+                            return false;
+                        }
+
+                        if (type == typeof(CancellationToken))
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    }
+
+                case ExpressionType.Call:
+                    {
+                        if (expression.Type == typeof(void))
+                        {
+                            return false;
+                        }
+
+                        var methodCallExpression = (MethodCallExpression)expression;
+                        if (methodCallExpression.Method.GetCustomAttribute<QueryMarkerFunctionAttribute>() is not null)
+                        {
+                            return false;
+                        }
+
+                        var methodDeclaringType = methodCallExpression.Method.DeclaringType;
+                        if ((methodDeclaringType == typeof(Queryable) || methodDeclaringType == typeof(Enumerable)) &&
+                            methodCallExpression.Arguments.FirstOrDefault() is ConstantExpression argument &&
+                            argument.Value.AsQueryableResourceTypeOrNull() is not null)
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    }
+
+                default:
+                    return true;
             }
-
-            if (expression.NodeType == ExpressionType.Constant)
-            {
-                var type = expression.Type;
-                if (type.GetCustomAttribute<QueryArgumentAttribute>() is not null ||
-                    type.GetInterfaces().Any(x => x.GetCustomAttribute<QueryArgumentAttribute>() is not null))
-                {
-                    return false;
-                }
-
-                if (type == typeof(CancellationToken))
-                {
-                    return false;
-                }
-            }
-
-            if (expression.NodeType == ExpressionType.Call)
-            {
-                if (expression.Type == typeof(void))
-                {
-                    return false;
-                }
-
-                var methodCallExpression = (MethodCallExpression)expression;
-                if (methodCallExpression.Method.GetCustomAttribute<QueryMarkerFunctionAttribute>() is not null)
-                {
-                    return false;
-                }
-
-                var methodDeclaringType = methodCallExpression.Method.DeclaringType;
-                if ((methodDeclaringType == typeof(Queryable) || methodDeclaringType == typeof(Enumerable)) &&
-                    methodCallExpression.Arguments.FirstOrDefault() is ConstantExpression argument &&
-                    argument.Value.AsQueryableResourceTypeOrNull() is not null)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -171,12 +176,12 @@ namespace Remote.Linq.ExpressionVisitors
         private sealed class Nominator : SystemExpressionVisitorBase
         {
             private readonly object _lock = new ();
-            private readonly Func<Expression, bool> _fnCanBeEvaluated;
+            private readonly Func<Expression, bool> _canBeEvaluated;
             private HashSet<Expression>? _candidates;
             private bool _cannotBeEvaluated;
 
-            internal Nominator(Func<Expression, bool>? fnCanBeEvaluated)
-                => _fnCanBeEvaluated = fnCanBeEvaluated.And(CanBeEvaluatedLocally) !;
+            internal Nominator(Func<Expression, bool>? canBeEvaluated)
+                => _canBeEvaluated = canBeEvaluated.And(CanBeEvaluatedLocally) !;
 
             internal HashSet<Expression> Nominate(Expression expression)
             {
@@ -200,7 +205,7 @@ namespace Remote.Linq.ExpressionVisitors
 
                     if (!_cannotBeEvaluated)
                     {
-                        if (_fnCanBeEvaluated(node))
+                        if (_canBeEvaluated(node))
                         {
                             _candidates!.Add(node);
                         }
