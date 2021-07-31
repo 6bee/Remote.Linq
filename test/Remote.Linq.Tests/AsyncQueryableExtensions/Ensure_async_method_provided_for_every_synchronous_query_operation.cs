@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Tests.AsyncQueryableExtensions
 {
+    using Aqua.TypeExtensions;
     using Remote.Linq;
     using Remote.Linq.Async;
     using Shouldly;
@@ -89,7 +90,7 @@ namespace Remote.Linq.Tests.AsyncQueryableExtensions
                     return true;
                 })
                 .ToArray();
-            matchingMethods.ShouldNotBeEmpty($"No '{methodName}' query operation found matching argument list ({string.Join(", ", method.GetParameters().Select(x => x.ParameterType.Name))}, {nameof(CancellationToken)})");
+            matchingMethods.ShouldNotBeEmpty($"No '{methodName}' query operation found matching argument list ({string.Join(", ", method.GetParameters().Select(x => x.ParameterType.GetFriendlyName(false, false)))}, {nameof(CancellationToken)})");
 
             if (matchingMethods.Length != 1)
             {
