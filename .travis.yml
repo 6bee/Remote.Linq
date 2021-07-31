@@ -5,6 +5,7 @@ dotnet: 5.0.102
 branches:
   except:
   - /^experimental.*$/
+  - 6.3.x
 
 matrix:
   include:
