@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Tests
 {
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using Shouldly;
     using System;
@@ -9,9 +10,13 @@ namespace Remote.Linq.Tests
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Threading.Tasks;
+    using MethodInfo = System.Reflection.MethodInfo;
 
     public static class TestHelper
     {
+        private static readonly MethodInfo _getAsyncResultMethodInfo = typeof(TestHelper).GetMethodEx(nameof(GetAsyncResult));
+
         public static Tuple<T, T> ShouldMatch<T>(this Tuple<T, T> tuple)
         {
             ShouldMatch(tuple.Item1, tuple.Item2);
@@ -108,5 +113,13 @@ namespace Remote.Linq.Tests
 
             throw new Xunit.Sdk.IsNotTypeException(typeof(Nullable<>), type);
         }
+
+        public static object GetValueTaskResult(object valueTask, Type resultType)
+            => _getAsyncResultMethodInfo.MakeGenericMethod(resultType).Invoke(null, new[] { valueTask });
+
+        public static Task<object> GetValueTaskResultAsync(object valueTask, Type resultType)
+            => Task.Run(() => GetValueTaskResult(valueTask, resultType));
+
+        private static TResult GetAsyncResult<TResult>(ValueTask<TResult> task) => task.Result;
     }
 }
