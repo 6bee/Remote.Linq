@@ -16,8 +16,7 @@ namespace Remote.Linq.ExpressionExecution
     public abstract class AsyncStreamExpressionExecutor<TQueryable, TDataTranferObject> : IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>
     {
         private readonly Func<Type, TQueryable> _queryableProvider;
-        private readonly ITypeResolver? _typeResolver;
-        private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
+        private readonly IExpressionFromRemoteLinqContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncStreamExpressionExecutor{TQueryable, TDataTranferObject}"/> class.
@@ -25,9 +24,7 @@ namespace Remote.Linq.ExpressionExecution
         protected AsyncStreamExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
         {
             _queryableProvider = queryableProvider.CheckNotNull(nameof(queryableProvider));
-            context ??= ExpressionTranslatorContext.Default;
-            _typeResolver = context.TypeResolver;
-            _canBeEvaluatedLocally = context.CanBeEvaluatedLocally;
+            _context = context ?? ExpressionTranslatorContext.Default;
         }
 
         ExecutionContext IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Context => Context;
@@ -70,7 +67,7 @@ namespace Remote.Linq.ExpressionExecution
         protected virtual RemoteLinq.Expression Prepare(RemoteLinq.Expression expression)
             => expression
             .ReplaceNonGenericQueryArgumentsByGenericArguments()
-            .ReplaceResourceDescriptorsByQueryable(_queryableProvider, _typeResolver);
+            .ReplaceResourceDescriptorsByQueryable(_queryableProvider, _context.TypeResolver);
 
         /// <summary>
         /// Transforms the <see cref="RemoteLinq.Expression"/> to a <see cref="SystemLinq.Expression"/>.
@@ -78,7 +75,7 @@ namespace Remote.Linq.ExpressionExecution
         /// <param name="expression">The <see cref="RemoteLinq.Expression"/> to be transformed.</param>
         /// <returns>A <see cref="SystemLinq.Expression"/>.</returns>
         protected virtual SystemLinq.Expression Transform(RemoteLinq.Expression expression)
-            => expression.ToLinqExpression(_typeResolver);
+            => expression.ToLinqExpression(_context);
 
         /// <summary>
         /// Prepares the query <see cref="SystemLinq.Expression"/> to be able to be executed.
@@ -86,7 +83,7 @@ namespace Remote.Linq.ExpressionExecution
         /// <param name="expression">The <see cref="SystemLinq.Expression"/> returned by the Transform method.</param>
         /// <returns>A <see cref="SystemLinq.Expression"/> ready for execution.</returns>
         protected virtual SystemLinq.Expression Prepare(SystemLinq.Expression expression)
-            => expression.PartialEval(_canBeEvaluatedLocally);
+            => expression.PartialEval(_context.CanBeEvaluatedLocally);
 
         /// <summary>
         /// Executes the <see cref="SystemLinq.Expression"/> and returns the raw async stream result.
