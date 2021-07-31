@@ -45,8 +45,8 @@ namespace Remote.Linq
         /// <summary>
         /// Translates a given expression into a remote linq expression.
         /// </summary>
-        [Obsolete("Method will be removed in futur version, use overload instaed.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Method will be removed in futur version, use overload instaed.")]
         public static RemoteLinq.Expression ToRemoteLinqExpression(this SystemLinq.Expression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
             => ToRemoteLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
@@ -62,8 +62,8 @@ namespace Remote.Linq
         /// <summary>
         /// Translates a given lambda expression into a remote linq expression.
         /// </summary>
-        [Obsolete("Method will be removed in futur version, use overload instaed.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Method will be removed in futur version, use overload instaed.")]
         public static RemoteLinq.LambdaExpression ToRemoteLinqExpression(this SystemLinq.LambdaExpression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
             => ToRemoteLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
 
@@ -76,6 +76,8 @@ namespace Remote.Linq
         /// <summary>
         /// Translates a given remote linq expression into an system linq expression.
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Method will be removed in futur version, use overload instaed.")]
         public static SystemLinq.Expression ToLinqExpression(this RemoteLinq.Expression expression, ITypeResolver? typeResolver)
             => ToLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeResolver));
 
@@ -108,6 +110,8 @@ namespace Remote.Linq
         /// <summary>
         /// Translates a given remote linq expression into a lambda expression.
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Method will be removed in futur version, use overload instaed.")]
         public static SystemLinq.LambdaExpression ToLinqExpression(this RemoteLinq.LambdaExpression expression, ITypeResolver? typeResolver)
             => ToLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeResolver));
 
