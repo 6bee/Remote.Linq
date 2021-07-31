@@ -9,7 +9,6 @@ namespace Remote.Linq.Include
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -21,34 +20,22 @@ namespace Remote.Linq.Include
         /// <summary>
         /// Type definition used in generic type filters.
         /// </summary>
-        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
         private sealed class T
         {
-            private T()
-            {
-            }
         }
 
         /// <summary>
         /// Type definition used in generic type filters.
         /// </summary>
-        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
         private sealed class TProperty
         {
-            private TProperty()
-            {
-            }
         }
 
         /// <summary>
         /// Type definition used in generic type filters.
         /// </summary>
-        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
         private sealed class TPreviousProperty
         {
-            private TPreviousProperty()
-            {
-            }
         }
 
         /// <summary>
