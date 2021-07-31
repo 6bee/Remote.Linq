@@ -119,7 +119,7 @@ namespace Remote.Linq
                 cancellationToken);
 
         public static Task<bool> SequenceEqualAsync<TSource>(this IQueryable<TSource> source1, IEnumerable<TSource> source2, CancellationToken cancellationToken = default)
-            => ExecuteAsync<TSource, bool>(MethodInfos.Queryable.SequenceEqualWithComparer, source1, source2, cancellationToken);
+            => ExecuteAsync<TSource, bool>(MethodInfos.Queryable.SequenceEqual, source1, source2, cancellationToken);
 
         public static Task<bool> SequenceEqualAsync<TSource>(this IQueryable<TSource> source1, IEnumerable<TSource> source2, IEqualityComparer<TSource> comparer, CancellationToken cancellationToken = default)
             => ExecuteAsync<TSource, bool>(
@@ -168,7 +168,7 @@ namespace Remote.Linq
             => ExecuteAsync<int?, int?>(MethodInfos.Queryable.SumNullableInt32, source, cancellationToken);
 
         public static Task<long> SumAsync(this IQueryable<long> source, CancellationToken cancellationToken = default)
-            => ExecuteAsync<long, long>(MethodInfos.Queryable.SumNullableInt64, source, cancellationToken);
+            => ExecuteAsync<long, long>(MethodInfos.Queryable.SumInt64, source, cancellationToken);
 
         public static Task<long?> SumAsync(this IQueryable<long?> source, CancellationToken cancellationToken = default)
             => ExecuteAsync<long?, long?>(MethodInfos.Queryable.SumNullableInt64, source, cancellationToken);
