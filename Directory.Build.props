@@ -20,8 +20,9 @@
     <Copyright>Copyright © Christof Senn 2013-$(CopyrightYear)</Copyright>
     <Authors>Christof Senn</Authors>
     <PackageIcon>remotelinq-small.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/6bee/Remote.Linq</PackageProjectUrl>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/6bee/Remote.Linq</PackageProjectUrl>
+    <PackageReleaseNotes>$(PackageProjectUrl)/blob/main/CHANGELOG.md</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/6bee/Remote.Linq.git</RepositoryUrl>
     <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
