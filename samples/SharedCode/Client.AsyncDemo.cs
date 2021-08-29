@@ -27,16 +27,12 @@ namespace Client
             }
 
             PrintHeader("CROSS JOIN:");
-            var vowels = new[] { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
             var crossJoinQuery =
                 from c in repo.ProductCategories
                 from p in repo.Products
-                let @particle = vowels.Contains(p.Name.First()) ? "An" : "A"
-                let @subject = p.Name.ToLower()
-                let @verb = $"is{(c.Id == p.ProductCategoryId ? null : " not")} a"
-                let @object = c.Name.ToLower().TrimEnd('s')
-                orderby @subject, @object
-                select $"{@particle} {@subject} {@verb} {@object}";
+                where c.Id == p.ProductCategoryId
+                orderby c.Name, p.Name
+                select $"{c.Name} {p.Name}";
             foreach (var item in await crossJoinQuery.ToListAsync().ConfigureAwait(false))
             {
                 PrintLine($"  {item}");
