@@ -2,6 +2,5 @@
 
 using System.Reflection;
 
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -3,4 +3,8 @@
 
   <Import Project="$(MSBuildThisFileDirectory)../$(MSBuildThisFile)" />
 
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
 </Project>
