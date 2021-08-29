@@ -6,7 +6,7 @@
     <MinorVersion>0</MinorVersion>
     <PatchVersion>0</PatchVersion>
     <PreReleaseLabel>alpha-108</PreReleaseLabel>
-    <AquaCoreVersion>5.0.0-beta-001</AquaCoreVersion>
+    <AquaCoreVersion>5.0.0-beta-002</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -70,8 +70,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.0.0" PrivateAssets="all" />
-    <PackageReference Include="aqua.tool.Validation" Version="1.1.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.1.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="1.4.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -79,7 +79,7 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.7.0.17535" Condition="'$(EnableSonarAnalyzers)' == 'true'">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.27.0.35380" Condition="'$(EnableSonarAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
