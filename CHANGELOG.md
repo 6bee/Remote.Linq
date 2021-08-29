@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-## [Unreleased 6.3.1][6.3.1-unreleased]
+## [6.3.1][6.3.1] - 2021-28-29
 
 ### Fixed
 - Fixed issue with async `IQueryable` extensions methods
@@ -55,8 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
 
-[7.0.0-unreleased]: https://github.com/6bee/Remote.Linq/compare/6.3.0...main
-[6.3.1-unreleased]: https://github.com/6bee/Remote.Linq/compare/6.3.0...6.3.x
+[7.0.0-unreleased]: https://github.com/6bee/Remote.Linq/compare/6.3.1...main
+[6.3.1]: https://github.com/6bee/Remote.Linq/compare/6.3.0...6.3.1
 [6.3.0]: https://github.com/6bee/Remote.Linq/compare/6.2.3...6.3.0
 
 [async-queryable]: https://www.nuget.org/packages/System.Linq.Async.Queryable/
