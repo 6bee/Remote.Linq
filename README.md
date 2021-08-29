@@ -3,15 +3,15 @@
 | ---    | ---                              | ---                            | ---                | ---               | ---                    | ---                         |
 | `main` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
 
-| package                           | nuget                           | myget                          |
-| ---                               | ---                             | ---                            |
-| `Remote.Linq`                     | [![NuGet Badge][13]][14]        | [![MyGet Pre Release][15]][16] |
-| `Remote.Linq.Async.Queryable`     | <!--[![NuGet Badge][33]][34]--> | [![MyGet Pre Release][35]][36] |
-| `Remote.Linq.EntityFramework`     | [![NuGet Badge][17]][18]        | [![MyGet Pre Release][19]][20] |
-| `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][21]][22]        | [![MyGet Pre Release][23]][24] |
-| `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge][25]][26]        | [![MyGet Pre Release][27]][28] |
-| `Remote.Linq.protobuf-net`        | <!--[![NuGet Badge][29]][30]--> | [![MyGet Pre Release][31]][32] |
-| `Remote.Linq.Text.Json`           | <!--[![NuGet Badge][37]][38]--> | [![MyGet Pre Release][39]][40] |
+| package                           | nuget                    | myget                          |
+| ---                               | ---                      | ---                            |
+| `Remote.Linq`                     | [![NuGet Badge][13]][14] | [![MyGet Pre Release][15]][16] |
+| `Remote.Linq.Async.Queryable`     | [![NuGet Badge][33]][34] | [![MyGet Pre Release][35]][36] |
+| `Remote.Linq.EntityFramework`     | [![NuGet Badge][17]][18] | [![MyGet Pre Release][19]][20] |
+| `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
+| `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge][25]][26] | [![MyGet Pre Release][27]][28] |
+| `Remote.Linq.protobuf-net`        | [![NuGet Badge][29]][30] | [![MyGet Pre Release][31]][32] |
+| `Remote.Linq.Text.Json`           | [![NuGet Badge][37]][38] | [![MyGet Pre Release][39]][40] |
 
 ## Description
 Remote Linq is a small and easy to use - yet very powerful - library to translate LINQ expression trees to strongly typed, serializable expression trees and vice versa. It provides functionality to send arbitrary LINQ queries to a remote service to be applied and executed against any enumerable or queryable data collection.
