@@ -31,6 +31,8 @@ Remote.Linq makes it super easy to implement a service allowing LINQ queries def
 Write operations (insert/update/delete) have to be implemented by other means if needed. [InfoCarrier.Core](https://github.com/azabluda/InfoCarrier.Core) might be interesting for such scenarios.
 
 ## Sample
+Check-out _Remote.Linq.Samples.sln_ and _samples_ folder for a number of sample use cases.
+
 **Client**
 Implement a repository class to set-up server connection and expose the queryable data sets (`IQueryable<>`)
 ```C#
@@ -50,11 +52,13 @@ public class ClientDataRepository
             };
     }
 
-    public IQueryable<Blog> Blogs => RemoteQueryable.Factory.CreateQueryable<Blog>(_dataProvider);
+    public IRemoteQueryable<Blog> Blogs => RemoteQueryable.Factory.CreateQueryable<Blog>(_dataProvider);
    
-    public IQueryable<Post> Posts => RemoteQueryable.Factory.CreateQueryable<Post>(_dataProvider);
+    public IRemoteQueryable<Post> Posts => RemoteQueryable.Factory.CreateQueryable<Post>(_dataProvider);
    
-    public IQueryable<User> Users => RemoteQueryable.Factory.CreateQueryable<User>(_dataProvider);
+    public IRemoteQueryable<User> Users => RemoteQueryable.Factory.CreateQueryable<User>(_dataProvider);
+    
+    // where IRemoteQueryable<out T> is IQueryable<out T>
 }
 ```
 
@@ -102,6 +106,35 @@ public class QueryService : IQueryService
 }
 ```
 
+**Async**
+```C#
+IAsyncRemoteQueryable<TEntity> asyncQuery = RemoteQueryable.Factory.CreateAsyncQueryable<TEntity>(...);
+TEntity[] result = await asyncQuery.ToArrayAsync().ConfigureAwait(false);
+
+// where interface IAsyncRemoteQueryable<out T> is IRemoteQueryable<out T> is IQueryable<out T>
+```
+
+**Async Stream**
+```C#
+IAsyncRemoteStreamQueryable<TEntity> asyncStreamQuery = RemoteQueryable.Factory.CreateAsyncStreamQueryable<TEntity>(...);
+await foreach (TEntity item in asyncStreamQuery.ConfigureAwait(false))
+{
+}
+
+// where interface IAsyncRemoteStreamQueryable<out T> is IQueryable<out T>
+```
+
+# Remote.Linq.Async.Queryable
+Provides interoperability with Interactive Extensions ([Ix.NET][ix-net]).
+
+## Sample
+```C#
+IAsyncQueryable<TEntity> asyncQuery = RemoteQueryable.Factory.CreateAsyncQueryable<TEntity>(...);
+await foreach (TEntity item in asyncQuery.ConfigureAwait(false))
+{
+}
+```
+
 # Remote.Linq.EntityFramework / Remote.Linq.EntityFrameworkCore
 Remote linq extensions for entity framework and entity framework core. 
 
@@ -146,6 +179,25 @@ public TExpression DeepCopy<TExpression>(TExpression expression)
 }
 ```
 
+# Remote.Linq.Text.Json
+Provides _System.Text.Json_ serialization settings for Remote.Linq types.
+
+## Sample
+```C#
+TEntity entity = ...;
+JsonSerializerOptions serializerSettings = new JsonSerializerOptions().ConfigureRemoteLinq();
+string json = JsonSerializer.Serialize(entity, serializerSettings);
+TEntity result = JsonSerializer.Deserialize<TEntity>(json, serializerSettings);
+```
+
+```C#
+// Microsoft.AspNetCore.Hosting
+new WebHostBuilder()
+  .ConfigureServices(services => services
+    .AddMvcCore()
+    .AddJsonOptions(options => options.JsonSerializerOptions.ConfigureRemoteLinq())) // add system.text.json options for remote.linq
+```
+
 [1]: https://ci.appveyor.com/api/projects/status/64kw6dsuvfwyrdtl/branch/main?svg=true
 [2]: https://ci.appveyor.com/project/6bee/remote-linq/branch/main
 [3]: https://travis-ci.com/6bee/Remote.Linq.svg?branch=main
@@ -186,3 +238,4 @@ public TExpression DeepCopy<TExpression>(TExpression expression)
 [38]: https://www.nuget.org/packages/Remote.Linq.Text.Json
 [39]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Text.Json.svg?style=flat-square&label=myget
 [40]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Text.Json
+[ix-net]: https://github.com/dotnet/reactive
