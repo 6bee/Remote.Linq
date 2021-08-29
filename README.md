@@ -129,7 +129,7 @@ Provides interoperability with Interactive Extensions ([Ix.NET][ix-net]).
 
 ## Sample
 ```C#
-IAsyncQueryable<TEntity> asyncQuery = RemoteQueryable.Factory.CreateAsyncQueryable<TEntity>(...);
+System.Linq.IAsyncQueryable<TEntity> asyncQuery = RemoteQueryable.Factory.CreateAsyncQueryable<TEntity>(...);
 await foreach (TEntity item in asyncQuery.ConfigureAwait(false))
 {
 }
