@@ -24,11 +24,11 @@ Building a LINQ interface for custom services is made a breeze by using Remote L
 *   Build remote complex LINQ query services (arbitrary LINQ query including joins, groupings, aggregations, projections, etc.)
 
 ## Scope
-In contrast to [re-linq](https://github.com/re-motion/Relinq), this project enables serialization and deserialization of expression trees and applying LINQ expressions to other LINQ providers e.g. linq-to-object, linq-to-entity, etc. 
+In contrast to [re-linq][re-linq-repo], this project enables serialization and deserialization of expression trees and applying LINQ expressions to other LINQ providers e.g. linq-to-object, linq-to-entity, etc. 
 
 Remote.Linq makes it super easy to implement a service allowing LINQ queries defined on a client to be executed on a remote server. 
 
-Write operations (insert/update/delete) have to be implemented by other means if needed. [InfoCarrier.Core](https://github.com/azabluda/InfoCarrier.Core) might be interesting for such scenarios.
+Write operations (insert/update/delete) have to be implemented by other means if needed. [InfoCarrier.Core][infocarrier-repo] might be interesting for such scenarios.
 
 ## Sample
 Check-out _Remote.Linq.Samples.sln_ and _samples_ folder for a number of sample use cases.
@@ -114,7 +114,7 @@ TEntity[] result = await asyncQuery.ToArrayAsync().ConfigureAwait(false);
 // where interface IAsyncRemoteQueryable<out T> is IRemoteQueryable<out T> is IQueryable<out T>
 ```
 
-**Async Stream**
+**Async Stream** _[MS doc][async-stream-ms-doc]_
 ```C#
 IAsyncRemoteStreamQueryable<TEntity> asyncStreamQuery = RemoteQueryable.Factory.CreateAsyncStreamQueryable<TEntity>(...);
 await foreach (TEntity item in asyncStreamQuery.ConfigureAwait(false))
@@ -125,7 +125,7 @@ await foreach (TEntity item in asyncStreamQuery.ConfigureAwait(false))
 ```
 
 # Remote.Linq.Async.Queryable
-Provides interoperability with Interactive Extensions ([Ix.NET][ix-net]).
+Provides interoperability with _Interactive Extensions ([Ix.NET][ix-net-repo] / [System.Linq.Async.Queryable][ix-net-async-queryable-package])_.
 
 ## Sample
 ```C#
@@ -136,7 +136,7 @@ await foreach (TEntity item in asyncQuery.ConfigureAwait(false))
 ```
 
 # Remote.Linq.EntityFramework / Remote.Linq.EntityFrameworkCore
-Remote linq extensions for entity framework and entity framework core. 
+Remote linq extensions for _[Entity Framework][ef6-package]_ and _[Entity Framework Core][efcore-package]_. 
 
 Use this package when using features specific to EF6 and EF Core:
 *   Apply eager-loading (`Include`-expressions)
@@ -165,7 +165,7 @@ public DynamicObject ExecuteQuery(Expression queryExpression)
 ```
 
 # Remote.Linq.Newtonsoft.Json
-Provides [Json.NET](https://github.com/JamesNK/Newtonsoft.Json) serialization settings for Remote.Linq types.
+Provides _[Json.NET][json-net-package] serialization settings for Remote.Linq types.
 
 ## Sample
 ```C#
@@ -180,7 +180,7 @@ public TExpression DeepCopy<TExpression>(TExpression expression)
 ```
 
 # Remote.Linq.Text.Json
-Provides _System.Text.Json_ serialization settings for Remote.Linq types.
+Provides _[System.Text.Json][json-text-package]_ serialization settings for Remote.Linq types.
 
 ## Sample
 ```C#
@@ -195,7 +195,7 @@ TEntity result = JsonSerializer.Deserialize<TEntity>(json, serializerSettings);
 new WebHostBuilder()
   .ConfigureServices(services => services
     .AddMvcCore()
-    .AddJsonOptions(options => options.JsonSerializerOptions.ConfigureRemoteLinq())) // add system.text.json options for remote.linq
+    .AddJsonOptions(options => options.JsonSerializerOptions.ConfigureRemoteLinq()))
 ```
 
 [1]: https://ci.appveyor.com/api/projects/status/64kw6dsuvfwyrdtl/branch/main?svg=true
@@ -238,4 +238,12 @@ new WebHostBuilder()
 [38]: https://www.nuget.org/packages/Remote.Linq.Text.Json
 [39]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Text.Json.svg?style=flat-square&label=myget
 [40]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Text.Json
-[ix-net]: https://github.com/dotnet/reactive
+[async-stream-ms-doc]: https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/tutorials/generate-consume-asynchronous-stream
+[ef6-package]: https://www.nuget.org/packages/EntityFramework/
+[efcore-package]: https://www.nuget.org/packages/Microsoft.EntityFrameworkCore/
+[infocarrier-repo]: https://github.com/azabluda/InfoCarrier.Core
+[ix-net-repo]: https://github.com/dotnet/reactive
+[ix-net-async-queryable-package]: https://www.nuget.org/packages/System.Linq.Async.Queryable/
+[json-net-package]: https://www.nuget.org/packages/Newtonsoft.Json/
+[json-text-package]: https://www.nuget.org/packages/System.Text.Json/
+[re-linq-repo]: https://github.com/re-motion/Relinq
