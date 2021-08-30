@@ -14,9 +14,9 @@
 | `Remote.Linq.Text.Json`           | [![NuGet Badge][37]][38] | [![MyGet Pre Release][39]][40] |
 
 ## Description
-Remote Linq is a small and easy to use - yet very powerful - library to translate LINQ expression trees to strongly typed, serializable expression trees and vice versa. It provides functionality to send arbitrary LINQ queries to a remote service to be applied and executed against any enumerable or queryable data collection.
+_Remote.Linq_ is a small and easy to use - yet very powerful - library to translate LINQ expression trees to strongly typed, serializable expression trees and vice versa. It provides functionality to send arbitrary LINQ queries to a remote service to be applied and executed against any enumerable or queryable data collection.
 
-Building a LINQ interface for custom services is made a breeze by using Remote Linq.
+Building a LINQ interface for custom services is made a breeze by using _Remote.Linq_.
 
 ## Features
 *   Translate LINQ expressions into serializable expression trees (remote LINQ expression) and vice versa. 
@@ -24,17 +24,16 @@ Building a LINQ interface for custom services is made a breeze by using Remote L
 *   Build remote complex LINQ query services (arbitrary LINQ query including joins, groupings, aggregations, projections, etc.)
 
 ## Scope
-In contrast to [re-linq][re-linq-repo], this project enables serialization and deserialization of expression trees and applying LINQ expressions to other LINQ providers e.g. linq-to-object, linq-to-entity, etc. 
+In contrast to _[re-linq][re-linq-repo]_, this project enables serialization and deserialization of expression trees and applying LINQ expressions to other LINQ providers e.g. linq-to-object, linq-to-entity, etc. 
 
 Remote.Linq makes it super easy to implement a service allowing LINQ queries defined on a client to be executed on a remote server. 
 
-Write operations (insert/update/delete) have to be implemented by other means if needed. [InfoCarrier.Core][infocarrier-repo] might be interesting for such scenarios.
+Write operations (insert/update/delete) have to be implemented by other means if needed. _[InfoCarrier.Core][infocarrier-repo]_ might be interesting for such scenarios.
 
 ## Sample
 Check-out _Remote.Linq.Samples.sln_ and _samples_ folder for a number of sample use cases.
 
-**Client**
-Implement a repository class to set-up server connection and expose the queryable data sets (`IQueryable<>`)
+**Client: ** Implement a repository class to set-up server connection and expose the queryable data sets (`IQueryable<>`)
 ```C#
 public class ClientDataRepository
 {
@@ -79,8 +78,7 @@ var myBlogPosts = (
     }).ToList();
 ```
 
-**Server**
-Implement the backend service to handle the client's query expression by applying it to a data source e.g. an ORM
+**Server:** Implement the backend service to handle the client's query expression by applying it to a data source e.g. an ORM
 ```C#
 public interface IQueryService : IDisposable
 {
@@ -138,15 +136,14 @@ await foreach (TEntity item in asyncQuery.ConfigureAwait(false))
 # Remote.Linq.EntityFramework / Remote.Linq.EntityFrameworkCore
 Remote linq extensions for _[Entity Framework][ef6-package]_ and _[Entity Framework Core][efcore-package]_. 
 
-Use this package when using features specific to EF6 and EF Core:
+Use this package when using features specific to _EF6_ and _EF Core_:
 *   Apply eager-loading (`Include`-expressions)
 
 *   Make use of DB functions</br>
     e.g. `queryable.Where(x => Microsoft.EntityFrameworkCore.EF.Functions.Like(x.Name, "%fruit%"))`
 
 ## Sample
-**Client**
-Query blogs including posts and owner
+**Client:** Query blogs including posts and owner
 ```C#
 using var repository = new RemoteRepository();
 var blogs = repository.Blogs
@@ -154,8 +151,7 @@ var blogs = repository.Blogs
     .ToList();
 ```
 
-**Server**
-Execute query on database via EF Core
+**Server:** Execute query on database via _EF Core_
 ```C#
 public DynamicObject ExecuteQuery(Expression queryExpression)
 {
@@ -165,7 +161,7 @@ public DynamicObject ExecuteQuery(Expression queryExpression)
 ```
 
 # Remote.Linq.Newtonsoft.Json
-Provides _[Json.NET][json-net-package] serialization settings for Remote.Linq types.
+Provides _[Json.NET][json-net-package]_ serialization settings for _Remote.Linq_ types.
 
 ## Sample
 ```C#
@@ -180,7 +176,7 @@ public TExpression DeepCopy<TExpression>(TExpression expression)
 ```
 
 # Remote.Linq.Text.Json
-Provides _[System.Text.Json][json-text-package]_ serialization settings for Remote.Linq types.
+Provides _[System.Text.Json][json-text-package]_ serialization settings for _Remote.Linq_ types.
 
 ## Sample
 ```C#
