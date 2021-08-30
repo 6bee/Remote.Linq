@@ -20,8 +20,8 @@ Building a LINQ interface for custom services is made a breeze by using _Remote.
 
 ## Features
 *   Translate LINQ expressions into serializable expression trees (remote LINQ expression) and vice versa. 
-*   Build remote single-type query services (paging, sorting, filtering)
-*   Build remote complex LINQ query services (arbitrary LINQ query including joins, groupings, aggregations, projections, etc.)
+*   Build remote single-type query services (paging, sorting, filtering).
+*   Build remote complex LINQ query services (arbitrary LINQ query including joins, groupings, aggregations, projections, etc.).
 
 ## Scope
 In contrast to _[re-linq][re-linq-repo]_, this project enables serialization and deserialization of expression trees and applying LINQ expressions to other LINQ providers e.g. linq-to-object, linq-to-entity, etc. 
