@@ -4,7 +4,7 @@ namespace Common
 {
     using Aqua.TypeSystem;
     using Newtonsoft.Json;
-    using Remote.Linq;
+    using Remote.Linq.Newtonsoft.Json;
     using System;
     using System.IO;
     using System.Text;

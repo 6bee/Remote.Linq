@@ -2,7 +2,6 @@
 
 namespace Client
 {
-    using Remote.Linq;
     using Remote.Linq.SimpleQuery;
     using System;
     using System.Collections.Generic;

@@ -5,7 +5,7 @@ namespace Server
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.DependencyInjection;
-    using Remote.Linq;
+    using Remote.Linq.Text.Json;
     using System;
     using System.Threading;
 

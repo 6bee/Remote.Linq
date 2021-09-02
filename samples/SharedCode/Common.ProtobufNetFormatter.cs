@@ -3,7 +3,7 @@
 namespace Common
 {
     using Aqua.TypeSystem;
-    using Remote.Linq;
+    using Remote.Linq.ProtoBuf;
     using System;
     using System.IO;
     using System.Threading;
