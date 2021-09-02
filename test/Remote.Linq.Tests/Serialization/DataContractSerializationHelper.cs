@@ -9,10 +9,10 @@ namespace Remote.Linq.Tests.Serialization
 
     public static class DataContractSerializationHelper
     {
-        public static T Serialize<T>(T graph)
-            => Serialize(graph, null);
+        public static T Clone<T>(T graph)
+            => Clone(graph, null);
 
-        public static T Serialize<T>(T graph, Type[] knownTypes)
+        public static T Clone<T>(T graph, Type[] knownTypes)
         {
             var serializer = new DataContractSerializer(typeof(T), knownTypes);
             using var stream = new MemoryStream();
@@ -21,15 +21,15 @@ namespace Remote.Linq.Tests.Serialization
             return (T)serializer.ReadObject(stream);
         }
 
-        public static T SerializeExpression<T>(T expression)
+        public static T CloneExpression<T>(T expression)
             where T : Remote.Linq.Expressions.Expression
-            => SerializeExpression(expression, null);
+            => CloneExpression(expression, null);
 
-        public static T SerializeExpression<T>(T expression, Type[] knownTypes)
+        public static T CloneExpression<T>(T expression, Type[] knownTypes)
             where T : Remote.Linq.Expressions.Expression
         {
             var exp1 = expression.ReplaceGenericQueryArgumentsByNonGenericArguments();
-            var exp2 = Serialize(exp1, knownTypes);
+            var exp2 = Clone(exp1, knownTypes);
             var exp3 = exp2.ReplaceNonGenericQueryArgumentsByGenericArguments();
             return exp3;
         }

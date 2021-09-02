@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq
+namespace Remote.Linq.Newtonsoft.Json
 {
-    using Aqua;
     using Aqua.Newtonsoft.Json;
     using global::Newtonsoft.Json;
     using global::Newtonsoft.Json.Serialization;
-    using Remote.Linq.Newtonsoft.Json;
     using Remote.Linq.Newtonsoft.Json.ContractResolvers;
     using Remote.Linq.SimpleQuery;
     using System;

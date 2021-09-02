@@ -2,8 +2,9 @@
 
 namespace Remote.Linq.Tests.Serialization
 {
-    using Aqua;
+    using Aqua.Text.Json;
     using Aqua.Text.Json.Converters;
+    using Remote.Linq.Text.Json;
     using System;
     using System.Numerics;
     using System.Text.Json;
@@ -11,22 +12,25 @@ namespace Remote.Linq.Tests.Serialization
 
     public static class SystemTextJsonSerializationHelper
     {
-        private static readonly JsonSerializerOptions _serializerSettings = new JsonSerializerOptions { WriteIndented = true }
+        /// <summary>
+        /// Gets pre-configured <see cref="JsonSerializerOptions"/> for <i>Aqua</i> types.
+        /// </summary>
+        public static JsonSerializerOptions SerializerSettings => new JsonSerializerOptions { WriteIndented = true }
             .AddConverter(new TimeSpanConverter())
             .ConfigureRemoteLinq();
 
-        public static T Serialize<T>(this T graph)
+        public static T Clone<T>(this T graph)
         {
-            var json = JsonSerializer.Serialize(graph, _serializerSettings);
+            var json = JsonSerializer.Serialize(graph, SerializerSettings);
 
-            return JsonSerializer.Deserialize<T>(json, _serializerSettings);
+            return JsonSerializer.Deserialize<T>(json, SerializerSettings);
         }
 
-        public static object Serialize(this object graph, Type type)
+        public static object Clone(this object graph, Type type)
         {
-            var json = JsonSerializer.Serialize(graph, _serializerSettings);
+            var json = JsonSerializer.Serialize(graph, SerializerSettings);
 
-            return JsonSerializer.Deserialize(json, type, _serializerSettings);
+            return JsonSerializer.Deserialize(json, type, SerializerSettings);
         }
 
         public static void SkipUnsupportedDataType(Type type, object value)

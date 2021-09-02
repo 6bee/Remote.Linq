@@ -17,7 +17,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public class With_binary_formatter : When_subquery_expression_use_same_parameter_name
         {
             public With_binary_formatter()
-                : base(BinarySerializationHelper.Serialize)
+                : base(BinarySerializationHelper.Clone)
             {
             }
         }
@@ -25,7 +25,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public class With_data_contract_serializer : When_subquery_expression_use_same_parameter_name
         {
             public With_data_contract_serializer()
-                : base(DataContractSerializationHelper.Serialize)
+                : base(DataContractSerializationHelper.Clone)
             {
             }
         }
@@ -33,7 +33,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public class With_newtonsoft_json_serializer : When_subquery_expression_use_same_parameter_name
         {
             public With_newtonsoft_json_serializer()
-                : base(x => (Expression)NewtonsoftJsonSerializationHelper.Serialize(x, x.GetType()))
+                : base(x => (Expression)NewtonsoftJsonSerializationHelper.Clone(x, x.GetType()))
             {
             }
         }
@@ -41,7 +41,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public class With_system_text_json_serializer : When_subquery_expression_use_same_parameter_name
         {
             public With_system_text_json_serializer()
-                : base(x => (Expression)SystemTextJsonSerializationHelper.Serialize(x, x.GetType()))
+                : base(x => (Expression)SystemTextJsonSerializationHelper.Clone(x, x.GetType()))
             {
             }
         }
@@ -50,7 +50,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public class With_net_data_contract_serializer : When_subquery_expression_use_same_parameter_name
         {
             public With_net_data_contract_serializer()
-                : base(NetDataContractSerializationHelper.Serialize)
+                : base(NetDataContractSerializationHelper.Clone)
             {
             }
         }
@@ -59,7 +59,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public class With_protobuf_net_serializer : When_using_LoopExpressions
         {
             public With_protobuf_net_serializer()
-                : base(ProtobufNetSerializationHelper.Serialize)
+                : base(ProtobufNetSerializationHelper.Clone)
             {
             }
         }
@@ -67,7 +67,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
         public class With_xml_serializer : When_subquery_expression_use_same_parameter_name
         {
             public With_xml_serializer()
-                : base(XmlSerializationHelper.Serialize)
+                : base(XmlSerializationHelper.Clone)
             {
             }
         }

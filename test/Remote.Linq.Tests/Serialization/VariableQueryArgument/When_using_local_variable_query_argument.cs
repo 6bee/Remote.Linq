@@ -11,7 +11,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         public class With_binary_formatter : When_using_local_variable_query_argument
         {
             public With_binary_formatter()
-                : base(BinarySerializationHelper.Serialize)
+                : base(BinarySerializationHelper.Clone)
             {
             }
         }
@@ -19,7 +19,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         public class With_data_contract_serializer : When_using_local_variable_query_argument
         {
             public With_data_contract_serializer()
-                : base(DataContractSerializationHelper.SerializeExpression)
+                : base(DataContractSerializationHelper.CloneExpression)
             {
             }
         }
@@ -27,7 +27,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         public class With_newtonsoft_json_serializer : When_using_local_variable_query_argument
         {
             public With_newtonsoft_json_serializer()
-                : base(NewtonsoftJsonSerializationHelper.Serialize)
+                : base(NewtonsoftJsonSerializationHelper.Clone)
             {
             }
         }
@@ -35,7 +35,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         public class With_system_text_json_serializer : When_using_local_variable_query_argument
         {
             public With_system_text_json_serializer()
-                : base(SystemTextJsonSerializationHelper.Serialize)
+                : base(SystemTextJsonSerializationHelper.Clone)
             {
             }
         }
@@ -44,7 +44,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         public class With_net_data_contract_serializer : When_using_local_variable_query_argument
         {
             public With_net_data_contract_serializer()
-                : base(NetDataContractSerializationHelper.Serialize)
+                : base(NetDataContractSerializationHelper.Clone)
             {
             }
         }
@@ -53,7 +53,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         public class With_protobuf_net_serializer : When_using_local_variable_query_argument
         {
             public With_protobuf_net_serializer()
-                : base(ProtobufNetSerializationHelper.Serialize)
+                : base(ProtobufNetSerializationHelper.Clone)
             {
             }
         }
@@ -61,7 +61,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
         public class With_xml_serializer : When_using_local_variable_query_argument
         {
             public With_xml_serializer()
-                : base(XmlSerializationHelper.SerializeExpression)
+                : base(XmlSerializationHelper.CloneExpression)
             {
             }
         }

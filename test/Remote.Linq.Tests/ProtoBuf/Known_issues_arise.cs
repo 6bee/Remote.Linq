@@ -5,6 +5,7 @@ namespace Remote.Linq.Tests.ProtoBuf
     using global::ProtoBuf;
     using global::ProtoBuf.Meta;
     using Remote.Linq.DynamicQuery;
+    using Remote.Linq.ProtoBuf;
     using Shouldly;
     using System;
     using System.IO;
@@ -32,7 +33,7 @@ namespace Remote.Linq.Tests.ProtoBuf
             var remoteExpression = l.ToRemoteLinqExpression();
 
             // throws on deep clone
-            Should.Throw<ProtoException>(remoteExpression.Serialize);
+            Should.Throw<ProtoException>(remoteExpression.Clone);
 
             var config = ProtoBufTypeModel.ConfigureRemoteLinq().Model;
             using var memorystream = new MemoryStream();

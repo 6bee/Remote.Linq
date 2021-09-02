@@ -10,7 +10,7 @@ namespace Remote.Linq.Tests.Serialization
 
     public static class NetDataContractSerializationHelper
     {
-        public static T Serialize<T>(this T graph)
+        public static T Clone<T>(this T graph)
         {
             var serializer = new NetDataContractSerializer();
             using var stream = new MemoryStream();
@@ -19,11 +19,11 @@ namespace Remote.Linq.Tests.Serialization
             return (T)serializer.Deserialize(stream);
         }
 
-        public static T SerializeExpression<T>(T expression)
+        public static T CloneExpression<T>(T expression)
             where T : Remote.Linq.Expressions.Expression
         {
             var exp1 = expression.ReplaceGenericQueryArgumentsByNonGenericArguments();
-            var exp2 = Serialize(exp1);
+            var exp2 = Clone(exp1);
             var exp3 = exp2.ReplaceNonGenericQueryArgumentsByGenericArguments();
             return exp3;
         }

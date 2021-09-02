@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.ExpressionExecution
 {
-    using Aqua.TypeSystem;
     using Remote.Linq.ExpressionVisitors;
     using System;
     using System.Collections.Generic;

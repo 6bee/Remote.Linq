@@ -73,11 +73,11 @@ namespace Remote.Linq.Tests
                 new Complex(-87654, 234),
                 new Complex(double.MinValue, double.MinValue),
                 new Complex(double.MaxValue, double.MaxValue),
-#if NET5_0
+#if NET5_0_OR_GREATER
                 (Half)Math.PI,
                 Half.MinValue,
                 Half.MaxValue,
-#endif // NET5_0
+#endif // NET5_0_OR_GREATER
                 new { Text = string.Empty, Timestamp = default(DateTime?) },
             }
             .SelectMany(x => new (Type Type, object Value)[]

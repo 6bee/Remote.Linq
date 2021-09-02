@@ -8,7 +8,7 @@ namespace Remote.Linq.Tests.Serialization
 
     public static class BinarySerializationHelper
     {
-        public static T Serialize<T>(T graph)
+        public static T Clone<T>(T graph)
         {
 #pragma warning disable SYSLIB0011 // Type or member is obsolete
             var serializer = new BinaryFormatter();
@@ -19,11 +19,11 @@ namespace Remote.Linq.Tests.Serialization
 #pragma warning restore SYSLIB0011 // Type or member is obsolete
         }
 
-        public static T SerializeExpression<T>(T expression)
+        public static T CloneExpression<T>(T expression)
             where T : Remote.Linq.Expressions.Expression
         {
             var exp1 = expression.ReplaceGenericQueryArgumentsByNonGenericArguments();
-            var exp2 = Serialize(exp1);
+            var exp2 = Clone(exp1);
             var exp3 = exp2.ReplaceNonGenericQueryArgumentsByGenericArguments();
             return exp3;
         }

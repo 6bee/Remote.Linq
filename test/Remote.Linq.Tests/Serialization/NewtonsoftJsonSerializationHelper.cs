@@ -3,24 +3,28 @@
 namespace Remote.Linq.Tests.Serialization
 {
     using global::Newtonsoft.Json;
+    using Remote.Linq.Newtonsoft.Json;
     using System;
 
     public static class NewtonsoftJsonSerializationHelper
     {
-        private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { Formatting = Formatting.Indented }.ConfigureRemoteLinq();
+        /// <summary>
+        /// Gets pre-configured <see cref="JsonSerializerSettings"/> for <i>Aqua</i> types.
+        /// </summary>
+        public static JsonSerializerSettings SerializerSettings => new JsonSerializerSettings { Formatting = Formatting.Indented }.ConfigureRemoteLinq();
 
-        public static T Serialize<T>(this T graph)
+        public static T Clone<T>(this T graph)
         {
-            var json = JsonConvert.SerializeObject(graph, _serializerSettings);
+            var json = JsonConvert.SerializeObject(graph, SerializerSettings);
 
-            return JsonConvert.DeserializeObject<T>(json, _serializerSettings);
+            return JsonConvert.DeserializeObject<T>(json, SerializerSettings);
         }
 
-        public static object Serialize(this object graph, Type type)
+        public static object Clone(this object graph, Type type)
         {
-            var json = JsonConvert.SerializeObject(graph, _serializerSettings);
+            var json = JsonConvert.SerializeObject(graph, SerializerSettings);
 
-            return JsonConvert.DeserializeObject(json, type, _serializerSettings);
+            return JsonConvert.DeserializeObject(json, type, SerializerSettings);
         }
     }
 }

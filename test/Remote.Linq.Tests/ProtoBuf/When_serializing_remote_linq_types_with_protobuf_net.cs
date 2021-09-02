@@ -4,6 +4,7 @@ namespace Remote.Linq.Tests.ProtoBuf
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
+    using Remote.Linq.ProtoBuf;
     using Shouldly;
     using System;
     using System.Collections;
@@ -29,7 +30,7 @@ namespace Remote.Linq.Tests.ProtoBuf
             var config = ProtoBufTypeModel.ConfigureRemoteLinq(configureDefaultSystemTypes: false)
                 .AddDynamicPropertyType(TypeHelper.GetElementType(type))
                 .Compile();
-            var copy = property.Serialize(config);
+            var copy = property.Clone(config);
 
             copy.Value.ShouldBe(value);
         }
@@ -44,7 +45,7 @@ namespace Remote.Linq.Tests.ProtoBuf
                 { "p3", 1 },
             };
 
-            var copy = propertySet.Serialize();
+            var copy = propertySet.Clone();
 
             copy["p1"].ShouldBe(propertySet["p1"]);
             copy["p2"].ShouldBe(propertySet["p2"]);
@@ -67,7 +68,7 @@ namespace Remote.Linq.Tests.ProtoBuf
             var config = ProtoBufTypeModel.ConfigureRemoteLinq(configureDefaultSystemTypes: false)
                 .AddDynamicPropertyType(TypeHelper.GetElementType(type))
                 .Compile();
-            var copy = propertySet.Serialize(config);
+            var copy = propertySet.Clone(config);
 
             copy["p1"].ShouldBe(value);
         }
@@ -81,7 +82,7 @@ namespace Remote.Linq.Tests.ProtoBuf
             var dynamicObject = new DynamicObjectMapper().MapObject(value);
 
             var config = CreateModelFor(type);
-            var copy = dynamicObject.Serialize(config);
+            var copy = dynamicObject.Clone(config);
 
             copy?.Get().ShouldBe(dynamicObject?.Get(), $"type: {type} value: {value}");
 
@@ -99,7 +100,7 @@ namespace Remote.Linq.Tests.ProtoBuf
             var dynamicObjects = new DynamicObjectMapper(new DynamicObjectMapperSettings { WrapNullAsDynamicObject = true }).MapCollection(value);
 
             var config = CreateModelFor(type);
-            var copy = dynamicObjects.Serialize(config);
+            var copy = dynamicObjects.Clone(config);
 
             var dynamicObjectsCount = dynamicObjects?.Count() ?? 0;
             var copyCount = copy?.Count() ?? 0;

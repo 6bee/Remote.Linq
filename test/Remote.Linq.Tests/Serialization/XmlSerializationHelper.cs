@@ -9,9 +9,9 @@ namespace Remote.Linq.Tests.Serialization
 
     public static class XmlSerializationHelper
     {
-        public static T Serialize<T>(this T graph) => Serialize(graph, null);
+        public static T Clone<T>(this T graph) => Clone(graph, null);
 
-        public static T Serialize<T>(this T graph, Type[] extraTypes)
+        public static T Clone<T>(this T graph, Type[] extraTypes)
         {
             var serializer = new XmlSerializer(typeof(T), extraTypes);
             using var stream = new MemoryStream();
@@ -20,15 +20,15 @@ namespace Remote.Linq.Tests.Serialization
             return (T)serializer.Deserialize(stream);
         }
 
-        public static T SerializeExpression<T>(T expression)
+        public static T CloneExpression<T>(T expression)
             where T : Remote.Linq.Expressions.Expression
-            => SerializeExpression(expression, null);
+            => CloneExpression(expression, null);
 
-        public static T SerializeExpression<T>(T expression, Type[] extraTypes)
+        public static T CloneExpression<T>(T expression, Type[] extraTypes)
             where T : Remote.Linq.Expressions.Expression
         {
             var exp1 = expression.ReplaceGenericQueryArgumentsByNonGenericArguments();
-            var exp2 = Serialize(exp1, extraTypes);
+            var exp2 = Clone(exp1, extraTypes);
             var exp3 = exp2.ReplaceNonGenericQueryArgumentsByGenericArguments();
             return exp3;
         }

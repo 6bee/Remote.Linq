@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Tests.Serialization.Expressions
 {
-    using Aqua;
     using global::Newtonsoft.Json;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
@@ -33,10 +32,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
         public When_deserializing_json_with_constant_expression()
         {
-            var serializerSettings = new JsonSerializerSettings()
-                .ConfigureAqua()
-                .ConfigureRemoteLinq();
-
+            var serializerSettings = NewtonsoftJsonSerializationHelper.SerializerSettings;
             expression = JsonConvert.DeserializeObject<ConstantExpression>(Json, serializerSettings);
         }
 

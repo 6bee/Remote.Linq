@@ -4,6 +4,7 @@ namespace Remote.Linq.Tests.Serialization
 {
     using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
+    using Remote.Linq.ProtoBuf;
     using System;
     using System.Linq;
     using System.Numerics;
@@ -28,15 +29,15 @@ namespace Remote.Linq.Tests.Serialization
             return configuration;
         }
 
-        public static T Serialize<T>(this T graph) => Serialize(graph, null);
+        public static T Clone<T>(this T graph) => Clone(graph, null);
 
-        public static T Serialize<T>(this T graph, TypeModel configuration)
+        public static T Clone<T>(this T graph, TypeModel configuration)
         {
             configuration ??= _configuration;
             return (T)configuration.DeepClone(graph);
         }
 
-        public static global::ProtoBuf.Meta.TypeModel CreateModelFor(Type type)
+        public static TypeModel CreateModelFor(Type type)
         {
             if (type.IsCollection())
             {
@@ -59,9 +60,9 @@ namespace Remote.Linq.Tests.Serialization
             Skip.If(type.Is<BigInteger>(), $"{type} not supported by out-of-the-box protobuf-net");
             Skip.If(type.Is<Complex>(), $"{type} not supported by out-of-the-box protobuf-net");
             Skip.If(type.IsNotPublic(), $"Not-public {type} not supported protobuf-net");
-#if NET5_0
+#if NET5_0_OR_GREATER
             Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET5_0
+#endif // NET5_0_OR_GREATER
         }
     }
 }
