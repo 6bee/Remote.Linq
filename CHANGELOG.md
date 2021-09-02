@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-## [6.3.1][6.3.1] - 2021-28-29
+## [6.3.1][6.3.1] - 2021-08-29
 
 ### Fixed
 - Fixed issue with async `IQueryable` extensions methods
