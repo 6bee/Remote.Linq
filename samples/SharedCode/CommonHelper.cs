@@ -6,7 +6,7 @@ using System.Linq;
 
 internal static class CommonHelper
 {
-    private const string TitleBase = "(⌐■_■)  Remote.Linq Demo";
+    private const string TitleBase = ">> (⌐■_■)  Remote.Linq Demo";
     private const char NewLine = '\n';
     private static bool _isInteractive = true;
 
