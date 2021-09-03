@@ -99,7 +99,6 @@ namespace Remote.Linq.ExpressionExecution
                 return type;
             }
 
-            expression.CheckNotNull(nameof(expression));
             try
             {
                 return await ExecuteCoreAsync(expression, cancellation).ConfigureAwait(false);
