@@ -1,5 +1,5 @@
 @echo off
-set configuration=Debug
+set configuration=Release
 
 call "%~dp0clean.bat"
 dotnet test "%~dp0Remote.Linq.sln" -c %configuration%
