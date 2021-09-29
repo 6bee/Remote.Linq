@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased vNext][vNext-unreleased]
+## [Unreleased vNext][vnext-unreleased]
 
 ### Added
 
@@ -55,7 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
-[vNext-unreleased]: https://github.com/6bee/Remote.Linq/compare/7.0.0...main
+[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/7.0.0...main
 [7.0.0]: https://github.com/6bee/Remote.Linq/compare/6.3.1...7.0.0
 [6.3.1]: https://github.com/6bee/Remote.Linq/compare/6.3.0...6.3.1
 [6.3.0]: https://github.com/6bee/Remote.Linq/compare/6.2.3...6.3.0
