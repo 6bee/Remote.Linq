@@ -201,7 +201,7 @@ namespace Remote.Linq.Include
                 => _queryable.GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator()
-                => GetEnumerator();
+                => ((IEnumerable)_queryable).GetEnumerator();
         }
     }
 }

@@ -5,6 +5,7 @@ namespace Remote.Linq.SimpleQuery
     using Aqua.EnumerableExtensions;
     using Remote.Linq.ExpressionVisitors;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -190,7 +191,7 @@ namespace Remote.Linq.SimpleQuery
             return _dataProvider(this).GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public override string ToString()
         {
