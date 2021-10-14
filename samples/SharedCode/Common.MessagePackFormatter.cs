@@ -56,7 +56,8 @@ namespace Common
             var count = 0;
             do
             {
-                var size = await stream.ReadAsync(buffer, 0, buffer.Length, cancellation).ConfigureAwait(false);
+                var length = Math.Min(buffer.Length, messageSize - count);
+                var size = await stream.ReadAsync(buffer, 0, length, cancellation).ConfigureAwait(false);
                 Array.Copy(buffer, 0, bin, count, size);
                 count += size;
             }
