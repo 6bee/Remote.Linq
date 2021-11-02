@@ -15,7 +15,7 @@ namespace Remote.Linq
         /// <param name="instance">The instance in case of an instance method or <see langword="null"/> for static methods.</param>
         /// <param name="args">The argument list.</param>
         /// <returns>The return value of the method invocation.</returns>
-        public static object? InvokeAndUnwrap(this MethodInfo methodInfo, object? instance, params object?[] args)
+        internal static object? InvokeAndUnwrap(this MethodInfo methodInfo, object? instance, params object?[] args)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace Remote.Linq
         /// <param name="instance">The instance in case of an instance method or <see langword="null"/> for static methods.</param>
         /// <param name="args">The argument list.</param>
         /// <returns>The return value of the method invocation.</returns>
-        public static TResult InvokeAndUnwrap<TResult>(this MethodInfo methodInfo, object? instance, params object?[] args)
+        internal static TResult InvokeAndUnwrap<TResult>(this MethodInfo methodInfo, object? instance, params object?[] args)
             => (TResult)methodInfo.InvokeAndUnwrap(instance, args) !;
     }
 }
