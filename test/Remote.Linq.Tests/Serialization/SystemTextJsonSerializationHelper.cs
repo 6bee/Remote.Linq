@@ -15,22 +15,22 @@ namespace Remote.Linq.Tests.Serialization
         /// <summary>
         /// Gets pre-configured <see cref="JsonSerializerOptions"/> for <i>Aqua</i> types.
         /// </summary>
-        public static JsonSerializerOptions SerializerSettings => new JsonSerializerOptions { WriteIndented = true }
+        public static JsonSerializerOptions SerializerOptions => new JsonSerializerOptions { WriteIndented = true }
             .AddConverter(new TimeSpanConverter())
             .ConfigureRemoteLinq();
 
         public static T Clone<T>(this T graph)
         {
-            var json = JsonSerializer.Serialize(graph, SerializerSettings);
+            var json = JsonSerializer.Serialize(graph, SerializerOptions);
 
-            return JsonSerializer.Deserialize<T>(json, SerializerSettings);
+            return JsonSerializer.Deserialize<T>(json, SerializerOptions);
         }
 
         public static object Clone(this object graph, Type type)
         {
-            var json = JsonSerializer.Serialize(graph, SerializerSettings);
+            var json = JsonSerializer.Serialize(graph, SerializerOptions);
 
-            return JsonSerializer.Deserialize(json, type, SerializerSettings);
+            return JsonSerializer.Deserialize(json, type, SerializerOptions);
         }
 
         public static void SkipUnsupportedDataType(Type type, object value)
