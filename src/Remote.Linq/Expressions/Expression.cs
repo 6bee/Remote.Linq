@@ -38,6 +38,7 @@ namespace Remote.Linq.Expressions
     [KnownType(typeof(FieldInfo)), XmlInclude(typeof(FieldInfo))]
     [KnownType(typeof(PropertyInfo)), XmlInclude(typeof(PropertyInfo))]
     [KnownType(typeof(MethodInfo)), XmlInclude(typeof(MethodInfo))]
+    [KnownType(typeof(Expression[])), XmlInclude(typeof(Expression[]))]
     [DebuggerDisplay("{DebugFormatter,nq}")]
     public abstract class Expression
     {

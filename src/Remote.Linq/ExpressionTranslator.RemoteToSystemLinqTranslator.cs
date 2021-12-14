@@ -353,7 +353,17 @@ namespace Remote.Linq
                 var value = node.Value;
                 var type = node.Type.ResolveType(_typeResolver);
 
-                if (type == typeof(Type) && value is Aqua.TypeSystem.TypeInfo typeInfo)
+                if (type is not null && typeof(SystemLinq.Expression).IsAssignableFrom(type) && node.Value is RemoteLinq.Expression expressionValue)
+                {
+                    var expValue = Visit(expressionValue);
+                    value = expValue;
+                }
+                else if (type is not null && typeof(IEnumerable<SystemLinq.Expression>).IsAssignableFrom(type) && node.Value is IEnumerable<RemoteLinq.Expression> expressionCollection)
+                {
+                    var list = VisitExpressionList(expressionCollection).ToArray();
+                    value = list;
+                }
+                else if (type == typeof(Type) && value is Aqua.TypeSystem.TypeInfo typeInfo)
                 {
                     value = typeInfo.ResolveType(_typeResolver);
                 }
@@ -365,9 +375,9 @@ namespace Remote.Linq
                     foreach (var property in dynamicObject.Properties.AsEmptyIfNull())
                     {
                         var propertyValue = property.Value;
-                        if (propertyValue is RemoteLinq.Expression expressionValue)
+                        if (propertyValue is RemoteLinq.Expression expValue)
                         {
-                            propertyValue = Visit(expressionValue);
+                            propertyValue = Visit(expValue);
                         }
 
                         copy.Add(property.Name, propertyValue);

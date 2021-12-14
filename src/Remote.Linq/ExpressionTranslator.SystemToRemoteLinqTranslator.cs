@@ -129,25 +129,37 @@ namespace Remote.Linq
 
             protected override SystemLinq.Expression VisitConstant(SystemLinq.ConstantExpression node)
             {
+                var type = node.Type;
+                var value = node.Value;
                 RemoteLinq.ConstantExpression exp;
-                if (node.Type == typeof(Type) && node.Value is Type typeValue)
+                if (type is not null && typeof(SystemLinq.Expression).IsAssignableFrom(type) && value is SystemLinq.Expression expressionValue)
                 {
-                    exp = new RemoteLinq.ConstantExpression(typeValue.AsTypeInfo(), node.Type);
+                    var expValue = Visit(expressionValue).Unwrap();
+                    exp = new RemoteLinq.ConstantExpression(expValue, _typeInfoProvider.GetTypeInfo(type));
                 }
-                else if (node.Value is object value && _needsMapping(value))
+                else if (type is not null && typeof(IEnumerable<SystemLinq.Expression>).IsAssignableFrom(type) && value is IEnumerable<SystemLinq.Expression> expressionCollection)
                 {
-                    var key = new { value, node.Type };
+                    var list = VisitExpressionList(new ReadOnlyCollection<SystemLinq.Expression>(expressionCollection.ToArray())).Select(Unwrap<RemoteLinq.Expression>).ToArray();
+                    exp = new RemoteLinq.ConstantExpression(list, _typeInfoProvider.GetTypeInfo(type));
+                }
+                else if (type == typeof(Type) && value is Type typeValue)
+                {
+                    exp = new RemoteLinq.ConstantExpression(typeValue.AsTypeInfo(), type);
+                }
+                else if (value is not null && _needsMapping(value))
+                {
+                    var key = new { value, type };
                     if (!_constantQueryArgumentCache.TryGetValue(key, out var constantQueryArgument))
                     {
                         var dynamicObject = _dynamicObjectMapper.MapObject(value);
-                        var copy = new DynamicObject(dynamicObject.Type ?? _typeInfoProvider.GetTypeInfo(node.Type, false, false));
+                        var copy = new DynamicObject(dynamicObject.Type ?? _typeInfoProvider.GetTypeInfo(type, false, false));
 
                         foreach (var property in dynamicObject.Properties.AsEmptyIfNull())
                         {
                             var propertyValue = property.Value;
-                            if (propertyValue is SystemLinq.Expression expressionValue)
+                            if (propertyValue is SystemLinq.Expression expValue)
                             {
-                                propertyValue = Visit(expressionValue).UnwrapNullable();
+                                propertyValue = Visit(expValue).UnwrapNullable();
                             }
 
                             copy.Add(property.Name, propertyValue);
@@ -157,13 +169,17 @@ namespace Remote.Linq
                         _constantQueryArgumentCache.Add(key, constantQueryArgument);
                     }
 
-                    exp = node.Type == constantQueryArgument.Value.Type?.ToType()
+                    exp = type is null
+                        ? new RemoteLinq.ConstantExpression(constantQueryArgument)
+                        : type == constantQueryArgument.Value.Type?.ToType()
                         ? new RemoteLinq.ConstantExpression(constantQueryArgument, constantQueryArgument.Value.Type)
-                        : new RemoteLinq.ConstantExpression(constantQueryArgument, _typeInfoProvider.GetTypeInfo(node.Type));
+                        : new RemoteLinq.ConstantExpression(constantQueryArgument, _typeInfoProvider.GetTypeInfo(type));
                 }
                 else
                 {
-                    exp = new RemoteLinq.ConstantExpression(node.Value, _typeInfoProvider.GetTypeInfo(node.Type));
+                    exp = type is null
+                        ? new RemoteLinq.ConstantExpression(value)
+                        : new RemoteLinq.ConstantExpression(value, _typeInfoProvider.GetTypeInfo(type));
                 }
 
                 return exp.Wrap();
