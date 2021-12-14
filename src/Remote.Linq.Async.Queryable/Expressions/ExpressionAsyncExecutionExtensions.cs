@@ -16,7 +16,7 @@ namespace Remote.Linq.Async.Queryable.Expressions
     public static class ExpressionAsyncExecutionExtensions
     {
         /// <summary>
-        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
+        /// Composes and executes the query based on the <see cref="Expression"/> and maps the result into dynamic objects.
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="asyncQueryableProvider">Delegate to provide <see cref="IAsyncQueryable"/> instances for given <see cref="Type"/>s.</param>

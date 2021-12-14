@@ -30,7 +30,7 @@ namespace Remote.Linq.ExpressionExecution
             => _parent = parent.CheckNotNull(nameof(parent));
 
         /// <summary>
-        /// Composes and executes the query asynchronously based on the <see cref="RemoteLinq.Expression"/> and mappes the result into dynamic objects.
+        /// Composes and executes the query asynchronously based on the <see cref="RemoteLinq.Expression"/> and maps the result into dynamic objects.
         /// </summary>
         /// <remarks>
         /// Multiple active operations on the same EF context instance are not supported. Use <see langword="await"/> to ensure

@@ -30,7 +30,7 @@ namespace Remote.Linq.ExpressionExecution
         protected ExecutionContext Context { get; } = new ExecutionContext();
 
         /// <summary>
-        /// Composes and executes the query based on the <see cref="RemoteLinq.Expression"/> and mappes the result into dynamic objects.
+        /// Composes and executes the query based on the <see cref="RemoteLinq.Expression"/> and maps the result into dynamic objects.
         /// </summary>
         /// <param name="expression">The <see cref="RemoteLinq.Expression"/> to be executed.</param>
         /// <returns>The mapped result of the query execution.</returns>

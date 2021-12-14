@@ -79,7 +79,7 @@ namespace Remote.Linq.EntityFramework
             => new AsyncExpressionExecutionContext<TResult>(new CastingEntityFrameworkExpressionExecutor<TResult>(queryableProvider, context), expression);
 
         /// <summary>
-        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
+        /// Composes and executes the query based on the <see cref="Expression"/> and maps the result into dynamic objects.
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
@@ -95,7 +95,7 @@ namespace Remote.Linq.EntityFramework
             => new DefaultEntityFrameworkExpressionExecutor(dbContext, context, setTypeInformation).Execute(expression);
 
         /// <summary>
-        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
+        /// Composes and executes the query based on the <see cref="Expression"/> and maps the result into dynamic objects.
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s.</param>
@@ -137,7 +137,7 @@ namespace Remote.Linq.EntityFramework
             => new CastingEntityFrameworkExpressionExecutor<TResult>(queryableProvider, context).Execute(expression);
 
         /// <summary>
-        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
+        /// Composes and executes the query based on the <see cref="Expression"/> and maps the result into dynamic objects.
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="dbContext">Instance of <see cref="DbContext"/> to get the <see cref="DbSet{T}"/>.</param>
@@ -155,7 +155,7 @@ namespace Remote.Linq.EntityFramework
             => new DefaultEntityFrameworkExpressionExecutor(dbContext, context, setTypeInformation).ExecuteAsync(expression, cancellation);
 
         /// <summary>
-        /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.
+        /// Composes and executes the query based on the <see cref="Expression"/> and maps the result into dynamic objects.
         /// </summary>
         /// <param name="expression">The <see cref="Expression"/> to be executed.</param>
         /// <param name="queryableProvider">Delegate to provide <see cref="IQueryable"/> instances for given <see cref="Type"/>s.</param>
