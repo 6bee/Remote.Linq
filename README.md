@@ -33,7 +33,7 @@ Write operations (insert/update/delete) have to be implemented by other means if
 ## Sample
 Check-out _Remote.Linq.Samples.sln_ and _samples_ folder for a number of sample use cases.
 
-**Client: ** Implement a repository class to set-up server connection and expose the queryable data sets (`IQueryable<>`)
+**Client:** Implement a repository class to set-up server connection and expose the queryable data sets (`IQueryable<>`)
 ```C#
 public class ClientDataRepository
 {
