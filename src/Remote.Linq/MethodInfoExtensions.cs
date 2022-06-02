@@ -2,6 +2,7 @@
 
 namespace Remote.Linq
 {
+    using System;
     using System.ComponentModel;
     using System.Reflection;
 
@@ -23,7 +24,17 @@ namespace Remote.Linq
             }
             catch (TargetInvocationException ex)
             {
-                throw ex.InnerException!;
+                throw Unwrap(ex);
+            }
+
+            static Exception Unwrap(Exception ex)
+            {
+                while (ex.InnerException is not null && ex is TargetInvocationException)
+                {
+                    ex = ex.InnerException;
+                }
+
+                return ex;
             }
         }
 
