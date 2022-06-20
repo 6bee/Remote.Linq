@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 5.0.102
+dotnet: 6.0.300
 
 branches:
   except:
