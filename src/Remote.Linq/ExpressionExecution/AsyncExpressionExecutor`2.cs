@@ -51,10 +51,10 @@ namespace Remote.Linq.ExpressionExecution
 
             var processedResult = ProcessResult(queryResult);
 
-            var dynamicObjects = ConvertResult(processedResult);
+            var dataTransferObjects = ConvertResult(processedResult);
 
-            var processedDynamicObjects = ProcessResult(dynamicObjects);
-            return processedDynamicObjects;
+            var processedDataTransferObjects = ProcessResult(dataTransferObjects);
+            return processedDataTransferObjects;
         }
 
         /// <summary>
