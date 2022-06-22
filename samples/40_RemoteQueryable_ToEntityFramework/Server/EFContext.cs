@@ -2,7 +2,7 @@
 
 namespace Server
 {
-    using Common.Model;
+    using Server.DbModel;
     using System.Data.Entity;
 
     public partial class EFContext : DbContext
@@ -16,17 +16,20 @@ namespace Server
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Product>()
+            modelBuilder.Entity<ProductEntity>()
+                .ToTable("Products")
                 .HasRequired(x => x.ProductCategory)
                 .WithMany()
                 .Map(m => m.MapKey("ProductCategoryId"));
 
-            modelBuilder.Entity<OrderItem>()
+            modelBuilder.Entity<OrderItemEntity>()
+                .ToTable("OrderItems")
                 .HasRequired(x => x.Product)
                 .WithMany()
                 .Map(m => m.MapKey("ProductId"));
 
-            modelBuilder.Entity<ProductGroup>()
+            modelBuilder.Entity<ProductGroupEntity>()
+                .ToTable("ProductGroups")
                 .HasMany(x => x.Products)
                 .WithMany()
                 .Map(x =>
@@ -36,7 +39,11 @@ namespace Server
                     x.MapRightKey("ProductId");
                 });
 
-            modelBuilder.Entity<Market>()
+            modelBuilder.Entity<ProductCategoryEntity>()
+                .ToTable("ProductCategories");
+
+            modelBuilder.Entity<MarketEntity>()
+                .ToTable("Markets")
                 .HasMany(x => x.Products)
                 .WithMany(x => x.Markets)
                 .Map(x =>
@@ -47,14 +54,14 @@ namespace Server
                 });
         }
 
-        public virtual DbSet<OrderItem> OrderItems { get; set; }
+        public virtual DbSet<OrderItemEntity> OrderItems { get; set; }
 
-        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ProductEntity> Products { get; set; }
 
-        public virtual DbSet<ProductGroup> ProductGroups { get; set; }
+        public virtual DbSet<ProductGroupEntity> ProductGroups { get; set; }
 
-        public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+        public virtual DbSet<ProductCategoryEntity> ProductCategories { get; set; }
 
-        public virtual DbSet<Market> Markets { get; set; }
+        public virtual DbSet<MarketEntity> Markets { get; set; }
     }
 }

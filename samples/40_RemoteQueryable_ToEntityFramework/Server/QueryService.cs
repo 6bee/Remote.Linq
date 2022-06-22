@@ -13,7 +13,7 @@ namespace Server
         public async ValueTask<DynamicObject> ExecuteQueryAsync(Expression queryExpression, CancellationToken cancellation)
         {
             using var efContext = new EFContext();
-            return await queryExpression.ExecuteWithEntityFrameworkAsync(efContext, cancellation).ConfigureAwait(false);
+            return await queryExpression.ExecuteWithEntityFrameworkAsync(efContext, cancellation, new CustomTypeMappingExpressionTranslatorContext()).ConfigureAwait(false);
         }
     }
 }
