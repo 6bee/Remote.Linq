@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.Include
 {
+    using Aqua.EnumerableExtensions;
     using Aqua.TypeExtensions;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;
@@ -80,7 +81,7 @@ namespace Remote.Linq.Include
                     };
 
                     var m = method.MakeGenericMethod(args);
-                    var expression = (Expression)m.Invoke(null, new[] { node.Value });
+                    var expression = (Expression)m.Invoke(null, new[] { node.Value }) !;
                     return Visit(expression);
                 }
 
@@ -125,7 +126,7 @@ namespace Remote.Linq.Include
             {
                 if (MapRemoteLinqToEntityFrameworkMethod(node.Method?.ToMethodInfo()) is MethodInfo mappedMethod)
                 {
-                    var arguments = node.Arguments.Select(Visit).ToArray();
+                    var arguments = node.Arguments?.Select(Visit).ToArray();
                     var queryable = mappedMethod.Invoke(this, arguments);
                     return new ConstantExpression(queryable);
                 }

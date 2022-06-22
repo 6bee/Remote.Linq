@@ -61,10 +61,10 @@ namespace Remote.Linq.Include
 
                 const BindingFlags Any = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
                 var element = expression.Type;
-                var p = Aqua.TypeSystem.TypeHelper.GetElementType(element).GetProperty(segment, Any);
+                var p = Aqua.TypeSystem.TypeHelper.GetElementType(element).GetProperty(segment, Any) !;
                 if (element.Implements(typeof(IEnumerable<>)) && element != typeof(string))
                 {
-                    var x = Expression.Parameter(p.DeclaringType, $"x{++i}");
+                    var x = Expression.Parameter(p.DeclaringType!, $"x{++i}");
                     var selector = Expression.MakeMemberAccess(x, p);
                     var navigation = Subselect(selector, segments.Skip(1), i);
                     return Expression.Call(
@@ -127,7 +127,7 @@ namespace Remote.Linq.Include
                     };
 
                     var m = method.MakeGenericMethod(args);
-                    var expression = (Expression)m.Invoke(null, new[] { queryable });
+                    var expression = (Expression)m.Invoke(null, new[] { queryable }) !;
                     return Visit(expression);
                 }
 
@@ -170,7 +170,7 @@ namespace Remote.Linq.Include
             {
                 if (MapRemoteLinqToEntityFrameworkMethod(node.Method) is MethodInfo mappedMethod)
                 {
-                    var arguments = node.Arguments.Select(Visit).ToArray();
+                    var arguments = node.Arguments?.Select<Expression, Expression>(Visit).ToArray();
                     var method = Expression.Call(Expression.Constant(this), mappedMethod, arguments);
                     var queryable = method.CompileAndInvokeExpression();
                     return Expression.Constant(queryable);

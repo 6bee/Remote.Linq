@@ -127,6 +127,18 @@ namespace Remote.Linq
                 typeof(IQueryable<TSource>),
                 typeof(int));
 
+#if NET6_0_OR_GREATER
+            internal static readonly MethodInfo ElementAtWithSystemIndex = GetQueryableMethod(
+                nameof(System.Linq.Queryable.ElementAt),
+                typeof(IQueryable<TSource>),
+                typeof(Index));
+
+            internal static readonly MethodInfo ElementAtOrDefaultWithSystemIndex = GetQueryableMethod(
+                nameof(System.Linq.Queryable.ElementAtOrDefault),
+                typeof(IQueryable<TSource>),
+                typeof(Index));
+#endif // NET6_0_OR_GREATER
+
             internal static readonly MethodInfo First = GetQueryableMethod(
                 nameof(System.Linq.Queryable.First),
                 typeof(IQueryable<TSource>));
@@ -172,14 +184,39 @@ namespace Remote.Linq
                 nameof(System.Linq.Queryable.LongCount),
                 typeof(IQueryable<TSource>));
 
+            internal static readonly MethodInfo Max = GetQueryableMethod(
+                nameof(System.Linq.Queryable.Max),
+                typeof(IQueryable<TSource>));
+
             internal static readonly MethodInfo MaxWithSelector = GetQueryableMethod(
                 nameof(System.Linq.Queryable.Max),
                 new[] { typeof(TSource), typeof(TResult) },
                 typeof(IQueryable<TSource>),
                 typeof(Expression<Func<TSource, TResult>>));
 
-            internal static readonly MethodInfo Max = GetQueryableMethod(
+#if NET6_0_OR_GREATER
+            internal static readonly MethodInfo MaxWithComparer = GetQueryableMethod(
                 nameof(System.Linq.Queryable.Max),
+                new[] { typeof(TSource) },
+                typeof(IQueryable<TSource>),
+                typeof(IComparer<TSource>));
+
+            internal static readonly MethodInfo MaxBy = GetQueryableMethod(
+                nameof(System.Linq.Queryable.MaxBy),
+                new[] { typeof(TSource), typeof(TKey) },
+                typeof(IQueryable<TSource>),
+                typeof(Expression<Func<TSource, TKey>>));
+
+            internal static readonly MethodInfo MaxByWithComparer = GetQueryableMethod(
+                nameof(System.Linq.Queryable.MaxBy),
+                new[] { typeof(TSource), typeof(TKey) },
+                typeof(IQueryable<TSource>),
+                typeof(Expression<Func<TSource, TKey>>),
+                typeof(IComparer<TSource>));
+#endif // NET6_0_OR_GREATER
+
+            internal static readonly MethodInfo Min = GetQueryableMethod(
+                nameof(System.Linq.Queryable.Min),
                 typeof(IQueryable<TSource>));
 
             internal static readonly MethodInfo MinWithSelector = GetQueryableMethod(
@@ -188,9 +225,26 @@ namespace Remote.Linq
                 typeof(IQueryable<TSource>),
                 typeof(Expression<Func<TSource, TResult>>));
 
-            internal static readonly MethodInfo Min = GetQueryableMethod(
+#if NET6_0_OR_GREATER
+            internal static readonly MethodInfo MinWithComparer = GetQueryableMethod(
                 nameof(System.Linq.Queryable.Min),
-                typeof(IQueryable<TSource>));
+                new[] { typeof(TSource) },
+                typeof(IQueryable<TSource>),
+                typeof(IComparer<TSource>));
+
+            internal static readonly MethodInfo MinBy = GetQueryableMethod(
+                nameof(System.Linq.Queryable.MinBy),
+                new[] { typeof(TSource), typeof(TKey) },
+                typeof(IQueryable<TSource>),
+                typeof(Expression<Func<TSource, TKey>>));
+
+            internal static readonly MethodInfo MinByWithComparer = GetQueryableMethod(
+                nameof(System.Linq.Queryable.MinBy),
+                new[] { typeof(TSource), typeof(TKey) },
+                typeof(IQueryable<TSource>),
+                typeof(Expression<Func<TSource, TKey>>),
+                typeof(IComparer<TSource>));
+#endif // NET6_0_OR_GREATER
 
             internal static readonly MethodInfo SequenceEqualWithComparer = GetQueryableMethod(
                 nameof(System.Linq.Queryable.SequenceEqual),

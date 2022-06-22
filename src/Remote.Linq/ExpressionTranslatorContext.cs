@@ -230,7 +230,7 @@ namespace Remote.Linq
         /// <inheritdoc/>
         public Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally { get; }
 
-        private static object MapGroupToDynamicObjectGraphMethod(Type[] genericTypeArguments, object group)
+        private static object? MapGroupToDynamicObjectGraphMethod(Type[] genericTypeArguments, object group)
             => _mapGroupToDynamicObjectGraphMethodDefinition
             .MakeGenericMethod(genericTypeArguments)
             .Invoke(null, new[] { group });

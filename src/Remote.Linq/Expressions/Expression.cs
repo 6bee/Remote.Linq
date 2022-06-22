@@ -61,13 +61,13 @@ namespace Remote.Linq.Expressions
 
             protected Expression Expression { get; }
 
-            private string FormattedString => ToString();
+            private string FormattedString => ToString() ?? string.Empty;
 
-            public override string ToString() => Expression.ToString();
+            public override string? ToString() => Expression.ToString();
 
             // TODO: [expression string formatter] add indentation and line break formtting
             [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Pending task...")]
-            protected internal string ToString(int level) => ToString();
+            protected internal string ToString(int level) => ToString() ?? string.Empty;
 
             protected static string Format(Type? t) => Format(t.AsTypeInfo());
 
