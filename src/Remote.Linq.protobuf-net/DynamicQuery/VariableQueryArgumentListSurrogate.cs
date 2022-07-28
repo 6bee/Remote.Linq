@@ -14,7 +14,7 @@ namespace Remote.Linq.ProtoBuf.DynamicQuery
         [ProtoMember(1, IsRequired = true)]
         public TypeInfo ElementType { get; set; } = null!;
 
-        [ProtoMember(2, DynamicType = true)]
+        [ProtoMember(2)]
         public Values Values { get; set; } = null!;
 
         [ProtoConverter]
@@ -29,7 +29,7 @@ namespace Remote.Linq.ProtoBuf.DynamicQuery
 
         [ProtoConverter]
         public static VariableQueryArgumentList? Convert(VariableQueryArgumentListSurrogate? surrogate)
-            => surrogate?.Values.ObjectValue is IEnumerable enumerable
+            => surrogate?.Values?.ObjectValue is IEnumerable enumerable
             ? new VariableQueryArgumentList(enumerable, surrogate.ElementType)
             : null;
     }

@@ -17,7 +17,8 @@ namespace Remote.Linq.ProtoBuf.Expressions
             => typeModel
             .RegisterBaseAndSubtypes<MemberBinding>()
             .RegisterBaseAndSubtypes<Expression>()
-            .AddTypeSurrogate<ConstantExpression, ConstantExpressionSurrogate>();
+            .AddType<ConstantExpressionSurrogate>()
+            .AddSerializerType<ConstantExpression, ConstantExpressionSerializer>();
 
         /// <summary>Register a base class and it's subtypes from the same assebly, uncluding all their serializable fields and proeprties.</summary>
         private static AquaTypeModel RegisterBaseAndSubtypes<T>(this AquaTypeModel typeModel)
@@ -48,13 +49,13 @@ namespace Remote.Linq.ProtoBuf.Expressions
 
                 resiteredTypes.Add(baseType);
 
-                var expressionTypes = baseType.Assembly
+                var subTypes = baseType.Assembly
                     .GetTypes()
                     .Where(x => x.BaseType == baseType)
                     .OrderBy(x => x.FullName)
                     .ToArray();
 
-                foreach (var t in expressionTypes)
+                foreach (var t in subTypes)
                 {
                     typeModel.AddSubType(baseType, t);
                     RegisterBaseAndSubtypes(t);
@@ -64,7 +65,7 @@ namespace Remote.Linq.ProtoBuf.Expressions
 
             RegisterBaseAndSubtypes(typeof(T));
 
-            pendingTypes.ForEach(x => _ = typeModel.GetType(x));
+            pendingTypes.ForEach(typeModel.GetType);
 
             return typeModel;
         }

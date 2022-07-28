@@ -6,17 +6,19 @@ namespace Remote.Linq.ProtoBuf.Expressions
     using Aqua.TypeSystem;
     using global::ProtoBuf;
     using Remote.Linq.Expressions;
+    using System.Diagnostics.CodeAnalysis;
 
-    [ProtoContract(Name = nameof(ConstantExpression))]
+    [ProtoContract(Name = "X" + nameof(ConstantExpression))]
     public sealed class ConstantExpressionSurrogate
     {
         [ProtoMember(1, IsRequired = true)]
         public TypeInfo Type { get; set; } = null!;
 
-        [ProtoMember(2, DynamicType = true)]
+        [ProtoMember(2)]
         public Value? Value { get; set; }
 
         [ProtoConverter]
+        [return: NotNullIfNotNull("source")]
         public static ConstantExpressionSurrogate? Convert(ConstantExpression? source)
             => source is null
             ? null
@@ -27,6 +29,7 @@ namespace Remote.Linq.ProtoBuf.Expressions
             };
 
         [ProtoConverter]
+        [return: NotNullIfNotNull("surrogate")]
         public static ConstantExpression? Convert(ConstantExpressionSurrogate? surrogate)
             => surrogate is null
             ? null

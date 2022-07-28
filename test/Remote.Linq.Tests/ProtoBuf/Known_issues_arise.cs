@@ -16,6 +16,7 @@ namespace Remote.Linq.Tests.ProtoBuf
     /// <summary>
     /// Rather than actual tests, this class is a documentation of know limitations to <i>Remote.Linq</i>'s support for <i>protobuf-net</i>.
     /// </summary>
+    [Trait("Category", "Documentation")]
     public class Known_issues_arise
     {
         [Fact]

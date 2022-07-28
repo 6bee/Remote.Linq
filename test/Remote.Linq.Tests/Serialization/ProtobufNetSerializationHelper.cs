@@ -6,6 +6,7 @@ namespace Remote.Linq.Tests.Serialization
     using Aqua.TypeSystem;
     using Remote.Linq.ProtoBuf;
     using System;
+    using System.IO;
     using System.Linq;
     using System.Numerics;
     using Xunit;
@@ -22,6 +23,7 @@ namespace Remote.Linq.Tests.Serialization
             var testdatatypes = TestData.TestTypes
                 .Select(x => (Type)x[0])
                 .Select(x => x.AsNonNullableType())
+                .Where(x => x.IsPublic)
                 .Distinct()
                 .ToArray();
             testdatatypes.ForEach(x => configuration.AddDynamicPropertyType(x));
@@ -34,7 +36,7 @@ namespace Remote.Linq.Tests.Serialization
         public static T Clone<T>(this T graph, TypeModel configuration)
         {
             configuration ??= _configuration;
-            return (T)configuration.DeepClone(graph);
+            return configuration.DeepClone(graph);
         }
 
         public static TypeModel CreateModelFor(Type type)

@@ -13,7 +13,7 @@ namespace Remote.Linq.ProtoBuf.DynamicQuery
         [ProtoMember(1, IsRequired = true)]
         public TypeInfo Type { get; set; } = null!;
 
-        [ProtoMember(2, DynamicType = true)]
+        [ProtoMember(2)]
         public Value? Value { get; set; }
 
         [ProtoConverter]
