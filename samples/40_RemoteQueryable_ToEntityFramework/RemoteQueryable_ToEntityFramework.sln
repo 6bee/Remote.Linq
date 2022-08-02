@@ -12,8 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{DBE94428-488E-4189-A783-01DF7337AD8F}"
 	ProjectSection(SolutionItems) = preProject
-		Database\RemoteQueryableDemoDB.sql = Database\RemoteQueryableDemoDB.sql
-		Database\RemoteQueryableDemoDBSetup.cmd = Database\RemoteQueryableDemoDBSetup.cmd
+		..\SharedCode\mssql\RemoteQueryableDemoDB.sql = ..\SharedCode\mssql\RemoteQueryableDemoDB.sql
+		..\SharedCode\mssql\RemoteQueryableDemoDBSetup.cmd = ..\SharedCode\mssql\RemoteQueryableDemoDBSetup.cmd
 	EndProjectSection
 EndProject
 Global
