@@ -44,10 +44,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
             typeof(IQueryable<TSource>),
             typeof(CancellationToken));
 
-        private static readonly MethodInfo _dbContextSetMethod = typeof(DbContext).GetMethodEx(
-            nameof(DbContext.Set),
-            genericArguments: new[] { typeof(TEntity) });
-
         private static readonly MethodInfo _executeAsAsyncStreamMethod = typeof(Helper).GetMethodEx(nameof(ExecuteAsAsyncStream));
 
         internal static Task ToListAsync(IQueryable source, CancellationToken cancellation)
@@ -69,6 +65,10 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         [SecuritySafeCritical]
         private sealed class QueryableSetProvider
         {
+            private static readonly MethodInfo _dbSetMethod = typeof(QueryableSetProvider).GetMethodEx(
+                nameof(QueryableSetProvider.Set),
+                genericArguments: new[] { typeof(TEntity) });
+
             private readonly DbContext _dbContext;
 
             [SecuritySafeCritical]
@@ -78,10 +78,15 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
             [SecuritySafeCritical]
             public IQueryable GetQueryableSet(Type type)
             {
-                var method = _dbContextSetMethod.MakeGenericMethod(type);
-                var set = method.Invoke(_dbContext, null);
+                var method = _dbSetMethod.MakeGenericMethod(type);
+                var set = method.Invoke(this, null);
                 return (IQueryable)set!;
             }
+
+            [SecuritySafeCritical]
+            private DbSet<T> Set<T>()
+                where T : class
+                => _dbContext.Set<T>();
         }
 
         public static IAsyncEnumerable<object?> ExecuteAsAsyncStreamWithCancellation(this IQueryable queryable, CancellationToken cancellation)

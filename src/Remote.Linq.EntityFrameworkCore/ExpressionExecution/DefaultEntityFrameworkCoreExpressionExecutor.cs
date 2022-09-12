@@ -5,6 +5,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Infrastructure;
     using System;
     using System.Linq;
     using System.Security;
@@ -13,6 +14,19 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
     {
         private readonly IDynamicObjectMapper _mapper;
         private readonly Func<Type, bool> _setTypeInformation;
+
+        ////[SecuritySafeCritical]
+        ////public DefaultEntityFrameworkCoreExpressionExecutor(DbContext dbContext, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
+        ////    : this(((IInfrastructure<IServiceProvider>)dbContext).Instance, dbContext.GetQueryableSetProvider(), context, setTypeInformation)
+        ////{
+        ////}
+
+        ////public DefaultEntityFrameworkCoreExpressionExecutor(IServiceProvider serviceProvider, Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
+        ////    : base(serviceProvider, queryableProvider, context ??= new EntityFrameworkCoreExpressionTranslatorContext())
+        ////{
+        ////    _mapper = context.ValueMapper;
+        ////    _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
+        ////}
 
         [SecuritySafeCritical]
         public DefaultEntityFrameworkCoreExpressionExecutor(DbContext dbContext, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)

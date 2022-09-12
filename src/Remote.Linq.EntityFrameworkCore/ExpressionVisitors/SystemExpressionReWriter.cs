@@ -95,7 +95,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
                 if (MapRemoteLinqToEntityFrameworkMethod(node.Method) is MethodInfo mappedMethod)
                 {
                     var arguments = node.Arguments.Select(Visit).ToArray();
-                    node = Expression.Call(mappedMethod, arguments);
+                    node = Expression.Call(mappedMethod, arguments!);
                 }
 
                 return base.VisitMethodCall(node);

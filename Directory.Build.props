@@ -4,8 +4,8 @@
   <PropertyGroup>
     <MajorVersion>7</MajorVersion>
     <MinorVersion>0</MinorVersion>
-    <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel></PreReleaseLabel>
+    <PatchVersion>1</PatchVersion>
+    <PreReleaseLabel>alpha-008</PreReleaseLabel>
     <AquaCoreVersion>5.0.0</AquaCoreVersion>
   </PropertyGroup>
 
@@ -48,8 +48,8 @@
     <GenerateDocumentationFile Condition="'$(GenerateDocumentationFile)' == ''">true</GenerateDocumentationFile>
     <TreatWarningsAsErrors Condition="'$(TreatWarningsAsErrors)' == ''">true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
-    <EnableStyleCopAnalyzers Condition="'$(EnableStyleCopAnalyzers)' == ''">true</EnableStyleCopAnalyzers>
-    <EnableNETAnalyzers Condition="'$(EnableNETAnalyzers)' == ''">true</EnableNETAnalyzers>
+    <EnableStyleCopAnalyzers Condition="'$(EnableStyleCopAnalyzers)' == ''">false</EnableStyleCopAnalyzers>
+    <EnableNETAnalyzers Condition="'$(EnableNETAnalyzers)' == ''">false</EnableNETAnalyzers>
     <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">false</EnableSonarAnalyzers>
   </PropertyGroup>
 
@@ -61,8 +61,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.1.0" PrivateAssets="all" />
-    <PackageReference Include="aqua.tool.Validation" Version="1.4.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.0.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="2.0.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

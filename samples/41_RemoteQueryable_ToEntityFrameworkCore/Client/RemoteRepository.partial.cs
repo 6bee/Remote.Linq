@@ -8,6 +8,6 @@ namespace Client
 
     partial class RemoteRepository
     {
-        public IQueryable<Market> Markets => RemoteQueryable.Factory.CreateAsyncQueryable<Market>(_asyncDataProvider);
+        ////public IQueryable<Market> Markets => RemoteQueryable.Factory.CreateAsyncQueryable<Market>(_asyncDataProvider);
     }
 }

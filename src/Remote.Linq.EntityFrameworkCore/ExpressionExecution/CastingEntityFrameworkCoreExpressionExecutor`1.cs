@@ -15,6 +15,11 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         {
         }
 
+        ////public CastingEntityFrameworkCoreExpressionExecutor(IServiceProvider serviceProvider, Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+        ////    : base(serviceProvider, queryableProvider, context)
+        ////{
+        ////}
+
         public CastingEntityFrameworkCoreExpressionExecutor(Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
             : base(queryableProvider, context)
         {

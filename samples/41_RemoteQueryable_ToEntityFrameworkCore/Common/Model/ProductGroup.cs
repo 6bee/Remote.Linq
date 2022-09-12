@@ -8,8 +8,8 @@ namespace Common.Model
     {
         public int Id { get; set; }
 
-        public string GroupName { get; set; }
+        ////public string GroupName { get; set; }
 
-        public IList<ProductProductGroup> Products { get; set; }
+        ////public IList<ProductProductGroup> Products { get; set; }
     }
 }

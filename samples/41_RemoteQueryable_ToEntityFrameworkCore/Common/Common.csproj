@@ -4,10 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Model\Market.cs" />
+    <Compile Remove="Model\Product.cs" />
+    <Compile Remove="Model\ProductMarket.cs" />
+    <Compile Remove="Model\ProductProductGroup.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Remote.Linq.Newtonsoft.Json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SharedCode\Common.Model.ProductCategory.cs" Link="Model\ProductCategory.cs" />
     <Compile Include="..\..\SharedCode\Common.JsonFormatter.cs" Link="JsonFormatter.cs" />
   </ItemGroup>
 </Project>

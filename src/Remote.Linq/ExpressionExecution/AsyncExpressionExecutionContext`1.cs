@@ -12,7 +12,7 @@ namespace Remote.Linq.ExpressionExecution
         private readonly Expression _expression;
 
         public AsyncExpressionExecutionContext(AsyncExpressionExecutionContext<TDataTranferObject> parent)
-            : this(parent.CheckNotNull(nameof(parent)), parent._expression)
+            : this(parent, parent._expression)
         {
         }
 

@@ -4,11 +4,15 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 {
     using Aqua.TypeExtensions;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Infrastructure;
+    using Microsoft.EntityFrameworkCore.Query;
+    using Microsoft.Extensions.DependencyInjection;
     using Remote.Linq.EntityFrameworkCore.ExpressionVisitors;
     using Remote.Linq.ExpressionExecution;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Security;
     using System.Threading;
     using System.Threading.Tasks;
@@ -16,6 +20,22 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
     public abstract class EntityFrameworkCoreExpressionExecutor<TDataTranferObject> : AsyncExpressionExecutor<IQueryable, TDataTranferObject>
     {
+        ////private readonly IQueryContextFactory _queryContextFactory;
+        ////private readonly IQueryCompilationContextFactory _queryCompilationContextFactory;
+
+        ////[SecuritySafeCritical]
+        ////protected EntityFrameworkCoreExpressionExecutor(DbContext dbContext, IExpressionFromRemoteLinqContext? context = null)
+        ////    : this(((IInfrastructure<IServiceProvider>)dbContext).Instance, dbContext.GetQueryableSetProvider(), context)
+        ////{
+        ////}
+
+        ////protected EntityFrameworkCoreExpressionExecutor(IServiceProvider serviceProvider, Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+        ////    : base(queryableProvider, context ?? new EntityFrameworkCoreExpressionTranslatorContext())
+        ////{
+        ////    _queryContextFactory = serviceProvider.GetService<IQueryContextFactory>() !;
+        ////    _queryCompilationContextFactory = serviceProvider.GetService<IQueryCompilationContextFactory>() !;
+        ////}
+
         [SecuritySafeCritical]
         protected EntityFrameworkCoreExpressionExecutor(DbContext dbContext, IExpressionFromRemoteLinqContext? context = null)
             : this(dbContext.GetQueryableSetProvider(), context)
@@ -100,10 +120,26 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
                 // force query execution
                 task = Helper.ToListAsync(queryable, cancellation);
                 queryResult = await GetTaskResultAsync(task, typeof(List<>).MakeGenericType(queryable.ElementType)).ConfigureAwait(false);
+
+                ////var m = typeof(EntityFrameworkCoreExpressionExecutor<TDataTranferObject>).GetMethod(nameof(ExecuteEf), BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(typeof(List<>).MakeGenericType(queryable.ElementType));
+                ////queryResult = m.Invoke(this, new object[] { queryable.Expression, false });
             }
 
             return queryResult;
         }
+
+        ////private TResult ExecuteEf<TResult>(SystemLinq.Expression expression, bool async)
+        ////{
+        ////    var queryContext = _queryContextFactory.Create();
+
+        ////    var compilationContext = _queryCompilationContextFactory.Create(async: false);
+
+        ////    var queryExecutor = compilationContext.CreateQueryExecutor<TResult>(expression);
+
+        ////    var result = queryExecutor(queryContext);
+
+        ////    return result;
+        ////}
 
         private static async Task<object?> GetTaskResultAsync(Task task, Type resultType)
         {

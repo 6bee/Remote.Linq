@@ -8,9 +8,9 @@ namespace Client
 
     public interface IRemoteRepository : IDisposable
     {
-        IQueryable<ProductCategory> ProductCategories { get; }
+        ////IQueryable<ProductCategory> ProductCategories { get; }
 
-        IQueryable<Product> Products { get; }
+        ////IQueryable<Product> Products { get; }
 
         IQueryable<OrderItem> OrderItems { get; }
 
