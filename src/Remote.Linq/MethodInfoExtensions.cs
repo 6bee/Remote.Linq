@@ -5,6 +5,7 @@ namespace Remote.Linq
     using System;
     using System.ComponentModel;
     using System.Reflection;
+    using System.Runtime.ExceptionServices;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class MethodInfoExtensions
@@ -24,7 +25,8 @@ namespace Remote.Linq
             }
             catch (TargetInvocationException ex)
             {
-                throw Unwrap(ex);
+                ExceptionDispatchInfo.Capture(Unwrap(ex)).Throw();
+                throw; // satisfy compiler for CS0161 : not all code paths return a value
             }
 
             static Exception Unwrap(Exception ex)

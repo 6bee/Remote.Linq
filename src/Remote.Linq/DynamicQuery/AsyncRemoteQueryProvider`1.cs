@@ -7,6 +7,7 @@ namespace Remote.Linq.DynamicQuery
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Runtime.ExceptionServices;
     using System.Threading;
     using System.Threading.Tasks;
     using MethodInfo = System.Reflection.MethodInfo;
@@ -57,12 +58,10 @@ namespace Remote.Linq.DynamicQuery
             {
                 if (ex.InnerException is not null)
                 {
-                    throw ex.InnerException!;
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
         }
 

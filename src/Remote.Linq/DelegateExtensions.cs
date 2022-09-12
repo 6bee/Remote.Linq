@@ -5,11 +5,12 @@ namespace Remote.Linq
     using System;
     using System.ComponentModel;
     using System.Reflection;
+    using System.Runtime.ExceptionServices;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class DelegateExtensions
     {
-        public static object? DynamicInvokeAndUnwrap(this Delegate @delegate, params object?[] args)
+        internal static object? DynamicInvokeAndUnwrap(this Delegate @delegate, params object?[] args)
         {
             try
             {
@@ -17,7 +18,18 @@ namespace Remote.Linq
             }
             catch (TargetInvocationException ex)
             {
-                throw ex.InnerException!;
+                ExceptionDispatchInfo.Capture(Unwrap(ex)).Throw();
+                throw; // satisfy compiler for CS0161 : not all code paths return a value
+            }
+
+            static Exception Unwrap(Exception ex)
+            {
+                while (ex.InnerException is not null && ex is TargetInvocationException)
+                {
+                    ex = ex.InnerException;
+                }
+
+                return ex;
             }
         }
     }
