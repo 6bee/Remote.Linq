@@ -55,8 +55,10 @@ public sealed class Subquery
         //     SELECT MAX([o].[ProductId])
         //     FROM [OrderItems] AS [o])
 
-        var productQueryableExp = Expression.Constant(productQueryable);
-        var orderItemQueryableExp = Expression.Constant(orderItemQueryable);
+        //var productQueryableExp = Expression.Constant(productQueryable);
+        //var orderItemQueryableExp = Expression.Constant(orderItemQueryable);
+        var productQueryableExp = MakeClosure(context.Products);
+        var orderItemQueryableExp = MakeClosure(context.OrderItems);
 
         var whereMethod = typeof(System.Linq.Queryable)
             .GetMethods()
@@ -196,6 +198,12 @@ public sealed class Subquery
         //   EntityQueryable`1.GetEnumerator()
         //   List`1.ctor(IEnumerable`1 collection)
         //   Enumerable.ToList[TSource](IEnumerable`1 source)
+
+        static Expression MakeClosure<T>(T value)
+        {
+            Expression<Func<T>> lambda = () => value;
+            return lambda.Body;
+        }
     }
 
     public class EfContext : DbContext
