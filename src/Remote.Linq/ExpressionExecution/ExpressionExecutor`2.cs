@@ -108,25 +108,37 @@ namespace Remote.Linq.ExpressionExecution
             {
                 if (string.Equals(ex.Message, "Sequence contains no elements", StringComparison.Ordinal))
                 {
-                    return Array.CreateInstance(expression.Type, 0);
+                    return CreateArray(expression.Type, 0);
                 }
 
                 if (string.Equals(ex.Message, "Sequence contains no matching element", StringComparison.Ordinal))
                 {
-                    return Array.CreateInstance(expression.Type, 0);
+                    return CreateArray(expression.Type, 0);
                 }
 
                 if (string.Equals(ex.Message, "Sequence contains more than one element", StringComparison.Ordinal))
                 {
-                    return Array.CreateInstance(expression.Type, 2);
+                    return CreateArray(expression.Type, 2);
                 }
 
                 if (string.Equals(ex.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
                 {
-                    return Array.CreateInstance(expression.Type, 2);
+                    return CreateArray(expression.Type, 2);
                 }
 
                 throw;
+            }
+
+            static Array CreateArray(Type type, int size) => Array.CreateInstance(GetResultType(type), size);
+
+            static Type GetResultType(Type type)
+            {
+                if (!type.IsNullableType())
+                {
+                    return typeof(Nullable<>).MakeGenericType(type);
+                }
+
+                return type;
             }
         }
 

@@ -84,6 +84,37 @@ namespace Remote.Linq.ExpressionExecution
         /// <returns>Execution result of the <see cref="SystemLinq.Expression"/> specified.</returns>
         protected virtual async ValueTask<object?> ExecuteAsync(SystemLinq.Expression expression, CancellationToken cancellation)
         {
+            try
+            {
+                return await ExecuteCoreAsync(expression, cancellation).ConfigureAwait(false);
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (string.Equals(ex.Message, "Sequence contains no elements", StringComparison.Ordinal))
+                {
+                    return CreateArray(expression.Type, 0);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains no matching element", StringComparison.Ordinal))
+                {
+                    return CreateArray(expression.Type, 0);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains more than one element", StringComparison.Ordinal))
+                {
+                    return CreateArray(expression.Type, 2);
+                }
+
+                if (string.Equals(ex.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
+                {
+                    return CreateArray(expression.Type, 2);
+                }
+
+                throw;
+            }
+
+            static Array CreateArray(Type type, int size) => Array.CreateInstance(GetResultType(type), size);
+
             static Type GetResultType(Type type)
             {
                 if (type.Implements(typeof(Task<>), out var taskResultType))
@@ -96,36 +127,12 @@ namespace Remote.Linq.ExpressionExecution
                     return valueTaskResultType[0];
                 }
 
+                if (!type.IsNullableType())
+                {
+                    return typeof(Nullable<>).MakeGenericType(type);
+                }
+
                 return type;
-            }
-
-            try
-            {
-                return await ExecuteCoreAsync(expression, cancellation).ConfigureAwait(false);
-            }
-            catch (InvalidOperationException ex)
-            {
-                if (string.Equals(ex.Message, "Sequence contains no elements", StringComparison.Ordinal))
-                {
-                    return Array.CreateInstance(GetResultType(expression.Type), 0);
-                }
-
-                if (string.Equals(ex.Message, "Sequence contains no matching element", StringComparison.Ordinal))
-                {
-                    return Array.CreateInstance(GetResultType(expression.Type), 0);
-                }
-
-                if (string.Equals(ex.Message, "Sequence contains more than one element", StringComparison.Ordinal))
-                {
-                    return Array.CreateInstance(GetResultType(expression.Type), 2);
-                }
-
-                if (string.Equals(ex.Message, "Sequence contains more than one matching element", StringComparison.Ordinal))
-                {
-                    return Array.CreateInstance(GetResultType(expression.Type), 2);
-                }
-
-                throw;
             }
         }
 
