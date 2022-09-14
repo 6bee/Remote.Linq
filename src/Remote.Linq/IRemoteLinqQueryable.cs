@@ -4,6 +4,7 @@ namespace Remote.Linq
 {
     using Remote.Linq.DynamicQuery;
     using System;
+    using System.Linq.Expressions;
 
     /// <summary>
     /// Denotes a <i>Remote.Linq</i> queryable resource.
@@ -11,6 +12,11 @@ namespace Remote.Linq
     [QueryArgument]
     public interface IRemoteLinqQueryable
     {
+        /// <summary>
+        /// Gets the expression tree that is associated with the instance of <see cref="IRemoteLinqQueryable"/>.
+        /// </summary>
+        Expression Expression { get; }
+
         /// <summary>
         /// Gets the type of the remote queryable resource items.
         /// </summary>

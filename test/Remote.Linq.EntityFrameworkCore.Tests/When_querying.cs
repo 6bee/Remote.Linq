@@ -54,6 +54,57 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         }
 
         [Fact]
+        public async Task Should_support_subquery_predicate()
+        {
+            var result = await _queryable.SingleAsync(x => x.Value == _queryable.First().Value).ConfigureAwait(false);
+            result.Key.ShouldBe("1");
+        }
+
+        [Fact]
+        public async Task Should_support_subquery_closure()
+        {
+            var mainquery =
+                from i in _queryable
+                select new { i.Key, i.Value };
+            var subquery =
+                from i in _queryable
+                select i.Value;
+            var q = mainquery.Where(x => x.Value == subquery.First());
+            var result = await q.SingleAsync().ConfigureAwait(false);
+            result.Key.ShouldBe("1");
+        }
+
+        [Fact]
+        public async Task Should_support_join_and_subquery_predicate()
+        {
+            var subquery =
+                from i in _queryable
+                select new { i.Key, i.Value };
+            var query =
+                from a in subquery
+                join b in subquery on a.Key equals b.Key
+                where a.Value == subquery.OrderBy(x => x.Value.Length).Last().Value
+                select new { a.Key, b.Value };
+            var result = await query.SingleAsync().ConfigureAwait(false);
+            result.Key.ShouldBe("3");
+            result.Value.ShouldBe("Three");
+        }
+
+        [Fact]
+        public async Task Should_support_join_with_subquery_predicate2()
+        {
+            var query =
+                from a in _queryable
+                join b in _queryable on a.Key equals b.Key
+                where a.Value.Length == _queryable.Max(x => x.Value.Length)
+                select new { a.Key, b.Value };
+
+            var result = await query.SingleAsync().ConfigureAwait(false);
+            result.Key.ShouldBe("3");
+            result.Value.ShouldBe("Three");
+        }
+
+        [Fact]
         public void Should_throw_when_calling_single_or_default_with_predicate_on_query_with_multiple_results()
         {
             var ex = Should.Throw<InvalidOperationException>(() => _queryable.SingleOrDefault(x => x.Value.ToUpper().Contains("O")));

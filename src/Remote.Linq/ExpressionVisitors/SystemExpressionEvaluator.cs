@@ -62,9 +62,9 @@ namespace Remote.Linq.ExpressionVisitors
                         {
                             return false;
                         }
-
-                        return true;
                     }
+
+                    break;
 
                 case ExpressionType.Call:
                     {
@@ -86,13 +86,23 @@ namespace Remote.Linq.ExpressionVisitors
                         {
                             return false;
                         }
-
-                        return true;
                     }
 
-                default:
-                    return true;
+                    break;
+
+                case ExpressionType.MemberAccess:
+                    if (expression is MemberExpression m && m.Type.Implements(typeof(IQueryable<>)))
+                    {
+                        if (m.Expression?.Type.Implements(typeof(Closure<>)) is true)
+                        {
+                            return false;
+                        }
+                    }
+
+                    break;
             }
+
+            return true;
         }
 
         /// <summary>
@@ -138,6 +148,12 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 var value = expression.CompileAndInvokeExpression();
+
+                if (value is IRemoteLinqQueryable remoteLinqQueryable)
+                {
+                    // unwrap subquery from closure
+                    return remoteLinqQueryable.Expression;
+                }
 
                 if (value is Expression valueAsExpression)
                 {

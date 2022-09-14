@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Include
 {
-    using Aqua.EnumerableExtensions;
     using Aqua.TypeExtensions;
     using Remote.Linq.Expressions;
     using Remote.Linq.ExpressionVisitors;

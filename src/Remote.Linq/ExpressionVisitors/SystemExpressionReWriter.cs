@@ -2,6 +2,7 @@
 
 namespace Remote.Linq.ExpressionVisitors
 {
+    using Remote.Linq.ExpressionExecution;
     using System;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
@@ -74,11 +75,10 @@ namespace Remote.Linq.ExpressionVisitors
 
                     if (!_parameterScope.HasParameters && typeof(IQueryable).IsAssignableFrom(node.Type))
                     {
-                        var lambda = Expression.Lambda<Func<object>>(node);
-                        var value = lambda.Compile()();
-                        if (value is IRemoteLinqQueryable)
+                        var value = node.CompileAndInvokeExpression();
+                        if (value is IRemoteLinqQueryable remoteLinqQueryable)
                         {
-                            return Expression.Constant(value, node.Type);
+                            return remoteLinqQueryable.Expression;
                         }
                     }
 
