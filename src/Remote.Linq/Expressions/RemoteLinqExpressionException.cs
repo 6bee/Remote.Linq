@@ -12,6 +12,7 @@ namespace Remote.Linq.Expressions
     {
         private RemoteLinqExpressionException()
         {
+            Expression = null!;
         }
 
         public RemoteLinqExpressionException(Expression expression)
@@ -43,6 +44,6 @@ namespace Remote.Linq.Expressions
             info.AddValue(nameof(Expression), Expression);
         }
 
-        public Expression Expression { get; } = null!;
+        public Expression Expression { get; }
     }
 }
