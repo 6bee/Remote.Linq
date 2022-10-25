@@ -21,8 +21,8 @@ namespace Remote.Linq.DynamicQuery
         [SecuritySafeCritical]
         public AsyncRemoteStreamProvider(
             Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource?>> dataProvider,
-            IAsyncQueryResultMapper<TSource> resultMapper,
-            IExpressionToRemoteLinqContext? context)
+            IExpressionToRemoteLinqContext? context,
+            IAsyncQueryResultMapper<TSource> resultMapper)
         {
             _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));

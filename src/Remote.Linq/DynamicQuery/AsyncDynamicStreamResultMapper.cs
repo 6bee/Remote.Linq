@@ -12,13 +12,16 @@ namespace Remote.Linq.DynamicQuery
     /// </summary>
     public sealed class AsyncDynamicStreamResultMapper : IAsyncQueryResultMapper<DynamicObject>
     {
-        private readonly IDynamicObjectMapper _mapper;
+        private readonly IDynamicObjectMapper? _mapper;
 
-        public AsyncDynamicStreamResultMapper(IDynamicObjectMapper? mapper)
-            => _mapper = mapper ?? ExpressionTranslatorContext.Default.ValueMapper;
+        public AsyncDynamicStreamResultMapper(IDynamicObjectMapper? mapper = null)
+            => _mapper = mapper;
 
         /// <inheritdoc/>
         public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject? source, Expression expression, CancellationToken cancellation = default)
-            => new ValueTask<TResult>(_mapper.Map<TResult>(source));
+        {
+            var mapper = _mapper ?? ExpressionTranslatorContext.Default.ValueMapper;
+            return new(mapper.Map<TResult>(source));
+        }
     }
 }
