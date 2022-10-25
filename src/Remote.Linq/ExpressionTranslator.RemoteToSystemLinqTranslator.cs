@@ -289,7 +289,7 @@ namespace Remote.Linq
                     from i in node.Initializers
                     select SystemLinq.Expression.ElementInit(
                         ResolveMethod(i.AddMethod),
-                        i.Arguments.Select(Visit) !);
+                        i.Arguments.Select(Visit)!);
                 return SystemLinq.Expression.ListInit(n, initializers);
             }
 

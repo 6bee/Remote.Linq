@@ -392,7 +392,7 @@ namespace Remote.Linq.ExpressionVisitors
             var exprs = VisitExpressionList(node.CheckNotNull(nameof(node)).Expressions);
             if (exprs != node.Expressions)
             {
-                var elementType = node.Type.GetElementType() !;
+                var elementType = node.Type.GetElementType()!;
                 return node.NodeType == ExpressionType.NewArrayInit
                     ? Expression.NewArrayInit(elementType, exprs)
                     : Expression.NewArrayBounds(elementType, exprs);

@@ -15,6 +15,6 @@ namespace Remote.Linq.DynamicQuery
 
         /// <inheritdoc/>
         public ValueTask<TResult> MapResultAsync<TResult>(object? source, Expression expression, CancellationToken cancellation = default)
-            => new ValueTask<TResult>(_objectResultCaster.MapResult<TResult>(source, expression) !);
+            => new(_objectResultCaster.MapResult<TResult>(source, expression)!);
     }
 }

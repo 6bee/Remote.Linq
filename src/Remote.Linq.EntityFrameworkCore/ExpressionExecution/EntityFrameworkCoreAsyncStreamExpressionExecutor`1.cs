@@ -36,7 +36,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
                 throw new ArgumentException("Expression must be of type IQueryable<>", nameof(expression));
             }
 
-            var queryable = (IQueryable)expression.CompileAndInvokeExpression() !;
+            var queryable = (IQueryable)expression.CompileAndInvokeExpression()!;
             return queryable.ExecuteAsAsyncStreamWithCancellation(cancellation);
         }
     }

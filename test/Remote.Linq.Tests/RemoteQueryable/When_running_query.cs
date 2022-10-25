@@ -1172,14 +1172,14 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_support_non_materialized_ienumerable_query_argument()
         {
-            var data = new List<(int key, string value)>
+            var data = new List<(int Key, string Value)>
             {
                 (1, "Fruit"),
                 (2, "Vehicle"),
             };
             var filteredItems = data
-                .Where(x => x.value.StartsWith("V"))
-                .Select(x => x.key);
+                .Where(x => x.Value.StartsWith("V"))
+                .Select(x => x.Key);
             var result = _categoryQueryable.FirstOrDefault(x => filteredItems.Contains(x.Id));
             result.Id.ShouldBe(2);
             result.Name.ShouldBe("Vehicles");
@@ -1188,15 +1188,15 @@ namespace Remote.Linq.Tests.RemoteQueryable
         [Fact]
         public void Should_support_non_materialized_enumerablequery_argument()
         {
-            var data = new List<(int key, string value)>
+            var data = new List<(int Key, string Value)>
             {
                 (1, "Fruit"),
                 (2, "Vehicle"),
             };
             var filteredItems = data
                 .AsQueryable()
-                .Where(x => x.value.StartsWith("V"))
-                .Select(x => x.key);
+                .Where(x => x.Value.StartsWith("V"))
+                .Select(x => x.Key);
             var result = _categoryQueryable.FirstOrDefault(x => filteredItems.Contains(x.Id));
             result.Id.ShouldBe(2);
             result.Name.ShouldBe("Vehicles");

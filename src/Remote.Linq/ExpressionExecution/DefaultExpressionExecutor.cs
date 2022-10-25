@@ -43,7 +43,7 @@ namespace Remote.Linq.ExpressionExecution
                 var type = queryResult.GetType();
                 if (type.IsArray)
                 {
-                    var mappedArray = MapArray(queryResult, type.GetElementType() !);
+                    var mappedArray = MapArray(queryResult, type.GetElementType()!);
                     return new DynamicObject(
                         type,
                         new PropertySet(new[]
@@ -62,7 +62,7 @@ namespace Remote.Linq.ExpressionExecution
             : _mapper.MapObject(value, _setTypeInformation);
 
         private object[] MapArray(object array, Type elementType)
-            => (object[])_mapArrayMethodInfo.MakeGenericMethod(elementType).Invoke(this, new[] { array }) !;
+            => (object[])_mapArrayMethodInfo.MakeGenericMethod(elementType).Invoke(this, new[] { array })!;
 
         private object[] MapArray<T>(T[] array)
             => array

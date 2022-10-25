@@ -98,7 +98,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
             Expression<Func<double>> expression = () => e;
 
             BackAndForth(expression)
-                .Item2
+                .RoundTrip
                 .Body.ShouldBeAssignableTo<MemberExpression>()
                 .Expression.ShouldBeOfType<NewExpression>()
                 .With(exp => exp.Type.ShouldBe(typeof(VariableQueryArgument<double>)))
@@ -110,7 +110,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
         public void Should_preserve_func_expression()
         {
             var func = new Func<int, int>(x => x);
-            var newFunc = BackAndForth<Expression<Func<int, int>>>(x => func(x)).Item2.Compile();
+            var newFunc = BackAndForth<Expression<Func<int, int>>>(x => func(x)).RoundTrip.Compile();
             var r = newFunc(9);
             r.ShouldBe(9);
         }
@@ -122,7 +122,7 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator
         public void Should_preserve_action_expression()
         {
             var action = new Action<int>(x => { });
-            var newAction = BackAndForth<Expression<Action<int>>>(x => action(x)).Item2.Compile();
+            var newAction = BackAndForth<Expression<Action<int>>>(x => action(x)).RoundTrip.Compile();
             newAction(9);
 
 #if NETFRAMEWORK

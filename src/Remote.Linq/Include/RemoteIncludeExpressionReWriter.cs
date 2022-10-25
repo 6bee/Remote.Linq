@@ -80,7 +80,7 @@ namespace Remote.Linq.Include
                     };
 
                     var m = method.MakeGenericMethod(args);
-                    var expression = (Expression)m.Invoke(null, new[] { node.Value }) !;
+                    var expression = (Expression)m.Invoke(null, new[] { node.Value })!;
                     return Visit(expression);
                 }
 

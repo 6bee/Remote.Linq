@@ -114,6 +114,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         private static System.Reflection.PropertyInfo TaskResultProperty(Type resultType)
             => typeof(Task<>)
             .MakeGenericType(resultType)
-            .GetProperty(nameof(Task<object>.Result)) !;
+            .GetProperty(nameof(Task<object>.Result))!;
     }
 }

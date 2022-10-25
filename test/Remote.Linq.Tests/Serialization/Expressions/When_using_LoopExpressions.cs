@@ -99,7 +99,8 @@ namespace Remote.Linq.Tests.Serialization.Expressions
                                     Expression.AddAssign(sum, i))),
                             Expression.Break(breakLabel)),
                         breakLabel),
-                    sum), maxRange);
+                    sum),
+                maxRange);
 
             _originalExpression = expression;
 

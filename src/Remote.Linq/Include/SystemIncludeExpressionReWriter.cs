@@ -61,7 +61,7 @@ namespace Remote.Linq.Include
 
                 const BindingFlags Any = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
                 var element = expression.Type;
-                var p = Aqua.TypeSystem.TypeHelper.GetElementType(element).GetProperty(segment, Any) !;
+                var p = Aqua.TypeSystem.TypeHelper.GetElementType(element).GetProperty(segment, Any)!;
                 if (element.Implements(typeof(IEnumerable<>)) && element != typeof(string))
                 {
                     var x = Expression.Parameter(p.DeclaringType!, $"x{++i}");
@@ -127,7 +127,7 @@ namespace Remote.Linq.Include
                     };
 
                     var m = method.MakeGenericMethod(args);
-                    var expression = (Expression)m.Invoke(null, new[] { queryable }) !;
+                    var expression = (Expression)m.Invoke(null, new[] { queryable })!;
                     return Visit(expression);
                 }
 

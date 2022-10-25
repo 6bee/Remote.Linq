@@ -3,9 +3,9 @@
 
   <PropertyGroup>
     <MajorVersion>7</MajorVersion>
-    <MinorVersion>0</MinorVersion>
+    <MinorVersion>1</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel></PreReleaseLabel>
+    <PreReleaseLabel>alpha-000.1</PreReleaseLabel>
     <AquaCoreVersion>5.0.0</AquaCoreVersion>
   </PropertyGroup>
 
@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <LangVersion>10</LangVersion>
     <CopyrightYear>$([System.DateTime]::Now.ToString("yyyy"))</CopyrightYear>
     <Copyright>Copyright © Christof Senn 2013-$(CopyrightYear)</Copyright>
     <Authors>Christof Senn</Authors>
@@ -67,10 +68,10 @@
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435 " Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.27.0.35380" Condition="'$(EnableSonarAnalyzers)' == 'true'">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.47.0.55603" Condition="'$(EnableSonarAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

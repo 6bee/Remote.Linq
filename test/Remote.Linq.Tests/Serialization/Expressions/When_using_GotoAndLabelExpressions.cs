@@ -91,7 +91,8 @@ namespace Remote.Linq.Tests.Serialization.Expressions
                     Expression.Assign(position, positionProperty),
                     Expression.Call(writer, typeof(TextWriter).GetMethod(nameof(TextWriter.WriteLine), new[] { typeof(string) }), Expression.Constant("SomeText")),
                     Expression.Return(returnLabel, Expression.Subtract(positionProperty, position), typeof(long)),
-                    Expression.Label(returnLabel, Expression.Default(typeof(long)))), writer);
+                    Expression.Label(returnLabel, Expression.Default(typeof(long)))),
+                writer);
 
             _originalExpression = expression;
 

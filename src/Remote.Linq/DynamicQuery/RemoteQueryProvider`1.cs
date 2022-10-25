@@ -47,7 +47,7 @@ namespace Remote.Linq.DynamicQuery
 
             var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
             var dataRecords = _dataProvider(rlinq);
-            return _resultMapper.MapResult<TResult>(dataRecords, expression) !;
+            return _resultMapper.MapResult<TResult>(dataRecords, expression)!;
         }
 
         /// <inheritdoc/>

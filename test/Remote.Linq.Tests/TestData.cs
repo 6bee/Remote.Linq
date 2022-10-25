@@ -126,7 +126,7 @@ namespace Remote.Linq.Tests
 
         public static IEnumerable<object[]> TestValues
             => CreateTestValues()
-            .Select(x => new object[] { x.Item1, x.Item2 });
+            .Select(x => new object[] { x.Type, x.Value });
 
         public static IEnumerable<object[]> TestValueArrays
             => CreateTestValues()

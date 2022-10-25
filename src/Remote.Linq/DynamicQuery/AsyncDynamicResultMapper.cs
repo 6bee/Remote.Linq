@@ -17,11 +17,11 @@ namespace Remote.Linq.DynamicQuery
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncDynamicResultMapper"/> class.
         /// </summary>
-        public AsyncDynamicResultMapper(IDynamicObjectMapper? mapper)
+        public AsyncDynamicResultMapper(IDynamicObjectMapper? mapper = null)
             => _mapper = mapper;
 
         /// <inheritdoc/>
         public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject? source, Expression expression, CancellationToken cancellation = default)
-            => new ValueTask<TResult>(DynamicResultMapper.MapToType<TResult>(source, _mapper, expression) !);
+            => new(DynamicResultMapper.MapToType<TResult>(source, _mapper, expression)!);
     }
 }

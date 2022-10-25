@@ -49,6 +49,6 @@ namespace Remote.Linq
         /// <param name="args">The argument list.</param>
         /// <returns>The return value of the method invocation.</returns>
         internal static TResult InvokeAndUnwrap<TResult>(this MethodInfo methodInfo, object? instance, params object?[] args)
-            => (TResult)methodInfo.InvokeAndUnwrap(instance, args) !;
+            => (TResult)methodInfo.InvokeAndUnwrap(instance, args)!;
     }
 }

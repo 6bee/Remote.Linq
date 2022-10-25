@@ -23,9 +23,9 @@ namespace Remote.Linq.Tests
             return tuple;
         }
 
-        public static (T, T) ShouldMatch<T>(this (T, T) tuple)
+        public static (T A, T B) ShouldMatch<T>(this (T A, T B) tuple)
         {
-            ShouldMatch(tuple.Item1, tuple.Item2);
+            ShouldMatch(tuple.A, tuple.B);
             return tuple;
         }
 

@@ -26,8 +26,8 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected class GenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
         {
-            private static readonly System.Reflection.PropertyInfo QueryArgumentValuePropertyInfo = typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value)) !;
-            private static readonly System.Reflection.PropertyInfo QueryArgumentValueListPropertyInfo = typeof(VariableQueryArgumentList).GetProperty(nameof(VariableQueryArgumentList.Values)) !;
+            private static readonly System.Reflection.PropertyInfo QueryArgumentValuePropertyInfo = typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value))!;
+            private static readonly System.Reflection.PropertyInfo QueryArgumentValueListPropertyInfo = typeof(VariableQueryArgumentList).GetProperty(nameof(VariableQueryArgumentList.Values))!;
 
             internal Expression Run(Expression expression) => Visit(expression);
 

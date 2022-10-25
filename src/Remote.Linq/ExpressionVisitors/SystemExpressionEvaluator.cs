@@ -179,7 +179,7 @@ namespace Remote.Linq.ExpressionVisitors
 
                 return Expression.Property(
                     Expression.New(
-                        typeof(VariableQueryArgument<>).MakeGenericType(expression.Type).GetConstructor(new[] { expression.Type }) !,
+                        typeof(VariableQueryArgument<>).MakeGenericType(expression.Type).GetConstructor(new[] { expression.Type })!,
                         Expression.Constant(value, expression.Type)),
                     nameof(VariableQueryArgument<object>.Value));
             }
@@ -191,13 +191,13 @@ namespace Remote.Linq.ExpressionVisitors
         /// </summary>
         private sealed class Nominator : SystemExpressionVisitorBase
         {
-            private readonly object _lock = new ();
+            private readonly object _lock = new();
             private readonly Func<Expression, bool> _canBeEvaluated;
             private HashSet<Expression>? _candidates;
             private bool _cannotBeEvaluated;
 
             internal Nominator(Func<Expression, bool>? canBeEvaluated)
-                => _canBeEvaluated = canBeEvaluated.And(CanBeEvaluatedLocally) !;
+                => _canBeEvaluated = canBeEvaluated.And(CanBeEvaluatedLocally)!;
 
             internal HashSet<Expression> Nominate(Expression expression)
             {

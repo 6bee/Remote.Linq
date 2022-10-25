@@ -39,7 +39,7 @@ namespace Remote.Linq.TestSupport
 
         /// <inheritdoc/>
         public ValueTask<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellation)
-            => new ValueTask<TResult>(Execute<TResult>(expression) !);
+            => new(Execute<TResult>(expression)!);
 
         /// <inheritdoc/>
         public object? Execute(Expression expression)
