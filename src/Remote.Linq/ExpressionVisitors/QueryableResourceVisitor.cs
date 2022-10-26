@@ -4,12 +4,10 @@ namespace Remote.Linq.ExpressionVisitors
 {
     using Aqua.Dynamic;
     using Aqua.EnumerableExtensions;
-    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.Expressions;
     using System;
-    using System.Linq;
     using System.Threading;
 
     public abstract class QueryableResourceVisitor
@@ -39,14 +37,12 @@ namespace Remote.Linq.ExpressionVisitors
                 var value = node.CheckNotNull(nameof(node)).Value;
                 if (TryGetQueryableByQueryableResourceDescriptor(value, out var queryable))
                 {
-                    return CreateClosure(queryable);
+                    return new ConstantExpression(queryable);
                 }
 
                 if (TryResolveQueryableSuorceInConstantQueryArgument(value, out var constantQueryArgument))
                 {
-#pragma warning disable CA1062 // Validate arguments of public methods -> false positive.
                     return new ConstantExpression(constantQueryArgument, node.Type);
-#pragma warning restore CA1062 // Validate arguments of public methods
                 }
 
                 if (TryResolveSubstitutedValue(value, out var substitutedValue))
@@ -55,23 +51,6 @@ namespace Remote.Linq.ExpressionVisitors
                 }
 
                 return base.VisitConstant(node);
-
-                static Expression CreateClosure(TQueryable? value)
-                {
-                    // TODO: move EF Core specific code/behavious into corresponding project.
-                    // to support EF Core subqueries, queryables must no be returned as ConstantExpression but wrapped as closure.
-                    if (value?.GetType().Implements(typeof(IQueryable<>), out var genericargs) is true)
-                    {
-                        var queryableType = typeof(IQueryable<>).MakeGenericType(genericargs);
-                        var closure = Activator.CreateInstance(typeof(Closure<>).MakeGenericType(queryableType), value)
-                            ?? throw new RemoteLinqException($"Failed to create closure for type {queryableType}.");
-                        var valueProperty = closure.GetType().GetProperty(nameof(Closure<TQueryable>.Value))
-                            ?? throw new RemoteLinqException("Failed to get 'Closure.Value' property info.");
-                        return new MemberExpression(new ConstantExpression(closure), valueProperty);
-                    }
-
-                    return new ConstantExpression(value);
-                }
             }
 
             private bool TryGetQueryableByQueryableResourceDescriptor(object? value, out TQueryable? queryable)

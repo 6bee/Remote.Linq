@@ -27,7 +27,9 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         }
 
         protected override SystemLinq.Expression Prepare(SystemLinq.Expression expression)
-            => base.Prepare(expression.ReplaceIncludeQueryMethods());
+            => base.Prepare(expression
+                .WrapQueryableInClosure()
+                .ReplaceIncludeQueryMethods());
 
         protected override IAsyncEnumerable<object?> ExecuteAsyncStream(SystemLinq.Expression expression, CancellationToken cancellation)
         {

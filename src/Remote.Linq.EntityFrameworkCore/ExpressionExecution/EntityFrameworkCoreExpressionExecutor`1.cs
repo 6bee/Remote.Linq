@@ -28,7 +28,9 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         }
 
         protected override SystemLinq.Expression Prepare(SystemLinq.Expression expression)
-            => base.Prepare(expression.ReplaceIncludeQueryMethods());
+            => base.Prepare(expression
+                .WrapQueryableInClosure()
+                .ReplaceIncludeQueryMethods());
 
         /// <summary>
         /// Prepares the query <see cref="SystemLinq.Expression"/> to be able to be executed.

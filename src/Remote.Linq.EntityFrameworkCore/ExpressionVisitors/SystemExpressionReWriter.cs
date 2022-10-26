@@ -26,6 +26,15 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
         public static Expression ReplaceIncludeQueryMethods(this Expression expression)
             => new QueryMethodMapper().Run(expression);
 
+        /// <summary>
+        /// Wrap all queryable contained in <see cref="ConstantExpression"/> in closure as required by EF Core to successfully execute subqueries.
+        /// </summary>
+        /// <param name="expression">The <see cref="Expression"/> to be processed.</param>
+        /// <returns>A new expression tree with queryables wrapped in closures if any queryable was contained in the original expression,
+        /// otherwise the original expression tree is returned.</returns>
+        public static Expression WrapQueryableInClosure(this Expression expression)
+            => new QueryableVisitor().Run(expression);
+
         private sealed class QueryMethodMapper : SystemExpressionVisitorBase
         {
             private static class EntityFrameworkMethodInfos
@@ -148,6 +157,27 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionVisitors
                         return null;
                     }
                 }
+            }
+        }
+
+        private sealed class QueryableVisitor : SystemExpressionVisitorBase
+        {
+            internal Expression Run(Expression expression) => Visit(expression);
+
+            protected override Expression VisitConstant(ConstantExpression node)
+            {
+                // to support EF Core subqueries, queryables must no be returned as ConstantExpression but wrapped as closure.
+                if (node.Type.Implements(typeof(IQueryable<>), out var genericargs))
+                {
+                    var queryableType = typeof(IQueryable<>).MakeGenericType(genericargs);
+                    var closure = Activator.CreateInstance(typeof(Closure<>).MakeGenericType(queryableType), node.Value)
+                        ?? throw new RemoteLinqException($"Failed to create closure for type {queryableType}.");
+                    var valueProperty = closure.GetType().GetProperty(nameof(Closure<object>.Value))
+                        ?? throw new RemoteLinqException("Failed to get 'Closure.Value' property info.");
+                    return Expression.MakeMemberAccess(Expression.Constant(closure), valueProperty);
+                }
+
+                return base.VisitConstant(node);
             }
         }
     }

@@ -50,9 +50,7 @@ namespace Remote.Linq.ExpressionVisitors
                 SwitchExpression switchExpression => VisitSwitch(switchExpression),
                 TryExpression tryExpression => VisitTry(tryExpression),
                 TypeBinaryExpression typeBinaryExpression => VisitTypeIs(typeBinaryExpression),
-#pragma warning disable CA1062 // Validate arguments of public methods --> as this is handled by switch expression
                 _ => throw new RemoteLinqException($"Unhandled expression type: '{node.NodeType}'"),
-#pragma warning restore CA1062 // Validate arguments of public methods
             };
 
         protected virtual Expression VisitSwitch(SwitchExpression node)

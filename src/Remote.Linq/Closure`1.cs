@@ -2,11 +2,17 @@
 
 namespace Remote.Linq
 {
-    internal sealed class Closure<T>
+    using System;
+    using System.Runtime.Serialization;
+
+    [Serializable]
+    [DataContract]
+    public sealed class Closure<T>
     {
         public Closure(T value)
             => Value = value;
 
-        public T Value { get; }
+        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
+        public T Value { get; init; }
     }
 }

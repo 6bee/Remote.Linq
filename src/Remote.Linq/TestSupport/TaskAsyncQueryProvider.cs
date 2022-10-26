@@ -5,7 +5,6 @@ namespace Remote.Linq.TestSupport
     using Aqua.TypeExtensions;
     using Remote.Linq.DynamicQuery;
     using Remote.Linq.ExpressionExecution;
-    using Remote.Linq.ExpressionVisitors;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
