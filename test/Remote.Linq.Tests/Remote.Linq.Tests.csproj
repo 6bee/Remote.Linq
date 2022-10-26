@@ -12,14 +12,4 @@
     <ProjectReference Include="..\..\src\Remote.Linq.protobuf-net\Remote.Linq.protobuf-net.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-    <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
-    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
-    <Reference Include="System.ObjectModel" />
-    <Reference Include="System.Text.RegularExpressions" />
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
 </Project>
