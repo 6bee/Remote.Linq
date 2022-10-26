@@ -29,7 +29,7 @@ namespace Remote.Linq.ExpressionVisitors
             private static readonly System.Reflection.PropertyInfo QueryArgumentValuePropertyInfo = typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value))!;
             private static readonly System.Reflection.PropertyInfo QueryArgumentValueListPropertyInfo = typeof(VariableQueryArgumentList).GetProperty(nameof(VariableQueryArgumentList.Values))!;
 
-            internal Expression Run(Expression expression) => Visit(expression);
+            public Expression Run(Expression expression) => Visit(expression);
 
             protected override Expression VisitConstant(ConstantExpression node)
             {
@@ -108,7 +108,7 @@ namespace Remote.Linq.ExpressionVisitors
             private static readonly MethodInfo CreateVariableQueryArgumentListMethodInfo =
                 typeof(NonGenericVariableQueryArgumentVisitor).GetMethodEx(nameof(CreateVariableQueryArgumentList));
 
-            internal Expression Run(Expression expression) => Visit(expression);
+            public Expression Run(Expression expression) => Visit(expression);
 
             protected override Expression VisitConstant(ConstantExpression node)
             {

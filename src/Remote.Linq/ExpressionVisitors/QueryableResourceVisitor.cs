@@ -32,7 +32,7 @@ namespace Remote.Linq.ExpressionVisitors
                 _typeResolver = typeResolver ?? TypeResolver.Instance;
             }
 
-            internal Expression Run(Expression expression) => Visit(expression);
+            public Expression Run(Expression expression) => Visit(expression);
 
             protected override Expression VisitConstant(ConstantExpression node)
             {
@@ -140,8 +140,7 @@ namespace Remote.Linq.ExpressionVisitors
                 _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
             }
 
-            internal Expression Run(Expression expression)
-                => Visit(expression);
+            public Expression Run(Expression expression) => Visit(expression);
 
             protected override Expression VisitConstant(ConstantExpression node)
             {

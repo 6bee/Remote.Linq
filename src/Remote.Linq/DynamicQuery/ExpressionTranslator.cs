@@ -36,5 +36,4 @@ namespace Remote.Linq.DynamicQuery
             .ReplaceQueryableByResourceDescriptors(_context?.TypeInfoProvider)
             .ReplaceGenericQueryArgumentsByNonGenericArguments();
     }
-#pragma warning restore SA1402 // File may only contain a single type
 }
