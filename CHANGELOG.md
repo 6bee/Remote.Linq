@@ -4,14 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [Unreleased vNext][vnext-unreleased]
 
 ### Added
 
 ### Changed
-- Added optional result mapper argument to all _RemoteQueryable.Factory_ methods.
-- Re-ordered method arguments to be consistent for all _RemoteQueryable.Factory_ methods.
-- Removed _RemoteQueryable.Factory_ methods previously marked as obsolete.
 
 ### Deprecated
 
@@ -20,6 +18,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Security
+
+
+## [Unreleased 7.1.0][7.1.0-unreleased]
+
+### Added
+
+### Changed
+- Added optional result mapper argument to all _RemoteQueryable.Factory_ methods.
+- Re-ordered method arguments to be consistent for all _RemoteQueryable.Factory_ methods.
+
+### Deprecated
+
+### Removed
+- Removed various types and methods previously marked as obsolete.
+
+### Fixed
+- Fixed issue with subqueries with EF Core [#112][issue#112]
+
+### Security
+
 
 ## [7.0.0][7.0.0] - 2021-09-29
 ### Added
@@ -58,10 +76,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
+
 [vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/7.0.0...main
+[7.1.0-unreleased]: https://github.com/6bee/Remote.Linq/compare/7.0.0...main
 [7.0.0]: https://github.com/6bee/Remote.Linq/compare/6.3.1...7.0.0
 [6.3.1]: https://github.com/6bee/Remote.Linq/compare/6.3.0...6.3.1
 [6.3.0]: https://github.com/6bee/Remote.Linq/compare/6.2.3...6.3.0
+
+[issue#112]: https://github.com/6bee/Remote.Linq/issues/112
 
 [async-queryable]: https://www.nuget.org/packages/System.Linq.Async.Queryable/
 [async-streams]: https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/tutorials/generate-consume-asynchronous-stream
