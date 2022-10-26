@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added optional result mapper argument to all _RemoteQueryable.Factory_ methods.
 - Re-ordered method arguments to be consistent for all _RemoteQueryable.Factory_ methods.
+- Removed _RemoteQueryable.Factory_ methods previously marked as obsolete.
 
 ### Deprecated
 
