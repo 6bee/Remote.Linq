@@ -12,16 +12,6 @@ namespace Remote.Linq.ExpressionVisitors
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class SystemExpressionReWriter
     {
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is no longer available and will be removed in a future version.", true)]
-        public static Expression ResolveDynamicPropertySelectors(this Expression expression, bool throwOnInvalidProperty = false)
-            => throw new NotSupportedException(nameof(ResolveDynamicPropertySelectors) + " methods was removed.");
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is no longer available and will be removed in a future version.", true)]
-        public static LambdaExpression ResolveDynamicPropertySelectors(this LambdaExpression expression, bool throwOnInvalidProperty = false)
-            => (LambdaExpression)ResolveDynamicPropertySelectors((Expression)expression, throwOnInvalidProperty);
-
         /// <summary>
         /// Replace complicated access to <see cref="IRemoteQueryable"/> by simple <see cref="ConstantExpression"/>.
         /// </summary>

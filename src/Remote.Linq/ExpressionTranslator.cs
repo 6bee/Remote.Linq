@@ -43,14 +43,6 @@ namespace Remote.Linq
             => new SystemToRemoteLinqTranslator(context ?? ExpressionTranslatorContext.Default).ToRemoteExpression(expression);
 
         /// <summary>
-        /// Translates a given expression into a remote linq expression.
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Method will be removed in futur version, use overload instaed.")]
-        public static RemoteLinq.Expression ToRemoteLinqExpression(this SystemLinq.Expression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => ToRemoteLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
-
-        /// <summary>
         /// Translates a given lambda expression into a remote linq expression.
         /// </summary>
         public static RemoteLinq.LambdaExpression ToRemoteLinqExpression(this SystemLinq.LambdaExpression expression, IExpressionToRemoteLinqContext? context = null)
@@ -60,26 +52,10 @@ namespace Remote.Linq
         }
 
         /// <summary>
-        /// Translates a given lambda expression into a remote linq expression.
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Method will be removed in futur version, use overload instaed.")]
-        public static RemoteLinq.LambdaExpression ToRemoteLinqExpression(this SystemLinq.LambdaExpression expression, ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null)
-            => ToRemoteLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeInfoProvider, canBeEvaluatedLocally));
-
-        /// <summary>
         /// Translates a given remote linq expression into an system linq expression.
         /// </summary>
         public static SystemLinq.Expression ToLinqExpression(this RemoteLinq.Expression expression, IExpressionFromRemoteLinqContext? context = null)
             => new RemoteToSystemLinqTranslator(context ?? ExpressionTranslatorContext.Default).ToExpression(expression);
-
-        /// <summary>
-        /// Translates a given remote linq expression into an system linq expression.
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Method will be removed in futur version, use overload instaed.")]
-        public static SystemLinq.Expression ToLinqExpression(this RemoteLinq.Expression expression, ITypeResolver? typeResolver)
-            => ToLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeResolver));
 
         /// <summary>
         /// Translates a given query expression into a lambda expression.
@@ -106,14 +82,6 @@ namespace Remote.Linq
         /// </summary>
         public static SystemLinq.LambdaExpression ToLinqExpression(this RemoteLinq.LambdaExpression expression, IExpressionFromRemoteLinqContext? context = null)
             => (SystemLinq.LambdaExpression)new RemoteToSystemLinqTranslator(context ?? ExpressionTranslatorContext.Default).ToExpression(expression);
-
-        /// <summary>
-        /// Translates a given remote linq expression into a lambda expression.
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Method will be removed in futur version, use overload instaed.")]
-        public static SystemLinq.LambdaExpression ToLinqExpression(this RemoteLinq.LambdaExpression expression, ITypeResolver? typeResolver)
-            => ToLinqExpression(expression, GetExpressionTranslatorContextOrNull(typeResolver));
 
         private static SystemLinq.ExpressionType ToExpressionType(this RemoteLinq.BinaryOperator binaryOperator)
             => (SystemLinq.ExpressionType)(int)binaryOperator;

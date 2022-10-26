@@ -9,7 +9,6 @@ namespace Remote.Linq
     using System.ComponentModel;
     using System.Threading;
     using System.Threading.Tasks;
-    using static Remote.Linq.MethodInfos;
     using RemoteLinq = Remote.Linq.Expressions;
     using SystemLinq = System.Linq.Expressions;
 

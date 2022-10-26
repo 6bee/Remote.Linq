@@ -2,8 +2,6 @@
 
 namespace Remote.Linq.SimpleQuery
 {
-    using Aqua.Dynamic;
-    using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -12,21 +10,6 @@ namespace Remote.Linq.SimpleQuery
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class SimpleQueryEnumerableExtensions
     {
-        private const string EnumerableOfDynamicObjectBasedMethodObsolete = "This method can no longer be used and will be removed in a future version. Make sure to create data provider returning DynamicObject rather than IEnumerable<DynamicObject>.";
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete(EnumerableOfDynamicObjectBasedMethodObsolete, true)]
-        public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, IEnumerable<DynamicObject>> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null)
-            => throw new NotSupportedException(EnumerableOfDynamicObjectBasedMethodObsolete);
-
-        /// <summary>
-        /// Creates an instance of <see cref="IQueryable{T}" /> that utilizes the data provider specified.
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method will be removed in a future version. Use one of the factory methods based on RemoteQueryable.", false)]
-        public static IQueryable<T> AsQueryable<T>(this IEnumerable<T> resource, Func<Expressions.Expression, DynamicObject> dataProvider, ITypeInfoProvider? typeInfoProvider = null, IDynamicObjectMapper? mapper = null)
-            => RemoteQueryable.Factory.CreateQueryable<T>(dataProvider, typeInfoProvider);
-
         /// <summary>
         /// Applies this query instance to an enumerable.
         /// </summary>
