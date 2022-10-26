@@ -29,7 +29,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
         private readonly Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource?>>? _asyncStreamProvider;
         private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>>? _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
-        private readonly IExpressionToRemoteLinqContext? _context;
+        private readonly IExpressionToRemoteLinqContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoteLinqAsyncQueryProvider{TSource}"/> class.
@@ -51,7 +51,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
             _asyncStreamProvider = asyncStreamProvider;
             _asyncDataProvider = asyncDataProvider;
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
-            _context = context;
+            _context = context ?? ExpressionTranslatorContext.Default;
         }
 
         /// <inheritdoc/>
@@ -68,7 +68,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
                 ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
                 cancellation.ThrowIfCancellationRequested();
-                var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
+                var rlinq = _context.ExpressionTranslator.TranslateExpression(expression);
 
                 cancellation.ThrowIfCancellationRequested();
 
@@ -88,7 +88,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
                 ExpressionHelper.CheckExpressionResultType<ValueTask<TResult>>(expression);
 
                 cancellation.ThrowIfCancellationRequested();
-                var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
+                var rlinq = _context.ExpressionTranslator.TranslateExpression(expression);
 
                 if (_asyncDataProvider is not null)
                 {

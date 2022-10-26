@@ -22,7 +22,7 @@ namespace Remote.Linq.DynamicQuery
 
         private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>> _asyncDataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
-        private readonly IExpressionToRemoteLinqContext? _context;
+        private readonly IExpressionToRemoteLinqContext _context;
 
         public AsyncRemoteQueryProvider(
             Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>> asyncDataProvider,
@@ -31,7 +31,7 @@ namespace Remote.Linq.DynamicQuery
         {
             _asyncDataProvider = asyncDataProvider.CheckNotNull(nameof(asyncDataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
-            _context = context;
+            _context = context ?? ExpressionTranslatorContext.Default;
         }
 
         /// <inheritdoc/>
@@ -70,7 +70,7 @@ namespace Remote.Linq.DynamicQuery
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
-            var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
+            var rlinq = _context.ExpressionTranslator.TranslateExpression(expression);
 
             var dataRecords = await _asyncDataProvider(rlinq, cancellation).ConfigureAwait(false);
 

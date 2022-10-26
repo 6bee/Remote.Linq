@@ -16,7 +16,7 @@ namespace Remote.Linq
     using RemoteLinq = Remote.Linq.Expressions;
     using SystemLinq = System.Linq.Expressions;
 
-    partial class ExpressionTranslator
+    partial class ExpressionTranslationExtensions
     {
         private sealed class SystemToRemoteLinqTranslator : SystemExpressionVisitorBase
         {

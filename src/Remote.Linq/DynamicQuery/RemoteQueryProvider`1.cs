@@ -16,7 +16,7 @@ namespace Remote.Linq.DynamicQuery
 
         private readonly Func<Expressions.Expression, TSource?> _dataProvider;
         private readonly IQueryResultMapper<TSource> _resultMapper;
-        private readonly IExpressionToRemoteLinqContext? _context;
+        private readonly IExpressionToRemoteLinqContext _context;
 
         public RemoteQueryProvider(
             Func<Expressions.Expression, TSource?> dataProvider,
@@ -25,7 +25,7 @@ namespace Remote.Linq.DynamicQuery
         {
             _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
-            _context = context;
+            _context = context ?? ExpressionTranslatorContext.Default;
         }
 
         /// <inheritdoc/>
@@ -45,7 +45,7 @@ namespace Remote.Linq.DynamicQuery
         {
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
-            var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
+            var rlinq = _context.ExpressionTranslator.TranslateExpression(expression);
             var dataRecords = _dataProvider(rlinq);
             return _resultMapper.MapResult<TResult>(dataRecords, expression)!;
         }

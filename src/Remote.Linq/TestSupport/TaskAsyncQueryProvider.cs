@@ -24,10 +24,10 @@ namespace Remote.Linq.TestSupport
         private static readonly MethodInfo _createQueryMethod = typeof(TaskAsyncQueryProvider)
             .GetMethodEx(nameof(CreateQuery), new[] { typeof(MethodInfos.TElement) }, typeof(Expression));
 
-        private readonly IExpressionTranslatorContext? _context;
+        private readonly IExpressionTranslatorContext _context;
 
         public TaskAsyncQueryProvider(IExpressionTranslatorContext? context = null)
-            => _context = context;
+            => _context = context ?? ExpressionTranslatorContext.Default;
 
         /// <inheritdoc/>
         public IQueryable CreateQuery(Expression expression)
@@ -48,10 +48,8 @@ namespace Remote.Linq.TestSupport
         /// <inheritdoc/>
         public TResult Execute<TResult>(Expression expression)
         {
-            var systemlinq = expression.SimplifyIncorporationOfRemoteQueryables();
-            var remotelinq = systemlinq
-                .ToRemoteLinqExpression(_context)
-                .ReplaceGenericQueryArgumentsByNonGenericArguments();
+            // TODO: verify modificatiopn does no harm as it's adding "exp.ReplaceQueryableByResourceDescriptors(_context?.TypeInfoProvider)"
+            var remotelinq = _context.ExpressionTranslator.TranslateExpression(expression);
             var queryresult = remotelinq.Execute(null!, _context);
             var result = DynamicResultMapper.MapToType<TResult>(queryresult, null, expression);
             return result!;

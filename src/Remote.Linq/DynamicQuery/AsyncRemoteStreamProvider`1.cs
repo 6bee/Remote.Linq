@@ -16,7 +16,7 @@ namespace Remote.Linq.DynamicQuery
     {
         private readonly Func<Expressions.Expression, CancellationToken, IAsyncEnumerable<TSource?>> _dataProvider;
         private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
-        private readonly IExpressionToRemoteLinqContext? _context;
+        private readonly IExpressionToRemoteLinqContext _context;
 
         [SecuritySafeCritical]
         public AsyncRemoteStreamProvider(
@@ -26,7 +26,7 @@ namespace Remote.Linq.DynamicQuery
         {
             _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
             _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
-            _context = context;
+            _context = context ?? ExpressionTranslatorContext.Default;
         }
 
         /// <inheritdoc/>
@@ -35,7 +35,7 @@ namespace Remote.Linq.DynamicQuery
             ExpressionHelper.CheckExpressionResultType<TResult>(expression);
 
             cancellation.ThrowIfCancellationRequested();
-            var rlinq = ExpressionHelper.TranslateExpression(expression, _context);
+            var rlinq = _context.ExpressionTranslator.TranslateExpression(expression);
 
             cancellation.ThrowIfCancellationRequested();
             var asyncEnumerable = _dataProvider(rlinq, cancellation);

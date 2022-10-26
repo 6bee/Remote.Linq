@@ -3,6 +3,7 @@
 namespace Remote.Linq
 {
     using Aqua.TypeSystem;
+    using Remote.Linq.DynamicQuery;
     using System;
 
     /// <summary>
@@ -19,5 +20,10 @@ namespace Remote.Linq
         /// Gets a function to check whether a value requires mapping.
         /// </summary>
         Func<object, bool> NeedsMapping { get; }
+
+        /// <summary>
+        /// Gets the expression translator.
+        /// </summary>
+        IExpressionTranslator ExpressionTranslator { get; }
     }
 }

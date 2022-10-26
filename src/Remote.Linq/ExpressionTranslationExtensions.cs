@@ -9,7 +9,7 @@ namespace Remote.Linq
     using SystemLinq = System.Linq.Expressions;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static partial class ExpressionTranslator
+    public static partial class ExpressionTranslationExtensions
     {
         private sealed class ResultWrapperExpression : SystemLinq.Expression
         {

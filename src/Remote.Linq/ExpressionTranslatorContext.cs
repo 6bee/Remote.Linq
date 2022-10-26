@@ -36,6 +36,8 @@ namespace Remote.Linq
             public ITypeResolver TypeResolver => Aqua.TypeSystem.TypeResolver.Instance;
 
             private NotSupportedException NotSupportedException => new NotSupportedException("Operation must not be called as no value mapping should occure.");
+
+            public IExpressionTranslator ExpressionTranslator => new ExpressionTranslator(this);
         }
 
         private sealed class IsKnownTypeProviderDecorator : IIsKnownTypeProvider
@@ -229,6 +231,9 @@ namespace Remote.Linq
 
         /// <inheritdoc/>
         public Func<SystemLinq.Expression, bool>? CanBeEvaluatedLocally { get; }
+
+        /// <inheritdoc/>
+        public virtual IExpressionTranslator ExpressionTranslator => new ExpressionTranslator(this);
 
         private static object? MapGroupToDynamicObjectGraphMethod(Type[] genericTypeArguments, object group)
             => _mapGroupToDynamicObjectGraphMethodDefinition
