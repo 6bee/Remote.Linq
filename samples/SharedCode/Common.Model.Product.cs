@@ -11,5 +11,7 @@ namespace Common.Model
         public string Name { get; set; }
 
         public decimal Price { get; set; }
+
+        public RelatedPosition RelatedPosition { get; set; }
     }
 }

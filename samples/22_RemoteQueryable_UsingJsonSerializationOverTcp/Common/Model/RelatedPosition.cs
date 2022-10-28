@@ -2,14 +2,8 @@
 
 namespace Common.Model
 {
-    using System.Collections.Generic;
-
-    public partial class ProductGroup
+    public partial class RelatedPosition
     {
         public string Id { get; set; }
-
-        public string GroupName { get; set; }
-
-        public IList<Product> Products { get; set; }
     }
 }

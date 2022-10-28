@@ -26,11 +26,11 @@ namespace Server
 
             _products = new[]
             {
-                new Product { Id = 10, Name = "Apple", Price = 1m, ProductCategoryId = 1 },
-                new Product { Id = 11, Name = "Pear", Price = 2m, ProductCategoryId = 1 },
-                new Product { Id = 12, Name = "Pineapple", Price = 3m, ProductCategoryId = 1 },
-                new Product { Id = 13, Name = "Car", Price = 33999m, ProductCategoryId = 2 },
-                new Product { Id = 14, Name = "Bicycle", Price = 150m, ProductCategoryId = 2 },
+                new Product { Id = 10, Name = "Apple", Price = 1m, ProductCategoryId = 1, RelatedPosition = new RelatedPosition { Id = "1" } },
+                new Product { Id = 11, Name = "Pear", Price = 2m, ProductCategoryId = 1, RelatedPosition = new RelatedPosition { Id = "1" } },
+                new Product { Id = 12, Name = "Pineapple", Price = 3m, ProductCategoryId = 1, RelatedPosition = new RelatedPosition { Id = "1" } },
+                new Product { Id = 13, Name = "Car", Price = 33999m, ProductCategoryId = 2, RelatedPosition = new RelatedPosition { Id = "2" } },
+                new Product { Id = 14, Name = "Bicycle", Price = 150m, ProductCategoryId = 2, RelatedPosition = new RelatedPosition { Id = "2" } },
             };
 
             _orderItems = new[]
@@ -49,19 +49,19 @@ namespace Server
             {
                 new ProductGroup
                 {
-                    Id = 0,
+                    Id = "0",
                     GroupName = "All",
                     Products = _products.ToList(),
                 },
                 new ProductGroup
                 {
-                    Id = 1,
+                    Id = "1",
                     GroupName = "Food",
                     Products = _products.Where(x => x.ProductCategoryId == 1).ToList(),
                 },
                 new ProductGroup
                 {
-                    Id = 2,
+                    Id = "2",
                     GroupName = "NonFood",
                     Products = _products.Where(x => x.ProductCategoryId == 2).ToList(),
                 },
