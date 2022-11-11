@@ -5,8 +5,8 @@
     <MajorVersion>7</MajorVersion>
     <MinorVersion>1</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-002</PreReleaseLabel>
-    <AquaCoreVersion>5.2.0-alpha-001</AquaCoreVersion>
+    <PreReleaseLabel></PreReleaseLabel>
+    <AquaCoreVersion>5.2.0</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -67,7 +67,7 @@
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435 " Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="SonarAnalyzer.CSharp" Version="8.47.0.55603" Condition="'$(EnableSonarAnalyzers)' == 'true'">
