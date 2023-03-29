@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28729.10
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0BC2CB05-0651-45C9-A601-630C1FC7EDBE}"
 	ProjectSection(SolutionItems) = preProject
@@ -35,6 +35,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".global", ".global", "{3FB30F85-98CC-46DD-9B34-B5A41A0D5674}"
 	ProjectSection(SolutionItems) = preProject
 		.runsettings = .runsettings
+		CHANGELOG.md = CHANGELOG.md
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
