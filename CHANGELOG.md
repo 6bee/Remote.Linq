@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Bump _Microsoft.Bcl.AsyncInterfaces_ from 6.0.0 to 7.0.0
+- Bump _Microsoft.EntityFrameworkCore_ from 6.0.10 to 7.0.4 (concerns _Remote.Linq.EntityFrameworkCore_)
 
 ### Deprecated
 
