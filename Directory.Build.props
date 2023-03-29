@@ -3,10 +3,10 @@
 
   <PropertyGroup>
     <MajorVersion>7</MajorVersion>
-    <MinorVersion>1</MinorVersion>
+    <MinorVersion>2</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel></PreReleaseLabel>
-    <AquaCoreVersion>5.2.0</AquaCoreVersion>
+    <PreReleaseLabel>alpha-001</PreReleaseLabel>
+    <AquaCoreVersion>5.3.0-alpha-001</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
