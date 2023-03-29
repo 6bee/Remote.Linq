@@ -10,7 +10,7 @@ namespace Remote.Linq.DynamicQuery
     {
         private readonly IExpressionToRemoteLinqContext? _context;
 
-        public ExpressionTranslator(IExpressionToRemoteLinqContext? context)
+        public ExpressionTranslator(IExpressionToRemoteLinqContext? context = null)
             => _context = context;
 
         /// <summary>
