@@ -50,7 +50,7 @@ namespace Remote.Linq.ExpressionVisitors
                 SwitchExpression switchExpression => VisitSwitch(switchExpression),
                 TryExpression tryExpression => VisitTry(tryExpression),
                 TypeBinaryExpression typeBinaryExpression => VisitTypeIs(typeBinaryExpression),
-                _ => throw new RemoteLinqException($"Unhandled expression type: '{node.NodeType}'"),
+                _ => throw new RemoteLinqException($"Unhandled expression type: '{node.NodeType}' ({node.GetType()})"),
             };
 
         protected virtual Expression VisitSwitch(SwitchExpression node)

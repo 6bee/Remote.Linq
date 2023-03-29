@@ -37,7 +37,7 @@ namespace Remote.Linq.ExpressionVisitors
                 ExpressionType.TypeIs => VisitTypeIs((TypeBinaryExpression)node),
                 ExpressionType.Try => VisitTry((TryExpression)node),
                 ExpressionType.Unary => VisitUnary((UnaryExpression)node),
-                _ => throw new NotSupportedException($"Unknown expression type: '{node.NodeType}'"),
+                _ => throw new NotSupportedException($"Unknown expression type: '{node.NodeType}' ({node.GetType()})"),
             };
 
         protected virtual Expression VisitSwitch(SwitchExpression node)
