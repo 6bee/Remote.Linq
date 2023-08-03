@@ -35,7 +35,7 @@ namespace Remote.Linq.SimpleQuery
         /// </summary>
         public Query(TypeInfo type, IEnumerable<LambdaExpression>? filterExpressions = null, IEnumerable<SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
         {
-            Type = type.CheckNotNull(nameof(type));
+            Type = type.CheckNotNull();
             FilterExpressions = filterExpressions.AsNullIfEmpty()?.ToList();
             SortExpressions = sortExpressions.AsNullIfEmpty()?.ToList();
             SkipValue = skip;
@@ -82,7 +82,7 @@ namespace Remote.Linq.SimpleQuery
         /// </summary>
         public IOrderedQuery OrderBy(SortExpression sortExpression)
         {
-            if (sortExpression.CheckNotNull(nameof(sortExpression)).SortDirection != SortDirection.Ascending)
+            if (sortExpression.CheckNotNull().SortDirection != SortDirection.Ascending)
             {
                 throw new ArgumentException("Expected sort expresson to be ascending.");
             }
@@ -96,7 +96,7 @@ namespace Remote.Linq.SimpleQuery
         /// </summary>
         public IOrderedQuery OrderByDescending(SortExpression sortExpression)
         {
-            if (sortExpression.CheckNotNull(nameof(sortExpression)).SortDirection != SortDirection.Descending)
+            if (sortExpression.CheckNotNull().SortDirection != SortDirection.Descending)
             {
                 throw new ArgumentException("Expected sort expresson to be descending.");
             }
@@ -182,7 +182,7 @@ namespace Remote.Linq.SimpleQuery
         /// <returns>A non-generic version of the specified query instance.</returns>
         public static Query CreateFromGeneric<T>(IQuery<T> query)
         {
-            var instance = new Query(typeof(T), query.CheckNotNull(nameof(query)).FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
+            var instance = new Query(typeof(T), query.CheckNotNull().FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
             return instance;
         }
 

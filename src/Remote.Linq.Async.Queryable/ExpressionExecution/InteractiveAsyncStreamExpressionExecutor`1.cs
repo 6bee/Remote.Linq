@@ -31,7 +31,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 
         private IAsyncEnumerable<object?> ExecuteAsyncStreamCore(Expression expression)
         {
-            var queryResult = expression.CheckNotNull(nameof(expression)).CompileAndInvokeExpression();
+            var queryResult = expression.CheckNotNull().CompileAndInvokeExpression();
             if (queryResult is IAsyncEnumerable<object?> asyncEnumerable)
             {
                 return asyncEnumerable;

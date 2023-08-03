@@ -31,7 +31,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
             }
 
             protected override bool ShouldMapToDynamicObject(IEnumerable collection)
-                => collection.CheckNotNull(nameof(collection)).GetType().Implements(typeof(IAsyncGrouping<,>))
+                => collection.CheckNotNull().GetType().Implements(typeof(IAsyncGrouping<,>))
                 || base.ShouldMapToDynamicObject(collection);
 
             protected override DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation)

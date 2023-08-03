@@ -27,7 +27,7 @@ namespace Remote.Linq.Async.Queryable.TestSupport
             Action<Expression>? onExecuteAsyncQuery = null)
             where T : class
         {
-            if (testData.CheckNotNull(nameof(testData)) is IAsyncQueryable<T> asyncQueryable)
+            if (testData.CheckNotNull() is IAsyncQueryable<T> asyncQueryable)
             {
                 return asyncQueryable;
             }

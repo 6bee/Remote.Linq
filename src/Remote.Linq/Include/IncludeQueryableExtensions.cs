@@ -88,8 +88,8 @@ namespace Remote.Linq.Include
         [QueryMarkerFunction]
         public static IQueryable<T> Include<T>(this IQueryable<T> source, string navigationPropertyPath)
         {
-            source.AssertNotNull(nameof(source));
-            navigationPropertyPath.AssertNotNullOrEmpty(nameof(navigationPropertyPath));
+            source.AssertNotNull();
+            navigationPropertyPath.AssertNotNullOrEmpty();
 
             return source.Provider is IRemoteLinqQueryProvider
                 ? source.Provider.CreateQuery<T>(
@@ -111,8 +111,8 @@ namespace Remote.Linq.Include
         [QueryMarkerFunction]
         public static IIncludableQueryable<T, TProperty> Include<T, TProperty>(this IQueryable<T> source, Expression<Func<T, TProperty>> navigationPropertyPath)
         {
-            source.AssertNotNull(nameof(source));
-            navigationPropertyPath.AssertNotNull(nameof(navigationPropertyPath));
+            source.AssertNotNull();
+            navigationPropertyPath.AssertNotNull();
 
             return new IncludableQueryable<T, TProperty>(
                 source.Provider is IRemoteLinqQueryProvider
@@ -138,8 +138,8 @@ namespace Remote.Linq.Include
             this IIncludableQueryable<T, TPreviousProperty> source,
             Expression<Func<TPreviousProperty, TProperty>> navigationPropertyPath)
         {
-            source.AssertNotNull(nameof(source));
-            navigationPropertyPath.AssertNotNull(nameof(navigationPropertyPath));
+            source.AssertNotNull();
+            navigationPropertyPath.AssertNotNull();
 
             return new IncludableQueryable<T, TProperty>(
                 source.Provider is IRemoteLinqQueryProvider
@@ -165,8 +165,8 @@ namespace Remote.Linq.Include
             this IIncludableQueryable<T, IEnumerable<TPreviousProperty>> source,
             Expression<Func<TPreviousProperty, TProperty>> navigationPropertyPath)
         {
-            source.AssertNotNull(nameof(source));
-            navigationPropertyPath.AssertNotNull(nameof(navigationPropertyPath));
+            source.AssertNotNull();
+            navigationPropertyPath.AssertNotNull();
 
             return new IncludableQueryable<T, TProperty>(
                 source.Provider is IRemoteLinqQueryProvider
@@ -183,7 +183,7 @@ namespace Remote.Linq.Include
             private readonly IQueryable<T> _queryable;
 
             internal IncludableQueryable(IQueryable<T> queryable)
-                => _queryable = queryable.CheckNotNull(nameof(queryable));
+                => _queryable = queryable.CheckNotNull();
 
             public Expression Expression
                 => _queryable.Expression;

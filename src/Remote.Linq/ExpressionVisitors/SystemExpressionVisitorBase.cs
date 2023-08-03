@@ -55,7 +55,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitSwitch(SwitchExpression node)
         {
-            var cases = (node.CheckNotNull(nameof(node)).Cases ?? Enumerable.Empty<SwitchCase>()).ToList();
+            var cases = (node.CheckNotNull().Cases ?? Enumerable.Empty<SwitchCase>()).ToList();
             var switchCases = cases.Select(VisitSwitchCase).ToList();
             var body = Visit(node.DefaultBody);
             var switchValue = Visit(node.SwitchValue);
@@ -71,7 +71,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual SwitchCase VisitSwitchCase(SwitchCase switchCase)
         {
-            var body = Visit(switchCase.CheckNotNull(nameof(switchCase)).Body);
+            var body = Visit(switchCase.CheckNotNull().Body);
             var testValues = switchCase.TestValues.Select(Visit).ToList();
             if (body != switchCase.Body || !switchCase.TestValues.SequenceEqual(testValues))
             {
@@ -83,7 +83,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitTry(TryExpression node)
         {
-            var body = Visit(node.CheckNotNull(nameof(node)).Body);
+            var body = Visit(node.CheckNotNull().Body);
             var fault = Visit(node.Fault);
             var @finally = Visit(node.Finally);
             var handlers = node.Handlers.Select(VisitCatch).ToList();
@@ -100,7 +100,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual CatchBlock VisitCatch(CatchBlock catchBlock)
         {
-            var body = Visit(catchBlock.CheckNotNull(nameof(catchBlock)).Body);
+            var body = Visit(catchBlock.CheckNotNull().Body);
             var filter = Visit(catchBlock.Filter);
             var variable = catchBlock.Variable is null ? null : (ParameterExpression)VisitParameter(catchBlock.Variable);
             if (body != catchBlock.Body || filter != catchBlock.Filter || variable != catchBlock.Variable)
@@ -112,7 +112,7 @@ namespace Remote.Linq.ExpressionVisitors
         }
 
         protected virtual MemberBinding VisitMemberBinding(MemberBinding binding)
-            => binding.CheckNotNull(nameof(binding)).BindingType switch
+            => binding.CheckNotNull().BindingType switch
             {
                 MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment)binding),
                 MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding)binding),
@@ -122,7 +122,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
         {
-            var arguments = VisitExpressionList(initializer.CheckNotNull(nameof(initializer)).Arguments);
+            var arguments = VisitExpressionList(initializer.CheckNotNull().Arguments);
             if (arguments != initializer.Arguments)
             {
                 return Expression.ElementInit(initializer.AddMethod, arguments);
@@ -133,7 +133,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitUnary(UnaryExpression node)
         {
-            var operand = Visit(node.CheckNotNull(nameof(node)).Operand);
+            var operand = Visit(node.CheckNotNull().Operand);
             if (operand != node.Operand)
             {
                 return Expression.MakeUnary(node.NodeType, operand, node.Type, node.Method);
@@ -144,7 +144,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitBinary(BinaryExpression node)
         {
-            var left = Visit(node.CheckNotNull(nameof(node)).Left);
+            var left = Visit(node.CheckNotNull().Left);
             var right = Visit(node.Right);
             var conversion = Visit(node.Conversion);
             if (left != node.Left || right != node.Right || conversion != node.Conversion)
@@ -159,7 +159,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitTypeIs(TypeBinaryExpression node)
         {
-            var expr = Visit(node.CheckNotNull(nameof(node)).Expression);
+            var expr = Visit(node.CheckNotNull().Expression);
             if (expr != node.Expression)
             {
                 return Expression.TypeIs(expr, node.TypeOperand);
@@ -175,7 +175,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitConditional(ConditionalExpression node)
         {
-            var test = Visit(node.CheckNotNull(nameof(node)).Test);
+            var test = Visit(node.CheckNotNull().Test);
             var ifTrue = Visit(node.IfTrue);
             var ifFalse = Visit(node.IfFalse);
 
@@ -196,7 +196,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitMemberAccess(MemberExpression node)
         {
-            var exp = Visit(node.CheckNotNull(nameof(node)).Expression);
+            var exp = Visit(node.CheckNotNull().Expression);
             if (exp != node.Expression)
             {
                 return Expression.MakeMemberAccess(exp, node.Member);
@@ -207,7 +207,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitMethodCall(MethodCallExpression node)
         {
-            var obj = Visit(node.CheckNotNull(nameof(node)).Object);
+            var obj = Visit(node.CheckNotNull().Object);
             var args = VisitExpressionList(node.Arguments);
             if (obj != node.Object || args != node.Arguments)
             {
@@ -220,7 +220,7 @@ namespace Remote.Linq.ExpressionVisitors
         protected virtual ReadOnlyCollection<T> VisitExpressionList<T>(ReadOnlyCollection<T> list)
             where T : Expression
         {
-            list.AssertNotNull(nameof(list));
+            list.AssertNotNull();
             List<T>? visited = null;
             for (int i = 0, n = list.Count; i < n; i++)
             {
@@ -246,7 +246,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
         {
-            var e = Visit(assignment.CheckNotNull(nameof(assignment)).Expression);
+            var e = Visit(assignment.CheckNotNull().Expression);
             if (e != assignment.Expression)
             {
                 return Expression.Bind(assignment.Member, e);
@@ -257,7 +257,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding binding)
         {
-            var bindings = VisitBindingList(binding.CheckNotNull(nameof(binding)).Bindings);
+            var bindings = VisitBindingList(binding.CheckNotNull().Bindings);
             if (bindings != binding.Bindings)
             {
                 return Expression.MemberBind(binding.Member, bindings);
@@ -268,7 +268,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual MemberListBinding VisitMemberListBinding(MemberListBinding binding)
         {
-            var initializers = VisitElementInitializerList(binding.CheckNotNull(nameof(binding)).Initializers);
+            var initializers = VisitElementInitializerList(binding.CheckNotNull().Initializers);
             if (initializers != binding.Initializers)
             {
                 return Expression.ListBind(binding.Member, initializers);
@@ -279,7 +279,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual IEnumerable<MemberBinding> VisitBindingList(ReadOnlyCollection<MemberBinding> list)
         {
-            list.AssertNotNull(nameof(list));
+            list.AssertNotNull();
             List<MemberBinding>? visited = null;
             for (int i = 0, n = list.Count; i < n; i++)
             {
@@ -305,7 +305,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual IEnumerable<ElementInit> VisitElementInitializerList(ReadOnlyCollection<ElementInit> list)
         {
-            list.AssertNotNull(nameof(list));
+            list.AssertNotNull();
             List<ElementInit>? visited = null;
             for (int i = 0, n = list.Count; i < n; i++)
             {
@@ -331,7 +331,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitLambda(LambdaExpression node)
         {
-            var body = Visit(node.CheckNotNull(nameof(node)).Body);
+            var body = Visit(node.CheckNotNull().Body);
             if (body != node.Body)
             {
                 return Expression.Lambda(node.Type, body, node.Parameters);
@@ -342,7 +342,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitNew(NewExpression node)
         {
-            var args = VisitExpressionList(node.CheckNotNull(nameof(node)).Arguments);
+            var args = VisitExpressionList(node.CheckNotNull().Arguments);
             if (args != node.Arguments)
             {
                 if (node.Constructor is null)
@@ -363,7 +363,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitMemberInit(MemberInitExpression node)
         {
-            var n = VisitNew(node.CheckNotNull(nameof(node)).NewExpression);
+            var n = VisitNew(node.CheckNotNull().NewExpression);
             var bindings = VisitBindingList(node.Bindings);
             if (n is NewExpression newExpression && (newExpression != node.NewExpression || bindings != node.Bindings))
             {
@@ -375,7 +375,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitListInit(ListInitExpression node)
         {
-            var n = VisitNew(node.CheckNotNull(nameof(node)).NewExpression);
+            var n = VisitNew(node.CheckNotNull().NewExpression);
             var initializers = VisitElementInitializerList(node.Initializers);
             if (n is NewExpression newExpression && (newExpression != node.NewExpression || initializers != node.Initializers))
             {
@@ -387,7 +387,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitNewArray(NewArrayExpression node)
         {
-            var exprs = VisitExpressionList(node.CheckNotNull(nameof(node)).Expressions);
+            var exprs = VisitExpressionList(node.CheckNotNull().Expressions);
             if (exprs != node.Expressions)
             {
                 var elementType = node.Type.GetElementType()!;
@@ -401,7 +401,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitInvocation(InvocationExpression node)
         {
-            var args = VisitExpressionList(node.CheckNotNull(nameof(node)).Arguments);
+            var args = VisitExpressionList(node.CheckNotNull().Arguments);
             var expr = Visit(node.Expression);
             if (args != node.Arguments || expr != node.Expression)
             {
@@ -413,7 +413,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitBlock(BlockExpression node)
         {
-            var expressions = VisitExpressionList(node.CheckNotNull(nameof(node)).Expressions);
+            var expressions = VisitExpressionList(node.CheckNotNull().Expressions);
             var variables = VisitExpressionList(node.Variables);
             if (expressions != node.Expressions || variables != node.Variables)
             {
@@ -431,7 +431,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitLabel(LabelExpression node)
         {
-            var defaultValue = Visit(node.CheckNotNull(nameof(node)).DefaultValue);
+            var defaultValue = Visit(node.CheckNotNull().DefaultValue);
             if (!ReferenceEquals(defaultValue, node.DefaultValue))
             {
                 return Expression.Label(node.Target, defaultValue);
@@ -442,7 +442,7 @@ namespace Remote.Linq.ExpressionVisitors
 
         protected virtual Expression VisitLoop(LoopExpression node)
         {
-            var body = Visit(node.CheckNotNull(nameof(node)).Body);
+            var body = Visit(node.CheckNotNull().Body);
             if (!ReferenceEquals(body, node.Body))
             {
                 return Expression.Loop(body, node.BreakLabel, node.ContinueLabel);

@@ -351,7 +351,7 @@ namespace Remote.Linq.Async
         /// <returns>The query results.</returns>
         public static IAsyncEnumerable<TSource> AsAsyncEnumerable<TSource>(this IQueryable<TSource> source, CancellationToken cancellation = default)
         {
-            source.AssertNotNull(nameof(source));
+            source.AssertNotNull();
 
             if (source is IAsyncEnumerable<TSource> asyncEnumerable)
             {
@@ -392,7 +392,7 @@ namespace Remote.Linq.Async
         /// <returns>A <see cref="ValueTask{TResult}"/> representing the asynchronous result of the remote query.</returns>
         public static async ValueTask<TResult> ExecuteAsync<TResult>(this IQueryable source, CancellationToken cancellation = default)
         {
-            if (source.CheckNotNull(nameof(source)).Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
+            if (source.CheckNotNull().Provider is IAsyncRemoteQueryProvider asyncQueryableProvider)
             {
                 return await asyncQueryableProvider.ExecuteAsync<TResult>(source.Expression, cancellation).ConfigureAwait(false);
             }
@@ -411,7 +411,7 @@ namespace Remote.Linq.Async
 
         private static async ValueTask<TResult> ExecuteAsync<TSource, TResult>(System.Reflection.MethodInfo method, IQueryable<TSource> source, IEnumerable<object?> args, CancellationToken cancellation)
         {
-            source.AssertNotNull(nameof(source));
+            source.AssertNotNull();
 
             if (method.IsGenericMethodDefinition)
             {

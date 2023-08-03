@@ -16,7 +16,7 @@ namespace Remote.Linq.DynamicQuery
         /// </summary>
         public static void CheckExpressionResultType<TResult>(SystemExpression expression)
         {
-            var expressionType = expression.CheckNotNull(nameof(expression)).Type;
+            var expressionType = expression.CheckNotNull().Type;
             if (typeof(TResult).IsAssignableFrom(expressionType))
             {
                 return;

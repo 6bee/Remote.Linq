@@ -63,7 +63,7 @@ namespace Remote.Linq
 
             public RemoteToSystemLinqTranslator(IExpressionFromRemoteLinqContext expressionTranslatorContext)
             {
-                expressionTranslatorContext.AssertNotNull(nameof(expressionTranslatorContext));
+                expressionTranslatorContext.AssertNotNull();
 
                 _parameterExpressionCache = new Dictionary<RemoteLinq.ParameterExpression, SystemLinq.ParameterExpression>(ExpressionComparer.Default);
 
@@ -76,7 +76,7 @@ namespace Remote.Linq
                     ?? throw new ArgumentException($"{nameof(expressionTranslatorContext.ValueMapper)} property must not be null.", nameof(expressionTranslatorContext));
             }
 
-            public SystemLinq.Expression ToExpression(RemoteLinq.Expression expression) => Visit(expression.CheckNotNull(nameof(expression)));
+            public SystemLinq.Expression ToExpression(RemoteLinq.Expression expression) => Visit(expression.CheckNotNull());
 
             [return: NotNullIfNotNull("node")]
             private SystemLinq.Expression? Visit(RemoteLinq.Expression? node)

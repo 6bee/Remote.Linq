@@ -30,7 +30,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
 
         protected override async IAsyncEnumerable<DynamicObject> ConvertResult(IAsyncEnumerable<object?> queryResult)
         {
-            await foreach (var item in queryResult.CheckNotNull(nameof(queryResult)))
+            await foreach (var item in queryResult.CheckNotNull())
             {
                 yield return _mapper.MapObject(item, _setTypeInformation)
                     ?? DynamicObject.CreateDefault(Context.SystemExpression?.Type);

@@ -51,7 +51,7 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
         {
             cancellation.ThrowIfCancellationRequested();
 
-            var queryResult = expression.CheckNotNull(nameof(expression)).CompileAndInvokeExpression();
+            var queryResult = expression.CheckNotNull().CompileAndInvokeExpression();
 
             if (queryResult is not null && queryResult.GetType().Implements(typeof(ValueTask<>), out var genericArguments))
             {

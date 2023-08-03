@@ -90,7 +90,7 @@ namespace Remote.Linq
             }
 
             protected override bool ShouldMapToDynamicObject(IEnumerable collection)
-                => collection.CheckNotNull(nameof(collection)).GetType().Implements(typeof(IGrouping<,>))
+                => collection.CheckNotNull().GetType().Implements(typeof(IGrouping<,>))
                 || base.ShouldMapToDynamicObject(collection);
 
             protected override DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation)
@@ -196,7 +196,7 @@ namespace Remote.Linq
             TypeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
             CanBeEvaluatedLocally = canBeEvaluatedLocally;
             ValueMapper = valueMapper ?? new ExpressionTranslatorContextObjectMapper(this);
-            NeedsMapping = value => !IsKnownTypeProvider.IsKnownType(value.CheckNotNull(nameof(value)).GetType());
+            NeedsMapping = value => !IsKnownTypeProvider.IsKnownType(value.CheckNotNull().GetType());
         }
 
         /// <summary>

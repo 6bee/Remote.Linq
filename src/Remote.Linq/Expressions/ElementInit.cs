@@ -18,8 +18,8 @@ namespace Remote.Linq.Expressions
 
         public ElementInit(MethodInfo addMethod, IEnumerable<Expression> arguments)
         {
-            AddMethod = addMethod.CheckNotNull(nameof(addMethod));
-            Arguments = arguments.CheckNotNull(nameof(arguments)).ToList();
+            AddMethod = addMethod.CheckNotNull();
+            Arguments = arguments.CheckNotNull().ToList();
         }
 
         public ElementInit(System.Reflection.MethodInfo addMethod, IEnumerable<Expression> arguments)

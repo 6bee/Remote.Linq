@@ -15,7 +15,7 @@ namespace Remote.Linq.ProtoBuf
             => ConfigureRemoteLinq(RuntimeTypeModel.Create(name), configureDefaultSystemTypes);
 
         public static AquaTypeModel ConfigureRemoteLinq(this RuntimeTypeModel typeModel, bool configureDefaultSystemTypes = true)
-            => typeModel.CheckNotNull(nameof(typeModel))
+            => typeModel.CheckNotNull()
             .ConfigureAquaTypes(configureDefaultSystemTypes)
             .ConfigureRemoteLinqDynamicQueryTypes()
             .ConfigureRemoteLinqExpressionTypes();

@@ -20,8 +20,8 @@ namespace Remote.Linq.Expressions
         public NewArrayExpression(NewArrayType newArrayType, TypeInfo typeInfo, IEnumerable<Expression> expressions)
         {
             NewArrayType = newArrayType;
-            Type = typeInfo.CheckNotNull(nameof(typeInfo));
-            Expressions = expressions.CheckNotNull(nameof(expressions)).ToList();
+            Type = typeInfo.CheckNotNull();
+            Expressions = expressions.CheckNotNull().ToList();
         }
 
         public NewArrayExpression(NewArrayType newArrayType, Type type, IEnumerable<Expression> expressions)

@@ -57,7 +57,7 @@ namespace Remote.Linq.Expressions
         protected internal class ExpressionDebugFormatter
         {
             public ExpressionDebugFormatter(Expression expression)
-                => Expression = expression.CheckNotNull(nameof(expression));
+                => Expression = expression.CheckNotNull();
 
             protected Expression Expression { get; }
 

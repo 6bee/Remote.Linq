@@ -21,7 +21,7 @@ namespace Remote.Linq.DynamicQuery
 
         public SubstitutionValue(TypeInfo type)
         {
-            Type = type.CheckNotNull(nameof(type));
+            Type = type.CheckNotNull();
         }
 
         [DataMember(Name = "Type", Order = 1, IsRequired = true, EmitDefaultValue = false)]

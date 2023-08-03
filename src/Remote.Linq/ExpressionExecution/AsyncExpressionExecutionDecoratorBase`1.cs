@@ -27,7 +27,7 @@ namespace Remote.Linq.ExpressionExecution
         [SuppressMessage("Major Code Smell", "S3442:\"abstract\" classes should not have \"public\" constructors", Justification = "Argument type has internal visibility only")]
         internal AsyncExpressionExecutionDecoratorBase(IAsyncExpressionExecutionDecorator<TDataTranferObject> parent)
             : base(parent)
-            => _parent = parent.CheckNotNull(nameof(parent));
+            => _parent = parent.CheckNotNull();
 
         /// <summary>
         /// Composes and executes the query asynchronously based on the <see cref="RemoteLinq.Expression"/> and maps the result into dynamic objects.

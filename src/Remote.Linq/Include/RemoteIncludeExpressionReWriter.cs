@@ -195,8 +195,8 @@ namespace Remote.Linq.Include
                 Expression navigationExpression,
                 bool isNestedStatement)
             {
-                queryableExpression.AssertNotNull(nameof(queryableExpression));
-                navigationExpression.AssertNotNull(nameof(navigationExpression));
+                queryableExpression.AssertNotNull();
+                navigationExpression.AssertNotNull();
 
                 var navigationPropertyPath = ToSystemLambdaExpression(navigationExpression);
                 if (!TryParsePath(navigationPropertyPath.Body, out var path) || path is null)
@@ -298,9 +298,9 @@ namespace Remote.Linq.Include
             {
                 public StackedIncludableQueryable(Expression expression, Expression parent, string includePath)
                 {
-                    Expression = expression.CheckNotNull(nameof(expression));
-                    Parent = parent.CheckNotNull(nameof(parent));
-                    IncludePath = includePath.CheckNotNullOrEmpty(nameof(includePath));
+                    Expression = expression.CheckNotNull();
+                    Parent = parent.CheckNotNull();
+                    IncludePath = includePath.CheckNotNullOrEmpty();
                 }
 
                 public string IncludePath { get; }

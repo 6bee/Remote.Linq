@@ -23,7 +23,7 @@ namespace Remote.Linq.ExpressionExecution
 
         [SuppressMessage("Major Code Smell", "S3442:\"abstract\" classes should not have \"public\" constructors", Justification = "Argument type has internal visibility only")]
         internal ExpressionExecutionDecoratorBase(IExpressionExecutionDecorator<TDataTranferObject> parent)
-            => _parent = parent.CheckNotNull(nameof(parent));
+            => _parent = parent.CheckNotNull();
 
         ExecutionContext IExpressionExecutionDecorator<TDataTranferObject>.Context => _parent.Context;
 

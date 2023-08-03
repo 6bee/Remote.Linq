@@ -26,7 +26,7 @@ namespace Remote.Linq.Text.Json.Converters
 
             reader.AssertEndObject();
 
-            result.CheckNotNull(nameof(result)).Type = typeInfo;
+            result.CheckNotNull().Type = typeInfo;
             result.Value = value;
         }
 

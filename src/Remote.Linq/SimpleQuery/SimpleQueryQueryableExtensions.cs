@@ -20,14 +20,14 @@ namespace Remote.Linq.SimpleQuery
         /// </summary>
         public static TResult Execute<TResult>(this IQueryable source)
         {
-            source.AssertNotNull(nameof(source));
+            source.AssertNotNull();
             return source.Provider.Execute<TResult>(source.Expression);
         }
 
         private static IOrderedQueryable<T> Sort<T>(this IQueryable<T> queryable, SystemLinq.LambdaExpression lambdaExpression, MethodInfo methodInfo)
         {
-            queryable.AssertNotNull(nameof(queryable));
-            var exp = lambdaExpression.CheckNotNull(nameof(lambdaExpression)).Body;
+            queryable.AssertNotNull();
+            var exp = lambdaExpression.CheckNotNull().Body;
             var resultType = exp.Type;
             var funcType = typeof(Func<,>).MakeGenericType(typeof(T), resultType);
             var lambdaExpressionMethodInfo = MethodInfos.Expression.Lambda.MakeGenericMethod(funcType);
@@ -75,8 +75,8 @@ namespace Remote.Linq.SimpleQuery
 
         private static IQueryable<T> ApplyFilters<T>(this IQueryable<T> queriable, IQuery<T> query, Func<RemoteLinq.LambdaExpression, RemoteLinq.LambdaExpression> expressionVisitor)
         {
-            queriable.AssertNotNull(nameof(queriable));
-            query.AssertNotNull(nameof(query));
+            queriable.AssertNotNull();
+            query.AssertNotNull();
             foreach (var filter in query.FilterExpressions ?? Enumerable.Empty<RemoteLinq.LambdaExpression>())
             {
                 var predicate = expressionVisitor(filter).ToLinqExpression<T, bool>();

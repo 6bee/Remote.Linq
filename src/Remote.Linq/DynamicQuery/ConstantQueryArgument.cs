@@ -22,7 +22,7 @@ namespace Remote.Linq.DynamicQuery
         }
 
         public ConstantQueryArgument(DynamicObject value)
-            => Value = value.CheckNotNull(nameof(value));
+            => Value = value.CheckNotNull();
 
         [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
         public DynamicObject Value { get; set; } = default!;

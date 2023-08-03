@@ -33,7 +33,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitConstant(ConstantExpression node)
             {
-                if (IsGenericVariableQueryArgument(node.CheckNotNull(nameof(node)), out var valueType))
+                if (IsGenericVariableQueryArgument(node.CheckNotNull(), out var valueType))
                 {
                     var valueProperty = node.Value?.GetType().GetProperty(nameof(VariableQueryArgument<object>.Value));
                     var value = valueProperty?.GetValue(node.Value);
@@ -72,7 +72,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitMemberAccess(MemberExpression node)
             {
-                if (node.CheckNotNull(nameof(node)).Expression?.NodeType == ExpressionType.Constant)
+                if (node.CheckNotNull().Expression?.NodeType == ExpressionType.Constant)
                 {
                     var member = node.Member;
                     if (member.MemberType == MemberTypes.Property &&
@@ -112,7 +112,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitConstant(ConstantExpression node)
             {
-                if (node.CheckNotNull(nameof(node)).Value is VariableQueryArgument nonGenericQueryArgument)
+                if (node.CheckNotNull().Value is VariableQueryArgument nonGenericQueryArgument)
                 {
                     var type = nonGenericQueryArgument.Type.ToType();
                     var value = nonGenericQueryArgument.Value;
@@ -140,7 +140,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitMemberAccess(MemberExpression node)
             {
-                var member = node.CheckNotNull(nameof(node)).Member;
+                var member = node.CheckNotNull().Member;
                 if (member.MemberType == MemberTypes.Property &&
                     (string.Equals(member.DeclaringType?.FullName, typeof(VariableQueryArgument).FullName, StringComparison.Ordinal) ||
                     string.Equals(member.DeclaringType?.FullName, typeof(VariableQueryArgumentList).FullName, StringComparison.Ordinal)) &&

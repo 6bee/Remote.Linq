@@ -25,7 +25,7 @@ namespace Remote.Linq.Newtonsoft.Json
         {
             knownTypesRegistry ??= new KnownTypesRegistry();
 
-            settings = settings.CheckNotNull(nameof(settings)).ConfigureAqua(knownTypesRegistry);
+            settings = settings.CheckNotNull().ConfigureAqua(knownTypesRegistry);
 
             RegisterKnownTypes(knownTypesRegistry);
 

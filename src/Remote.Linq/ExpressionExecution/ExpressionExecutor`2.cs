@@ -99,7 +99,7 @@ namespace Remote.Linq.ExpressionExecution
         /// <returns>Execution result of the <see cref="SystemLinq.Expression"/> specified.</returns>
         protected virtual object? Execute(SystemLinq.Expression expression)
         {
-            expression.CheckNotNull(nameof(expression));
+            expression.CheckNotNull();
             try
             {
                 return ExecuteCore(expression);
@@ -149,7 +149,7 @@ namespace Remote.Linq.ExpressionExecution
         /// <returns>Execution result of the <see cref="SystemLinq.Expression"/> specified.</returns>
         protected static object? ExecuteCore(SystemLinq.Expression expression)
         {
-            var queryResult = expression.CheckNotNull(nameof(expression)).CompileAndInvokeExpression();
+            var queryResult = expression.CheckNotNull().CompileAndInvokeExpression();
             if (queryResult is null)
             {
                 return null;

@@ -17,8 +17,8 @@ namespace Remote.Linq.DynamicQuery
         /// </summary>
         public RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression? expression = null)
         {
-            ElementType = elemntType.CheckNotNull(nameof(elemntType));
-            Provider = provider.CheckNotNull(nameof(provider));
+            ElementType = elemntType.CheckNotNull();
+            Provider = provider.CheckNotNull();
             Expression = expression ?? Expression.Constant(this);
         }
 

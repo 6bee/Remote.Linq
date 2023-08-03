@@ -43,7 +43,7 @@ namespace Remote.Linq.Include
 
         internal static LambdaExpression BuildSubSelectNavigation<T>(string path)
         {
-            path.AssertNotNullOrEmpty(nameof(path));
+            path.AssertNotNullOrEmpty();
 
             var segments = path.Split('.');
 
@@ -241,8 +241,8 @@ namespace Remote.Linq.Include
                 Expression<Func<TPreviousProperty, TProperty>> navigationPropertyPath,
                 bool isNestedStatement)
             {
-                queryable.AssertNotNull(nameof(queryable));
-                navigationPropertyPath.AssertNotNull(nameof(navigationPropertyPath));
+                queryable.AssertNotNull();
+                navigationPropertyPath.AssertNotNull();
 
                 if (!TryParsePath(navigationPropertyPath.Body, out var path) || path is null)
                 {
@@ -324,9 +324,9 @@ namespace Remote.Linq.Include
             {
                 public StackedIncludableQueryable(Expression expression, Expression parent, string includePath)
                 {
-                    Expression = expression.CheckNotNull(nameof(expression));
-                    Parent = parent.CheckNotNull(nameof(parent));
-                    IncludePath = includePath.CheckNotNullOrEmpty(nameof(includePath));
+                    Expression = expression.CheckNotNull();
+                    Parent = parent.CheckNotNull();
+                    IncludePath = includePath.CheckNotNullOrEmpty();
                 }
 
                 public string IncludePath { get; }

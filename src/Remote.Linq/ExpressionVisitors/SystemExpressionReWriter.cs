@@ -37,7 +37,7 @@ namespace Remote.Linq.ExpressionVisitors
                     _parent = parent;
                     _count = parent?._count ?? 0;
 
-                    _visitor = visitor.CheckNotNull(nameof(visitor));
+                    _visitor = visitor.CheckNotNull();
                     _visitor._parameterScope = this;
                 }
 

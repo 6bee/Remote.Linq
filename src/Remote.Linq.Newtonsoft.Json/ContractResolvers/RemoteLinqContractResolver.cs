@@ -28,7 +28,7 @@ namespace Remote.Linq.Newtonsoft.Json.ContractResolvers
                 decorated = self._decorated;
             }
 
-            _knownTypeRegistry = knownTypeRegistry.CheckNotNull(nameof(knownTypeRegistry));
+            _knownTypeRegistry = knownTypeRegistry.CheckNotNull();
             _decorated = (decorated as AquaContractResolver) ?? new AquaContractResolver(_knownTypeRegistry, decorated);
             _converters = new Dictionary<Type, JsonConverter>
             {
@@ -71,7 +71,7 @@ namespace Remote.Linq.Newtonsoft.Json.ContractResolvers
         }
 
         private static bool IsTypeHandled(Type type)
-            => Equals(type.CheckNotNull(nameof(type)).Assembly, typeof(Expression).Assembly)
+            => Equals(type.CheckNotNull().Assembly, typeof(Expression).Assembly)
             && type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
 
         private static JsonConverter CreateObjectConverter(Type type, KnownTypesRegistry knownTypeRegistry)

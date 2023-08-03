@@ -22,11 +22,11 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
             void SetResult(List<object?>? values = null)
             {
                 reader.AssertEndObject();
-                result.CheckNotNull(nameof(result)).ElementType = elementTypeInfo;
+                result.CheckNotNull().ElementType = elementTypeInfo;
                 result.Values = values ?? new List<object?>();
             }
 
-            reader.CheckNotNull(nameof(reader)).AssertProperty(nameof(VariableQueryArgumentList.ElementType));
+            reader.CheckNotNull().AssertProperty(nameof(VariableQueryArgumentList.ElementType));
             elementTypeInfo = reader.Read<TypeInfo>(serializer) ?? throw reader.CreateException($"{nameof(VariableQueryArgumentList.ElementType)} must not be null.");
 
             reader.Advance();
@@ -67,8 +67,8 @@ namespace Remote.Linq.Newtonsoft.Json.Converters
 
         protected override void WriteObjectProperties(JsonWriter writer, VariableQueryArgumentList instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
         {
-            writer.CheckNotNull(nameof(writer)).WritePropertyName(nameof(VariableQueryArgumentList.ElementType));
-            serializer.CheckNotNull(nameof(serializer)).Serialize(writer, instance.CheckNotNull(nameof(instance)).ElementType);
+            writer.CheckNotNull().WritePropertyName(nameof(VariableQueryArgumentList.ElementType));
+            serializer.CheckNotNull().Serialize(writer, instance.CheckNotNull().ElementType);
 
             writer.WritePropertyName(nameof(VariableQueryArgumentList.Values));
             serializer.Serialize(writer, instance.Values, instance.ElementType?.ToType());

@@ -24,8 +24,8 @@ namespace Remote.Linq.DynamicQuery
             IExpressionToRemoteLinqContext? context,
             IAsyncQueryResultMapper<TSource> resultMapper)
         {
-            _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
-            _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
+            _dataProvider = dataProvider.CheckNotNull();
+            _resultMapper = resultMapper.CheckNotNull();
             _context = context ?? ExpressionTranslatorContext.Default;
         }
 
@@ -52,7 +52,7 @@ namespace Remote.Linq.DynamicQuery
         /// <inheritdoc/>
         IQueryable IQueryProvider.CreateQuery(Expression expression)
         {
-            var elementType = TypeHelper.GetElementType(expression.CheckNotNull(nameof(expression)).Type)
+            var elementType = TypeHelper.GetElementType(expression.CheckNotNull().Type)
                 ?? throw new RemoteLinqException($"Failed to get element type of {expression.Type}");
             return new AsyncRemoteStreamQueryable(elementType, this, expression);
         }

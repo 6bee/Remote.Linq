@@ -19,7 +19,7 @@ namespace Remote.Linq.Expressions
         public MemberMemberBinding(MemberInfo member, IEnumerable<MemberBinding> bindings)
             : base(member)
         {
-            Bindings = bindings.CheckNotNull(nameof(bindings)).ToList();
+            Bindings = bindings.CheckNotNull().ToList();
         }
 
         public override MemberBindingType BindingType => MemberBindingType.MemberBinding;

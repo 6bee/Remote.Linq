@@ -20,7 +20,7 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 
         protected async override ValueTask<object?> ExecuteCoreAsync(Expression expression, CancellationToken cancellation)
         {
-            var queryResult = expression.CheckNotNull(nameof(expression)).CompileAndInvokeExpression();
+            var queryResult = expression.CheckNotNull().CompileAndInvokeExpression();
             if (queryResult is null)
             {
                 return null;

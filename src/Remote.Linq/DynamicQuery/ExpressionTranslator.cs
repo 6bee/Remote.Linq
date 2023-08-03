@@ -18,7 +18,7 @@ namespace Remote.Linq.DynamicQuery
         /// </summary>
         public virtual RemoteExpression TranslateExpression(SystemExpression expression)
         {
-            expression.AssertNotNull(nameof(expression));
+            expression.AssertNotNull();
             var slinq1 = PreProcess(expression);
             var rlinq1 = Translate(slinq1);
             var rlinq2 = PostProcess(rlinq1);

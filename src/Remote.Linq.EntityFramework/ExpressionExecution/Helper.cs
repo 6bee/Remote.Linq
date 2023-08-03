@@ -48,7 +48,7 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 
         internal static Task ToListAsync(IQueryable source, CancellationToken cancellation)
         {
-            source.AssertNotNull(nameof(source));
+            source.AssertNotNull();
             var method = QueryableToListAsyncMethod.MakeGenericMethod(source.ElementType);
             var task = method.Invoke(null, new object[] { source, cancellation });
             return (Task)task!;
@@ -69,7 +69,7 @@ namespace Remote.Linq.EntityFramework.ExpressionExecution
 
             [SecuritySafeCritical]
             public QueryableSetProvider(DbContext dbContext)
-                => _dbContext = dbContext.CheckNotNull(nameof(dbContext));
+                => _dbContext = dbContext.CheckNotNull();
 
             [SecuritySafeCritical]
             public IQueryable GetQueryableSet(Type type)

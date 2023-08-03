@@ -15,7 +15,7 @@ namespace Remote.Linq.Expressions
 
         public LoopExpression(Expression body, LabelTarget? breakLabel, LabelTarget? continueLabel)
         {
-            Body = body.CheckNotNull(nameof(body));
+            Body = body.CheckNotNull();
             BreakLabel = breakLabel;
             ContinueLabel = continueLabel;
         }

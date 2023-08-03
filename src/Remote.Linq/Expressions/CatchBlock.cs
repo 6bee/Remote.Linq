@@ -21,10 +21,10 @@ namespace Remote.Linq.Expressions
 
         public CatchBlock(TypeInfo test, ParameterExpression? parameter, Expression body, Expression? filter)
         {
-            Test = test.CheckNotNull(nameof(test));
+            Test = test.CheckNotNull();
             Variable = parameter;
             Filter = filter;
-            Body = body.CheckNotNull(nameof(body));
+            Body = body.CheckNotNull();
         }
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]

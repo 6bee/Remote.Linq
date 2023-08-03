@@ -18,8 +18,8 @@ namespace Remote.Linq.DynamicQuery
         /// </summary>
         public AsyncRemoteStreamQueryable(Type elementType, IAsyncRemoteStreamProvider provider, Expression? expression)
         {
-            ElementType = elementType.CheckNotNull(nameof(elementType));
-            Provider = provider.CheckNotNull(nameof(provider));
+            ElementType = elementType.CheckNotNull();
+            Provider = provider.CheckNotNull();
             Expression = expression ?? Expression.Constant(this);
         }
 

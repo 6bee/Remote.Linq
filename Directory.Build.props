@@ -61,8 +61,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.0.0" PrivateAssets="all" />
-    <PackageReference Include="aqua.tool.Validation" Version="2.0.1" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.2.1" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="2.2.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

@@ -19,7 +19,7 @@ namespace Remote.Linq.Expressions
 
         public NewExpression(TypeInfo type)
         {
-            Type = type.CheckNotNull(nameof(type));
+            Type = type.CheckNotNull();
         }
 
         public NewExpression(Type type)
@@ -28,7 +28,7 @@ namespace Remote.Linq.Expressions
         }
 
         public NewExpression(ConstructorInfo constructor, IEnumerable<Expression>? arguments, IEnumerable<MemberInfo>? members = null)
-            : this(constructor.CheckNotNull(nameof(constructor)).DeclaringType ?? throw new ArgumentException($"{nameof(ConstructorInfo.DeclaringType)} not set", nameof(constructor)))
+            : this(constructor.CheckNotNull().DeclaringType ?? throw new ArgumentException($"{nameof(ConstructorInfo.DeclaringType)} not set", nameof(constructor)))
         {
             Constructor = constructor;
             Arguments = arguments?.ToList();

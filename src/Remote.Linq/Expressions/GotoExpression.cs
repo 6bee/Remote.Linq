@@ -22,7 +22,7 @@ namespace Remote.Linq.Expressions
         public GotoExpression(GotoExpressionKind kind, LabelTarget target, TypeInfo? type, Expression? value)
         {
             Kind = kind;
-            Target = target.CheckNotNull(nameof(target));
+            Target = target.CheckNotNull();
             Type = type;
             Value = value;
         }

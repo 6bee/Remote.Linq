@@ -35,7 +35,7 @@ namespace Remote.Linq.Text.Json
         /// <param name="knownTypesRegistry">Type registry to control types for deserialization of <see cref="DynamicObject"/>s.</param>
         public static JsonSerializerOptions ConfigureRemoteLinq(this JsonSerializerOptions options, KnownTypesRegistry? knownTypesRegistry)
         {
-            options.AssertNotNull(nameof(options));
+            options.AssertNotNull();
 
             knownTypesRegistry ??= KnownTypesRegistry.Default;
 

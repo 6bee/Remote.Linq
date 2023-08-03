@@ -23,8 +23,8 @@ namespace Remote.Linq.DynamicQuery
             IQueryResultMapper<TSource> resultMapper,
             IExpressionToRemoteLinqContext? context)
         {
-            _dataProvider = dataProvider.CheckNotNull(nameof(dataProvider));
-            _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
+            _dataProvider = dataProvider.CheckNotNull();
+            _resultMapper = resultMapper.CheckNotNull();
             _context = context ?? ExpressionTranslatorContext.Default;
         }
 

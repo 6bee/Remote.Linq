@@ -41,7 +41,7 @@ namespace Remote.Linq.Expressions
 
         public ConstantExpression(object? value, TypeInfo type)
         {
-            Type = type.CheckNotNull(nameof(type));
+            Type = type.CheckNotNull();
             Value = value;
         }
 

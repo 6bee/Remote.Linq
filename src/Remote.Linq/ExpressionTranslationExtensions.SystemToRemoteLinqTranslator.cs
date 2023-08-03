@@ -36,7 +36,7 @@ namespace Remote.Linq
 
             public SystemToRemoteLinqTranslator(IExpressionToRemoteLinqContext expressionTranslatorContext)
             {
-                expressionTranslatorContext.AssertNotNull(nameof(expressionTranslatorContext));
+                expressionTranslatorContext.AssertNotNull();
 
                 _canBeEvaluatedLocally = expressionTranslatorContext.CanBeEvaluatedLocally;
 
@@ -51,7 +51,7 @@ namespace Remote.Linq
 
             public RemoteLinq.Expression ToRemoteExpression(SystemLinq.Expression expression)
             {
-                var partialEvalExpression = expression.CheckNotNull(nameof(expression)).PartialEval(_canBeEvaluatedLocally);
+                var partialEvalExpression = expression.CheckNotNull().PartialEval(_canBeEvaluatedLocally);
                 var constExpression = Visit(partialEvalExpression);
                 return constExpression.Unwrap();
             }

@@ -22,7 +22,7 @@ namespace Remote.Linq.ExpressionExecution
         /// </summary>
         protected AsyncStreamExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
         {
-            _queryableProvider = queryableProvider.CheckNotNull(nameof(queryableProvider));
+            _queryableProvider = queryableProvider.CheckNotNull();
             _context = context ?? ExpressionTranslatorContext.Default;
         }
 

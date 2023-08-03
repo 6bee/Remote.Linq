@@ -24,8 +24,8 @@ namespace Remote.Linq.Expressions
 
         public TryExpression(TypeInfo type, Expression body, Expression? fault, Expression? @finally, IEnumerable<CatchBlock>? handlers)
         {
-            Type = type.CheckNotNull(nameof(body));
-            Body = body.CheckNotNull(nameof(body));
+            Type = type.CheckNotNull();
+            Body = body.CheckNotNull();
             Handlers = handlers?.ToList();
             Finally = @finally;
             Fault = fault;

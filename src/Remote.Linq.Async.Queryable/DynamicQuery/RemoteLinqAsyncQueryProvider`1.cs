@@ -50,7 +50,7 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery
 
             _asyncStreamProvider = asyncStreamProvider;
             _asyncDataProvider = asyncDataProvider;
-            _resultMapper = resultMapper.CheckNotNull(nameof(resultMapper));
+            _resultMapper = resultMapper.CheckNotNull();
             _context = context ?? ExpressionTranslatorContext.Default;
         }
 

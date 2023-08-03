@@ -17,8 +17,8 @@ namespace Remote.Linq.Expressions
         public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand)
         {
             BinaryOperator = binaryOperator;
-            LeftOperand = leftOperand.CheckNotNull(nameof(leftOperand));
-            RightOperand = rightOperand.CheckNotNull(nameof(rightOperand));
+            LeftOperand = leftOperand.CheckNotNull();
+            RightOperand = rightOperand.CheckNotNull();
         }
 
         public BinaryExpression(BinaryOperator binaryOperator, Expression leftOperand, Expression rightOperand, bool liftToNull, MethodInfo? method, LambdaExpression? conversion = null)

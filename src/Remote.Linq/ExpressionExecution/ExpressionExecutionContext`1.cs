@@ -10,7 +10,7 @@ namespace Remote.Linq.ExpressionExecution
         private readonly Expression _expression;
 
         public ExpressionExecutionContext(ExpressionExecutionContext<TDataTranferObject> parent)
-            : this(parent.CheckNotNull(nameof(parent)), parent._expression)
+            : this(parent.CheckNotNull(), parent._expression)
         {
         }
 
@@ -21,7 +21,7 @@ namespace Remote.Linq.ExpressionExecution
 
         internal ExpressionExecutionContext(IExpressionExecutionDecorator<TDataTranferObject> parent, Expression expression)
             : base(parent)
-            => _expression = expression.CheckNotNull(nameof(expression));
+            => _expression = expression.CheckNotNull();
 
         public TDataTranferObject Execute()
             => Execute(_expression);

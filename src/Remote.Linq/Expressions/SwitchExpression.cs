@@ -19,7 +19,7 @@ namespace Remote.Linq.Expressions
 
         public SwitchExpression(Expression switchValue, MethodInfo? comparison, Expression? defaultExpression, IEnumerable<SwitchCase>? cases)
         {
-            SwitchValue = switchValue.CheckNotNull(nameof(switchValue));
+            SwitchValue = switchValue.CheckNotNull();
             Comparison = comparison;
             DefaultExpression = defaultExpression;
             Cases = cases?.ToList();

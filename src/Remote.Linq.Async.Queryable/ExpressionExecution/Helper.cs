@@ -20,22 +20,22 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 
         public static IAsyncEnumerable<object?> TaskResultToSingleElementStream(object task, Type resultType)
         {
-            task.AssertNotNull(nameof(task));
-            resultType.AssertNotNull(nameof(resultType));
+            task.AssertNotNull();
+            resultType.AssertNotNull();
             var result = ToSingleElementStreamMethod(resultType).Invoke(null, new[] { task });
             return (IAsyncEnumerable<object?>)result!;
         }
 
         private static async IAsyncEnumerable<object?> ToSingleElementStream<T>(Task<T> task)
         {
-            task.AssertNotNull(nameof(task));
+            task.AssertNotNull();
             var result = await task.ConfigureAwait(false);
             yield return result;
         }
 
         public static IAsyncEnumerable<object?> MapAsyncEnumerable(object asyncEnumerable, Type itemType)
         {
-            itemType.AssertNotNull(nameof(itemType));
+            itemType.AssertNotNull();
             var result = MapAsyncEnumerableMethod(itemType).Invoke(null, new[] { asyncEnumerable });
             return (IAsyncEnumerable<object?>)result!;
         }
@@ -53,8 +53,8 @@ namespace Remote.Linq.Async.Queryable.ExpressionExecution
 
         public static ValueTask<object?> MapTaskResultAsync(object task, Type resultType)
         {
-            task.AssertNotNull(nameof(task));
-            resultType.AssertNotNull(nameof(resultType));
+            task.AssertNotNull();
+            resultType.AssertNotNull();
             var result = MapTaskAsyncMethod(resultType).Invoke(null, new[] { task });
             return (ValueTask<object?>)result!;
         }

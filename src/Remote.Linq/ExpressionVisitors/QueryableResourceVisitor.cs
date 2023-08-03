@@ -26,7 +26,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             internal protected ResourceDescriptorVisitor(Func<Type, TQueryable> provider, ITypeResolver? typeResolver)
             {
-                _provider = provider.CheckNotNull(nameof(provider));
+                _provider = provider.CheckNotNull();
                 _typeResolver = typeResolver ?? TypeResolver.Instance;
             }
 
@@ -34,7 +34,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitConstant(ConstantExpression node)
             {
-                var value = node.CheckNotNull(nameof(node)).Value;
+                var value = node.CheckNotNull().Value;
                 if (TryGetQueryableByQueryableResourceDescriptor(value, out var queryable))
                 {
                     return new ConstantExpression(queryable);
@@ -123,7 +123,7 @@ namespace Remote.Linq.ExpressionVisitors
 
             protected override Expression VisitConstant(ConstantExpression node)
             {
-                if (node.CheckNotNull(nameof(node)).Value.AsQueryableResourceTypeOrNull() is Type resourceType)
+                if (node.CheckNotNull().Value.AsQueryableResourceTypeOrNull() is Type resourceType)
                 {
                     var typeInfo = _typeInfoProvider.GetTypeInfo(resourceType);
                     var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);

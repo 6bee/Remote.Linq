@@ -221,7 +221,7 @@ namespace Remote.Linq
             IExpressionToRemoteLinqContext? context,
             IAsyncQueryResultMapper<TSource> resultMapper)
         {
-            dataProvider.AssertNotNull(nameof(dataProvider));
+            dataProvider.AssertNotNull();
             return CreateAsyncQueryable<TSource>(factory, elementType, (expression, _) => dataProvider(expression), context, resultMapper);
         }
 
@@ -312,7 +312,7 @@ namespace Remote.Linq
             IExpressionToRemoteLinqContext? context,
             IAsyncQueryResultMapper<TSource> resultMapper)
         {
-            dataProvider.AssertNotNull(nameof(dataProvider));
+            dataProvider.AssertNotNull();
             return factory.CreateAsyncQueryable<T, TSource>((expression, _) => dataProvider(expression), context, resultMapper);
         }
 

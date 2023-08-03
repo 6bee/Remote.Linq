@@ -129,7 +129,7 @@ namespace Remote.Linq.ExpressionExecution
 
             public ExpressionExecutorWithRemoteExpressionTransformer(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<RemoteLinq.Expression, RemoteLinq.Expression> transform)
                 : base(parent)
-                => _transform = transform.CheckNotNull(nameof(transform));
+                => _transform = transform.CheckNotNull();
 
             protected override RemoteLinq.Expression Prepare(RemoteLinq.Expression expression)
                 => _transform(base.Prepare(expression));
@@ -141,7 +141,7 @@ namespace Remote.Linq.ExpressionExecution
 
             public ExpressionExecutorWithSystemExpressionTransformer(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<SystemLinq.Expression, SystemLinq.Expression> transform)
                 : base(parent)
-                => _transform = transform.CheckNotNull(nameof(transform));
+                => _transform = transform.CheckNotNull();
 
             protected override SystemLinq.Expression Prepare(SystemLinq.Expression expression)
                 => _transform(base.Prepare(expression));
@@ -153,7 +153,7 @@ namespace Remote.Linq.ExpressionExecution
 
             public ExpressionExecutorWithExpressionTransformer(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<RemoteLinq.Expression, SystemLinq.Expression> transform)
                 : base(parent)
-                => _transform = transform.CheckNotNull(nameof(transform));
+                => _transform = transform.CheckNotNull();
 
             protected override SystemLinq.Expression Transform(RemoteLinq.Expression expression)
                 => _transform(expression);
@@ -165,7 +165,7 @@ namespace Remote.Linq.ExpressionExecution
 
             public ExpressionExecutorWithExpressionExecutor(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<SystemLinq.Expression, object?> transform)
                 : base(parent)
-                => _transform = transform.CheckNotNull(nameof(transform));
+                => _transform = transform.CheckNotNull();
 
             protected override object? Execute(SystemLinq.Expression expression)
                 => _transform(expression);
@@ -177,7 +177,7 @@ namespace Remote.Linq.ExpressionExecution
 
             public ExpressionExecutorWithObjectResultProcessor(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<object?, object?> transform)
                 : base(parent)
-                => _transform = transform.CheckNotNull(nameof(transform));
+                => _transform = transform.CheckNotNull();
 
             protected override object? ProcessResult(object? queryResult)
                 => _transform(base.ProcessResult(queryResult));
@@ -189,7 +189,7 @@ namespace Remote.Linq.ExpressionExecution
 
             public ExpressionExecutorWithResultConverter(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<object?, TDataTranferObject> transform)
                 : base(parent)
-                => _transform = transform.CheckNotNull(nameof(transform));
+                => _transform = transform.CheckNotNull();
 
             protected override TDataTranferObject ConvertResult(object? queryResult)
                 => _transform(queryResult);
@@ -201,7 +201,7 @@ namespace Remote.Linq.ExpressionExecution
 
             public ExpressionExecutorWithDynamicObjectResultProcessor(IExpressionExecutionDecorator<TDataTranferObject> parent, Func<TDataTranferObject, TDataTranferObject> transform)
                 : base(parent)
-                => _transform = transform.CheckNotNull(nameof(transform));
+                => _transform = transform.CheckNotNull();
 
             protected override TDataTranferObject ProcessResult(TDataTranferObject queryResult)
                 => _transform(base.ProcessResult(queryResult));

@@ -16,7 +16,7 @@ namespace Remote.Linq.Expressions
 
         public ParameterExpression(TypeInfo parameterType, string? parameterName, int instanceId)
         {
-            ParameterType = parameterType.CheckNotNull(nameof(parameterType));
+            ParameterType = parameterType.CheckNotNull();
             ParameterName = parameterName;
             InstanceId = instanceId;
         }
