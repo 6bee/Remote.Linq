@@ -178,7 +178,9 @@ var blogs = repository.Blogs
     .ToList();
 ```
 
-**Server:** Execute query on database via _EF Core_
+### Server Code Sample
+
+Execute query on database via _EF Core_
 
 ```C#
 public DynamicObject ExecuteQuery(Expression queryExpression)
@@ -195,14 +197,11 @@ Provides _[Json.NET][json-net-package]_ serialization settings for _Remote.Linq_
 ## How to Use
 
 ```C#
-public TExpression DeepCopy<TExpression>(TExpression expression)
-    where TExpression : Remote.Linq.Expressions.Expression
-{
-    JsonSerializerSettings serializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq(); 
-    string json = JsonConvert.SerializeObject(expression, serializerSettings); 
-    TExpression copy = JsonConvert.DeserializeObject<TExpression>(json, serializerSettings); 
-    return copy;
-}
+// Serialization
+TValue value = ...;
+JsonSerializerSettings serializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq(); 
+string json = JsonConvert.SerializeObject(value, serializerSettings); 
+TValue copy = JsonConvert.DeserializeObject<TValue>(json, serializerSettings); 
 ```
 
 # Remote.Linq.Text.Json
@@ -212,18 +211,36 @@ Provides _[System.Text.Json][json-text-package]_ serialization settings for _Rem
 ## How to Use
 
 ```C#
-TEntity entity = ...;
+// Serialization
+TValue value = ...;
 JsonSerializerOptions serializerOptions = new JsonSerializerOptions().ConfigureRemoteLinq();
-string json = JsonSerializer.Serialize(entity, serializerOptions);
-TEntity result = JsonSerializer.Deserialize<TEntity>(json, serializerOptions);
+string json = JsonSerializer.Serialize(value, serializerOptions);
+TValue copy = JsonSerializer.Deserialize<TValue>(json, serializerOptions);
 ```
 
 ```C#
-// Microsoft.AspNetCore.Hosting
+// Microsoft.AspNetCore.Hosting [WebHostBuilder]
 new WebHostBuilder()
   .ConfigureServices(services => services
     .AddMvcCore()
-    .AddJsonOptions(options => options.JsonSerializerOptions.ConfigureRemoteLinq()))
+    .AddJsonOptions(options => options.JsonSerializerOptions.ConfigureRemoteLinq()));
+```
+
+```C#
+// Microsoft.AspNetCore.Hosting [WebApplicationBuilder]
+var builder = WebApplication.CreateBuilder();
+builder.Services
+  .AddMvcCore()
+  .AddJsonOptions(options => options.JsonSerializerOptions.ConfigureRemoteLinq());
+```
+
+```C#
+// System.Net.Http.HttpClient
+TValue value = ...;
+Uri uri = ...;
+var serializerOptions = new JsonSerializerOptions().ConfigureRemoteLinq();
+using var httpClient = new HttpClient();
+await httpClient.PostAsJsonAsync(uri, value, serializerOptions);
 ```
 
 [1]: https://ci.appveyor.com/api/projects/status/64kw6dsuvfwyrdtl/branch/main?svg=true
