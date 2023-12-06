@@ -16,6 +16,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             }
         }
 
+#if !NET8_0_OR_GREATER
         public class With_binary_formatter : When_using_const_bool_expression
         {
             public With_binary_formatter()
@@ -23,6 +24,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
+#endif // NET8_0_OR_GREATER
 
         public class With_data_contract_serializer : When_using_const_bool_expression
         {

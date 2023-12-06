@@ -6,7 +6,7 @@
     <MinorVersion>2</MinorVersion>
     <PatchVersion>0</PatchVersion>
     <PreReleaseLabel>alpha-001</PreReleaseLabel>
-    <AquaCoreVersion>5.3.0-alpha-001</AquaCoreVersion>
+    <AquaCoreVersion>5.4.0-alpha-001</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -44,7 +44,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <LangVersion Condition="'$(LangVersion)' == ''">10</LangVersion>
+    <LangVersion Condition="'$(LangVersion)' == ''">12.0</LangVersion>
     <GenerateDocumentationFile Condition="'$(GenerateDocumentationFile)' == ''">true</GenerateDocumentationFile>
     <TreatWarningsAsErrors Condition="'$(TreatWarningsAsErrors)' == ''">true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
@@ -61,19 +61,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.2.3" PrivateAssets="all" />
-    <PackageReference Include="aqua.tool.Validation" Version="2.2.3" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="3.0.0-alpha-004" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.47.0.55603" Condition="'$(EnableSonarAnalyzers)' == 'true'">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507" PrivateAssets="all" Condition="'$(EnableStyleCopAnalyzers)' == 'true'"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.14.0.81108" PrivateAssets="all" Condition="'$(EnableSonarAnalyzers)' == 'true'"/>
   </ItemGroup>
 
 </Project>

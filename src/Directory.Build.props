@@ -4,7 +4,7 @@
   <Import Project="$(MSBuildThisFileDirectory)../$(MSBuildThisFile)" />
 
   <PropertyGroup>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>

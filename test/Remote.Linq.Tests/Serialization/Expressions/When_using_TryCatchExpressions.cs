@@ -10,6 +10,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
 
     public abstract class When_using_TryCatchExpressions
     {
+#if !NET8_0_OR_GREATER
         public class With_binary_formatter : When_using_TryCatchExpressions
         {
             public With_binary_formatter()
@@ -17,6 +18,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
+#endif // NET8_0_OR_GREATER
 
         public class With_data_contract_serializer : When_using_TryCatchExpressions
         {

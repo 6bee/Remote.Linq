@@ -3,12 +3,13 @@
 namespace Remote.Linq
 {
     using System;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// Represents errors that occur in relation to <i>Remote.Linq</i>.
     /// </summary>
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif // NET8_0_OR_GREATER
     public class RemoteLinqException : Exception
     {
         /// <summary>
@@ -39,14 +40,16 @@ namespace Remote.Linq
         {
         }
 
+#if !NET8_0_OR_GREATER
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoteLinqException"/> class with serialized data.
         /// </summary>
-        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
-        protected RemoteLinqException(SerializationInfo info, StreamingContext context)
+        /// <param name="info">The <see cref="System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+        protected RemoteLinqException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
             : base(info, context)
         {
         }
+#endif // NET8_0_OR_GREATER
     }
 }

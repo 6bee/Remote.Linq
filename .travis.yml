@@ -1,24 +1,40 @@
-language: csharp
-mono: none
-dotnet: 6.0.300
+language: minimal
 
 branches:
   except:
   - /^experimental.*$/
-  - 6.3.x
+
+env:
+  global:
+    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+    - DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+addons:
+  apt:
+    packages:
+    - gettext
+    - libcurl4-openssl-dev
+    - libicu-dev
+    - libssl-dev
+    - libunwind8
+    - zlib1g
 
 matrix:
   include:
     - os: linux
       env: CONFIGURATION=Release
     - os: osx
+      osx_image: xcode14.2 # https://docs.travis-ci.com/user/reference/osx/#macos-version
       env: CONFIGURATION=Release
+
+install:
+  - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
+  - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel LTS --version latest --install-dir "$DOTNET_INSTALL_DIR"
+  - export PATH="$DOTNET_INSTALL_DIR:$PATH"
+  - if test "$TRAVIS_OS_NAME" == "osx"; then export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib; fi
 
 before_script:
   - dotnet --info
 
 script:
-  - travis_wait 20 dotnet test test/Remote.Linq.Tests      -c $CONFIGURATION -f net6.0
-  - dotnet test test/Remote.Linq.Async.Queryable.Tests     -c $CONFIGURATION -f net6.0
-  - dotnet test test/Remote.Linq.EntityFramework.Tests     -c $CONFIGURATION -f net6.0
-  - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests -c $CONFIGURATION -f net6.0
+  - dotnet test Remote.Linq.sln -c $CONFIGURATION -f net8.0

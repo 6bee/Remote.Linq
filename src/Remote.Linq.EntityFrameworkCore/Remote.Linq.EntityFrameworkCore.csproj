@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Remote linq extensions for entity framework core. Use this package to execute remote queries using EF Core.</Description>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
     <PackageTags>LINQ,expression-tree,lambda,dynamic,remote,remote-query,multi-tier,n-tier,fluent-interface,entity-framework-core,entity-framework,ef-core,ef</PackageTags>
   </PropertyGroup>
 
@@ -13,7 +13,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.32" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" Condition="'$(TargetFramework)' == 'netstandard2.1'" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.4" Condition="'$(TargetFramework)' == 'net6.0'" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" Condition="'$(TargetFramework)' == 'net6.0'" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" Condition="'$(TargetFramework)' == 'net8.0'" />
   </ItemGroup>
 
 </Project>

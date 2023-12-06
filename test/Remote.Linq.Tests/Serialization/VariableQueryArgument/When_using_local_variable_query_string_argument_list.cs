@@ -9,6 +9,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
 
     public abstract class When_using_local_variable_query_string_argument_list
     {
+#if !NET8_0_OR_GREATER
         public class With_binary_formatter : When_using_local_variable_query_string_argument_list
         {
             public With_binary_formatter()
@@ -16,6 +17,7 @@ namespace Remote.Linq.Tests.Serialization.VariableQueryArgument
             {
             }
         }
+#endif // NET8_0_OR_GREATER
 
         public class With_data_contract_serializer : When_using_local_variable_query_string_argument_list
         {

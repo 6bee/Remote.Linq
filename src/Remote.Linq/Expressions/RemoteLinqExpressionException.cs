@@ -4,9 +4,10 @@ namespace Remote.Linq.Expressions
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.Serialization;
 
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif // NET8_0_OR_GREATER
     [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "This exception type requires an expression.")]
     public class RemoteLinqExpressionException : RemoteLinqException
     {
@@ -32,17 +33,19 @@ namespace Remote.Linq.Expressions
             Expression = expression;
         }
 
-        protected RemoteLinqExpressionException(SerializationInfo info, StreamingContext context)
+#if !NET8_0_OR_GREATER
+        protected RemoteLinqExpressionException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
             : base(info, context)
         {
             Expression = (Expression)info.GetValue(nameof(Expression), typeof(Expression))!;
         }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         {
             base.GetObjectData(info, context);
             info.AddValue(nameof(Expression), Expression);
         }
+#endif // NET8_0_OR_GREATER
 
         public Expression Expression { get; }
     }

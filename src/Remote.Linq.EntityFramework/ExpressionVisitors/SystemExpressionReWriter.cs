@@ -26,26 +26,26 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors
                 var type = node.Type;
 
                 if (type == typeof(VariableQueryArgument) &&
-                    node.Constructor?.GetParameters().Length == 2 &&
-                    node.Arguments?.Any() is true)
+                    node.Constructor?.GetParameters().Length is 2 &&
+                    node.Arguments?.Count > 0)
                 {
-                    var valueArgument = node.Arguments.Select(Visit).First();
+                    var valueArgument = node.Arguments.Select(Visit).First()!;
 
                     // Note: second parameter (i.e. optional type argument) is omitted since not supported by EF anyway
                     return Expression.MemberInit(
                         Expression.New(type),
-                        Expression.Bind(type.GetProperty(nameof(VariableQueryArgument.Value)), valueArgument));
+                        Expression.Bind(type.GetProperty(nameof(VariableQueryArgument.Value))!, valueArgument));
                 }
 
                 if (type.IsGenericType &&
                     type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>) &&
-                    node.Constructor?.GetParameters().Length == 1 &&
-                    node.Arguments?.Count == 1)
+                    node.Constructor?.GetParameters().Length is 1 &&
+                    node.Arguments?.Count is 1)
                 {
-                    var argument = node.Arguments.Select(Visit).Single();
+                    var argument = node.Arguments.Select(Visit).Single()!;
                     return Expression.MemberInit(
                         Expression.New(type),
-                        Expression.Bind(type.GetProperty(nameof(VariableQueryArgument<object>.Value)), argument));
+                        Expression.Bind(type.GetProperty(nameof(VariableQueryArgument<object>.Value))!, argument));
                 }
 
                 return base.VisitNew(node);

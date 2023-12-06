@@ -50,7 +50,7 @@ namespace Remote.Linq.EntityFramework.Tests
         [Fact]
         public async Task Should_query_single_with_predicate_async()
         {
-            var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W")).ConfigureAwait(false);
+            var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W"));
             result.Key.ShouldBe("2");
         }
 
@@ -64,7 +64,7 @@ namespace Remote.Linq.EntityFramework.Tests
         [Fact]
         public async Task Should_throw_when_calling_single_or_default_with_predicate_on_query_with_multiple_results_async()
         {
-            var ex = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("O")).AsTask()).ConfigureAwait(false);
+            var ex = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("O")).AsTask());
             ex.Message.ShouldBe("Sequence contains more than one matching element");
         }
 
@@ -92,7 +92,7 @@ namespace Remote.Linq.EntityFramework.Tests
         [Fact]
         public async Task SingleOrDefaultAsync_with_predicate_should_return_null_if_no_match()
         {
-            var result = await _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("no match")).ConfigureAwait(false);
+            var result = await _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("no match"));
             result.ShouldBeNull();
         }
 
@@ -106,7 +106,7 @@ namespace Remote.Linq.EntityFramework.Tests
                 new LookupItem { Key = "3", Value = "Three" },
             };
             var filteredPeoplesNames = data.Where(x => x.Value.StartsWith("O")).Select(x => x.Value);
-            var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value)).ConfigureAwait(false);
+            var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value));
             result.Value.ShouldBe("One");
         }
 
@@ -120,7 +120,7 @@ namespace Remote.Linq.EntityFramework.Tests
                 new LookupItem { Key = "3", Value = "Three" },
             };
             var filteredPeoplesNames = data.Where(x => x.Value.StartsWith("O")).Select(x => x.Value).AsQueryable();
-            var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value)).ConfigureAwait(false);
+            var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value));
             result.Value.ShouldBe("One");
         }
 
@@ -128,7 +128,7 @@ namespace Remote.Linq.EntityFramework.Tests
         private async Task Should_handle_closure_with_string_property()
         {
             var lookupitem = new LookupItem { Key = "1", Value = "One" };
-            var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem.Value).ConfigureAwait(false);
+            var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem.Value);
             result.Value.ShouldBe("One");
         }
 
@@ -136,7 +136,7 @@ namespace Remote.Linq.EntityFramework.Tests
         private async Task Should_handle_string_closure()
         {
             var lookupitem = "One";
-            var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem).ConfigureAwait(false);
+            var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem);
             result.Value.ShouldBe("One");
         }
     }

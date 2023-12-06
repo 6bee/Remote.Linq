@@ -11,6 +11,7 @@ namespace Remote.Linq.Tests
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+    using Xunit.Sdk;
     using MethodInfo = System.Reflection.MethodInfo;
 
     public static class TestHelper
@@ -111,7 +112,7 @@ namespace Remote.Linq.Tests
                 return;
             }
 
-            throw new Xunit.Sdk.IsNotTypeException(typeof(Nullable<>), type);
+            throw new XunitException($"ShouldBeNullable() Failure: Type is not a nullable value type as expected. Actual: {type}");
         }
 
         public static object GetValueTaskResult(object valueTask, Type resultType)

@@ -64,6 +64,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             }
         }
 
+#if !NET8_0_OR_GREATER
         public class With_binary_formatter : When_running_query
         {
             public With_binary_formatter()
@@ -71,6 +72,7 @@ namespace Remote.Linq.Tests.RemoteQueryable
             {
             }
         }
+#endif // NET8_0_OR_GREATER
 
         public class With_protobuf_net_serializer : When_running_query
         {

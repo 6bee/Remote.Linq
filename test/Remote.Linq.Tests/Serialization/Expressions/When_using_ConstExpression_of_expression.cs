@@ -14,6 +14,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
     // xml serializer: not supporting expression array
     public abstract class When_using_ConstExpression_of_expression
     {
+#if !NET8_0_OR_GREATER
         public class With_binary_formatter : When_using_ConstExpression_of_expression
         {
             public With_binary_formatter()
@@ -21,6 +22,7 @@ namespace Remote.Linq.Tests.Serialization.Expressions
             {
             }
         }
+#endif // NET8_0_OR_GREATER
 
         public class With_data_contract_serializer : When_using_ConstExpression_of_expression
         {
