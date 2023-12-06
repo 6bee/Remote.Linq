@@ -34,8 +34,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         {
             var result = await _queryable
                 .Where(p => DbFunctionsExtensions.Like(null, p.Value, "%e")) // EF.Functions.Like(<property>, <pattern>)
-                .ToListAsync()
-                .ConfigureAwait(false);
+                .ToListAsync();
             result.Count.ShouldBe(2);
         }
 
@@ -49,14 +48,14 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         [Fact]
         public async Task Should_query_single_with_predicate_async()
         {
-            var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W")).ConfigureAwait(false);
+            var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W"));
             result.Key.ShouldBe("2");
         }
 
         [Fact]
         public async Task Should_support_subquery_predicate()
         {
-            var result = await _queryable.SingleAsync(x => x.Value == _queryable.First().Value).ConfigureAwait(false);
+            var result = await _queryable.SingleAsync(x => x.Value == _queryable.First().Value);
             result.Key.ShouldBe("1");
         }
 
@@ -70,7 +69,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
                 from i in _queryable
                 select i.Value;
             var q = mainquery.Where(x => x.Value == subquery.First());
-            var result = await q.SingleAsync().ConfigureAwait(false);
+            var result = await q.SingleAsync();
             result.Key.ShouldBe("1");
         }
 
@@ -85,7 +84,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
                 join b in subquery on a.Key equals b.Key
                 where a.Value == subquery.OrderBy(x => x.Value.Length).Last().Value
                 select new { a.Key, b.Value };
-            var result = await query.SingleAsync().ConfigureAwait(false);
+            var result = await query.SingleAsync();
             result.Key.ShouldBe("3");
             result.Value.ShouldBe("Three");
         }
@@ -99,7 +98,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
                 where a.Value.Length == _queryable.Max(x => x.Value.Length)
                 select new { a.Key, b.Value };
 
-            var result = await query.SingleAsync().ConfigureAwait(false);
+            var result = await query.SingleAsync();
             result.Key.ShouldBe("3");
             result.Value.ShouldBe("Three");
         }
@@ -114,7 +113,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         [Fact]
         public async Task Should_throw_when_calling_single_or_default_with_predicate_on_query_with_multiple_results_async()
         {
-            var ex = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("O")).AsTask()).ConfigureAwait(false);
+            var ex = await Should.ThrowAsync<InvalidOperationException>(() => _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("O")).AsTask());
             ex.Message.ShouldBe("Sequence contains more than one matching element");
         }
 
@@ -142,7 +141,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
         [Fact]
         public async Task SingleOrDefaultAsync_with_predicate_should_return_null_if_no_match()
         {
-            var result = await _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("no match")).ConfigureAwait(false);
+            var result = await _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("no match"));
             result.ShouldBeNull();
         }
 

@@ -49,7 +49,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
             var asyncResultStream = _queryable
                 .Where(p => DbFunctionsExtensions.Like(null, p.Value, "%e")) // EF.Functions.Like(<property>, <pattern>)
                 .AsAsyncEnumerable();
-            var result = await ToArrayAsync(asyncResultStream).ConfigureAwait(false);
+            var result = await ToArrayAsync(asyncResultStream);
             result.Length.ShouldBe(2);
         }
 
@@ -59,7 +59,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
             var asyncResultStream = _queryable
                 .Where(x => x.Value.ToUpper().Contains("W"))
                 .AsAsyncEnumerable();
-            var result = await ToArrayAsync(asyncResultStream).ConfigureAwait(false);
+            var result = await ToArrayAsync(asyncResultStream);
             result.Single().Key.ShouldBe("2");
         }
 
@@ -70,7 +70,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
                 .Where(x => x.Value.ToUpper().Contains("O"))
                 .OrderByDescending(x => x.Key)
                 .AsAsyncEnumerable();
-            var result = await ToArrayAsync(asyncResultStream).ConfigureAwait(false);
+            var result = await ToArrayAsync(asyncResultStream);
             result.Length.ShouldBe(2);
             result[0].Key.ShouldBe("2");
             result[1].Key.ShouldBe("1");
@@ -82,7 +82,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests
             var asyncResultStream = _queryable
                 .Where(x => x.Value.ToUpper().Contains("no match"))
                 .AsAsyncEnumerable();
-            var result = await ToArrayAsync(asyncResultStream).ConfigureAwait(false);
+            var result = await ToArrayAsync(asyncResultStream);
             result.ShouldBeEmpty();
         }
 

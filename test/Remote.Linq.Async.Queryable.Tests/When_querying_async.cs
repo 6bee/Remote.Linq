@@ -174,8 +174,7 @@ namespace Remote.Linq.Async.Queryable.Tests
         {
             var single = await AsyncStream
                 .AsAsyncEnumerable()
-                .SingleAsync(x => x.Id == 5)
-                .ConfigureAwait(false);
+                .SingleAsync(x => x.Id == 5);
 
             single.Id.ShouldBe(5);
 
@@ -237,8 +236,7 @@ namespace Remote.Linq.Async.Queryable.Tests
         {
             var groupedResult = await AsyncStream
                 .GroupBy(x => x.Id)
-                .ToListAsync()
-                .ConfigureAwait(false);
+                .ToListAsync();
 
             groupedResult.Count.ShouldBe(10);
 

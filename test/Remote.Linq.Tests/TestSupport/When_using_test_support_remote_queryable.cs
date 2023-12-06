@@ -38,7 +38,7 @@ namespace Remote.Linq.Tests.TestSupport
         [Fact]
         public async Task Should_allow_async_execution_of_remote_queryable_created_with_test_support_method()
         {
-            var result = await Enumerable.Range(1, 100).AsRemoteQueryable().SumAsync().ConfigureAwait(false);
+            var result = await Enumerable.Range(1, 100).AsRemoteQueryable().SumAsync();
             result.ShouldBe(5050);
         }
 
@@ -53,8 +53,7 @@ namespace Remote.Linq.Tests.TestSupport
                     from x in _queryable
                     from f in factors
                     select x * f)
-                .SumAsync()
-                .ConfigureAwait(false);
+                .SumAsync();
 
             result.ShouldBe((_queryable.Sum() * factor1) + (_queryable.Sum() * factor2), 0.0000001);
         }
