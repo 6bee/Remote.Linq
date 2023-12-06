@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Remote linq extensions for entity framework. Use this package to execute remote queries using EF6.</Description>
-    <TargetFrameworks>net461;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
     <PackageTags>LINQ,expression-tree,lambda,dynamic,remote,remote-query,multi-tier,n-tier,fluent-interface,entity-framework,ef</PackageTags>
   </PropertyGroup>
 
