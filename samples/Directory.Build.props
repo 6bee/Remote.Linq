@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <RestoreAdditionalProjectSources Condition=" Exists('$(MSBuildThisFileDirectory)..\artifacts') ">$(MSBuildThisFileDirectory)..\artifacts</RestoreAdditionalProjectSources>
     <RemoteLinqVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</RemoteLinqVersion>
     <RemoteLinqVersion Condition="'$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</RemoteLinqVersion>
     <Nullable>disable</Nullable>
@@ -25,7 +26,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Remove="aqua.tool.polyfill.IsExternalInit" />
     <PackageReference Remove="aqua.tool.Validation" />
   </ItemGroup>
 

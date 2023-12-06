@@ -18,14 +18,12 @@ before_build:
   - dotnet tool install --global codecov.tool
 
 build_script:
-  - dotnet build Remote.Linq.sln
+  - dotnet build Remote.Linq.sln -c Release
   - dotnet build Remote.Linq.Samples.sln
 
 test_script:
-  - dotnet test test/Remote.Linq.Tests                     --settings coverlet.runsettings
-  - dotnet test test/Remote.Linq.Async.Queryable.Tests     --settings coverlet.runsettings
-  - dotnet test test/Remote.Linq.EntityFramework.Tests     --settings coverlet.runsettings
-  - dotnet test test/Remote.Linq.EntityFrameworkCore.Tests --settings coverlet.runsettings
+  - dotnet test Remote.Linq.sln --settings coverlet.runsettings
+  - for /r "samples\" %f in (DemoStartUp.csproj) do @if exist "%f" dotnet run --project "%f" --non-interactive
 
 after_test:
   - codecov -f **\coverage.cobertura.xml
