@@ -29,6 +29,7 @@ nuget.exe
 *.db
 .vs/
 config.test.json
+*.binlog
 *.log
 /.build/
 .testPublish/
