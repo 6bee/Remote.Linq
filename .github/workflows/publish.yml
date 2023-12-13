@@ -1,0 +1,78 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Extract version from tag
+      uses: nowsprinting/check-version-format-action@v3
+      id: version
+      with:
+        prefix: 'v'
+
+    - name: Invalid version tag
+      if: steps.version.outputs.is_valid != 'true'
+      run: |
+        echo "Version tag format invalid: ${{ steps.version.outputs.full }}"
+        exit 1
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Mandatory to use exact version from tag action
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+       global-json-file: global.json
+
+    - name: Check version
+      # assert version match with project version so only pre-release label can be changed based on release tag
+      run: dotnet build Remote.Linq.sln -t:CheckVersion -c Release -p BuildVersion="${{ steps.version.outputs.major_without_prefix }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}"
+
+    - name: Set version info
+      run: |
+        $VersionPrefix="${{ steps.version.outputs.major_without_prefix }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}"
+        $VersionSuffix="${{ steps.version.outputs.prerelease }}"
+        $IsStable="${{ steps.version.outputs.is_stable }}"
+        if ( -not $VersionSuffix ) {
+          $Version=$VersionPrefix
+        } else {
+          $Version="$VersionPrefix-$VersionSuffix"
+        }
+        echo "VersionPrefix=$VersionPrefix" >> $Env:GITHUB_ENV
+        echo "VersionSuffix=$VersionSuffix" >> $Env:GITHUB_ENV
+        echo "Version=$Version" >> $Env:GITHUB_ENV
+        echo "IsStable=$IsStable" >> $Env:GITHUB_ENV
+        echo "Create release: v$Version"
+
+    - name: Build
+      run: dotnet test Remote.Linq.sln -c Release /bl
+      
+    - name: Upload build log
+      uses: actions/upload-artifact@v3
+      with:
+        name: msbuild_log
+        path: msbuild.binlog
+        if-no-files-found: error
+
+    - name: Upload packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget_packages
+        path: artifacts
+        if-no-files-found: error
+
+    - name: Publish packages
+      env:
+        MYGET_AUTH_TOKEN: ${{ secrets.MYGET_AUTH_TOKEN }}
+        NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
+      run: |
+        dotnet nuget push artifacts\*.nupkg -k "$env:MYGET_AUTH_TOKEN" -s https://www.myget.org/F/aqua/api/v3/index.json
+        dotnet nuget push artifacts\*.nupkg -k "$env:NUGET_AUTH_TOKEN" -s https://api.nuget.org/v3/index.json
