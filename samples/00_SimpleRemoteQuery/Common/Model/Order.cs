@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Common.Model
+namespace Common.Model;
+
+using System.Collections.Generic;
+using System.Linq;
+
+public class Order
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    public long Id { get; set; }
 
-    public class Order
-    {
-        public long Id { get; set; }
+    public IList<OrderItem> Items { get; set; } = new List<OrderItem>();
 
-        public IList<OrderItem> Items { get; set; } = new List<OrderItem>();
+    public decimal TotalAmount => Items.Sum(i => i.Quantity * i.UnitPrice);
 
-        public decimal TotalAmount => Items.Sum(i => i.Quantity * i.UnitPrice);
-
-        public void Add(Product product, int quantity)
-            => Items.Add(new OrderItem { ProductId = product.Id, UnitPrice = product.Price, Quantity = quantity });
-    }
+    public void Add(Product product, int quantity)
+        => Items.Add(new OrderItem { ProductId = product.Id, UnitPrice = product.Price, Quantity = quantity });
 }

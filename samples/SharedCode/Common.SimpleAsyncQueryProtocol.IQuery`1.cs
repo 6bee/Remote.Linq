@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Common.SimpleAsyncQueryProtocol
+namespace Common.SimpleAsyncQueryProtocol;
+
+public interface IQuery<T>
 {
-    public interface IQuery<T>
-    {
-        T Request { get; }
-    }
+    T Request { get; }
 }

@@ -1,42 +1,41 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Client
+namespace Client;
+
+using Common;
+using System;
+using System.IO;
+using System.Linq;
+using System.Security;
+using static CommonHelper;
+
+public class Client : IDemo
 {
-    using Common;
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Security;
-    using static CommonHelper;
+    private readonly RemoteRepository _repo;
 
-    public class Client : IDemo
+    public Client(string ip, int port)
+        => _repo = new RemoteRepository(ip, port);
+
+    public void Run()
     {
-        private readonly RemoteRepository _repo;
+        IQueryable<string> query = _repo.Queryable
+            .SelectMany(x => Directory.GetLogicalDrives())
+            .SelectMany(x => Directory.GetDirectories(x));
 
-        public Client(string ip, int port)
-            => _repo = new RemoteRepository(ip, port);
-
-        public void Run()
+        try
         {
-            IQueryable<string> query = _repo.Queryable
-                .SelectMany(x => Directory.GetLogicalDrives())
-                .SelectMany(x => Directory.GetDirectories(x));
-
-            try
+            using var color = TextColor(ConsoleColor.Red);
+            query.ForEach(PrintLine);
+        }
+        catch (Exception ex)
+        {
+            while (ex.InnerException is SecurityException inner)
             {
-                using var color = TextColor(ConsoleColor.Red);
-                query.ForEach(PrintLine);
+                ex = inner;
             }
-            catch (Exception ex)
-            {
-                while (ex.InnerException is SecurityException inner)
-                {
-                    ex = inner;
-                }
 
-                using var color = TextColor(ex is SecurityException ? ConsoleColor.Green : ConsoleColor.Red);
-                PrintLine($"{ex.GetType()}: {ex.Message}");
-            }
+            using var color = TextColor(ex is SecurityException ? ConsoleColor.Green : ConsoleColor.Red);
+            PrintLine($"{ex.GetType()}: {ex.Message}");
         }
     }
 }

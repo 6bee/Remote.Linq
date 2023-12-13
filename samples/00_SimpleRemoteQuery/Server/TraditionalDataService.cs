@@ -1,24 +1,23 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Server
+namespace Server;
+
+using Common.Model;
+using Common.ServiceContract;
+using System.Collections.Generic;
+using System.Linq;
+
+public class TraditionalDataService : ITraditionalDataService
 {
-    using Common.Model;
-    using Common.ServiceContract;
-    using System.Collections.Generic;
-    using System.Linq;
+    private InMemoryDataStore DataSource => InMemoryDataStore.Instance;
 
-    public class TraditionalDataService : ITraditionalDataService
-    {
-        private InMemoryDataStore DataSource => InMemoryDataStore.Instance;
+    public IEnumerable<Product> GetProductsByName(string productName) =>
+        from product in DataSource.Products
+        where product.Name == productName
+        select product;
 
-        public IEnumerable<Product> GetProductsByName(string productName) =>
-            from product in DataSource.Products
-            where product.Name == productName
-            select product;
-
-        public IEnumerable<Order> GetOrdersByProductId(long productId) =>
-            from order in DataSource.Orders
-            where order.Items.Any(item => item.ProductId == productId)
-            select order;
-    }
+    public IEnumerable<Order> GetOrdersByProductId(long productId) =>
+        from order in DataSource.Orders
+        where order.Items.Any(item => item.ProductId == productId)
+        select order;
 }

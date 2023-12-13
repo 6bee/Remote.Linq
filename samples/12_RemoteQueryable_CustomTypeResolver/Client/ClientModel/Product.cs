@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Client.ClientModel
+namespace Client.ClientModel;
+
+public class Product
 {
-    public class Product
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public int ProductCategoryId { get; set; }
+    public int ProductCategoryId { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public decimal Price { get; set; }
-    }
+    public decimal Price { get; set; }
 }

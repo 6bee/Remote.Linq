@@ -1,44 +1,43 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Common
+namespace Common;
+
+using Aqua.Dynamic;
+using System.IO;
+using System.IO.Compression;
+using System.Runtime.Serialization.Formatters.Binary;
+
+public class CompressionHelper
 {
-    using Aqua.Dynamic;
-    using System.IO;
-    using System.IO.Compression;
-    using System.Runtime.Serialization.Formatters.Binary;
-
-    public class CompressionHelper
+    public DynamicObject Decompress(byte[] compressedData)
     {
-        public DynamicObject Decompress(byte[] compressedData)
+        using var decompressedStream = new MemoryStream();
+        using (var compressedStream = new MemoryStream())
         {
-            using var decompressedStream = new MemoryStream();
-            using (var compressedStream = new MemoryStream())
-            {
-                compressedStream.Write(compressedData, 0, compressedData.Length);
-                compressedStream.Seek(0, SeekOrigin.Begin);
+            compressedStream.Write(compressedData, 0, compressedData.Length);
+            compressedStream.Seek(0, SeekOrigin.Begin);
 
-                using var decompressionStream = new GZipStream(compressedStream, CompressionMode.Decompress);
-                decompressionStream.CopyTo(decompressedStream);
-            }
+            using var decompressionStream = new GZipStream(compressedStream, CompressionMode.Decompress);
+            decompressionStream.CopyTo(decompressedStream);
+        }
 
-            decompressedStream.Seek(0, SeekOrigin.Begin);
+        decompressedStream.Seek(0, SeekOrigin.Begin);
 
+        var formatter = new BinaryFormatter();
+        object obj = formatter.Deserialize(decompressedStream);
+        return (DynamicObject)obj;
+    }
+
+    public byte[] Compress(DynamicObject graph)
+    {
+        using var compressedStream = new MemoryStream();
+        using (var compressionStream = new GZipStream(compressedStream, CompressionMode.Compress))
+        {
             var formatter = new BinaryFormatter();
-            object obj = formatter.Deserialize(decompressedStream);
-            return (DynamicObject)obj;
+            formatter.Serialize(compressionStream, graph);
         }
 
-        public byte[] Compress(DynamicObject graph)
-        {
-            using var compressedStream = new MemoryStream();
-            using (var compressionStream = new GZipStream(compressedStream, CompressionMode.Compress))
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(compressionStream, graph);
-            }
-
-            byte[] compressedData = compressedStream.ToArray();
-            return compressedData;
-        }
+        byte[] compressedData = compressedStream.ToArray();
+        return compressedData;
     }
 }

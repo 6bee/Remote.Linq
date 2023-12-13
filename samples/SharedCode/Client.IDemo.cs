@@ -2,7 +2,9 @@
 
 using System;
 
+#pragma warning disable IDE0161 // Convert to file-scoped namespace
 namespace Client
+#pragma warning restore IDE0161 // Convert to file-scoped namespace
 {
     public interface IDemo
     {

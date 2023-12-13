@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Server.DbModel
+namespace Server.DbModel;
+
+using System.Collections.Generic;
+
+public class ProductGroupEntity
 {
-    using System.Collections.Generic;
+    public int Id { get; set; }
 
-    public class ProductGroupEntity
-    {
-        public int Id { get; set; }
+    public string GroupName { get; set; }
 
-        public string GroupName { get; set; }
-
-        public ICollection<ProductEntity> Products { get; set; }
-    }
+    public ICollection<ProductEntity> Products { get; set; }
 }

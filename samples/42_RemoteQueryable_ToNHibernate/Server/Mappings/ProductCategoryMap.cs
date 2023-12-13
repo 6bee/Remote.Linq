@@ -1,21 +1,20 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Server.Mappings
+namespace Server.Mappings;
+
+using Common.Model;
+using FluentNHibernate.Mapping;
+
+public class ProductCategoryMap : ClassMap<ProductCategory>
 {
-    using Common.Model;
-    using FluentNHibernate.Mapping;
-
-    public class ProductCategoryMap : ClassMap<ProductCategory>
+    public ProductCategoryMap()
     {
-        public ProductCategoryMap()
-        {
-            Not.LazyLoad();
+        Not.LazyLoad();
 
-            Table("ProductCategories");
+        Table("ProductCategories");
 
-            Id(x => x.Id);
+        Id(x => x.Id);
 
-            Map(x => x.Name);
-        }
+        Map(x => x.Name);
     }
 }

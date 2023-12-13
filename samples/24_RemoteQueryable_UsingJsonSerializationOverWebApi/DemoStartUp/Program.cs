@@ -1,30 +1,29 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace DemoStartUp
+namespace DemoStartUp;
+
+using static CommonHelper;
+
+internal static class Program
 {
-    using static CommonHelper;
-
-    internal static class Program
+    private static void Main(string[] args)
     {
-        private static void Main(string[] args)
-        {
-            ParseContextArgs(args);
-            Title("JSON Serialization over Web API async");
-            const string host = "localhost";
-            const int port = 8089;
+        ParseContextArgs(args);
+        Title("JSON Serialization over Web API async");
+        const string host = "localhost";
+        const int port = 8089;
 
-            PrintSetup("Starting Web API service...");
-            using var webServer = new Server.WebApiServer(port);
-            webServer.Open();
+        PrintSetup("Starting Web API service...");
+        using var webServer = new Server.WebApiServer(port);
+        webServer.Open();
 
-            PrintSetup("Staring client demo...");
-            PrintSetup("-------------------------------------------------");
-            new Client.AsyncDemo(() => new Client.RemoteRepository(host, port)).RunAsyncDemo();
+        PrintSetup("Staring client demo...");
+        PrintSetup("-------------------------------------------------");
+        new Client.AsyncDemo(() => new Client.RemoteRepository(host, port)).RunAsyncDemo();
 
-            PrintSetup();
-            PrintSetup("-------------------------------------------------");
-            PrintSetup("Done.");
-            WaitForEnterKey();
-        }
+        PrintSetup();
+        PrintSetup("-------------------------------------------------");
+        PrintSetup("Done.");
+        WaitForEnterKey();
     }
 }

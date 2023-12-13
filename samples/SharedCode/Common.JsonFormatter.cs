@@ -1,101 +1,100 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Common
+namespace Common;
+
+using Aqua.TypeSystem;
+using Newtonsoft.Json;
+using Remote.Linq.Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+public static class JsonFormatter
 {
-    using Aqua.TypeSystem;
-    using Newtonsoft.Json;
-    using Remote.Linq.Newtonsoft.Json;
-    using System;
-    using System.IO;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
+    private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
 
-    public static class JsonFormatter
+    public static void Write(this Stream stream, object obj) => stream.WriteAsync(obj).AsTask().Wait();
+
+    public static T Read<T>(this Stream stream) => stream.ReadAsync<T>().Result;
+
+    public static async ValueTask WriteAsync(this Stream stream, object obj, CancellationToken cancellation = default)
     {
-        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
+        var typeInfo = new TypeInfo(obj.GetType(), false, false);
 
-        public static void Write(this Stream stream, object obj) => stream.WriteAsync(obj).AsTask().Wait();
+        await WriteInternalAsync(stream, typeInfo, cancellation).ConfigureAwait(false);
 
-        public static T Read<T>(this Stream stream) => stream.ReadAsync<T>().Result;
+        await WriteInternalAsync(stream, obj, cancellation).ConfigureAwait(false);
+    }
 
-        public static async ValueTask WriteAsync(this Stream stream, object obj, CancellationToken cancellation = default)
+    private static async ValueTask WriteInternalAsync(Stream stream, object obj, CancellationToken cancellation)
+    {
+        string json = JsonConvert.SerializeObject(obj, Formatting.Indented, _jsonSerializerSettings);
+
+        byte[] data = Encoding.Default.GetBytes(json);
+
+        long size = data.LongLength;
+        byte[] sizeData = BitConverter.GetBytes(size);
+
+        await stream.WriteAsync(sizeData, 0, sizeData.Length, cancellation).ConfigureAwait(false);
+        await stream.WriteAsync(new[] { obj is Exception ? (byte)1 : (byte)0 }, 0, 1, cancellation).ConfigureAwait(false);
+        await stream.WriteAsync(data, 0, data.Length, cancellation).ConfigureAwait(false);
+    }
+
+    public static async ValueTask<T> ReadAsync<T>(this Stream stream, CancellationToken cancellation = default)
+    {
+        var typeInfo = await ReadInternalAsync<TypeInfo>(stream, null, cancellation).ConfigureAwait(false);
+        var type = typeInfo.ToType();
+
+        T obj = await ReadInternalAsync<T>(stream, type, cancellation).ConfigureAwait(false);
+        return obj;
+    }
+
+    private static async ValueTask<T> ReadInternalAsync<T>(Stream stream, Type type, CancellationToken cancellation)
+    {
+        byte[] bytes = new byte[256];
+
+        await stream.ReadAsync(bytes, 0, 8, cancellation).ConfigureAwait(false);
+        long size = BitConverter.ToInt64(bytes, 0);
+
+        byte[] exceptionFlag = new byte[1];
+        int i = await stream.ReadAsync(exceptionFlag, 0, 1, cancellation).ConfigureAwait(false);
+        if (i != 1)
         {
-            var typeInfo = new TypeInfo(obj.GetType(), false, false);
-
-            await WriteInternalAsync(stream, typeInfo, cancellation).ConfigureAwait(false);
-
-            await WriteInternalAsync(stream, obj, cancellation).ConfigureAwait(false);
+            throw new IOException("Unable to read expected error indication flag.");
         }
 
-        private static async ValueTask WriteInternalAsync(Stream stream, object obj, CancellationToken cancellation)
+        object obj;
+        using (var dataStream = new MemoryStream())
         {
-            string json = JsonConvert.SerializeObject(obj, Formatting.Indented, _jsonSerializerSettings);
-
-            byte[] data = Encoding.Default.GetBytes(json);
-
-            long size = data.LongLength;
-            byte[] sizeData = BitConverter.GetBytes(size);
-
-            await stream.WriteAsync(sizeData, 0, sizeData.Length, cancellation).ConfigureAwait(false);
-            await stream.WriteAsync(new[] { obj is Exception ? (byte)1 : (byte)0 }, 0, 1, cancellation).ConfigureAwait(false);
-            await stream.WriteAsync(data, 0, data.Length, cancellation).ConfigureAwait(false);
-        }
-
-        public static async ValueTask<T> ReadAsync<T>(this Stream stream, CancellationToken cancellation = default)
-        {
-            var typeInfo = await ReadInternalAsync<TypeInfo>(stream, null, cancellation).ConfigureAwait(false);
-            var type = typeInfo.ToType();
-
-            T obj = await ReadInternalAsync<T>(stream, type, cancellation).ConfigureAwait(false);
-            return obj;
-        }
-
-        private static async ValueTask<T> ReadInternalAsync<T>(Stream stream, Type type, CancellationToken cancellation)
-        {
-            byte[] bytes = new byte[256];
-
-            await stream.ReadAsync(bytes, 0, 8, cancellation).ConfigureAwait(false);
-            long size = BitConverter.ToInt64(bytes, 0);
-
-            byte[] exceptionFlag = new byte[1];
-            int i = await stream.ReadAsync(exceptionFlag, 0, 1, cancellation).ConfigureAwait(false);
-            if (i != 1)
+            int count = 0;
+            do
             {
-                throw new IOException("Unable to read expected error indication flag.");
+                int length = size - count < bytes.Length
+                    ? (int)(size - count)
+                    : bytes.Length;
+
+                i = await stream.ReadAsync(bytes, 0, length, cancellation).ConfigureAwait(false);
+                count += i;
+
+                await dataStream.WriteAsync(bytes, 0, i, cancellation).ConfigureAwait(false);
             }
+            while (count < size);
 
-            object obj;
-            using (var dataStream = new MemoryStream())
-            {
-                int count = 0;
-                do
-                {
-                    int length = size - count < bytes.Length
-                        ? (int)(size - count)
-                        : bytes.Length;
+            dataStream.Position = 0;
 
-                    i = await stream.ReadAsync(bytes, 0, length, cancellation).ConfigureAwait(false);
-                    count += i;
+            string json = Encoding.Default.GetString(dataStream.GetBuffer());
 
-                    await dataStream.WriteAsync(bytes, 0, i, cancellation).ConfigureAwait(false);
-                }
-                while (count < size);
-
-                dataStream.Position = 0;
-
-                string json = Encoding.Default.GetString(dataStream.GetBuffer());
-
-                obj = JsonConvert.DeserializeObject(json, type ?? typeof(T), _jsonSerializerSettings);
-            }
-
-            if (exceptionFlag[0] != 0)
-            {
-                var exception = (Exception)obj;
-                throw exception;
-            }
-
-            return (T)obj;
+            obj = JsonConvert.DeserializeObject(json, type ?? typeof(T), _jsonSerializerSettings);
         }
+
+        if (exceptionFlag[0] != 0)
+        {
+            var exception = (Exception)obj;
+            throw exception;
+        }
+
+        return (T)obj;
     }
 }

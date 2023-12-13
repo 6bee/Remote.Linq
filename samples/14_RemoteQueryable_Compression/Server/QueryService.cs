@@ -1,24 +1,23 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Server
+namespace Server;
+
+using Aqua.Dynamic;
+using Common;
+using Common.ServiceContracts;
+using Remote.Linq.ExpressionExecution;
+using Remote.Linq.Expressions;
+
+public class QueryService : IQueryService
 {
-    using Aqua.Dynamic;
-    using Common;
-    using Common.ServiceContracts;
-    using Remote.Linq.ExpressionExecution;
-    using Remote.Linq.Expressions;
+    private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
-    public class QueryService : IQueryService
+    public byte[] ExecuteQuery(Expression queryExpression)
     {
-        private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
+        DynamicObject result = queryExpression.Execute(DataStore.QueryableByTypeProvider);
 
-        public byte[] ExecuteQuery(Expression queryExpression)
-        {
-            DynamicObject result = queryExpression.Execute(DataStore.QueryableByTypeProvider);
+        byte[] compressedData = new CompressionHelper().Compress(result);
 
-            byte[] compressedData = new CompressionHelper().Compress(result);
-
-            return compressedData;
-        }
+        return compressedData;
     }
 }

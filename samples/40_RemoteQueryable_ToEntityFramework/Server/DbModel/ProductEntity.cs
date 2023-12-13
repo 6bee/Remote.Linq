@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Server.DbModel
+namespace Server.DbModel;
+
+using System.Collections.Generic;
+
+public class ProductEntity
 {
-    using System.Collections.Generic;
+    public int Id { get; set; }
 
-    public class ProductEntity
-    {
-        public int Id { get; set; }
+    public ProductCategoryEntity ProductCategory { get; set; }
 
-        public ProductCategoryEntity ProductCategory { get; set; }
+    public string Name { get; set; }
 
-        public string Name { get; set; }
+    public decimal Price { get; set; }
 
-        public decimal Price { get; set; }
-
-        public IList<MarketEntity> Markets { get; set; }
-    }
+    public IList<MarketEntity> Markets { get; set; }
 }

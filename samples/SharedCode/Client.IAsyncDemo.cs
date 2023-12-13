@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using System;
+using System.Threading.Tasks;
 
+#pragma warning disable IDE0161 // Convert to file-scoped namespace
 namespace Client
+#pragma warning restore IDE0161 // Convert to file-scoped namespace
 {
-    using System.Threading.Tasks;
-
     public interface IAsyncDemo
     {
         Task RunAsync();

@@ -1,20 +1,19 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Server
+namespace Server;
+
+using Aqua.Dynamic;
+using Common.Model;
+using Microsoft.AspNetCore.Mvc;
+using Remote.Linq.ExpressionExecution;
+
+[ApiController]
+[Route("api")]
+public class QueryController : Controller
 {
-    using Aqua.Dynamic;
-    using Common.Model;
-    using Microsoft.AspNetCore.Mvc;
-    using Remote.Linq.ExpressionExecution;
+    private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
-    [ApiController]
-    [Route("api")]
-    public class QueryController : Controller
-    {
-        private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
-
-        [Route("query")]
-        public DynamicObject Query([FromBody] Query query)
-            => query.Expression.Execute(DataStore.QueryableByTypeProvider);
-    }
+    [Route("query")]
+    public DynamicObject Query([FromBody] Query query)
+        => query.Expression.Execute(DataStore.QueryableByTypeProvider);
 }

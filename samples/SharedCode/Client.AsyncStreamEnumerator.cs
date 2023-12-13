@@ -1,78 +1,77 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Client
+namespace Client;
+
+using Common;
+using Common.SimpleAsyncQueryProtocol;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
+internal sealed class AsyncStreamEnumerator<T> : IAsyncEnumerator<T>
 {
-    using Common;
-    using Common.SimpleAsyncQueryProtocol;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Threading;
-    using System.Threading.Tasks;
+    private readonly Stream _stream;
+    private readonly CancellationToken _cancellation;
+    private Lazy<T> _current;
+    private long _sequence = 0;
 
-    internal sealed class AsyncStreamEnumerator<T> : IAsyncEnumerator<T>
+    public AsyncStreamEnumerator(Stream stream, CancellationToken cancellation)
     {
-        private readonly Stream _stream;
-        private readonly CancellationToken _cancellation;
-        private Lazy<T> _current;
-        private long _sequence = 0;
+        SetError($"{nameof(MoveNextAsync)} has not completed yet.");
+        _stream = stream;
+        _cancellation = cancellation;
+    }
 
-        public AsyncStreamEnumerator(Stream stream, CancellationToken cancellation)
+    private void SetError(string error) => SetError(new InvalidOperationException(error));
+
+    private void SetError(Exception exception)
+    {
+        _current = new Lazy<T>(() => throw exception);
+    }
+
+    private void SetCurrent(T current)
+    {
+        _current = new Lazy<T>(() => current);
+    }
+
+    public T Current => _current.Value;
+
+    public ValueTask DisposeAsync() => _stream.DisposeAsync();
+
+    public async ValueTask<bool> MoveNextAsync()
+    {
+        try
         {
-            SetError($"{nameof(MoveNextAsync)} has not completed yet.");
-            _stream = stream;
-            _cancellation = cancellation;
-        }
+            _cancellation.ThrowIfCancellationRequested();
 
-        private void SetError(string error) => SetError(new InvalidOperationException(error));
+            await _stream.WriteAsync(new NextRequest { SequenceNumber = Interlocked.Increment(ref _sequence) }, _cancellation).ConfigureAwait(false);
+            await _stream.FlushAsync(_cancellation).ConfigureAwait(false);
 
-        private void SetError(Exception exception)
-        {
-            _current = new Lazy<T>(() => throw exception);
-        }
-
-        private void SetCurrent(T current)
-        {
-            _current = new Lazy<T>(() => current);
-        }
-
-        public T Current => _current.Value;
-
-        public ValueTask DisposeAsync() => _stream.DisposeAsync();
-
-        public async ValueTask<bool> MoveNextAsync()
-        {
-            try
+            var response = await _stream.ReadAsync<NextResponse<T>>(_cancellation).ConfigureAwait(false);
+            if (response.SequenceNumber != _sequence)
             {
-                _cancellation.ThrowIfCancellationRequested();
-
-                await _stream.WriteAsync(new NextRequest { SequenceNumber = Interlocked.Increment(ref _sequence) }, _cancellation).ConfigureAwait(false);
-                await _stream.FlushAsync(_cancellation).ConfigureAwait(false);
-
-                var response = await _stream.ReadAsync<NextResponse<T>>(_cancellation).ConfigureAwait(false);
-                if (response.SequenceNumber != _sequence)
-                {
-                    var exception = new InvalidOperationException("Async stream is out of bound.");
-                    SetError(exception);
-                    throw exception;
-                }
-
-                if (response.HasNext)
-                {
-                    SetCurrent(response.Item);
-                    return true;
-                }
-                else
-                {
-                    SetError("Reached end of stream.");
-                    return false;
-                }
+                var exception = new InvalidOperationException("Async stream is out of bound.");
+                SetError(exception);
+                throw exception;
             }
-            catch (Exception ex)
+
+            if (response.HasNext)
             {
-                SetError(ex);
-                throw;
+                SetCurrent(response.Item);
+                return true;
             }
+            else
+            {
+                SetError("Reached end of stream.");
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+            throw;
         }
     }
 }

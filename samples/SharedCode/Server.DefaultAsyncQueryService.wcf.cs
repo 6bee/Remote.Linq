@@ -1,18 +1,17 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Server
+namespace Server;
+
+using Aqua.Dynamic;
+using Common.ServiceContracts;
+using Remote.Linq.ExpressionExecution;
+using Remote.Linq.Expressions;
+using System.Threading.Tasks;
+
+public class QueryService : IQueryService
 {
-    using Aqua.Dynamic;
-    using Common.ServiceContracts;
-    using Remote.Linq.ExpressionExecution;
-    using Remote.Linq.Expressions;
-    using System.Threading.Tasks;
+    private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
-    public class QueryService : IQueryService
-    {
-        private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
-
-        public Task<DynamicObject> ExecuteQueryAsync(Expression queryExpression)
-            => Task.Run(() => queryExpression.Execute(DataStore.QueryableByTypeProvider));
-    }
+    public Task<DynamicObject> ExecuteQueryAsync(Expression queryExpression)
+        => Task.Run(() => queryExpression.Execute(DataStore.QueryableByTypeProvider));
 }

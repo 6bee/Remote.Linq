@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Common.SimpleAsyncQueryProtocol
+namespace Common.SimpleAsyncQueryProtocol;
+
+public readonly struct AsyncQuery<T> : IQuery<T>
 {
-    public readonly struct AsyncQuery<T> : IQuery<T>
-    {
-        public T Request { get; init; }
-    }
+    public T Request { get; init; }
 }
