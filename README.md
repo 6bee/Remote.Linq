@@ -1,5 +1,7 @@
 # Remote.Linq
 
+[![Github Workflow][pub-badge]][pub-link]
+
 | branch | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy            | CodeFactor             | License                     |
 | ---    | ---                              | ---                            | ---                | ---               | ---                    | ---                         |
 | `main` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
@@ -283,6 +285,10 @@ await httpClient.PostAsJsonAsync(uri, value, serializerOptions);
 [38]: https://www.nuget.org/packages/Remote.Linq.Text.Json
 [39]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Text.Json.svg?style=flat-square&label=myget
 [40]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Text.Json
+
+[pub-badge]: https://github.com/6bee/Remote.Linq/actions/workflows/publish.yml/badge.svg
+[pub-link]: https://github.com/6bee/Remote.Linq/actions/workflows/publish.yml
+
 [async-stream-ms-doc]: https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/tutorials/generate-consume-asynchronous-stream
 [ef6-package]: https://www.nuget.org/packages/EntityFramework/
 [efcore-package]: https://www.nuget.org/packages/Microsoft.EntityFrameworkCore/
