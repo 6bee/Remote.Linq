@@ -14,4 +14,9 @@
       <Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput"/>
     </Exec>
   </Target>
+  <Target Name="CheckVersion">
+    <Message Text="Check Version: '$(BuildVersion)' == '$(VersionPrefix)' [$(MSBuildProjectFile)]" Importance="high" />
+    <Error Condition=" '$(BuildVersion)' == '' " Text="Build version must not be emty" />
+    <Error Condition=" '$(BuildVersion)' != '$(VersionPrefix)' " Text="Build version '$(BuildVersion)' does not match project version '$(VersionPrefix)'" />
+  </Target>
 </Project>
