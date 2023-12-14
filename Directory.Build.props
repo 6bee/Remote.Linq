@@ -48,9 +48,9 @@
     <GenerateDocumentationFile Condition="'$(GenerateDocumentationFile)' == ''">true</GenerateDocumentationFile>
     <TreatWarningsAsErrors Condition="'$(TreatWarningsAsErrors)' == ''">true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
-    <EnableStyleCopAnalyzers Condition="'$(EnableStyleCopAnalyzers)' == ''">true</EnableStyleCopAnalyzers>
     <EnableNETAnalyzers Condition="'$(EnableNETAnalyzers)' == ''">true</EnableNETAnalyzers>
     <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">false</EnableSonarAnalyzers>
+    <EnableStyleCopAnalyzers Condition="'$(EnableStyleCopAnalyzers)' == ''">true</EnableStyleCopAnalyzers>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -61,13 +61,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.Validation" Version="3.0.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="3.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507" PrivateAssets="all" Condition="'$(EnableStyleCopAnalyzers)' == 'true'"/>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.15.0.81779" PrivateAssets="all" Condition="'$(EnableSonarAnalyzers)' == 'true'"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.15.0.81779" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507" Condition=" '$(EnableStyleCopAnalyzers)' == 'true' ">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
