@@ -244,6 +244,7 @@ dotnet_naming_style._fieldname.required_prefix = _
 dotnet_naming_style._fieldname.required_suffix = 
 dotnet_naming_style._fieldname.word_separator = 
 dotnet_naming_style._fieldname.capitalization = camel_case
+csharp_style_prefer_primary_constructors = true:suggestion
 
 [*.{cs,vb}]
 dotnet_style_coalesce_expression = true:suggestion
@@ -263,6 +264,7 @@ dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
 dotnet_style_namespace_match_folder = true:warning
 dotnet_style_prefer_conditional_expression_over_return = true:silent
 dotnet_style_explicit_tuple_names = true:suggestion
+dotnet_style_prefer_collection_expression = true:suggestion
 
 # Xaml files
 [*.xaml]
