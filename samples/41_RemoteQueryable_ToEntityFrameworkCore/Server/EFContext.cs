@@ -11,7 +11,7 @@ public class EFContext : DbContext
     {
         base.OnConfiguring(optionsBuilder);
 
-        optionsBuilder.UseSqlServer(@"Server=.;Database=RemoteQueryableDemoDB_MAY2020;User Id=Demo;Password=demo(!)Password;MultipleActiveResultSets=True;App=Remote.Linq.Demo.EFCore;");
+        optionsBuilder.UseSqlServer(@"Server=.;Database=RemoteQueryableDemoDB_MAY2020;User Id=Demo;Password=demo(!)Password;TrustServerCertificate=True;MultipleActiveResultSets=True;App=Remote.Linq.Demo.EFCore;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
