@@ -29,22 +29,28 @@ public static class RemoteExpressionReWriter
     ///     Replaces include query methods by entity framework's include methods.
     ///   </para>
     /// </remarks>
-    public static Expression MapIncludeQueryMethods(this Expression expression)
+    public static Expression MapIncludeQueryMethods(this Expression expression, ITypeResolver? typeResolver)
         => expression
-        .ReplaceIncludeQueryMethodsByStringInclude()
-        .ReplaceIncludeQueryMethods();
+        .ReplaceIncludeQueryMethodsByStringInclude(typeResolver: typeResolver)
+        .ReplaceIncludeQueryMethods(typeResolver);
 
     /// <summary>
     /// Replaces include query methods by entity framework's include methods.
     /// </summary>
     /// <param name="expression">The <see cref="Expression"/> to be examined.</param>
+    /// <param name="typeResolver">Type resolver.</param>
     /// <returns>A new expression tree with the EF's version of the include method if any method calls to include was contained in the original expression,
     /// otherwise the original expression tree is returned.</returns>
-    private static Expression ReplaceIncludeQueryMethods(this Expression expression)
-        => new QueryMethodMapper().Run(expression);
+    private static Expression ReplaceIncludeQueryMethods(this Expression expression, ITypeResolver? typeResolver)
+        => new QueryMethodMapper(typeResolver).Run(expression);
 
     private sealed class QueryMethodMapper : RemoteExpressionVisitorBase
     {
+        public QueryMethodMapper(ITypeResolver? typeResolver)
+            : base(typeResolver)
+        {
+        }
+
         internal Expression Run(Expression expression) => Visit(expression);
 
         protected override Expression VisitMethodCall(MethodCallExpression node)

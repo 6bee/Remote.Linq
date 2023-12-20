@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionVisitors;
 
 using Aqua.EnumerableExtensions;
+using Aqua.TypeSystem;
 using Remote.Linq.Expressions;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,11 @@ using System.Linq;
 
 public abstract class RemoteExpressionVisitorBase
 {
+    protected RemoteExpressionVisitorBase(ITypeResolver? typeResolver)
+        => TypeResolver = typeResolver ?? Aqua.TypeSystem.TypeResolver.Instance;
+
+    public ITypeResolver TypeResolver { get; }
+
     [return: NotNullIfNotNull("node")]
     protected virtual Expression? Visit(Expression? node)
         => node?.NodeType switch
@@ -226,7 +232,9 @@ public abstract class RemoteExpressionVisitorBase
         var arguments = VisitExpressionList(initializer.CheckNotNull().Arguments);
         if (!ReferenceEquals(arguments, initializer.Arguments))
         {
-            return new ElementInit(initializer.AddMethod.ToMethodInfo(), arguments);
+            var addMethod = initializer.AddMethod.ResolveMethod(TypeResolver)
+                ?? throw new RemoteLinqException($"Failed to resolve method {initializer.AddMethod}");
+            return new ElementInit(addMethod, arguments);
         }
 
         return initializer;

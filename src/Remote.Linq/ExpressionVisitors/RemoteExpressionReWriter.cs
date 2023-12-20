@@ -14,14 +14,14 @@ public static class RemoteExpressionReWriter
         where TExpression : Expression
         => QueryableResourceVisitor.ReplaceResourceDescriptorsByQueryable(expression, provider, typeResolver);
 
-    public static TExpression ReplaceNonGenericQueryArgumentsByGenericArguments<TExpression>(this TExpression expression)
+    public static TExpression ReplaceNonGenericQueryArgumentsByGenericArguments<TExpression>(this TExpression expression, ITypeResolver? typeResolver = null)
         where TExpression : Expression
-        => VariableQueryArgumentVisitor.ReplaceNonGenericQueryArgumentsByGenericArguments(expression);
+        => VariableQueryArgumentVisitor.ReplaceNonGenericQueryArgumentsByGenericArguments(expression, typeResolver);
 
-    public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeInfoProvider? typeInfoProvider = null)
-        => QueryableResourceVisitor.ReplaceQueryablesByResourceDescriptors(expression, typeInfoProvider);
+    public static Expression ReplaceQueryableByResourceDescriptors(this Expression expression, ITypeInfoProvider? typeInfoProvider = null, ITypeResolver? typeResolver = null)
+        => QueryableResourceVisitor.ReplaceQueryablesByResourceDescriptors(expression, typeInfoProvider, typeResolver);
 
-    public static TExpression ReplaceGenericQueryArgumentsByNonGenericArguments<TExpression>(this TExpression expression)
+    public static TExpression ReplaceGenericQueryArgumentsByNonGenericArguments<TExpression>(this TExpression expression, ITypeResolver? typeResolver = null)
         where TExpression : Expression
-        => VariableQueryArgumentVisitor.ReplaceGenericQueryArgumentsByNonGenericArguments(expression);
+        => VariableQueryArgumentVisitor.ReplaceGenericQueryArgumentsByNonGenericArguments(expression, typeResolver);
 }

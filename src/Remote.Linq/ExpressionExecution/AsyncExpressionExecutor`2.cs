@@ -37,7 +37,7 @@ public abstract class AsyncExpressionExecutor<TQueryable, TDataTranferObject> : 
     {
         expression.AssertNotNull();
 
-        var ctx = Context;
+        var ctx = ExecutionContext;
 
         var preparedRemoteExpression = Prepare(expression);
         ctx.RemoteExpression = preparedRemoteExpression;

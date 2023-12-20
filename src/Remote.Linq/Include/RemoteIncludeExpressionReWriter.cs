@@ -3,13 +3,14 @@
 namespace Remote.Linq.Include;
 
 using Aqua.TypeExtensions;
+using Aqua.TypeSystem;
 using Remote.Linq.Expressions;
 using Remote.Linq.ExpressionVisitors;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
+using MethodInfo = System.Reflection.MethodInfo;
 using SystemLinq = System.Linq.Expressions;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
@@ -21,10 +22,10 @@ public static class RemoteIncludeExpressionReWriter
     /// <see cref="IncludeQueryableExtensions.ThenInclude{T, TPreviousProperty, TProperty}(IIncludableQueryable{T, TPreviousProperty}, SystemLinq.Expression{Func{TPreviousProperty, TProperty}})"/>
     /// by <see cref="IncludeQueryableExtensions.Include{T}(IQueryable{T}, string)"/>.
     /// </summary>
-    public static Expression ReplaceIncludeQueryMethodsByStringInclude(this Expression expression, Func<Type, MethodInfo>? stringIncludeMethodInfoProvider = null)
+    public static Expression ReplaceIncludeQueryMethodsByStringInclude(this Expression expression, Func<Type, MethodInfo>? stringIncludeMethodInfoProvider = null, ITypeResolver? typeResolver = null)
     {
-        var mapped = new QueryMethodMapper(stringIncludeMethodInfoProvider).Run(expression);
-        var cleaned = new StackedQueryableCleaner().Run(mapped);
+        var mapped = new QueryMethodMapper(typeResolver, stringIncludeMethodInfoProvider).Run(expression);
+        var cleaned = new StackedQueryableCleaner(typeResolver).Run(mapped);
         return cleaned;
     }
 
@@ -33,10 +34,10 @@ public static class RemoteIncludeExpressionReWriter
     /// and <see cref="IncludeQueryableExtensions.ThenInclude{T, TPreviousProperty, TProperty}(IIncludableQueryable{T, TPreviousProperty}, SystemLinq.Expression{Func{TPreviousProperty, TProperty}})"/>
     /// by <see cref="IncludeQueryableExtensions.Include{T, TProperty}(IQueryable{T}, SystemLinq.Expression{Func{T, TProperty}})"/> with sub-selects.
     /// </summary>
-    public static Expression ReplaceThenIncludeQueryMethodsBySubSelects(this Expression expression)
+    public static Expression ReplaceThenIncludeQueryMethodsBySubSelects(this Expression expression, ITypeResolver? typeResolver)
     {
-        var mapped = new QueryMethodMapper().Run(expression);
-        var cleaned = new StackedQueryableCleaner(StackedQueryableCleaner.Strategy.SubSelect).Run(mapped);
+        var mapped = new QueryMethodMapper(typeResolver).Run(expression);
+        var cleaned = new StackedQueryableCleaner(typeResolver, StackedQueryableCleaner.Strategy.SubSelect).Run(mapped);
         return cleaned;
     }
 
@@ -63,7 +64,8 @@ public static class RemoteIncludeExpressionReWriter
 
         private readonly Strategy _strategy;
 
-        public StackedQueryableCleaner(Strategy strategy = Strategy.Eliminate)
+        public StackedQueryableCleaner(ITypeResolver? typeResolver, Strategy strategy = Strategy.Eliminate)
+            : base(typeResolver)
             => _strategy = strategy;
 
         internal Expression Run(Expression expression) => Visit(expression);
@@ -116,14 +118,15 @@ public static class RemoteIncludeExpressionReWriter
 
         private readonly Func<Type, MethodInfo> _stringIncludeMethodInfo;
 
-        public QueryMethodMapper(Func<Type, MethodInfo>? stringIncludeMethodInfoProvider = null)
+        public QueryMethodMapper(ITypeResolver? typeResolver, Func<Type, MethodInfo>? stringIncludeMethodInfoProvider = null)
+            : base(typeResolver)
             => _stringIncludeMethodInfo = stringIncludeMethodInfoProvider ?? (type => IncludeQueryableExtensions.StringIncludeMethodInfo.MakeGenericMethod(type));
 
         internal Expression Run(Expression expression) => Visit(expression);
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            if (MapRemoteLinqToEntityFrameworkMethod(node.Method?.ToMethodInfo()) is MethodInfo mappedMethod)
+            if (MapRemoteLinqToEntityFrameworkMethod(node.Method.ResolveMethod(TypeResolver)) is MethodInfo mappedMethod)
             {
                 var arguments = node.Arguments?.Select(Visit).ToArray();
                 var queryable = mappedMethod.Invoke(this, arguments);
@@ -231,7 +234,7 @@ public static class RemoteIncludeExpressionReWriter
         private static SystemLinq.LambdaExpression ToSystemLambdaExpression(Expression expression)
         {
             var systemExpression = expression.ToLinqExpression();
-            if (systemExpression.NodeType == SystemLinq.ExpressionType.Quote)
+            if (systemExpression.NodeType is SystemLinq.ExpressionType.Quote)
             {
                 systemExpression = ((SystemLinq.UnaryExpression)systemExpression).Operand;
             }
@@ -266,7 +269,7 @@ public static class RemoteIncludeExpressionReWriter
             else if (expression1 is SystemLinq.MethodCallExpression methodCallExpression)
             {
                 if (string.Equals(methodCallExpression.Method.Name, "Select", StringComparison.Ordinal) &&
-                    methodCallExpression.Arguments.Count == 2 &&
+                    methodCallExpression.Arguments.Count is 2 &&
                     TryParsePath(methodCallExpression.Arguments[0], out var path1) &&
                     path1 is not null &&
                     methodCallExpression.Arguments[1] is SystemLinq.LambdaExpression lambdaExpression &&

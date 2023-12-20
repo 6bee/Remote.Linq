@@ -30,7 +30,7 @@ public abstract class EntityFrameworkExpressionExecutor<TDataTranferObject> : As
 
     protected override RemoteLinq.Expression Prepare(RemoteLinq.Expression expression)
         => base.Prepare(expression)
-        .MapIncludeQueryMethods();
+        .MapIncludeQueryMethods(Context?.TypeResolver);
 
     protected override SystemLinq.Expression Prepare(SystemLinq.Expression expression)
         => base.Prepare(expression)

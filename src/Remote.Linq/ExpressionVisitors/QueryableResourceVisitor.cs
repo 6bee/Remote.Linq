@@ -16,19 +16,16 @@ public abstract class QueryableResourceVisitor
         where TExpression : Expression
         => (TExpression)new ResourceDescriptorVisitor<TQueryable>(provider, typeResolver).Run(expression);
 
-    internal static Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider? typeInfoProvider)
-        => new QueryableVisitor(typeInfoProvider).Run(expression);
+    internal static Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider? typeInfoProvider, ITypeResolver? typeResolver)
+        => new QueryableVisitor(typeInfoProvider, typeResolver).Run(expression);
 
     protected class ResourceDescriptorVisitor<TQueryable> : RemoteExpressionVisitorBase
     {
-        private readonly ITypeResolver _typeResolver;
         private readonly Func<Type, TQueryable> _provider;
 
         internal protected ResourceDescriptorVisitor(Func<Type, TQueryable> provider, ITypeResolver? typeResolver)
-        {
-            _provider = provider.CheckNotNull();
-            _typeResolver = typeResolver ?? TypeResolver.Instance;
-        }
+            : base(typeResolver)
+            => _provider = provider.CheckNotNull();
 
         public Expression Run(Expression expression) => Visit(expression);
 
@@ -57,7 +54,7 @@ public abstract class QueryableResourceVisitor
         {
             if (value is QueryableResourceDescriptor queryableResourceDescriptor)
             {
-                var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
+                var queryableType = queryableResourceDescriptor.Type.ResolveType(TypeResolver);
                 queryable = _provider(queryableType);
                 return true;
             }
@@ -96,7 +93,7 @@ public abstract class QueryableResourceVisitor
         {
             if (value is SubstitutionValue substitutionValue)
             {
-                var type = substitutionValue.Type.ResolveType(_typeResolver);
+                var type = substitutionValue.Type.ResolveType(TypeResolver);
                 if (type == typeof(CancellationToken))
                 {
                     // TODO: should/can cancellation token be retrieved from context?
@@ -114,10 +111,9 @@ public abstract class QueryableResourceVisitor
     {
         private readonly ITypeInfoProvider _typeInfoProvider;
 
-        internal protected QueryableVisitor(ITypeInfoProvider? typeInfoProvider)
-        {
-            _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
-        }
+        internal protected QueryableVisitor(ITypeInfoProvider? typeInfoProvider, ITypeResolver? typeResolver)
+            : base(typeResolver)
+            => _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
 
         public Expression Run(Expression expression) => Visit(expression);
 

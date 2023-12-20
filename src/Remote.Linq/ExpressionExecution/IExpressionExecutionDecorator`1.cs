@@ -9,7 +9,7 @@ using SystemLinq = System.Linq.Expressions;
 [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
 internal interface IExpressionExecutionDecorator<TDataTranferObject>
 {
-    ExecutionContext Context { get; }
+    ExecutionContext ExecutionContext { get; }
 
     RemoteLinq.Expression Prepare(RemoteLinq.Expression expression);
 

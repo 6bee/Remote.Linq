@@ -65,7 +65,7 @@ public abstract class AsyncStreamExpressionExecutor<TQueryable, TDataTranferObje
     /// <returns>A <see cref="SystemLinq.Expression"/>.</returns>
     protected virtual RemoteLinq.Expression Prepare(RemoteLinq.Expression expression)
         => expression
-        .ReplaceNonGenericQueryArgumentsByGenericArguments()
+        .ReplaceNonGenericQueryArgumentsByGenericArguments(_context.TypeResolver)
         .ReplaceResourceDescriptorsByQueryable(_queryableProvider, _context.TypeResolver);
 
     /// <summary>

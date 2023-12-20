@@ -53,7 +53,7 @@ public class DefaultExpressionExecutor : ExpressionExecutor<IQueryable, DynamicO
             }
         }
 
-        return Map(queryResult, Context.SystemExpression?.Type);
+        return Map(queryResult, ExecutionContext.SystemExpression?.Type);
     }
 
     private DynamicObject Map(object? value, Type? type)

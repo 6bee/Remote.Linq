@@ -4,30 +4,36 @@ namespace Remote.Linq.ExpressionVisitors;
 
 using Aqua.EnumerableExtensions;
 using Aqua.TypeExtensions;
+using Aqua.TypeSystem;
 using Remote.Linq.DynamicQuery;
 using Remote.Linq.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using MemberTypes = Aqua.TypeSystem.MemberTypes;
+using MethodInfo = System.Reflection.MethodInfo;
 using PropertyInfo = Aqua.TypeSystem.PropertyInfo;
 
 public abstract class VariableQueryArgumentVisitor
 {
-    internal static T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(T expression)
+    internal static T ReplaceNonGenericQueryArgumentsByGenericArguments<T>(T expression, ITypeResolver? typeResolver)
         where T : Expression
-        => (T)new NonGenericVariableQueryArgumentVisitor().Run(expression);
+        => (T)new NonGenericVariableQueryArgumentVisitor(typeResolver).Run(expression);
 
-    internal static T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(T expression)
+    internal static T ReplaceGenericQueryArgumentsByNonGenericArguments<T>(T expression, ITypeResolver? typeResolver)
         where T : Expression
-        => (T)new GenericVariableQueryArgumentVisitor().Run(expression);
+        => (T)new GenericVariableQueryArgumentVisitor(typeResolver).Run(expression);
 
     protected class GenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
     {
         private static readonly System.Reflection.PropertyInfo QueryArgumentValuePropertyInfo = typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value))!;
         private static readonly System.Reflection.PropertyInfo QueryArgumentValueListPropertyInfo = typeof(VariableQueryArgumentList).GetProperty(nameof(VariableQueryArgumentList.Values))!;
+
+        public GenericVariableQueryArgumentVisitor(ITypeResolver? typeResolver)
+            : base(typeResolver)
+        {
+        }
 
         public Expression Run(Expression expression) => Visit(expression);
 
@@ -107,6 +113,11 @@ public abstract class VariableQueryArgumentVisitor
     {
         private static readonly MethodInfo CreateVariableQueryArgumentListMethodInfo =
             typeof(NonGenericVariableQueryArgumentVisitor).GetMethodEx(nameof(CreateVariableQueryArgumentList));
+
+        public NonGenericVariableQueryArgumentVisitor(ITypeResolver? typeResolver)
+            : base(typeResolver)
+        {
+        }
 
         public Expression Run(Expression expression) => Visit(expression);
 

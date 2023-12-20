@@ -3,6 +3,7 @@
 namespace Remote.Linq.ExpressionExecution;
 
 using Aqua.TypeExtensions;
+using Aqua.TypeSystem;
 using Remote.Linq.ExpressionVisitors;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -14,7 +15,6 @@ using SystemLinq = System.Linq.Expressions;
 public abstract class ExpressionExecutor<TQueryable, TDataTranferObject> : IExpressionExecutionDecorator<TDataTranferObject>
 {
     private readonly Func<Type, TQueryable> _queryableProvider;
-    private readonly IExpressionFromRemoteLinqContext? _context;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExpressionExecutor{TQueryable, TDataTranferObject}"/> class.
@@ -22,12 +22,14 @@ public abstract class ExpressionExecutor<TQueryable, TDataTranferObject> : IExpr
     protected ExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
     {
         _queryableProvider = queryableProvider ?? (_ => throw new NotSupportedException("No queryable provider has been specified"));
-        _context = context;
+        Context = context;
     }
 
-    ExecutionContext IExpressionExecutionDecorator<TDataTranferObject>.Context => Context;
+    protected IExpressionFromRemoteLinqContext? Context { get; }
 
-    protected ExecutionContext Context { get; } = new ExecutionContext();
+    ExecutionContext IExpressionExecutionDecorator<TDataTranferObject>.ExecutionContext => ExecutionContext;
+
+    protected ExecutionContext ExecutionContext { get; } = new ExecutionContext();
 
     /// <summary>
     /// Composes and executes the query based on the <see cref="RemoteLinq.Expression"/> and maps the result into dynamic objects.
@@ -36,7 +38,7 @@ public abstract class ExpressionExecutor<TQueryable, TDataTranferObject> : IExpr
     /// <returns>The mapped result of the query execution.</returns>
     public TDataTranferObject Execute(RemoteLinq.Expression expression)
     {
-        var ctx = Context;
+        var ctx = ExecutionContext;
 
         var preparedRemoteExpression = Prepare(expression);
         ctx.RemoteExpression = preparedRemoteExpression;
@@ -63,8 +65,8 @@ public abstract class ExpressionExecutor<TQueryable, TDataTranferObject> : IExpr
     /// <returns>A <see cref="SystemLinq.Expression"/>.</returns>
     protected virtual RemoteLinq.Expression Prepare(RemoteLinq.Expression expression)
         => expression
-        .ReplaceNonGenericQueryArgumentsByGenericArguments()
-        .ReplaceResourceDescriptorsByQueryable(_queryableProvider, _context?.TypeResolver);
+        .ReplaceNonGenericQueryArgumentsByGenericArguments(Context?.TypeResolver)
+        .ReplaceResourceDescriptorsByQueryable(_queryableProvider, Context?.TypeResolver);
 
     /// <summary>
     /// Transforms the <see cref="RemoteLinq.Expression"/> to a <see cref="SystemLinq.Expression"/>.
@@ -72,7 +74,7 @@ public abstract class ExpressionExecutor<TQueryable, TDataTranferObject> : IExpr
     /// <param name="expression">The <see cref="RemoteLinq.Expression"/> to be transformed.</param>
     /// <returns>A <see cref="SystemLinq.Expression"/>.</returns>
     protected virtual SystemLinq.Expression Transform(RemoteLinq.Expression expression)
-        => expression.ToLinqExpression(_context);
+        => expression.ToLinqExpression(Context);
 
     /// <summary>
     /// Prepares the query <see cref="SystemLinq.Expression"/> to be able to be executed.
@@ -80,7 +82,7 @@ public abstract class ExpressionExecutor<TQueryable, TDataTranferObject> : IExpr
     /// <param name="expression">The <see cref="SystemLinq.Expression"/> returned by the Transform method.</param>
     /// <returns>A <see cref="SystemLinq.Expression"/> ready for execution.</returns>
     protected virtual SystemLinq.Expression Prepare(SystemLinq.Expression expression)
-        => expression.PartialEval(_context?.CanBeEvaluatedLocally);
+        => expression.PartialEval(Context?.CanBeEvaluatedLocally);
 
     /// <summary>
     /// Executes the <see cref="SystemLinq.Expression"/> and returns the raw result.

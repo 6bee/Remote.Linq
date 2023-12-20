@@ -13,7 +13,7 @@ using SystemLinq = System.Linq.Expressions;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class SimpleQueryQueryableExtensions
 {
-    private static readonly Func<RemoteLinq.LambdaExpression, RemoteLinq.LambdaExpression> _defaultExpressionVisitor = RemoteExpressionReWriter.ReplaceNonGenericQueryArgumentsByGenericArguments;
+    private static readonly Func<RemoteLinq.LambdaExpression, RemoteLinq.LambdaExpression> _defaultExpressionVisitor = t => RemoteExpressionReWriter.ReplaceNonGenericQueryArgumentsByGenericArguments(t);
 
     /// <summary>
     /// Execute the <see cref="IQueryable"/> and return the result without any extra tranformation.

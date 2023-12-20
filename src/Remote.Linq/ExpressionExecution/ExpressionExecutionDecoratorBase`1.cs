@@ -25,9 +25,9 @@ public abstract class ExpressionExecutionDecoratorBase<TDataTranferObject> : IEx
     internal ExpressionExecutionDecoratorBase(IExpressionExecutionDecorator<TDataTranferObject> parent)
         => _parent = parent.CheckNotNull();
 
-    ExecutionContext IExpressionExecutionDecorator<TDataTranferObject>.Context => _parent.Context;
+    ExecutionContext IExpressionExecutionDecorator<TDataTranferObject>.ExecutionContext => _parent.ExecutionContext;
 
-    internal ExecutionContext Context => _parent.Context;
+    internal ExecutionContext Context => _parent.ExecutionContext;
 
     protected TDataTranferObject Execute(RemoteLinq.Expression expression)
     {
