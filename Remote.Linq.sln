@@ -34,6 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.EntityFramework
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".global", ".global", "{3FB30F85-98CC-46DD-9B34-B5A41A0D5674}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.runsettings = .runsettings
 		CHANGELOG.md = CHANGELOG.md
 		Directory.Build.props = Directory.Build.props
