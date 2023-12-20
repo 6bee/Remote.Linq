@@ -29,13 +29,13 @@ public sealed class VariableQueryArgumentListConverter : ObjectConverter<Variabl
         }
 
         reader.Advance();
-        if (reader.TokenType == JsonTokenType.Null)
+        if (reader.TokenType is JsonTokenType.Null)
         {
             SetResult(ref reader);
             return;
         }
 
-        if (reader.TokenType != JsonTokenType.StartArray)
+        if (reader.TokenType is not JsonTokenType.StartArray)
         {
             throw reader.CreateException($"Expected array");
         }
@@ -44,7 +44,7 @@ public sealed class VariableQueryArgumentListConverter : ObjectConverter<Variabl
         {
             if (!reader.TryRead(elementTypeInfo, options, out value))
             {
-                if (reader.TokenType == JsonTokenType.EndArray)
+                if (reader.TokenType is JsonTokenType.EndArray)
                 {
                     return false;
                 }

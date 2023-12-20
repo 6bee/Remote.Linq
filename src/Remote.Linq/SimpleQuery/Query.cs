@@ -82,7 +82,7 @@ public class Query : IOrderedQuery
     /// </summary>
     public IOrderedQuery OrderBy(SortExpression sortExpression)
     {
-        if (sortExpression.CheckNotNull().SortDirection != SortDirection.Ascending)
+        if (sortExpression.CheckNotNull().SortDirection is not SortDirection.Ascending)
         {
             throw new ArgumentException("Expected sort expresson to be ascending.");
         }
@@ -96,7 +96,7 @@ public class Query : IOrderedQuery
     /// </summary>
     public IOrderedQuery OrderByDescending(SortExpression sortExpression)
     {
-        if (sortExpression.CheckNotNull().SortDirection != SortDirection.Descending)
+        if (sortExpression.CheckNotNull().SortDirection is not SortDirection.Descending)
         {
             throw new ArgumentException("Expected sort expresson to be descending.");
         }
@@ -112,12 +112,12 @@ public class Query : IOrderedQuery
     /// <returns>A new query instance containing all specified query parameters.</returns>
     IOrderedQuery IOrderedQuery.ThenBy(SortExpression sortExpression)
     {
-        if (SortExpressions?.Any() != true)
+        if (SortExpressions?.Any() is not true)
         {
             throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
         }
 
-        if (sortExpression.SortDirection != SortDirection.Ascending)
+        if (sortExpression.SortDirection is not SortDirection.Ascending)
         {
             throw new ArgumentException("Expected sort expresson to be ascending.");
         }
@@ -136,12 +136,12 @@ public class Query : IOrderedQuery
     /// <returns>A new query instance containing all specified query parameters.</returns>
     IOrderedQuery IOrderedQuery.ThenByDescending(SortExpression sortExpression)
     {
-        if (SortExpressions?.Any() != true)
+        if (SortExpressions?.Any() is not true)
         {
             throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
         }
 
-        if (sortExpression.SortDirection != SortDirection.Descending)
+        if (sortExpression.SortDirection is not SortDirection.Descending)
         {
             throw new ArgumentException("Expected sort expresson to be descending.");
         }

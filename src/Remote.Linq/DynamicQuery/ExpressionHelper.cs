@@ -28,7 +28,7 @@ public static class ExpressionHelper
         }
 
         if (expressionType.Implements(typeof(IQueryable<>), out var typeArgs) &&
-            typeArgs.Length == 1 &&
+            typeArgs.Length is 1 &&
             typeof(TResult).IsAssignableFrom(typeArgs[0]))
         {
             return;

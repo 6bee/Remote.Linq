@@ -92,7 +92,7 @@ public class Ensure_async_method_provided_for_every_synchronous_query_operation
             .ToArray();
         matchingMethods.ShouldNotBeEmpty($"No '{methodName}' query operation found matching argument list ({string.Join(", ", method.GetParameters().Select(x => x.ParameterType.GetFriendlyName(false, false)))}, {nameof(CancellationToken)})");
 
-        if (matchingMethods.Length != 1)
+        if (matchingMethods.Length is not 1)
         {
             throw new RemoteLinqException($"Implementation error: should have exactly one matching method left at this point: '{methodName}'");
         }

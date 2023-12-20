@@ -421,7 +421,7 @@ public static class AsyncQueryableExtensions
                 throw new RemoteLinqException("Implementation error: expected closed generic method definition.");
             }
 
-            method = genericArgumentCount == 2
+            method = genericArgumentCount is 2
                 ? method.MakeGenericMethod(typeof(TSource), typeof(TResult))
                 : method.MakeGenericMethod(typeof(TSource));
         }

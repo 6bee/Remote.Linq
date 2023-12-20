@@ -67,12 +67,12 @@ public sealed class DynamicResultMapper : IQueryResultMapper<DynamicObject>
         {
             // handle special case of single item query from too small or too large result set.
             var properties = dataRecords.Properties;
-            if (properties?.Count == 1)
+            if (properties?.Count is 1)
             {
                 var p = properties.Single();
                 if (string.IsNullOrEmpty(p.Name) && p.Value is object[] objectArray)
                 {
-                    if (objectArray.Length == 0)
+                    if (objectArray.Length is 0)
                     {
                         return Enumerable.Empty<TResult>();
                     }
@@ -91,7 +91,7 @@ public sealed class DynamicResultMapper : IQueryResultMapper<DynamicObject>
     [return: MaybeNull]
     internal static TResult MapToSingleResult<TResult>(Type elementType, System.Collections.IEnumerable result, MethodCallExpression methodCallExpression)
     {
-        var hasPredicate = methodCallExpression.Arguments.Count == 2;
+        var hasPredicate = methodCallExpression.Arguments.Count is 2;
         var arguments = hasPredicate
             ? new object[] { result, GetTruePredicate(elementType) }
             : new object[] { result };

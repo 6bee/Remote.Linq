@@ -30,13 +30,13 @@ public sealed class VariableQueryArgumentListConverter : ObjectConverter<Variabl
         elementTypeInfo = reader.Read<TypeInfo>(serializer) ?? throw reader.CreateException($"{nameof(VariableQueryArgumentList.ElementType)} must not be null.");
 
         reader.Advance();
-        if (reader.TokenType == JsonToken.Null)
+        if (reader.TokenType is JsonToken.Null)
         {
             SetResult();
             return;
         }
 
-        if (reader.TokenType != JsonToken.StartArray)
+        if (reader.TokenType is not JsonToken.StartArray)
         {
             throw reader.CreateException($"Expected array");
         }
@@ -45,7 +45,7 @@ public sealed class VariableQueryArgumentListConverter : ObjectConverter<Variabl
         {
             if (!reader.TryRead(elementTypeInfo!, serializer, out value))
             {
-                if (reader.TokenType == JsonToken.EndArray)
+                if (reader.TokenType is JsonToken.EndArray)
                 {
                     return false;
                 }

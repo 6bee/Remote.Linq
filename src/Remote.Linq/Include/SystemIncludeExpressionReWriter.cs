@@ -312,7 +312,7 @@ public static class SystemIncludeExpressionReWriter
 
         private static Expression RemoveConvert(Expression expression)
         {
-            while (expression.NodeType == ExpressionType.Convert || expression.NodeType == ExpressionType.ConvertChecked)
+            while (expression.NodeType is ExpressionType.Convert or ExpressionType.ConvertChecked)
             {
                 expression = ((UnaryExpression)expression).Operand;
             }

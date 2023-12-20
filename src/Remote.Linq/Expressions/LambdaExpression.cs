@@ -48,7 +48,7 @@ public sealed class LambdaExpression : Expression
     public override string ToString()
     {
         var parameters = Parameters;
-        var (open, close) = parameters?.Count == 1 ? (null, null) : ("(", ")");
+        var (open, close) = parameters?.Count is 1 ? (null, null) : ("(", ")");
         var parameterList = parameters.StringJoin(", ");
         return $"{open}{parameterList}{close} => {Expression}";
     }

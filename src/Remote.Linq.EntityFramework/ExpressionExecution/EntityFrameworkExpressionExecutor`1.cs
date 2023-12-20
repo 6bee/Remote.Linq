@@ -73,7 +73,7 @@ public abstract class EntityFrameworkExpressionExecutor<TDataTranferObject> : As
                     .ToArray();
             }
 
-            if (resultType.Length != 1)
+            if (resultType.Length is not 1)
             {
                 throw new RemoteLinqException($"Failed to retrieve the result type for async query result {task.GetType()}");
             }
