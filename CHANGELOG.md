@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump _aqua-core_ from 5.2.0 to 5.4.0
 - Bump _Microsoft.Bcl.AsyncInterfaces_ from 6.0.0 to 8.0.0
-- Bump _Microsoft.EntityFrameworkCore_ from 6.0.10 to 7.0.14 (.net6.0) and 8.0.0 (net8.0) (concerns _Remote.Linq.EntityFrameworkCore_)
+- Bump _Microsoft.EntityFrameworkCore_ from 6.0.10 to 7.0.14 (net6.0) and 8.0.0 (net8.0) (concerns _Remote.Linq.EntityFrameworkCore_)
 
 ### Deprecated
 
@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Pass ITypeResolver to RemoteExpressionVisitor to avoid potential duplication of emitting dynamic type
+- Pass `ITypeResolver` to remote expression visitors to avoid potential duplication of emitting dynamic type
 
 ### Security
 
