@@ -1,5 +1,7 @@
 language: minimal
 
+if: tag IS blank
+
 branches:
   except:
   - /^experimental.*$/
