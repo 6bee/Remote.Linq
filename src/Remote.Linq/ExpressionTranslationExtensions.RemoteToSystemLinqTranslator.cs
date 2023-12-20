@@ -107,9 +107,9 @@ partial class ExpressionTranslationExtensions
                 _ => throw new NotSupportedException($"Unknown expression node type: '{node.NodeType}'"),
             };
 
-        private System.Reflection.MethodInfo ResolveMethod(Aqua.TypeSystem.MethodInfo method)
+        private System.Reflection.MethodInfo ResolveMethod(MethodInfo method)
             => method.ResolveMethod(_typeResolver)
-            ?? throw new RemoteLinqException($"Failed to resolve method '{method}'");
+            ?? throw new TypeResolverException($"Failed to resolve method '{method}'");
 
         private SystemLinq.Expression VisitSwitch(RemoteLinq.SwitchExpression node)
         {
@@ -273,7 +273,7 @@ partial class ExpressionTranslationExtensions
         {
             var arguments = VisitExpressionList(initializer.Arguments);
             var m = initializer.AddMethod.ResolveMethod(_typeResolver)
-                ?? throw new RemoteLinqException($"Failed to resolve method '{initializer.AddMethod}'");
+                ?? throw new TypeResolverException($"Failed to resolve method '{initializer.AddMethod}'");
             return SystemLinq.Expression.ElementInit(m, arguments);
         }
 

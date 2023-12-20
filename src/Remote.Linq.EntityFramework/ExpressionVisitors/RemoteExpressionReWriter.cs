@@ -75,7 +75,7 @@ public static class RemoteExpressionReWriter
                     return null;
                 }
 
-                var method = source.ToMethodInfo();
+                var method = source.ResolveMethod(TypeResolver) ?? throw new TypeResolverException($"Failed to resolve method '{source}'");
                 var target = MapMethod(method);
                 if (target is null)
                 {

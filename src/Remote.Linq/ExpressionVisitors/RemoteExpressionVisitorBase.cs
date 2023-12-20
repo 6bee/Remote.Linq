@@ -233,7 +233,7 @@ public abstract class RemoteExpressionVisitorBase
         if (!ReferenceEquals(arguments, initializer.Arguments))
         {
             var addMethod = initializer.AddMethod.ResolveMethod(TypeResolver)
-                ?? throw new RemoteLinqException($"Failed to resolve method {initializer.AddMethod}");
+                ?? throw new TypeResolverException($"Failed to resolve method '{initializer.AddMethod}'");
             return new ElementInit(addMethod, arguments);
         }
 

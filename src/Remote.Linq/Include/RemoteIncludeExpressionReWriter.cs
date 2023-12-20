@@ -72,7 +72,8 @@ public static class RemoteIncludeExpressionReWriter
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            if (node.Type.ToType().Implements(typeof(IStackedIncludableQueryable<>), out var args))
+            var type = node.Type.ResolveType(TypeResolver) ?? throw new TypeResolverException($"Failed to resolve type '{node.Type}'");
+            if (type.Implements(typeof(IStackedIncludableQueryable<>), out var args))
             {
                 var method = _strategy switch
                 {

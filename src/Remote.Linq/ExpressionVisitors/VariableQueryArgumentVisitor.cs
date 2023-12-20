@@ -61,9 +61,9 @@ public abstract class VariableQueryArgumentVisitor
             return base.VisitConstant(node);
         }
 
-        private static bool IsGenericVariableQueryArgument(ConstantExpression expression, [NotNullWhen(true)] out Type? valueType)
+        private bool IsGenericVariableQueryArgument(ConstantExpression expression, [NotNullWhen(true)] out Type? valueType)
         {
-            var type = expression.Type?.ToType() ?? expression.Value?.GetType();
+            var type = expression.Type?.ResolveType(TypeResolver) ?? expression.Value?.GetType();
             if (type is not null &&
                 type.IsGenericType &&
                 type.GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
@@ -78,12 +78,12 @@ public abstract class VariableQueryArgumentVisitor
 
         protected override Expression VisitMemberAccess(MemberExpression node)
         {
-            if (node.CheckNotNull().Expression?.NodeType == ExpressionType.Constant)
+            if (node.CheckNotNull().Expression?.NodeType is ExpressionType.Constant)
             {
                 var member = node.Member;
-                if (member.MemberType == MemberTypes.Property &&
+                if (member.MemberType is MemberTypes.Property &&
                     member.DeclaringType?.IsGenericType is true &&
-                    member.DeclaringType?.ToType().GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                    member.DeclaringType?.ResolveType(TypeResolver).GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                 {
                     var instanceExpression = (ConstantExpression)(Visit(node.Expression) ?? throw new InvalidOperationException("Visit must not return null for non null value."));
 
@@ -125,7 +125,7 @@ public abstract class VariableQueryArgumentVisitor
         {
             if (node.CheckNotNull().Value is VariableQueryArgument nonGenericQueryArgument)
             {
-                var type = nonGenericQueryArgument.Type.ToType();
+                var type = nonGenericQueryArgument.Type.ResolveType(TypeResolver);
                 var value = nonGenericQueryArgument.Value;
                 var queryArgument = Activator.CreateInstance(typeof(VariableQueryArgument<>).MakeGenericType(type), new[] { value });
                 return new ConstantExpression(queryArgument);
@@ -133,7 +133,7 @@ public abstract class VariableQueryArgumentVisitor
 
             if (node.Value is VariableQueryArgumentList nonGenericQueryArgumentList)
             {
-                var elementType = nonGenericQueryArgumentList.ElementType.ToType();
+                var elementType = nonGenericQueryArgumentList.ElementType.ResolveType(TypeResolver);
                 var values = nonGenericQueryArgumentList.Values;
                 var methodInfo = CreateVariableQueryArgumentListMethodInfo.MakeGenericMethod(elementType);
                 var queryArgument = methodInfo.Invoke(null, new object[] { values });
@@ -158,7 +158,7 @@ public abstract class VariableQueryArgumentVisitor
                 Visit(node.Expression) is ConstantExpression instanceExpression)
             {
                 var instanceType = instanceExpression.Type;
-                if (instanceType.IsGenericType && instanceType.ToType().GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
+                if (instanceType.IsGenericType && instanceType.ResolveType(TypeResolver).GetGenericTypeDefinition() == typeof(VariableQueryArgument<>))
                 {
                     var valueType = instanceType.GenericArguments!.Single();
                     var valuePropertyInfo = new PropertyInfo(nameof(VariableQueryArgument.Value), valueType, instanceType);
