@@ -213,11 +213,11 @@ dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, p
 dotnet_naming_symbols.interface.required_modifiers = 
 
 dotnet_naming_symbols.private_or_internal_field.applicable_kinds = field
-dotnet_naming_symbols.private_or_internal_field.applicable_accessibilities = internal, private, private_protected
+dotnet_naming_symbols.private_or_internal_field.applicable_accessibilities = private
 dotnet_naming_symbols.private_or_internal_field.required_modifiers = 
 
 dotnet_naming_symbols.private_or_internal_static_field.applicable_kinds = field
-dotnet_naming_symbols.private_or_internal_static_field.applicable_accessibilities = internal, private, private_protected
+dotnet_naming_symbols.private_or_internal_static_field.applicable_accessibilities = private
 dotnet_naming_symbols.private_or_internal_static_field.required_modifiers = static
 
 dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
