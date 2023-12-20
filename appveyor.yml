@@ -4,6 +4,8 @@ branches:
   except:
   - /^experimental.*$/
 
+skip_tags: true
+
 init:
   - git config --global core.autocrlf true
 
