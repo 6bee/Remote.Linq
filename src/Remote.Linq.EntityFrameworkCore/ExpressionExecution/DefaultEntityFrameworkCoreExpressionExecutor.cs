@@ -1,38 +1,37 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution
+namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution;
+
+using Aqua.Dynamic;
+using Aqua.TypeExtensions;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Security;
+
+public class DefaultEntityFrameworkCoreExpressionExecutor : EntityFrameworkCoreExpressionExecutor<DynamicObject?>
 {
-    using Aqua.Dynamic;
-    using Aqua.TypeExtensions;
-    using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Linq;
-    using System.Security;
+    private readonly IDynamicObjectMapper _mapper;
+    private readonly Func<Type, bool> _setTypeInformation;
 
-    public class DefaultEntityFrameworkCoreExpressionExecutor : EntityFrameworkCoreExpressionExecutor<DynamicObject?>
+    [SecuritySafeCritical]
+    public DefaultEntityFrameworkCoreExpressionExecutor(DbContext dbContext, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
+        : this(dbContext.GetQueryableSetProvider(), context, setTypeInformation)
     {
-        private readonly IDynamicObjectMapper _mapper;
-        private readonly Func<Type, bool> _setTypeInformation;
-
-        [SecuritySafeCritical]
-        public DefaultEntityFrameworkCoreExpressionExecutor(DbContext dbContext, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
-            : this(dbContext.GetQueryableSetProvider(), context, setTypeInformation)
-        {
-        }
-
-        public DefaultEntityFrameworkCoreExpressionExecutor(Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
-            : base(queryableProvider, context ??= new EntityFrameworkCoreExpressionTranslatorContext())
-        {
-            _mapper = context.ValueMapper;
-            _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
-        }
-
-        /// <summary>
-        /// Converts the query result into a collection of <see cref="DynamicObject"/>.
-        /// </summary>
-        /// <param name="queryResult">The reult of the query execution.</param>
-        /// <returns>The mapped query result.</returns>
-        protected override DynamicObject? ConvertResult(object? queryResult)
-            => _mapper.MapObject(queryResult, _setTypeInformation);
     }
+
+    public DefaultEntityFrameworkCoreExpressionExecutor(Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null, Func<Type, bool>? setTypeInformation = null)
+        : base(queryableProvider, context ??= new EntityFrameworkCoreExpressionTranslatorContext())
+    {
+        _mapper = context.ValueMapper;
+        _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
+    }
+
+    /// <summary>
+    /// Converts the query result into a collection of <see cref="DynamicObject"/>.
+    /// </summary>
+    /// <param name="queryResult">The reult of the query execution.</param>
+    /// <returns>The mapped query result.</returns>
+    protected override DynamicObject? ConvertResult(object? queryResult)
+        => _mapper.MapObject(queryResult, _setTypeInformation);
 }

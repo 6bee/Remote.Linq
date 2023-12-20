@@ -1,241 +1,240 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.SimpleQuery
+namespace Remote.Linq.SimpleQuery;
+
+using Aqua.EnumerableExtensions;
+using Aqua.TypeSystem;
+using Remote.Linq.Expressions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+
+[Serializable]
+[DataContract]
+public class Query : IOrderedQuery
 {
-    using Aqua.EnumerableExtensions;
-    using Aqua.TypeSystem;
-    using Remote.Linq.Expressions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
-    using System.Text;
-
-    [Serializable]
-    [DataContract]
-    public class Query : IOrderedQuery
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Query"/> class.
+    /// </summary>
+    private Query()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Query"/> class.
-        /// </summary>
-        private Query()
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Query"/> class.
+    /// </summary>
+    public Query(Type type, IEnumerable<LambdaExpression>? filterExpressions = null, IEnumerable<SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
+        : this(type.AsTypeInfo(), filterExpressions, sortExpressions, skip, take)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Query"/> class.
+    /// </summary>
+    public Query(TypeInfo type, IEnumerable<LambdaExpression>? filterExpressions = null, IEnumerable<SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
+    {
+        Type = type.CheckNotNull();
+        FilterExpressions = filterExpressions.AsNullIfEmpty()?.ToList();
+        SortExpressions = sortExpressions.AsNullIfEmpty()?.ToList();
+        SkipValue = skip;
+        TakeValue = take;
+    }
+
+    [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
+    public TypeInfo Type { get; set; } = null!;
+
+    public bool HasFilters => FilterExpressions?.Count > 0;
+
+    public bool HasSorting => SortExpressions?.Count > 0;
+
+    public bool HasPaging => TakeValue.HasValue;
+
+    [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
+    public List<LambdaExpression>? FilterExpressions { get; set; }
+
+    [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+    public List<SortExpression>? SortExpressions { get; set; }
+
+    [DataMember(Name = "Skip", Order = 4, IsRequired = false, EmitDefaultValue = false)]
+    public int? SkipValue { get; set; }
+
+    [DataMember(Name = "Take", Order = 5, IsRequired = false, EmitDefaultValue = false)]
+    public int? TakeValue { get; set; }
+
+    /// <summary>
+    /// Filters a sequence of values based on a predicate.
+    /// </summary>
+    /// <param name="predicate">A lambda expression to test each element for a condition.</param>
+    /// <returns>A new query instance containing all specified query parameters.</returns>
+    public IQuery Where(LambdaExpression predicate)
+    {
+        var filterExpressions = FilterExpressions.AsEmptyIfNull().ToList();
+        filterExpressions.Add(predicate);
+
+        var query = new Query(Type, filterExpressions, SortExpressions, SkipValue, TakeValue);
+        return query;
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in ascending order according to a key.
+    /// </summary>
+    public IOrderedQuery OrderBy(SortExpression sortExpression)
+    {
+        if (sortExpression.CheckNotNull().SortDirection != SortDirection.Ascending)
         {
+            throw new ArgumentException("Expected sort expresson to be ascending.");
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Query"/> class.
-        /// </summary>
-        public Query(Type type, IEnumerable<LambdaExpression>? filterExpressions = null, IEnumerable<SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
-            : this(type.AsTypeInfo(), filterExpressions, sortExpressions, skip, take)
+        var query = new Query(Type, FilterExpressions, new[] { sortExpression }, SkipValue, TakeValue);
+        return query;
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in descending order according to a key.
+    /// </summary>
+    public IOrderedQuery OrderByDescending(SortExpression sortExpression)
+    {
+        if (sortExpression.CheckNotNull().SortDirection != SortDirection.Descending)
         {
+            throw new ArgumentException("Expected sort expresson to be descending.");
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Query"/> class.
-        /// </summary>
-        public Query(TypeInfo type, IEnumerable<LambdaExpression>? filterExpressions = null, IEnumerable<SortExpression>? sortExpressions = null, int? skip = null, int? take = null)
+        var query = new Query(Type, FilterExpressions, new[] { sortExpression }, SkipValue, TakeValue);
+        return query;
+    }
+
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+    /// </summary>
+    /// <param name="sortExpression">A sort expression to extract a key from each element and define a sort direction.</param>
+    /// <returns>A new query instance containing all specified query parameters.</returns>
+    IOrderedQuery IOrderedQuery.ThenBy(SortExpression sortExpression)
+    {
+        if (SortExpressions?.Any() != true)
         {
-            Type = type.CheckNotNull();
-            FilterExpressions = filterExpressions.AsNullIfEmpty()?.ToList();
-            SortExpressions = sortExpressions.AsNullIfEmpty()?.ToList();
-            SkipValue = skip;
-            TakeValue = take;
+            throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
         }
 
-        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]
-        public TypeInfo Type { get; set; } = null!;
-
-        public bool HasFilters => FilterExpressions?.Count > 0;
-
-        public bool HasSorting => SortExpressions?.Count > 0;
-
-        public bool HasPaging => TakeValue.HasValue;
-
-        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public List<LambdaExpression>? FilterExpressions { get; set; }
-
-        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public List<SortExpression>? SortExpressions { get; set; }
-
-        [DataMember(Name = "Skip", Order = 4, IsRequired = false, EmitDefaultValue = false)]
-        public int? SkipValue { get; set; }
-
-        [DataMember(Name = "Take", Order = 5, IsRequired = false, EmitDefaultValue = false)]
-        public int? TakeValue { get; set; }
-
-        /// <summary>
-        /// Filters a sequence of values based on a predicate.
-        /// </summary>
-        /// <param name="predicate">A lambda expression to test each element for a condition.</param>
-        /// <returns>A new query instance containing all specified query parameters.</returns>
-        public IQuery Where(LambdaExpression predicate)
+        if (sortExpression.SortDirection != SortDirection.Ascending)
         {
-            var filterExpressions = FilterExpressions.AsEmptyIfNull().ToList();
-            filterExpressions.Add(predicate);
-
-            var query = new Query(Type, filterExpressions, SortExpressions, SkipValue, TakeValue);
-            return query;
+            throw new ArgumentException("Expected sort expresson to be ascending.");
         }
 
-        /// <summary>
-        /// Sorts the elements of a sequence in ascending order according to a key.
-        /// </summary>
-        public IOrderedQuery OrderBy(SortExpression sortExpression)
-        {
-            if (sortExpression.CheckNotNull().SortDirection != SortDirection.Ascending)
-            {
-                throw new ArgumentException("Expected sort expresson to be ascending.");
-            }
+        var sortExpressions = SortExpressions.ToList();
+        sortExpressions.Add(sortExpression);
 
-            var query = new Query(Type, FilterExpressions, new[] { sortExpression }, SkipValue, TakeValue);
-            return query;
+        var query = new Query(Type, FilterExpressions, sortExpressions, SkipValue, TakeValue);
+        return query;
+    }
+
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
+    /// </summary>
+    /// <param name="sortExpression">A sort expression to extract a key from each element and define a sort direction.</param>
+    /// <returns>A new query instance containing all specified query parameters.</returns>
+    IOrderedQuery IOrderedQuery.ThenByDescending(SortExpression sortExpression)
+    {
+        if (SortExpressions?.Any() != true)
+        {
+            throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
         }
 
-        /// <summary>
-        /// Sorts the elements of a sequence in descending order according to a key.
-        /// </summary>
-        public IOrderedQuery OrderByDescending(SortExpression sortExpression)
+        if (sortExpression.SortDirection != SortDirection.Descending)
         {
-            if (sortExpression.CheckNotNull().SortDirection != SortDirection.Descending)
-            {
-                throw new ArgumentException("Expected sort expresson to be descending.");
-            }
-
-            var query = new Query(Type, FilterExpressions, new[] { sortExpression }, SkipValue, TakeValue);
-            return query;
+            throw new ArgumentException("Expected sort expresson to be descending.");
         }
 
-        /// <summary>
-        /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
-        /// </summary>
-        /// <param name="sortExpression">A sort expression to extract a key from each element and define a sort direction.</param>
-        /// <returns>A new query instance containing all specified query parameters.</returns>
-        IOrderedQuery IOrderedQuery.ThenBy(SortExpression sortExpression)
+        var sortExpressions = SortExpressions.ToList();
+        sortExpressions.Add(sortExpression);
+
+        var query = new Query(Type, FilterExpressions, sortExpressions, SkipValue, TakeValue);
+        return query;
+    }
+
+    /// <summary>
+    /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
+    /// </summary>
+    /// <param name="count">The number of elements to skip before returning the remaining elements.</param>
+    /// <returns>A new query instance containing all specified query parameters.</returns>
+    public IQuery Skip(int count)
+    {
+        var query = new Query(Type, FilterExpressions, SortExpressions, count, TakeValue);
+        return query;
+    }
+
+    /// <summary>
+    /// Returns a specified number of contiguous elements from the start of a sequence.
+    /// </summary>
+    /// <param name="count">The number of elements to return.</param>
+    /// <returns>A new query instance containing all specified query parameters.</returns>
+    public IQuery Take(int count)
+    {
+        var query = new Query(Type, FilterExpressions, SortExpressions, SkipValue, count);
+        return query;
+    }
+
+    /// <summary>
+    /// Creates a non-generic version of the specified query instance.
+    /// </summary>
+    /// <param name="query">The query instance to be converted into a non-generc query object.</param>
+    /// <returns>A non-generic version of the specified query instance.</returns>
+    public static Query CreateFromGeneric<T>(IQuery<T> query)
+    {
+        var instance = new Query(typeof(T), query.CheckNotNull().FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
+        return instance;
+    }
+
+    public override string ToString()
+    {
+        var queryParameters = QueryParametersToString();
+        return string.Format(
+            "Query {0}{1}{2}",
+            Type,
+            string.IsNullOrEmpty(queryParameters) ? null : ": ",
+            queryParameters);
+    }
+
+    protected string QueryParametersToString()
+    {
+        var sb = new StringBuilder();
+
+        var filterExpressions = FilterExpressions;
+        if (filterExpressions is not null)
         {
-            if (SortExpressions?.Any() != true)
-            {
-                throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
-            }
-
-            if (sortExpression.SortDirection != SortDirection.Ascending)
-            {
-                throw new ArgumentException("Expected sort expresson to be ascending.");
-            }
-
-            var sortExpressions = SortExpressions.ToList();
-            sortExpressions.Add(sortExpression);
-
-            var query = new Query(Type, FilterExpressions, sortExpressions, SkipValue, TakeValue);
-            return query;
-        }
-
-        /// <summary>
-        /// Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
-        /// </summary>
-        /// <param name="sortExpression">A sort expression to extract a key from each element and define a sort direction.</param>
-        /// <returns>A new query instance containing all specified query parameters.</returns>
-        IOrderedQuery IOrderedQuery.ThenByDescending(SortExpression sortExpression)
-        {
-            if (SortExpressions?.Any() != true)
-            {
-                throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
-            }
-
-            if (sortExpression.SortDirection != SortDirection.Descending)
-            {
-                throw new ArgumentException("Expected sort expresson to be descending.");
-            }
-
-            var sortExpressions = SortExpressions.ToList();
-            sortExpressions.Add(sortExpression);
-
-            var query = new Query(Type, FilterExpressions, sortExpressions, SkipValue, TakeValue);
-            return query;
-        }
-
-        /// <summary>
-        /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
-        /// </summary>
-        /// <param name="count">The number of elements to skip before returning the remaining elements.</param>
-        /// <returns>A new query instance containing all specified query parameters.</returns>
-        public IQuery Skip(int count)
-        {
-            var query = new Query(Type, FilterExpressions, SortExpressions, count, TakeValue);
-            return query;
-        }
-
-        /// <summary>
-        /// Returns a specified number of contiguous elements from the start of a sequence.
-        /// </summary>
-        /// <param name="count">The number of elements to return.</param>
-        /// <returns>A new query instance containing all specified query parameters.</returns>
-        public IQuery Take(int count)
-        {
-            var query = new Query(Type, FilterExpressions, SortExpressions, SkipValue, count);
-            return query;
-        }
-
-        /// <summary>
-        /// Creates a non-generic version of the specified query instance.
-        /// </summary>
-        /// <param name="query">The query instance to be converted into a non-generc query object.</param>
-        /// <returns>A non-generic version of the specified query instance.</returns>
-        public static Query CreateFromGeneric<T>(IQuery<T> query)
-        {
-            var instance = new Query(typeof(T), query.CheckNotNull().FilterExpressions, query.SortExpressions, query.SkipValue, query.TakeValue);
-            return instance;
-        }
-
-        public override string ToString()
-        {
-            var queryParameters = QueryParametersToString();
-            return string.Format(
-                "Query {0}{1}{2}",
-                Type,
-                string.IsNullOrEmpty(queryParameters) ? null : ": ",
-                queryParameters);
-        }
-
-        protected string QueryParametersToString()
-        {
-            var sb = new StringBuilder();
-
-            var filterExpressions = FilterExpressions;
-            if (filterExpressions is not null)
-            {
-                foreach (var expression in filterExpressions)
-                {
-                    sb.AppendLine();
-                    sb.AppendFormat("\tWhere {0}", expression);
-                }
-            }
-
-            var sortExpressions = SortExpressions;
-            if (sortExpressions is not null)
-            {
-                foreach (var expression in sortExpressions)
-                {
-                    sb.AppendLine();
-                    sb.AppendFormat("\t{0}", expression);
-                }
-            }
-
-            var skipValue = SkipValue;
-            if (skipValue.HasValue)
+            foreach (var expression in filterExpressions)
             {
                 sb.AppendLine();
-                sb.AppendFormat("\tSkip {0}", skipValue.Value);
+                sb.AppendFormat("\tWhere {0}", expression);
             }
+        }
 
-            var takeValue = TakeValue;
-            if (takeValue.HasValue)
+        var sortExpressions = SortExpressions;
+        if (sortExpressions is not null)
+        {
+            foreach (var expression in sortExpressions)
             {
                 sb.AppendLine();
-                sb.AppendFormat("\tTake {0}", takeValue.Value);
+                sb.AppendFormat("\t{0}", expression);
             }
-
-            var queryParameters = sb.ToString();
-            return queryParameters;
         }
+
+        var skipValue = SkipValue;
+        if (skipValue.HasValue)
+        {
+            sb.AppendLine();
+            sb.AppendFormat("\tSkip {0}", skipValue.Value);
+        }
+
+        var takeValue = TakeValue;
+        if (takeValue.HasValue)
+        {
+            sb.AppendLine();
+            sb.AppendFormat("\tTake {0}", takeValue.Value);
+        }
+
+        var queryParameters = sb.ToString();
+        return queryParameters;
     }
 }

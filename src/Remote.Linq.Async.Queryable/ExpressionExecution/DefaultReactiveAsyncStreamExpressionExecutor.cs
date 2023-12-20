@@ -1,37 +1,36 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Async.Queryable.ExpressionExecution
+namespace Remote.Linq.Async.Queryable.ExpressionExecution;
+
+using Aqua.Dynamic;
+using Aqua.TypeExtensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+internal sealed class DefaultReactiveAsyncStreamExpressionExecutor : InteractiveAsyncStreamExpressionExecutor<DynamicObject>
 {
-    using Aqua.Dynamic;
-    using Aqua.TypeExtensions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    private readonly IDynamicObjectMapper _mapper;
+    private readonly Func<Type, bool> _setTypeInformation;
 
-    internal sealed class DefaultReactiveAsyncStreamExpressionExecutor : InteractiveAsyncStreamExpressionExecutor<DynamicObject>
+    public DefaultReactiveAsyncStreamExpressionExecutor(
+        Func<Type, IAsyncQueryable> queryableProvider,
+        IExpressionFromRemoteLinqContext? context = null,
+        Func<Type, bool>? setTypeInformation = null)
+        : base(queryableProvider, context ??= new AsyncQueryExpressionTranslatorContext())
     {
-        private readonly IDynamicObjectMapper _mapper;
-        private readonly Func<Type, bool> _setTypeInformation;
+        _mapper = context.ValueMapper;
+        _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
+    }
 
-        public DefaultReactiveAsyncStreamExpressionExecutor(
-            Func<Type, IAsyncQueryable> queryableProvider,
-            IExpressionFromRemoteLinqContext? context = null,
-            Func<Type, bool>? setTypeInformation = null)
-            : base(queryableProvider, context ??= new AsyncQueryExpressionTranslatorContext())
+    protected override async IAsyncEnumerable<DynamicObject> ConvertResult(IAsyncEnumerable<object?> queryResult)
+    {
+        if (queryResult is not null)
         {
-            _mapper = context.ValueMapper;
-            _setTypeInformation = setTypeInformation ?? (t => !t.IsAnonymousType());
-        }
-
-        protected override async IAsyncEnumerable<DynamicObject> ConvertResult(IAsyncEnumerable<object?> queryResult)
-        {
-            if (queryResult is not null)
+            await foreach (var item in queryResult)
             {
-                await foreach (var item in queryResult)
-                {
-                    yield return _mapper.MapObject(item, _setTypeInformation)
-                        ?? DynamicObject.CreateDefault(Context.SystemExpression?.Type);
-                }
+                yield return _mapper.MapObject(item, _setTypeInformation)
+                    ?? DynamicObject.CreateDefault(Context.SystemExpression?.Type);
             }
         }
     }

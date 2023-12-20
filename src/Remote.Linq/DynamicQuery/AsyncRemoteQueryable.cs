@@ -1,24 +1,23 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.DynamicQuery
+namespace Remote.Linq.DynamicQuery;
+
+using System;
+using System.Linq.Expressions;
+
+/// <summary>
+/// Provides functionality to compose queries for async remote execution.
+/// </summary>
+public class AsyncRemoteQueryable : RemoteQueryable, IOrderedAsyncRemoteQueryable
 {
-    using System;
-    using System.Linq.Expressions;
-
     /// <summary>
-    /// Provides functionality to compose queries for async remote execution.
+    /// Initializes a new instance of the <see cref="AsyncRemoteQueryable"/> class.
     /// </summary>
-    public class AsyncRemoteQueryable : RemoteQueryable, IOrderedAsyncRemoteQueryable
+    public AsyncRemoteQueryable(Type elemntType, IAsyncRemoteQueryProvider provider, Expression? expression = null)
+        : base(elemntType, provider, expression)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncRemoteQueryable"/> class.
-        /// </summary>
-        public AsyncRemoteQueryable(Type elemntType, IAsyncRemoteQueryProvider provider, Expression? expression = null)
-            : base(elemntType, provider, expression)
-        {
-        }
-
-        /// <inheritdoc/>
-        public new IAsyncRemoteQueryProvider Provider => (IAsyncRemoteQueryProvider)base.Provider;
     }
+
+    /// <inheritdoc/>
+    public new IAsyncRemoteQueryProvider Provider => (IAsyncRemoteQueryProvider)base.Provider;
 }

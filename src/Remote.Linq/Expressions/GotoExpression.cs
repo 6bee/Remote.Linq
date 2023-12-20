@@ -1,46 +1,45 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Expressions
+namespace Remote.Linq.Expressions;
+
+using Aqua.TypeSystem;
+using System;
+using System.Runtime.Serialization;
+
+[Serializable]
+[DataContract]
+public sealed class GotoExpression : Expression
 {
-    using Aqua.TypeSystem;
-    using System;
-    using System.Runtime.Serialization;
-
-    [Serializable]
-    [DataContract]
-    public sealed class GotoExpression : Expression
+    public GotoExpression()
     {
-        public GotoExpression()
-        {
-        }
-
-        public GotoExpression(GotoExpressionKind kind, LabelTarget target, Type? type, Expression? value)
-            : this(kind, target, type.AsTypeInfo(), value)
-        {
-        }
-
-        public GotoExpression(GotoExpressionKind kind, LabelTarget target, TypeInfo? type, Expression? value)
-        {
-            Kind = kind;
-            Target = target.CheckNotNull();
-            Type = type;
-            Value = value;
-        }
-
-        public override ExpressionType NodeType => ExpressionType.Goto;
-
-        [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
-        public GotoExpressionKind Kind { get; set; }
-
-        [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
-        public LabelTarget Target { get; set; } = null!;
-
-        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo? Type { get; set; }
-
-        [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
-        public Expression? Value { get; set; }
-
-        public override string ToString() => $".goto {Kind} {Target} {Value}";
     }
+
+    public GotoExpression(GotoExpressionKind kind, LabelTarget target, Type? type, Expression? value)
+        : this(kind, target, type.AsTypeInfo(), value)
+    {
+    }
+
+    public GotoExpression(GotoExpressionKind kind, LabelTarget target, TypeInfo? type, Expression? value)
+    {
+        Kind = kind;
+        Target = target.CheckNotNull();
+        Type = type;
+        Value = value;
+    }
+
+    public override ExpressionType NodeType => ExpressionType.Goto;
+
+    [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
+    public GotoExpressionKind Kind { get; set; }
+
+    [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
+    public LabelTarget Target { get; set; } = null!;
+
+    [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+    public TypeInfo? Type { get; set; }
+
+    [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
+    public Expression? Value { get; set; }
+
+    public override string ToString() => $".goto {Kind} {Target} {Value}";
 }

@@ -1,159 +1,158 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.ExpressionVisitors
+namespace Remote.Linq.ExpressionVisitors;
+
+using Aqua.Dynamic;
+using Aqua.EnumerableExtensions;
+using Aqua.TypeSystem;
+using Remote.Linq.DynamicQuery;
+using Remote.Linq.Expressions;
+using System;
+using System.Threading;
+
+public abstract class QueryableResourceVisitor
 {
-    using Aqua.Dynamic;
-    using Aqua.EnumerableExtensions;
-    using Aqua.TypeSystem;
-    using Remote.Linq.DynamicQuery;
-    using Remote.Linq.Expressions;
-    using System;
-    using System.Threading;
+    internal static TExpression ReplaceResourceDescriptorsByQueryable<TExpression, TQueryable>(TExpression expression, Func<Type, TQueryable> provider, ITypeResolver? typeResolver)
+        where TExpression : Expression
+        => (TExpression)new ResourceDescriptorVisitor<TQueryable>(provider, typeResolver).Run(expression);
 
-    public abstract class QueryableResourceVisitor
+    internal static Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider? typeInfoProvider)
+        => new QueryableVisitor(typeInfoProvider).Run(expression);
+
+    protected class ResourceDescriptorVisitor<TQueryable> : RemoteExpressionVisitorBase
     {
-        internal static TExpression ReplaceResourceDescriptorsByQueryable<TExpression, TQueryable>(TExpression expression, Func<Type, TQueryable> provider, ITypeResolver? typeResolver)
-            where TExpression : Expression
-            => (TExpression)new ResourceDescriptorVisitor<TQueryable>(provider, typeResolver).Run(expression);
+        private readonly ITypeResolver _typeResolver;
+        private readonly Func<Type, TQueryable> _provider;
 
-        internal static Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider? typeInfoProvider)
-            => new QueryableVisitor(typeInfoProvider).Run(expression);
-
-        protected class ResourceDescriptorVisitor<TQueryable> : RemoteExpressionVisitorBase
+        internal protected ResourceDescriptorVisitor(Func<Type, TQueryable> provider, ITypeResolver? typeResolver)
         {
-            private readonly ITypeResolver _typeResolver;
-            private readonly Func<Type, TQueryable> _provider;
-
-            internal protected ResourceDescriptorVisitor(Func<Type, TQueryable> provider, ITypeResolver? typeResolver)
-            {
-                _provider = provider.CheckNotNull();
-                _typeResolver = typeResolver ?? TypeResolver.Instance;
-            }
-
-            public Expression Run(Expression expression) => Visit(expression);
-
-            protected override Expression VisitConstant(ConstantExpression node)
-            {
-                var value = node.CheckNotNull().Value;
-                if (TryGetQueryableByQueryableResourceDescriptor(value, out var queryable))
-                {
-                    return new ConstantExpression(queryable);
-                }
-
-                if (TryResolveQueryableSuorceInConstantQueryArgument(value, out var constantQueryArgument))
-                {
-                    return new ConstantExpression(constantQueryArgument, node.Type);
-                }
-
-                if (TryResolveSubstitutedValue(value, out var substitutedValue))
-                {
-                    return new ConstantExpression(substitutedValue, node.Type);
-                }
-
-                return base.VisitConstant(node);
-            }
-
-            private bool TryGetQueryableByQueryableResourceDescriptor(object? value, out TQueryable? queryable)
-            {
-                if (value is QueryableResourceDescriptor queryableResourceDescriptor)
-                {
-                    var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
-                    queryable = _provider(queryableType);
-                    return true;
-                }
-
-                queryable = default;
-                return false;
-            }
-
-            private bool TryResolveQueryableSuorceInConstantQueryArgument(object? value, out ConstantQueryArgument? newConstantQueryArgument)
-            {
-                if (value is ConstantQueryArgument constantQueryArgument)
-                {
-                    var hasChanged = false;
-                    var tempConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument.Value);
-                    foreach (var property in tempConstantQueryArgument.Value.Properties.AsEmptyIfNull())
-                    {
-                        if (TryGetQueryableByQueryableResourceDescriptor(property.Value, out var queryable))
-                        {
-                            property.Value = queryable;
-                            hasChanged = true;
-                        }
-                    }
-
-                    if (hasChanged)
-                    {
-                        newConstantQueryArgument = tempConstantQueryArgument;
-                        return true;
-                    }
-                }
-
-                newConstantQueryArgument = null;
-                return false;
-            }
-
-            private bool TryResolveSubstitutedValue(object? value, out object? resubstitutionValue)
-            {
-                if (value is SubstitutionValue substitutionValue)
-                {
-                    var type = substitutionValue.Type.ResolveType(_typeResolver);
-                    if (type == typeof(CancellationToken))
-                    {
-                        // TODO: should/can cancellation token be retrieved from context?
-                        resubstitutionValue = CancellationToken.None;
-                        return true;
-                    }
-                }
-
-                resubstitutionValue = null;
-                return false;
-            }
+            _provider = provider.CheckNotNull();
+            _typeResolver = typeResolver ?? TypeResolver.Instance;
         }
 
-        protected class QueryableVisitor : RemoteExpressionVisitorBase
+        public Expression Run(Expression expression) => Visit(expression);
+
+        protected override Expression VisitConstant(ConstantExpression node)
         {
-            private readonly ITypeInfoProvider _typeInfoProvider;
-
-            internal protected QueryableVisitor(ITypeInfoProvider? typeInfoProvider)
+            var value = node.CheckNotNull().Value;
+            if (TryGetQueryableByQueryableResourceDescriptor(value, out var queryable))
             {
-                _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
+                return new ConstantExpression(queryable);
             }
 
-            public Expression Run(Expression expression) => Visit(expression);
-
-            protected override Expression VisitConstant(ConstantExpression node)
+            if (TryResolveQueryableSuorceInConstantQueryArgument(value, out var constantQueryArgument))
             {
-                if (node.CheckNotNull().Value.AsQueryableResourceTypeOrNull() is Type resourceType)
-                {
-                    var typeInfo = _typeInfoProvider.GetTypeInfo(resourceType);
-                    var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
-                    return new ConstantExpression(queryableResourceDescriptor);
-                }
+                return new ConstantExpression(constantQueryArgument, node.Type);
+            }
 
-                if (node.Value is ConstantQueryArgument constantQueryArgument)
+            if (TryResolveSubstitutedValue(value, out var substitutedValue))
+            {
+                return new ConstantExpression(substitutedValue, node.Type);
+            }
+
+            return base.VisitConstant(node);
+        }
+
+        private bool TryGetQueryableByQueryableResourceDescriptor(object? value, out TQueryable? queryable)
+        {
+            if (value is QueryableResourceDescriptor queryableResourceDescriptor)
+            {
+                var queryableType = queryableResourceDescriptor.Type.ResolveType(_typeResolver);
+                queryable = _provider(queryableType);
+                return true;
+            }
+
+            queryable = default;
+            return false;
+        }
+
+        private bool TryResolveQueryableSuorceInConstantQueryArgument(object? value, out ConstantQueryArgument? newConstantQueryArgument)
+        {
+            if (value is ConstantQueryArgument constantQueryArgument)
+            {
+                var hasChanged = false;
+                var tempConstantQueryArgument = new ConstantQueryArgument(constantQueryArgument.Value);
+                foreach (var property in tempConstantQueryArgument.Value.Properties.AsEmptyIfNull())
                 {
-                    var copy = new DynamicObject(constantQueryArgument.Value);
-                    foreach (var property in copy.Properties.AsEmptyIfNull())
+                    if (TryGetQueryableByQueryableResourceDescriptor(property.Value, out var queryable))
                     {
-                        if (property.Value.AsQueryableResourceTypeOrNull() is Type resourceTypePropertyValue)
-                        {
-                            var typeInfo = _typeInfoProvider.GetTypeInfo(resourceTypePropertyValue);
-                            var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
-                            property.Value = queryableResourceDescriptor;
-                        }
+                        property.Value = queryable;
+                        hasChanged = true;
                     }
-
-                    return new ConstantExpression(new ConstantQueryArgument(copy), node.Type);
                 }
 
-                if (node.Value is CancellationToken)
+                if (hasChanged)
                 {
-                    var substitutionValue = new SubstitutionValue(node.Type);
-                    return new ConstantExpression(substitutionValue, node.Type);
+                    newConstantQueryArgument = tempConstantQueryArgument;
+                    return true;
+                }
+            }
+
+            newConstantQueryArgument = null;
+            return false;
+        }
+
+        private bool TryResolveSubstitutedValue(object? value, out object? resubstitutionValue)
+        {
+            if (value is SubstitutionValue substitutionValue)
+            {
+                var type = substitutionValue.Type.ResolveType(_typeResolver);
+                if (type == typeof(CancellationToken))
+                {
+                    // TODO: should/can cancellation token be retrieved from context?
+                    resubstitutionValue = CancellationToken.None;
+                    return true;
+                }
+            }
+
+            resubstitutionValue = null;
+            return false;
+        }
+    }
+
+    protected class QueryableVisitor : RemoteExpressionVisitorBase
+    {
+        private readonly ITypeInfoProvider _typeInfoProvider;
+
+        internal protected QueryableVisitor(ITypeInfoProvider? typeInfoProvider)
+        {
+            _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider(false, false);
+        }
+
+        public Expression Run(Expression expression) => Visit(expression);
+
+        protected override Expression VisitConstant(ConstantExpression node)
+        {
+            if (node.CheckNotNull().Value.AsQueryableResourceTypeOrNull() is Type resourceType)
+            {
+                var typeInfo = _typeInfoProvider.GetTypeInfo(resourceType);
+                var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
+                return new ConstantExpression(queryableResourceDescriptor);
+            }
+
+            if (node.Value is ConstantQueryArgument constantQueryArgument)
+            {
+                var copy = new DynamicObject(constantQueryArgument.Value);
+                foreach (var property in copy.Properties.AsEmptyIfNull())
+                {
+                    if (property.Value.AsQueryableResourceTypeOrNull() is Type resourceTypePropertyValue)
+                    {
+                        var typeInfo = _typeInfoProvider.GetTypeInfo(resourceTypePropertyValue);
+                        var queryableResourceDescriptor = new QueryableResourceDescriptor(typeInfo);
+                        property.Value = queryableResourceDescriptor;
+                    }
                 }
 
-                return base.VisitConstant(node);
+                return new ConstantExpression(new ConstantQueryArgument(copy), node.Type);
             }
+
+            if (node.Value is CancellationToken)
+            {
+                var substitutionValue = new SubstitutionValue(node.Type);
+                return new ConstantExpression(substitutionValue, node.Type);
+            }
+
+            return base.VisitConstant(node);
         }
     }
 }

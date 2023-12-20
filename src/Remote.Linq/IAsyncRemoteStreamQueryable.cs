@@ -1,17 +1,16 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq
-{
-    using System.Linq;
+namespace Remote.Linq;
 
+using System.Linq;
+
+/// <summary>
+/// Provides functionality to compose queries for remote execution as async stream.
+/// </summary>
+public interface IAsyncRemoteStreamQueryable : IQueryable, IRemoteLinqQueryable
+{
     /// <summary>
-    /// Provides functionality to compose queries for remote execution as async stream.
+    /// Gets the query provider that is associated with this data source.
     /// </summary>
-    public interface IAsyncRemoteStreamQueryable : IQueryable, IRemoteLinqQueryable
-    {
-        /// <summary>
-        /// Gets the query provider that is associated with this data source.
-        /// </summary>
-        new IAsyncRemoteStreamProvider Provider { get; }
-    }
+    new IAsyncRemoteStreamProvider Provider { get; }
 }

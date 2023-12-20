@@ -1,30 +1,29 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Tests.Serialization
+namespace Remote.Linq.Tests.Serialization;
+
+using global::Newtonsoft.Json;
+using Remote.Linq.Newtonsoft.Json;
+using System;
+
+public static class NewtonsoftJsonSerializationHelper
 {
-    using global::Newtonsoft.Json;
-    using Remote.Linq.Newtonsoft.Json;
-    using System;
+    /// <summary>
+    /// Gets pre-configured <see cref="JsonSerializerSettings"/> for <i>Aqua</i> types.
+    /// </summary>
+    public static JsonSerializerSettings SerializerSettings => new JsonSerializerSettings { Formatting = Formatting.Indented }.ConfigureRemoteLinq();
 
-    public static class NewtonsoftJsonSerializationHelper
+    public static T Clone<T>(this T graph)
     {
-        /// <summary>
-        /// Gets pre-configured <see cref="JsonSerializerSettings"/> for <i>Aqua</i> types.
-        /// </summary>
-        public static JsonSerializerSettings SerializerSettings => new JsonSerializerSettings { Formatting = Formatting.Indented }.ConfigureRemoteLinq();
+        var json = JsonConvert.SerializeObject(graph, SerializerSettings);
 
-        public static T Clone<T>(this T graph)
-        {
-            var json = JsonConvert.SerializeObject(graph, SerializerSettings);
+        return JsonConvert.DeserializeObject<T>(json, SerializerSettings);
+    }
 
-            return JsonConvert.DeserializeObject<T>(json, SerializerSettings);
-        }
+    public static object Clone(this object graph, Type type)
+    {
+        var json = JsonConvert.SerializeObject(graph, SerializerSettings);
 
-        public static object Clone(this object graph, Type type)
-        {
-            var json = JsonConvert.SerializeObject(graph, SerializerSettings);
-
-            return JsonConvert.DeserializeObject(json, type, SerializerSettings);
-        }
+        return JsonConvert.DeserializeObject(json, type, SerializerSettings);
     }
 }

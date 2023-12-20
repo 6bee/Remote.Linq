@@ -1,76 +1,75 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Text.Json.Converters
-{
-    using Aqua.Text.Json;
-    using Aqua.Text.Json.Converters;
-    using Aqua.TypeSystem;
-    using Remote.Linq.DynamicQuery;
-    using System.Collections.Generic;
-    using System.Text.Json;
+namespace Remote.Linq.Text.Json.Converters;
 
-    public sealed class VariableQueryArgumentListConverter : ObjectConverter<VariableQueryArgumentList>
+using Aqua.Text.Json;
+using Aqua.Text.Json.Converters;
+using Aqua.TypeSystem;
+using Remote.Linq.DynamicQuery;
+using System.Collections.Generic;
+using System.Text.Json;
+
+public sealed class VariableQueryArgumentListConverter : ObjectConverter<VariableQueryArgumentList>
+{
+    public VariableQueryArgumentListConverter(KnownTypesRegistry knownTypesRegistry)
+        : base(knownTypesRegistry)
     {
-        public VariableQueryArgumentListConverter(KnownTypesRegistry knownTypesRegistry)
-            : base(knownTypesRegistry)
+    }
+
+    protected override void ReadObjectProperties(ref Utf8JsonReader reader, VariableQueryArgumentList result, Dictionary<string, Property> properties, JsonSerializerOptions options)
+    {
+        reader.AssertProperty(nameof(VariableQueryArgumentList.ElementType));
+        var elementTypeInfo = reader.Read<TypeInfo>(options) ?? throw reader.CreateException($"{nameof(VariableQueryArgumentList.ElementType)} must not be null.");
+
+        void SetResult(ref Utf8JsonReader reader, List<object?>? values = null)
         {
+            reader.AssertEndObject();
+            result.ElementType = elementTypeInfo;
+            result.Values = values ?? new List<object?>();
         }
 
-        protected override void ReadObjectProperties(ref Utf8JsonReader reader, VariableQueryArgumentList result, Dictionary<string, Property> properties, JsonSerializerOptions options)
+        reader.Advance();
+        if (reader.TokenType == JsonTokenType.Null)
         {
-            reader.AssertProperty(nameof(VariableQueryArgumentList.ElementType));
-            var elementTypeInfo = reader.Read<TypeInfo>(options) ?? throw reader.CreateException($"{nameof(VariableQueryArgumentList.ElementType)} must not be null.");
+            SetResult(ref reader);
+            return;
+        }
 
-            void SetResult(ref Utf8JsonReader reader, List<object?>? values = null)
-            {
-                reader.AssertEndObject();
-                result.ElementType = elementTypeInfo;
-                result.Values = values ?? new List<object?>();
-            }
+        if (reader.TokenType != JsonTokenType.StartArray)
+        {
+            throw reader.CreateException($"Expected array");
+        }
 
-            reader.Advance();
-            if (reader.TokenType == JsonTokenType.Null)
+        bool TryReadNextItem(ref Utf8JsonReader reader, out object? value)
+        {
+            if (!reader.TryRead(elementTypeInfo, options, out value))
             {
-                SetResult(ref reader);
-                return;
-            }
-
-            if (reader.TokenType != JsonTokenType.StartArray)
-            {
-                throw reader.CreateException($"Expected array");
-            }
-
-            bool TryReadNextItem(ref Utf8JsonReader reader, out object? value)
-            {
-                if (!reader.TryRead(elementTypeInfo, options, out value))
+                if (reader.TokenType == JsonTokenType.EndArray)
                 {
-                    if (reader.TokenType == JsonTokenType.EndArray)
-                    {
-                        return false;
-                    }
-
-                    throw reader.CreateException("Unexpected token structure.");
+                    return false;
                 }
 
-                return true;
+                throw reader.CreateException("Unexpected token structure.");
             }
 
-            var values = new List<object?>();
-            while (TryReadNextItem(ref reader, out object? value))
-            {
-                values.Add(value);
-            }
-
-            SetResult(ref reader, values);
+            return true;
         }
 
-        protected override void WriteObjectProperties(Utf8JsonWriter writer, VariableQueryArgumentList instance, IReadOnlyCollection<Property> properties, JsonSerializerOptions options)
+        var values = new List<object?>();
+        while (TryReadNextItem(ref reader, out object? value))
         {
-            writer.WritePropertyName(nameof(VariableQueryArgumentList.ElementType));
-            writer.Serialize(instance.ElementType, options);
-
-            writer.WritePropertyName(nameof(VariableQueryArgumentList.Values));
-            writer.Serialize(instance.Values, options);
+            values.Add(value);
         }
+
+        SetResult(ref reader, values);
+    }
+
+    protected override void WriteObjectProperties(Utf8JsonWriter writer, VariableQueryArgumentList instance, IReadOnlyCollection<Property> properties, JsonSerializerOptions options)
+    {
+        writer.WritePropertyName(nameof(VariableQueryArgumentList.ElementType));
+        writer.Serialize(instance.ElementType, options);
+
+        writer.WritePropertyName(nameof(VariableQueryArgumentList.Values));
+        writer.Serialize(instance.Values, options);
     }
 }

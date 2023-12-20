@@ -1,96 +1,95 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.EntityFrameworkCore.Tests
+namespace Remote.Linq.EntityFrameworkCore.Tests;
+
+using Remote.Linq.Async;
+using Remote.Linq.EntityFrameworkCore.Tests.Model;
+using Shouldly;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security;
+using System.Threading.Tasks;
+using Xunit;
+using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtensions;
+
+public class When_executing_async_stream : IDisposable
 {
-    using Remote.Linq.Async;
-    using Remote.Linq.EntityFrameworkCore.Tests.Model;
-    using Shouldly;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
-    using Xunit;
-    using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtensions;
+    private readonly TestContext _context;
+    private readonly IQueryable<LookupItem> _queryable;
 
-    public class When_executing_async_stream : IDisposable
+    [SecuritySafeCritical]
+    public When_executing_async_stream()
     {
-        private readonly TestContext _context;
-        private readonly IQueryable<LookupItem> _queryable;
+        _context = new TestContext();
+        _context.Lookup.Add(new LookupItem { Key = "1", Value = "One" });
+        _context.Lookup.Add(new LookupItem { Key = "2", Value = "Two" });
+        _context.Lookup.Add(new LookupItem { Key = "3", Value = "Three" });
+        _context.SaveChanges();
 
-        [SecuritySafeCritical]
-        public When_executing_async_stream()
+        _queryable = RemoteQueryable.Factory.CreateAsyncStreamQueryable<LookupItem>(expression => expression.ExecuteAsyncStreamWithEntityFrameworkCore(_context));
+    }
+
+    public void Dispose() => _context.Dispose();
+
+    private static async Task<T[]> ToArrayAsync<T>(IAsyncEnumerable<T> asyncResultStream)
+    {
+        var list = new List<T>();
+        await foreach (var item in asyncResultStream)
         {
-            _context = new TestContext();
-            _context.Lookup.Add(new LookupItem { Key = "1", Value = "One" });
-            _context.Lookup.Add(new LookupItem { Key = "2", Value = "Two" });
-            _context.Lookup.Add(new LookupItem { Key = "3", Value = "Three" });
-            _context.SaveChanges();
-
-            _queryable = RemoteQueryable.Factory.CreateAsyncStreamQueryable<LookupItem>(expression => expression.ExecuteAsyncStreamWithEntityFrameworkCore(_context));
+            list.Add(item);
         }
 
-        public void Dispose() => _context.Dispose();
+        return list.ToArray();
+    }
 
-        private static async Task<T[]> ToArrayAsync<T>(IAsyncEnumerable<T> asyncResultStream)
-        {
-            var list = new List<T>();
-            await foreach (var item in asyncResultStream)
-            {
-                list.Add(item);
-            }
+    [Fact]
+    public async Task Should_not_evaluate_ef_functions_prematurely()
+    {
+        var asyncResultStream = _queryable
+            .Where(p => DbFunctionsExtensions.Like(null, p.Value, "%e")) // EF.Functions.Like(<property>, <pattern>)
+            .AsAsyncEnumerable();
+        var result = await ToArrayAsync(asyncResultStream);
+        result.Length.ShouldBe(2);
+    }
 
-            return list.ToArray();
-        }
+    [Fact]
+    public async Task Should_query_single_with_predicate()
+    {
+        var asyncResultStream = _queryable
+            .Where(x => x.Value.ToUpper().Contains("W"))
+            .AsAsyncEnumerable();
+        var result = await ToArrayAsync(asyncResultStream);
+        result.Single().Key.ShouldBe("2");
+    }
 
-        [Fact]
-        public async Task Should_not_evaluate_ef_functions_prematurely()
-        {
-            var asyncResultStream = _queryable
-                .Where(p => DbFunctionsExtensions.Like(null, p.Value, "%e")) // EF.Functions.Like(<property>, <pattern>)
-                .AsAsyncEnumerable();
-            var result = await ToArrayAsync(asyncResultStream);
-            result.Length.ShouldBe(2);
-        }
+    [Fact]
+    public async Task Should_yield_results_for_query_with_predicate_with_multiple_results()
+    {
+        var asyncResultStream = _queryable
+            .Where(x => x.Value.ToUpper().Contains("O"))
+            .OrderByDescending(x => x.Key)
+            .AsAsyncEnumerable();
+        var result = await ToArrayAsync(asyncResultStream);
+        result.Length.ShouldBe(2);
+        result[0].Key.ShouldBe("2");
+        result[1].Key.ShouldBe("1");
+    }
 
-        [Fact]
-        public async Task Should_query_single_with_predicate()
-        {
-            var asyncResultStream = _queryable
-                .Where(x => x.Value.ToUpper().Contains("W"))
-                .AsAsyncEnumerable();
-            var result = await ToArrayAsync(asyncResultStream);
-            result.Single().Key.ShouldBe("2");
-        }
+    [Fact]
+    public async Task Should_yield_empty_result_for_query_with_predicate_with_no_match()
+    {
+        var asyncResultStream = _queryable
+            .Where(x => x.Value.ToUpper().Contains("no match"))
+            .AsAsyncEnumerable();
+        var result = await ToArrayAsync(asyncResultStream);
+        result.ShouldBeEmpty();
+    }
 
-        [Fact]
-        public async Task Should_yield_results_for_query_with_predicate_with_multiple_results()
-        {
-            var asyncResultStream = _queryable
-                .Where(x => x.Value.ToUpper().Contains("O"))
-                .OrderByDescending(x => x.Key)
-                .AsAsyncEnumerable();
-            var result = await ToArrayAsync(asyncResultStream);
-            result.Length.ShouldBe(2);
-            result[0].Key.ShouldBe("2");
-            result[1].Key.ShouldBe("1");
-        }
-
-        [Fact]
-        public async Task Should_yield_empty_result_for_query_with_predicate_with_no_match()
-        {
-            var asyncResultStream = _queryable
-                .Where(x => x.Value.ToUpper().Contains("no match"))
-                .AsAsyncEnumerable();
-            var result = await ToArrayAsync(asyncResultStream);
-            result.ShouldBeEmpty();
-        }
-
-        [Fact]
-        public void Should_throw_for_scalar_query_execution()
-        {
-            var ex = Should.Throw<NotSupportedException>(() => _queryable.SingleOrDefault());
-            ex.Message.ShouldBe("Async remote stream must be executed as IAsyncEnumerable<T>. The AsAsyncEnumerable() extension method may be used.");
-        }
+    [Fact]
+    public void Should_throw_for_scalar_query_execution()
+    {
+        var ex = Should.Throw<NotSupportedException>(() => _queryable.SingleOrDefault());
+        ex.Message.ShouldBe("Async remote stream must be executed as IAsyncEnumerable<T>. The AsAsyncEnumerable() extension method may be used.");
     }
 }

@@ -1,461 +1,460 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.ExpressionVisitors
+namespace Remote.Linq.ExpressionVisitors;
+
+using Aqua.EnumerableExtensions;
+using Remote.Linq.Expressions;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+
+public abstract class RemoteExpressionVisitorBase
 {
-    using Aqua.EnumerableExtensions;
-    using Remote.Linq.Expressions;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
+    [return: NotNullIfNotNull("node")]
+    protected virtual Expression? Visit(Expression? node)
+        => node?.NodeType switch
+        {
+            null => null,
+            ExpressionType.Binary => VisitBinary((BinaryExpression)node),
+            ExpressionType.Block => VisitBlock((BlockExpression)node),
+            ExpressionType.Call => VisitMethodCall((MethodCallExpression)node),
+            ExpressionType.Conditional => VisitConditional((ConditionalExpression)node),
+            ExpressionType.Constant => VisitConstant((ConstantExpression)node),
+            ExpressionType.Default => VisitDefault((DefaultExpression)node),
+            ExpressionType.Goto => VisitGoto((GotoExpression)node),
+            ExpressionType.Invoke => VisitInvoke((InvokeExpression)node),
+            ExpressionType.Label => VisitLabel((LabelExpression)node),
+            ExpressionType.Lambda => VisitLambda((LambdaExpression)node),
+            ExpressionType.ListInit => VisitListInit((ListInitExpression)node),
+            ExpressionType.Loop => VisitLoop((LoopExpression)node),
+            ExpressionType.MemberAccess => VisitMemberAccess((MemberExpression)node),
+            ExpressionType.MemberInit => VisitMemberInit((MemberInitExpression)node),
+            ExpressionType.New => VisitNew((NewExpression)node),
+            ExpressionType.NewArray => VisitNewArray((NewArrayExpression)node),
+            ExpressionType.Parameter => VisitParameter((ParameterExpression)node),
+            ExpressionType.Switch => VisitSwitch((SwitchExpression)node),
+            ExpressionType.TypeIs => VisitTypeIs((TypeBinaryExpression)node),
+            ExpressionType.Try => VisitTry((TryExpression)node),
+            ExpressionType.Unary => VisitUnary((UnaryExpression)node),
+            _ => throw new NotSupportedException($"Unknown expression type: '{node.NodeType}' ({node.GetType()})"),
+        };
 
-    public abstract class RemoteExpressionVisitorBase
+    protected virtual Expression VisitSwitch(SwitchExpression node)
     {
-        [return: NotNullIfNotNull("node")]
-        protected virtual Expression? Visit(Expression? node)
-            => node?.NodeType switch
-            {
-                null => null,
-                ExpressionType.Binary => VisitBinary((BinaryExpression)node),
-                ExpressionType.Block => VisitBlock((BlockExpression)node),
-                ExpressionType.Call => VisitMethodCall((MethodCallExpression)node),
-                ExpressionType.Conditional => VisitConditional((ConditionalExpression)node),
-                ExpressionType.Constant => VisitConstant((ConstantExpression)node),
-                ExpressionType.Default => VisitDefault((DefaultExpression)node),
-                ExpressionType.Goto => VisitGoto((GotoExpression)node),
-                ExpressionType.Invoke => VisitInvoke((InvokeExpression)node),
-                ExpressionType.Label => VisitLabel((LabelExpression)node),
-                ExpressionType.Lambda => VisitLambda((LambdaExpression)node),
-                ExpressionType.ListInit => VisitListInit((ListInitExpression)node),
-                ExpressionType.Loop => VisitLoop((LoopExpression)node),
-                ExpressionType.MemberAccess => VisitMemberAccess((MemberExpression)node),
-                ExpressionType.MemberInit => VisitMemberInit((MemberInitExpression)node),
-                ExpressionType.New => VisitNew((NewExpression)node),
-                ExpressionType.NewArray => VisitNewArray((NewArrayExpression)node),
-                ExpressionType.Parameter => VisitParameter((ParameterExpression)node),
-                ExpressionType.Switch => VisitSwitch((SwitchExpression)node),
-                ExpressionType.TypeIs => VisitTypeIs((TypeBinaryExpression)node),
-                ExpressionType.Try => VisitTry((TryExpression)node),
-                ExpressionType.Unary => VisitUnary((UnaryExpression)node),
-                _ => throw new NotSupportedException($"Unknown expression type: '{node.NodeType}' ({node.GetType()})"),
-            };
-
-        protected virtual Expression VisitSwitch(SwitchExpression node)
+        var defaultExpression = Visit(node.CheckNotNull().DefaultExpression);
+        var switchValue = Visit(node.SwitchValue);
+        var cases = node.Cases.AsEmptyIfNull().Select(VisitSwitchCase).ToList();
+        if (defaultExpression != node.DefaultExpression ||
+            switchValue != node.SwitchValue ||
+            !(node.Cases is not null && cases.SequenceEqual(node.Cases)))
         {
-            var defaultExpression = Visit(node.CheckNotNull().DefaultExpression);
-            var switchValue = Visit(node.SwitchValue);
-            var cases = node.Cases.AsEmptyIfNull().Select(VisitSwitchCase).ToList();
-            if (defaultExpression != node.DefaultExpression ||
-                switchValue != node.SwitchValue ||
-                !(node.Cases is not null && cases.SequenceEqual(node.Cases)))
-            {
-                return new SwitchExpression(switchValue, node.Comparison, defaultExpression, cases);
-            }
-
-            return node;
+            return new SwitchExpression(switchValue, node.Comparison, defaultExpression, cases);
         }
 
-        protected virtual SwitchCase VisitSwitchCase(SwitchCase switchCase)
-        {
-            var body = Visit(switchCase.CheckNotNull().Body);
-            var testValues = switchCase.TestValues.AsEmptyIfNull();
-            var newTestValues = testValues.Select(Visit).ToList();
-            if (body != switchCase.Body || !testValues.SequenceEqual(newTestValues))
-            {
-                return new SwitchCase(body, newTestValues!);
-            }
+        return node;
+    }
 
-            return switchCase;
+    protected virtual SwitchCase VisitSwitchCase(SwitchCase switchCase)
+    {
+        var body = Visit(switchCase.CheckNotNull().Body);
+        var testValues = switchCase.TestValues.AsEmptyIfNull();
+        var newTestValues = testValues.Select(Visit).ToList();
+        if (body != switchCase.Body || !testValues.SequenceEqual(newTestValues))
+        {
+            return new SwitchCase(body, newTestValues!);
         }
 
-        protected virtual Expression VisitTry(TryExpression node)
-        {
-            var @finally = Visit(node.CheckNotNull().Finally);
-            var body = Visit(node.Body);
-            var fault = Visit(node.Fault);
-            var handlers = node.Handlers.AsEmptyIfNull().Select(VisitCatchBlock).ToList();
-            if (@finally != node.Finally ||
-                body != node.Body ||
-                fault != node.Fault ||
-                !(node.Handlers is not null && handlers.SequenceEqual(node.Handlers)))
-            {
-                return new TryExpression(node.Type, body, fault, @finally, handlers);
-            }
+        return switchCase;
+    }
 
-            return node;
+    protected virtual Expression VisitTry(TryExpression node)
+    {
+        var @finally = Visit(node.CheckNotNull().Finally);
+        var body = Visit(node.Body);
+        var fault = Visit(node.Fault);
+        var handlers = node.Handlers.AsEmptyIfNull().Select(VisitCatchBlock).ToList();
+        if (@finally != node.Finally ||
+            body != node.Body ||
+            fault != node.Fault ||
+            !(node.Handlers is not null && handlers.SequenceEqual(node.Handlers)))
+        {
+            return new TryExpression(node.Type, body, fault, @finally, handlers);
         }
 
-        protected virtual CatchBlock VisitCatchBlock(CatchBlock catchBlock)
-        {
-            var body = Visit(catchBlock.CheckNotNull().Body);
-            var variable = catchBlock.Variable is null ? null : VisitParameter(catchBlock.Variable);
-            var filter = Visit(catchBlock.Filter);
-            if (body != catchBlock.Body || variable != catchBlock.Variable || filter != catchBlock.Filter)
-            {
-                return new CatchBlock(catchBlock.Test, variable, body, filter);
-            }
+        return node;
+    }
 
-            return catchBlock;
+    protected virtual CatchBlock VisitCatchBlock(CatchBlock catchBlock)
+    {
+        var body = Visit(catchBlock.CheckNotNull().Body);
+        var variable = catchBlock.Variable is null ? null : VisitParameter(catchBlock.Variable);
+        var filter = Visit(catchBlock.Filter);
+        if (body != catchBlock.Body || variable != catchBlock.Variable || filter != catchBlock.Filter)
+        {
+            return new CatchBlock(catchBlock.Test, variable, body, filter);
         }
 
-        protected virtual Expression VisitMemberInit(MemberInitExpression node)
-        {
-            var n = VisitNew(node.CheckNotNull().NewExpression);
-            var bindings = VisitBindingList(node.Bindings);
+        return catchBlock;
+    }
 
-            if (n != node.NewExpression || bindings != node.Bindings)
+    protected virtual Expression VisitMemberInit(MemberInitExpression node)
+    {
+        var n = VisitNew(node.CheckNotNull().NewExpression);
+        var bindings = VisitBindingList(node.Bindings);
+
+        if (n != node.NewExpression || bindings != node.Bindings)
+        {
+            if (n is not NewExpression newExpression)
             {
-                if (n is not NewExpression newExpression)
+                throw new InvalidOperationException(
+                    $"{nameof(MemberInitExpression)} can only be created with {nameof(NewExpression)} but got a {n?.GetType().ToString() ?? "null"} instead");
+            }
+
+            return new MemberInitExpression(newExpression, bindings);
+        }
+
+        return node;
+    }
+
+    [return: NotNullIfNotNull("list")]
+    protected virtual List<MemberBinding>? VisitBindingList(List<MemberBinding>? list)
+    {
+        if (list is null)
+        {
+            return null;
+        }
+
+        List<MemberBinding>? visited = null;
+        for (int i = 0, n = list.Count; i < n; i++)
+        {
+            MemberBinding b = VisitBinding(list[i]);
+            if (visited is not null)
+            {
+                visited.Add(b);
+            }
+            else if (b != list[i])
+            {
+                visited = new List<MemberBinding>(n);
+                for (int j = 0; j < i; j++)
                 {
-                    throw new InvalidOperationException(
-                        $"{nameof(MemberInitExpression)} can only be created with {nameof(NewExpression)} but got a {n?.GetType().ToString() ?? "null"} instead");
+                    visited.Add(list[j]);
                 }
 
-                return new MemberInitExpression(newExpression, bindings);
+                visited.Add(b);
             }
-
-            return node;
         }
 
-        [return: NotNullIfNotNull("list")]
-        protected virtual List<MemberBinding>? VisitBindingList(List<MemberBinding>? list)
-        {
-            if (list is null)
-            {
-                return null;
-            }
+        return visited ?? list;
+    }
 
-            List<MemberBinding>? visited = null;
-            for (int i = 0, n = list.Count; i < n; i++)
+    protected virtual MemberBinding VisitBinding(MemberBinding binding)
+        => binding.CheckNotNull().BindingType switch
+        {
+            MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment)binding),
+            MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding)binding),
+            MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding)binding),
+            _ => throw new NotSupportedException($"Unhandled binding type '{binding.BindingType}'"),
+        };
+
+    protected virtual MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
+    {
+        var e = Visit(assignment.CheckNotNull().Expression);
+        if (e != assignment.Expression)
+        {
+            return new MemberAssignment(assignment.Member, e);
+        }
+
+        return assignment;
+    }
+
+    protected virtual MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding binding)
+    {
+        var bindings = VisitBindingList(binding.CheckNotNull().Bindings.ToList());
+        if (bindings != binding.Bindings)
+        {
+            return new MemberMemberBinding(binding.Member, bindings);
+        }
+
+        return binding;
+    }
+
+    protected virtual MemberListBinding VisitMemberListBinding(MemberListBinding binding)
+    {
+        var initializers = VisitElementInitializerList(binding.CheckNotNull().Initializers);
+        if (!ReferenceEquals(initializers, binding.Initializers))
+        {
+            return new MemberListBinding(binding.Member, initializers);
+        }
+
+        return binding;
+    }
+
+    [return: NotNullIfNotNull("list")]
+    protected virtual List<ElementInit>? VisitElementInitializerList(List<ElementInit>? list)
+    {
+        if (list is null)
+        {
+            return null;
+        }
+
+        List<ElementInit>? visited = null;
+        for (int i = 0, n = list.Count; i < n; i++)
+        {
+            var init = VisitElementInitializer(list[i]);
+            if (visited is not null)
             {
-                MemberBinding b = VisitBinding(list[i]);
-                if (visited is not null)
+                visited.Add(init);
+            }
+            else if (init != list[i])
+            {
+                visited = new List<ElementInit>(n);
+                for (int j = 0; j < i; j++)
                 {
-                    visited.Add(b);
-                }
-                else if (b != list[i])
-                {
-                    visited = new List<MemberBinding>(n);
-                    for (int j = 0; j < i; j++)
-                    {
-                        visited.Add(list[j]);
-                    }
-
-                    visited.Add(b);
-                }
-            }
-
-            return visited ?? list;
-        }
-
-        protected virtual MemberBinding VisitBinding(MemberBinding binding)
-            => binding.CheckNotNull().BindingType switch
-            {
-                MemberBindingType.Assignment => VisitMemberAssignment((MemberAssignment)binding),
-                MemberBindingType.MemberBinding => VisitMemberMemberBinding((MemberMemberBinding)binding),
-                MemberBindingType.ListBinding => VisitMemberListBinding((MemberListBinding)binding),
-                _ => throw new NotSupportedException($"Unhandled binding type '{binding.BindingType}'"),
-            };
-
-        protected virtual MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
-        {
-            var e = Visit(assignment.CheckNotNull().Expression);
-            if (e != assignment.Expression)
-            {
-                return new MemberAssignment(assignment.Member, e);
-            }
-
-            return assignment;
-        }
-
-        protected virtual MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding binding)
-        {
-            var bindings = VisitBindingList(binding.CheckNotNull().Bindings.ToList());
-            if (bindings != binding.Bindings)
-            {
-                return new MemberMemberBinding(binding.Member, bindings);
-            }
-
-            return binding;
-        }
-
-        protected virtual MemberListBinding VisitMemberListBinding(MemberListBinding binding)
-        {
-            var initializers = VisitElementInitializerList(binding.CheckNotNull().Initializers);
-            if (!ReferenceEquals(initializers, binding.Initializers))
-            {
-                return new MemberListBinding(binding.Member, initializers);
-            }
-
-            return binding;
-        }
-
-        [return: NotNullIfNotNull("list")]
-        protected virtual List<ElementInit>? VisitElementInitializerList(List<ElementInit>? list)
-        {
-            if (list is null)
-            {
-                return null;
-            }
-
-            List<ElementInit>? visited = null;
-            for (int i = 0, n = list.Count; i < n; i++)
-            {
-                var init = VisitElementInitializer(list[i]);
-                if (visited is not null)
-                {
-                    visited.Add(init);
-                }
-                else if (init != list[i])
-                {
-                    visited = new List<ElementInit>(n);
-                    for (int j = 0; j < i; j++)
-                    {
-                        visited.Add(list[j]);
-                    }
-
-                    visited.Add(init);
-                }
-            }
-
-            return visited ?? list;
-        }
-
-        protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
-        {
-            var arguments = VisitExpressionList(initializer.CheckNotNull().Arguments);
-            if (!ReferenceEquals(arguments, initializer.Arguments))
-            {
-                return new ElementInit(initializer.AddMethod.ToMethodInfo(), arguments);
-            }
-
-            return initializer;
-        }
-
-        [return: NotNullIfNotNull("list")]
-        protected virtual List<T>? VisitExpressionList<T>(List<T>? list)
-            where T : Expression
-        {
-            if (list is null)
-            {
-                return null;
-            }
-
-            List<T>? visited = null;
-            for (int i = 0, n = list.Count; i < n; i++)
-            {
-                var p = (T)Visit(list[i]);
-                if (visited is not null)
-                {
-                    visited.Add(p);
-                }
-                else if (p != list[i])
-                {
-                    visited = new List<T>(n);
-                    for (int j = 0; j < i; j++)
-                    {
-                        visited.Add(list[j]);
-                    }
-
-                    visited.Add(p);
-                }
-            }
-
-            return visited ?? list;
-        }
-
-        protected virtual Expression VisitNew(NewExpression node)
-        {
-            var args = VisitExpressionList(node.CheckNotNull().Arguments);
-            if (!ReferenceEquals(args, node.Arguments))
-            {
-                return node.Constructor is null
-                    ? new NewExpression(node.Type ?? throw new RemoteLinqException($"{nameof(NewExpression)} requires either {nameof(NewExpression.Type)} or {nameof(NewExpression.Constructor)} property not null."))
-                    : new NewExpression(node.Constructor, args, node.Members);
-            }
-
-            return node;
-        }
-
-        private Expression VisitNewArray(NewArrayExpression node)
-        {
-            var expressions = VisitExpressionList(node.Expressions);
-            if (!ReferenceEquals(expressions, node.Expressions))
-            {
-                return new NewArrayExpression(node.NewArrayType, node.Type, expressions);
-            }
-
-            return node;
-        }
-
-        protected virtual Expression VisitListInit(ListInitExpression node)
-        {
-            var n = VisitNew(node.CheckNotNull().NewExpression);
-            if (!ReferenceEquals(n, node.NewExpression))
-            {
-                if (n is not NewExpression newExpression)
-                {
-                    throw new InvalidOperationException(
-                        $"{nameof(ListInitExpression)} can only be created with {nameof(NewExpression)} but got a {n?.GetType().ToString() ?? "null"} instead");
+                    visited.Add(list[j]);
                 }
 
-                return new ListInitExpression(newExpression, node.Initializers);
+                visited.Add(init);
             }
-
-            return node;
         }
 
-        protected virtual Expression VisitBinary(BinaryExpression node)
+        return visited ?? list;
+    }
+
+    protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
+    {
+        var arguments = VisitExpressionList(initializer.CheckNotNull().Arguments);
+        if (!ReferenceEquals(arguments, initializer.Arguments))
         {
-            var leftOperand = Visit(node.CheckNotNull().LeftOperand);
-            var rightOperand = Visit(node.RightOperand);
-            var conversion = Visit(node.Conversion) as LambdaExpression;
-            if (!ReferenceEquals(leftOperand, node.LeftOperand) || !ReferenceEquals(rightOperand, node.RightOperand) || !ReferenceEquals(conversion, node.Conversion))
-            {
-                return new BinaryExpression(node.BinaryOperator, leftOperand, rightOperand, node.IsLiftedToNull, node.Method, conversion);
-            }
-
-            return node;
+            return new ElementInit(initializer.AddMethod.ToMethodInfo(), arguments);
         }
 
-        protected virtual Expression VisitInvoke(InvokeExpression node)
+        return initializer;
+    }
+
+    [return: NotNullIfNotNull("list")]
+    protected virtual List<T>? VisitExpressionList<T>(List<T>? list)
+        where T : Expression
+    {
+        if (list is null)
         {
-            var expression = Visit(node.CheckNotNull().Expression);
-            var arguments = VisitExpressionList(node.Arguments);
-            if (!ReferenceEquals(expression, node.Expression) || !ReferenceEquals(arguments, node.Arguments))
-            {
-                return new InvokeExpression(expression, arguments);
-            }
-
-            return node;
+            return null;
         }
 
-        protected virtual Expression VisitBlock(BlockExpression node)
+        List<T>? visited = null;
+        for (int i = 0, n = list.Count; i < n; i++)
         {
-            var variables = VisitExpressionList(node.CheckNotNull().Variables);
-            var expressions = VisitExpressionList(node.Expressions);
-            if (!ReferenceEquals(variables, node.Variables) || !ReferenceEquals(expressions, node.Expressions))
+            var p = (T)Visit(list[i]);
+            if (visited is not null)
             {
-                return new BlockExpression(node.Type, variables, expressions);
+                visited.Add(p);
             }
+            else if (p != list[i])
+            {
+                visited = new List<T>(n);
+                for (int j = 0; j < i; j++)
+                {
+                    visited.Add(list[j]);
+                }
 
-            return node;
+                visited.Add(p);
+            }
         }
 
-        protected virtual Expression VisitTypeIs(TypeBinaryExpression node)
+        return visited ?? list;
+    }
+
+    protected virtual Expression VisitNew(NewExpression node)
+    {
+        var args = VisitExpressionList(node.CheckNotNull().Arguments);
+        if (!ReferenceEquals(args, node.Arguments))
         {
-            var exp = Visit(node.CheckNotNull().Expression);
-            if (!ReferenceEquals(exp, node.Expression))
-            {
-                return new TypeBinaryExpression(exp, node.TypeOperand);
-            }
-
-            return node;
+            return node.Constructor is null
+                ? new NewExpression(node.Type ?? throw new RemoteLinqException($"{nameof(NewExpression)} requires either {nameof(NewExpression.Type)} or {nameof(NewExpression.Constructor)} property not null."))
+                : new NewExpression(node.Constructor, args, node.Members);
         }
 
-        protected virtual Expression VisitConditional(ConditionalExpression node)
+        return node;
+    }
+
+    private Expression VisitNewArray(NewArrayExpression node)
+    {
+        var expressions = VisitExpressionList(node.Expressions);
+        if (!ReferenceEquals(expressions, node.Expressions))
         {
-            var test = Visit(node.CheckNotNull().Test);
-            var ifTrue = Visit(node.IfTrue);
-            var ifFalse = Visit(node.IfFalse);
-            if (!ReferenceEquals(test, node.Test) || !ReferenceEquals(ifTrue, node.IfTrue) || !ReferenceEquals(ifFalse, node.IfFalse))
-            {
-                return new ConditionalExpression(test, ifTrue, ifFalse);
-            }
-
-            return node;
+            return new NewArrayExpression(node.NewArrayType, node.Type, expressions);
         }
 
-        protected virtual Expression VisitConstant(ConstantExpression node)
-            => node;
+        return node;
+    }
 
-        protected virtual ParameterExpression VisitParameter(ParameterExpression node)
-            => node;
-
-        protected virtual Expression VisitMemberAccess(MemberExpression node)
+    protected virtual Expression VisitListInit(ListInitExpression node)
+    {
+        var n = VisitNew(node.CheckNotNull().NewExpression);
+        if (!ReferenceEquals(n, node.NewExpression))
         {
-            var instance = Visit(node.CheckNotNull().Expression);
-            if (!ReferenceEquals(instance, node.Expression))
+            if (n is not NewExpression newExpression)
             {
-                return new MemberExpression(instance, node.Member);
+                throw new InvalidOperationException(
+                    $"{nameof(ListInitExpression)} can only be created with {nameof(NewExpression)} but got a {n?.GetType().ToString() ?? "null"} instead");
             }
 
-            return node;
+            return new ListInitExpression(newExpression, node.Initializers);
         }
 
-        protected virtual Expression VisitUnary(UnaryExpression node)
+        return node;
+    }
+
+    protected virtual Expression VisitBinary(BinaryExpression node)
+    {
+        var leftOperand = Visit(node.CheckNotNull().LeftOperand);
+        var rightOperand = Visit(node.RightOperand);
+        var conversion = Visit(node.Conversion) as LambdaExpression;
+        if (!ReferenceEquals(leftOperand, node.LeftOperand) || !ReferenceEquals(rightOperand, node.RightOperand) || !ReferenceEquals(conversion, node.Conversion))
         {
-            var operand = Visit(node.CheckNotNull().Operand);
-            if (!ReferenceEquals(operand, node.Operand))
-            {
-                return new UnaryExpression(node.UnaryOperator, operand, node.Type, node.Method);
-            }
-
-            return node;
+            return new BinaryExpression(node.BinaryOperator, leftOperand, rightOperand, node.IsLiftedToNull, node.Method, conversion);
         }
 
-        protected virtual Expression VisitMethodCall(MethodCallExpression node)
+        return node;
+    }
+
+    protected virtual Expression VisitInvoke(InvokeExpression node)
+    {
+        var expression = Visit(node.CheckNotNull().Expression);
+        var arguments = VisitExpressionList(node.Arguments);
+        if (!ReferenceEquals(expression, node.Expression) || !ReferenceEquals(arguments, node.Arguments))
         {
-            var instance = Visit(node.CheckNotNull().Instance);
-            var argumements = node.Arguments?
-                .Select(i => new { Old = i, New = Visit(i) })
-                .ToList();
-            if (!ReferenceEquals(instance, node.Instance) || argumements?.Any(i => !ReferenceEquals(i.Old, i.New)) is true)
-            {
-                return new MethodCallExpression(instance, node.Method, argumements.AsEmptyIfNull().Select(i => i.New));
-            }
-
-            return node;
+            return new InvokeExpression(expression, arguments);
         }
 
-        protected virtual Expression VisitLambda(LambdaExpression node)
+        return node;
+    }
+
+    protected virtual Expression VisitBlock(BlockExpression node)
+    {
+        var variables = VisitExpressionList(node.CheckNotNull().Variables);
+        var expressions = VisitExpressionList(node.Expressions);
+        if (!ReferenceEquals(variables, node.Variables) || !ReferenceEquals(expressions, node.Expressions))
         {
-            var exp = Visit(node.CheckNotNull().Expression);
-            var parameters = node.Parameters?
-                .Select(i => new { Old = i, New = VisitParameter(i) })
-                .ToList();
-            if (!ReferenceEquals(exp, node.Expression) || parameters?.Any(i => !ReferenceEquals(i.Old, i.New)) is true)
-            {
-                return new LambdaExpression(node.Type, exp, parameters?.Select(i => i.New));
-            }
-
-            return node;
+            return new BlockExpression(node.Type, variables, expressions);
         }
 
-        protected virtual Expression VisitDefault(DefaultExpression node)
-            => node;
+        return node;
+    }
 
-        protected virtual Expression VisitGoto(GotoExpression node)
+    protected virtual Expression VisitTypeIs(TypeBinaryExpression node)
+    {
+        var exp = Visit(node.CheckNotNull().Expression);
+        if (!ReferenceEquals(exp, node.Expression))
         {
-            var value = Visit(node.CheckNotNull().Value);
-            if (!ReferenceEquals(value, node.Value))
-            {
-                return new GotoExpression(node.Kind, node.Target, node.Type, node.Value);
-            }
-
-            return node;
+            return new TypeBinaryExpression(exp, node.TypeOperand);
         }
 
-        protected virtual Expression VisitLabel(LabelExpression node)
+        return node;
+    }
+
+    protected virtual Expression VisitConditional(ConditionalExpression node)
+    {
+        var test = Visit(node.CheckNotNull().Test);
+        var ifTrue = Visit(node.IfTrue);
+        var ifFalse = Visit(node.IfFalse);
+        if (!ReferenceEquals(test, node.Test) || !ReferenceEquals(ifTrue, node.IfTrue) || !ReferenceEquals(ifFalse, node.IfFalse))
         {
-            var defaultValue = Visit(node.CheckNotNull().DefaultValue);
-            if (!ReferenceEquals(defaultValue, node.DefaultValue))
-            {
-                return new LabelExpression(node.Target, defaultValue);
-            }
-
-            return node;
+            return new ConditionalExpression(test, ifTrue, ifFalse);
         }
 
-        protected virtual LoopExpression VisitLoop(LoopExpression node)
+        return node;
+    }
+
+    protected virtual Expression VisitConstant(ConstantExpression node)
+        => node;
+
+    protected virtual ParameterExpression VisitParameter(ParameterExpression node)
+        => node;
+
+    protected virtual Expression VisitMemberAccess(MemberExpression node)
+    {
+        var instance = Visit(node.CheckNotNull().Expression);
+        if (!ReferenceEquals(instance, node.Expression))
         {
-            var body = Visit(node.CheckNotNull().Body);
-            if (!ReferenceEquals(body, node.Body))
-            {
-                return new LoopExpression(body, node.BreakLabel, node.ContinueLabel);
-            }
-
-            return node;
+            return new MemberExpression(instance, node.Member);
         }
+
+        return node;
+    }
+
+    protected virtual Expression VisitUnary(UnaryExpression node)
+    {
+        var operand = Visit(node.CheckNotNull().Operand);
+        if (!ReferenceEquals(operand, node.Operand))
+        {
+            return new UnaryExpression(node.UnaryOperator, operand, node.Type, node.Method);
+        }
+
+        return node;
+    }
+
+    protected virtual Expression VisitMethodCall(MethodCallExpression node)
+    {
+        var instance = Visit(node.CheckNotNull().Instance);
+        var argumements = node.Arguments?
+            .Select(i => new { Old = i, New = Visit(i) })
+            .ToList();
+        if (!ReferenceEquals(instance, node.Instance) || argumements?.Any(i => !ReferenceEquals(i.Old, i.New)) is true)
+        {
+            return new MethodCallExpression(instance, node.Method, argumements.AsEmptyIfNull().Select(i => i.New));
+        }
+
+        return node;
+    }
+
+    protected virtual Expression VisitLambda(LambdaExpression node)
+    {
+        var exp = Visit(node.CheckNotNull().Expression);
+        var parameters = node.Parameters?
+            .Select(i => new { Old = i, New = VisitParameter(i) })
+            .ToList();
+        if (!ReferenceEquals(exp, node.Expression) || parameters?.Any(i => !ReferenceEquals(i.Old, i.New)) is true)
+        {
+            return new LambdaExpression(node.Type, exp, parameters?.Select(i => i.New));
+        }
+
+        return node;
+    }
+
+    protected virtual Expression VisitDefault(DefaultExpression node)
+        => node;
+
+    protected virtual Expression VisitGoto(GotoExpression node)
+    {
+        var value = Visit(node.CheckNotNull().Value);
+        if (!ReferenceEquals(value, node.Value))
+        {
+            return new GotoExpression(node.Kind, node.Target, node.Type, node.Value);
+        }
+
+        return node;
+    }
+
+    protected virtual Expression VisitLabel(LabelExpression node)
+    {
+        var defaultValue = Visit(node.CheckNotNull().DefaultValue);
+        if (!ReferenceEquals(defaultValue, node.DefaultValue))
+        {
+            return new LabelExpression(node.Target, defaultValue);
+        }
+
+        return node;
+    }
+
+    protected virtual LoopExpression VisitLoop(LoopExpression node)
+    {
+        var body = Visit(node.CheckNotNull().Body);
+        if (!ReferenceEquals(body, node.Body))
+        {
+            return new LoopExpression(body, node.BreakLabel, node.ContinueLabel);
+        }
+
+        return node;
     }
 }

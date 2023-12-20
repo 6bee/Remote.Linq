@@ -1,56 +1,55 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Tests.RemoteQueryable
+namespace Remote.Linq.Tests.RemoteQueryable;
+
+using Remote.Linq;
+using Remote.Linq.ExpressionExecution;
+using Shouldly;
+using System;
+using System.Linq;
+using Xunit;
+
+public class When_running_cross_join_query
 {
-    using Remote.Linq;
-    using Remote.Linq.ExpressionExecution;
-    using Shouldly;
-    using System;
-    using System.Linq;
-    using Xunit;
-
-    public class When_running_cross_join_query
+    private class A
     {
-        private class A
+    }
+
+    private class B
+    {
+    }
+
+    public static IQueryable GetQueryableByType(Type type)
+    {
+        if (type == typeof(A))
         {
+            return new[] { new A() }.AsQueryable();
         }
 
-        private class B
+        if (type == typeof(B))
         {
+            return new[] { new B() }.AsQueryable();
         }
 
-        public static IQueryable GetQueryableByType(Type type)
-        {
-            if (type == typeof(A))
-            {
-                return new[] { new A() }.AsQueryable();
-            }
+        throw new NotSupportedException();
+    }
 
-            if (type == typeof(B))
-            {
-                return new[] { new B() }.AsQueryable();
-            }
+    [Fact]
+    public void Should_return_cross_product()
+    {
+        var queryableA = RemoteQueryable.Factory.CreateQueryable<A>(x => x.Execute(queryableProvider: GetQueryableByType));
 
-            throw new NotSupportedException();
-        }
+        var queryableB = RemoteQueryable.Factory.CreateQueryable<B>(x => x.Execute(queryableProvider: GetQueryableByType));
 
-        [Fact]
-        public void Should_return_cross_product()
-        {
-            var queryableA = RemoteQueryable.Factory.CreateQueryable<A>(x => x.Execute(queryableProvider: GetQueryableByType));
+        var query =
+            from a in queryableA
+            from b in queryableB
+            select new { A = a, B = b };
 
-            var queryableB = RemoteQueryable.Factory.CreateQueryable<B>(x => x.Execute(queryableProvider: GetQueryableByType));
+        var result = query.Single();
 
-            var query =
-                from a in queryableA
-                from b in queryableB
-                select new { A = a, B = b };
+        result.A.ShouldNotBeNull();
 
-            var result = query.Single();
-
-            result.A.ShouldNotBeNull();
-
-            result.B.ShouldNotBeNull();
-        }
+        result.B.ShouldNotBeNull();
     }
 }
