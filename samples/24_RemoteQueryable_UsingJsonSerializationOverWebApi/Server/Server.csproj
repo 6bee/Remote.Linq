@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Remote.Linq.Text.Json" />
+    <ProjectReference Include="..\..\..\src\Remote.Linq.Text.Json\Remote.Linq.Text.Json.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />

@@ -1,13 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.targets" />
-  <ItemGroup>
-    <PackageReference Update="Remote.Linq" Version="$(RemoteLinqVersion)" />
-    <PackageReference Update="Remote.Linq.Async.Queryable" Version="$(RemoteLinqVersion)" />
-    <PackageReference Update="Remote.Linq.EntityFramework" Version="$(RemoteLinqVersion)" />
-    <PackageReference Update="Remote.Linq.EntityFrameworkCore" Version="$(RemoteLinqVersion)" />
-    <PackageReference Update="Remote.Linq.Newtonsoft.Json" Version="$(RemoteLinqVersion)" />
-    <PackageReference Update="Remote.Linq.protobuf-net" Version="$(RemoteLinqVersion)" />
-    <PackageReference Update="Remote.Linq.Text.Json" Version="$(RemoteLinqVersion)" />
-  </ItemGroup>
 </Project>

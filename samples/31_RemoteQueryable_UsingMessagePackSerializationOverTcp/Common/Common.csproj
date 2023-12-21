@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.3.75" />
-    <PackageReference Include="Remote.Linq" />
+    <ProjectReference Include="..\..\..\src\Remote.Linq\Remote.Linq.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Common.MessagePackFormatter.cs" Link="MessagePackFormatter.cs" />

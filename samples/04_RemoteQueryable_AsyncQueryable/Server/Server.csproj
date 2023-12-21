@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Remote.Linq.Async.Queryable" />
+    <ProjectReference Include="..\..\..\src\Remote.Linq.Async.Queryable\Remote.Linq.Async.Queryable.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />

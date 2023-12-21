@@ -10,12 +10,10 @@
   <PropertyGroup Condition="'$(DemoCommandLine)' == 'true'">
     <OutputType Condition="'$(OutputType)' == ''">Exe</OutputType>
     <TargetFramework Condition="'$(TargetFramework)' == ''">netcoreapp3.1</TargetFramework>
+    <ApplicationIcon Condition=" '$(OutputType)' == 'Exe' ">$(MSBuildThisFileDirectory)..\remotelinq-w.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup>
-    <RestoreAdditionalProjectSources Condition=" Exists('$(MSBuildThisFileDirectory)..\artifacts') ">$(MSBuildThisFileDirectory)..\artifacts</RestoreAdditionalProjectSources>
-    <RemoteLinqVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</RemoteLinqVersion>
-    <RemoteLinqVersion Condition="'$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</RemoteLinqVersion>
     <Nullable>disable</Nullable>
     <SignAssembly>false</SignAssembly>
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>    

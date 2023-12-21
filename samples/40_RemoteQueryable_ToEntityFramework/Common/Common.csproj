@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Remote.Linq.Newtonsoft.Json" />
+    <ProjectReference Include="..\..\..\src\Remote.Linq.Newtonsoft.Json\Remote.Linq.Newtonsoft.Json.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Common.Model.Market.cs" Link="Model\Market.cs" />

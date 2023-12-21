@@ -5,9 +5,7 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Remote.Linq.EntityFramework" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Remote.Linq.EntityFramework\Remote.Linq.EntityFramework.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -6,9 +6,6 @@
     <DefineConstants>$(DefineConstants);KNOWN_TYPES_ONLY</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Remote.Linq" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30104.148
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00_SimpleRemoteQuery", "00_SimpleRemoteQuery", "{692E4FD8-80B0-4AAF-AE58-3934D0247CAA}"
 	ProjectSection(SolutionItems) = preProject
@@ -321,6 +321,22 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\31_RemoteQueryable_UsingMessagePackSerializationOverTcp\Server\Server.csproj", "{157926E3-9097-4330-B4DF-1C7347640C38}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\31_RemoteQueryable_UsingMessagePackSerializationOverTcp\DemoStartUp\DemoStartUp.csproj", "{41E35159-ED90-405D-9D8D-0F04D8BC10A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".framework", ".framework", "{8687346F-A492-4A8F-8F8F-637FAE0CE439}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq", "src\Remote.Linq\Remote.Linq.csproj", "{D1C0B20F-C6DC-46B1-938D-38337396878B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.Async.Queryable", "src\Remote.Linq.Async.Queryable\Remote.Linq.Async.Queryable.csproj", "{01A4A29F-67D2-44CF-AE88-B7F19AEFDBE8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.EntityFramework", "src\Remote.Linq.EntityFramework\Remote.Linq.EntityFramework.csproj", "{122A5C84-ED67-4789-A9C0-EBB7A1AC3896}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.EntityFrameworkCore", "src\Remote.Linq.EntityFrameworkCore\Remote.Linq.EntityFrameworkCore.csproj", "{30401A7C-5B2E-47D5-8DB4-450629A9C863}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.Newtonsoft.Json", "src\Remote.Linq.Newtonsoft.Json\Remote.Linq.Newtonsoft.Json.csproj", "{B7F2B77F-436A-478B-832E-36B84D4E9655}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.protobuf-net", "src\Remote.Linq.protobuf-net\Remote.Linq.protobuf-net.csproj", "{076D298F-C2CB-4BB6-9075-5277DC963C19}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.Text.Json", "src\Remote.Linq.Text.Json\Remote.Linq.Text.Json.csproj", "{BFD2C0C3-9474-466D-9438-2E427852ED61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -760,6 +776,34 @@ Global
 		{41E35159-ED90-405D-9D8D-0F04D8BC10A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41E35159-ED90-405D-9D8D-0F04D8BC10A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41E35159-ED90-405D-9D8D-0F04D8BC10A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1C0B20F-C6DC-46B1-938D-38337396878B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1C0B20F-C6DC-46B1-938D-38337396878B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1C0B20F-C6DC-46B1-938D-38337396878B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1C0B20F-C6DC-46B1-938D-38337396878B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01A4A29F-67D2-44CF-AE88-B7F19AEFDBE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01A4A29F-67D2-44CF-AE88-B7F19AEFDBE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01A4A29F-67D2-44CF-AE88-B7F19AEFDBE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01A4A29F-67D2-44CF-AE88-B7F19AEFDBE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{122A5C84-ED67-4789-A9C0-EBB7A1AC3896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{122A5C84-ED67-4789-A9C0-EBB7A1AC3896}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{122A5C84-ED67-4789-A9C0-EBB7A1AC3896}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{122A5C84-ED67-4789-A9C0-EBB7A1AC3896}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30401A7C-5B2E-47D5-8DB4-450629A9C863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30401A7C-5B2E-47D5-8DB4-450629A9C863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30401A7C-5B2E-47D5-8DB4-450629A9C863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30401A7C-5B2E-47D5-8DB4-450629A9C863}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7F2B77F-436A-478B-832E-36B84D4E9655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7F2B77F-436A-478B-832E-36B84D4E9655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7F2B77F-436A-478B-832E-36B84D4E9655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7F2B77F-436A-478B-832E-36B84D4E9655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{076D298F-C2CB-4BB6-9075-5277DC963C19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{076D298F-C2CB-4BB6-9075-5277DC963C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{076D298F-C2CB-4BB6-9075-5277DC963C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{076D298F-C2CB-4BB6-9075-5277DC963C19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFD2C0C3-9474-466D-9438-2E427852ED61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFD2C0C3-9474-466D-9438-2E427852ED61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFD2C0C3-9474-466D-9438-2E427852ED61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFD2C0C3-9474-466D-9438-2E427852ED61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -876,6 +920,13 @@ Global
 		{9DFC844E-4284-48FA-9F72-5B8573B1F5B7} = {C92BA4B1-069E-4A9D-8EA6-F5E5B01FE6C3}
 		{157926E3-9097-4330-B4DF-1C7347640C38} = {C92BA4B1-069E-4A9D-8EA6-F5E5B01FE6C3}
 		{41E35159-ED90-405D-9D8D-0F04D8BC10A3} = {C92BA4B1-069E-4A9D-8EA6-F5E5B01FE6C3}
+		{D1C0B20F-C6DC-46B1-938D-38337396878B} = {8687346F-A492-4A8F-8F8F-637FAE0CE439}
+		{01A4A29F-67D2-44CF-AE88-B7F19AEFDBE8} = {8687346F-A492-4A8F-8F8F-637FAE0CE439}
+		{122A5C84-ED67-4789-A9C0-EBB7A1AC3896} = {8687346F-A492-4A8F-8F8F-637FAE0CE439}
+		{30401A7C-5B2E-47D5-8DB4-450629A9C863} = {8687346F-A492-4A8F-8F8F-637FAE0CE439}
+		{B7F2B77F-436A-478B-832E-36B84D4E9655} = {8687346F-A492-4A8F-8F8F-637FAE0CE439}
+		{076D298F-C2CB-4BB6-9075-5277DC963C19} = {8687346F-A492-4A8F-8F8F-637FAE0CE439}
+		{BFD2C0C3-9474-466D-9438-2E427852ED61} = {8687346F-A492-4A8F-8F8F-637FAE0CE439}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7222E3B1-7D71-4663-8F49-6EFBF1019E06}
