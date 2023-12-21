@@ -34,6 +34,9 @@ internal static class Program
         PrintLine("such as virtualization, containers, or user accounts, for running processes");
         PrintLine("with the minimum set of privileges.");
 
+        PrintError("\n\nWARNING");
+        PrintError("Code access security is not supported by .NET 5.0 and later (https://aka.ms/dotnet-warnings/SYSLIB0003)");
+
         WaitForEnterKey("\n\nHit enter to continue...");
 
         const string ip = "127.0.0.1";
