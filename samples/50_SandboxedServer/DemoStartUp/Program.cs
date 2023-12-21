@@ -35,6 +35,7 @@ internal static class Program
         PrintLine("with the minimum set of privileges.");
 
         PrintError("\n\nWARNING");
+        PrintError("This sample runs on .NET Framework only!");
         PrintError("Code access security is not supported by .NET 5.0 and later (https://aka.ms/dotnet-warnings/SYSLIB0003)");
 
         WaitForEnterKey("\n\nHit enter to continue...");
