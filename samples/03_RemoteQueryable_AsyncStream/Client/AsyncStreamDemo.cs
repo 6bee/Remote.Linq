@@ -19,14 +19,14 @@ public class AsyncStreamDemo : IAsyncDemo
     {
         using IRemoteRepository repo = _repoProvider();
 
-        PrintHeader("GET ALL PRODUCTS:");
+        PrintHeader("GET ALL PRODUCTS [REMOTE ASYNC STREAM]:");
         var asyncProductsQueryable = repo.Products.AsAsyncEnumerable();
         await foreach (var item in asyncProductsQueryable.ConfigureAwait(false))
         {
             PrintLine($"  {item.Id} | {item.Name} | {item.Price:C}");
         }
 
-        PrintHeader("CROSS JOIN:");
+        PrintHeader("CROSS JOIN [REMOTE ASYNC STREAM]:");
         var vowels = new[] { 'a', 'e', 'i', 'o', 'u' };
         var crossJoinQuery =
             from c in repo.ProductCategories
@@ -42,7 +42,7 @@ public class AsyncStreamDemo : IAsyncDemo
             PrintLine($"  {item}");
         }
 
-        PrintHeader("INNER JOIN:");
+        PrintHeader("INNER JOIN [REMOTE ASYNC STREAM]:");
         var innerJoinQuery =
             from c in repo.ProductCategories
             join p in repo.Products on c.Id equals p.ProductCategoryId
@@ -52,7 +52,7 @@ public class AsyncStreamDemo : IAsyncDemo
             PrintLine($"  {item}");
         }
 
-        PrintHeader("SELECT IDs:");
+        PrintHeader("SELECT IDs [REMOTE ASYNC STREAM]:");
         var productIdsQuery =
             from p in repo.Products
             orderby p.Price descending
@@ -63,7 +63,7 @@ public class AsyncStreamDemo : IAsyncDemo
             PrintLine($"  {id}");
         }
 
-        PrintHeader("TOTAL AMOUNT BY CATEGORY:");
+        PrintHeader("TOTAL AMOUNT BY CATEGORY [REMOTE ASYNC STREAM]:");
         var totalAmountByCategoryQuery =
             from c in repo.ProductCategories
             join p in repo.Products on c.Id equals p.ProductCategoryId

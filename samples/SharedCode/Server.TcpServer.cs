@@ -68,7 +68,7 @@ public sealed class TcpServer : IDisposable
                         }
                         catch (OperationCanceledException)
                         {
-                            // client sesstion terminated
+                            // client session terminated
                             client.Close();
                         }
                     });

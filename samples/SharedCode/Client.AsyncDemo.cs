@@ -37,7 +37,7 @@ public class AsyncDemo : IAsyncDemo
             PrintLine($"  {item}");
         }
 
-        PrintHeader("CROSS JOIN [ASYNC STREAM]:");
+        PrintHeader("CROSS JOIN [LOCAL ASYNC STREAM]:");
         await foreach (var item in crossJoinQuery.AsAsyncEnumerable().ConfigureAwait(false))
         {
             PrintLine($"  {item}");
