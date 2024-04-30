@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Binary serialization removed for .NET 8.0 and later ([SYSLIB0050: Formatter-based serialization is obsolete][syslib0050])
+- Removed package reference for _System.Linq.Expressions_
 
 ### Fixed
 
