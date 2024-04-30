@@ -12,8 +12,8 @@
     <PackageReference Include="coverlet.collector" Version="6.0.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" PrivateAssets="all" />
     <PackageReference Include="Shouldly" Version="4.2.1" PrivateAssets="all" />
-    <PackageReference Include="xunit" Version="2.7.1" PrivateAssets="all" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.8" PrivateAssets="all" />
+    <PackageReference Include="xunit" Version="2.8.0" PrivateAssets="all" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.0" PrivateAssets="all" />
     <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" PrivateAssets="all" />
   </ItemGroup>
 
