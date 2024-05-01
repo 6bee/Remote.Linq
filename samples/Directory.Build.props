@@ -9,7 +9,7 @@
 
   <PropertyGroup Condition="'$(DemoCommandLine)' == 'true'">
     <OutputType Condition="'$(OutputType)' == ''">Exe</OutputType>
-    <TargetFramework Condition="'$(TargetFramework)' == ''">netcoreapp3.1</TargetFramework>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net8.0</TargetFramework>
     <ApplicationIcon Condition=" '$(OutputType)' == 'Exe' ">$(MSBuildThisFileDirectory)..\remotelinq-w.ico</ApplicationIcon>
   </PropertyGroup>
 
