@@ -110,11 +110,13 @@ public abstract class EntityFrameworkCoreExpressionExecutor<TDataTranferObject> 
     private static async Task<object?> GetTaskResultAsync(Task task, Type resultType)
     {
         await task.ConfigureAwait(false);
-        return TaskResultProperty(resultType).GetValue(task);
-    }
 
-    private static System.Reflection.PropertyInfo TaskResultProperty(Type resultType)
-        => typeof(Task<>)
-        .MakeGenericType(resultType)
-        .GetProperty(nameof(Task<object>.Result))!;
+        return ExtractResult(task, resultType);
+
+        static object? ExtractResult(Task task, Type resultType)
+            => typeof(Task<>)
+            .MakeGenericType(resultType)
+            .GetProperty(nameof(Task<object>.Result))!
+            .GetValue(task);
+    }
 }
