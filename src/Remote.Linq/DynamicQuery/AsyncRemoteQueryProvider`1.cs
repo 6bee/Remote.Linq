@@ -52,7 +52,7 @@ public sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvide
         try
         {
             var task = ExecuteAsync<TResult>(expression, CancellationToken.None).AsTask();
-            return task.Result;
+            return task.GetAwaiter().GetResult();
         }
         catch (AggregateException ex)
         {
