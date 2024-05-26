@@ -8,7 +8,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using static CommonHelper;
-using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtensions;
+
+// NOTE: Normally one would use Microsoft.EntityFrameworkCore.EF.Functions.Like(...)
+//       However, adding namespace 'Microsoft.EntityFrameworkCore' would lead to collisions of Remote.Linq extension methods.
+//       Therefore, we're using DbFunctionsExtensions directly as static methods.
+using DbFunctions = Microsoft.EntityFrameworkCore.DbFunctionsExtensions;
 
 public class Demo : IAsyncDemo
 {
@@ -72,8 +76,8 @@ public class Demo : IAsyncDemo
 
         PrintHeader("GET MARKETS WITH APPLES:");
         var marketsWithProducts = repo.Markets
-            .Where(x => x.Products.Any(r => DbFunctionsExtensions.Like(null, r.Product.Name, "app%")))
-            .Include(x => x.Products.Where(xp => DbFunctionsExtensions.Like(null, xp.Product.Name, "app%"))).ThenInclude(x => x.Product)
+            .Where(x => x.Products.Any(r => DbFunctions.Like(null, r.Product.Name, "app%")))
+            .Include(x => x.Products.Where(xp => DbFunctions.Like(null, xp.Product.Name, "app%"))).ThenInclude(x => x.Product)
             .ToListAsync()
             .ConfigureAwait(false);
         foreach (var market in await marketsWithProducts)
