@@ -1,9 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Remote linq extensions for entity framework core. Use this package to execute remote queries using EF Core.</Description>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
     <PackageTags>LINQ,expression-tree,lambda,dynamic,remote,remote-query,multi-tier,n-tier,fluent-interface,entity-framework-core,entity-framework,ef-core,ef</PackageTags>
+    <Description>
+      Remote linq extensions for EF Core.
+    
+      Use this package on server side to apply queries to EFs DbContext.
+
+      Use this package in a client side project to enable utilization of query features specific to EF Core:
+
+      - Apply eager-loading (Include-expressions in linq queries)
+
+      - Make use of DB functions
+        e.g. queryable.Where(x => Microsoft.EntityFrameworkCore.EF.Functions.Like(x.Name, "%fruit%"))</Description>
   </PropertyGroup>
 
   <ItemGroup>

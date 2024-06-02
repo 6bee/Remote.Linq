@@ -160,7 +160,9 @@ await foreach (TEntity item in asyncQuery.ConfigureAwait(false))
 
 Remote linq extensions for _[Entity Framework][ef6-package]_ and _[Entity Framework Core][efcore-package]_.
 
-Use this package when using features specific to _EF6_ and _EF Core_:
+These packages are used on server side to apply queries to EFs `DbContext`.
+
+The only reason to include one of these packages in a client side project is to enable utilization of query features specific to _EF6_ and _EF Core_:
 
 * Apply eager-loading (`Include`-expressions)
 
@@ -171,12 +173,13 @@ Use this package when using features specific to _EF6_ and _EF Core_:
 
 ### Client Code Sample
 
-Query blogs including posts and owner
+Query blogs including (i.e. eager loading) posts and owners
 
 ```C#
 using var repository = new RemoteRepository();
 var blogs = repository.Blogs
-    .Include(x => x.Posts).ThenInclude(x => x.Owner)
+    .Include(x => x.Posts)
+    .ThenInclude(x => x.Owner)
     .ToList();
 ```
 

@@ -1,9 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Remote linq extensions for entity framework. Use this package to execute remote queries using EF6.</Description>
     <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
     <PackageTags>LINQ,expression-tree,lambda,dynamic,remote,remote-query,multi-tier,n-tier,fluent-interface,entity-framework,ef</PackageTags>
+    <Description>
+      Remote linq extensions for EF6:
+
+      - Use this package on server side to apply queries to EFs DbContext.
+
+      - Use this package in a client side project to enable eager-loading (Include-expressions in linq queries).
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
