@@ -1,0 +1,16 @@
+﻿@page "/"
+@using BlazorApp.Client.Pages;
+
+<h1>Welcome to <b><i>Remote.Linq</i></b> WebAssembly!</h1>
+
+<p>
+This page is using <i>Remote.Linq</i> for retrieving data from the web server,
+applying text search, sorting, and pagination via linq query.
+</p>
+
+<p>
+    In the backend, the linq expression is applied unaltered to an OData provider
+    for retrieving the data from <a href="https://www.odata.org/odata-services/" target="_blank">www.odata.org</a>.
+</p>
+
+<Query @rendermode="InteractiveWebAssembly" />

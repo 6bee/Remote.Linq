@@ -1,0 +1,169 @@
+﻿@attribute [StreamRendering]
+
+@using BlazorApp.Client.Helper
+@using BlazorApp.Client.Services
+@using BlazorApp.Model
+@using Remote.Linq.Async;
+@using System.Linq.Expressions;
+
+@inject IClientRepository ClientRepository;
+
+<p><button @onclick="QueryAsync" class="btn btn-primary" hidden>Query</button></p>
+<p>
+    <div class="input-group">
+        <span class="input-group-text">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <input type="text" class="form-control" @bind="SearchText" placeholder="Search..." />
+        <button type="button" class="btn-clear" @onclick="ClearSearchText">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</p>
+<p>
+    <div class="overlay" id="loading" hidden="@(!IsLoading)">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+@if (!IsLoading && _pagination.NumberOrRecords is 0)
+{
+    <p><em>No Data</em></p>
+}
+else @if (People != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"><button class="btn btn-light" @onclick="() => SortAsync(x => x.UserName)"><b>Username</b> <i class="fa-solid fa-sort"></i></button></th>
+                <th scope="col"><button class="btn btn-light" @onclick="() => SortAsync(x => x.LastName)"><b>Last Name</b> <i class="fa-solid fa-sort"></i></button></th>
+                <th scope="col"><button class="btn btn-light" @onclick="() => SortAsync(x => x.FirstName)"><b>First Name</b> <i class="fa-solid fa-sort"></i></button></th>
+                <th scope="col"><button class="btn btn-light" disabled><b>Email</b></button></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in People)
+            {
+                <tr>
+                    <td scope="row">@person.UserName</td>
+                    <td>@person.LastName</td>
+                    <td>@person.FirstName</td>
+                    <td>@string.Join("; ", person.Emails)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div>
+        <button class="btn btn-light" @onclick="@_pagination.First" disabled="@(!_pagination.CanMoveBack)"><i class="fa-solid fa-angles-left"></i></button>
+        <button class="btn btn-light" @onclick="@_pagination.Previous" disabled="@(!_pagination.CanMoveBack)"><i class="fa-solid fa-angle-left"></i></button>
+        <button class="btn btn-light" disabled>@_pagination.Page of @_pagination.NumberOfPages</button>
+        <button class="btn btn-light" @onclick="@_pagination.Next" disabled="@(!_pagination.CanMoveForward)"><i class="fa-solid fa-angle-right"></i></button>
+        <button class="btn btn-light" @onclick="@_pagination.Last" disabled="@(!_pagination.CanMoveForward)"><i class="fa-solid fa-angles-right"></i></button>
+    </div>
+}
+</p>
+
+@code {
+    private readonly SortingCollection<Person> _sorting;
+    private readonly Pagination _pagination;
+
+    private string? _searchText;
+
+    public Query()
+    {
+        _sorting = new(3);
+        _pagination = new(7, QueryCoreAsync);
+    }
+
+    private IReadOnlyCollection<Person>? People{ get; set; }
+
+    private bool IsLoading { get; set; }
+
+    private string? SearchText
+    {
+        get => _searchText;
+        set
+        {
+            _searchText = value;
+            _ = TextSearchAsync();
+        }
+    }
+
+    private void ClearSearchText() => SearchText = null;
+
+    private async Task SortAsync<TKey>(Expression<Func<Person, TKey>> keySelector)
+    {
+        _sorting.Push(keySelector);
+        await QueryCoreAsync();
+    }
+
+    private async Task TextSearchAsync()
+    {
+        _pagination.Reset();
+        _sorting.Clear();
+        _sorting.Push(x => x.UserName);
+        await QueryCoreAsync();
+        StateHasChanged();
+    }
+
+    private async Task QueryAsync()
+    {
+        _searchText = null;
+        _pagination.Reset();
+        _sorting.Clear();
+        _sorting.Push(x => x.UserName);
+        await QueryCoreAsync();
+    }
+
+    private async Task QueryCoreAsync()
+    {
+        IsLoading = true;
+        try
+        {
+            var baseQuery = ClientRepository.People;
+
+            var searchText = SearchText?.ToLower();
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                baseQuery = baseQuery.Where(x
+                    => x.UserName.ToLower().Contains(searchText)
+                    || x.LastName.ToLower().Contains(searchText)
+                    || x.FirstName.ToLower().Contains(searchText));
+            }
+
+            var totalCount = baseQuery
+                .CountAsync();
+
+            var query = baseQuery
+                .Apply(_sorting)
+                .Apply(_pagination)
+                .ToArrayAsync();
+
+            _pagination.NumberOrRecords = await totalCount;
+            People = await query;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        if (!OperatingSystem.IsBrowser())
+        {
+            return;
+        }
+
+        var totalCount = await ClientRepository.People.CountAsync();
+        _pagination.NumberOrRecords = totalCount;
+
+        await QueryAsync();
+    }
+}

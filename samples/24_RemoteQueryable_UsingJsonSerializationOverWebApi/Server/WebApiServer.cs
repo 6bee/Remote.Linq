@@ -20,7 +20,7 @@ public sealed class WebApiServer : IDisposable
         _webHost = new WebHostBuilder()
             .ConfigureServices(services => services
                 .AddMvcCore(options => options.EnableEndpointRouting = false)
-                .AddJsonOptions(options => options.JsonSerializerOptions.ConfigureRemoteLinq())) // add system.text.json options for remote.linq
+                .AddJsonOptions(options => options.JsonSerializerOptions.ConfigureRemoteLinq())) // add System.Text.Json.JsonSerializerOptions for remote.linq
             .Configure(application => application.UseMvc())
             .UseKestrel()
             .UseUrls($"http://+:{port}")
