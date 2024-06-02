@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Provides Json.NET serialization for Remote.Linq types.</Description>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageTags>remote-linq;json-net;newtonsoft-json</PackageTags>
+    <Description>Provides Json.NET serialization for Remote.Linq types.</Description>
   </PropertyGroup>
 
   <ItemGroup>

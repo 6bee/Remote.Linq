@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Provides Remote.Linq interoperability with Interactive Extensions (Ix.NET).</Description>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageTags>remote-linq;json-net;newtonsoft-json</PackageTags>
+    <Description>Provides Remote.Linq interoperability with Interactive Extensions (Ix.NET).</Description>
   </PropertyGroup>
 
   <ItemGroup>
