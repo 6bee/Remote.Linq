@@ -250,7 +250,7 @@ await httpClient.PostAsJsonAsync(uri, value, serializerOptions);
 
 [1]: https://ci.appveyor.com/api/projects/status/64kw6dsuvfwyrdtl/branch/main?svg=true
 [2]: https://ci.appveyor.com/project/6bee/remote-linq/branch/main
-[3]: https://travis-ci.com/6bee/Remote.Linq.svg?branch=main
+[3]: https://api.travis-ci.com/6bee/Remote.Linq.svg?branch=main
 [4]: https://travis-ci.com/github/6bee/Remote.Linq?branch=main
 [5]: https://codecov.io/gh/6bee/Remote.Linq/branch/main/graph/badge.svg
 [6]: https://codecov.io/gh/6bee/Remote.Linq
