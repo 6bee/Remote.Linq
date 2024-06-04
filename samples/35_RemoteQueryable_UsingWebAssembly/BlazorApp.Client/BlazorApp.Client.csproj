@@ -9,13 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.6" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Remote.Linq.Text.Json\Remote.Linq.Text.Json.csproj" />
-    <!--<ProjectReference Include="..\BlazorApp.Common\BlazorApp.Common.csproj" />-->
   </ItemGroup>
 
 </Project>
