@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [7.2.0][7.2.0] - 2024-06-04
+
+### Added
+
 - Add .NET 8.0 framework target
 - Add `SystemExpression.Factory`
 
@@ -18,8 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump _Microsoft.Bcl.AsyncInterfaces_ from 6.0.0 to 8.0.0
 - Bump _Microsoft.EntityFrameworkCore_ from 6.0.10 to 7.0.20 (net6.0) and 8.0.6 (net8.0) (concerns _Remote.Linq.EntityFrameworkCore_)
 
-### Deprecated
-
 ### Removed
 
 - Binary serialization removed for .NET 8.0 and later ([SYSLIB0050: Formatter-based serialization is obsolete][syslib0050])
@@ -28,8 +40,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Pass `ITypeResolver` to remote expression visitors to avoid potential duplication of emitting dynamic type
-
-### Security
 
 ## [7.1.0][7.1.0] - 2022-11-11
 
@@ -95,7 +105,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
-[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/7.1.0...main
+[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/7.2.0...main
+[7.2.0]: https://github.com/6bee/Remote.Linq/compare/7.1.0...7.2.0
 [7.1.0]: https://github.com/6bee/Remote.Linq/compare/7.0.0...7.1.0
 [7.0.0]: https://github.com/6bee/Remote.Linq/compare/6.3.1...7.0.0
 [6.3.1]: https://github.com/6bee/Remote.Linq/compare/6.3.0...6.3.1
