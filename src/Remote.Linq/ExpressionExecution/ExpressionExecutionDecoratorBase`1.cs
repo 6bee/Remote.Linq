@@ -47,30 +47,72 @@ public abstract class ExpressionExecutionDecoratorBase<TDataTranferObject> : IEx
 
         var dataTranferObjects = ConvertResult(processedResult);
 
-        var processedDataTranferObjects = ProcessResult(dataTranferObjects);
+        var processedDataTranferObjects = ProcessConvertedResult(dataTranferObjects);
         return processedDataTranferObjects;
     }
 
+    /// <summary>
+    /// Prepare remote linq expression before transformation to system linq expression.
+    /// </summary>
+    /// <remarks>
+    /// Used for synchronous and asynchronous execution.
+    /// </remarks>
     protected virtual RemoteLinq.Expression Prepare(RemoteLinq.Expression expression)
         => _parent.Prepare(expression);
 
+    /// <summary>
+    /// Transform remote linq expression to system linq expression.
+    /// </summary>
+    /// <remarks>
+    /// Used for synchronous and asynchronous execution.
+    /// </remarks>
     protected virtual SystemLinq.Expression Transform(RemoteLinq.Expression expression)
         => _parent.Transform(expression);
 
+    /// <summary>
+    /// Prepare system linq rexpression befor execution.
+    /// </summary>
+    /// <remarks>
+    /// Used for synchronous and asynchronous execution.
+    /// </remarks>
     protected virtual SystemLinq.Expression Prepare(SystemLinq.Expression expression)
         => _parent.Prepare(expression);
 
+    /// <summary>
+    /// Execute system linq expression and retrieve result.
+    /// </summary>
+    /// <remarks>
+    /// Used for synchronous execution only.
+    /// </remarks>
     protected virtual object? Execute(SystemLinq.Expression expression)
         => _parent.Execute(expression);
 
+    /// <summary>
+    /// Process result as retrieved from expression execution.
+    /// </summary>
+    /// <remarks>
+    /// Used for synchronous and asynchronous execution.
+    /// </remarks>
     protected virtual object? ProcessResult(object? queryResult)
         => _parent.ProcessResult(queryResult);
 
+    /// <summary>
+    /// Convert result to target type.
+    /// </summary>
+    /// <remarks>
+    /// Used for synchronous and asynchronous execution.
+    /// </remarks>
     protected virtual TDataTranferObject ConvertResult(object? queryResult)
         => _parent.ConvertResult(queryResult);
 
-    protected virtual TDataTranferObject ProcessResult(TDataTranferObject queryResult)
-        => _parent.ProcessResult(queryResult);
+    /// <summary>
+    /// Prepare result before being returned.
+    /// </summary>
+    /// <remarks>
+    /// Used for synchronous and asynchronous execution.
+    /// </remarks>
+    protected virtual TDataTranferObject ProcessConvertedResult(TDataTranferObject queryResult)
+        => _parent.ProcessConvertedResult(queryResult);
 
     RemoteLinq.Expression IExpressionExecutionDecorator<TDataTranferObject>.Prepare(RemoteLinq.Expression expression)
         => Prepare(expression);
@@ -90,6 +132,6 @@ public abstract class ExpressionExecutionDecoratorBase<TDataTranferObject> : IEx
     TDataTranferObject IExpressionExecutionDecorator<TDataTranferObject>.ConvertResult(object? queryResult)
         => ConvertResult(queryResult);
 
-    TDataTranferObject IExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(TDataTranferObject queryResult)
-        => ProcessResult(queryResult);
+    TDataTranferObject IExpressionExecutionDecorator<TDataTranferObject>.ProcessConvertedResult(TDataTranferObject queryResult)
+        => ProcessConvertedResult(queryResult);
 }

@@ -9,6 +9,7 @@ using Shouldly;
 using System;
 using Xunit;
 using Xunit.Sdk;
+using static TestExpressionExecutionContext;
 
 public class When_using_expression_execution_context
 {
@@ -17,13 +18,11 @@ public class When_using_expression_execution_context
     [Fact]
     public void Should_apply_all_custom_strategies_and_return_expected_result()
     {
-        var context = new TestExpressionExecutionContext(
-            new DefaultExpressionExecutor(null),
-            TestExpressionExecutionContext.Step0_Expression);
+        var context = new TestExpressionExecutionContext();
 
         context
             .Execute()
-            .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
+            .ShouldBeSameAs(Step7_FinalResult);
 
         context.AssertAllMethodsInvokedExacltyOnce();
     }
@@ -36,15 +35,13 @@ public class When_using_expression_execution_context
 
         var callCounter = new int[3];
 
-        var context = new TestExpressionExecutionContext(
-            new DefaultExpressionExecutor(null),
-            TestExpressionExecutionContext.Step0_Expression);
+        var context = new TestExpressionExecutionContext();
 
         context
             .With(x =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionContext.Step1_Expression);
+                x.ShouldBeSameAs(Step1_PreparedRemoteExpression);
                 return customExpression1;
             })
             .With(x =>
@@ -57,10 +54,10 @@ public class When_using_expression_execution_context
             {
                 callCounter[2]++;
                 x.ShouldBeSameAs(customExpression2);
-                return TestExpressionExecutionContext.Step1_Expression;
+                return Step1_PreparedRemoteExpression;
             })
             .Execute()
-            .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
+            .ShouldBeSameAs(Step7_FinalResult);
 
         context.AssertAllMethodsInvokedExacltyOnce();
         callCounter.ShouldAllBe(x => x == 1);
@@ -71,9 +68,7 @@ public class When_using_expression_execution_context
     {
         var callCounter = new int[1];
 
-        var context = new TestExpressionExecutionContext(
-            new DefaultExpressionExecutor(null),
-            TestExpressionExecutionContext.Step0_Expression);
+        var context = new TestExpressionExecutionContext();
 
         context
             .With(new Func<Expression, System.Linq.Expressions.Expression>(x => throw ShouldHaveBeenReplacedException))
@@ -81,13 +76,13 @@ public class When_using_expression_execution_context
             .With((Expression x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionContext.Step1_Expression);
-                return TestExpressionExecutionContext.Step2_Expression;
+                x.ShouldBeSameAs(Step1_PreparedRemoteExpression);
+                return Step2_InitialTransformedSystemExpression;
             })
             .Execute()
-            .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
+            .ShouldBeSameAs(Step7_FinalResult);
 
-        context.AssertAllMethodsInvokedExacltyOnce(skip: 1);
+        context.AssertAllMethodsInvokedExacltyOnce(skip: StepIndex2_InitialTransformedSystemExpression);
         callCounter.ShouldAllBe(x => x == 1);
     }
 
@@ -99,15 +94,13 @@ public class When_using_expression_execution_context
 
         var callCounter = new int[3];
 
-        var context = new TestExpressionExecutionContext(
-            new DefaultExpressionExecutor(null),
-            TestExpressionExecutionContext.Step0_Expression);
+        var context = new TestExpressionExecutionContext();
 
         context
             .With((System.Linq.Expressions.Expression x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionContext.Step3_Expression);
+                x.ShouldBeSameAs(Step3_PreparedSystemExpression);
                 return customExpression1;
             })
             .With((System.Linq.Expressions.Expression x) =>
@@ -120,10 +113,10 @@ public class When_using_expression_execution_context
             {
                 callCounter[2]++;
                 x.ShouldBeSameAs(customExpression2);
-                return TestExpressionExecutionContext.Step3_Expression;
+                return Step3_PreparedSystemExpression;
             })
             .Execute()
-            .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
+            .ShouldBeSameAs(Step7_FinalResult);
 
         context.AssertAllMethodsInvokedExacltyOnce();
         callCounter.ShouldAllBe(x => x == 1);
@@ -134,9 +127,7 @@ public class When_using_expression_execution_context
     {
         var callCounter = new int[1];
 
-        var context = new TestExpressionExecutionContext(
-            new DefaultExpressionExecutor(null),
-            TestExpressionExecutionContext.Step0_Expression);
+        var context = new TestExpressionExecutionContext();
 
         context
             .With(new Func<System.Linq.Expressions.Expression, object>(x => throw ShouldHaveBeenReplacedException))
@@ -144,13 +135,13 @@ public class When_using_expression_execution_context
             .With((System.Linq.Expressions.Expression x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionContext.Step3_Expression);
-                return TestExpressionExecutionContext.Step4_Result;
+                x.ShouldBeSameAs(Step3_PreparedSystemExpression);
+                return Step4_ExecutionResult;
             })
             .Execute()
-            .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
+            .ShouldBeSameAs(Step7_FinalResult);
 
-        context.AssertAllMethodsInvokedExacltyOnce(skip: 3);
+        context.AssertAllMethodsInvokedExacltyOnce(skip: StepIndex4_ExecutionResult);
         callCounter.ShouldAllBe(x => x == 1);
     }
 
@@ -162,15 +153,13 @@ public class When_using_expression_execution_context
 
         var callCounter = new int[3];
 
-        var context = new TestExpressionExecutionContext(
-            new DefaultExpressionExecutor(null),
-            TestExpressionExecutionContext.Step0_Expression);
+        var context = new TestExpressionExecutionContext();
 
         context
             .With((object x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionContext.Step5_Result);
+                x.ShouldBeSameAs(Step5_ProcessedResult);
                 return customResult1;
             })
             .With((object x) =>
@@ -183,10 +172,10 @@ public class When_using_expression_execution_context
             {
                 callCounter[2]++;
                 x.ShouldBeSameAs(customResult2);
-                return TestExpressionExecutionContext.Step5_Result;
+                return Step5_ProcessedResult;
             })
             .Execute()
-            .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
+            .ShouldBeSameAs(Step7_FinalResult);
 
         context.AssertAllMethodsInvokedExacltyOnce();
         callCounter.ShouldAllBe(x => x == 1);
@@ -197,9 +186,7 @@ public class When_using_expression_execution_context
     {
         var callCounter = new int[1];
 
-        var context = new TestExpressionExecutionContext(
-            new DefaultExpressionExecutor(null),
-            TestExpressionExecutionContext.Step0_Expression);
+        var context = new TestExpressionExecutionContext();
 
         context
             .With(new Func<object, DynamicObject>(x => throw ShouldHaveBeenReplacedException))
@@ -207,13 +194,13 @@ public class When_using_expression_execution_context
             .With((object x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionContext.Step5_Result);
-                return TestExpressionExecutionContext.Step6_Result;
+                x.ShouldBeSameAs(Step5_ProcessedResult);
+                return Step6_ConvertedResult;
             })
             .Execute()
-            .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
+            .ShouldBeSameAs(Step7_FinalResult);
 
-        context.AssertAllMethodsInvokedExacltyOnce(skip: 5);
+        context.AssertAllMethodsInvokedExacltyOnce(skip: StepIndex6_ConvertedResult);
         callCounter.ShouldAllBe(x => x == 1);
     }
 
@@ -225,15 +212,13 @@ public class When_using_expression_execution_context
 
         var callCounter = new int[3];
 
-        var context = new TestExpressionExecutionContext(
-            new DefaultExpressionExecutor(null),
-            TestExpressionExecutionContext.Step0_Expression);
+        var context = new TestExpressionExecutionContext();
 
         context
             .With((DynamicObject x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
+                x.ShouldBeSameAs(Step7_FinalResult);
                 return customResult1;
             })
             .With((DynamicObject x) =>
@@ -246,10 +231,10 @@ public class When_using_expression_execution_context
             {
                 callCounter[2]++;
                 x.ShouldBeSameAs(customResult2);
-                return TestExpressionExecutionContext.Step7_Result;
+                return Step7_FinalResult;
             })
             .Execute()
-            .ShouldBeSameAs(TestExpressionExecutionContext.Step7_Result);
+            .ShouldBeSameAs(Step7_FinalResult);
 
         context.AssertAllMethodsInvokedExacltyOnce();
         callCounter.ShouldAllBe(x => x == 1);

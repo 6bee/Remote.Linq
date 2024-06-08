@@ -142,6 +142,6 @@ public abstract class AsyncStreamExpressionExecutor<TQueryable, TDataTranferObje
     IAsyncEnumerable<TDataTranferObject> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ConvertResult(IAsyncEnumerable<object?> queryResult)
         => ConvertResult(queryResult);
 
-    IAsyncEnumerable<TDataTranferObject> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(IAsyncEnumerable<TDataTranferObject> queryResult)
+    IAsyncEnumerable<TDataTranferObject> IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.ProcessConvertedResult(IAsyncEnumerable<TDataTranferObject> queryResult)
         => ProcessResult(queryResult);
 }

@@ -50,22 +50,42 @@ public abstract class AsyncExpressionExecutionDecoratorBase<TDataTranferObject> 
 
         var linqExpression = Transform(preparedRemoteExpression);
 
-        var preparedLinqExpression = PrepareAsyncQuery(linqExpression, cancellation);
-        ctx.SystemExpression = preparedLinqExpression;
+        var preparedLinqExpression1 = Prepare(linqExpression);
+        ctx.SystemExpression = preparedLinqExpression1;
 
-        var queryResult = await ExecuteAsync(preparedLinqExpression, cancellation).ConfigureAwait(false);
+        var preparedLinqExpression2 = PrepareAsyncQuery(preparedLinqExpression1, cancellation);
+        ctx.SystemExpression = preparedLinqExpression2;
+
+        var queryResult = await ExecuteAsync(preparedLinqExpression2, cancellation).ConfigureAwait(false);
 
         var processedResult = ProcessResult(queryResult);
 
         var dynamicObjects = ConvertResult(processedResult);
 
-        var processedDynamicObjects = ProcessResult(dynamicObjects);
+        var processedDynamicObjects = ProcessConvertedResult(dynamicObjects);
         return processedDynamicObjects;
     }
 
+    /// <summary>
+    /// Prepare system linq rexpression befor async execution.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Used for asynchronous execution only.
+    /// </para>
+    /// <para>
+    /// <see cref="PrepareAsyncQuery"/> is executed after <see cref="ExpressionExecutionDecoratorBase{T}.Prepare(SystemLinq.Expression)"/>.
+    /// </para>
+    /// </remarks>
     protected virtual SystemLinq.Expression PrepareAsyncQuery(SystemLinq.Expression expression, CancellationToken cancellation)
        => _parent.PrepareAsyncQuery(expression, cancellation);
 
+    /// <summary>
+    /// Asynchronously execute system linq expression and retrieve result.
+    /// </summary>
+    /// <remarks>
+    /// Used for asynchronous execution only.
+    /// </remarks>
     protected virtual ValueTask<object?> ExecuteAsync(SystemLinq.Expression expression, CancellationToken cancellation)
         => _parent.ExecuteAsync(expression, cancellation);
 

@@ -25,9 +25,11 @@ public class AsyncExpressionExecutionContext<TDataTranferObject> : AsyncExpressi
         : base(parent)
         => _expression = expression.CheckNotNull();
 
+    internal Expression Expression => _expression;
+
     public TDataTranferObject Execute()
         => Execute(_expression);
 
-    public ValueTask<TDataTranferObject> ExecuteAsync(CancellationToken cancellation)
+    public ValueTask<TDataTranferObject> ExecuteAsync(CancellationToken cancellation = default)
         => ExecuteAsync(_expression, cancellation);
 }

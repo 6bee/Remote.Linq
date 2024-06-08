@@ -44,10 +44,13 @@ public abstract class AsyncExpressionExecutor<TQueryable, TDataTranferObject> : 
 
         var linqExpression = Transform(preparedRemoteExpression);
 
-        var preparedLinqExpression = PrepareAsyncQuery(linqExpression, cancellation);
-        ctx.SystemExpression = preparedLinqExpression;
+        var preparedLinqExpression1 = Prepare(linqExpression);
+        ctx.SystemExpression = preparedLinqExpression1;
 
-        var queryResult = await ExecuteAsync(preparedLinqExpression, cancellation).ConfigureAwait(false);
+        var preparedLinqExpression2 = PrepareAsyncQuery(preparedLinqExpression1, cancellation);
+        ctx.SystemExpression = preparedLinqExpression2;
+
+        var queryResult = await ExecuteAsync(preparedLinqExpression2, cancellation).ConfigureAwait(false);
 
         var processedResult = ProcessResult(queryResult);
 
@@ -64,7 +67,7 @@ public abstract class AsyncExpressionExecutor<TQueryable, TDataTranferObject> : 
     /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
     /// <returns>A <see cref="SystemLinq.Expression"/> ready for execution.</returns>
     protected virtual SystemLinq.Expression PrepareAsyncQuery(SystemLinq.Expression expression, CancellationToken cancellation)
-        => Prepare(expression);
+        => expression;
 
     /// <summary>
     /// Executes the <see cref="SystemLinq.Expression"/> and returns the raw result.

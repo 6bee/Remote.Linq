@@ -12,63 +12,63 @@ using SystemLinq = System.Linq.Expressions;
 public static class ExpressionExecutionDecoratorExtensions
 {
     /// <summary>
-    /// Decorate with custom strategy.
+    /// Decorate with custom strategy: prepare remote expression.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
-        this ExpressionExecutionDecorator<TDataTranferObject> decorator,
+        this ExpressionExecutionDecoratorBase<TDataTranferObject> decorator,
         Func<RemoteLinq.Expression, RemoteLinq.Expression> transform)
         => new ExpressionExecutorWithRemoteExpressionTransformer<TDataTranferObject>(decorator, transform);
 
     /// <summary>
-    /// Replace expression transformtion logic with custom strategy.
+    /// Replace expression transformtion logic with custom strategy: transform remote expression to system expression.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
-        this ExpressionExecutionDecorator<TDataTranferObject> decorator,
+        this ExpressionExecutionDecoratorBase<TDataTranferObject> decorator,
         Func<RemoteLinq.Expression, SystemLinq.Expression> transform)
         => new ExpressionExecutorWithExpressionTransformer<TDataTranferObject>(decorator, transform);
 
     /// <summary>
-    /// Decorate with custom strategy.
+    /// Decorate with custom strategy: prepare system expression.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
-        this ExpressionExecutionDecorator<TDataTranferObject> decorator,
+        this ExpressionExecutionDecoratorBase<TDataTranferObject> decorator,
         Func<SystemLinq.Expression, SystemLinq.Expression> transform)
         => new ExpressionExecutorWithSystemExpressionTransformer<TDataTranferObject>(decorator, transform);
 
     /// <summary>
-    /// Replace expression execution logic with custom strategy.
+    /// Replace expression execution logic with custom strategy: execute expression.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
-        this ExpressionExecutionDecorator<TDataTranferObject> decorator,
-        Func<SystemLinq.Expression, object> transform)
+        this ExpressionExecutionDecoratorBase<TDataTranferObject> decorator,
+        Func<SystemLinq.Expression, object?> transform)
         => new ExpressionExecutorWithExpressionExecutor<TDataTranferObject>(decorator, transform);
 
     /// <summary>
-    /// Decorate with custom strategy.
+    /// Decorate with custom strategy: process execution result.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
-        this ExpressionExecutionDecorator<TDataTranferObject> decorator,
+        this ExpressionExecutionDecoratorBase<TDataTranferObject> decorator,
         Func<object?, object?> transform)
         => new ExpressionExecutorWithObjectResultProcessor<TDataTranferObject>(decorator, transform);
 
     /// <summary>
-    /// Replace result transformation logic with custom strategy.
+    /// Replace result transformation logic with custom strategy: convert execution result to target type.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
-        this ExpressionExecutionDecorator<TDataTranferObject> decorator,
+        this ExpressionExecutionDecoratorBase<TDataTranferObject> decorator,
         Func<object?, TDataTranferObject> transform)
         => new ExpressionExecutorWithResultConverter<TDataTranferObject>(decorator, transform);
 
     /// <summary>
-    /// Decorate with custom strategy.
+    /// Decorate with custom strategy: process converted result before being returned.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
-        this ExpressionExecutionDecorator<TDataTranferObject> decorator,
+        this ExpressionExecutionDecoratorBase<TDataTranferObject> decorator,
         Func<TDataTranferObject, TDataTranferObject> transform)
         => new ExpressionExecutorWithDynamicObjectResultProcessor<TDataTranferObject>(decorator, transform);
 
     /// <summary>
-    /// Decorate with custom strategy.
+    /// Decorate with custom strategy: prepare remote expression.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
         this ExpressionExecutor<IQueryable, TDataTranferObject> executor,
@@ -76,7 +76,7 @@ public static class ExpressionExecutionDecoratorExtensions
         => new ExpressionExecutorWithRemoteExpressionTransformer<TDataTranferObject>(executor, transform);
 
     /// <summary>
-    /// Replace expression transformtion logic with custom strategy.
+    /// Replace expression transformtion logic with custom strategy: transform remote expression to system expression.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
         this ExpressionExecutor<IQueryable, TDataTranferObject> executor,
@@ -84,7 +84,7 @@ public static class ExpressionExecutionDecoratorExtensions
         => new ExpressionExecutorWithExpressionTransformer<TDataTranferObject>(executor, transform);
 
     /// <summary>
-    /// Decorate with custom strategy.
+    /// Decorate with custom strategy: prepare system expression.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
         this ExpressionExecutor<IQueryable, TDataTranferObject> executor,
@@ -92,7 +92,7 @@ public static class ExpressionExecutionDecoratorExtensions
         => new ExpressionExecutorWithSystemExpressionTransformer<TDataTranferObject>(executor, transform);
 
     /// <summary>
-    /// Replace expression execution logic with custom strategy.
+    /// Replace expression execution logic with custom strategy: execute expression.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
         this ExpressionExecutor<IQueryable, TDataTranferObject> executor,
@@ -100,7 +100,7 @@ public static class ExpressionExecutionDecoratorExtensions
         => new ExpressionExecutorWithExpressionExecutor<TDataTranferObject>(executor, transform);
 
     /// <summary>
-    /// Decorate with custom strategy.
+    /// Decorate with custom strategy: process execution result.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
         this ExpressionExecutor<IQueryable, TDataTranferObject> executor,
@@ -108,7 +108,7 @@ public static class ExpressionExecutionDecoratorExtensions
         => new ExpressionExecutorWithObjectResultProcessor<TDataTranferObject>(executor, transform);
 
     /// <summary>
-    /// Replace result transformation logic with custom strategy.
+    /// Replace result transformation logic with custom strategy: convert execution result to target type.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
         this ExpressionExecutor<IQueryable, TDataTranferObject> executor,
@@ -116,7 +116,7 @@ public static class ExpressionExecutionDecoratorExtensions
         => new ExpressionExecutorWithResultConverter<TDataTranferObject>(executor, transform);
 
     /// <summary>
-    /// Decorate with custom strategy.
+    /// Decorate with custom strategy: process converted result before being returned.
     /// </summary>
     public static ExpressionExecutionDecorator<TDataTranferObject> With<TDataTranferObject>(
         this ExpressionExecutor<IQueryable, TDataTranferObject> executor,
@@ -203,7 +203,7 @@ public static class ExpressionExecutionDecoratorExtensions
             : base(parent)
             => _transform = transform.CheckNotNull();
 
-        protected override TDataTranferObject ProcessResult(TDataTranferObject queryResult)
-            => _transform(base.ProcessResult(queryResult));
+        protected override TDataTranferObject ProcessConvertedResult(TDataTranferObject queryResult)
+            => _transform(base.ProcessConvertedResult(queryResult));
     }
 }

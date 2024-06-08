@@ -9,6 +9,7 @@ using Shouldly;
 using System;
 using Xunit;
 using Xunit.Sdk;
+using static TestExpressionExecutionDecorator;
 
 public class When_decorating_expression_executor
 {
@@ -17,11 +18,11 @@ public class When_decorating_expression_executor
     [Fact]
     public void Should_apply_all_custom_strategies_and_return_expected_result()
     {
-        var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
+        var decorator = new TestExpressionExecutionDecorator();
 
         decorator
-            .Execute(TestExpressionExecutionDecorator.Step0_Expression)
-            .ShouldBeSameAs(TestExpressionExecutionDecorator.Step7_Result);
+            .Execute(Step0_InitialRemoteExpression)
+            .ShouldBeSameAs(Step7_FinalResult);
 
         decorator.AssertAllMethodsInvokedExacltyOnce();
     }
@@ -34,13 +35,13 @@ public class When_decorating_expression_executor
 
         var callCounter = new int[3];
 
-        var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
+        var decorator = new TestExpressionExecutionDecorator();
 
         decorator
             .With(x =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionDecorator.Step1_Expression);
+                x.ShouldBeSameAs(Step1_PreparedRemoteExpression);
                 return customExpression1;
             })
             .With(x =>
@@ -53,10 +54,10 @@ public class When_decorating_expression_executor
             {
                 callCounter[2]++;
                 x.ShouldBeSameAs(customExpression2);
-                return TestExpressionExecutionDecorator.Step1_Expression;
+                return Step1_PreparedRemoteExpression;
             })
-            .Execute(TestExpressionExecutionDecorator.Step0_Expression)
-            .ShouldBeSameAs(TestExpressionExecutionDecorator.Step7_Result);
+            .Execute(Step0_InitialRemoteExpression)
+            .ShouldBeSameAs(Step7_FinalResult);
 
         decorator.AssertAllMethodsInvokedExacltyOnce();
         callCounter.ShouldAllBe(x => x == 1);
@@ -67,7 +68,7 @@ public class When_decorating_expression_executor
     {
         var callCounter = new int[1];
 
-        var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
+        var decorator = new TestExpressionExecutionDecorator();
 
         decorator
             .With(new Func<Expression, System.Linq.Expressions.Expression>(x => throw ShouldHaveBeenReplacedException))
@@ -75,13 +76,13 @@ public class When_decorating_expression_executor
             .With((Expression x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionDecorator.Step1_Expression);
-                return TestExpressionExecutionDecorator.Step2_Expression;
+                x.ShouldBeSameAs(Step1_PreparedRemoteExpression);
+                return Step2_InitialTransformedSystemExpression;
             })
-            .Execute(TestExpressionExecutionDecorator.Step0_Expression)
-            .ShouldBeSameAs(TestExpressionExecutionDecorator.Step7_Result);
+            .Execute(Step0_InitialRemoteExpression)
+            .ShouldBeSameAs(Step7_FinalResult);
 
-        decorator.AssertAllMethodsInvokedExacltyOnce(skip: 1);
+        decorator.AssertAllMethodsInvokedExacltyOnce(skip: StepIndex2_InitialTransformedSystemExpression);
         callCounter.ShouldAllBe(x => x == 1);
     }
 
@@ -93,13 +94,13 @@ public class When_decorating_expression_executor
 
         var callCounter = new int[3];
 
-        var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
+        var decorator = new TestExpressionExecutionDecorator();
 
         decorator
             .With((System.Linq.Expressions.Expression x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionDecorator.Step3_Expression);
+                x.ShouldBeSameAs(Step3_PreparedSystemExpression);
                 return customExpression1;
             })
             .With((System.Linq.Expressions.Expression x) =>
@@ -112,10 +113,10 @@ public class When_decorating_expression_executor
             {
                 callCounter[2]++;
                 x.ShouldBeSameAs(customExpression2);
-                return TestExpressionExecutionDecorator.Step3_Expression;
+                return Step3_PreparedSystemExpression;
             })
-            .Execute(TestExpressionExecutionDecorator.Step0_Expression)
-            .ShouldBeSameAs(TestExpressionExecutionDecorator.Step7_Result);
+            .Execute(Step0_InitialRemoteExpression)
+            .ShouldBeSameAs(Step7_FinalResult);
 
         decorator.AssertAllMethodsInvokedExacltyOnce();
         callCounter.ShouldAllBe(x => x == 1);
@@ -126,7 +127,7 @@ public class When_decorating_expression_executor
     {
         var callCounter = new int[1];
 
-        var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
+        var decorator = new TestExpressionExecutionDecorator();
 
         decorator
             .With(new Func<System.Linq.Expressions.Expression, object>(x => throw ShouldHaveBeenReplacedException))
@@ -134,13 +135,13 @@ public class When_decorating_expression_executor
             .With((System.Linq.Expressions.Expression x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionDecorator.Step3_Expression);
-                return TestExpressionExecutionDecorator.Step4_Result;
+                x.ShouldBeSameAs(Step3_PreparedSystemExpression);
+                return Step4_ExecutionResult;
             })
-            .Execute(TestExpressionExecutionDecorator.Step0_Expression)
-            .ShouldBeSameAs(TestExpressionExecutionDecorator.Step7_Result);
+            .Execute(Step0_InitialRemoteExpression)
+            .ShouldBeSameAs(Step7_FinalResult);
 
-        decorator.AssertAllMethodsInvokedExacltyOnce(skip: 3);
+        decorator.AssertAllMethodsInvokedExacltyOnce(skip: StepIndex4_ExecutionResult);
         callCounter.ShouldAllBe(x => x == 1);
     }
 
@@ -152,13 +153,13 @@ public class When_decorating_expression_executor
 
         var callCounter = new int[3];
 
-        var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
+        var decorator = new TestExpressionExecutionDecorator();
 
         decorator
             .With((object x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionDecorator.Step5_Result);
+                x.ShouldBeSameAs(Step5_ProcessedResult);
                 return customResult1;
             })
             .With((object x) =>
@@ -171,10 +172,10 @@ public class When_decorating_expression_executor
             {
                 callCounter[2]++;
                 x.ShouldBeSameAs(customResult2);
-                return TestExpressionExecutionDecorator.Step5_Result;
+                return Step5_ProcessedResult;
             })
-            .Execute(TestExpressionExecutionDecorator.Step0_Expression)
-            .ShouldBeSameAs(TestExpressionExecutionDecorator.Step7_Result);
+            .Execute(Step0_InitialRemoteExpression)
+            .ShouldBeSameAs(Step7_FinalResult);
 
         decorator.AssertAllMethodsInvokedExacltyOnce();
         callCounter.ShouldAllBe(x => x == 1);
@@ -185,7 +186,7 @@ public class When_decorating_expression_executor
     {
         var callCounter = new int[1];
 
-        var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
+        var decorator = new TestExpressionExecutionDecorator();
 
         decorator
             .With(new Func<object, DynamicObject>(x => throw ShouldHaveBeenReplacedException))
@@ -193,13 +194,13 @@ public class When_decorating_expression_executor
             .With((object x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionDecorator.Step5_Result);
-                return TestExpressionExecutionDecorator.Step6_Result;
+                x.ShouldBeSameAs(Step5_ProcessedResult);
+                return Step6_ConvertedResult;
             })
-            .Execute(TestExpressionExecutionDecorator.Step0_Expression)
-            .ShouldBeSameAs(TestExpressionExecutionDecorator.Step7_Result);
+            .Execute(Step0_InitialRemoteExpression)
+            .ShouldBeSameAs(Step7_FinalResult);
 
-        decorator.AssertAllMethodsInvokedExacltyOnce(skip: 5);
+        decorator.AssertAllMethodsInvokedExacltyOnce(skip: StepIndex6_ConvertedResult);
         callCounter.ShouldAllBe(x => x == 1);
     }
 
@@ -211,13 +212,13 @@ public class When_decorating_expression_executor
 
         var callCounter = new int[3];
 
-        var decorator = new TestExpressionExecutionDecorator(new DefaultExpressionExecutor(null));
+        var decorator = new TestExpressionExecutionDecorator();
 
         decorator
             .With((DynamicObject x) =>
             {
                 callCounter[0]++;
-                x.ShouldBeSameAs(TestExpressionExecutionDecorator.Step7_Result);
+                x.ShouldBeSameAs(Step7_FinalResult);
                 return customResult1;
             })
             .With((DynamicObject x) =>
@@ -230,10 +231,10 @@ public class When_decorating_expression_executor
             {
                 callCounter[2]++;
                 x.ShouldBeSameAs(customResult2);
-                return TestExpressionExecutionDecorator.Step7_Result;
+                return Step7_FinalResult;
             })
-            .Execute(TestExpressionExecutionDecorator.Step0_Expression)
-            .ShouldBeSameAs(TestExpressionExecutionDecorator.Step7_Result);
+            .Execute(Step0_InitialRemoteExpression)
+            .ShouldBeSameAs(Step7_FinalResult);
 
         decorator.AssertAllMethodsInvokedExacltyOnce();
         callCounter.ShouldAllBe(x => x == 1);

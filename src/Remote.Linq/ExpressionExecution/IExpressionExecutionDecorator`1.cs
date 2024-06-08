@@ -23,5 +23,5 @@ internal interface IExpressionExecutionDecorator<TDataTranferObject>
 
     TDataTranferObject ConvertResult(object? queryResult);
 
-    TDataTranferObject ProcessResult(TDataTranferObject queryResult);
+    TDataTranferObject ProcessConvertedResult(TDataTranferObject queryResult);
 }

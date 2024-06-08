@@ -23,6 +23,8 @@ public class ExpressionExecutionContext<TDataTranferObject> : ExpressionExecutio
         : base(parent)
         => _expression = expression.CheckNotNull();
 
+    internal Expression Expression => _expression;
+
     public TDataTranferObject Execute()
         => Execute(_expression);
 }

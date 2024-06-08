@@ -43,7 +43,8 @@ public abstract class EntityFrameworkExpressionExecutor<TDataTranferObject> : As
     /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
     /// <returns>A <see cref="SystemLinq.Expression"/> ready for execution.</returns>
     protected override SystemLinq.Expression PrepareAsyncQuery(SystemLinq.Expression expression, CancellationToken cancellation)
-        => Prepare(expression).ScalarQueryToAsyncExpression(cancellation);
+        => base.PrepareAsyncQuery(expression, cancellation)
+        .ScalarQueryToAsyncExpression(cancellation);
 
     /// <summary>
     /// Executes the <see cref="SystemLinq.Expression"/> and returns the raw result.

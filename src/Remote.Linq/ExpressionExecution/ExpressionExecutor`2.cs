@@ -3,7 +3,6 @@
 namespace Remote.Linq.ExpressionExecution;
 
 using Aqua.TypeExtensions;
-using Aqua.TypeSystem;
 using Remote.Linq.ExpressionVisitors;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -208,6 +207,6 @@ public abstract class ExpressionExecutor<TQueryable, TDataTranferObject> : IExpr
     TDataTranferObject IExpressionExecutionDecorator<TDataTranferObject>.ConvertResult(object? queryResult)
         => ConvertResult(queryResult);
 
-    TDataTranferObject IExpressionExecutionDecorator<TDataTranferObject>.ProcessResult(TDataTranferObject queryResult)
+    TDataTranferObject IExpressionExecutionDecorator<TDataTranferObject>.ProcessConvertedResult(TDataTranferObject queryResult)
         => ProcessResult(queryResult);
 }

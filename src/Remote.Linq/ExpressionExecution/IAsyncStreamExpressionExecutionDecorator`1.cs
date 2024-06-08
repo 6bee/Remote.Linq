@@ -25,5 +25,5 @@ internal interface IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>
 
     IAsyncEnumerable<TDataTranferObject> ConvertResult(IAsyncEnumerable<object?> queryResult);
 
-    IAsyncEnumerable<TDataTranferObject> ProcessResult(IAsyncEnumerable<TDataTranferObject> queryResult);
+    IAsyncEnumerable<TDataTranferObject> ProcessConvertedResult(IAsyncEnumerable<TDataTranferObject> queryResult);
 }
