@@ -12,7 +12,7 @@ using MethodInfo = System.Reflection.MethodInfo;
 public sealed class RemoteQueryProvider<TSource> : IRemoteQueryProvider
 {
     private static readonly MethodInfo _executeMethod = typeof(RemoteQueryProvider<TSource>)
-        .GetMethodEx(nameof(Execute), new[] { typeof(MethodInfos.TResult) }, typeof(Expression));
+        .GetMethodEx(nameof(Execute), [typeof(MethodInfos.TResult)], typeof(Expression));
 
     private readonly Func<Expressions.Expression, TSource?> _dataProvider;
     private readonly IQueryResultMapper<TSource> _resultMapper;

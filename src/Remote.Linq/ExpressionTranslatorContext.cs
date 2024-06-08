@@ -134,12 +134,12 @@ public class ExpressionTranslatorContext : IExpressionTranslatorContext
             typeof(System.Numerics.Complex),
             typeof(byte[]),
         }
-        .SelectMany(x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
+        .SelectMany(x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : [x])
         .ToHashSet()
         .Contains;
 
-    private static readonly Type[] _unmappedTypes = new[]
-        {
+    private static readonly Type[] _unmappedTypes =
+        [
             typeof(CancellationToken),
             typeof(ConstantQueryArgument),
             typeof(VariableQueryArgument),
@@ -149,12 +149,12 @@ public class ExpressionTranslatorContext : IExpressionTranslatorContext
             typeof(SystemLinq.Expression),
             typeof(IQueryable),
             typeof(IRemoteLinqQueryable),
-        };
+        ];
 
-    private static readonly Type[] _excludeFromUnmappedTypes = new[]
-        {
+    private static readonly Type[] _excludeFromUnmappedTypes =
+        [
             typeof(EnumerableQuery),
-        };
+        ];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExpressionTranslatorContext"/> class.
@@ -238,7 +238,7 @@ public class ExpressionTranslatorContext : IExpressionTranslatorContext
     private static object? MapGroupToDynamicObjectGraphMethod(Type[] genericTypeArguments, object group)
         => _mapGroupToDynamicObjectGraphMethodDefinition
         .MakeGenericMethod(genericTypeArguments)
-        .Invoke(null, new[] { group });
+        .Invoke(null, [group]);
 
     private static Grouping<TKey, TElement> MapGroupToDynamicObjectGraph<TKey, TElement>(IGrouping<TKey, TElement> group)
         => group is Grouping<TKey, TElement> grouping

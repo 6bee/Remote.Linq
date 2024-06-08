@@ -39,11 +39,11 @@ public class AsyncQueryExpressionTranslatorContext : ExpressionTranslatorContext
             var genericTypeArguments = default(Type[]);
             if (obj?.GetType().Implements(typeof(IAsyncGrouping<,>), out genericTypeArguments) is true)
             {
-                obj = MapAsyncGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, new[] { obj });
+                obj = MapAsyncGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, [obj]);
             }
             else if (obj?.GetType().Implements(typeof(IAsyncEnumerable<>), out genericTypeArguments) is true)
             {
-                obj = MapAsyncEnumerableMethod(genericTypeArguments!).Invoke(null, new[] { obj });
+                obj = MapAsyncEnumerableMethod(genericTypeArguments!).Invoke(null, [obj]);
             }
 
             return base.MapToDynamicObjectGraph(obj, setTypeInformation);

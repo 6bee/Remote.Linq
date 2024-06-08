@@ -26,7 +26,7 @@ public abstract class When_using_include
                 .ToList();
         }
 
-        protected override string[] ExpectedIncludePaths => new[] { "Children.Parent.Children.Parent" };
+        protected override string[] ExpectedIncludePaths => ["Children.Parent.Children.Parent"];
     }
 
     public class With_include_path : When_using_include
@@ -40,7 +40,7 @@ public abstract class When_using_include
                 .ToList();
         }
 
-        protected override string[] ExpectedIncludePaths => new[] { "Children.Parent.Children.Parent" };
+        protected override string[] ExpectedIncludePaths => ["Children.Parent.Children.Parent"];
     }
 
     public class With_include_reference_collection : When_using_include
@@ -54,7 +54,7 @@ public abstract class When_using_include
                 .ToList();
         }
 
-        protected override string[] ExpectedIncludePaths => new[] { "Children" };
+        protected override string[] ExpectedIncludePaths => ["Children"];
     }
 
     public class With_include_on_subtype : When_using_include
@@ -69,7 +69,7 @@ public abstract class When_using_include
                 .ToList();
         }
 
-        protected override string[] ExpectedIncludePaths => new[] { "Parent" };
+        protected override string[] ExpectedIncludePaths => ["Parent"];
     }
 
     public class With_include_reference : When_using_include
@@ -83,7 +83,7 @@ public abstract class When_using_include
                 .ToList();
         }
 
-        protected override string[] ExpectedIncludePaths => new[] { "Parent" };
+        protected override string[] ExpectedIncludePaths => ["Parent"];
 
         protected override Type QueryResourceType => typeof(Child);
     }
@@ -101,7 +101,7 @@ public abstract class When_using_include
                 .ToList();
         }
 
-        protected override string[] ExpectedIncludePaths => new[] { "Parent.Children", "Siblings.Siblings", "Siblings.Parent" };
+        protected override string[] ExpectedIncludePaths => ["Parent.Children", "Siblings.Siblings", "Siblings.Parent"];
 
         protected override Type QueryResourceType => typeof(Child);
     }
@@ -117,7 +117,7 @@ public abstract class When_using_include
                 .ToList();
         }
 
-        protected override string[] ExpectedIncludePaths => new[] { "Children.Parent.Children.Parent" };
+        protected override string[] ExpectedIncludePaths => ["Children.Parent.Children.Parent"];
     }
 
     private class Child

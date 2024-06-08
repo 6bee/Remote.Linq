@@ -43,7 +43,7 @@ public static class IncludeQueryableExtensions
     /// </summary>
     public static readonly MethodInfo StringIncludeMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
         nameof(IncludeQueryableExtensions.Include),
-        new[] { typeof(T) },
+        [typeof(T)],
         typeof(IQueryable<T>),
         typeof(string));
 
@@ -52,7 +52,7 @@ public static class IncludeQueryableExtensions
     /// </summary>
     public static readonly MethodInfo IncludeMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
         nameof(IncludeQueryableExtensions.Include),
-        new[] { typeof(T), typeof(TProperty) },
+        [typeof(T), typeof(TProperty)],
         typeof(IQueryable<T>),
         typeof(Expression<Func<T, TProperty>>));
 
@@ -63,7 +63,7 @@ public static class IncludeQueryableExtensions
     /// </summary>
     public static readonly MethodInfo ThenIncludeAfterEnumerableMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
         nameof(IncludeQueryableExtensions.ThenInclude),
-        new[] { typeof(T), typeof(TPreviousProperty), typeof(TProperty) },
+        [typeof(T), typeof(TPreviousProperty), typeof(TProperty)],
         typeof(IIncludableQueryable<T, IEnumerable<TPreviousProperty>>),
         typeof(Expression<Func<TPreviousProperty, TProperty>>));
 
@@ -74,7 +74,7 @@ public static class IncludeQueryableExtensions
     /// </summary>
     public static readonly MethodInfo ThenIncludeAfterReferenceMethodInfo = typeof(IncludeQueryableExtensions).GetMethodEx(
         nameof(IncludeQueryableExtensions.ThenInclude),
-        new[] { typeof(T), typeof(TPreviousProperty), typeof(TProperty) },
+        [typeof(T), typeof(TPreviousProperty), typeof(TProperty)],
         typeof(IIncludableQueryable<T, TPreviousProperty>),
         typeof(Expression<Func<TPreviousProperty, TProperty>>));
 

@@ -22,7 +22,7 @@ internal static class Helper
     {
         task.AssertNotNull();
         resultType.AssertNotNull();
-        var result = ToSingleElementStreamMethod(resultType).Invoke(null, new[] { task });
+        var result = ToSingleElementStreamMethod(resultType).Invoke(null, [task]);
         return (IAsyncEnumerable<object?>)result!;
     }
 
@@ -36,7 +36,7 @@ internal static class Helper
     public static IAsyncEnumerable<object?> MapAsyncEnumerable(object asyncEnumerable, Type itemType)
     {
         itemType.AssertNotNull();
-        var result = MapAsyncEnumerableMethod(itemType).Invoke(null, new[] { asyncEnumerable });
+        var result = MapAsyncEnumerableMethod(itemType).Invoke(null, [asyncEnumerable]);
         return (IAsyncEnumerable<object?>)result!;
     }
 
@@ -55,7 +55,7 @@ internal static class Helper
     {
         task.AssertNotNull();
         resultType.AssertNotNull();
-        var result = MapTaskAsyncMethod(resultType).Invoke(null, new[] { task });
+        var result = MapTaskAsyncMethod(resultType).Invoke(null, [task]);
         return (ValueTask<object?>)result!;
     }
 

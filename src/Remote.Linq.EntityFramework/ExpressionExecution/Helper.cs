@@ -38,19 +38,19 @@ internal static class Helper
 
     private static readonly MethodInfo QueryableToListAsyncMethod = typeof(QueryableExtensions).GetMethodEx(
         nameof(QueryableExtensions.ToListAsync),
-        new[] { typeof(TSource) },
+        [typeof(TSource)],
         typeof(IQueryable<TSource>),
         typeof(CancellationToken));
 
     private static readonly MethodInfo DbContextSetMethod = typeof(DbContext).GetMethodEx(
         nameof(DbContext.Set),
-        genericArguments: new[] { typeof(TEntity) });
+        genericArguments: [typeof(TEntity)]);
 
     internal static Task ToListAsync(IQueryable source, CancellationToken cancellation)
     {
         source.AssertNotNull();
         var method = QueryableToListAsyncMethod.MakeGenericMethod(source.ElementType);
-        var task = method.Invoke(null, new object[] { source, cancellation });
+        var task = method.Invoke(null, [source, cancellation]);
         return (Task)task!;
     }
 

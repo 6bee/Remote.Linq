@@ -147,13 +147,13 @@ public static class TestData
     private static object CreateArray(Type type, object item)
     {
         var toArrayMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray), PublicStatic).MakeGenericMethod(type);
-        return toArrayMethod.Invoke(null, new[] { CreateEnumerable(type, item) });
+        return toArrayMethod.Invoke(null, [CreateEnumerable(type, item)]);
     }
 
     private static object CreateList(Type type, object item)
     {
         var toListMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList), PublicStatic).MakeGenericMethod(type);
-        return toListMethod.Invoke(null, new[] { CreateEnumerable(type, item) });
+        return toListMethod.Invoke(null, [CreateEnumerable(type, item)]);
     }
 
     private static object CreateEnumerable(Type type, object item)

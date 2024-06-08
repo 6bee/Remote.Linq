@@ -91,7 +91,7 @@ public abstract class When_using_GotoAndLabelExpressions
             Expression.Block(
                 new[] { position },
                 Expression.Assign(position, positionProperty),
-                Expression.Call(writer, typeof(TextWriter).GetMethod(nameof(TextWriter.WriteLine), new[] { typeof(string) }), Expression.Constant("SomeText")),
+                Expression.Call(writer, typeof(TextWriter).GetMethod(nameof(TextWriter.WriteLine), [typeof(string)]), Expression.Constant("SomeText")),
                 Expression.Return(returnLabel, Expression.Subtract(positionProperty, position), typeof(long)),
                 Expression.Label(returnLabel, Expression.Default(typeof(long)))),
             writer);

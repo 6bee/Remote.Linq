@@ -31,7 +31,7 @@ public class When_using_async_numeric_linq_operations
         get
         {
             IScenario[] scenarios =
-            {
+            [
                 new ScenarioFor<int>(x => 2 * x, 0, 102, -5),
                 new ScenarioFor<int?>(x => 2 * x, null, 102, -5),
 
@@ -46,9 +46,9 @@ public class When_using_async_numeric_linq_operations
 
                 new ScenarioFor<double>(x => 2 * x, 0, 1.02d, -5),
                 new ScenarioFor<double?>(x => 2 * x, null, 1.02d, -5),
-            };
-            string[] methods = { "Sum", "Average" };
-            bool[] withSelectorFlags = { false, true };
+            ];
+            string[] methods = ["Sum", "Average"];
+            bool[] withSelectorFlags = [false, true];
 
             return
                 from scenario in scenarios

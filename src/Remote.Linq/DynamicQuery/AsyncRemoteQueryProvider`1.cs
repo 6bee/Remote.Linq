@@ -18,7 +18,7 @@ using SystemLinq = System.Linq.Expressions;
 public sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
 {
     private static readonly MethodInfo _executeMethod = typeof(AsyncRemoteQueryProvider<TSource>)
-        .GetMethodEx(nameof(Execute), new[] { typeof(MethodInfos.TResult) }, typeof(SystemLinq.Expression));
+        .GetMethodEx(nameof(Execute), [typeof(MethodInfos.TResult)], typeof(SystemLinq.Expression));
 
     private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>> _asyncDataProvider;
     private readonly IAsyncQueryResultMapper<TSource> _resultMapper;

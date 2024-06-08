@@ -19,25 +19,25 @@ partial class MethodInfos
 
         internal static readonly MethodInfo OrderBy = GetQueryableMethod(
             nameof(System.Linq.Queryable.OrderBy),
-            new[] { typeof(TSource), typeof(TKey) },
+            [typeof(TSource), typeof(TKey)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>));
 
         internal static readonly MethodInfo OrderByDescending = GetQueryableMethod(
             nameof(System.Linq.Queryable.OrderByDescending),
-            new[] { typeof(TSource), typeof(TKey) },
+            [typeof(TSource), typeof(TKey)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>));
 
         internal static readonly MethodInfo ThenBy = GetQueryableMethod(
             nameof(System.Linq.Queryable.ThenBy),
-            new[] { typeof(TSource), typeof(TKey) },
+            [typeof(TSource), typeof(TKey)],
             typeof(IOrderedQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>));
 
         internal static readonly MethodInfo ThenByDescending = GetQueryableMethod(
             nameof(System.Linq.Queryable.ThenByDescending),
-            new[] { typeof(TSource), typeof(TKey) },
+            [typeof(TSource), typeof(TKey)],
             typeof(IOrderedQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>));
 
@@ -48,14 +48,14 @@ partial class MethodInfos
 
         internal static readonly MethodInfo AggregateWithSeed = GetQueryableMethod(
             nameof(System.Linq.Queryable.Aggregate),
-            new[] { typeof(TSource), typeof(TAccumulate) },
+            [typeof(TSource), typeof(TAccumulate)],
             typeof(IQueryable<TSource>),
             typeof(TAccumulate),
             typeof(Expression<Func<TAccumulate, TSource, TAccumulate>>));
 
         internal static readonly MethodInfo AggregateWithSeedAndSelector = GetQueryableMethod(
             nameof(System.Linq.Queryable.Aggregate),
-            new[] { typeof(TSource), typeof(TAccumulate), typeof(TResult) },
+            [typeof(TSource), typeof(TAccumulate), typeof(TResult)],
             typeof(IQueryable<TSource>),
             typeof(TAccumulate),
             typeof(Expression<Func<TAccumulate, TSource, TAccumulate>>),
@@ -190,26 +190,26 @@ partial class MethodInfos
 
         internal static readonly MethodInfo MaxWithSelector = GetQueryableMethod(
             nameof(System.Linq.Queryable.Max),
-            new[] { typeof(TSource), typeof(TResult) },
+            [typeof(TSource), typeof(TResult)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TResult>>));
 
 #if NET6_0_OR_GREATER
         internal static readonly MethodInfo MaxWithComparer = GetQueryableMethod(
             nameof(System.Linq.Queryable.Max),
-            new[] { typeof(TSource) },
+            [typeof(TSource)],
             typeof(IQueryable<TSource>),
             typeof(IComparer<TSource>));
 
         internal static readonly MethodInfo MaxBy = GetQueryableMethod(
             nameof(System.Linq.Queryable.MaxBy),
-            new[] { typeof(TSource), typeof(TKey) },
+            [typeof(TSource), typeof(TKey)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>));
 
         internal static readonly MethodInfo MaxByWithComparer = GetQueryableMethod(
             nameof(System.Linq.Queryable.MaxBy),
-            new[] { typeof(TSource), typeof(TKey) },
+            [typeof(TSource), typeof(TKey)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>),
             typeof(IComparer<TSource>));
@@ -221,26 +221,26 @@ partial class MethodInfos
 
         internal static readonly MethodInfo MinWithSelector = GetQueryableMethod(
             nameof(System.Linq.Queryable.Min),
-            new[] { typeof(TSource), typeof(TResult) },
+            [typeof(TSource), typeof(TResult)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TResult>>));
 
 #if NET6_0_OR_GREATER
         internal static readonly MethodInfo MinWithComparer = GetQueryableMethod(
             nameof(System.Linq.Queryable.Min),
-            new[] { typeof(TSource) },
+            [typeof(TSource)],
             typeof(IQueryable<TSource>),
             typeof(IComparer<TSource>));
 
         internal static readonly MethodInfo MinBy = GetQueryableMethod(
             nameof(System.Linq.Queryable.MinBy),
-            new[] { typeof(TSource), typeof(TKey) },
+            [typeof(TSource), typeof(TKey)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>));
 
         internal static readonly MethodInfo MinByWithComparer = GetQueryableMethod(
             nameof(System.Linq.Queryable.MinBy),
-            new[] { typeof(TSource), typeof(TKey) },
+            [typeof(TSource), typeof(TKey)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>),
             typeof(IComparer<TSource>));
@@ -299,7 +299,7 @@ partial class MethodInfos
 
         internal static readonly MethodInfo Select = GetQueryableMethod(
             nameof(System.Linq.Queryable.Select),
-            new[] { typeof(TSource), typeof(TResult) },
+            [typeof(TSource), typeof(TResult)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TResult>>));
 
@@ -324,7 +324,7 @@ partial class MethodInfos
             typeof(Expression<Func<TSource, T>>));
 
         private static MethodInfo GetQueryableMethod(string name, params Type[] parameterTypes)
-            => GetQueryableMethod(name, new[] { typeof(TSource) }, parameterTypes);
+            => GetQueryableMethod(name, [typeof(TSource)], parameterTypes);
 
         private static MethodInfo GetQueryableMethod(string name, Type[] genericArgumentTypes, params Type[] parameterTypes)
             => typeof(System.Linq.Queryable).GetMethodEx(name, genericArgumentTypes, parameterTypes);

@@ -35,13 +35,13 @@ internal static class EntityFrameworkMethodInfos
 
     internal static readonly MethodInfo StringIncludeMethodInfo = typeof(System.Data.Entity.QueryableExtensions).GetMethodEx(
         nameof(System.Data.Entity.QueryableExtensions.Include),
-        new[] { typeof(T) },
+        [typeof(T)],
         typeof(IQueryable<T>),
         typeof(string));
 
     internal static readonly MethodInfo IncludeMethodInfo = typeof(System.Data.Entity.QueryableExtensions).GetMethodEx(
         nameof(System.Data.Entity.QueryableExtensions.Include),
-        new[] { typeof(T), typeof(TProperty) },
+        [typeof(T), typeof(TProperty)],
         typeof(IQueryable<T>),
         typeof(Expression<Func<T, TProperty>>));
 }

@@ -12,7 +12,7 @@ partial class MethodInfos
     {
         internal static readonly MethodInfo Lambda = typeof(System.Linq.Expressions.Expression).GetMethodEx(
             nameof(System.Linq.Expressions.Expression.Lambda),
-            new[] { typeof(TDelegate) },
+            [typeof(TDelegate)],
             typeof(System.Linq.Expressions.Expression),
             typeof(ParameterExpression[]));
     }

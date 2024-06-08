@@ -22,7 +22,7 @@ public abstract class When_using_local_variable_query_argument_list
     public class With_data_contract_serializer : When_using_local_variable_query_argument_list
     {
         public With_data_contract_serializer()
-            : base(x => DataContractSerializationHelper.CloneExpression(x, new[] { typeof(List<int>) }))
+            : base(x => DataContractSerializationHelper.CloneExpression(x, [typeof(List<int>)]))
         {
         }
     }
@@ -64,7 +64,7 @@ public abstract class When_using_local_variable_query_argument_list
     public class With_xml_serializer : When_using_local_variable_query_argument_list
     {
         public With_xml_serializer()
-            : base(x => XmlSerializationHelper.CloneExpression(x, new[] { typeof(List<int>) }))
+            : base(x => XmlSerializationHelper.CloneExpression(x, [typeof(List<int>)]))
         {
         }
     }

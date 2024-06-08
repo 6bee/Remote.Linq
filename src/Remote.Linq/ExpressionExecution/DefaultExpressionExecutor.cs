@@ -62,7 +62,7 @@ public class DefaultExpressionExecutor : ExpressionExecutor<IQueryable, DynamicO
         : _mapper.MapObject(value, _setTypeInformation);
 
     private object[] MapArray(object array, Type elementType)
-        => (object[])_mapArrayMethodInfo.MakeGenericMethod(elementType).Invoke(this, new[] { array })!;
+        => (object[])_mapArrayMethodInfo.MakeGenericMethod(elementType).Invoke(this, [array])!;
 
     private object[] MapArray<T>(T[] array)
         => array

@@ -127,7 +127,7 @@ public abstract class VariableQueryArgumentVisitor
             {
                 var type = nonGenericQueryArgument.Type.ResolveType(TypeResolver);
                 var value = nonGenericQueryArgument.Value;
-                var queryArgument = Activator.CreateInstance(typeof(VariableQueryArgument<>).MakeGenericType(type), new[] { value });
+                var queryArgument = Activator.CreateInstance(typeof(VariableQueryArgument<>).MakeGenericType(type), [value]);
                 return new ConstantExpression(queryArgument);
             }
 
@@ -136,7 +136,7 @@ public abstract class VariableQueryArgumentVisitor
                 var elementType = nonGenericQueryArgumentList.ElementType.ResolveType(TypeResolver);
                 var values = nonGenericQueryArgumentList.Values;
                 var methodInfo = CreateVariableQueryArgumentListMethodInfo.MakeGenericMethod(elementType);
-                var queryArgument = methodInfo.Invoke(null, new object[] { values });
+                var queryArgument = methodInfo.Invoke(null, [values]);
                 return new ConstantExpression(queryArgument);
             }
 

@@ -337,7 +337,7 @@ public abstract class When_running_query
     [Fact]
     public void Should_return_orders_joined_with_chars_array_closure()
     {
-        char[] array = { 'h', 'e', 'l', 'l', 'o' };
+        char[] array = ['h', 'e', 'l', 'l', 'o'];
         var joinLocalVariable = (
             from i in _orderItemQueryable
             from s in array
@@ -1062,7 +1062,7 @@ public abstract class When_running_query
         => GetType()
         .GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
         .MakeGenericMethod(genericType)
-        .Invoke(this, new[] { argument });
+        .Invoke(this, [argument]);
 
     [Fact]
     public void Should_query_value_created_using_default_operator()

@@ -66,7 +66,7 @@ public abstract class When_using_ConstExpression_of_expression
     [Fact]
     public void ConstExpression_of_ExpressionArray_should_be_serializable()
     {
-        Expression[] expressions = new Expression[] { Expression.Constant(1) };
+        Expression[] expressions = [Expression.Constant(1)];
         Expression constExpression = Expression.Constant(expressions);
 
         var clone = Serialize(constExpression);

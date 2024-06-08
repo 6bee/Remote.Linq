@@ -116,7 +116,7 @@ public static class TestHelper
     }
 
     public static object GetValueTaskResult(object valueTask, Type resultType)
-        => _getAsyncResultMethodInfo.MakeGenericMethod(resultType).Invoke(null, new[] { valueTask });
+        => _getAsyncResultMethodInfo.MakeGenericMethod(resultType).Invoke(null, [valueTask]);
 
     public static Task<object> GetValueTaskResultAsync(object valueTask, Type resultType)
         => Task.Run(() => GetValueTaskResult(valueTask, resultType));

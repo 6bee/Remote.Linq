@@ -94,7 +94,7 @@ public sealed class DynamicResultMapper : IQueryResultMapper<DynamicObject>
         var hasPredicate = methodCallExpression.Arguments.Count is 2;
         var arguments = hasPredicate
             ? new object[] { result, GetTruePredicate(elementType) }
-            : new object[] { result };
+            : [result];
         var method = methodCallExpression.Method.Name.EndsWith("OrDefault", StringComparison.Ordinal)
             ? (hasPredicate ? MethodInfos.Enumerable.SingleOrDefaultWithPredicate : MethodInfos.Enumerable.SingleOrDefault)
             : (hasPredicate ? MethodInfos.Enumerable.SingleWithPredicate : MethodInfos.Enumerable.Single);

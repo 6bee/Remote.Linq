@@ -79,8 +79,8 @@ public abstract class When_using_IfElseExpressions
     {
         var expression = Expression.IfThenElse(
             Expression.MakeBinary(ExpressionType.LessThan, Expression.Constant(5), Expression.Constant(2)),
-            Expression.Throw(Expression.New(typeof(Exception).GetConstructor(new[] { typeof(string) }), Expression.Constant("The condition is true."))),
-            Expression.Throw(Expression.New(typeof(Exception).GetConstructor(new[] { typeof(string) }), Expression.Constant("The condition is false."))));
+            Expression.Throw(Expression.New(typeof(Exception).GetConstructor([typeof(string)]), Expression.Constant("The condition is true."))),
+            Expression.Throw(Expression.New(typeof(Exception).GetConstructor([typeof(string)]), Expression.Constant("The condition is false."))));
 
         _originalExpression = expression;
 

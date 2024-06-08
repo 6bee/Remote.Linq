@@ -32,10 +32,10 @@ public static class SimpleQueryQueryableExtensions
         var funcType = typeof(Func<,>).MakeGenericType(typeof(T), resultType);
         var lambdaExpressionMethodInfo = MethodInfos.Expression.Lambda.MakeGenericMethod(funcType);
 
-        var funcExpression = lambdaExpressionMethodInfo.Invoke(null, new object[] { exp, lambdaExpression.Parameters.ToArray() });
+        var funcExpression = lambdaExpressionMethodInfo.Invoke(null, [exp, lambdaExpression.Parameters.ToArray()]);
 
         var method = methodInfo.MakeGenericMethod(typeof(T), resultType);
-        var result = method.Invoke(null, new object[] { queryable, funcExpression! });
+        var result = method.Invoke(null, [queryable, funcExpression!]);
 
         return (IOrderedQueryable<T>)result!;
     }

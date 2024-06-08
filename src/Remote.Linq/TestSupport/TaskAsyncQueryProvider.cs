@@ -18,10 +18,10 @@ using MethodInfo = System.Reflection.MethodInfo;
 internal sealed class TaskAsyncQueryProvider : IAsyncRemoteQueryProvider
 {
     private static readonly MethodInfo _executeMethod = typeof(TaskAsyncQueryProvider)
-        .GetMethodEx(nameof(Execute), new[] { typeof(MethodInfos.TResult) }, typeof(Expression));
+        .GetMethodEx(nameof(Execute), [typeof(MethodInfos.TResult)], typeof(Expression));
 
     private static readonly MethodInfo _createQueryMethod = typeof(TaskAsyncQueryProvider)
-        .GetMethodEx(nameof(CreateQuery), new[] { typeof(MethodInfos.TElement) }, typeof(Expression));
+        .GetMethodEx(nameof(CreateQuery), [typeof(MethodInfos.TElement)], typeof(Expression));
 
     private readonly IExpressionTranslatorContext _context;
 

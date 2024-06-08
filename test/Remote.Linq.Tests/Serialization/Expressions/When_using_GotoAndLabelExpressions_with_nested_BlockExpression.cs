@@ -91,10 +91,10 @@ public abstract class When_using_GotoAndLabelExpressions_with_nested_BlockExpres
                 Expression.IfThen(
                     Expression.ReferenceEqual(Expression.Constant("SomeText"), Expression.Constant(null, typeof(string))),
                     Expression.Block(
-                        Expression.Call(typeof(Console).GetMethod(nameof(Console.WriteLine), new[] { typeof(string) }), Expression.Constant("Text is null")),
+                        Expression.Call(typeof(Console).GetMethod(nameof(Console.WriteLine), [typeof(string)]), Expression.Constant("Text is null")),
                         Expression.Return(returnLabel, Expression.Constant(0L), typeof(long)))),
                 Expression.Assign(position, positionProperty),
-                Expression.Call(writer, typeof(TextWriter).GetMethod(nameof(TextWriter.WriteLine), new[] { typeof(string) }), Expression.Constant("SomeText")),
+                Expression.Call(writer, typeof(TextWriter).GetMethod(nameof(TextWriter.WriteLine), [typeof(string)]), Expression.Constant("SomeText")),
                 Expression.Return(returnLabel, Expression.Subtract(positionProperty, position), typeof(long)),
                 Expression.Label(returnLabel, Expression.Default(typeof(long)))),
             writer);

@@ -43,7 +43,7 @@ public class When_using_remote_linq_as_linq_provider
     public void Should_support_method_call_expression()
     {
         var src = RemoteItems;
-        var result = (int)src.Provider.Execute(Expression.Call(typeof(Queryable), nameof(Queryable.Count), new[] { src.ElementType }, new[] { src.Expression }));
+        var result = (int)src.Provider.Execute(Expression.Call(typeof(Queryable), nameof(Queryable.Count), [src.ElementType], [src.Expression]));
         result.ShouldBe(1);
     }
 }

@@ -67,7 +67,7 @@ public abstract class When_using_LambdaExpression_returnung_a_type
     public class With_xml_serializer : When_using_LambdaExpression_returnung_a_type
     {
         public With_xml_serializer()
-            : base(x => XmlSerializationHelper.CloneExpression(x, new[] { typeof(List<Aqua.TypeSystem.TypeInfo>), typeof(Aqua.TypeSystem.TypeInfo[]) }))
+            : base(x => XmlSerializationHelper.CloneExpression(x, [typeof(List<Aqua.TypeSystem.TypeInfo>), typeof(Aqua.TypeSystem.TypeInfo[])]))
         {
         }
     }

@@ -96,7 +96,7 @@ public abstract class When_using_BlockExpression
                         typeof(decimal).GetMethod(nameof(decimal.ToString), Type.EmptyTypes))),
                 Expression.Call(
                     formattedDecimalString,
-                    typeof(string).GetMethod(nameof(string.Replace), new[] { typeof(char), typeof(char) }),
+                    typeof(string).GetMethod(nameof(string.Replace), [typeof(char), typeof(char)]),
                     Expression.Constant('.'),
                     Expression.Constant(','))),
             decimalInputParameter);

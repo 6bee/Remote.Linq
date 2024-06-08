@@ -40,13 +40,13 @@ internal static class Helper
 
     private static readonly MethodInfo _entityFrameworkQueryableToListAsyncMethod = typeof(EntityFrameworkQueryableExtensions).GetMethodEx(
         nameof(EntityFrameworkQueryableExtensions.ToListAsync),
-        new[] { typeof(TSource) },
+        [typeof(TSource)],
         typeof(IQueryable<TSource>),
         typeof(CancellationToken));
 
     private static readonly MethodInfo _dbContextSetMethod = typeof(DbContext).GetMethodEx(
         nameof(DbContext.Set),
-        genericArguments: new[] { typeof(TEntity) });
+        genericArguments: [typeof(TEntity)]);
 
     private static readonly MethodInfo _executeAsAsyncStreamMethod = typeof(Helper).GetMethodEx(nameof(ExecuteAsAsyncStream));
 
@@ -54,7 +54,7 @@ internal static class Helper
     {
         source.AssertNotNull();
         var method = _entityFrameworkQueryableToListAsyncMethod.MakeGenericMethod(source.ElementType);
-        var task = method.Invoke(null, new object[] { source, cancellation });
+        var task = method.Invoke(null, [source, cancellation]);
         return (Task)task!;
     }
 
@@ -88,7 +88,7 @@ internal static class Helper
     {
         queryable.AssertNotNull();
         var method = _executeAsAsyncStreamMethod.MakeGenericMethod(queryable.ElementType);
-        var asyncStream = method.Invoke(null, new object[] { queryable, cancellation });
+        var asyncStream = method.Invoke(null, [queryable, cancellation]);
         return (IAsyncEnumerable<object?>)asyncStream!;
     }
 

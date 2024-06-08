@@ -106,14 +106,14 @@ public class RemoteLinqAsyncQueryProvider<TSource> : IRemoteLinqAsyncQueryProvid
     private TResult MapAsyncEnumerable<TResult>(Type elementType, IAsyncEnumerable<TSource?> source, CancellationToken cancellation)
     {
         var method = _mapAsyncEnumerableMethodInfo.MakeGenericMethod(elementType);
-        var result = method.Invoke(null, new object[] { source, _resultMapper, cancellation });
+        var result = method.Invoke(null, [source, _resultMapper, cancellation]);
         return (TResult)result!;
     }
 
     private ValueTask<TResult> MapSingleElementStream<TResult>(IAsyncEnumerable<TSource?> source, CancellationToken cancellation)
     {
         var method = _mapSingleElementStreamMethodInfo.MakeGenericMethod(typeof(TResult));
-        var result = method.Invoke(null, new object[] { source, _resultMapper, cancellation });
+        var result = method.Invoke(null, [source, _resultMapper, cancellation]);
         return (ValueTask<TResult>)result!;
     }
 

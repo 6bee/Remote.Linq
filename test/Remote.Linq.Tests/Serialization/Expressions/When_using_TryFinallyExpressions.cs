@@ -90,8 +90,8 @@ public abstract class When_using_TryFinallyExpressions
                     Expression.Block(
                         Expression.IfThen(
                             Expression.Equal(Expression.Constant(true), shouldFail),
-                            Expression.Throw(Expression.New(typeof(InvalidOperationException).GetTypeInfo().GetConstructor(new[] { typeof(string) }), Expression.Constant("x"))))),
-                    Expression.Throw(Expression.New(typeof(InvalidOperationException).GetTypeInfo().GetConstructor(new[] { typeof(string) }), Expression.Constant("y")))),
+                            Expression.Throw(Expression.New(typeof(InvalidOperationException).GetTypeInfo().GetConstructor([typeof(string)]), Expression.Constant("x"))))),
+                    Expression.Throw(Expression.New(typeof(InvalidOperationException).GetTypeInfo().GetConstructor([typeof(string)]), Expression.Constant("y")))),
                 Expression.Assign(result, Expression.Constant(true)),
                 result),
             shouldFail);
