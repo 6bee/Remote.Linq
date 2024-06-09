@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 
-public class DefaultEntityFrameworkCoreAsyncStreamExpressionExecutor : EntityFrameworkCoreAsyncStreamExpressionExecutor<DynamicObject>
+public sealed class DefaultEntityFrameworkCoreAsyncStreamExpressionExecutor : EntityFrameworkCoreAsyncStreamExpressionExecutor<DynamicObject>
 {
     private readonly IDynamicObjectMapper _mapper;
     private readonly Func<Type, bool> _setTypeInformation;

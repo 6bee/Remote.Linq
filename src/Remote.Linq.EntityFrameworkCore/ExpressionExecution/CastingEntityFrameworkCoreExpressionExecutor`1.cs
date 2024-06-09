@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using System.Security;
 
-internal sealed class CastingEntityFrameworkCoreExpressionExecutor<TResult> : EntityFrameworkCoreExpressionExecutor<TResult>
+public sealed class CastingEntityFrameworkCoreExpressionExecutor<TResult> : EntityFrameworkCoreExpressionExecutor<TResult>
 {
     [SecuritySafeCritical]
     public CastingEntityFrameworkCoreExpressionExecutor(DbContext dbContext, IExpressionFromRemoteLinqContext? context = null)

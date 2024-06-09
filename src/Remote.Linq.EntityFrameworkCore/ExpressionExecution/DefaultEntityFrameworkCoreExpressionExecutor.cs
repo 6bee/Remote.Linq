@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using System.Security;
 
-public class DefaultEntityFrameworkCoreExpressionExecutor : EntityFrameworkCoreExpressionExecutor<DynamicObject?>
+public sealed class DefaultEntityFrameworkCoreExpressionExecutor : EntityFrameworkCoreExpressionExecutor<DynamicObject?>
 {
     private readonly IDynamicObjectMapper _mapper;
     private readonly Func<Type, bool> _setTypeInformation;

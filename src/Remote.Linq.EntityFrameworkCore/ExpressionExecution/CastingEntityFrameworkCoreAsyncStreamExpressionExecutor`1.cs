@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 
-internal sealed class CastingEntityFrameworkCoreAsyncStreamExpressionExecutor<TResult> : EntityFrameworkCoreAsyncStreamExpressionExecutor<TResult?>
+public sealed class CastingEntityFrameworkCoreAsyncStreamExpressionExecutor<TResult> : EntityFrameworkCoreAsyncStreamExpressionExecutor<TResult?>
     where TResult : class
 {
     [SecuritySafeCritical]

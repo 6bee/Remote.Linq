@@ -7,7 +7,7 @@ using Aqua.TypeExtensions;
 using System;
 using System.Linq;
 
-public class DefaultReactiveAsyncExpressionExecutor : InteractiveAsyncExpressionExecutor<DynamicObject?>
+public sealed class DefaultReactiveAsyncExpressionExecutor : InteractiveAsyncExpressionExecutor<DynamicObject?>
 {
     private readonly IDynamicObjectMapper _mapper;
     private readonly Func<Type, bool> _setTypeInformation;

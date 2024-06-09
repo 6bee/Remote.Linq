@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-internal sealed class DefaultReactiveAsyncStreamExpressionExecutor : InteractiveAsyncStreamExpressionExecutor<DynamicObject>
+public sealed class DefaultReactiveAsyncStreamExpressionExecutor : InteractiveAsyncStreamExpressionExecutor<DynamicObject>
 {
     private readonly IDynamicObjectMapper _mapper;
     private readonly Func<Type, bool> _setTypeInformation;

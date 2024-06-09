@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-internal sealed class CastingReactiveAsyncStreamExpressionExecutor<TResult> : InteractiveAsyncStreamExpressionExecutor<TResult>
+public sealed class CastingReactiveAsyncStreamExpressionExecutor<TResult> : InteractiveAsyncStreamExpressionExecutor<TResult>
 {
     public CastingReactiveAsyncStreamExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
         : base(queryableProvider, context)
