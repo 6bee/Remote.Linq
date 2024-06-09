@@ -8,7 +8,7 @@ using System.Linq;
 
 public abstract class ExpressionExecutionDecorator<TDataTranferObject> : ExpressionExecutionDecoratorBase<TDataTranferObject>
 {
-    protected ExpressionExecutionDecorator(ExpressionExecutionDecorator<TDataTranferObject> parent)
+    protected ExpressionExecutionDecorator(ExpressionExecutionDecoratorBase<TDataTranferObject> parent)
         : base(parent)
     {
     }

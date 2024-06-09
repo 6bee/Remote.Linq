@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 public abstract class AsyncExpressionExecutionDecorator<TDataTranferObject> : AsyncExpressionExecutionDecoratorBase<TDataTranferObject>
 {
-    protected AsyncExpressionExecutionDecorator(AsyncExpressionExecutionDecorator<TDataTranferObject> parent)
+    protected AsyncExpressionExecutionDecorator(AsyncExpressionExecutionDecoratorBase<TDataTranferObject> parent)
         : base(parent)
     {
     }
