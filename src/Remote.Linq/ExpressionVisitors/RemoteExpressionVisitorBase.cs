@@ -405,12 +405,12 @@ public abstract class RemoteExpressionVisitorBase
     protected virtual Expression VisitMethodCall(MethodCallExpression node)
     {
         var instance = Visit(node.CheckNotNull().Instance);
-        var argumements = node.Arguments?
+        var arguments = node.Arguments?
             .Select(i => new { Old = i, New = Visit(i) })
             .ToList();
-        if (!ReferenceEquals(instance, node.Instance) || argumements?.Any(i => !ReferenceEquals(i.Old, i.New)) is true)
+        if (!ReferenceEquals(instance, node.Instance) || arguments?.Any(i => !ReferenceEquals(i.Old, i.New)) is true)
         {
-            return new MethodCallExpression(instance, node.Method, argumements.AsEmptyIfNull().Select(i => i.New));
+            return new MethodCallExpression(instance, node.Method, arguments.AsEmptyIfNull().Select(i => i.New));
         }
 
         return node;
