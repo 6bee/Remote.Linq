@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved and extended API for fluent configuration of custom trategies for expression execution
+- Improved and extended API for fluent configuration of custom strategies for expression execution
   (namespace `Remote.Linq.ExpressionExecution`).
 
 ### Deprecated
