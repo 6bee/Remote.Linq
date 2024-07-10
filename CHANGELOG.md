@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved and extended API for fluent configuration of custom strategies for expression execution
   (namespace `Remote.Linq.ExpressionExecution`).
+- Bump _Microsoft.EntityFramework_ from 6.4.4 to 6.5.1 (concerns _Remote.Linq.EntityFramework_)
 - Bump _Microsoft.EntityFrameworkCore_ from 8.0.6 to 8.0.7 (net8.0) (concerns _Remote.Linq.EntityFrameworkCore_)
 
 ### Deprecated
