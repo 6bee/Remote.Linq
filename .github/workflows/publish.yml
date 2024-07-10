@@ -11,7 +11,7 @@ jobs:
     
     steps:
     - name: Extract version from tag
-      uses: nowsprinting/check-version-format-action@v3
+      uses: nowsprinting/check-version-format-action@v4
       id: version
       with:
         prefix: 'v'
@@ -23,12 +23,12 @@ jobs:
         exit 1
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0 # Mandatory to use exact version from tag action
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         global-json-file: global.json
 
@@ -56,14 +56,14 @@ jobs:
       run: dotnet test Remote.Linq.sln -c Release /bl
       
     - name: Upload build log
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: msbuild_log
         path: msbuild.binlog
         if-no-files-found: error
 
     - name: Upload packages
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nuget_packages
         path: artifacts
