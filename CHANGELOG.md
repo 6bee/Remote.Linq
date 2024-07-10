@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [7.2.1][7.2.1] - 2024-07-10
+
+### Security
+
+- Bump _aqua-core_ from 5.4.0 to 5.4.1 ([CVE-2024-30105][CVE-2024-30105])
+
 ## [7.2.0][7.2.0] - 2024-06-04
 
 ### Added
@@ -105,8 +111,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
-[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/7.2.0...main
-[7.2.0]: https://github.com/6bee/Remote.Linq/compare/7.1.0...7.2.0
+[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.2.1...main
+[7.2.1]: https://github.com/6bee/Remote.Linq/compare/v7.2.0...v7.2.1
+[7.2.0]: https://github.com/6bee/Remote.Linq/compare/7.1.0...v7.2.0
 [7.1.0]: https://github.com/6bee/Remote.Linq/compare/7.0.0...7.1.0
 [7.0.0]: https://github.com/6bee/Remote.Linq/compare/6.3.1...7.0.0
 [6.3.1]: https://github.com/6bee/Remote.Linq/compare/6.3.0...6.3.1
@@ -121,3 +128,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [nullable-references]: https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references
 [protobuf-net-v2]: https://www.nuget.org/packages/protobuf-net/2.4.6
 [syslib0050]: https://learn.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0050
+[CVE-2024-30105]: https://github.com/advisories/GHSA-hh2w-p6rv-4g7w
