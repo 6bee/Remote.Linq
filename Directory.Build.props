@@ -6,7 +6,7 @@
     <MinorVersion>3</MinorVersion>
     <PatchVersion>0</PatchVersion>
     <PreReleaseLabel>dev</PreReleaseLabel>
-    <AquaCoreVersion>5.4.0</AquaCoreVersion>
+    <AquaCoreVersion>5.4.1</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
