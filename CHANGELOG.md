@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved and extended API for fluent configuration of custom strategies for expression execution
   (namespace `Remote.Linq.ExpressionExecution`).
 - Bump _Microsoft.EntityFramework_ from 6.4.4 to 6.5.1 (concerns _Remote.Linq.EntityFramework_)
-- Bump _Microsoft.EntityFrameworkCore_ from 8.0.6 to 8.0.7 (net8.0) (concerns _Remote.Linq.EntityFrameworkCore_)
 
 ### Deprecated
 
@@ -23,6 +22,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Security
+
+## [7.2.2][7.2.2] - 2024-11-20
+
+### Changed
+
+- Bump _Microsoft.EntityFrameworkCore_ from 8.0.6 to 8.0.11 (net8.0) (concerns _Remote.Linq.EntityFrameworkCore_)
+
+### Security
+
+- Bump _aqua-core_ from 5.4.1 to 5.4.2 ([CVE-2024-43485][CVE-2024-43485])
 
 ## [7.2.1][7.2.1] - 2024-07-10
 
@@ -116,7 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
-[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.2.1...main
+[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.2.2...main
+[7.2.2]: https://github.com/6bee/Remote.Linq/compare/v7.2.1...v7.2.2
 [7.2.1]: https://github.com/6bee/Remote.Linq/compare/v7.2.0...v7.2.1
 [7.2.0]: https://github.com/6bee/Remote.Linq/compare/7.1.0...v7.2.0
 [7.1.0]: https://github.com/6bee/Remote.Linq/compare/7.0.0...7.1.0
@@ -134,3 +144,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [protobuf-net-v2]: https://www.nuget.org/packages/protobuf-net/2.4.6
 [syslib0050]: https://learn.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0050
 [CVE-2024-30105]: https://github.com/advisories/GHSA-hh2w-p6rv-4g7w
+[CVE-2024-43485]: https://github.com/advisories/GHSA-8g4q-xg66-9fp4

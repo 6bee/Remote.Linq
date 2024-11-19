@@ -6,7 +6,7 @@
     <MinorVersion>3</MinorVersion>
     <PatchVersion>0</PatchVersion>
     <PreReleaseLabel>dev</PreReleaseLabel>
-    <AquaCoreVersion>5.4.1</AquaCoreVersion>
+    <AquaCoreVersion>5.4.2</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -61,7 +61,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.Validation" Version="3.0.1">
+    <PackageReference Include="aqua.tool.Validation" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
