@@ -61,7 +61,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.Validation" Version="3.0.1">
+    <PackageReference Include="aqua.tool.Validation" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
