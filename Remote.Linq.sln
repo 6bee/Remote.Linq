@@ -41,6 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".global", ".global", "{3FB3
 		Directory.Build.targets = Directory.Build.targets
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
 		nuget.config = nuget.config
+		README.md = README.md
 		Style.NoDoc.ruleset = Style.NoDoc.ruleset
 		Style.ruleset = Style.ruleset
 		Style.Tests.ruleset = Style.Tests.ruleset

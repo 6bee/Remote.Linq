@@ -127,7 +127,7 @@ partial class MethodInfos
             typeof(IQueryable<TSource>),
             typeof(int));
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
         internal static readonly MethodInfo ElementAtWithSystemIndex = GetQueryableMethod(
             nameof(System.Linq.Queryable.ElementAt),
             typeof(IQueryable<TSource>),
@@ -137,7 +137,7 @@ partial class MethodInfos
             nameof(System.Linq.Queryable.ElementAtOrDefault),
             typeof(IQueryable<TSource>),
             typeof(Index));
-#endif // NET6_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
         internal static readonly MethodInfo First = GetQueryableMethod(
             nameof(System.Linq.Queryable.First),
@@ -194,7 +194,7 @@ partial class MethodInfos
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TResult>>));
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
         internal static readonly MethodInfo MaxWithComparer = GetQueryableMethod(
             nameof(System.Linq.Queryable.Max),
             [typeof(TSource)],
@@ -213,7 +213,7 @@ partial class MethodInfos
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>),
             typeof(IComparer<TSource>));
-#endif // NET6_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
         internal static readonly MethodInfo Min = GetQueryableMethod(
             nameof(System.Linq.Queryable.Min),
@@ -225,7 +225,7 @@ partial class MethodInfos
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TResult>>));
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
         internal static readonly MethodInfo MinWithComparer = GetQueryableMethod(
             nameof(System.Linq.Queryable.Min),
             [typeof(TSource)],
@@ -244,7 +244,7 @@ partial class MethodInfos
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>),
             typeof(IComparer<TSource>));
-#endif // NET6_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
         internal static readonly MethodInfo SequenceEqualWithComparer = GetQueryableMethod(
             nameof(System.Linq.Queryable.SequenceEqual),

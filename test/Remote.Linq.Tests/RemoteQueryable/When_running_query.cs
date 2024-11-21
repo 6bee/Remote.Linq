@@ -941,9 +941,9 @@ public abstract class When_running_query
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
         Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
         RunTestMethod(
             nameof(TestMethodFor_Should_query_primitive_value_injected_as_variable_closure),
@@ -976,9 +976,9 @@ public abstract class When_running_query
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
         Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
         RunTestMethod(
             nameof(TestMethodFor_Should_query_primitive_value_collection_injected_as_variable_closure),
@@ -1009,9 +1009,9 @@ public abstract class When_running_query
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
         Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
         RunTestMethod(
             nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure),
@@ -1043,9 +1043,9 @@ public abstract class When_running_query
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
         Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
         RunTestMethod(
             nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure),

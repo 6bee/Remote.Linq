@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <PackageTags>remote-linq;json;system-text-json</PackageTags>
     <Description>Provides System.Text.Json serialization for Remote.Linq types.</Description>
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>

@@ -82,12 +82,12 @@ public static class AsyncQueryableExtensions
     public static ValueTask<TSource?> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.FirstOrDefaultWithPredicate, source, predicate, cancellation);
 
-    // NET6.0 and later
+    // NET8.0 and later
     public static async ValueTask<TSource> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source, TSource defaultValue, CancellationToken cancellation = default)
         => await ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.FirstOrDefault, source, cancellation).ConfigureAwait(false)
         ?? defaultValue;
 
-    // NET6.0 and later
+    // NET8.0 and later
     public static async ValueTask<TSource> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, TSource defaultValue, CancellationToken cancellation = default)
         => await ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.FirstOrDefaultWithPredicate, source, predicate, cancellation).ConfigureAwait(false)
         ?? defaultValue;
@@ -104,12 +104,12 @@ public static class AsyncQueryableExtensions
     public static ValueTask<TSource?> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.SingleOrDefaultWithPredicate, source, predicate, cancellation);
 
-    // NET6.0 and later
+    // NET8.0 and later
     public static async ValueTask<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source, TSource defaultValue, CancellationToken cancellation = default)
         => await ExecuteAsync<TSource, TSource>(MethodInfos.Queryable.SingleOrDefault, source, cancellation).ConfigureAwait(false)
         ?? defaultValue;
 
-    // NET6.0 and later
+    // NET8.0 and later
     public static async ValueTask<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, TSource defaultValue, CancellationToken cancellation = default)
         => await ExecuteAsync<TSource, TSource>(MethodInfos.Queryable.SingleOrDefaultWithPredicate, source, predicate, cancellation).ConfigureAwait(false)
         ?? defaultValue;
@@ -126,12 +126,12 @@ public static class AsyncQueryableExtensions
     public static ValueTask<TSource?> LastOrDefaultAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.LastOrDefaultWithPredicate, source, predicate, cancellation);
 
-    // NET6.0 and later
+    // NET8.0 and later
     public static async ValueTask<TSource> LastOrDefaultAsync<TSource>(this IQueryable<TSource> source, TSource defaultValue, CancellationToken cancellation = default)
         => await ExecuteAsync<TSource, TSource>(MethodInfos.Queryable.LastOrDefault, source, cancellation).ConfigureAwait(false)
         ?? defaultValue;
 
-    // NET6.0 and later
+    // NET8.0 and later
     public static async ValueTask<TSource> LastOrDefaultAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, TSource defaultValue, CancellationToken cancellation = default)
         => await ExecuteAsync<TSource, TSource>(MethodInfos.Queryable.LastOrDefaultWithPredicate, source, predicate, cancellation).ConfigureAwait(false)
         ?? defaultValue;
@@ -142,13 +142,13 @@ public static class AsyncQueryableExtensions
     public static ValueTask<TSource?> ElementAtOrDefaultAsync<TSource>(this IQueryable<TSource> source, int index, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.ElementAtOrDefault, source, index, cancellation);
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
     public static ValueTask<TSource> ElementAtAsync<TSource>(this IQueryable<TSource> source, Index index, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource>(MethodInfos.Queryable.ElementAt, source, index, cancellation);
 
     public static ValueTask<TSource?> ElementAtOrDefaultAsync<TSource>(this IQueryable<TSource> source, Index index, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.ElementAtOrDefaultWithSystemIndex, source, index, cancellation);
-#endif // NET6_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
     public static ValueTask<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, bool>(MethodInfos.Queryable.Contains, source, item, cancellation);
@@ -197,7 +197,7 @@ public static class AsyncQueryableExtensions
     public static ValueTask<TResult?> MinAsync<TSource, TResult>(this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TResult?>(MethodInfos.Queryable.MinWithSelector, source, selector, cancellation);
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
     public static ValueTask<TSource?> MinAsync<TSource>(this IQueryable<TSource> source, IComparer<TSource> comparer, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MinWithComparer, source, comparer, cancellation);
 
@@ -206,7 +206,7 @@ public static class AsyncQueryableExtensions
 
     public static ValueTask<TSource?> MinByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IComparer<TSource> comparer, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MinByWithComparer, source, new object?[] { keySelector, comparer }, cancellation);
-#endif // NET6_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
     public static ValueTask<TSource?> MaxAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.Max, source, cancellation);
@@ -214,7 +214,7 @@ public static class AsyncQueryableExtensions
     public static ValueTask<TResult?> MaxAsync<TSource, TResult>(this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TResult?>(MethodInfos.Queryable.MaxWithSelector, source, selector, cancellation);
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
     public static ValueTask<TSource?> MaxAsync<TSource>(this IQueryable<TSource> source, IComparer<TSource>? comparer, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MaxWithComparer, source, comparer, cancellation);
 
@@ -223,7 +223,7 @@ public static class AsyncQueryableExtensions
 
     public static ValueTask<TSource?> MaxByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IComparer<TSource>? comparer, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MaxByWithComparer, source, new object?[] { keySelector, comparer }, cancellation);
-#endif // NET6_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
     public static ValueTask<int> SumAsync(this IQueryable<int> source, CancellationToken cancellation = default)
         => ExecuteAsync<int, int>(MethodInfos.Queryable.SumInt32, source, cancellation);

@@ -60,8 +60,8 @@ public static class ProtobufNetSerializationHelper
         Skip.If(type.Is<BigInteger>(), $"{type} not supported by out-of-the-box protobuf-net");
         Skip.If(type.Is<Complex>(), $"{type} not supported by out-of-the-box protobuf-net");
         Skip.If(type.IsNotPublic(), $"Not-public {type} not supported protobuf-net");
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
         Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
     }
 }
