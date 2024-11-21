@@ -12,7 +12,7 @@
          Dependency of Microsoft.EntityFrameworkCore in client code is required only
          if using Microsoft.EntityFrameworkCore.DbFunctionsExtensions in linq queries.
     -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Client.AsyncTcp.RemoteRepository.cs" Link="RemoteRepository.cs" />

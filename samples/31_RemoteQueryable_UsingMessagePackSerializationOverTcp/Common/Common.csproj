@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MessagePack" Version="2.5.171" />
+    <PackageReference Include="MessagePack" Version="2.5.192" />
     <ProjectReference Include="..\..\..\src\Remote.Linq\Remote.Linq.csproj" />
   </ItemGroup>
   <ItemGroup>

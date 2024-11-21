@@ -7,7 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <PackageReference Include="Grpc.Core" Version="2.46.6" />
-    <PackageReference Include="ServiceModel.Grpc" Version="1.8.3" />
+    <PackageReference Include="ServiceModel.Grpc" Version="1.10.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Client.AsyncDemo.cs" Link="AsyncDemo.cs" />

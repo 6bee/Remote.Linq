@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Remote.Linq\Remote.Linq.csproj" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.3" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Common.ServiceContracts.DefaultIQueryService.wcf.cs" Link="ServiceContracts\IQueryService.cs" />
