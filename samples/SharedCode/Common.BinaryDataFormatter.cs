@@ -33,7 +33,11 @@ public static class BinaryDataFormatter
     {
         byte[] bytes = new byte[256];
 
-        stream.Read(bytes, 0, 8);
+        if (stream.Read(bytes, 0, 8) != 8)
+        {
+            throw new InvalidOperationException("Could not read data from stream!");
+        }
+
         long size = BitConverter.ToInt64(bytes, 0);
 
         bool isException = stream.ReadByte() != 0;

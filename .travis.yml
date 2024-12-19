@@ -31,7 +31,7 @@ matrix:
 
 install:
   - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
-  - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel LTS --version latest --install-dir "$DOTNET_INSTALL_DIR"
+  - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 9.0 --version latest --install-dir "$DOTNET_INSTALL_DIR"
   - export PATH="$DOTNET_INSTALL_DIR:$PATH"
   - if test "$TRAVIS_OS_NAME" == "osx"; then export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib; fi
 
@@ -39,4 +39,4 @@ before_script:
   - dotnet --info
 
 script:
-  - dotnet test Remote.Linq.sln -c $CONFIGURATION -f net8.0
+  - dotnet test Remote.Linq.sln -c $CONFIGURATION -f net9.0

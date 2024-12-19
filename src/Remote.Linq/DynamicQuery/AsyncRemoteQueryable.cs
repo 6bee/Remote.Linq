@@ -13,8 +13,8 @@ public class AsyncRemoteQueryable : RemoteQueryable, IOrderedAsyncRemoteQueryabl
     /// <summary>
     /// Initializes a new instance of the <see cref="AsyncRemoteQueryable"/> class.
     /// </summary>
-    public AsyncRemoteQueryable(Type elemntType, IAsyncRemoteQueryProvider provider, Expression? expression = null)
-        : base(elemntType, provider, expression)
+    public AsyncRemoteQueryable(Type elementType, IAsyncRemoteQueryProvider provider, Expression? expression = null)
+        : base(elementType, provider, expression)
     {
     }
 
