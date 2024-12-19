@@ -21,6 +21,7 @@
     <ApplicationIcon>$(MSBuildThisFileDirectory)..\remotelinq-w.ico</ApplicationIcon>
     <EnableFxCopAnalyzers>false</EnableFxCopAnalyzers>
     <EnableSonarAnalyzers>false</EnableSonarAnalyzers>
+    <NuGetAudit>false</NuGetAudit>
   </PropertyGroup>
 
   <ItemGroup>
