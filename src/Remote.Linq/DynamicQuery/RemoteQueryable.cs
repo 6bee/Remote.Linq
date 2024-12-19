@@ -15,9 +15,9 @@ public class RemoteQueryable : IOrderedRemoteQueryable
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoteQueryable"/> class.
     /// </summary>
-    public RemoteQueryable(Type elemntType, IRemoteQueryProvider provider, Expression? expression = null)
+    public RemoteQueryable(Type elementType, IRemoteQueryProvider provider, Expression? expression = null)
     {
-        ElementType = elemntType.CheckNotNull();
+        ElementType = elementType.CheckNotNull();
         Provider = provider.CheckNotNull();
         Expression = expression ?? Expression.Constant(this);
     }

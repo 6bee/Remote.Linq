@@ -15,9 +15,17 @@ public static class ExpressionHelper
     /// throws an <see cref="ArgumentException"/> otherwise.
     /// </summary>
     public static void CheckExpressionResultType<TResult>(SystemExpression expression)
+       => CheckExpressionResultType(typeof(TResult), expression);
+
+    /// <summary>
+    /// Checks whether the give <see cref="SystemExpression"/> is assignable
+    /// to the given <cparam name="resultType"/> type in any form,
+    /// throws an <see cref="ArgumentException"/> otherwise.
+    /// </summary>
+    public static void CheckExpressionResultType(Type resultType, SystemExpression expression)
     {
         var expressionType = expression.CheckNotNull().Type;
-        if (typeof(TResult).IsAssignableFrom(expressionType))
+        if (resultType.IsAssignableFrom(expressionType))
         {
             return;
         }
@@ -29,7 +37,7 @@ public static class ExpressionHelper
 
         if (expressionType.Implements(typeof(IQueryable<>), out var typeArgs) &&
             typeArgs.Length is 1 &&
-            typeof(TResult).IsAssignableFrom(typeArgs[0]))
+            resultType.IsAssignableFrom(typeArgs[0]))
         {
             return;
         }
