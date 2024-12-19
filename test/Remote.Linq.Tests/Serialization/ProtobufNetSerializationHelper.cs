@@ -60,8 +60,16 @@ public static class ProtobufNetSerializationHelper
         Skip.If(type.Is<BigInteger>(), $"{type} not supported by out-of-the-box protobuf-net");
         Skip.If(type.Is<Complex>(), $"{type} not supported by out-of-the-box protobuf-net");
         Skip.If(type.IsNotPublic(), $"Not-public {type} not supported protobuf-net");
-#if NET8_0_OR_GREATER
-        Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET8_0_OR_GREATER
+#if NET5_0_OR_GREATER
+        Skip.If(type.Is<Half>(), $"{type} serialization is not supported.");
+#endif // NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
+        Skip.If(type.Is<DateOnly>(), $"{type} serialization is not supported.");
+        Skip.If(type.Is<TimeOnly>(), $"{type} serialization is not supported.");
+#endif // NET6_0_OR_GREATER
+#if NET7_0_OR_GREATER
+        Skip.If(type.Is<Int128>(), $"{type} serialization is not supported.");
+        Skip.If(type.Is<UInt128>(), $"{type} serialization is not supported.");
+#endif // NET7_0_OR_GREATER
     }
 }

@@ -73,12 +73,27 @@ public static class TestData
             new Complex(-87654, 234),
             new Complex(double.MinValue, double.MinValue),
             new Complex(double.MaxValue, double.MaxValue),
-#if NET8_0_OR_GREATER
-            (Half)Math.PI,
-            Half.MinValue,
-            Half.MaxValue,
-#endif // NET8_0_OR_GREATER
             new { Text = string.Empty, Timestamp = default(DateTime?) },
+#if NET5_0_OR_GREATER
+            Half.MaxValue,
+            Half.Epsilon,
+            (Half)Math.PI,
+            (Half).1f,
+#endif // NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
+            DateOnly.MinValue,
+            DateOnly.MaxValue,
+            DateOnly.FromDateTime(DateTime.Today),
+            TimeOnly.MinValue,
+            TimeOnly.MaxValue,
+            TimeOnly.FromDateTime(DateTime.Now),
+#endif // NET6_0_OR_GREATER
+#if NET7_0_OR_GREATER
+            Int128.MinValue,
+            Int128.MaxValue,
+            UInt128.MinValue,
+            UInt128.MaxValue,
+#endif // NET7_0_OR_GREATER
         }
         .SelectMany(x => new (Type Type, object Value)[]
         {

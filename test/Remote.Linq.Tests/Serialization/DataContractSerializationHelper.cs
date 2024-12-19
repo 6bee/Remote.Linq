@@ -5,7 +5,9 @@ namespace Remote.Linq.Tests.Serialization;
 using Remote.Linq.ExpressionVisitors;
 using System;
 using System.IO;
+using System.Numerics;
 using System.Runtime.Serialization;
+using Xunit;
 
 public static class DataContractSerializationHelper
 {
@@ -32,5 +34,20 @@ public static class DataContractSerializationHelper
         var exp2 = Clone(exp1, knownTypes);
         var exp3 = exp2.ReplaceNonGenericQueryArgumentsByGenericArguments();
         return exp3;
+    }
+
+    public static void SkipUnsupportedDataType(Type type, object value)
+    {
+#if NET5_0_OR_GREATER
+        Skip.If(type.Is<Half>(), $"{type} serialization is not supported.");
+#endif // NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
+        Skip.If(type.Is<DateOnly>(), $"{type} serialization is not supported.");
+        Skip.If(type.Is<TimeOnly>(), $"{type} serialization is not supported.");
+#endif // NET6_0_OR_GREATER
+#if NET7_0_OR_GREATER
+        Skip.If(type.Is<Int128>(), $"{type} serialization is not supported.");
+        Skip.If(type.Is<UInt128>(), $"{type} serialization is not supported.");
+#endif // NET7_0_OR_GREATER
     }
 }

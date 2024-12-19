@@ -926,10 +926,10 @@ public abstract class When_running_query
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
     {
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by With_xml_serializer");
+        if (this.TestIs<With_data_contract_serializer>())
+        {
+            DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
 
         if (this.TestIs<With_protobuf_net_serializer>())
         {
@@ -941,9 +941,10 @@ public abstract class When_running_query
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-#if NET8_0_OR_GREATER
-        Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET8_0_OR_GREATER
+        if (this.TestIs<With_xml_serializer>())
+        {
+            XmlSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
 
         RunTestMethod(
             nameof(TestMethodFor_Should_query_primitive_value_injected_as_variable_closure),
@@ -961,10 +962,10 @@ public abstract class When_running_query
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_query_primitive_value_collection_injected_as_variable_closure(Type type, object value)
     {
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by With_xml_serializer");
+        if (this.TestIs<With_data_contract_serializer>())
+        {
+            DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
 
         if (this.TestIs<With_protobuf_net_serializer>())
         {
@@ -976,9 +977,10 @@ public abstract class When_running_query
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-#if NET8_0_OR_GREATER
-        Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET8_0_OR_GREATER
+        if (this.TestIs<With_xml_serializer>())
+        {
+            XmlSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
 
         RunTestMethod(
             nameof(TestMethodFor_Should_query_primitive_value_collection_injected_as_variable_closure),
@@ -995,10 +997,10 @@ public abstract class When_running_query
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure(Type type, object value)
     {
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by With_xml_serializer");
+        if (this.TestIs<With_data_contract_serializer>())
+        {
+            DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
 
         if (this.TestIs<With_protobuf_net_serializer>())
         {
@@ -1009,9 +1011,11 @@ public abstract class When_running_query
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
-#if NET8_0_OR_GREATER
-        Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET8_0_OR_GREATER
+
+        if (this.TestIs<With_xml_serializer>())
+        {
+            XmlSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
 
         RunTestMethod(
             nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure),
@@ -1029,10 +1033,10 @@ public abstract class When_running_query
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure(Type type, object value)
     {
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<DateTimeOffset>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<TimeSpan>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<BigInteger>(), $"{type} not supported by With_xml_serializer");
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<Complex>(), $"{type} not supported by With_xml_serializer");
+        if (this.TestIs<With_data_contract_serializer>())
+        {
+            DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
 
         if (this.TestIs<With_protobuf_net_serializer>())
         {
@@ -1043,9 +1047,11 @@ public abstract class When_running_query
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
-#if NET8_0_OR_GREATER
-        Skip.If(type.Is<Half>(), $"{type} not supported by serializers");
-#endif // NET8_0_OR_GREATER
+
+        if (this.TestIs<With_xml_serializer>())
+        {
+            XmlSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
 
         RunTestMethod(
             nameof(TestMethodFor_Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure),
