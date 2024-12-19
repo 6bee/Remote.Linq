@@ -35,9 +35,6 @@ public sealed class RemoteLinqEfCoreAsyncQueryProvider<TSource> : IRemoteLinqEfC
     private static readonly MethodInfo _mapElementStreamMethodInfo =
         typeof(RemoteLinqEfCoreAsyncQueryProvider<TSource>).GetMethodEx(nameof(MapElementStreamInternal));
 
-    private static readonly MethodInfo _taskFromResultMethodInfo =
-        typeof(Task).GetMethodEx(nameof(Task.FromResult));
-
     private readonly Func<RemoteLinq.Expression, CancellationToken, ValueTask<TSource?>>? _asyncDataProvider;
     private readonly IAsyncQueryResultMapper<TSource> _resultMapper;
     private readonly IExpressionToRemoteLinqContext _context;
@@ -153,5 +150,5 @@ public sealed class RemoteLinqEfCoreAsyncQueryProvider<TSource> : IRemoteLinqEfC
     }
 
     private static TResult WrapIntoTypedTask<TResult>(Type innerType, object objectToWrap)
-        => (TResult)_taskFromResultMethodInfo.MakeGenericMethod(innerType).Invoke(null, [objectToWrap])!;
+        => (TResult)RemoteLinqEfCoreAsyncQueryProvider.TaskFromResultMethodInfo.MakeGenericMethod(innerType).Invoke(null, [objectToWrap])!;
 }
