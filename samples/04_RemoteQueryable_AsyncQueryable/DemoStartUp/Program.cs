@@ -21,7 +21,7 @@ internal static class Program
         var asyncQueryService = new AsyncQueryService();
         asyncStreamServiceHost.RunAsyncStreamQueryService(asyncQueryService.ExecuteAsyncStreamQuery, asyncQueryService.ExecuteQueryAsync);
 
-        PrintSetup("Staring client demo...");
+        PrintSetup("Starting client demo...");
         PrintSetup("-------------------------------------------------");
         new AsyncStreamDemo(() => new AsyncTcpRemoteRepository(host, port)).RunAsyncDemo();
 

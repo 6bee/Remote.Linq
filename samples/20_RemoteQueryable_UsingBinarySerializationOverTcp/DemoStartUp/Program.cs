@@ -18,7 +18,7 @@ internal static class Program
         using var tcpServiceHost = new Server.TcpServer(port);
         tcpServiceHost.RunQueryService(new Server.QueryService().ExecuteQuery);
 
-        PrintSetup("Staring client demo...");
+        PrintSetup("Starting client demo...");
         PrintSetup("-------------------------------------------------");
         new Client.Demo(() => new Client.RemoteRepository(host, port)).RunDemo();
 

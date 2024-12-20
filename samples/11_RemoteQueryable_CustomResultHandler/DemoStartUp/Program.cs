@@ -20,7 +20,7 @@ internal static class Program
             .AddNetNamedPipeEndpoint<IQueryService>(url)
             .OpenService();
 
-        PrintSetup("Staring client demo...");
+        PrintSetup("Starting client demo...");
         PrintSetup("-------------------------------------------------");
         new Demo(() => new RemoteRepository(url)).RunDemo();
 

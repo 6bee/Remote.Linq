@@ -22,7 +22,7 @@ internal static class Program
         server.Services.AddServiceModelTransient(() => new QueryService());
         server.Start();
 
-        PrintSetup("Staring client demo...");
+        PrintSetup("Starting client demo...");
         PrintSetup("-------------------------------------------------");
         new AsyncDemo(() => new RemoteRepository(host, port)).RunAsyncDemo();
 

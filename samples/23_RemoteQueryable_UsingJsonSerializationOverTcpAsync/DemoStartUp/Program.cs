@@ -17,7 +17,7 @@ internal static class Program
         using var serviceHost = new Server.TcpServer(port);
         serviceHost.RunAsyncQueryService(new Server.QueryService().ExecuteQueryAsync);
 
-        PrintSetup("Staring client demo...");
+        PrintSetup("Starting client demo...");
         PrintSetup("-------------------------------------------------");
         new Client.AsyncDemo(() => new Client.RemoteRepository(host, port)).RunAsyncDemo();
 

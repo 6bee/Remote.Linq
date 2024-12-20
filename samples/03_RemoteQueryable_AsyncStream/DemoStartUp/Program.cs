@@ -20,7 +20,7 @@ internal static class Program
         using var serviceHost = new TcpServer(port);
         serviceHost.RunAsyncStreamQueryService(new QueryService().ExecuteAsyncStreamQuery);
 
-        PrintSetup("Staring client demo...");
+        PrintSetup("Starting client demo...");
         PrintSetup("-------------------------------------------------");
         new AsyncStreamDemo(() => new AsyncRemoteStreamRepository(host, port)).RunAsyncDemo();
 

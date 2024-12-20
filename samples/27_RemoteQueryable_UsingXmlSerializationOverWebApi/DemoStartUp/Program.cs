@@ -17,7 +17,7 @@ internal static class Program
         using var webServer = new Server.WebApiServer(port);
         webServer.Open();
 
-        PrintSetup("Staring client demo...");
+        PrintSetup("Starting client demo...");
         PrintSetup("-------------------------------------------------");
         new Client.AsyncDemo(() => new Client.RemoteRepository(host, port)).RunAsyncDemo();
 

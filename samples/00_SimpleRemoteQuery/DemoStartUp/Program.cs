@@ -21,7 +21,7 @@ internal static class Program
             .AddNetTcpEndpoint<Common.ServiceContract.IRemoteLinqDataService>("net.tcp://localhost:8080/remotelinqdataservice")
             .OpenService();
 
-        PrintSetup("Staring client demo...");
+        PrintSetup("Starting client demo...");
         new Client.Demo().RunDemo();
 
         PrintSetup();

@@ -18,7 +18,7 @@ internal static class Program
         using var httpServer = new HttpServer(port);
         httpServer.RunQueryService(new QueryService().ExecuteQueryAsync);
 
-        PrintSetup("Staring client demo...");
+        PrintSetup("Starting client demo...");
         PrintSetup("-------------------------------------------------");
         string url = $"http://{host}:{port}/queryservice/";
         new Client.AsyncDemo(() => new Client.RemoteRepository(url)).RunAsyncDemo();
