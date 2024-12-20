@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved and extended API for fluent configuration of custom strategies for expression execution
   (namespace `Remote.Linq.ExpressionExecution`).
 - Bump _Microsoft.EntityFramework_ from 6.4.4 to 6.5.1 (concerns _Remote.Linq.EntityFramework_)
+- Allow remote linq expressions to be executed using EF Core extension methods on client side (concerns _Remote.Linq.EntityFrameworkCore_) [#126][issue#126]
 
 ### Deprecated
 
@@ -137,6 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [6.3.0]: https://github.com/6bee/Remote.Linq/compare/6.2.3...6.3.0
 
 [issue#112]: https://github.com/6bee/Remote.Linq/issues/112
+[issue#126]: https://github.com/6bee/Remote.Linq/issues/126
 
 [async-queryable]: https://www.nuget.org/packages/System.Linq.Async.Queryable/
 [async-streams]: https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/tutorials/generate-consume-asynchronous-stream
