@@ -8,6 +8,5 @@ using MethodInfo = System.Reflection.MethodInfo;
 
 internal static class RemoteLinqEfCoreAsyncQueryProvider
 {
-    public static readonly MethodInfo TaskFromResultMethodInfo =
-        typeof(Task).GetMethodEx(nameof(Task.FromResult));
+    public static readonly MethodInfo TaskFromResultMethodInfo = typeof(Task).GetMethodEx(nameof(Task.FromResult));
 }
