@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Sdk;
 using MethodInfo = System.Reflection.MethodInfo;
@@ -84,10 +85,12 @@ public static class TestHelper
 
     private sealed class CultureContext : IDisposable
     {
+        private static readonly SemaphoreSlim _semaphore = new(1, 1);
         private readonly CultureInfo _culture;
 
         public CultureContext(CultureInfo culture)
         {
+            _semaphore.Wait();
             _culture = CultureInfo.CurrentCulture;
             CultureInfo.CurrentCulture = culture;
         }
@@ -95,6 +98,7 @@ public static class TestHelper
         public void Dispose()
         {
             CultureInfo.CurrentCulture = _culture;
+            _semaphore.Release();
         }
     }
 
