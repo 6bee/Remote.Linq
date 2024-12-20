@@ -3,7 +3,6 @@
 namespace Remote.Linq.Tests.Serialization;
 
 using global::Newtonsoft.Json;
-using Remote.Linq.Newtonsoft.Json;
 using System;
 
 public static class NewtonsoftJsonSerializationHelper

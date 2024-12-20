@@ -4,7 +4,6 @@ namespace Remote.Linq.Tests.Serialization;
 
 using Aqua.Text.Json;
 using Aqua.Text.Json.Converters;
-using Remote.Linq.Text.Json;
 using System;
 using System.Numerics;
 using System.Text.Json;

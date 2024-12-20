@@ -3,8 +3,8 @@
 #nullable enable
 namespace Remote.Linq.Tests;
 
+using global::Newtonsoft.Json;
 using Remote.Linq.ExpressionExecution;
-using Remote.Linq.Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -106,16 +106,15 @@ public static class ExpressionHelper
     public static string ToJson<TExpression>(this TExpression expression)
         where TExpression : Remote.Linq.Expressions.Expression
     {
-        var serializerSettings = new global::Newtonsoft.Json.JsonSerializerSettings().ConfigureRemoteLinq();
-        return global::Newtonsoft.Json.JsonConvert.SerializeObject(expression, serializerSettings);
+        var serializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
+        return JsonConvert.SerializeObject(expression, serializerSettings);
     }
 
     public static TExpression? FromJson<TExpression>(this string json)
         where TExpression : Remote.Linq.Expressions.Expression
     {
-        var serializerSettings = new global::Newtonsoft.Json.JsonSerializerSettings().ConfigureRemoteLinq();
-        return global::Newtonsoft.Json.JsonConvert.DeserializeObject<TExpression>(json, serializerSettings);
+        var serializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq();
+        return JsonConvert.DeserializeObject<TExpression>(json, serializerSettings);
     }
 }
 #pragma warning restore SA1402 // File may only contain a single type
-#nullable restore

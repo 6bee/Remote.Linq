@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Newtonsoft.Json;
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace Newtonsoft.Json;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 using Aqua.Newtonsoft.Json;
-using global::Newtonsoft.Json;
 using global::Newtonsoft.Json.Serialization;
+using Remote.Linq.Newtonsoft.Json;
 using Remote.Linq.Newtonsoft.Json.ContractResolvers;
 using Remote.Linq.SimpleQuery;
 using System;
