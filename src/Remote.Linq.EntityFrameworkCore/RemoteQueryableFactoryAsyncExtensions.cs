@@ -40,7 +40,7 @@ public static class RemoteQueryableFactoryAsyncExtensions
         this RemoteQueryableFactory factory,
         Type elementType,
         Func<RemoteLinq.Expression, CancellationToken, ValueTask<DynamicObject>> dataProvider,
-        ITypeInfoProvider? typeInfoProvider = null,
+        ITypeInfoProvider? typeInfoProvider,
         Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
         IAsyncQueryResultMapper<DynamicObject>? resultMapper = null)
         => CreateEntityFrameworkCoreAsyncQueryable(factory, elementType, dataProvider, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally), resultMapper);
@@ -49,7 +49,7 @@ public static class RemoteQueryableFactoryAsyncExtensions
         this RemoteQueryableFactory factory,
         Type elementType,
         Func<RemoteLinq.Expression, ValueTask<DynamicObject>> dataProvider,
-        ITypeInfoProvider? typeInfoProvider = null,
+        ITypeInfoProvider? typeInfoProvider,
         Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
         IAsyncQueryResultMapper<DynamicObject>? resultMapper = null)
         => CreateEntityFrameworkCoreAsyncQueryable(factory, elementType, dataProvider, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally), resultMapper);
@@ -74,7 +74,7 @@ public static class RemoteQueryableFactoryAsyncExtensions
     public static IAsyncRemoteQueryable<T> CreateEntityFrameworkCoreAsyncQueryable<T>(
         this RemoteQueryableFactory factory,
         Func<RemoteLinq.Expression, ValueTask<DynamicObject>> dataProvider,
-        ITypeInfoProvider? typeInfoProvider = null,
+        ITypeInfoProvider? typeInfoProvider,
         Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
         IAsyncQueryResultMapper<DynamicObject>? resultMapper = null)
         => CreateEntityFrameworkCoreAsyncQueryable<T>(factory, dataProvider, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally), resultMapper);
@@ -82,7 +82,7 @@ public static class RemoteQueryableFactoryAsyncExtensions
     public static IAsyncRemoteQueryable<T> CreateEntityFrameworkCoreAsyncQueryable<T>(
         this RemoteQueryableFactory factory,
         Func<RemoteLinq.Expression, CancellationToken, ValueTask<DynamicObject>> dataProvider,
-        ITypeInfoProvider? typeInfoProvider = null,
+        ITypeInfoProvider? typeInfoProvider,
         Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
         IAsyncQueryResultMapper<DynamicObject>? resultMapper = null)
         => CreateEntityFrameworkCoreAsyncQueryable<T>(factory, dataProvider, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally), resultMapper);
@@ -110,7 +110,7 @@ public static class RemoteQueryableFactoryAsyncExtensions
         this RemoteQueryableFactory factory,
         Type elementType,
         Func<RemoteLinq.Expression, CancellationToken, ValueTask<object?>> dataProvider,
-        ITypeInfoProvider? typeInfoProvider = null,
+        ITypeInfoProvider? typeInfoProvider,
         Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
         IAsyncQueryResultMapper<object>? resultMapper = null)
         => CreateEntityFrameworkCoreAsyncQueryable(factory, elementType, dataProvider, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally), resultMapper);
@@ -119,7 +119,7 @@ public static class RemoteQueryableFactoryAsyncExtensions
         this RemoteQueryableFactory factory,
         Type elementType,
         Func<RemoteLinq.Expression, ValueTask<object?>> dataProvider,
-        ITypeInfoProvider? typeInfoProvider = null,
+        ITypeInfoProvider? typeInfoProvider,
         Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
         IAsyncQueryResultMapper<object>? resultMapper = null)
         => CreateEntityFrameworkCoreAsyncQueryable(factory, elementType, dataProvider, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally), resultMapper);
@@ -144,7 +144,7 @@ public static class RemoteQueryableFactoryAsyncExtensions
     public static IAsyncRemoteQueryable<T> CreateEntityFrameworkCoreAsyncQueryable<T>(
         this RemoteQueryableFactory factory,
         Func<RemoteLinq.Expression, ValueTask<object?>> dataProvider,
-        ITypeInfoProvider? typeInfoProvider = null,
+        ITypeInfoProvider? typeInfoProvider,
         Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
         IAsyncQueryResultMapper<object>? resultMapper = null)
         => CreateEntityFrameworkCoreAsyncQueryable<T>(factory, dataProvider, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally), resultMapper);
@@ -152,7 +152,7 @@ public static class RemoteQueryableFactoryAsyncExtensions
     public static IAsyncRemoteQueryable<T> CreateEntityFrameworkCoreAsyncQueryable<T>(
         this RemoteQueryableFactory factory,
         Func<RemoteLinq.Expression, CancellationToken, ValueTask<object?>> dataProvider,
-        ITypeInfoProvider? typeInfoProvider = null,
+        ITypeInfoProvider? typeInfoProvider,
         Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally = null,
         IAsyncQueryResultMapper<object>? resultMapper = null)
         => CreateEntityFrameworkCoreAsyncQueryable<T>(factory, dataProvider, GetExpressionToRemoteLinqContext(typeInfoProvider, canBeEvaluatedLocally), resultMapper);
