@@ -44,7 +44,7 @@ public class Ensure_async_method_provided_for_every_synchronous_query_operation
             .ToArray();
         matchingMethods.ShouldNotBeEmpty($"No method found with name '{methodName}'");
 
-        if (genericArgumentTypes.Any())
+        if (genericArgumentTypes.Length > 0)
         {
             matchingMethods = matchingMethods
                 .Where(x => x.IsGenericMethodDefinition && x.GetGenericArguments().Length == genericArgumentTypes.Length)

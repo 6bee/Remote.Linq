@@ -117,8 +117,8 @@ public class Query<T> : IOrderedQuery<T>
     /// <returns>A new query instance containing all specified query parameters.</returns>
     IOrderedQuery<T> IOrderedQuery<T>.ThenBy<TKey>(Expression<Func<T, TKey>> keySelector)
     {
-        var sortExpressions = SortExpressions.AsEmptyIfNull().ToList();
-        if (!sortExpressions.Any())
+        var sortExpressions = SortExpressions?.ToList();
+        if (sortExpressions?.Count is null or 0)
         {
             throw new InvalidOperationException($"No sorting defined yet, use {nameof(OrderBy)} or {nameof(OrderByDescending)} first.");
         }
@@ -140,8 +140,8 @@ public class Query<T> : IOrderedQuery<T>
     /// <returns>A new query instance containing all specified query parameters.</returns>
     IOrderedQuery<T> IOrderedQuery<T>.ThenByDescending<TKey>(Expression<Func<T, TKey>> keySelector)
     {
-        var sortExpressions = SortExpressions.AsEmptyIfNull().ToList();
-        if (!sortExpressions.Any())
+        var sortExpressions = SortExpressions?.ToList();
+        if (sortExpressions?.Count is null or 0)
         {
             throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
         }

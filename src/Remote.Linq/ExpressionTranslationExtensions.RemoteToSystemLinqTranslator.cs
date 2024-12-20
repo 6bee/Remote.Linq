@@ -161,7 +161,7 @@ partial class ExpressionTranslationExtensions
                 ?? throw new RemoteLinqException($"Failed to resolve constructor of node {nameof(RemoteLinq.NewExpression)}");
             if (node.Arguments is null)
             {
-                if (node.Members?.Any() ?? false)
+                if (node.Members?.Count > 0)
                 {
                     var members = node.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
                     return SystemLinq.Expression.New(constructor, Array.Empty<SystemLinq.Expression>(), members);
@@ -176,7 +176,7 @@ partial class ExpressionTranslationExtensions
                 var arguments =
                     from a in node.Arguments
                     select Visit(a);
-                if (node.Members?.Any() ?? false)
+                if (node.Members?.Count > 0)
                 {
                     var members = node.Members.Select(x => x.ResolveMemberInfo(_typeResolver)).ToArray();
                     return SystemLinq.Expression.New(constructor, arguments, members);

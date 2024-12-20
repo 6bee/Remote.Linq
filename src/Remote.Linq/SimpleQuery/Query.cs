@@ -112,7 +112,7 @@ public class Query : IOrderedQuery
     /// <returns>A new query instance containing all specified query parameters.</returns>
     IOrderedQuery IOrderedQuery.ThenBy(SortExpression sortExpression)
     {
-        if (SortExpressions?.Any() is not true)
+        if (SortExpressions?.Count is null or 0)
         {
             throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
         }
@@ -136,7 +136,7 @@ public class Query : IOrderedQuery
     /// <returns>A new query instance containing all specified query parameters.</returns>
     IOrderedQuery IOrderedQuery.ThenByDescending(SortExpression sortExpression)
     {
-        if (SortExpressions?.Any() is not true)
+        if (SortExpressions?.Count is null or 0)
         {
             throw new InvalidOperationException("No sorting defined yet, use OrderBy or OrderByDescending first.");
         }

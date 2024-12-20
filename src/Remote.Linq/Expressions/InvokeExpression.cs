@@ -18,7 +18,7 @@ public sealed class InvokeExpression : Expression
     public InvokeExpression(Expression expression, IEnumerable<Expression>? arguments)
     {
         Expression = expression.CheckNotNull();
-        Arguments = arguments?.Any() ?? false ? arguments.ToList() : null;
+        Arguments = arguments?.Any() is true ? arguments.ToList() : null;
     }
 
     public override ExpressionType NodeType => ExpressionType.Invoke;
