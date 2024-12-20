@@ -102,8 +102,8 @@ public class When_serializing_remote_linq_types_with_protobuf_net
         var config = CreateModelFor(type);
         var copy = dynamicObjects.Clone(config);
 
-        var dynamicObjectsCount = dynamicObjects?.Count() ?? 0;
-        var copyCount = copy?.Count() ?? 0;
+        var dynamicObjectsCount = dynamicObjects?.Count ?? 0;
+        var copyCount = copy?.Count ?? 0;
         copyCount.ShouldBe(dynamicObjectsCount);
 
         for (int i = 0; i < copyCount; i++)
