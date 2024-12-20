@@ -65,7 +65,7 @@ public sealed class RemoteLinqEfCoreAsyncQueryProvider<TSource> : IRemoteLinqEfC
     TResult IQueryProvider.Execute<TResult>(Expression expression)
         => ExecuteAsyncInternal<TResult>(expression, CancellationToken.None);
 
-    public TResult ExecuteAsyncInternal<TResult>(Expression expression, CancellationToken cancellationToken)
+    private TResult ExecuteAsyncInternal<TResult>(Expression expression, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
