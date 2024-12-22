@@ -3,6 +3,10 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
 
+  <PropertyGroup>
+    <NuGetAudit>false</NuGetAudit>
+  </PropertyGroup>
+  
   <PropertyGroup Condition="'$(DemoLibrary)' == 'true'">
     <TargetFramework Condition="'$(TargetFramework)' == ''">netstandard2.0</TargetFramework>
   </PropertyGroup>
