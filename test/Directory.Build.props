@@ -13,12 +13,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" PrivateAssets="all" />
     <PackageReference Include="Shouldly" Version="4.2.1" PrivateAssets="all" />
     <PackageReference Include="xunit" Version="2.9.2" PrivateAssets="all" />
-    <!--
-      ISSUE #136:
-      update to xunit.runner.visualstudio.3.0.0 breaks unit tests in Remote.Linq.Async.Queryable.Tests for net48
-      make sure to resolve and test before updating xunit.runner.visualstudio
-    -->
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" PrivateAssets="all" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1-pre.2" PrivateAssets="all" />
     <PackageReference Include="Xunit.SkippableFact" Version="1.5.23" PrivateAssets="all" />
   </ItemGroup>
 
