@@ -31,7 +31,7 @@ public class When_inheriting_from_expression_executor
     {
         TestExpressionExecutor.Step0_Expression
             .Execute(null)
-            .Values
+            .GetValues()
             .ShouldHaveSingleItem()
             .ShouldBe("step0");
     }

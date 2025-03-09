@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved and extended API for fluent configuration of custom strategies for expression execution
   (namespace `Remote.Linq.ExpressionExecution`).
 - Bump _Microsoft.EntityFramework_ from 6.4.4 to 6.5.1 (concerns _Remote.Linq.EntityFramework_)
+- Bump _aqua-core_ from 5.4.2 to 5.5.0-alpha-008
 - Allow remote linq expressions to be executed using EF Core extension methods on client side (concerns _Remote.Linq.EntityFrameworkCore_) [#126][issue#126]
 
 ### Deprecated

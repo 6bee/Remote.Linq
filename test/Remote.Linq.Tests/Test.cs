@@ -46,7 +46,7 @@ public class Test
         // before the expression is eventually executed. The result is then based on the queryable provided (i.e. the remoteQuery)
         // with the deserialized expression applied.
         var result = deserializedExpression.Execute(queryableProvider: queryableProvider);
-        var remoteResult = result.Values.Count();
+        var remoteResult = result.GetValues().Count;
         Console.WriteLine($"Remote result: {remoteResult}");
 
         // Use an overload of Execute to change result type if required.
