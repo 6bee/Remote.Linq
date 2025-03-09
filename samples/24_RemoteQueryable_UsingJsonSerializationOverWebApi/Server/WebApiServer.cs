@@ -5,8 +5,8 @@ namespace Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Remote.Linq.Text.Json;
 using System;
+using System.Text.Json;
 using System.Threading;
 
 public sealed class WebApiServer : IDisposable
