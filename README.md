@@ -35,7 +35,7 @@ In contrast to _[re-linq][re-linq-repo]_, this project enables serialization and
 
 Remote.Linq makes it super easy to implement a service allowing LINQ queries defined on a client to be executed on a remote server.
 
-Write operations (insert/update/delete) have to be implemented by other means if needed. _[InfoCarrier.Core][infocarrier-repo]_ might be interesting for such scenarios.
+Write operations (insert/update/delete) have to be implemented by other means if needed. _[InfoCarrier.Core][infocarrier-repo]_ or _[EfCore.Client][efcore-client-repo]_ might be interesting for such scenarios.
 
 ## How to Use
 
@@ -298,6 +298,7 @@ await httpClient.PostAsJsonAsync(uri, value, serializerOptions);
 [ef6-package]: https://www.nuget.org/packages/EntityFramework/
 [efcore-package]: https://www.nuget.org/packages/Microsoft.EntityFrameworkCore/
 [infocarrier-repo]: https://github.com/azabluda/InfoCarrier.Core
+[efcore-client-repo]: https://github.com/JohnGoldInc/EfCore.Client
 [ix-net-repo]: https://github.com/dotnet/reactive
 [ix-net-async-queryable-package]: https://www.nuget.org/packages/System.Linq.Async.Queryable/
 [json-net-package]: https://www.nuget.org/packages/Newtonsoft.Json/
