@@ -33,7 +33,7 @@ Building a LINQ interface for custom services is made a breeze by using _Remote.
 
 In contrast to _[re-linq][re-linq-repo]_, this project enables serialization and deserialization of expression trees and applying LINQ expressions to other LINQ providers e.g. linq-to-object, linq-to-entity, etc.
 
-Remote.Linq makes it super easy to implement a service allowing LINQ queries defined on a client to be executed on a remote server.
+Remote.Linq makes it super easy to implement a service that executes LINQ queries defined on a client against a data source on a remote server.
 
 Write operations (insert/update/delete) have to be implemented by other means if needed. _[InfoCarrier.Core][infocarrier-repo]_ or _[EfCore.Client][efcore-client-repo]_ might be interesting for such scenarios.
 
@@ -53,13 +53,13 @@ public class ClientDataRepository
     public RemoteRepository(string uri)
     {
         _dataProvider = expression =>
-            {
-                // setup service connectivity
-                using IQueryService service = CreateServerConnection(uri);
-                // send expression to service and get back results
-                DynamicObject result = service.ExecuteQuery(expression);
-                return result;
-            };
+        {
+            // setup service connectivity
+            using IQueryService service = CreateServerConnection(uri);
+            // send expression to service and get back results
+            DynamicObject result = service.ExecuteQuery(expression);
+            return result;
+        };
     }
 
     public IRemoteQueryable<Blog> Blogs => RemoteQueryable.Factory.CreateQueryable<Blog>(_dataProvider);
@@ -124,7 +124,7 @@ public class QueryService : IQueryService
 ```C#
 IAsyncRemoteQueryable<TEntity> asyncQuery =
   RemoteQueryable.Factory.CreateAsyncQueryable<TEntity>(...);
-TEntity[] result = await asyncQuery.ToArrayAsync().ConfigureAwait(false);
+TEntity[] result = await asyncQuery.ToArrayAsync();
 
 // where interface IAsyncRemoteQueryable<out T> is IRemoteQueryable<out T> is IQueryable<out T>
 ```
@@ -134,7 +134,7 @@ TEntity[] result = await asyncQuery.ToArrayAsync().ConfigureAwait(false);
 ```C#
 IAsyncRemoteStreamQueryable<TEntity> asyncStreamQuery =
   RemoteQueryable.Factory.CreateAsyncStreamQueryable<TEntity>(...);
-await foreach (TEntity item in asyncStreamQuery.ConfigureAwait(false))
+await foreach (TEntity item in asyncStreamQuery)
 {
 }
 
@@ -152,7 +152,7 @@ Provides interoperability with _Interactive Extensions ([Ix.NET][ix-net-repo] / 
 ```C#
 System.Linq.IAsyncQueryable<TEntity> asyncQuery =
   RemoteQueryable.Factory.CreateAsyncQueryable<TEntity>(...);
-await foreach (TEntity item in asyncQuery.ConfigureAwait(false))
+await foreach (TEntity item in asyncQuery)
 {
 }
 ```
