@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Removed .NET 6.0 framework target
+- Removed support for partially trusted code (code access security (CAS) and security-transparent code)
 
 ### Fixed
 

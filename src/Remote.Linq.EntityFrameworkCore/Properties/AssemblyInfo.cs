@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 using System.Runtime.CompilerServices;
-using System.Security;
-
-[assembly: AllowPartiallyTrustedCallers]
 
 [assembly: InternalsVisibleTo("Remote.Linq.EntityFrameworkCore.Test, PublicKey=" +
 "0024000004800000940000000602000000240000525341310004000001000100953fd5a46105ee" +

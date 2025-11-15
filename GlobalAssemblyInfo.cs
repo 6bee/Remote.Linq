@@ -2,11 +2,8 @@
 
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security;
 
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
-
-[assembly: SecurityRules(SecurityRuleSet.Level1)]
