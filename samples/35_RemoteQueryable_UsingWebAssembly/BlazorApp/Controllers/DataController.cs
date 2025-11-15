@@ -9,14 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DataController : ControllerBase
+public class DataController(IDataProvider dataProvider) : ControllerBase
 {
-    private readonly IDataProvider _dataProvider;
-
-    public DataController(IDataProvider dataProvider)
-        => _dataProvider = dataProvider;
-
     [Route("query")]
     public DynamicObject Query([FromBody] Query query)
-        => _dataProvider.Execute(query.Expression);
+        => dataProvider.Execute(query.Expression);
 }

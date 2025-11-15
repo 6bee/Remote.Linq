@@ -19,16 +19,6 @@
           "ASPNETCORE_ENVIRONMENT": "Development"
         }
       },
-      "https": {
-        "commandName": "Project",
-        "dotnetRunMessages": true,
-        "launchBrowser": true,
-        "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-        "applicationUrl": "https://localhost:7265;http://localhost:5055",
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Development"
-        }
-      },
       "IIS Express": {
         "commandName": "IISExpress",
         "launchBrowser": true,

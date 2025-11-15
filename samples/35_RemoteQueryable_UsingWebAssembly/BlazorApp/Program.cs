@@ -12,6 +12,11 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 
+// IMPORTANT: assert type can be loaded via reflection at runtime
+//            System.Linq.Queryable is used by web assembly client and needs to be resolved on server via reflection
+//            types fails to resolve unless assemblies are loaded
+var t = typeof(System.Linq.Queryable);
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
@@ -41,16 +46,11 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-
-    // default HSTS value is 30 days. for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-
-app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddInteractiveServerRenderMode()
