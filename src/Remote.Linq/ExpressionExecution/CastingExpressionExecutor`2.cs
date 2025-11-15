@@ -2,8 +2,6 @@
 
 namespace Remote.Linq.ExpressionExecution;
 
-using System;
-
 internal sealed class CastingExpressionExecutor<TQueryable, TResult> : ExpressionExecutor<TQueryable, TResult>
 {
     public CastingExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context)

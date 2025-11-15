@@ -5,12 +5,8 @@ namespace Common;
 using Aqua.TypeSystem;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
-using System;
 using System.Collections;
 using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 public static class BsonFormatter
 {

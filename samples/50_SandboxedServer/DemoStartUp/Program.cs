@@ -3,7 +3,6 @@
 namespace DemoStartUp;
 
 using Common;
-using System;
 using System.IO;
 using System.Net;
 using System.Reflection;

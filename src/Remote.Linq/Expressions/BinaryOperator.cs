@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Expressions;
 
-using System;
 using NodeType = System.Linq.Expressions.ExpressionType;
 
 [Serializable]

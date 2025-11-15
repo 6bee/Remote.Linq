@@ -4,9 +4,6 @@ namespace Client;
 
 using Remote.Linq.Async;
 using Remote.Linq.Include;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using static CommonHelper;
 
 // NOTE: Normally one would use Microsoft.EntityFrameworkCore.EF.Functions.Like(...)

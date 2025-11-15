@@ -7,7 +7,6 @@ using Aqua.Newtonsoft.Json.Converters;
 using Aqua.TypeSystem;
 using global::Newtonsoft.Json;
 using Remote.Linq.Expressions;
-using System.Collections.Generic;
 
 public sealed class ExpressionConverter : ObjectConverter<Expression>
 {

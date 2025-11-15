@@ -2,8 +2,6 @@
 
 namespace Remote.Linq;
 
-using System;
-
 /// <summary>
 /// Represents errors that occur in relation to <i>Remote.Linq</i>.
 /// </summary>

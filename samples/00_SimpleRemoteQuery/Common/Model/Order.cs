@@ -2,9 +2,6 @@
 
 namespace Common.Model;
 
-using System.Collections.Generic;
-using System.Linq;
-
 public class Order
 {
     public long Id { get; set; }

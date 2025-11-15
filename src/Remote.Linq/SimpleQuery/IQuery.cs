@@ -3,7 +3,6 @@
 namespace Remote.Linq.SimpleQuery;
 
 using Aqua.TypeSystem;
-using System.Collections.Generic;
 
 public interface IQuery
 {

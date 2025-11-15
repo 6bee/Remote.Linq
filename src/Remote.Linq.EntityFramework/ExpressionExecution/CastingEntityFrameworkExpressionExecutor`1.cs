@@ -2,9 +2,7 @@
 
 namespace Remote.Linq.EntityFramework.ExpressionExecution;
 
-using System;
 using System.Data.Entity;
-using System.Linq;
 using System.Security;
 
 public sealed class CastingEntityFrameworkExpressionExecutor<TResult> : EntityFrameworkExpressionExecutor<TResult>

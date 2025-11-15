@@ -3,8 +3,6 @@
 namespace Remote.Linq;
 
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 /// <summary>
 /// Represents a query provider for <i>Remote.Linq</i> task based async queryable sequences.

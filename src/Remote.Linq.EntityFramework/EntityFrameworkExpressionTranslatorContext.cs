@@ -4,7 +4,6 @@ namespace Remote.Linq.EntityFramework;
 
 using Aqua.Dynamic;
 using Aqua.TypeSystem;
-using System;
 using SystemLinq = System.Linq.Expressions;
 
 public class EntityFrameworkExpressionTranslatorContext : ExpressionTranslatorContext

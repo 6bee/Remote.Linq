@@ -2,8 +2,6 @@
 
 namespace BlazorApp.Model;
 
-using System.Collections.Generic;
-
 public sealed record class Person
 {
     public required string UserName { get; init; }

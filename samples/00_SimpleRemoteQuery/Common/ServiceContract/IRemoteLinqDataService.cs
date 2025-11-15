@@ -4,7 +4,6 @@ namespace Common.ServiceContract;
 
 using Common.Model;
 using Remote.Linq.SimpleQuery;
-using System.Collections.Generic;
 using System.ServiceModel;
 
 [ServiceContract]

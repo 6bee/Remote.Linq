@@ -3,8 +3,6 @@
 namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution;
 
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Security;
 
 public sealed class CastingEntityFrameworkCoreExpressionExecutor<TResult> : EntityFrameworkCoreExpressionExecutor<TResult>

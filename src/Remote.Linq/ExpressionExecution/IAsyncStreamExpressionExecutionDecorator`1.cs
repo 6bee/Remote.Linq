@@ -2,9 +2,7 @@
 
 namespace Remote.Linq.ExpressionExecution;
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using RemoteLinq = Remote.Linq.Expressions;
 using SystemLinq = System.Linq.Expressions;
 

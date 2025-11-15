@@ -2,8 +2,6 @@
 
 namespace Remote.Linq;
 
-using System.Linq;
-
 /// <summary>
 /// Represents a query provider for <i>Remote.Linq</i> version of queryable sequences.
 /// </summary>

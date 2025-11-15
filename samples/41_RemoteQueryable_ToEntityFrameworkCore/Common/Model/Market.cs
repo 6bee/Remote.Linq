@@ -2,8 +2,6 @@
 
 namespace Common.Model;
 
-using System.Collections.Generic;
-
 public partial class Market
 {
     public int Id { get; set; }

@@ -2,8 +2,6 @@
 
 namespace Remote.Linq.DynamicQuery;
 
-using System;
-
 /// <summary>
 /// Denotes annotated methods as query marker functions to prevent local evaluation (i.e. execution of the method) when translating expressions.
 /// </summary>

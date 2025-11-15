@@ -4,8 +4,6 @@ namespace Common;
 
 using Aqua.Dynamic;
 using Common.Model;
-using System;
-using System.Collections.Generic;
 
 public class IsKnownTypeProvider : IIsKnownTypeProvider
 {

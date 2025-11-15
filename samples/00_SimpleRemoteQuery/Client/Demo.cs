@@ -7,9 +7,6 @@ using Common.ServiceContract;
 using Remote.Linq;
 using Remote.Linq.ExpressionVisitors;
 using Remote.Linq.SimpleQuery;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using static CommonHelper;
 
 public class Demo : IDemo

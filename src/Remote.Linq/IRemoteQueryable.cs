@@ -2,8 +2,6 @@
 
 namespace Remote.Linq;
 
-using System.Linq;
-
 /// <summary>
 /// Provides functionality to compose queries for remote execution.
 /// </summary>

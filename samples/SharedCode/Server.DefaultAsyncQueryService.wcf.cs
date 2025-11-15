@@ -6,7 +6,6 @@ using Aqua.Dynamic;
 using Common.ServiceContracts;
 using Remote.Linq.ExpressionExecution;
 using Remote.Linq.Expressions;
-using System.Threading.Tasks;
 
 public class QueryService : IQueryService
 {

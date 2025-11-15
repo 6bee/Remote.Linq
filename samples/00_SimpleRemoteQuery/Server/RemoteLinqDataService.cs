@@ -5,9 +5,6 @@ namespace Server;
 using Common.Model;
 using Common.ServiceContract;
 using Remote.Linq.SimpleQuery;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 public class RemoteLinqDataService : IRemoteLinqDataService

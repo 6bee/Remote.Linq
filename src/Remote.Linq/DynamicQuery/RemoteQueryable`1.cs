@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.DynamicQuery;
 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 /// <summary>

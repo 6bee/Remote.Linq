@@ -5,7 +5,6 @@ namespace Common.ServiceContracts;
 using Aqua.Dynamic;
 using Remote.Linq.Expressions;
 using System.ServiceModel;
-using System.Threading.Tasks;
 
 [ServiceContract]
 public interface IQueryService

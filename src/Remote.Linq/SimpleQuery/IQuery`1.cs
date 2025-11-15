@@ -2,9 +2,6 @@
 
 namespace Remote.Linq.SimpleQuery;
 
-using System;
-using System.Collections.Generic;
-
 public interface IQuery<T> : IEnumerable<T>
 {
     bool HasFilters { get; }

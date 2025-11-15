@@ -2,8 +2,6 @@
 
 namespace Client.ClientModel;
 
-using System.Collections.Generic;
-
 public class ProductGroup
 {
     public int Id { get; set; }

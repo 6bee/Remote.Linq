@@ -44,7 +44,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <LangVersion Condition="'$(LangVersion)' == ''">12.0</LangVersion>
+    <LangVersion Condition="'$(LangVersion)' == ''">14.0</LangVersion>
     <GenerateDocumentationFile Condition="'$(GenerateDocumentationFile)' == ''">true</GenerateDocumentationFile>
     <TreatWarningsAsErrors Condition="'$(TreatWarningsAsErrors)' == ''">true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
@@ -52,6 +52,14 @@
     <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">false</EnableSonarAnalyzers>
     <EnableStyleCopAnalyzers Condition="'$(EnableStyleCopAnalyzers)' == ''">true</EnableStyleCopAnalyzers>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="System" Global="true" />
+    <Using Include="System.Collections.Generic" Global="true" />
+    <Using Include="System.Linq" Global="true" />
+    <Using Include="System.Threading" Global="true" />
+    <Using Include="System.Threading.Tasks" Global="true" />
+  </ItemGroup>
 
   <PropertyGroup>
     <SignAssembly Condition="'$(SignAssembly)' == ''">true</SignAssembly>

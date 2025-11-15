@@ -2,8 +2,6 @@
 
 namespace Remote.Linq;
 
-using System.Linq;
-
 /// <summary>
 /// Represents the result of a sorting operation of a remote stream queryable resource.
 /// </summary>

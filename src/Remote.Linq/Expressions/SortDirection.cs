@@ -2,8 +2,6 @@
 
 namespace Remote.Linq.Expressions;
 
-using System;
-
 [Serializable]
 public enum SortDirection
 {

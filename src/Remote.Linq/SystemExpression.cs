@@ -2,8 +2,6 @@
 
 namespace Remote.Linq;
 
-using System.Linq;
-
 /// <summary>
 /// Entry point for accessing factory and helper function for <see cref="System.Linq.Expressions.Expression"/>.
 /// </summary>

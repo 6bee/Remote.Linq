@@ -6,8 +6,6 @@ using Aqua.Dynamic;
 using Remote.Linq.ExpressionExecution;
 using Remote.Linq.Expressions;
 using Remote.Linq.TestSupport;
-using System.Collections.Generic;
-using System.Threading;
 
 public class QueryService
 {

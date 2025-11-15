@@ -3,7 +3,6 @@
 namespace Remote.Linq.ExpressionExecution;
 
 using Remote.Linq.Expressions;
-using System.Linq;
 
 public class ExpressionExecutionContext<TDataTranferObject> : ExpressionExecutionDecoratorBase<TDataTranferObject>
 {

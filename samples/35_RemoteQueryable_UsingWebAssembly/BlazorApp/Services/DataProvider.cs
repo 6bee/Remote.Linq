@@ -7,8 +7,6 @@ using BlazorApp.Model;
 using Microsoft.OData.Client;
 using Remote.Linq.ExpressionExecution;
 using Remote.Linq.Expressions;
-using System;
-using System.Linq;
 
 public class DataProvider : IDataProvider
 {

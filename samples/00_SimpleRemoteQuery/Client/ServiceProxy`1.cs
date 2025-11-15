@@ -3,8 +3,6 @@
 namespace Client;
 
 using Remote.Linq.SimpleQuery;
-using System;
-using System.Collections.Generic;
 using System.ServiceModel;
 
 public sealed class ServiceProxy<T> : IDisposable

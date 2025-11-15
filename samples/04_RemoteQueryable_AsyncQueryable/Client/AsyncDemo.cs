@@ -2,9 +2,6 @@
 
 namespace Client;
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using static CommonHelper;
 
 public class AsyncStreamDemo : IAsyncDemo

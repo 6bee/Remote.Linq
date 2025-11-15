@@ -3,7 +3,6 @@
 namespace Remote.Linq;
 
 using System.ComponentModel;
-using System.Linq;
 
 /// <summary>
 /// Provides factory methods for creating <see cref="IQueryable{T}"/> types

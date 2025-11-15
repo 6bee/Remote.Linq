@@ -7,8 +7,6 @@ using Aqua.EnumerableExtensions;
 using Aqua.TypeSystem;
 using Remote.Linq.DynamicQuery;
 using Remote.Linq.Expressions;
-using System;
-using System.Threading;
 
 public abstract class QueryableResourceVisitor
 {

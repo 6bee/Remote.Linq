@@ -10,9 +10,6 @@ using global::Newtonsoft.Json.Serialization;
 using Remote.Linq.DynamicQuery;
 using Remote.Linq.Expressions;
 using Remote.Linq.Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 
 public sealed class RemoteLinqContractResolver : DefaultContractResolver

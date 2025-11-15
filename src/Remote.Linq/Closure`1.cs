@@ -2,7 +2,6 @@
 
 namespace Remote.Linq;
 
-using System;
 using System.Runtime.Serialization;
 
 [Serializable]

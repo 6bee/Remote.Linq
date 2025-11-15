@@ -4,7 +4,6 @@ namespace Remote.Linq;
 
 using Aqua.TypeSystem;
 using Remote.Linq.DynamicQuery;
-using System;
 
 /// <summary>
 /// Denotes a context for translating <i>System.Linq.Expressions</i> to <i>Remote.Linq</i>.

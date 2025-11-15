@@ -2,8 +2,6 @@
 
 namespace Server.DbModel;
 
-using System.Collections.Generic;
-
 public class ProductEntity
 {
     public int Id { get; set; }

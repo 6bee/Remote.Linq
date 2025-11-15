@@ -4,7 +4,6 @@ namespace Remote.Linq.ExpressionExecution;
 
 using Remote.Linq.Expressions;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 public abstract class ExpressionExecutionDecorator<TDataTranferObject> : ExpressionExecutionDecoratorBase<TDataTranferObject>
 {

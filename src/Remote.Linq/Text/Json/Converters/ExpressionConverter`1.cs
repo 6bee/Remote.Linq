@@ -6,7 +6,6 @@ using Aqua.Text.Json;
 using Aqua.Text.Json.Converters;
 using Aqua.TypeSystem;
 using Remote.Linq.Expressions;
-using System.Collections.Generic;
 using System.Text.Json;
 
 public class ExpressionConverter<TExpression>(KnownTypesRegistry knownTypesRegistry, bool handleSubtypes) : ObjectConverter<TExpression>(knownTypesRegistry, handleSubtypes)

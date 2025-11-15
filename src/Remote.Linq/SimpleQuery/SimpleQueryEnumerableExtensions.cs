@@ -2,10 +2,7 @@
 
 namespace Remote.Linq.SimpleQuery;
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class SimpleQueryEnumerableExtensions

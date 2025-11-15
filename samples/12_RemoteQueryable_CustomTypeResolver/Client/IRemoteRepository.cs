@@ -3,8 +3,6 @@
 namespace Client;
 
 using Client.ClientModel;
-using System;
-using System.Linq;
 
 public interface IRemoteRepository : IDisposable
 {

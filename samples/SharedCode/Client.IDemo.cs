@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-
 #pragma warning disable IDE0161 // Convert to file-scoped namespace
 namespace Client
 #pragma warning restore IDE0161 // Convert to file-scoped namespace

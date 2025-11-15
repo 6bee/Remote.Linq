@@ -3,7 +3,6 @@
 namespace Remote.Linq;
 
 using Aqua.TypeSystem;
-using System;
 
 /// <summary>
 /// Denotes a context for translating <i>Remote.Linq.Expressions</i> to <i>System.Linq</i>.

@@ -6,7 +6,6 @@ namespace System.Linq.Expressions;
 
 using Remote.Linq;
 using Remote.Linq.DynamicQuery;
-using System;
 using System.ComponentModel;
 
 [EditorBrowsable(EditorBrowsableState.Never)]

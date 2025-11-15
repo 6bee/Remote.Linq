@@ -7,7 +7,6 @@ using Aqua.Newtonsoft.Json.Converters;
 using Aqua.TypeSystem;
 using global::Newtonsoft.Json;
 using Remote.Linq.DynamicQuery;
-using System.Collections.Generic;
 
 public sealed class VariableQueryArgumentListConverter : ObjectConverter<VariableQueryArgumentList>
 {

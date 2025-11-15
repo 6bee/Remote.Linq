@@ -2,9 +2,7 @@
 
 namespace Remote.Linq;
 
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading;
 
 /// <summary>
 /// Represents a query provider for <i>Remote.Linq</i> async stream queryable sequences.

@@ -2,8 +2,6 @@
 
 namespace Common.Model;
 
-using System.Collections.Generic;
-
 public partial class ProductGroup
 {
     public int Id { get; set; }

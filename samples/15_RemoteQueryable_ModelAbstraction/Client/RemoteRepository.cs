@@ -7,8 +7,6 @@ using Common.Model;
 using Common.ServiceContracts;
 using Remote.Linq;
 using Remote.Linq.Expressions;
-using System;
-using System.Linq;
 using System.ServiceModel;
 
 public sealed class RemoteRepository : IDisposable

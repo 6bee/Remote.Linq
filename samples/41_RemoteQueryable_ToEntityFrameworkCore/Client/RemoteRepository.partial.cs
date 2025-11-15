@@ -4,7 +4,6 @@ namespace Client;
 
 using Common.Model;
 using Remote.Linq;
-using System.Linq;
 
 partial class RemoteRepository
 {

@@ -2,8 +2,6 @@
 
 namespace Remote.Linq.DynamicQuery;
 
-using System;
-
 /// <summary>
 /// Denotes annotated types as query argument to prevent local evaluation when translating expressions.
 /// </summary>

@@ -7,10 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 
 // IMPORTANT: assert type can be loaded via reflection at runtime
 //            System.Linq.Queryable is used by web assembly client and needs to be resolved on server via reflection

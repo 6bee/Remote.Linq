@@ -3,7 +3,6 @@
 namespace Common.ServiceContract;
 
 using Common.Model;
-using System.Collections.Generic;
 using System.ServiceModel;
 
 [ServiceContract]

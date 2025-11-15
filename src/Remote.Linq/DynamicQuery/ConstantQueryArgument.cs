@@ -4,7 +4,6 @@ namespace Remote.Linq.DynamicQuery;
 
 using Aqua.Dynamic;
 using Aqua.Text.Json.Converters;
-using System;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using RemoteLinq = Remote.Linq.Expressions;

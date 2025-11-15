@@ -5,8 +5,6 @@ namespace Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading;
 
 public sealed class WebApiServer : IDisposable
 {

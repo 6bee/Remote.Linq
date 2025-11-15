@@ -3,9 +3,7 @@
 namespace Remote.Linq.SimpleQuery;
 
 using Remote.Linq.ExpressionVisitors;
-using System;
 using System.ComponentModel;
-using System.Linq;
 using MethodInfo = System.Reflection.MethodInfo;
 using RemoteLinq = Remote.Linq.Expressions;
 using SystemLinq = System.Linq.Expressions;

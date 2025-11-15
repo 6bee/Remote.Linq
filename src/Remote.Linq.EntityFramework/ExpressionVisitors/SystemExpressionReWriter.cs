@@ -5,7 +5,6 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors;
 using Remote.Linq.DynamicQuery;
 using Remote.Linq.ExpressionVisitors;
 using System.ComponentModel;
-using System.Linq;
 using System.Linq.Expressions;
 
 [EditorBrowsable(EditorBrowsableState.Never)]

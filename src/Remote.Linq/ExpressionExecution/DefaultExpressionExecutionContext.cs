@@ -4,7 +4,6 @@ namespace Remote.Linq.ExpressionExecution;
 
 using Aqua.Dynamic;
 using Remote.Linq.Expressions;
-using System.Linq;
 
 public class DefaultExpressionExecutionContext : ExpressionExecutionContext<DynamicObject>
 {

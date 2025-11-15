@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.SimpleQuery;
 
-using System;
 using System.Linq.Expressions;
 
 public interface IOrderedQuery<T> : IQuery<T>

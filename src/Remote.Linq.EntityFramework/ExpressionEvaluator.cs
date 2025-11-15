@@ -3,7 +3,6 @@
 namespace Remote.Linq.EntityFramework;
 
 using Aqua.TypeExtensions;
-using System.Linq;
 using System.Linq.Expressions;
 
 public static class ExpressionEvaluator

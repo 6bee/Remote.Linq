@@ -3,7 +3,6 @@
 namespace Remote.Linq.EntityFrameworkCore.DynamicQuery;
 
 using Aqua.TypeExtensions;
-using System.Threading.Tasks;
 using MethodInfo = System.Reflection.MethodInfo;
 
 internal static class RemoteLinqEfCoreAsyncQueryProvider

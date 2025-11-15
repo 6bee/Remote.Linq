@@ -3,7 +3,6 @@
 namespace Client;
 
 using Aqua.TypeSystem;
-using System;
 
 public class ResultTypeMapper : TypeResolver
 {

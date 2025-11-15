@@ -2,8 +2,6 @@
 
 namespace Remote.Linq.Include;
 
-using System.Linq;
-
 /// <summary>
 /// Represents the result of an include operation of a remote queryable resource.
 /// </summary>

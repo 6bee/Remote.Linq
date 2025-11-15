@@ -2,11 +2,8 @@
 
 namespace Common;
 
-using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
-using System.Threading.Tasks;
 
 public static class BinaryDataFormatter
 {
