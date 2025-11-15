@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Remote.Linq.Text.Json\Remote.Linq.Text.Json.csproj" />
+    <ProjectReference Include="..\..\..\src\Remote.Linq\Remote.Linq.csproj" />
   </ItemGroup>
 
 </Project>
