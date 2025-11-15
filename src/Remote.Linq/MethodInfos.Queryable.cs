@@ -207,13 +207,23 @@ partial class MethodInfos
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>));
 
-        internal static readonly MethodInfo MaxByWithComparer = GetQueryableMethod(
+        // obsolete in net10.0
+        internal static readonly MethodInfo MaxByWithSourceComparer = GetQueryableMethod(
             nameof(System.Linq.Queryable.MaxBy),
             [typeof(TSource), typeof(TKey)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>),
             typeof(IComparer<TSource>));
 #endif // NET8_0_OR_GREATER
+
+#if NET10_0_OR_GREATER
+        internal static readonly MethodInfo MaxByWithKeyComparer = GetQueryableMethod(
+            nameof(System.Linq.Queryable.MaxBy),
+            [typeof(TSource), typeof(TKey)],
+            typeof(IQueryable<TSource>),
+            typeof(Expression<Func<TSource, TKey>>),
+            typeof(IComparer<TKey>));
+#endif // NET10_0_OR_GREATER
 
         internal static readonly MethodInfo Min = GetQueryableMethod(
             nameof(System.Linq.Queryable.Min),
@@ -238,13 +248,23 @@ partial class MethodInfos
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>));
 
-        internal static readonly MethodInfo MinByWithComparer = GetQueryableMethod(
+        // obsolete in net10.0
+        internal static readonly MethodInfo MinByWithSourceComparer = GetQueryableMethod(
             nameof(System.Linq.Queryable.MinBy),
             [typeof(TSource), typeof(TKey)],
             typeof(IQueryable<TSource>),
             typeof(Expression<Func<TSource, TKey>>),
             typeof(IComparer<TSource>));
 #endif // NET8_0_OR_GREATER
+
+#if NET10_0_OR_GREATER
+        internal static readonly MethodInfo MinByWithKeyComparer = GetQueryableMethod(
+            nameof(System.Linq.Queryable.MinBy),
+            [typeof(TSource), typeof(TKey)],
+            typeof(IQueryable<TSource>),
+            typeof(Expression<Func<TSource, TKey>>),
+            typeof(IComparer<TKey>));
+#endif // NET10_0_OR_GREATER
 
         internal static readonly MethodInfo SequenceEqualWithComparer = GetQueryableMethod(
             nameof(System.Linq.Queryable.SequenceEqual),

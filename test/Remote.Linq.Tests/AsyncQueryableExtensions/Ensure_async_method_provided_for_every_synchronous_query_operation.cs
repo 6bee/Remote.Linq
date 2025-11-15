@@ -34,7 +34,7 @@ public class Ensure_async_method_provided_for_every_synchronous_query_operation
     {
         var typeList = new[] { typeof(TOne), typeof(TTwo), typeof(TThree) };
         var genericArgumentTypes = method.IsGenericMethodDefinition
-            ? typeList.Take(method.GetGenericArguments().Length).ToArray()
+            ? [.. typeList.Take(method.GetGenericArguments().Length)]
             : Array.Empty<Type>();
 
         var methodName = $"{method.Name}Async";
@@ -96,11 +96,22 @@ public class Ensure_async_method_provided_for_every_synchronous_query_operation
         {
             throw new RemoteLinqException($"Implementation error: should have exactly one matching method left at this point: '{methodName}'");
         }
+
+        if (method.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute obsoleteAttribute)
+        {
+            var matchObsoleteAttribute = matchingMethods[0].GetCustomAttribute(typeof(ObsoleteAttribute)).ShouldBeOfType<ObsoleteAttribute>();
+            matchObsoleteAttribute.IsError.ShouldBe(obsoleteAttribute.IsError, $"method AsyncQueryableExtensions.{method.Name}Async");
+            matchObsoleteAttribute.Message.ShouldBe(obsoleteAttribute.Message, $"method AsyncQueryableExtensions.{method.Name}Async");
+#if NET8_0_OR_GREATER
+            matchObsoleteAttribute.DiagnosticId.ShouldBe(obsoleteAttribute.DiagnosticId, $"method AsyncQueryableExtensions.{method.Name}Async");
+            matchObsoleteAttribute.UrlFormat.ShouldBe(obsoleteAttribute.UrlFormat, $"method AsyncQueryableExtensions.{method.Name}Async");
+#endif // NET8_0_OR_GREATER
+        }
     }
 
     public static IEnumerable<object[]> QueryableOperations
         => typeof(Queryable)
-            .GetMethods(BindingFlags.Static | BindingFlags.Public)
-            .Where(x => !typeof(IQueryable).IsAssignableFrom(x.ReturnType))
-            .Select(x => new[] { x });
+        .GetMethods(BindingFlags.Static | BindingFlags.Public)
+        .Where(x => !typeof(IQueryable).IsAssignableFrom(x.ReturnType))
+        .Select(x => new[] { x });
 }

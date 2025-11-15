@@ -203,10 +203,21 @@ public static class AsyncQueryableExtensions
 
     public static ValueTask<TSource?> MinByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MinBy, source, keySelector, cancellation);
-
-    public static ValueTask<TSource?> MinByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IComparer<TSource> comparer, CancellationToken cancellation = default)
-        => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MinByWithComparer, source, new object?[] { keySelector, comparer }, cancellation);
 #endif // NET8_0_OR_GREATER
+
+#if NET8_0
+    public static ValueTask<TSource?> MinByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IComparer<TSource> comparer, CancellationToken cancellation = default)
+        => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MinByWithSourceComparer, source, new object?[] { keySelector, comparer }, cancellation);
+#endif // NET8_0
+
+#if NET10_0_OR_GREATER
+    [Obsolete("The Queryable MinBy and MaxBy taking an IComparer<TSource> are obsolete. Use the new ones that take an IComparer<TKey>.", DiagnosticId = "SYSLIB0061", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+    public static ValueTask<TSource?> MinByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IComparer<TSource> comparer, CancellationToken cancellation = default)
+        => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MinByWithSourceComparer, source, new object?[] { keySelector, comparer }, cancellation);
+
+    public static ValueTask<TSource?> MinByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IComparer<TKey> comparer, CancellationToken cancellation = default)
+        => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MinByWithKeyComparer, source, new object?[] { keySelector, comparer }, cancellation);
+#endif // NET10_0_OR_GREATER
 
     public static ValueTask<TSource?> MaxAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.Max, source, cancellation);
@@ -220,10 +231,21 @@ public static class AsyncQueryableExtensions
 
     public static ValueTask<TSource?> MaxByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, CancellationToken cancellation = default)
         => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MaxBy, source, keySelector, cancellation);
-
-    public static ValueTask<TSource?> MaxByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IComparer<TSource>? comparer, CancellationToken cancellation = default)
-        => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MaxByWithComparer, source, new object?[] { keySelector, comparer }, cancellation);
 #endif // NET8_0_OR_GREATER
+
+#if NET8_0
+    public static ValueTask<TSource?> MaxByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IComparer<TSource>? comparer, CancellationToken cancellation = default)
+        => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MaxByWithSourceComparer, source, new object?[] { keySelector, comparer }, cancellation);
+#endif // NET8_0
+
+#if NET10_0_OR_GREATER
+    [Obsolete("The Queryable MinBy and MaxBy taking an IComparer<TSource> are obsolete. Use the new ones that take an IComparer<TKey>.", DiagnosticId = "SYSLIB0061", UrlFormat = "https://aka.ms/dotnet-warnings/{0}")]
+    public static ValueTask<TSource?> MaxByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IComparer<TSource>? comparer, CancellationToken cancellation = default)
+        => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MaxByWithSourceComparer, source, new object?[] { keySelector, comparer }, cancellation);
+
+    public static ValueTask<TSource?> MaxByAsync<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IComparer<TKey>? comparer, CancellationToken cancellation = default)
+        => ExecuteAsync<TSource, TSource?>(MethodInfos.Queryable.MaxByWithKeyComparer, source, new object?[] { keySelector, comparer }, cancellation);
+#endif // NET10_0_OR_GREATER
 
     public static ValueTask<int> SumAsync(this IQueryable<int> source, CancellationToken cancellation = default)
         => ExecuteAsync<int, int>(MethodInfos.Queryable.SumInt32, source, cancellation);
