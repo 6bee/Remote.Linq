@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net10.0</TargetFrameworks>
     <PackageTags>remote-linq;json-net;newtonsoft-json</PackageTags>
     <Description>Provides Remote.Linq interoperability with Interactive Extensions (Ix.NET).</Description>
   </PropertyGroup>
@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Linq.Async.Queryable" Version="6.0.1" />
+    <PackageReference Include="System.Linq.Async.Queryable" Version="7.0.0-preview.10" />
   </ItemGroup>
 
 </Project>

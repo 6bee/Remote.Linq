@@ -95,7 +95,7 @@ public abstract class When_querying_async
     protected IAsyncQueryable<Entity> AsyncStream { get; }
 
     [Fact]
-    public async Task Should_query_full_set_via_async_foreach_stream()
+    public async Task Should_query_async_queryable_stream()
     {
         var count = 0;
         await foreach (var item in AsyncStream)
@@ -109,21 +109,13 @@ public abstract class When_querying_async
     }
 
     [Fact]
-    public async Task Should_query_full_set_via_ForEachAsync()
+    public async Task Should_query_async_enumerable_stream()
     {
         var count = 0;
-        await AsyncStream.ForEachAsync(_ => count++);
-
-        count.ShouldBe(10);
-
-        AssertProviderInvocationForStream();
-    }
-
-    [Fact]
-    public async Task Should_query_async_enumerable_stream_via_ForEachAsync()
-    {
-        var count = 0;
-        await AsyncStream.AsAsyncEnumerable().ForEachAsync(_ => count++);
+        await foreach (var _ in AsyncStream.AsAsyncEnumerable())
+        {
+            count++;
+        }
 
         count.ShouldBe(10);
 

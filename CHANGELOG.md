@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add .NET 10.0 framework target
+
 ### Changed
 
 - Improved and extended API for fluent configuration of custom strategies for expression execution

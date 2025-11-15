@@ -9,7 +9,6 @@ using Remote.Linq.DynamicQuery;
 using System;
 using System.Collections;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using MethodInfo = System.Reflection.MethodInfo;
 using SystemLinq = System.Linq.Expressions;
@@ -105,8 +104,6 @@ public class ExpressionTranslatorContext : IExpressionTranslatorContext
         }
     }
 
-    private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
-
     private static readonly MethodInfo _mapGroupToDynamicObjectGraphMethodDefinition =
         typeof(ExpressionTranslatorContext).GetMethodEx(nameof(MapGroupToDynamicObjectGraph));
 
@@ -128,8 +125,8 @@ public class ExpressionTranslatorContext : IExpressionTranslatorContext
             typeof(bool),
             typeof(Guid),
             typeof(DateTime),
-            typeof(TimeSpan),
             typeof(DateTimeOffset),
+            typeof(TimeSpan),
             typeof(System.Numerics.BigInteger),
             typeof(System.Numerics.Complex),
             typeof(byte[]),
