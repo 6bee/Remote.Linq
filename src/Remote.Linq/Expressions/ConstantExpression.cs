@@ -4,8 +4,10 @@ namespace Remote.Linq.Expressions;
 
 using Aqua.TypeSystem;
 using Remote.Linq.DynamicQuery;
+using Remote.Linq.Text.Json.Converters;
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
 [Serializable]
@@ -15,6 +17,7 @@ using System.Xml.Serialization;
 [KnownType(typeof(SubstitutionValue)), XmlInclude(typeof(SubstitutionValue))]
 [KnownType(typeof(VariableQueryArgument)), XmlInclude(typeof(VariableQueryArgument))]
 [KnownType(typeof(VariableQueryArgumentList)), XmlInclude(typeof(VariableQueryArgumentList))]
+[JsonConverter(typeof(ExpressionConverter<ConstantExpression>))]
 public sealed class ConstantExpression : Expression
 {
     public ConstantExpression()

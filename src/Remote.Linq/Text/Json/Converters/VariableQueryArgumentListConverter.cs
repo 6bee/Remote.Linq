@@ -9,10 +9,10 @@ using Remote.Linq.DynamicQuery;
 using System.Collections.Generic;
 using System.Text.Json;
 
-public sealed class VariableQueryArgumentListConverter : ObjectConverter<VariableQueryArgumentList>
+public sealed class VariableQueryArgumentListConverter(KnownTypesRegistry knownTypesRegistry) : ObjectConverter<VariableQueryArgumentList>(knownTypesRegistry)
 {
-    public VariableQueryArgumentListConverter(KnownTypesRegistry knownTypesRegistry)
-        : base(knownTypesRegistry)
+    public VariableQueryArgumentListConverter()
+        : this(KnownTypesRegistry.Default.RegisterRemoteLinqKnownTypes())
     {
     }
 
@@ -25,7 +25,7 @@ public sealed class VariableQueryArgumentListConverter : ObjectConverter<Variabl
         {
             reader.AssertEndObject();
             result.ElementType = elementTypeInfo;
-            result.Values = values ?? new List<object?>();
+            result.Values = values ?? [];
         }
 
         reader.Advance();

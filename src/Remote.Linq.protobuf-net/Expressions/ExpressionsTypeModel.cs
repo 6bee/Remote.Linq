@@ -49,7 +49,7 @@ internal static class ExpressionsTypeModel
             resiteredTypes.Add(baseType);
 
             var expressionTypes = baseType.Assembly
-                .GetTypes()
+                .GetLoadedTypes()
                 .Where(x => x.BaseType == baseType)
                 .OrderBy(x => x.FullName)
                 .ToArray();

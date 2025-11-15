@@ -9,18 +9,18 @@ using Remote.Linq.Expressions;
 using System.Collections.Generic;
 using System.Text.Json;
 
-public class ExpressionConverter<TExpression> : ObjectConverter<TExpression>
+public class ExpressionConverter<TExpression>(KnownTypesRegistry knownTypesRegistry, bool handleSubtypes) : ObjectConverter<TExpression>(knownTypesRegistry, handleSubtypes)
     where TExpression : Expression
 {
     private const string ValueTypePropertyName = "ValueType";
 
     public ExpressionConverter(KnownTypesRegistry knownTypesRegistry)
-        : base(knownTypesRegistry, false)
+        : this(knownTypesRegistry, false)
     {
     }
 
-    public ExpressionConverter(KnownTypesRegistry knownTypesRegistry, bool handleSubtypes)
-        : base(knownTypesRegistry, handleSubtypes)
+    public ExpressionConverter()
+        : this(KnownTypesRegistry.Default.RegisterRemoteLinqKnownTypes())
     {
     }
 

@@ -3,8 +3,10 @@
 namespace Remote.Linq.DynamicQuery;
 
 using Aqua.Dynamic;
+using Aqua.Text.Json.Converters;
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using RemoteLinq = Remote.Linq.Expressions;
 
 /// <summary>
@@ -14,6 +16,7 @@ using RemoteLinq = Remote.Linq.Expressions;
 [Serializable]
 [DataContract]
 [KnownType(typeof(DynamicObject))]
+[JsonConverter(typeof(ObjectConverter<ConstantQueryArgument>))]
 [QueryArgument]
 public sealed class ConstantQueryArgument
 {

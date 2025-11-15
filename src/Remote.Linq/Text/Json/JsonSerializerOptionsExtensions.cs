@@ -8,6 +8,7 @@ using Aqua.Dynamic;
 using Aqua.EnumerableExtensions;
 using Aqua.Text.Json;
 using Aqua.Text.Json.Converters;
+using Remote.Linq.DynamicQuery;
 using Remote.Linq.Expressions;
 using Remote.Linq.SimpleQuery;
 using Remote.Linq.Text.Json.Converters;
@@ -40,16 +41,16 @@ public static class JsonSerializerOptionsExtensions
 
         knownTypesRegistry ??= KnownTypesRegistry.Default;
 
-        RegisterKnownTypes(knownTypesRegistry);
+        RegisterRemoteLinqKnownTypes(knownTypesRegistry);
 
         options.ConfigureAqua(knownTypesRegistry);
 
-        if (!options.Converters.Any(x => x is VariableQueryArgumentConverter))
+        if (!options.Converters.Any(static x => x.CanConvert(typeof(VariableQueryArgument))))
         {
             options.Converters.Add(new VariableQueryArgumentConverter(knownTypesRegistry));
         }
 
-        if (!options.Converters.Any(x => x is VariableQueryArgumentListConverter))
+        if (!options.Converters.Any(static x => x.CanConvert(typeof(VariableQueryArgumentList))))
         {
             options.Converters.Add(new VariableQueryArgumentListConverter(knownTypesRegistry));
         }
@@ -58,21 +59,23 @@ public static class JsonSerializerOptionsExtensions
         // hence we register for abstract as well as non-abstract types.
         typeof(Expression).Assembly
             .GetTypes()
-            .Where(x => !x.IsAbstract)
+            .Where(static x => !x.IsAbstract)
             .Where(typeof(Expression).IsAssignableFrom)
             .RegisterJsonConverter(typeof(ExpressionConverter<>), options, knownTypesRegistry);
-        if (!options.Converters.Any(x => x is ExpressionConverter<Expression>))
+
+        if (!options.Converters.Any(x => x.CanConvert(typeof(Expression))))
         {
             options.Converters.Add(new ExpressionConverter<Expression>(knownTypesRegistry, true));
         }
 
         typeof(Expression).Assembly
             .GetTypes()
-            .Where(x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
-            .Where(x => x.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0)
+            .Where(static x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
+            .Where(static x => x.GetCustomAttributes(typeof(DataContractAttribute), false).Length is not 0)
+            .Where(static x => x.GetCustomAttributes(typeof(JsonConverterAttribute), false).Length is 0)
             .RegisterJsonConverter(typeof(ObjectConverter<>), options, knownTypesRegistry);
 
-        if (!options.Converters.Any(x => x is ObjectConverter<MemberBinding>))
+        if (!options.Converters.Any(static x => x.CanConvert(typeof(MemberBinding))))
         {
             options.Converters.Add(new ObjectConverter<MemberBinding>(knownTypesRegistry, true));
         }
@@ -96,14 +99,13 @@ public static class JsonSerializerOptionsExtensions
         }
     }
 
-    private static void RegisterKnownTypes(KnownTypesRegistry knownTypesRegistry)
+    internal static KnownTypesRegistry RegisterRemoteLinqKnownTypes(this KnownTypesRegistry knownTypesRegistry)
     {
         var types = typeof(Expression).Assembly
             .GetExportedTypes()
-            .Except(new[]
-            {
+            .Except([
                 typeof(Query),
-            })
+            ])
             .Where(x => !x.IsGenericType)
             .Where(x =>
             {
@@ -118,5 +120,7 @@ public static class JsonSerializerOptionsExtensions
                 throw new InvalidOperationException($"Failed to register '{type}' as known type.");
             }
         }
+
+        return knownTypesRegistry;
     }
 }

@@ -2,12 +2,15 @@
 
 namespace Remote.Linq.Expressions;
 
+using Aqua.Text.Json.Converters;
 using Aqua.TypeSystem;
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 [Serializable]
 [DataContract]
+[JsonConverter(typeof(ObjectConverter<MemberAssignment>))]
 public sealed class MemberAssignment : MemberBinding
 {
     public MemberAssignment()

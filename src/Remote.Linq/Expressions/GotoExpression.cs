@@ -3,11 +3,14 @@
 namespace Remote.Linq.Expressions;
 
 using Aqua.TypeSystem;
+using Remote.Linq.Text.Json.Converters;
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 [Serializable]
 [DataContract]
+[JsonConverter(typeof(ExpressionConverter<GotoExpression>))]
 public sealed class GotoExpression : Expression
 {
     public GotoExpression()

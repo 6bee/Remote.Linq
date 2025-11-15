@@ -3,6 +3,7 @@
 namespace Remote.Linq.SimpleQuery;
 
 using Aqua.EnumerableExtensions;
+using Aqua.Text.Json.Converters;
 using Remote.Linq.ExpressionVisitors;
 using System;
 using System.Collections;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 
 [Serializable]
 [DataContract]

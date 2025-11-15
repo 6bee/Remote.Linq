@@ -9,10 +9,10 @@ using Remote.Linq.DynamicQuery;
 using System.Collections.Generic;
 using System.Text.Json;
 
-public sealed class VariableQueryArgumentConverter : ObjectConverter<VariableQueryArgument>
+public sealed class VariableQueryArgumentConverter(KnownTypesRegistry knownTypeRegistry) : ObjectConverter<VariableQueryArgument>(knownTypeRegistry)
 {
-    public VariableQueryArgumentConverter(KnownTypesRegistry knownTypeRegistry)
-        : base(knownTypeRegistry)
+    public VariableQueryArgumentConverter()
+        : this(KnownTypesRegistry.Default.RegisterRemoteLinqKnownTypes())
     {
     }
 

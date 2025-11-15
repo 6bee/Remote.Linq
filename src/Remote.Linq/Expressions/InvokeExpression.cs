@@ -2,13 +2,16 @@
 
 namespace Remote.Linq.Expressions;
 
+using Remote.Linq.Text.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 [Serializable]
 [DataContract]
+[JsonConverter(typeof(ExpressionConverter<InvokeExpression>))]
 public sealed class InvokeExpression : Expression
 {
     public InvokeExpression()

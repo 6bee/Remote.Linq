@@ -2,9 +2,12 @@
 
 namespace Remote.Linq.DynamicQuery;
 
+using Aqua.Text.Json.Converters;
 using Aqua.TypeSystem;
+using Remote.Linq.Text.Json.Converters;
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
 /// <summary>
@@ -15,6 +18,7 @@ using System.Xml.Serialization;
 [KnownType(typeof(DateTimeOffset)), XmlInclude(typeof(DateTimeOffset))]
 [KnownType(typeof(System.Numerics.BigInteger)), XmlInclude(typeof(System.Numerics.BigInteger))]
 [KnownType(typeof(System.Numerics.Complex)), XmlInclude(typeof(System.Numerics.Complex))]
+[JsonConverter(typeof(VariableQueryArgumentConverter))]
 [QueryArgument]
 public sealed class VariableQueryArgument
 {

@@ -72,7 +72,7 @@ public sealed class RemoteLinqContractResolver : DefaultContractResolver
 
     private static bool IsTypeHandled(Type type)
         => Equals(type.CheckNotNull().Assembly, typeof(Expression).Assembly)
-        && type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
+        && type.GetCustomAttributes(typeof(DataContractAttribute), false).Length is not 0;
 
     private static JsonConverter CreateObjectConverter(Type type, KnownTypesRegistry knownTypeRegistry)
         => (JsonConverter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(type), knownTypeRegistry)!;
