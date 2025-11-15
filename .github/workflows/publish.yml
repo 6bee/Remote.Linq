@@ -23,12 +23,12 @@ jobs:
         exit 1
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0 # Mandatory to use exact version from tag action
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         global-json-file: global.json
 
