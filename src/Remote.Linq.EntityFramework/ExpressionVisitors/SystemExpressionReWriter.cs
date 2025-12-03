@@ -44,7 +44,7 @@ public static class SystemExpressionReWriter
                 var argument = node.Arguments.Select(Visit).Single()!;
                 return Expression.MemberInit(
                     Expression.New(type),
-                    Expression.Bind(type.GetProperty(nameof(VariableQueryArgument<object>.Value))!, argument));
+                    Expression.Bind(type.GetProperty(nameof(VariableQueryArgument<>.Value))!, argument));
             }
 
             return base.VisitNew(node);

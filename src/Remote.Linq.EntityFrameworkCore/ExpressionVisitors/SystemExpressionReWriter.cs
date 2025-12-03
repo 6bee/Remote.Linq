@@ -169,7 +169,7 @@ public static class SystemExpressionReWriter
                 var queryableType = typeof(IQueryable<>).MakeGenericType(genericargs);
                 var closure = Activator.CreateInstance(typeof(Closure<>).MakeGenericType(queryableType), node.Value)
                     ?? throw new RemoteLinqException($"Failed to create closure for type {queryableType}.");
-                var valueProperty = closure.GetType().GetProperty(nameof(Closure<object>.Value))
+                var valueProperty = closure.GetType().GetProperty(nameof(Closure<>.Value))
                     ?? throw new RemoteLinqException("Failed to get 'Closure.Value' property info.");
                 return Expression.MakeMemberAccess(Expression.Constant(closure), valueProperty);
             }

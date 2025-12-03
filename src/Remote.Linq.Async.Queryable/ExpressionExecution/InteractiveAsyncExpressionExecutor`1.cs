@@ -24,7 +24,7 @@ public abstract class InteractiveAsyncExpressionExecutor<TDataTranferObject> : A
         var queryResultType = queryResult.GetType();
         if (queryResultType.Implements(typeof(ValueTask<>), out var valueTaskResultType))
         {
-            var m = typeof(ValueTask<>).MakeGenericType(valueTaskResultType).GetMethodEx(nameof(ValueTask<object>.AsTask));
+            var m = typeof(ValueTask<>).MakeGenericType(valueTaskResultType).GetMethodEx(nameof(ValueTask<>.AsTask));
             queryResult = m.Invoke(queryResult, null)!;
             queryResultType = queryResult.GetType();
         }

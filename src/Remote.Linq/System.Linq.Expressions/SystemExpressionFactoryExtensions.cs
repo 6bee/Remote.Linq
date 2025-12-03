@@ -18,6 +18,6 @@ public static class SystemExpressionFactoryExtensions
             Expression.New(
                 typeof(VariableQueryArgument<>).MakeGenericType(type).GetConstructor([type])!,
                 Expression.Constant(value, type)),
-            nameof(VariableQueryArgument<object>.Value));
+            nameof(VariableQueryArgument<>.Value));
     }
 }

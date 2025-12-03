@@ -55,7 +55,7 @@ public abstract class EntityFrameworkExpressionExecutor<TDataTranferObject> : As
 
         if (queryResult is not null && queryResult.GetType().Implements(typeof(ValueTask<>), out var genericArguments))
         {
-            var m = typeof(ValueTask<>).MakeGenericType(genericArguments).GetMethodEx(nameof(ValueTask<int>.AsTask));
+            var m = typeof(ValueTask<>).MakeGenericType(genericArguments).GetMethodEx(nameof(ValueTask<>.AsTask));
             queryResult = m.Invoke(queryResult, null);
         }
 
@@ -103,7 +103,7 @@ public abstract class EntityFrameworkExpressionExecutor<TDataTranferObject> : As
         static object? ExtractResult(Task task, Type resultType)
             => typeof(Task<>)
             .MakeGenericType(resultType)
-            .GetProperty(nameof(Task<object>.Result))
+            .GetProperty(nameof(Task<>.Result))
             .GetValue(task);
     }
 }

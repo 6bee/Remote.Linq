@@ -38,7 +38,7 @@ public abstract class VariableQueryArgumentVisitor
         {
             if (IsGenericVariableQueryArgument(node.CheckNotNull(), out var valueType))
             {
-                var valueProperty = node.Value?.GetType().GetProperty(nameof(VariableQueryArgument<object>.Value));
+                var valueProperty = node.Value?.GetType().GetProperty(nameof(VariableQueryArgument<>.Value));
                 var value = valueProperty?.GetValue(node.Value);
 
                 object queryArgument;

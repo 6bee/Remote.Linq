@@ -177,7 +177,7 @@ public static class SystemExpressionEvaluator
                 Expression.New(
                     typeof(VariableQueryArgument<>).MakeGenericType(expression.Type).GetConstructor([expression.Type])!,
                     Expression.Constant(value, expression.Type)),
-                nameof(VariableQueryArgument<object>.Value));
+                nameof(VariableQueryArgument<>.Value));
         }
     }
 
