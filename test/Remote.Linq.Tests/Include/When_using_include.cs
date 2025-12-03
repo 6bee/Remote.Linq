@@ -193,7 +193,7 @@ public abstract class When_using_include
     [Fact]
     public void Second_argument_should_be_constant_expression_with_navigation_property_name()
     {
-        var expectedIncludePaths = ExpectedIncludePaths.Reverse().ToArray();
+        var expectedIncludePaths = Enumerable.Reverse(ExpectedIncludePaths).ToArray();
 
         void AssertIncludePath(MethodCallExpression expression, int index = 0)
         {
