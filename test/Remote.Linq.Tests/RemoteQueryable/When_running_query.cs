@@ -23,72 +23,24 @@ using Xunit;
 
 public abstract class When_running_query
 {
-    public class With_no_serialization : When_running_query
-    {
-        public With_no_serialization()
-            : base(x => x)
-        {
-        }
-    }
+    public class With_no_serialization() : When_running_query(x => x);
 
-    public class With_data_contract_serializer : When_running_query
-    {
-        public With_data_contract_serializer()
-            : base(DataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_data_contract_serializer() : When_running_query(DataContractSerializationHelper.Clone);
 
-    public class With_newtonsoft_json_serializer : When_running_query
-    {
-        public With_newtonsoft_json_serializer()
-            : base(x => (Expression)NewtonsoftJsonSerializationHelper.Clone(x, x.GetType()))
-        {
-        }
-    }
+    public class With_newtonsoft_json_serializer() : When_running_query(x => (Expression)NewtonsoftJsonSerializationHelper.Clone(x, x.GetType()));
 
-    public class With_system_text_json_serializer : When_running_query
-    {
-        public With_system_text_json_serializer()
-            : base(x => (Expression)SystemTextJsonSerializationHelper.Clone(x, x.GetType()))
-        {
-        }
-    }
+    public class With_system_text_json_serializer() : When_running_query(x => (Expression)SystemTextJsonSerializationHelper.Clone(x, x.GetType()));
 
-    public class With_xml_serializer : When_running_query
-    {
-        public With_xml_serializer()
-            : base(XmlSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_xml_serializer() : When_running_query(XmlSerializationHelper.Clone);
 
 #if !NET8_0_OR_GREATER
-    public class With_binary_formatter : When_running_query
-    {
-        public With_binary_formatter()
-            : base(BinarySerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_binary_formatter() : When_running_query(BinarySerializationHelper.Clone);
 #endif // NET8_0_OR_GREATER
 
-    public class With_protobuf_net_serializer : When_running_query
-    {
-        public With_protobuf_net_serializer()
-            : base(ProtobufNetSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_protobuf_net_serializer() : When_running_query(ProtobufNetSerializationHelper.Clone);
 
 #if NETFRAMEWORK
-    public class With_net_data_contract_serializer : When_running_query
-    {
-        public With_net_data_contract_serializer()
-            : base(NetDataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_net_data_contract_serializer() : When_running_query(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly IQueryable<Category> _categoryQueryable;

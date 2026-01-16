@@ -11,29 +11,12 @@ using Xunit;
 
 public abstract class When_querying_async
 {
-    public class With_stream_provider_and_data_provider : When_querying_async
-    {
-        public With_stream_provider_and_data_provider(bool useDynamicObjectConversion = false)
-            : base(useDynamicObjectConversion: useDynamicObjectConversion)
-        {
-        }
-    }
+    public class With_stream_provider_and_data_provider(bool useDynamicObjectConversion = false) : When_querying_async(useDynamicObjectConversion: useDynamicObjectConversion);
 
-    public class With_dynamic_object_stream_provider_and_data_provider : With_stream_provider_and_data_provider
-    {
-        public With_dynamic_object_stream_provider_and_data_provider()
-            : base(useDynamicObjectConversion: true)
-        {
-        }
-    }
+    public class With_dynamic_object_stream_provider_and_data_provider() : With_stream_provider_and_data_provider(useDynamicObjectConversion: true);
 
-    public class With_stream_provider_only : When_querying_async, IDisposable
+    public class With_stream_provider_only(bool useDynamicObjectConversion = false) : When_querying_async(createAsyncDataProvider: false, useDynamicObjectConversion: useDynamicObjectConversion), IDisposable
     {
-        public With_stream_provider_only(bool useDynamicObjectConversion = false)
-            : base(createAsyncDataProvider: false, useDynamicObjectConversion: useDynamicObjectConversion)
-        {
-        }
-
         public void Dispose()
         {
             AsyncDataProviderInvocationCount.ShouldBe(0);
@@ -41,21 +24,10 @@ public abstract class When_querying_async
         }
     }
 
-    public class With_dynamic_object_stream_provider_only : With_stream_provider_only
-    {
-        public With_dynamic_object_stream_provider_only()
-            : base(useDynamicObjectConversion: true)
-        {
-        }
-    }
+    public class With_dynamic_object_stream_provider_only() : With_stream_provider_only(useDynamicObjectConversion: true);
 
-    public class With_async_data_provider_only : When_querying_async, IDisposable
+    public class With_async_data_provider_only(bool useDynamicObjectConversion = false) : When_querying_async(createAsyncStreamProvider: false, useDynamicObjectConversion: useDynamicObjectConversion), IDisposable
     {
-        public With_async_data_provider_only(bool useDynamicObjectConversion = false)
-            : base(createAsyncStreamProvider: false, useDynamicObjectConversion: useDynamicObjectConversion)
-        {
-        }
-
         public void Dispose()
         {
             AsyncStreamProviderInvocationCount.ShouldBe(0);
@@ -63,13 +35,7 @@ public abstract class When_querying_async
         }
     }
 
-    public class With_async_dynamic_object_data_provider_only : With_async_data_provider_only
-    {
-        public With_async_dynamic_object_data_provider_only()
-            : base(useDynamicObjectConversion: true)
-        {
-        }
-    }
+    public class With_async_dynamic_object_data_provider_only() : With_async_data_provider_only(useDynamicObjectConversion: true);
 
     private readonly bool _hasStreamProviderSupport;
     private readonly bool _hasDataProviderSupport;

@@ -10,64 +10,22 @@ using Xunit;
 public abstract class When_using_local_variable_query_string_argument_list
 {
 #if !NET8_0_OR_GREATER
-    public class With_binary_formatter : When_using_local_variable_query_string_argument_list
-    {
-        public With_binary_formatter()
-            : base(BinarySerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_binary_formatter() : When_using_local_variable_query_string_argument_list(BinarySerializationHelper.Clone);
 #endif // NET8_0_OR_GREATER
 
-    public class With_data_contract_serializer : When_using_local_variable_query_string_argument_list
-    {
-        public With_data_contract_serializer()
-            : base(x => DataContractSerializationHelper.CloneExpression(x, [typeof(List<string>)]))
-        {
-        }
-    }
+    public class With_data_contract_serializer() : When_using_local_variable_query_string_argument_list(x => DataContractSerializationHelper.CloneExpression(x, [typeof(List<string>)]));
 
-    public class With_newtonsoft_json_serializer : When_using_local_variable_query_string_argument_list
-    {
-        public With_newtonsoft_json_serializer()
-            : base(NewtonsoftJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_newtonsoft_json_serializer() : When_using_local_variable_query_string_argument_list(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer : When_using_local_variable_query_string_argument_list
-    {
-        public With_system_text_json_serializer()
-            : base(SystemTextJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_system_text_json_serializer() : When_using_local_variable_query_string_argument_list(SystemTextJsonSerializationHelper.Clone);
 
 #if NETFRAMEWORK
-    public class With_net_data_contract_serializer : When_using_local_variable_query_string_argument_list
-    {
-        public With_net_data_contract_serializer()
-            : base(NetDataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_net_data_contract_serializer() : When_using_local_variable_query_string_argument_list(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
-    public class With_protobuf_net_serializer : When_using_local_variable_query_string_argument_list
-    {
-        public With_protobuf_net_serializer()
-            : base(ProtobufNetSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_protobuf_net_serializer() : When_using_local_variable_query_string_argument_list(ProtobufNetSerializationHelper.Clone);
 
-    public class With_xml_serializer : When_using_local_variable_query_string_argument_list
-    {
-        public With_xml_serializer()
-            : base(x => XmlSerializationHelper.CloneExpression(x, [typeof(List<string>)]))
-        {
-        }
-    }
+    public class With_xml_serializer() : When_using_local_variable_query_string_argument_list(x => XmlSerializationHelper.CloneExpression(x, [typeof(List<string>)]));
 
     private class AType
     {

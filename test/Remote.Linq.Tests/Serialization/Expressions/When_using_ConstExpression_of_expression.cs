@@ -15,47 +15,17 @@ using RemoteExpression = Remote.Linq.Expressions.Expression;
 public abstract class When_using_ConstExpression_of_expression
 {
 #if !NET8_0_OR_GREATER
-    public class With_binary_formatter : When_using_ConstExpression_of_expression
-    {
-        public With_binary_formatter()
-            : base(BinarySerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_binary_formatter() : When_using_ConstExpression_of_expression(BinarySerializationHelper.Clone);
 #endif // NET8_0_OR_GREATER
 
-    public class With_data_contract_serializer : When_using_ConstExpression_of_expression
-    {
-        public With_data_contract_serializer()
-            : base(DataContractSerializationHelper.CloneExpression)
-        {
-        }
-    }
+    public class With_data_contract_serializer() : When_using_ConstExpression_of_expression(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer : When_using_ConstExpression_of_expression
-    {
-        public With_newtonsoft_json_serializer()
-            : base(NewtonsoftJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_newtonsoft_json_serializer() : When_using_ConstExpression_of_expression(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer : When_using_ConstExpression_of_expression
-    {
-        public With_system_text_json_serializer()
-            : base(SystemTextJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_system_text_json_serializer() : When_using_ConstExpression_of_expression(SystemTextJsonSerializationHelper.Clone);
 
 #if NETFRAMEWORK
-    public class With_net_data_contract_serializer : When_using_ConstExpression_of_expression
-    {
-        public With_net_data_contract_serializer()
-            : base(NetDataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_net_data_contract_serializer() : When_using_ConstExpression_of_expression(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Func<RemoteExpression, RemoteExpression> _serialize;
