@@ -399,41 +399,81 @@ public abstract class When_running_query
     [Fact]
     public void Should_query_categories_filterd_using_local_array_inline()
     {
-        System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
+        System.Linq.Expressions.Expression<Func<Category, bool>> lambda0 =
             c => new[] { "Vehicles" }.Contains(c.Name);
 
-        var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
-
-        var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+        var arrayExpression =
+#if NET48
+            System.Linq.Expressions.Expression.Constant(new[] { "Vehicles" });
+#else
+            System.Linq.Expressions.Expression.New(
+                typeof(ReadOnlySpan<string>).GetConstructors().Single(x => x.GetParameters() is { Length: 1 } parameters && parameters[0].ParameterType == typeof(string[])),
+                System.Linq.Expressions.Expression.Constant(new[] { "Vehicles" }));
+#endif // NET48
+        var mc = (System.Linq.Expressions.MethodCallExpression)lambda0.Body;
+        var lambda1 = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
             System.Linq.Expressions.Expression.Call(
                 mc.Method,
-                System.Linq.Expressions.Expression.Constant(new[] { "Vehicles" }),
+                arrayExpression,
                 mc.Arguments[1]),
-            lambdaNewArrayInit.Parameters);
+            lambda0.Parameters);
+
+        var method = typeof(Enumerable)
+            .GetMethods(BindingFlags.Static | BindingFlags.Public)
+            .Single(x => x.Name is nameof(Enumerable.Contains) && x.GetParameters().Length is 2)
+            .MakeGenericMethod(typeof(string));
+        var parameter = System.Linq.Expressions.Expression.Parameter(typeof(Category), "c");
+        var lambda2 = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+            System.Linq.Expressions.Expression.Call(
+                method,
+                System.Linq.Expressions.Expression.Constant(new[] { "Vehicles" }),
+                System.Linq.Expressions.Expression.MakeMemberAccess(parameter, typeof(Category).GetProperty(nameof(Category.Name)))),
+            [parameter]);
 
         _categoryQueryable.Where(c => new[] { "Vehicles" }.Contains(c.Name)).Single().Name.ShouldBe("Vehicles");
-        _categoryQueryable.Where(lambdaNewArrayInit).Single().Name.ShouldBe("Vehicles");
-        _categoryQueryable.Where(lambdaConst).Single().Name.ShouldBe("Vehicles");
+        _categoryQueryable.Where(lambda0).Single().Name.ShouldBe("Vehicles");
+        _categoryQueryable.Where(lambda1).Single().Name.ShouldBe("Vehicles");
+        _categoryQueryable.Where(lambda2).Single().Name.ShouldBe("Vehicles");
     }
 
     [Fact]
     public void Should_query_categories_filterd_using_empty_local_array_inline()
     {
-        System.Linq.Expressions.Expression<Func<Category, bool>> lambdaNewArrayInit =
+        System.Linq.Expressions.Expression<Func<Category, bool>> lambda0 =
             c => new string[0].Contains(c.Name);
 
-        var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
-
-        var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+        var arrayExpression =
+#if NET48
+            System.Linq.Expressions.Expression.Constant(new string[0]);
+#else
+            System.Linq.Expressions.Expression.New(
+                typeof(ReadOnlySpan<string>).GetConstructors().Single(x => x.GetParameters() is { Length: 1 } parameters && parameters[0].ParameterType == typeof(string[])),
+                System.Linq.Expressions.Expression.Constant(new string[0]));
+#endif // NET48
+        var mc = (System.Linq.Expressions.MethodCallExpression)lambda0.Body;
+        var lambda1 = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
             System.Linq.Expressions.Expression.Call(
                 mc.Method,
-                System.Linq.Expressions.Expression.Constant(new string[0]),
+                arrayExpression,
                 mc.Arguments[1]),
-            lambdaNewArrayInit.Parameters);
+            lambda0.Parameters);
+
+        var method = typeof(Enumerable)
+            .GetMethods(BindingFlags.Static | BindingFlags.Public)
+            .Single(x => x.Name is nameof(Enumerable.Contains) && x.GetParameters().Length is 2)
+            .MakeGenericMethod(typeof(string));
+        var parameter = System.Linq.Expressions.Expression.Parameter(typeof(Category), "c");
+        var lambda2 = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
+            System.Linq.Expressions.Expression.Call(
+                method,
+                System.Linq.Expressions.Expression.Constant(new string[0]),
+                System.Linq.Expressions.Expression.MakeMemberAccess(parameter, typeof(Category).GetProperty(nameof(Category.Name)))),
+            [parameter]);
 
         _categoryQueryable.Where(c => new string[0].Contains(c.Name)).ToList().ShouldBeEmpty();
-        _categoryQueryable.Where(lambdaNewArrayInit).ToList().ShouldBeEmpty();
-        _categoryQueryable.Where(lambdaConst).ToList().ShouldBeEmpty();
+        _categoryQueryable.Where(lambda0).ToList().ShouldBeEmpty();
+        _categoryQueryable.Where(lambda1).ToList().ShouldBeEmpty();
+        _categoryQueryable.Where(lambda2).ToList().ShouldBeEmpty();
     }
 
     [Fact]
@@ -443,7 +483,6 @@ public abstract class When_running_query
             c => new List<string> { "Vehicles" }.Contains(c.Name);
 
         var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
-
         var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
             System.Linq.Expressions.Expression.Call(
                 System.Linq.Expressions.Expression.Constant(new List<string> { "Vehicles" }),
@@ -463,7 +502,6 @@ public abstract class When_running_query
             c => new List<string>().Contains(c.Name);
 
         var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
-
         var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
             System.Linq.Expressions.Expression.Call(
                 System.Linq.Expressions.Expression.Constant(new List<string>()),
@@ -483,7 +521,6 @@ public abstract class When_running_query
             c => Enumerable.Contains(new List<string> { "Vehicles" }, c.Name);
 
         var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
-
         var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
             System.Linq.Expressions.Expression.Call(
                 mc.Method,
@@ -503,7 +540,6 @@ public abstract class When_running_query
             c => Enumerable.Contains(new List<string>(), c.Name);
 
         var mc = (System.Linq.Expressions.MethodCallExpression)lambdaNewArrayInit.Body;
-
         var lambdaConst = System.Linq.Expressions.Expression.Lambda<Func<Category, bool>>(
             System.Linq.Expressions.Expression.Call(
                 mc.Method,
