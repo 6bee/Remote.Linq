@@ -29,6 +29,14 @@ public static class SystemExpressionEvaluator
 
     private static bool CanBeEvaluatedLocally(Expression expression)
     {
+#if !NETSTANDARD2_0
+        if (expression.Type.IsByRefLike)
+        {
+            // byref-like structure cannot be locally evaluated via expression compilation, reflection invocation, or dynamic dispatch
+            return false;
+        }
+#endif // NETSTANDARD2_0
+
         switch (expression.NodeType)
         {
             case ExpressionType.Block:

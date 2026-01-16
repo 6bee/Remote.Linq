@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow remote linq expressions to be executed using EF Core extension methods on client side (concerns _Remote.Linq.EntityFrameworkCore_) [#126][issue#126]
 - Changed namespace for extension methods to configure `JsonSerializerOptions` from `Remote.Linq.Text.Json` to `System.Text.Json`
 - Deprecate _Remote.Linq.Text.Json_ and integrate code into _Remote.Linq_ package
+- Prevent local evaluation of expressions of byref-like structure types (i.e. `ref struct` types in C#; `Type.IsByRefLike == true`) 
 
 ### Removed
 
