@@ -15,7 +15,6 @@
 | `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
 | `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge][25]][26] | [![MyGet Pre Release][27]][28] |
 | `Remote.Linq.protobuf-net`        | [![NuGet Badge][29]][30] | [![MyGet Pre Release][31]][32] |
-| `Remote.Linq.Text.Json`           | [![NuGet Badge][37]][38] | [![MyGet Pre Release][39]][40] |
 
 ## Description
 
@@ -283,10 +282,6 @@ await httpClient.PostAsJsonAsync(uri, value, serializerOptions);
 [34]: https://www.nuget.org/packages/Remote.Linq.Async.Queryable
 [35]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Async.Queryable.svg?label=myget
 [36]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Async.Queryable
-[37]: https://img.shields.io/nuget/v/Remote.Linq.Text.Json.svg
-[38]: https://www.nuget.org/packages/Remote.Linq.Text.Json
-[39]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Text.Json.svg?label=myget
-[40]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Text.Json
 
 [lic-badge]: https://img.shields.io/github/license/6bee/Remote.Linq.svg
 [lic-link]: https://github.com/6bee/Remote.Linq/blob/main/license.txt
