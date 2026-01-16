@@ -9,28 +9,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add .NET 10.0 framework target
-
 ### Changed
-
-- Improved and extended API for fluent configuration of custom strategies for expression execution
-  (namespace `Remote.Linq.ExpressionExecution`).
-- Bump _Microsoft.EntityFramework_ from 6.4.4 to 6.5.1 (concerns _Remote.Linq.EntityFramework_)
-- Bump _aqua-core_ from 5.4.2 to 5.5.0-alpha-008
-- Allow remote linq expressions to be executed using EF Core extension methods on client side (concerns _Remote.Linq.EntityFrameworkCore_) [#126][issue#126]
-- Changed namespace for extension methods to configure `JsonSerializerOptions` from `Remote.Linq.Text.Json` to `System.Text.Json`
-- Deprecate Remote.Linq.Text.Json and integrate code into Remote.Linq package
 
 ### Deprecated
 
 ### Removed
 
-- Removed .NET 6.0 framework target
-- Removed support for partially trusted code (code access security (CAS) and security-transparent code)
-
 ### Fixed
 
 ### Security
+
+## [7.3.0][7.3.0] - 2026-01-16
+
+### Added
+
+- Add .NET 10.0 framework target
+
+### Changed
+
+- Bump _aqua-core_ from 5.4.2 to 5.5.0
+- Bump _Microsoft.EntityFramework_ from 6.4.4 to 6.5.1 (concerns _Remote.Linq.EntityFramework_)
+- Bump _Microsoft.EntityFrameworkCore_ from 8.0.11 to 10.0.2 (concerns _Remote.Linq.EntityFrameworkCore_)
+- Bump _System.Linq.Async.Queryable_ from 6.0.1 to 7.0.0 (concerns _Remote.Linq.Async.Queryable_)
+- Improved and extended API for fluent configuration of custom strategies for expression execution
+  (namespace `Remote.Linq.ExpressionExecution`).
+- Allow remote linq expressions to be executed using EF Core extension methods on client side (concerns _Remote.Linq.EntityFrameworkCore_) [#126][issue#126]
+- Changed namespace for extension methods to configure `JsonSerializerOptions` from `Remote.Linq.Text.Json` to `System.Text.Json`
+- Deprecate _Remote.Linq.Text.Json_ and integrate code into _Remote.Linq_ package
+
+### Removed
+
+- Removed .NET 6.0 framework target
+- Removed support for partially trusted code (code access security (CAS) and security-transparent code)
 
 ## [7.2.2][7.2.2] - 2024-11-20
 
@@ -134,7 +144,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
-[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.2.2...main
+[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.3.0...main
+[7.3.0]: https://github.com/6bee/Remote.Linq/compare/v7.2.2...v7.3.0
 [7.2.2]: https://github.com/6bee/Remote.Linq/compare/v7.2.1...v7.2.2
 [7.2.1]: https://github.com/6bee/Remote.Linq/compare/v7.2.0...v7.2.1
 [7.2.0]: https://github.com/6bee/Remote.Linq/compare/7.1.0...v7.2.0
