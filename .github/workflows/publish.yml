@@ -53,6 +53,8 @@ jobs:
         echo "Create release: v$Version"
 
     - name: Build
+      env:
+        VSTEST_CONNECTION_TIMEOUT: 1200 # timeout 20 minutes
       run: dotnet test Remote.Linq.sln -c Release /bl
       
     - name: Upload build log
