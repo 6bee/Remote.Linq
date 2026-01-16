@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
@@ -12,7 +12,7 @@
          Dependency of Microsoft.EntityFrameworkCore in client code is required only
          if using Microsoft.EntityFrameworkCore.DbFunctionsExtensions in linq queries.
     -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Client.AsyncTcp.RemoteRepository.cs" Link="RemoteRepository.cs" />
