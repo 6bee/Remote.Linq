@@ -4,7 +4,7 @@
   <PropertyGroup>
     <MajorVersion>7</MajorVersion>
     <MinorVersion>3</MinorVersion>
-    <PatchVersion>0</PatchVersion>
+    <PatchVersion>1</PatchVersion>
     <PreReleaseLabel>dev</PreReleaseLabel>
     <AquaCoreVersion>5.5.0</AquaCoreVersion>
   </PropertyGroup>
