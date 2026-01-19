@@ -16,7 +16,7 @@ using static CommonHelper;
 
 public class RemoteRepository : IRemoteRepository
 {
-    private readonly JsonMediaTypeFormatter _formatter = new JsonMediaTypeFormatter
+    private readonly JsonMediaTypeFormatter _formatter = new()
     {
         SerializerSettings = new JsonSerializerSettings().ConfigureRemoteLinq(),
     };
@@ -26,7 +26,7 @@ public class RemoteRepository : IRemoteRepository
 
     public RemoteRepository(string server, int port)
     {
-        _httpClient = new HttpClient { BaseAddress = new Uri($"http://{server}:{port}/") };
+        _httpClient = new HttpClient { BaseAddress = new($"http://{server}:{port}/") };
         _dataProvider = async expression =>
         {
             try
@@ -34,7 +34,7 @@ public class RemoteRepository : IRemoteRepository
                 var query = new Query { Expression = expression };
                 var response = await _httpClient.PostAsync("/api/query", query, _formatter).ConfigureAwait(false);
 
-                if (response.StatusCode == HttpStatusCode.InternalServerError)
+                if (response.StatusCode is HttpStatusCode.InternalServerError)
                 {
                     byte[] errorMessageData = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                     string errorMessage = Encoding.UTF8.GetString(errorMessageData);

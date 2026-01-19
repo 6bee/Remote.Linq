@@ -5,16 +5,11 @@ namespace Client;
 using Remote.Linq.Async;
 using static CommonHelper;
 
-public class AsyncDemo : IAsyncDemo
+public class AsyncDemo(Func<IRemoteRepository> repoProvider) : IAsyncDemo
 {
-    private readonly Func<IRemoteRepository> _repoProvider;
-
-    public AsyncDemo(Func<IRemoteRepository> repoProvider)
-        => _repoProvider = repoProvider;
-
     public async Task RunAsync()
     {
-        using IRemoteRepository repo = _repoProvider();
+        using IRemoteRepository repo = repoProvider();
 
         PrintHeader("GET ALL PRODUCTS:");
         foreach (var item in await repo.Products.ToArrayAsync().ConfigureAwait(false))

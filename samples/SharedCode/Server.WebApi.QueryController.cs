@@ -13,7 +13,7 @@ public class QueryController : Controller
 {
     private InMemoryDataStore DataStore => InMemoryDataStore.Instance;
 
-    [Route("query")]
+    [HttpPost("query")]
     public DynamicObject Query([FromBody] Query query)
         => query.Expression.Execute(DataStore.QueryableByTypeProvider);
 }
