@@ -34,7 +34,7 @@ jobs:
 
     - name: Check version
       # assert version match with project version so only pre-release label can be changed based on release tag
-      run: dotnet build Remote.Linq.sln -t:CheckVersion -c Release -p BuildVersion="${{ steps.version.outputs.major_without_prefix }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}"
+      run: dotnet build Remote.Linq.slnx -t:CheckVersion -c Release -p BuildVersion="${{ steps.version.outputs.major_without_prefix }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}"
 
     - name: Set version info
       run: |
@@ -55,7 +55,7 @@ jobs:
     - name: Build
       env:
         VSTEST_CONNECTION_TIMEOUT: 1200 # timeout 20 minutes
-      run: dotnet test Remote.Linq.sln -c Release /bl
+      run: dotnet test Remote.Linq.slnx -c Release /bl
       
     - name: Upload build log
       uses: actions/upload-artifact@v4

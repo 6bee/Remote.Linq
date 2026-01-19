@@ -39,4 +39,4 @@ before_script:
   - dotnet --info
 
 script:
-  - dotnet test Remote.Linq.sln -c $CONFIGURATION -f net10.0
+  - dotnet test Remote.Linq.slnx -c $CONFIGURATION -f net10.0

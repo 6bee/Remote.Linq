@@ -20,11 +20,11 @@ before_build:
   - curl https://uploader.codecov.io/latest/windows/codecov.exe -o codecov.exe
 
 build_script:
-  - dotnet build Remote.Linq.sln -c Release
+  - dotnet build Remote.Linq.slnx -c Release
   - dotnet build Remote.Linq.Samples.sln
 
 test_script:
-  - dotnet test Remote.Linq.sln --settings coverlet.runsettings
+  - dotnet test Remote.Linq.slnx --settings coverlet.runsettings
 
 after_test:
   - codecov -f **\coverage.cobertura.xml

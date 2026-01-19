@@ -1,0 +1,33 @@
+<Solution>
+  <Folder Name="/.global/">
+    <File Path=".editorconfig" />
+    <File Path=".runsettings" />
+    <File Path="CHANGELOG.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="global.json" />
+    <File Path="GlobalAssemblyInfo.cs" />
+    <File Path="nuget.config" />
+    <File Path="README.md" />
+    <File Path="Style.NoDoc.ruleset" />
+    <File Path="Style.ruleset" />
+    <File Path="Style.Tests.ruleset" />
+    <File Path="Stylecop.json" />
+  </Folder>
+  <Folder Name="/src/">
+    <File Path="src/Directory.Build.props" />
+    <Project Path="src/Remote.Linq.Async.Queryable/Remote.Linq.Async.Queryable.csproj" />
+    <Project Path="src/Remote.Linq.EntityFramework/Remote.Linq.EntityFramework.csproj" />
+    <Project Path="src/Remote.Linq.EntityFrameworkCore/Remote.Linq.EntityFrameworkCore.csproj" />
+    <Project Path="src/Remote.Linq.Newtonsoft.Json/Remote.Linq.Newtonsoft.Json.csproj" />
+    <Project Path="src/Remote.Linq.protobuf-net/Remote.Linq.protobuf-net.csproj" />
+    <Project Path="src/Remote.Linq/Remote.Linq.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <File Path="test/Directory.Build.props" />
+    <Project Path="test/Remote.Linq.Async.Queryable.Tests/Remote.Linq.Async.Queryable.Tests.csproj" />
+    <Project Path="test/Remote.Linq.EntityFramework.Tests/Remote.Linq.EntityFramework.Tests.csproj" />
+    <Project Path="test/Remote.Linq.EntityFrameworkCore.Tests/Remote.Linq.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="test/Remote.Linq.Tests/Remote.Linq.Tests.csproj" />
+  </Folder>
+</Solution>
