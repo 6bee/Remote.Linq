@@ -14,6 +14,7 @@ using Remote.Linq.SimpleQuery;
 using Remote.Linq.Text.Json.Converters;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
@@ -52,24 +53,28 @@ public static class JsonSerializerOptionsExtensions
             options.Converters.Add(new VariableQueryArgumentListConverter(knownTypesRegistry));
         }
 
-        // Workaround: there seems to be no proper way to deal with converters for abtract base types,
-        // hence we register for abstract as well as non-abstract types.
-        typeof(Expression).Assembly
+        var remoteLinqAssembly = typeof(RemoteQueryable).Assembly;
+
+        remoteLinqAssembly
             .GetTypes()
             .Where(static x => !x.IsAbstract)
             .Where(typeof(Expression).IsAssignableFrom)
             .RegisterJsonConverter(typeof(ExpressionConverter<>), options, knownTypesRegistry);
 
+        // Workaround: there seems to be no proper way to deal with converters for abtract base types, hence we also register for abstract type.
         if (!options.Converters.Any(x => x.CanConvert(typeof(Expression))))
         {
             options.Converters.Add(new ExpressionConverter<Expression>(knownTypesRegistry, true));
         }
 
-        typeof(Expression).Assembly
+        remoteLinqAssembly
             .GetTypes()
             .Where(static x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
             .Where(static x => x.GetCustomAttributes(typeof(DataContractAttribute), false).Length is not 0)
-            .Where(static x => x.GetCustomAttributes(typeof(JsonConverterAttribute), false).Length is 0)
+            .Where(static x
+                => x.GetCustomAttribute<JsonConverterAttribute>(false)?.ConverterType is { } converterType
+                && converterType.IsGenericType
+                && converterType.GetGenericTypeDefinition() == typeof(ObjectConverter<>))
             .RegisterJsonConverter(typeof(ObjectConverter<>), options, knownTypesRegistry);
 
         if (!options.Converters.Any(static x => x.CanConvert(typeof(MemberBinding))))
@@ -103,12 +108,12 @@ public static class JsonSerializerOptionsExtensions
             .Except([
                 typeof(Query),
             ])
-            .Where(x => !x.IsGenericType)
-            .Where(x =>
+            .Where(static x => !x.IsGenericType)
+            .Where(static x =>
             {
                 var attributes = x.GetCustomAttributes(true);
-                return attributes.Any(a => a is SerializableAttribute)
-                    || attributes.Any(a => a is DataContractAttribute);
+                return attributes.Any(static a => a is SerializableAttribute)
+                    || attributes.Any(static a => a is DataContractAttribute);
             });
         foreach (var type in types)
         {

@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [7.3.1][7.3.1] - 2026-01-19
+
+### Fixed
+
+- Register `ObjectConverter<>` json converter to specify known types registry
+
 ## [7.3.0][7.3.0] - 2026-01-16
 
 ### Added
@@ -145,7 +151,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
-[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.3.0...main
+[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.3.1...main
+[7.3.1]: https://github.com/6bee/Remote.Linq/compare/v7.3.0...v7.3.1
 [7.3.0]: https://github.com/6bee/Remote.Linq/compare/v7.2.2...v7.3.0
 [7.2.2]: https://github.com/6bee/Remote.Linq/compare/v7.2.1...v7.2.2
 [7.2.1]: https://github.com/6bee/Remote.Linq/compare/v7.2.0...v7.2.1
