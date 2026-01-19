@@ -19,7 +19,7 @@ public sealed class MemberListBinding : MemberBinding
     public MemberListBinding(MemberInfo member, IEnumerable<ElementInit> initializers)
         : base(member)
     {
-        Initializers = initializers.CheckNotNull().ToList();
+        Initializers = [.. initializers.CheckNotNull()];
     }
 
     public override MemberBindingType BindingType => MemberBindingType.ListBinding;

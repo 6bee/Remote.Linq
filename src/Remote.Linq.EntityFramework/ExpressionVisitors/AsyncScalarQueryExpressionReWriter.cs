@@ -19,7 +19,7 @@ internal static class AsyncScalarQueryExpressionReWriter
 
     private static Dictionary<MethodInfo, MethodInfo> GetScalarQueryMethods()
     {
-        static Type[] CreateGenericArguments(MethodInfo m) => Enumerable.Repeat(typeof(ProbingType), m.GetGenericArguments().Length).ToArray();
+        static Type[] CreateGenericArguments(MethodInfo m) => [.. Enumerable.Repeat(typeof(ProbingType), m.GetGenericArguments().Length)];
 
         static MethodInfo CreateClosedGenericTypeIfRequired(MethodInfo m) => m.IsGenericMethodDefinition ? m.MakeGenericMethod(CreateGenericArguments(m)) : m;
 

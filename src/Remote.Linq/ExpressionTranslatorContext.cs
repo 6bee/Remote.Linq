@@ -237,6 +237,6 @@ public class ExpressionTranslatorContext : IExpressionTranslatorContext
         : new Grouping<TKey, TElement>
         {
             Key = group.Key,
-            Elements = group.ToArray(),
+            Elements = [.. group],
         };
 }

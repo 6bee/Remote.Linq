@@ -15,61 +15,61 @@ public sealed partial class InMemoryDataStore
 
     private InMemoryDataStore()
     {
-        _productCategories = new[]
-        {
+        _productCategories =
+        [
             new ProductCategory { Id = 1, Name = "Fruits" },
             new ProductCategory { Id = 2, Name = "Vehicles" },
-        };
+        ];
 
-        _products = new[]
-        {
+        _products =
+        [
             new Product { Id = 10, Name = "Apple", Price = 1m, ProductCategoryId = 1 },
             new Product { Id = 11, Name = "Pear", Price = 2m, ProductCategoryId = 1 },
             new Product { Id = 12, Name = "Pineapple", Price = 3m, ProductCategoryId = 1 },
             new Product { Id = 13, Name = "Car", Price = 33999m, ProductCategoryId = 2 },
             new Product { Id = 14, Name = "Bicycle", Price = 150m, ProductCategoryId = 2 },
-        };
+        ];
 
-        _orderItems = new[]
-        {
+        _orderItems =
+        [
             new OrderItem { Id = 100, ProductId = 10, Quantity = 2 },
             new OrderItem { Id = 101, ProductId = 11, Quantity = 3 },
             new OrderItem { Id = 102, ProductId = 14, Quantity = 4 },
-        };
+        ];
 
         foreach (var orderItem in _orderItems)
         {
             orderItem.UnitPrice = _products.Single(x => x.Id == orderItem.ProductId).Price;
         }
 
-        _productGroups = new[]
-        {
+        _productGroups =
+        [
             new ProductGroup
             {
                 Id = 0,
                 GroupName = "All",
-                Products = _products.ToList(),
+                Products = [.. _products],
             },
             new ProductGroup
             {
                 Id = 1,
                 GroupName = "Food",
-                Products = _products.Where(x => x.ProductCategoryId == 1).ToList(),
+                Products = [.. _products.Where(x => x.ProductCategoryId == 1)],
             },
             new ProductGroup
             {
                 Id = 2,
                 GroupName = "NonFood",
-                Products = _products.Where(x => x.ProductCategoryId == 2).ToList(),
+                Products = [.. _products.Where(x => x.ProductCategoryId == 2)],
             },
-        };
+        ];
 
         OnInitialize();
     }
 
     partial void OnInitialize();
 
-    public static InMemoryDataStore Instance { get; } = new InMemoryDataStore();
+    public static InMemoryDataStore Instance { get; } = new();
 
     public IQueryable<ProductGroup> ProductGroups => _productGroups.AsQueryable();
 

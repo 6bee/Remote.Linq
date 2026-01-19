@@ -19,7 +19,7 @@ public sealed class ElementInit
     public ElementInit(MethodInfo addMethod, IEnumerable<Expression> arguments)
     {
         AddMethod = addMethod.CheckNotNull();
-        Arguments = arguments.CheckNotNull().ToList();
+        Arguments = [.. arguments.CheckNotNull()];
     }
 
     public ElementInit(System.Reflection.MethodInfo addMethod, IEnumerable<Expression> arguments)

@@ -19,7 +19,7 @@ public sealed class MemberInitExpression : Expression
     public MemberInitExpression(NewExpression newExpression, IEnumerable<MemberBinding> bindings)
     {
         NewExpression = newExpression.CheckNotNull();
-        Bindings = bindings.CheckNotNull().ToList();
+        Bindings = [.. bindings.CheckNotNull()];
     }
 
     public override ExpressionType NodeType => ExpressionType.MemberInit;

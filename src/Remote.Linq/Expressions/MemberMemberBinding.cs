@@ -19,7 +19,7 @@ public sealed class MemberMemberBinding : MemberBinding
     public MemberMemberBinding(MemberInfo member, IEnumerable<MemberBinding> bindings)
         : base(member)
     {
-        Bindings = bindings.CheckNotNull().ToList();
+        Bindings = [.. bindings.CheckNotNull()];
     }
 
     public override MemberBindingType BindingType => MemberBindingType.MemberBinding;

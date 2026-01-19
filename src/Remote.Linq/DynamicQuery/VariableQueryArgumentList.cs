@@ -38,7 +38,7 @@ public sealed class VariableQueryArgumentList
 
         ElementType = elementType;
 
-        Values = values.Cast<object?>().ToList();
+        Values = [.. values.Cast<object?>()];
     }
 
     [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = false)]

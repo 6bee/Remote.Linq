@@ -170,7 +170,7 @@ public abstract class RemoteExpressionVisitorBase(ITypeResolver? typeResolver)
 
     protected virtual MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding binding)
     {
-        var bindings = VisitBindingList(binding.CheckNotNull().Bindings.ToList());
+        var bindings = VisitBindingList([.. binding.CheckNotNull().Bindings]);
         if (bindings != binding.Bindings)
         {
             return new MemberMemberBinding(binding.Member, bindings);

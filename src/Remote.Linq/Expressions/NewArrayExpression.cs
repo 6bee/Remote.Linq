@@ -21,7 +21,7 @@ public sealed class NewArrayExpression : Expression
     {
         NewArrayType = newArrayType;
         Type = typeInfo.CheckNotNull();
-        Expressions = expressions.CheckNotNull().ToList();
+        Expressions = [.. expressions.CheckNotNull()];
     }
 
     public NewArrayExpression(NewArrayType newArrayType, Type type, IEnumerable<Expression> expressions)

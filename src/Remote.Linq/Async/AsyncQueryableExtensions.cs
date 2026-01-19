@@ -28,13 +28,13 @@ public static class AsyncQueryableExtensions
     public static async ValueTask<List<TSource>> ToListAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellation = default)
     {
         var enumerator = await source.ExecuteAsync(cancellation).ConfigureAwait(false);
-        return enumerator.ToList();
+        return [.. enumerator];
     }
 
     public static async ValueTask<TSource[]> ToArrayAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellation = default)
     {
         var enumerator = await source.ExecuteAsync(cancellation).ConfigureAwait(false);
-        return enumerator.ToArray();
+        return [.. enumerator];
     }
 
     public static async ValueTask<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(this IQueryable<TSource> source, Func<TSource, TKey> keySelector, CancellationToken cancellation = default)

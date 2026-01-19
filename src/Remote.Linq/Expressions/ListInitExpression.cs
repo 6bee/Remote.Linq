@@ -19,7 +19,7 @@ public sealed class ListInitExpression : Expression
     public ListInitExpression(NewExpression newExpression, IEnumerable<ElementInit> initializers)
     {
         NewExpression = newExpression.CheckNotNull();
-        Initializers = initializers.CheckNotNull().ToList();
+        Initializers = [.. initializers.CheckNotNull()];
     }
 
     public override ExpressionType NodeType => ExpressionType.ListInit;

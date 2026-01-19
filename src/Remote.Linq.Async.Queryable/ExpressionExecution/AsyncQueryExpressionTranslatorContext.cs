@@ -64,12 +64,12 @@ public class AsyncQueryExpressionTranslatorContext : ExpressionTranslatorContext
     private static AsyncEnumerable<T> MapAsyncEnumerable<T>(IAsyncEnumerable<T> source)
         => source is AsyncEnumerable<T> asyncEnumerable
         ? asyncEnumerable
-        : new AsyncEnumerable<T> { Elements = EnumerateBlocking(source).ToArray() };
+        : new AsyncEnumerable<T> { Elements = [.. EnumerateBlocking(source)] };
 
     private static AsyncGrouping<TKey, TElement> MapAsyncGroupToDynamicObjectGraph<TKey, TElement>(IAsyncGrouping<TKey, TElement> group)
         => group is AsyncGrouping<TKey, TElement> remoteLinqGroup
         ? remoteLinqGroup
-        : new AsyncGrouping<TKey, TElement> { Key = group.Key, Elements = EnumerateBlocking(group).ToArray() };
+        : new AsyncGrouping<TKey, TElement> { Key = group.Key, Elements = [.. EnumerateBlocking(group)] };
 
     private static IEnumerable<T> EnumerateBlocking<T>(IAsyncEnumerable<T> source)
     {

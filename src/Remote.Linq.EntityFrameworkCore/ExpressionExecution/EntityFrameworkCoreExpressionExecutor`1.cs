@@ -59,10 +59,9 @@ public abstract class EntityFrameworkCoreExpressionExecutor<TDataTranferObject> 
         {
             if (!expression.Type.Implements(typeof(Task<>), out var resultType))
             {
-                resultType = task
+                resultType = [.. task
                     .GetType()
-                    .GetGenericArguments()
-                    .ToArray();
+                    .GetGenericArguments()];
             }
 
             if (resultType.Length is not 1)
