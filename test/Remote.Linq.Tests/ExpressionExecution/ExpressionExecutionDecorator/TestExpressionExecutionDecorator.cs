@@ -18,8 +18,8 @@ public class TestExpressionExecutionDecorator : ExpressionExecutionDecorator<Dyn
     public static readonly System.Linq.Expressions.Expression Step3_PreparedSystemExpression = System.Linq.Expressions.Expression.Constant("step3");
     public static readonly object Step4_ExecutionResult = "step4";
     public static readonly object Step5_ProcessedResult = "step5";
-    public static readonly DynamicObject Step6_ConvertedResult = new DynamicObject("step6");
-    public static readonly DynamicObject Step7_FinalResult = new DynamicObject("step7");
+    public static readonly DynamicObject Step6_ConvertedResult = new("step6");
+    public static readonly DynamicObject Step7_FinalResult = new("step7");
 
     public static readonly int StepIndex2_InitialTransformedSystemExpression = 1;
     public static readonly int StepIndex4_ExecutionResult = 3;

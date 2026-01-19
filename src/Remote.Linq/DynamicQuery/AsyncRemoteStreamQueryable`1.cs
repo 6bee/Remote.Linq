@@ -7,16 +7,9 @@ using System.Linq.Expressions;
 /// <summary>
 /// Provides functionality to compose queries for remote execution as async stream.
 /// </summary>
-public sealed class AsyncRemoteStreamQueryable<T> : AsyncRemoteStreamQueryable, IOrderedAsyncRemoteStreamQueryable<T>
+public sealed class AsyncRemoteStreamQueryable<T>(IAsyncRemoteStreamProvider provider, Expression? expression = null)
+    : AsyncRemoteStreamQueryable(typeof(T), provider, expression), IOrderedAsyncRemoteStreamQueryable<T>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRemoteStreamQueryable{T}"/> class.
-    /// </summary>
-    public AsyncRemoteStreamQueryable(IAsyncRemoteStreamProvider provider, Expression? expression = null)
-        : base(typeof(T), provider, expression)
-    {
-    }
-
     /// <inheritdoc/>
     public IAsyncEnumerable<T> ExecuteAsyncRemoteStream(CancellationToken cancellation = default)
         => Provider.ExecuteAsyncRemoteStream<T>(Expression, cancellation);

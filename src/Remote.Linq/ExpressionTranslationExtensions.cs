@@ -10,17 +10,11 @@ using SystemLinq = System.Linq.Expressions;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class ExpressionTranslationExtensions
 {
-    private sealed class ResultWrapperExpression : SystemLinq.Expression
+    private sealed class ResultWrapperExpression(RemoteLinq.Expression result, Type type) : SystemLinq.Expression
     {
-        public ResultWrapperExpression(RemoteLinq.Expression result, Type type)
-        {
-            Result = result;
-            Type = type;
-        }
+        public RemoteLinq.Expression Result { get; } = result;
 
-        public RemoteLinq.Expression Result { get; }
-
-        public override Type Type { get; }
+        public override Type Type { get; } = type;
 
         public override bool CanReduce => false;
 
@@ -105,7 +99,7 @@ public static partial class ExpressionTranslationExtensions
 
     private static ResultWrapperExpression Wrap<T>(this T expression)
         where T : RemoteLinq.Expression
-        => new ResultWrapperExpression(expression, typeof(T));
+        => new(expression, typeof(T));
 
     /// <summary>
     /// Unwraps the resulting <see cref="RemoteLinq.Expression"/>. This method throws if expression is not an <see cref="SystemLinq.ConstantExpression"/> holding the expected type.
@@ -129,14 +123,4 @@ public static partial class ExpressionTranslationExtensions
         => expression is ResultWrapperExpression resultWrapperExpression
         ? resultWrapperExpression.Result
         : null;
-
-    private static IExpressionTranslatorContext? GetExpressionTranslatorContextOrNull(ITypeResolver? typeResolver)
-        => typeResolver is null
-        ? null
-        : new ExpressionTranslatorContext(typeResolver);
-
-    private static IExpressionTranslatorContext? GetExpressionTranslatorContextOrNull(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
-        => typeInfoProvider is null && canBeEvaluatedLocally is null
-        ? null
-        : new ExpressionTranslatorContext(typeInfoProvider, canBeEvaluatedLocally);
 }

@@ -6,11 +6,8 @@ using System.Runtime.Serialization;
 
 [Serializable]
 [DataContract]
-public sealed class Closure<T>
+public sealed class Closure<T>(T value)
 {
-    public Closure(T value)
-        => Value = value;
-
     [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
-    public T Value { get; init; }
+    public T Value { get; init; } = value;
 }

@@ -24,8 +24,8 @@ public abstract class EntityFrameworkCoreAsyncStreamExpressionExecutor<TDataTran
 
     protected override SystemLinq.Expression Prepare(SystemLinq.Expression expression)
         => base.Prepare(expression
-            .WrapQueryableInClosure()
-            .ReplaceIncludeQueryMethods());
+        .WrapQueryableInClosure()
+        .ReplaceIncludeQueryMethods());
 
     protected override IAsyncEnumerable<object?> ExecuteAsyncStream(SystemLinq.Expression expression, CancellationToken cancellation)
     {

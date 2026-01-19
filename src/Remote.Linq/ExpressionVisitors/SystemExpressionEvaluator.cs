@@ -112,13 +112,8 @@ public static class SystemExpressionEvaluator
     /// <summary>
     /// Evaluates and replaces sub-trees when first candidate is reached (top-down).
     /// </summary>
-    private sealed class SubtreeEvaluator : SystemExpressionVisitorBase
+    private sealed class SubtreeEvaluator(HashSet<Expression> candidates) : SystemExpressionVisitorBase
     {
-        private readonly HashSet<Expression> _candidates;
-
-        internal SubtreeEvaluator(HashSet<Expression> candidates)
-            => _candidates = candidates;
-
         internal Expression Eval(Expression expression) => Visit(expression);
 
         [return: NotNullIfNotNull("node")]
@@ -129,7 +124,7 @@ public static class SystemExpressionEvaluator
                 return null;
             }
 
-            if (_candidates.Contains(node))
+            if (candidates.Contains(node))
             {
                 return Evaluate(node);
             }
@@ -193,21 +188,18 @@ public static class SystemExpressionEvaluator
     /// Performs bottom-up analysis to determine which nodes can possibly
     /// be part of an evaluated sub-tree.
     /// </summary>
-    private sealed class Nominator : SystemExpressionVisitorBase
+    private sealed class Nominator(Func<Expression, bool>? canBeEvaluated) : SystemExpressionVisitorBase
     {
         private readonly object _lock = new();
-        private readonly Func<Expression, bool> _canBeEvaluated;
+        private readonly Func<Expression, bool> _canBeEvaluated = canBeEvaluated.And(CanBeEvaluatedLocally)!;
         private HashSet<Expression>? _candidates;
         private bool _cannotBeEvaluated;
-
-        internal Nominator(Func<Expression, bool>? canBeEvaluated)
-            => _canBeEvaluated = canBeEvaluated.And(CanBeEvaluatedLocally)!;
 
         internal HashSet<Expression> Nominate(Expression expression)
         {
             lock (_lock)
             {
-                _candidates = new HashSet<Expression>();
+                _candidates = [];
                 Visit(expression);
                 return _candidates;
             }

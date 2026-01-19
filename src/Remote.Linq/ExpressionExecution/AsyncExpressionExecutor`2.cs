@@ -6,16 +6,9 @@ using Aqua.TypeExtensions;
 using RemoteLinq = Remote.Linq.Expressions;
 using SystemLinq = System.Linq.Expressions;
 
-public abstract class AsyncExpressionExecutor<TQueryable, TDataTranferObject> : ExpressionExecutor<TQueryable, TDataTranferObject>, IAsyncExpressionExecutionDecorator<TDataTranferObject>
+public abstract class AsyncExpressionExecutor<TQueryable, TDataTranferObject>(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+    : ExpressionExecutor<TQueryable, TDataTranferObject>(queryableProvider, context), IAsyncExpressionExecutionDecorator<TDataTranferObject>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncExpressionExecutor{TQueryable, TDataTranferObject}"/> class.
-    /// </summary>
-    protected AsyncExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
-        : base(queryableProvider, context)
-    {
-    }
-
     /// <summary>
     /// Composes and executes the query asynchronously based on the <see cref="RemoteLinq.Expression"/> and maps the result into dynamic objects.
     /// </summary>

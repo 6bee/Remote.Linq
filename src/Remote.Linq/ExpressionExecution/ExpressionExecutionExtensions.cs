@@ -11,10 +11,10 @@ using System.ComponentModel;
 public static class ExpressionExecutionExtensions
 {
     private static CastingExpressionExecutor<TQueryable, TResult> CreateCastExecutor<TQueryable, TResult>(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context)
-        => new CastingExpressionExecutor<TQueryable, TResult>(queryableProvider, context);
+        => new(queryableProvider, context);
 
     private static DefaultExpressionExecutor CreateDefaultExecutor(Func<Type, IQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context, Func<Type, bool>? setTypeInformation)
-        => new DefaultExpressionExecutor(queryableProvider, context, setTypeInformation);
+        => new(queryableProvider, context, setTypeInformation);
 
     /// <summary>
     /// Creates a <see cref="DefaultExpressionExecutionContext" /> for the given <see cref="Expression"/>.
@@ -29,7 +29,7 @@ public static class ExpressionExecutionExtensions
         Func<Type, IQueryable> queryableProvider,
         IExpressionFromRemoteLinqContext? context = null,
         Func<Type, bool>? setTypeInformation = null)
-        => new DefaultExpressionExecutionContext(CreateDefaultExecutor(queryableProvider, context, setTypeInformation), expression);
+        => new(CreateDefaultExecutor(queryableProvider, context, setTypeInformation), expression);
 
     /// <summary>
     /// Creates a <see cref="ExpressionExecutionContext{TResult}" /> for the given <see cref="Expression"/>.
@@ -42,7 +42,7 @@ public static class ExpressionExecutionExtensions
         this Expression expression,
         Func<Type, IQueryable> queryableProvider,
         IExpressionFromRemoteLinqContext? context = null)
-        => new ExpressionExecutionContext<TResult>(CreateCastExecutor<IQueryable, TResult>(queryableProvider, context), expression);
+        => new(CreateCastExecutor<IQueryable, TResult>(queryableProvider, context), expression);
 
     /// <summary>
     /// Composes and executes the query based on the <see cref="Expression"/> and mappes the result into dynamic objects.

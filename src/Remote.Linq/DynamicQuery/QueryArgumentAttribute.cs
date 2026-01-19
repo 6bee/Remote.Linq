@@ -6,6 +6,4 @@ namespace Remote.Linq.DynamicQuery;
 /// Denotes annotated types as query argument to prevent local evaluation when translating expressions.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct, AllowMultiple = false, Inherited = true)]
-public class QueryArgumentAttribute : Attribute
-{
-}
+public class QueryArgumentAttribute : Attribute;

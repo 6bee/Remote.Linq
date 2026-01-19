@@ -5,6 +5,4 @@ namespace Remote.Linq;
 /// <summary>
 /// Represents the result of a sorting operation of a remote stream queryable resource.
 /// </summary>
-public interface IOrderedAsyncRemoteStreamQueryable : IAsyncRemoteStreamQueryable, IOrderedRemoteQueryable
-{
-}
+public interface IOrderedAsyncRemoteStreamQueryable : IAsyncRemoteStreamQueryable, IOrderedRemoteQueryable;

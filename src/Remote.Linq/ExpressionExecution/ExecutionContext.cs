@@ -13,7 +13,7 @@ public sealed class ExecutionContext
     private Dictionary<string, object?>? _dictionary;
 
     private Dictionary<string, object?> Dictionary
-        => _dictionary ?? (_dictionary = new Dictionary<string, object?>());
+        => _dictionary ??= new Dictionary<string, object?>();
 
     /// <summary>
     /// Sets a key value pair.

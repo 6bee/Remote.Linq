@@ -14,13 +14,13 @@ public static class Helper
     /// Creates a <see cref="TypeInfo"/> instance for the given <see cref="Type"/>.
     /// </summary>
     [return: NotNullIfNotNull("type")]
-    public static TypeInfo? AsTypeInfo(this Type? type) => type is null ? null : new TypeInfo(type, false, false);
+    public static TypeInfo? AsTypeInfo(this Type? type) => type is null ? null : new(type, false, false);
 
     /// <summary>
     /// Creates a <see cref="MethodInfo"/> instace for the given <see cref="System.Reflection.MethodInfo"/>.
     /// </summary>
     [return: NotNullIfNotNull("method")]
-    public static MethodInfo? AsMethodInfo(this System.Reflection.MethodInfo? method) => method is null ? null : new MethodInfo(method);
+    public static MethodInfo? AsMethodInfo(this System.Reflection.MethodInfo? method) => method is null ? null : new(method);
 
     internal static Type? AsQueryableResourceTypeOrNull(this object? value)
     {
@@ -61,6 +61,6 @@ public static class Helper
 
 #if NETSTANDARD2_0
     internal static System.Collections.Generic.HashSet<T> ToHashSet<T>(this System.Collections.Generic.IEnumerable<T> source)
-        => new System.Collections.Generic.HashSet<T>(source);
+        => new(source);
 #endif // NETSTANDARD2_0
 }

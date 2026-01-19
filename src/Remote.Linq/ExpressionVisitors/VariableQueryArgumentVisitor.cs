@@ -22,15 +22,10 @@ public abstract class VariableQueryArgumentVisitor
         where T : Expression
         => (T)new GenericVariableQueryArgumentVisitor(typeResolver).Run(expression);
 
-    protected class GenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
+    protected class GenericVariableQueryArgumentVisitor(ITypeResolver? typeResolver) : RemoteExpressionVisitorBase(typeResolver)
     {
         private static readonly System.Reflection.PropertyInfo QueryArgumentValuePropertyInfo = typeof(VariableQueryArgument).GetProperty(nameof(VariableQueryArgument.Value))!;
         private static readonly System.Reflection.PropertyInfo QueryArgumentValueListPropertyInfo = typeof(VariableQueryArgumentList).GetProperty(nameof(VariableQueryArgumentList.Values))!;
-
-        public GenericVariableQueryArgumentVisitor(ITypeResolver? typeResolver)
-            : base(typeResolver)
-        {
-        }
 
         public Expression Run(Expression expression) => Visit(expression);
 
@@ -106,15 +101,10 @@ public abstract class VariableQueryArgumentVisitor
         }
     }
 
-    protected class NonGenericVariableQueryArgumentVisitor : RemoteExpressionVisitorBase
+    protected class NonGenericVariableQueryArgumentVisitor(ITypeResolver? typeResolver) : RemoteExpressionVisitorBase(typeResolver)
     {
         private static readonly MethodInfo CreateVariableQueryArgumentListMethodInfo =
             typeof(NonGenericVariableQueryArgumentVisitor).GetMethodEx(nameof(CreateVariableQueryArgumentList));
-
-        public NonGenericVariableQueryArgumentVisitor(ITypeResolver? typeResolver)
-            : base(typeResolver)
-        {
-        }
 
         public Expression Run(Expression expression) => Visit(expression);
 

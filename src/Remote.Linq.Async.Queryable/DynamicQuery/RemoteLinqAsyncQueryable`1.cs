@@ -7,16 +7,9 @@ using System.Linq.Expressions;
 /// <summary>
 /// A <i>Remote.Linq</i> queryable for async remote execution.
 /// </summary>
-public class RemoteLinqAsyncQueryable<T> : RemoteLinqAsyncQueryable, IOrderedAsyncQueryable<T>
+public class RemoteLinqAsyncQueryable<T>(IRemoteLinqAsyncQueryProvider provider, Expression? expression = null)
+    : RemoteLinqAsyncQueryable(typeof(T), provider, expression), IOrderedAsyncQueryable<T>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RemoteLinqAsyncQueryable{T}"/> class.
-    /// </summary>
-    public RemoteLinqAsyncQueryable(IRemoteLinqAsyncQueryProvider provider, Expression? expression = null)
-        : base(typeof(T), provider, expression)
-    {
-    }
-
     /// <summary>
     /// Executes the remote queryable asynchronously.
     /// </summary>

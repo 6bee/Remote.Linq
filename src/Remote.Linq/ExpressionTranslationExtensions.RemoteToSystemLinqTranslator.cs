@@ -16,7 +16,7 @@ partial class ExpressionTranslationExtensions
     {
         private sealed class ExpressionComparer : IEqualityComparer<RemoteLinq.ParameterExpression>, IEqualityComparer<RemoteLinq.LabelTarget>
         {
-            internal static readonly ExpressionComparer Default = new ExpressionComparer();
+            internal static readonly ExpressionComparer Default = new();
 
             bool IEqualityComparer<RemoteLinq.ParameterExpression>.Equals(RemoteLinq.ParameterExpression? x, RemoteLinq.ParameterExpression? y)
             {

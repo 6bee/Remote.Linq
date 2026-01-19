@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Remote.Linq.ExpressionVisitors;
 using Remote.Linq.Include;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -39,35 +38,17 @@ public static class SystemExpressionReWriter
             /// <summary>
             /// Type definition used in generic type filters.
             /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TEntity
-            {
-                private TEntity()
-                {
-                }
-            }
+            private sealed class TEntity;
 
             /// <summary>
             /// Type definition used in generic type filters.
             /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TProperty
-            {
-                private TProperty()
-                {
-                }
-            }
+            private sealed class TProperty;
 
             /// <summary>
             /// Type definition used in generic type filters.
             /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TPreviousProperty
-            {
-                private TPreviousProperty()
-                {
-                }
-            }
+            private sealed class TPreviousProperty;
 
             internal static readonly MethodInfo StringIncludeMethodInfo = typeof(EntityFrameworkQueryableExtensions).GetMethodEx(
                 nameof(EntityFrameworkQueryableExtensions.Include),

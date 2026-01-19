@@ -24,8 +24,8 @@ public abstract class EntityFrameworkCoreExpressionExecutor<TDataTranferObject> 
 
     protected override SystemLinq.Expression Prepare(SystemLinq.Expression expression)
         => base.Prepare(expression
-            .WrapQueryableInClosure()
-            .ReplaceIncludeQueryMethods());
+        .WrapQueryableInClosure()
+        .ReplaceIncludeQueryMethods());
 
     /// <summary>
     /// Prepares the query <see cref="SystemLinq.Expression"/> to be able to be executed.

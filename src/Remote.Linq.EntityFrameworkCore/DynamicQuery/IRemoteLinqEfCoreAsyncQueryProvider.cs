@@ -11,6 +11,4 @@ using IAsyncQueryProvider = Microsoft.EntityFrameworkCore.Query.Internal.IAsyncQ
 /// <summary>
 /// Represents a query provider for <i>Remote.Linq</i> version of asynchronous queryable sequences.
 /// </summary>
-public interface IRemoteLinqEfCoreAsyncQueryProvider : IAsyncQueryProvider, IAsyncRemoteStreamProvider, IAsyncRemoteQueryProvider, IRemoteQueryProvider
-{
-}
+public interface IRemoteLinqEfCoreAsyncQueryProvider : IAsyncQueryProvider, IAsyncRemoteStreamProvider, IAsyncRemoteQueryProvider, IRemoteQueryProvider;

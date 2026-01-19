@@ -7,16 +7,9 @@ using System.Linq.Expressions;
 /// <summary>
 /// Provides functionality to compose queries for async remote execution.
 /// </summary>
-public class AsyncRemoteQueryable<T> : AsyncRemoteQueryable, IOrderedAsyncRemoteQueryable<T>
+public class AsyncRemoteQueryable<T>(IAsyncRemoteQueryProvider provider, Expression? expression = null)
+    : AsyncRemoteQueryable(typeof(T), provider, expression), IOrderedAsyncRemoteQueryable<T>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRemoteQueryable{T}"/> class.
-    /// </summary>
-    public AsyncRemoteQueryable(IAsyncRemoteQueryProvider provider, Expression? expression = null)
-        : base(typeof(T), provider, expression)
-    {
-    }
-
     /// <inheritdoc/>
     public ValueTask<IEnumerable<T>> ExecuteAsync(CancellationToken cancellation = default)
         => Provider.ExecuteAsync<IEnumerable<T>>(Expression, cancellation);

@@ -5,6 +5,4 @@ namespace Remote.Linq;
 /// <summary>
 /// Represents a query provider for <i>Remote.Linq</i> version of queryable sequences.
 /// </summary>
-public interface IRemoteQueryProvider : IQueryProvider, IRemoteLinqQueryProvider
-{
-}
+public interface IRemoteQueryProvider : IQueryProvider, IRemoteLinqQueryProvider;

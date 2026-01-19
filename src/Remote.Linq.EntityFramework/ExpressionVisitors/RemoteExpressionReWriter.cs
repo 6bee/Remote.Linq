@@ -42,13 +42,8 @@ public static class RemoteExpressionReWriter
     private static Expression ReplaceIncludeQueryMethods(this Expression expression, ITypeResolver? typeResolver)
         => new QueryMethodMapper(typeResolver).Run(expression);
 
-    private sealed class QueryMethodMapper : RemoteExpressionVisitorBase
+    private sealed class QueryMethodMapper(ITypeResolver? typeResolver) : RemoteExpressionVisitorBase(typeResolver)
     {
-        public QueryMethodMapper(ITypeResolver? typeResolver)
-            : base(typeResolver)
-        {
-        }
-
         internal Expression Run(Expression expression) => Visit(expression);
 
         protected override Expression VisitMethodCall(MethodCallExpression node)

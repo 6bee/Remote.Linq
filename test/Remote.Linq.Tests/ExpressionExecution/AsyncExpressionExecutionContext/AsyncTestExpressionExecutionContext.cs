@@ -22,8 +22,8 @@ public class AsyncTestExpressionExecutionContext : AsyncExpressionExecutionConte
     public static readonly System.Linq.Expressions.Expression Step4_PreparedForAsyncExpression = System.Linq.Expressions.Expression.Constant("step4");
     public static readonly object Step5_ExecutionResult = "step5";
     public static readonly object Step6_ProcessedResult = "step6";
-    public static readonly DynamicObject Step7_ConvertedResult = new DynamicObject("step7");
-    public static readonly DynamicObject Step8_FinalResult = new DynamicObject("step8");
+    public static readonly DynamicObject Step7_ConvertedResult = new("step7");
+    public static readonly DynamicObject Step8_FinalResult = new("step8");
 
     public static readonly int StepIndex2_TransformRemoteExpression = 1;
     public static readonly int StepIndex4_PreparedForAsyncExpression = 3;

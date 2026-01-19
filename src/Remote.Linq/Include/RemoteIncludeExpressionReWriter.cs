@@ -48,7 +48,8 @@ public static class RemoteIncludeExpressionReWriter
         Expression Parent { get; }
     }
 
-    private sealed class StackedQueryableCleaner : RemoteExpressionVisitorBase
+    private sealed class StackedQueryableCleaner(ITypeResolver? typeResolver, StackedQueryableCleaner.Strategy strategy = StackedQueryableCleaner.Strategy.Eliminate)
+        : RemoteExpressionVisitorBase(typeResolver)
     {
         public enum Strategy
         {
@@ -60,12 +61,6 @@ public static class RemoteIncludeExpressionReWriter
 
         private static readonly MethodInfo SubselectStackedIncludableQueryableMethodInfo = typeof(StackedQueryableCleaner).GetMethodEx(nameof(SubselectStackedIncludableQueryable));
 
-        private readonly Strategy _strategy;
-
-        public StackedQueryableCleaner(ITypeResolver? typeResolver, Strategy strategy = Strategy.Eliminate)
-            : base(typeResolver)
-            => _strategy = strategy;
-
         internal Expression Run(Expression expression) => Visit(expression);
 
         protected override Expression VisitConstant(ConstantExpression node)
@@ -73,11 +68,11 @@ public static class RemoteIncludeExpressionReWriter
             var type = node.Type.ResolveType(TypeResolver) ?? throw new TypeResolverException($"Failed to resolve type '{node.Type}'");
             if (type.Implements(typeof(IStackedIncludableQueryable<>), out var args))
             {
-                var method = _strategy switch
+                var method = strategy switch
                 {
                     Strategy.Eliminate => EliminateStackedIncludableQueryableMethodInfo,
                     Strategy.SubSelect => SubselectStackedIncludableQueryableMethodInfo,
-                    _ => throw new NotSupportedException($"Strategy '{_strategy}' not supported."),
+                    _ => throw new NotSupportedException($"Strategy '{strategy}' not supported."),
                 };
 
                 var m = method.MakeGenericMethod(args);

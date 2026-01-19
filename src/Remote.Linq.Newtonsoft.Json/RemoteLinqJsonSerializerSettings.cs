@@ -5,10 +5,5 @@ namespace Remote.Linq.Newtonsoft.Json;
 using Aqua.Newtonsoft.Json;
 using global::Newtonsoft.Json;
 
-public class RemoteLinqJsonSerializerSettings : AquaJsonSerializerSettings
-{
-    public RemoteLinqJsonSerializerSettings(JsonSerializerSettings settings, KnownTypesRegistry? knownTypesRegistry = null)
-        : base(settings, knownTypesRegistry)
-    {
-    }
-}
+public class RemoteLinqJsonSerializerSettings(JsonSerializerSettings settings, KnownTypesRegistry? knownTypesRegistry = null)
+    : AquaJsonSerializerSettings(settings, knownTypesRegistry);

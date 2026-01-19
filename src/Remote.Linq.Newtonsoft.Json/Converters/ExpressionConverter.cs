@@ -8,14 +8,9 @@ using Aqua.TypeSystem;
 using global::Newtonsoft.Json;
 using Remote.Linq.Expressions;
 
-public sealed class ExpressionConverter : ObjectConverter<Expression>
+public sealed class ExpressionConverter(KnownTypesRegistry knownTypeRegistry) : ObjectConverter<Expression>(knownTypeRegistry)
 {
     private const string ValueTypePropertyName = "ValueType";
-
-    public ExpressionConverter(KnownTypesRegistry knownTypeRegistry)
-        : base(knownTypeRegistry)
-    {
-    }
 
     protected override void ReadObjectProperties(JsonReader reader, Expression result, Dictionary<string, Property> properties, JsonSerializer serializer)
     {

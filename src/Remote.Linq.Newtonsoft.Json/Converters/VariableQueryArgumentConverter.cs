@@ -8,13 +8,8 @@ using Aqua.TypeSystem;
 using global::Newtonsoft.Json;
 using Remote.Linq.DynamicQuery;
 
-public sealed class VariableQueryArgumentConverter : ObjectConverter<VariableQueryArgument>
+public sealed class VariableQueryArgumentConverter(KnownTypesRegistry knownTypeRegistry) : ObjectConverter<VariableQueryArgument>(knownTypeRegistry)
 {
-    public VariableQueryArgumentConverter(KnownTypesRegistry knownTypeRegistry)
-        : base(knownTypeRegistry)
-    {
-    }
-
     protected override void ReadObjectProperties(JsonReader reader, VariableQueryArgument result, Dictionary<string, Property> properties, JsonSerializer serializer)
     {
         reader.CheckNotNull().AssertProperty(nameof(VariableQueryArgument.Type));

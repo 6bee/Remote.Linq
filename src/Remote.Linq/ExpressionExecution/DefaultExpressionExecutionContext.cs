@@ -5,10 +5,5 @@ namespace Remote.Linq.ExpressionExecution;
 using Aqua.Dynamic;
 using Remote.Linq.Expressions;
 
-public class DefaultExpressionExecutionContext : ExpressionExecutionContext<DynamicObject>
-{
-    public DefaultExpressionExecutionContext(ExpressionExecutor<IQueryable, DynamicObject> parent, Expression expression)
-        : base(parent, expression)
-    {
-    }
-}
+public class DefaultExpressionExecutionContext(ExpressionExecutor<IQueryable, DynamicObject> parent, Expression expression)
+    : ExpressionExecutionContext<DynamicObject>(parent, expression);

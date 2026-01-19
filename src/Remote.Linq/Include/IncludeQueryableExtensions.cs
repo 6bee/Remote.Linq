@@ -16,23 +16,17 @@ public static class IncludeQueryableExtensions
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    private sealed class T
-    {
-    }
+    private sealed class T;
 
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    private sealed class TProperty
-    {
-    }
+    private sealed class TProperty;
 
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    private sealed class TPreviousProperty
-    {
-    }
+    private sealed class TPreviousProperty;
 
     /// <summary>
     /// Gets the <see cref="MethodInfo"/> of the <see cref="Include{T}(IQueryable{T}, string)"/> method.

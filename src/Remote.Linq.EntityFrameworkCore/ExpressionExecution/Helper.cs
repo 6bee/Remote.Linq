@@ -4,7 +4,6 @@ namespace Remote.Linq.EntityFrameworkCore.ExpressionExecution;
 
 using Aqua.TypeExtensions;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -13,13 +12,7 @@ internal static class Helper
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-    internal sealed class TSource
-    {
-        private TSource()
-        {
-        }
-    }
+    internal sealed class TSource;
 
     private static readonly MethodInfo _entityFrameworkQueryableToListAsyncMethod = typeof(EntityFrameworkQueryableExtensions).GetMethodEx(
         nameof(EntityFrameworkQueryableExtensions.ToListAsync),

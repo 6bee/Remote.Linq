@@ -8,23 +8,15 @@ using RemoteLinq = Remote.Linq.Expressions;
 using SystemLinq = System.Linq.Expressions;
 
 [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
-public abstract class AsyncStreamExpressionExecutor<TQueryable, TDataTranferObject> : IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>
+public abstract class AsyncStreamExpressionExecutor<TQueryable, TDataTranferObject>(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+    : IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>
 {
-    private readonly Func<Type, TQueryable> _queryableProvider;
-    private readonly IExpressionFromRemoteLinqContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncStreamExpressionExecutor{TQueryable, TDataTranferObject}"/> class.
-    /// </summary>
-    protected AsyncStreamExpressionExecutor(Func<Type, TQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
-    {
-        _queryableProvider = queryableProvider.CheckNotNull();
-        _context = context ?? ExpressionTranslatorContext.Default;
-    }
+    private readonly Func<Type, TQueryable> _queryableProvider = queryableProvider.CheckNotNull();
+    private readonly IExpressionFromRemoteLinqContext _context = context ?? ExpressionTranslatorContext.Default;
 
     ExecutionContext IAsyncStreamExpressionExecutionDecorator<TDataTranferObject>.Context => Context;
 
-    protected ExecutionContext Context { get; } = new ExecutionContext();
+    protected ExecutionContext Context { get; } = new();
 
     /// <summary>
     /// Composes and executes the query based on the <see cref="RemoteLinq.Expression"/>.

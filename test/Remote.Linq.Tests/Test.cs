@@ -55,7 +55,7 @@ public class Test
     }
 
     public static List<Person> GetPeople()
-        => new List<Person>
+        => new()
         {
             new Person("Rachel", 25),
             new Person("Joey", 24),

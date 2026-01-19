@@ -6,6 +6,4 @@ namespace Remote.Linq.DynamicQuery;
 /// Denotes annotated methods as query marker functions to prevent local evaluation (i.e. execution of the method) when translating expressions.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-public class QueryMarkerFunctionAttribute : Attribute
-{
-}
+public class QueryMarkerFunctionAttribute : Attribute;

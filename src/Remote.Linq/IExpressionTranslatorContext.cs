@@ -5,6 +5,4 @@ namespace Remote.Linq;
 /// <summary>
 /// Denotes a context for translating expressions from <i>System.Linq</i> to <i>Remote.Linq</i> and vice versa.
 /// </summary>
-public interface IExpressionTranslatorContext : IExpressionFromRemoteLinqContext, IExpressionToRemoteLinqContext
-{
-}
+public interface IExpressionTranslatorContext : IExpressionFromRemoteLinqContext, IExpressionToRemoteLinqContext;

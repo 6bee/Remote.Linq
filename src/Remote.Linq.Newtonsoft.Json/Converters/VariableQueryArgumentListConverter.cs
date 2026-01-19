@@ -2,19 +2,15 @@
 
 namespace Remote.Linq.Newtonsoft.Json.Converters;
 
+using Aqua.EnumerableExtensions;
 using Aqua.Newtonsoft.Json;
 using Aqua.Newtonsoft.Json.Converters;
 using Aqua.TypeSystem;
 using global::Newtonsoft.Json;
 using Remote.Linq.DynamicQuery;
 
-public sealed class VariableQueryArgumentListConverter : ObjectConverter<VariableQueryArgumentList>
+public sealed class VariableQueryArgumentListConverter(KnownTypesRegistry knownTypeRegistry) : ObjectConverter<VariableQueryArgumentList>(knownTypeRegistry)
 {
-    public VariableQueryArgumentListConverter(KnownTypesRegistry knownTypeRegistry)
-        : base(knownTypeRegistry)
-    {
-    }
-
     protected override void ReadObjectProperties(JsonReader reader, VariableQueryArgumentList result, Dictionary<string, Property> properties, JsonSerializer serializer)
     {
         TypeInfo? elementTypeInfo;
@@ -22,7 +18,7 @@ public sealed class VariableQueryArgumentListConverter : ObjectConverter<Variabl
         {
             reader.AssertEndObject();
             result.CheckNotNull().ElementType = elementTypeInfo;
-            result.Values = values ?? new List<object?>();
+            result.Values = values.AsEmptyIfNull();
         }
 
         reader.CheckNotNull().AssertProperty(nameof(VariableQueryArgumentList.ElementType));

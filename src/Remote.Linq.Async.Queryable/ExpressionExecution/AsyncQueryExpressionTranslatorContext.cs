@@ -35,11 +35,11 @@ public class AsyncQueryExpressionTranslatorContext : ExpressionTranslatorContext
             var genericTypeArguments = default(Type[]);
             if (obj?.GetType().Implements(typeof(IAsyncGrouping<,>), out genericTypeArguments) is true)
             {
-                obj = MapAsyncGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, [obj]);
+                obj = _mapAsyncGroupToDynamicObjectGraphMethod(genericTypeArguments!).Invoke(null, [obj]);
             }
             else if (obj?.GetType().Implements(typeof(IAsyncEnumerable<>), out genericTypeArguments) is true)
             {
-                obj = MapAsyncEnumerableMethod(genericTypeArguments!).Invoke(null, [obj]);
+                obj = _mapAsyncEnumerableMethod(genericTypeArguments!).Invoke(null, [obj]);
             }
 
             return base.MapToDynamicObjectGraph(obj, setTypeInformation);
@@ -48,12 +48,8 @@ public class AsyncQueryExpressionTranslatorContext : ExpressionTranslatorContext
 
     private static readonly MethodInfo _mapAsyncGroupToDynamicObjectGraph = typeof(AsyncQueryExpressionTranslatorContext).GetMethodEx(nameof(MapAsyncGroupToDynamicObjectGraph));
     private static readonly MethodInfo _mapAsyncEnumerable = typeof(AsyncQueryExpressionTranslatorContext).GetMethodEx(nameof(MapAsyncEnumerable));
-
-    private static readonly Func<Type[], MethodInfo> MapAsyncGroupToDynamicObjectGraphMethod =
-        genericArguments => _mapAsyncGroupToDynamicObjectGraph.MakeGenericMethod(genericArguments);
-
-    private static readonly Func<Type[], MethodInfo> MapAsyncEnumerableMethod =
-        genericArguments => _mapAsyncEnumerable.MakeGenericMethod(genericArguments);
+    private static readonly Func<Type[], MethodInfo> _mapAsyncGroupToDynamicObjectGraphMethod = _mapAsyncGroupToDynamicObjectGraph.MakeGenericMethod;
+    private static readonly Func<Type[], MethodInfo> _mapAsyncEnumerableMethod = _mapAsyncEnumerable.MakeGenericMethod;
 
     public AsyncQueryExpressionTranslatorContext(
         ITypeResolver? typeResolver = null,
@@ -91,7 +87,8 @@ public class AsyncQueryExpressionTranslatorContext : ExpressionTranslatorContext
                     list.Add(item);
                 }
             })
-            .Wait();
+            .GetAwaiter()
+            .GetResult();
 
         return list;
     }

@@ -7,6 +7,4 @@ namespace Remote.Linq.Include;
 /// </summary>
 /// <typeparam name="T">The type of the data in the data source.</typeparam>
 /// <typeparam name="TProperty">The type of the property to include.</typeparam>
-public interface IIncludableQueryable<out T, out TProperty> : IQueryable<T>
-{
-}
+public interface IIncludableQueryable<out T, out TProperty> : IQueryable<T>;

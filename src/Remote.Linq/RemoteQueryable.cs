@@ -21,5 +21,5 @@ public static class RemoteQueryable
     public static RemoteQueryableFactory Factory { get; } = new();
 
     internal static ExpressionTranslatorContext? GetExpressionTranslatorContextOrNull(ITypeInfoProvider? typeInfoProvider, Func<SystemLinq.Expression, bool>? canBeEvaluatedLocally)
-        => typeInfoProvider is null && canBeEvaluatedLocally is null ? null : new ExpressionTranslatorContext(typeInfoProvider, canBeEvaluatedLocally);
+        => typeInfoProvider is null && canBeEvaluatedLocally is null ? null : new(typeInfoProvider, canBeEvaluatedLocally);
 }

@@ -5,6 +5,4 @@ namespace Remote.Linq.Async.Queryable.DynamicQuery;
 /// <summary>
 /// Represents a query provider for <i>Remote.Linq</i> version of asynchronous queryable sequences.
 /// </summary>
-public interface IRemoteLinqAsyncQueryProvider : IAsyncQueryProvider, IRemoteLinqQueryProvider
-{
-}
+public interface IRemoteLinqAsyncQueryProvider : IAsyncQueryProvider, IRemoteLinqQueryProvider;

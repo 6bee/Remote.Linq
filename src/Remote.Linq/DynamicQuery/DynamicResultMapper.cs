@@ -7,19 +7,11 @@ using Aqua.TypeSystem;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
-public sealed class DynamicResultMapper : IQueryResultMapper<DynamicObject>
+public sealed class DynamicResultMapper(IDynamicObjectMapper? mapper = null) : IQueryResultMapper<DynamicObject>
 {
-    private readonly IDynamicObjectMapper? _mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DynamicResultMapper"/> class.
-    /// </summary>
-    public DynamicResultMapper(IDynamicObjectMapper? mapper = null)
-        => _mapper = mapper;
-
     /// <inheritdoc/>
     public TResult? MapResult<TResult>(DynamicObject? source, Expression expression)
-        => MapToType<TResult>(source, _mapper, expression);
+        => MapToType<TResult>(source, mapper, expression);
 
     [return: MaybeNull]
     internal static TResult MapToType<TResult>(DynamicObject? dataRecords, IDynamicObjectMapper? mapper, Expression expression)

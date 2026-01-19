@@ -21,9 +21,9 @@ public sealed class When_querying : IDisposable
     {
         var data = new List<LookupItem>
             {
-                new LookupItem { Key = "1", Value = "One" },
-                new LookupItem { Key = "2", Value = "Two" },
-                new LookupItem { Key = "3", Value = "Three" },
+                new() { Key = "1", Value = "One" },
+                new() { Key = "2", Value = "Two" },
+                new() { Key = "3", Value = "Three" },
             };
         _context = new ContextMock<TestContext>()
             .WithSet(x => x.Items, data)
@@ -101,9 +101,9 @@ public sealed class When_querying : IDisposable
     {
         var data = new List<LookupItem>
         {
-            new LookupItem { Key = "1", Value = "One" },
-            new LookupItem { Key = "2", Value = "Two" },
-            new LookupItem { Key = "3", Value = "Three" },
+            new() { Key = "1", Value = "One" },
+            new() { Key = "2", Value = "Two" },
+            new() { Key = "3", Value = "Three" },
         };
         var filteredPeoplesNames = data.Where(x => x.Value.StartsWith("O")).Select(x => x.Value);
         var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value));
@@ -115,9 +115,9 @@ public sealed class When_querying : IDisposable
     {
         var data = new List<LookupItem>
         {
-            new LookupItem { Key = "1", Value = "One" },
-            new LookupItem { Key = "2", Value = "Two" },
-            new LookupItem { Key = "3", Value = "Three" },
+            new() { Key = "1", Value = "One" },
+            new() { Key = "2", Value = "Two" },
+            new() { Key = "3", Value = "Three" },
         };
         var filteredPeoplesNames = data.Where(x => x.Value.StartsWith("O")).Select(x => x.Value).AsQueryable();
         var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value));

@@ -8,16 +8,8 @@ using System.Linq.Expressions;
 /// <summary>
 /// A <i>Remote.Linq</i> queryable for async remote execution of EntityFrameworkCore queries.
 /// </summary>
-public class RemoteLinqEfCoreAsyncQueryable<T> : AsyncRemoteQueryable<T>, IAsyncEnumerable<T>
+public class RemoteLinqEfCoreAsyncQueryable<T>(IRemoteLinqEfCoreAsyncQueryProvider provider, Expression? expression) : AsyncRemoteQueryable<T>(provider, expression), IAsyncEnumerable<T>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RemoteLinqEfCoreAsyncQueryable{T}"/> class.
-    /// </summary>
-    public RemoteLinqEfCoreAsyncQueryable(IRemoteLinqEfCoreAsyncQueryProvider provider, Expression? expression)
-        : base(provider, expression)
-    {
-    }
-
     /// <inheritdoc/>
     public async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {

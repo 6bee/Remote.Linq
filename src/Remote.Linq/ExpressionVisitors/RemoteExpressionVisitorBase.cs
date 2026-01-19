@@ -7,12 +7,9 @@ using Aqua.TypeSystem;
 using Remote.Linq.Expressions;
 using System.Diagnostics.CodeAnalysis;
 
-public abstract class RemoteExpressionVisitorBase
+public abstract class RemoteExpressionVisitorBase(ITypeResolver? typeResolver)
 {
-    protected RemoteExpressionVisitorBase(ITypeResolver? typeResolver)
-        => TypeResolver = typeResolver ?? Aqua.TypeSystem.TypeResolver.Instance;
-
-    public ITypeResolver TypeResolver { get; }
+    public ITypeResolver TypeResolver { get; } = typeResolver ?? Aqua.TypeSystem.TypeResolver.Instance;
 
     [return: NotNullIfNotNull("node")]
     protected virtual Expression? Visit(Expression? node)

@@ -5,7 +5,6 @@ namespace Remote.Linq.EntityFramework;
 using Aqua.TypeExtensions;
 using System.ComponentModel;
 using System.Data.Entity;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Security;
 
@@ -15,13 +14,7 @@ public static class DbContextExtensions
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-    private sealed class TEntity
-    {
-        private TEntity()
-        {
-        }
-    }
+    private sealed class TEntity;
 
     private static readonly MethodInfo _dbContextSetMethod = typeof(DbContext).GetMethodEx(
         nameof(DbContext.Set),

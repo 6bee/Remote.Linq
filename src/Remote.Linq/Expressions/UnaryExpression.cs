@@ -47,13 +47,8 @@ public sealed class UnaryExpression : Expression
 
     public override string? ToString() => DebugFormatter.ToString();
 
-    private sealed class UnaryExpressionDebugView : ExpressionDebugFormatter<UnaryExpression>
+    private sealed class UnaryExpressionDebugView(UnaryExpression expression) : ExpressionDebugFormatter<UnaryExpression>(expression)
     {
-        public UnaryExpressionDebugView(UnaryExpression expression)
-            : base(expression)
-        {
-        }
-
         public override string ToString()
             => Expression.UnaryOperator switch
             {

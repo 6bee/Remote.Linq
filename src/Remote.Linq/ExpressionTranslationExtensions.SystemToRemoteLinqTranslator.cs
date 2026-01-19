@@ -18,13 +18,13 @@ partial class ExpressionTranslationExtensions
     private sealed class SystemToRemoteLinqTranslator : SystemExpressionVisitorBase
     {
         private readonly Dictionary<SystemLinq.ParameterExpression, RemoteLinq.ParameterExpression> _parameterExpressionCache =
-            new Dictionary<SystemLinq.ParameterExpression, RemoteLinq.ParameterExpression>(ReferenceEqualityComparer<SystemLinq.ParameterExpression>.Default);
+            new(ReferenceEqualityComparer<SystemLinq.ParameterExpression>.Default);
 
         private readonly Dictionary<SystemLinq.LabelTarget, RemoteLinq.LabelTarget> _labelTargetCache =
-            new Dictionary<SystemLinq.LabelTarget, RemoteLinq.LabelTarget>(ReferenceEqualityComparer<SystemLinq.LabelTarget>.Default);
+            new(ReferenceEqualityComparer<SystemLinq.LabelTarget>.Default);
 
         private readonly Dictionary<object, ConstantQueryArgument> _constantQueryArgumentCache =
-            new Dictionary<object, ConstantQueryArgument>(ReferenceEqualityComparer<object>.Default);
+            new(ReferenceEqualityComparer<object>.Default);
 
         private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
         private readonly Func<object, bool> _needsMapping;

@@ -3,12 +3,10 @@
 namespace Remote.Linq.Expressions;
 
 using Aqua.Dynamic;
-using Aqua.Text.Json.Converters;
 using Aqua.TypeSystem;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
 [Serializable]
@@ -52,15 +50,12 @@ public abstract class Expression
     // TODO: [expression string formatter] make DebugFormatter property abstract and have every expression implement its own formatter
     [Unmapped]
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    protected internal virtual ExpressionDebugFormatter DebugFormatter => new ExpressionDebugFormatter(this);
+    protected internal virtual ExpressionDebugFormatter DebugFormatter => new(this);
 
     [DebuggerDisplay(@"\{{FormattedString,nq}\}")]
-    protected internal class ExpressionDebugFormatter
+    protected internal class ExpressionDebugFormatter(Expression expression)
     {
-        public ExpressionDebugFormatter(Expression expression)
-            => Expression = expression.CheckNotNull();
-
-        protected Expression Expression { get; }
+        protected Expression Expression { get; } = expression.CheckNotNull();
 
         private string FormattedString => ToString() ?? string.Empty;
 
@@ -75,14 +70,9 @@ public abstract class Expression
         protected static string Format(TypeInfo? typeInfo) => typeInfo?.GetFriendlyName(false) ?? string.Empty;
     }
 
-    protected internal abstract class ExpressionDebugFormatter<T> : ExpressionDebugFormatter
+    protected internal abstract class ExpressionDebugFormatter<T>(T expression) : ExpressionDebugFormatter(expression)
         where T : Expression
     {
-        protected ExpressionDebugFormatter(T expression)
-            : base(expression)
-        {
-        }
-
         public new T Expression => (T)base.Expression;
     }
 }

@@ -23,7 +23,7 @@ public static class JsonSerializerSettingsExtensions
     public static T ConfigureRemoteLinq<T>(this T settings, KnownTypesRegistry? knownTypesRegistry = null)
         where T : JsonSerializerSettings
     {
-        knownTypesRegistry ??= new KnownTypesRegistry();
+        knownTypesRegistry ??= new();
 
         settings = settings.CheckNotNull().ConfigureAqua(knownTypesRegistry);
 
@@ -54,12 +54,12 @@ public static class JsonSerializerSettingsExtensions
             {
                 typeof(Query),
             })
-            .Where(x => !x.IsGenericType)
-            .Where(x =>
+            .Where(static x => !x.IsGenericType)
+            .Where(static x =>
             {
                 var attributes = x.GetCustomAttributes(true);
-                return attributes.Any(a => a is SerializableAttribute)
-                    || attributes.Any(a => a is DataContractAttribute);
+                return attributes.Any(static a => a is SerializableAttribute)
+                    || attributes.Any(static a => a is DataContractAttribute);
             });
         foreach (var type in types)
         {

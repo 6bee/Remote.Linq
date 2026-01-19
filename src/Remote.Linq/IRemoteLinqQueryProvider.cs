@@ -5,6 +5,4 @@ namespace Remote.Linq;
 /// <summary>
 /// Marker interface for <i>Remote.Linq</i> providers of queryable sequences.
 /// </summary>
-public interface IRemoteLinqQueryProvider
-{
-}
+public interface IRemoteLinqQueryProvider;

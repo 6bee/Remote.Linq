@@ -7,42 +7,30 @@ internal static partial class MethodInfos
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    private sealed class TDelegate
-    {
-    }
+    private sealed class TDelegate;
 
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    internal sealed class TElement
-    {
-    }
+    internal sealed class TElement;
 
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    internal sealed class TSource
-    {
-    }
+    internal sealed class TSource;
 
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    internal sealed class TResult
-    {
-    }
+    internal sealed class TResult;
 
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    private sealed class TKey
-    {
-    }
+    private sealed class TKey;
 
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    private sealed class TAccumulate
-    {
-    }
+    private sealed class TAccumulate;
 }

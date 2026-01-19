@@ -6,13 +6,9 @@ using Aqua.TypeExtensions;
 using Remote.Linq.ExpressionExecution;
 using System.Linq.Expressions;
 
-public abstract class InteractiveAsyncExpressionExecutor<TDataTranferObject> : AsyncExpressionExecutor<IAsyncQueryable, TDataTranferObject>
+public abstract class InteractiveAsyncExpressionExecutor<TDataTranferObject>(Func<Type, IAsyncQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+    : AsyncExpressionExecutor<IAsyncQueryable, TDataTranferObject>(queryableProvider, context)
 {
-    protected InteractiveAsyncExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
-        : base(queryableProvider, context)
-    {
-    }
-
     protected async override ValueTask<object?> ExecuteCoreAsync(Expression expression, CancellationToken cancellation)
     {
         var queryResult = expression.CheckNotNull().CompileAndInvokeExpression();

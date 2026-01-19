@@ -12,7 +12,7 @@ using MethodInfo = System.Reflection.MethodInfo;
 /// <see cref="TaskAsyncQueryProvider"/> mimics asynchronous expression execution as in a client-server-round-trip using remote linq,
 /// allowing to wrap local test data in a <see cref="IAsyncRemoteQueryable{T}"/> type.
 /// </summary>
-internal sealed class TaskAsyncQueryProvider : IAsyncRemoteQueryProvider
+internal sealed class TaskAsyncQueryProvider(IExpressionTranslatorContext? context = null) : IAsyncRemoteQueryProvider
 {
     private static readonly MethodInfo _executeMethod = typeof(TaskAsyncQueryProvider)
         .GetMethodEx(nameof(Execute), [typeof(MethodInfos.TResult)], typeof(Expression));
@@ -20,10 +20,7 @@ internal sealed class TaskAsyncQueryProvider : IAsyncRemoteQueryProvider
     private static readonly MethodInfo _createQueryMethod = typeof(TaskAsyncQueryProvider)
         .GetMethodEx(nameof(CreateQuery), [typeof(MethodInfos.TElement)], typeof(Expression));
 
-    private readonly IExpressionTranslatorContext _context;
-
-    public TaskAsyncQueryProvider(IExpressionTranslatorContext? context = null)
-        => _context = context ?? ExpressionTranslatorContext.Default;
+    private readonly IExpressionTranslatorContext _context = context ?? ExpressionTranslatorContext.Default;
 
     /// <inheritdoc/>
     public IQueryable CreateQuery(Expression expression)

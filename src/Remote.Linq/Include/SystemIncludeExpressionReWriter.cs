@@ -91,7 +91,7 @@ public static class SystemIncludeExpressionReWriter
         Expression Parent { get; }
     }
 
-    private sealed class StackedQueryableCleaner : SystemExpressionVisitorBase
+    private sealed class StackedQueryableCleaner(StackedQueryableCleaner.Strategy strategy = StackedQueryableCleaner.Strategy.Eliminate) : SystemExpressionVisitorBase
     {
         public enum Strategy
         {
@@ -105,22 +105,17 @@ public static class SystemIncludeExpressionReWriter
         private static readonly MethodInfo SubselectStackedIncludableQueryableMethodInfo =
             typeof(StackedQueryableCleaner).GetMethodEx(nameof(SubselectStackedIncludableQueryable));
 
-        private readonly Strategy _strategy;
-
-        public StackedQueryableCleaner(Strategy strategy = Strategy.Eliminate)
-            => _strategy = strategy;
-
         internal Expression Run(Expression expression) => Visit(expression);
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
             if (node.Type.Implements(typeof(IStackedIncludableQueryable<>), out var args) && node.Value is IQueryable queryable)
             {
-                var method = _strategy switch
+                var method = strategy switch
                 {
                     Strategy.Eliminate => EliminateStackedIncludableQueryableMethodInfo,
                     Strategy.SubSelect => SubselectStackedIncludableQueryableMethodInfo,
-                    _ => throw new NotSupportedException($"Strategy '{_strategy}' not supported."),
+                    _ => throw new NotSupportedException($"Strategy '{strategy}' not supported."),
                 };
 
                 var m = method.MakeGenericMethod(args);
@@ -340,7 +335,7 @@ public static class SystemIncludeExpressionReWriter
 
             IEnumerator IEnumerable.GetEnumerator() => throw NotSupportedException;
 
-            private NotSupportedException NotSupportedException => new NotSupportedException("This queryable serves as a placeholder and is not meant for execution");
+            private NotSupportedException NotSupportedException => new("This queryable serves as a placeholder and is not meant for execution");
         }
     }
 }

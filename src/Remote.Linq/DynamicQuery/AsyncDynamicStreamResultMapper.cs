@@ -8,17 +8,9 @@ using System.Linq.Expressions;
 /// <summary>
 /// Asynchronous query result mapper for async streams.
 /// </summary>
-public sealed class AsyncDynamicStreamResultMapper : IAsyncQueryResultMapper<DynamicObject>
+public sealed class AsyncDynamicStreamResultMapper(IDynamicObjectMapper? mapper = null) : IAsyncQueryResultMapper<DynamicObject>
 {
-    private readonly IDynamicObjectMapper? _mapper;
-
-    public AsyncDynamicStreamResultMapper(IDynamicObjectMapper? mapper = null)
-        => _mapper = mapper;
-
     /// <inheritdoc/>
     public ValueTask<TResult> MapResultAsync<TResult>(DynamicObject? source, Expression expression, CancellationToken cancellation = default)
-    {
-        var mapper = _mapper ?? ExpressionTranslatorContext.Default.ValueMapper;
-        return new(mapper.Map<TResult>(source));
-    }
+        => new((mapper ?? ExpressionTranslatorContext.Default.ValueMapper).Map<TResult>(source));
 }

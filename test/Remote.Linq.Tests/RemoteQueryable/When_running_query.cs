@@ -53,7 +53,7 @@ public abstract class When_running_query
     {
         Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
         Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-        Store dataStore = new Store();
+        Store dataStore = new();
         Func<Expression, DynamicObject> execute = expression =>
             {
                 Interlocked.Increment(ref _roundtripCount);
@@ -234,7 +234,7 @@ public abstract class When_running_query
     {
         public Product Product { get; set; } = new Product();
 
-        public List<Product> ProductList { get; set; } = new List<Product>() { new Product() };
+        public List<Product> ProductList { get; set; } = new List<Product>() { new() };
     }
 
     [Fact]

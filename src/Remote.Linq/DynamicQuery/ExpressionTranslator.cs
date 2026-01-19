@@ -6,13 +6,8 @@ using Remote.Linq.ExpressionVisitors;
 using RemoteExpression = Remote.Linq.Expressions.Expression;
 using SystemExpression = System.Linq.Expressions.Expression;
 
-public class ExpressionTranslator : IExpressionTranslator
+public class ExpressionTranslator(IExpressionToRemoteLinqContext? context = null) : IExpressionTranslator
 {
-    private readonly IExpressionToRemoteLinqContext? _context;
-
-    public ExpressionTranslator(IExpressionToRemoteLinqContext? context = null)
-        => _context = context;
-
     /// <summary>
     /// Default procedure to translatest a given <see cref="SystemExpression"/> into a <see cref="RemoteExpression"/>.
     /// </summary>
@@ -29,10 +24,10 @@ public class ExpressionTranslator : IExpressionTranslator
         => expression.SimplifyIncorporationOfRemoteQueryables();
 
     protected virtual RemoteExpression Translate(SystemExpression expression)
-        => expression.ToRemoteLinqExpression(_context);
+        => expression.ToRemoteLinqExpression(context);
 
     protected virtual RemoteExpression PostProcess(RemoteExpression expression)
         => expression
-        .ReplaceQueryableByResourceDescriptors(_context?.TypeInfoProvider)
+        .ReplaceQueryableByResourceDescriptors(context?.TypeInfoProvider)
         .ReplaceGenericQueryArgumentsByNonGenericArguments();
 }

@@ -3,7 +3,6 @@
 namespace Remote.Linq.EntityFramework;
 
 using Aqua.TypeExtensions;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -12,24 +11,12 @@ internal static class EntityFrameworkMethodInfos
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-    private sealed class T
-    {
-        private T()
-        {
-        }
-    }
+    private sealed class T;
 
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-    private sealed class TProperty
-    {
-        private TProperty()
-        {
-        }
-    }
+    private sealed class TProperty;
 
     internal static readonly MethodInfo StringIncludeMethodInfo = typeof(System.Data.Entity.QueryableExtensions).GetMethodEx(
         nameof(System.Data.Entity.QueryableExtensions.Include),

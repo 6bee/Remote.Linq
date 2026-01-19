@@ -4,7 +4,6 @@ namespace Remote.Linq.EntityFramework.ExpressionVisitors;
 
 using Aqua.EnumerableExtensions;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -14,13 +13,7 @@ internal static class AsyncScalarQueryExpressionReWriter
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-    private sealed class ProbingType
-    {
-        private ProbingType()
-        {
-        }
-    }
+    private sealed class ProbingType;
 
     private static readonly Dictionary<MethodInfo, MethodInfo> _methods = GetScalarQueryMethods();
 

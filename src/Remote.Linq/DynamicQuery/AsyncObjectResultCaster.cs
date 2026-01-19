@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 /// </summary>
 public sealed class AsyncObjectResultCaster : IAsyncQueryResultMapper<object>
 {
-    private readonly ObjectResultCaster _objectResultCaster = new ObjectResultCaster();
+    private readonly ObjectResultCaster _objectResultCaster = new();
 
     /// <inheritdoc/>
     public ValueTask<TResult> MapResultAsync<TResult>(object? source, Expression expression, CancellationToken cancellation = default)

@@ -31,17 +31,14 @@ public class ExpressionTranslatorContext : IExpressionTranslatorContext
 
         public ITypeResolver TypeResolver => Aqua.TypeSystem.TypeResolver.Instance;
 
-        private NotSupportedException NotSupportedException => new NotSupportedException("Operation must not be called as no value mapping should occure.");
+        private NotSupportedException NotSupportedException => new("Operation must not be called as no value mapping should occure.");
 
         public IExpressionTranslator ExpressionTranslator => new ExpressionTranslator(this);
     }
 
-    private sealed class IsKnownTypeProviderDecorator : IIsKnownTypeProvider
+    private sealed class IsKnownTypeProviderDecorator(IIsKnownTypeProvider? parent) : IIsKnownTypeProvider
     {
-        private readonly Func<Type, bool> _parent;
-
-        public IsKnownTypeProviderDecorator(IIsKnownTypeProvider? parent)
-            => _parent = parent is null
+        private readonly Func<Type, bool> _parent = parent is null
             ? _ => false
             : parent.IsKnownType;
 

@@ -34,10 +34,10 @@ public class When_translating_expression_with_readonly_type_value : ExpressionTr
             => $"{_value:yyyy-MM-dd}";
 
         public static Date From(DateTime date)
-            => new Date(date);
+            => new(date);
 
         public static Date From(int year, int month, int day)
-            => new Date(new DateTime(year, month, day));
+            => new(new DateTime(year, month, day));
     }
 
     private static class DateHelper
@@ -51,7 +51,7 @@ public class When_translating_expression_with_readonly_type_value : ExpressionTr
         }
 
         public static DynamicObject ToDynamicObject(Date date)
-            => new DynamicObject(new PropertySet
+            => new(new PropertySet
             {
                 { "Day", date.Day },
                 { "Month", date.Month },

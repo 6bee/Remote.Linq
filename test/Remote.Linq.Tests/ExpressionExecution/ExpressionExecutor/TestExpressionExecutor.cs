@@ -18,8 +18,8 @@ public class TestExpressionExecutor : DefaultExpressionExecutor
     public static readonly System.Linq.Expressions.Expression Step3_Expression = System.Linq.Expressions.Expression.Constant("step3");
     public static readonly object Step4_Result = "step4";
     public static readonly object Step5_Result = "step5";
-    public static readonly DynamicObject Step6_Result = new DynamicObject("step6");
-    public static readonly DynamicObject Step7_Result = new DynamicObject("step7");
+    public static readonly DynamicObject Step6_Result = new("step6");
+    public static readonly DynamicObject Step7_Result = new("step7");
 
     private readonly int[] _callCounters = new int[7];
 

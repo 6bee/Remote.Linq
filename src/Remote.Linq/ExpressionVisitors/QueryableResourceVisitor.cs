@@ -17,13 +17,9 @@ public abstract class QueryableResourceVisitor
     internal static Expression ReplaceQueryablesByResourceDescriptors(Expression expression, ITypeInfoProvider? typeInfoProvider, ITypeResolver? typeResolver)
         => new QueryableVisitor(typeInfoProvider, typeResolver).Run(expression);
 
-    protected class ResourceDescriptorVisitor<TQueryable> : RemoteExpressionVisitorBase
+    protected class ResourceDescriptorVisitor<TQueryable>(Func<Type, TQueryable> provider, ITypeResolver? typeResolver) : RemoteExpressionVisitorBase(typeResolver)
     {
-        private readonly Func<Type, TQueryable> _provider;
-
-        internal protected ResourceDescriptorVisitor(Func<Type, TQueryable> provider, ITypeResolver? typeResolver)
-            : base(typeResolver)
-            => _provider = provider.CheckNotNull();
+        private readonly Func<Type, TQueryable> _provider = provider.CheckNotNull();
 
         public Expression Run(Expression expression) => Visit(expression);
 

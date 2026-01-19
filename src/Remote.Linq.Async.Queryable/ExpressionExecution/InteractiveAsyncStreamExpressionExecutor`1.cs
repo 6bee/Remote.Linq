@@ -8,13 +8,9 @@ using System.Collections;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-public abstract class InteractiveAsyncStreamExpressionExecutor<TDataTranferObject> : AsyncStreamExpressionExecutor<IAsyncQueryable, TDataTranferObject>
+public abstract class InteractiveAsyncStreamExpressionExecutor<TDataTranferObject>(Func<Type, IAsyncQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+    : AsyncStreamExpressionExecutor<IAsyncQueryable, TDataTranferObject>(queryableProvider, context)
 {
-    protected InteractiveAsyncStreamExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
-        : base(queryableProvider, context)
-    {
-    }
-
     protected override async IAsyncEnumerable<object?> ExecuteAsyncStream(Expression expression, [EnumeratorCancellation] CancellationToken cancellation)
     {
         var asyncEnumerable = ExecuteAsyncStreamCore(expression);

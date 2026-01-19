@@ -2,13 +2,9 @@
 
 namespace Remote.Linq.Async.Queryable.ExpressionExecution;
 
-public sealed class CastingReactiveAsyncExpressionExecutor<TResult> : InteractiveAsyncExpressionExecutor<TResult?>
+public sealed class CastingReactiveAsyncExpressionExecutor<TResult>(Func<Type, IAsyncQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
+    : InteractiveAsyncExpressionExecutor<TResult?>(queryableProvider, context)
 {
-    public CastingReactiveAsyncExpressionExecutor(Func<Type, IAsyncQueryable> queryableProvider, IExpressionFromRemoteLinqContext? context = null)
-        : base(queryableProvider, context)
-    {
-    }
-
     protected override TResult? ConvertResult(object? queryResult)
     {
         if (queryResult is null)

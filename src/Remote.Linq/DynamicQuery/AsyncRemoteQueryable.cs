@@ -7,16 +7,9 @@ using System.Linq.Expressions;
 /// <summary>
 /// Provides functionality to compose queries for async remote execution.
 /// </summary>
-public class AsyncRemoteQueryable : RemoteQueryable, IOrderedAsyncRemoteQueryable
+public class AsyncRemoteQueryable(Type elementType, IAsyncRemoteQueryProvider provider, Expression? expression = null)
+    : RemoteQueryable(elementType, provider, expression), IOrderedAsyncRemoteQueryable
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AsyncRemoteQueryable"/> class.
-    /// </summary>
-    public AsyncRemoteQueryable(Type elementType, IAsyncRemoteQueryProvider provider, Expression? expression = null)
-        : base(elementType, provider, expression)
-    {
-    }
-
     /// <inheritdoc/>
     public new IAsyncRemoteQueryProvider Provider => (IAsyncRemoteQueryProvider)base.Provider;
 }

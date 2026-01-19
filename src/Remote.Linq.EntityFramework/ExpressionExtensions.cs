@@ -30,7 +30,7 @@ public static class ExpressionExtensions
         DbContext dbContext,
         IExpressionTranslatorContext? context = null,
         Func<Type, bool>? setTypeInformation = null)
-        => new AsyncDefaultExpressionExecutionContext(new DefaultEntityFrameworkExpressionExecutor(dbContext, context, setTypeInformation), expression);
+        => new(new DefaultEntityFrameworkExpressionExecutor(dbContext, context, setTypeInformation), expression);
 
     /// <summary>
     /// Creates an <see cref="AsyncDefaultExpressionExecutionContext" /> for the given <see cref="Expression"/>.
@@ -45,7 +45,7 @@ public static class ExpressionExtensions
         Func<Type, IQueryable> queryableProvider,
         IExpressionTranslatorContext? context = null,
         Func<Type, bool>? setTypeInformation = null)
-        => new AsyncDefaultExpressionExecutionContext(new DefaultEntityFrameworkExpressionExecutor(queryableProvider, context, setTypeInformation), expression);
+        => new(new DefaultEntityFrameworkExpressionExecutor(queryableProvider, context, setTypeInformation), expression);
 
     /// <summary>
     /// Creates an <see cref="AsyncExpressionExecutionContext{TResult}" /> for the given <see cref="Expression"/>.
@@ -59,7 +59,7 @@ public static class ExpressionExtensions
         this Expression expression,
         DbContext dbContext,
         IExpressionTranslatorContext? context = null)
-        => new AsyncExpressionExecutionContext<TResult>(new CastingEntityFrameworkExpressionExecutor<TResult>(dbContext, context), expression);
+        => new(new CastingEntityFrameworkExpressionExecutor<TResult>(dbContext, context), expression);
 
     /// <summary>
     /// Creates an <see cref="AsyncExpressionExecutionContext{TResult}" /> for the given <see cref="Expression"/>.
@@ -72,7 +72,7 @@ public static class ExpressionExtensions
         this Expression expression,
         Func<Type, IQueryable> queryableProvider,
         IExpressionTranslatorContext? context = null)
-        => new AsyncExpressionExecutionContext<TResult>(new CastingEntityFrameworkExpressionExecutor<TResult>(queryableProvider, context), expression);
+        => new(new CastingEntityFrameworkExpressionExecutor<TResult>(queryableProvider, context), expression);
 
     /// <summary>
     /// Composes and executes the query based on the <see cref="Expression"/> and maps the result into dynamic objects.
