@@ -4,7 +4,7 @@
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <AquaCoreVersion>5.5.0</AquaCoreVersion>
+    <AquaCoreVersion>5.5.1</AquaCoreVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="aqua-core" Version="$(AquaCoreVersion)" />
