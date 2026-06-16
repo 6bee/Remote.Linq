@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bump _aqua-core_ packages from 5.5.0 to 5.5.1
+- Bump _EntityFramework_ from 6.5.1 to 6.5.2
 
 ### Deprecated
 

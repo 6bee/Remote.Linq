@@ -13,7 +13,7 @@
     <PackageVersion Include="aqua-core-text-json" Version="$(AquaCoreVersion)" />
     <PackageVersion Include="aqua.tool.Validation" Version="3.2.1" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
-    <PackageVersion Include="EntityFramework" Version="6.5.1" />
+    <PackageVersion Include="EntityFramework" Version="6.5.2" />
     <PackageVersion Include="FluentNHibernate" Version="3.4.0" />
     <PackageVersion Include="Grpc.Core" Version="2.46.6" />
     <PackageVersion Include="Iesi.Collections" Version="4.1.1" />
