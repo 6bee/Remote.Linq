@@ -13,9 +13,4 @@
     <PackageReference Include="Moq" PrivateAssets="all" />
   </ItemGroup>
 
-  <!--<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>-->
-
 </Project>
