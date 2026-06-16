@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-## [7.3.2][7.3.2] - 2026-06-16
+## [7.3.3][7.3.3] - 2026-06-16
 
 ### Changed
 
@@ -163,8 +163,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
-[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.3.2...main
-[7.3.2]: https://github.com/6bee/Remote.Linq/compare/v7.3.1...v7.3.2
+[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.3.3...main
+[7.3.3]: https://github.com/6bee/Remote.Linq/compare/v7.3.1...v7.3.3
 [7.3.1]: https://github.com/6bee/Remote.Linq/compare/v7.3.0...v7.3.1
 [7.3.0]: https://github.com/6bee/Remote.Linq/compare/v7.2.2...v7.3.0
 [7.2.2]: https://github.com/6bee/Remote.Linq/compare/v7.2.1...v7.2.2

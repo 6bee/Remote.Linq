@@ -4,7 +4,7 @@
   <PropertyGroup>
     <MajorVersion>7</MajorVersion>
     <MinorVersion>3</MinorVersion>
-    <PatchVersion>2</PatchVersion>
+    <PatchVersion>3</PatchVersion>
     <PreReleaseLabel>dev</PreReleaseLabel>
   </PropertyGroup>
 
