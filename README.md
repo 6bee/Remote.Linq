@@ -211,6 +211,8 @@ TValue copy = JsonConvert.DeserializeObject<TValue>(json, serializerSettings);
 
 # Remote.Linq.Text.Json
 
+Note: This package has been deprecated and is now included in Remote.Linq.
+
 Provides _[System.Text.Json][json-text-package]_ serialization settings for _Remote.Linq_ types.
 
 ## How to Use
