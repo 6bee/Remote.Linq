@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
   <PropertyGroup>
@@ -6,7 +6,6 @@
     <MinorVersion>3</MinorVersion>
     <PatchVersion>1</PatchVersion>
     <PreReleaseLabel>dev</PreReleaseLabel>
-    <AquaCoreVersion>5.5.0</AquaCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -35,8 +34,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)remotelinq-small.png" Pack="true" Visible="false" PackagePath=""/>
-    <None Include="$(MSBuildThisFileDirectory)license.txt" Pack="true" Visible="false" PackagePath=""/>
+    <None Include="$(MSBuildThisFileDirectory)remotelinq-small.png" Pack="true" Visible="false" PackagePath="" />
+    <None Include="$(MSBuildThisFileDirectory)license.txt" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
@@ -69,7 +68,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.Validation" Version="3.2.1">
+    <PackageReference Include="aqua.tool.Validation">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -77,11 +76,11 @@
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.26.0.92422" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
+    <PackageReference Include="SonarAnalyzer.CSharp" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" Condition=" '$(EnableStyleCopAnalyzers)' == 'true' ">
+    <PackageReference Include="StyleCop.Analyzers" Condition=" '$(EnableStyleCopAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Remote.Linq.Newtonsoft.Json\Remote.Linq.Newtonsoft.Json.csproj" />
-    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.3" />
+    <PackageReference Include="Newtonsoft.Json.Bson" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Common.Model.OrderItem.cs" Link="Model\OrderItem.cs" />

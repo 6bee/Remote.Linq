@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Remote.Linq\Remote.Linq.csproj" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Common.Model.OrderItem.cs" Link="Model\OrderItem.cs" />

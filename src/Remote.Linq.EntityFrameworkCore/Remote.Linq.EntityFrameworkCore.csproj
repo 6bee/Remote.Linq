@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net10.0</TargetFrameworks>
@@ -13,7 +13,7 @@
       - Apply eager-loading (Include-expressions in linq queries)
 
       - Make use of DB functions
-        e.g. queryable.Where(x => Microsoft.EntityFrameworkCore.EF.Functions.Like(x.Name, "%fruit%"))</Description>
+        e.g. queryable.Where(x =&gt; Microsoft.EntityFrameworkCore.EF.Functions.Like(x.Name, "%fruit%"))</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,10 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" Condition="'$(TargetFramework)' == 'net10.0'" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.12" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" Condition="'$(TargetFramework)' == 'netstandard2.1'" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.32" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
 
 </Project>
