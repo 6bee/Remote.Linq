@@ -11,15 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bump _aqua-core_ packages from 5.5.0 to 5.5.1
-- Bump _EntityFramework_ from 6.5.1 to 6.5.2 (concerns _Remote.Linq.EntityFramework_)
-- Bump _Microsoft.EntityFrameworkCore_ from 10.0.2 to 10.0.9 (net8.0 9.0.12 → 9.0.17) (concerns _Remote.Linq.EntityFrameworkCore_)
-
 ### Deprecated
 
 ### Removed
 
 ### Fixed
+
+### Security
+
+## [7.3.2][7.3.2] - 2026-06-16
+
+### Changed
+
+- Bump _aqua-core_ packages from 5.5.0 to 5.5.1
+- Bump _EntityFramework_ from 6.5.1 to 6.5.2 (concerns _Remote.Linq.EntityFramework_)
+- Bump _Microsoft.EntityFrameworkCore_ from 10.0.2 to 10.0.9 (net8.0 9.0.12 → 9.0.17) (concerns _Remote.Linq.EntityFrameworkCore_)
 
 ### Security
 
@@ -157,7 +163,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dropped unused dependency on _System.Runtime.Serialization.Formatters_.
 
-[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.3.1...main
+[vnext-unreleased]: https://github.com/6bee/Remote.Linq/compare/v7.3.2...main
+[7.3.2]: https://github.com/6bee/Remote.Linq/compare/v7.3.1...v7.3.2
 [7.3.1]: https://github.com/6bee/Remote.Linq/compare/v7.3.0...v7.3.1
 [7.3.0]: https://github.com/6bee/Remote.Linq/compare/v7.2.2...v7.3.0
 [7.2.2]: https://github.com/6bee/Remote.Linq/compare/v7.2.1...v7.2.2
