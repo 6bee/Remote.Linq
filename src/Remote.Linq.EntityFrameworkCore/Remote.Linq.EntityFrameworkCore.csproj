@@ -13,7 +13,8 @@
       - Apply eager-loading (Include-expressions in linq queries)
 
       - Make use of DB functions
-        e.g. queryable.Where(x =&gt; Microsoft.EntityFrameworkCore.EF.Functions.Like(x.Name, "%fruit%"))</Description>
+        e.g. queryable.Where(x =&gt; Microsoft.EntityFrameworkCore.EF.Functions.Like(x.Name, "%fruit%"))
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
