@@ -5,8 +5,7 @@ namespace Newtonsoft.Json;
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 
 using Aqua.Newtonsoft.Json;
-using global::Newtonsoft.Json.Serialization;
-using Remote.Linq.Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Remote.Linq.Newtonsoft.Json.ContractResolvers;
 using Remote.Linq.SimpleQuery;
 using System.ComponentModel;
@@ -23,11 +22,13 @@ public static class JsonSerializerSettingsExtensions
     public static T ConfigureRemoteLinq<T>(this T settings, KnownTypesRegistry? knownTypesRegistry = null)
         where T : JsonSerializerSettings
     {
+        settings.AssertNotNull();
+
         knownTypesRegistry ??= new();
 
-        settings = settings.CheckNotNull().ConfigureAqua(knownTypesRegistry);
+        settings = settings.ConfigureAqua(knownTypesRegistry);
 
-        RegisterKnownTypes(knownTypesRegistry);
+        knownTypesRegistry.RegisterKnownRemoteLinqTypes();
 
         if (settings.ContractResolver is not RemoteLinqContractResolver)
         {
@@ -46,26 +47,24 @@ public static class JsonSerializerSettingsExtensions
         return remoteLinqSettings.ConfigureRemoteLinq(remoteLinqSettings.KnownTypesRegistry);
     }
 
-    private static void RegisterKnownTypes(KnownTypesRegistry knownTypesRegistry)
+    extension(KnownTypesRegistry registry)
     {
-        var types = typeof(RemoteLinq.Expression).Assembly
-            .GetExportedTypes()
-            .Except(new[]
-            {
-                typeof(Query),
-            })
-            .Where(static x => !x.IsGenericType)
-            .Where(static x =>
-            {
-                var attributes = x.GetCustomAttributes(true);
-                return attributes.Any(static a => a is SerializableAttribute)
-                    || attributes.Any(static a => a is DataContractAttribute);
-            });
-        foreach (var type in types)
+        private void RegisterKnownRemoteLinqTypes()
         {
-            if (!knownTypesRegistry.TryRegister(type, type.Name))
+            var types = typeof(RemoteLinq.Expression).Assembly
+                .GetExportedTypes()
+                .Except(new[]
+                {
+                    typeof(Query),
+                })
+                .Where(static x => !x.IsGenericType)
+                .Where(static x => x.GetCustomAttributes(true).Any(static a => a is SerializableAttribute or DataContractAttribute));
+            foreach (var type in types)
             {
-                throw new InvalidOperationException($"Failed to register '{type}' as known type.");
+                if (!registry.TryRegister(type, type.Name))
+                {
+                    throw new InvalidOperationException($"Failed to register '{type}' as known type.");
+                }
             }
         }
     }

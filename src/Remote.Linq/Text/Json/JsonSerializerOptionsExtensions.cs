@@ -26,7 +26,7 @@ public static class JsonSerializerOptionsExtensions
     /// </summary>
     /// <param name="options">Json serializer options to be ammended.</param>
     public static JsonSerializerOptions ConfigureRemoteLinq(this JsonSerializerOptions options)
-        => options.ConfigureRemoteLinq(default(KnownTypesRegistry));
+        => options.ConfigureRemoteLinq(null);
 
     /// <summary>
     /// Configures <see cref="JsonSerializerOptions"/> and adds <see cref="JsonConverter"/>s for <i>Aqua</i> and <i>Remote.Linq</i> types.
@@ -39,7 +39,7 @@ public static class JsonSerializerOptionsExtensions
 
         knownTypesRegistry ??= KnownTypesRegistry.Default;
 
-        RegisterRemoteLinqKnownTypes(knownTypesRegistry);
+        knownTypesRegistry.RegisterKnownRemoteLinqTypes();
 
         options.ConfigureAqua(knownTypesRegistry);
 
@@ -53,9 +53,7 @@ public static class JsonSerializerOptionsExtensions
             options.Converters.Add(new VariableQueryArgumentListConverter(knownTypesRegistry));
         }
 
-        var remoteLinqAssembly = typeof(RemoteQueryable).Assembly;
-
-        remoteLinqAssembly
+        RemoteLinqAssembly
             .GetTypes()
             .Where(static x => !x.IsAbstract)
             .Where(typeof(Expression).IsAssignableFrom)
@@ -67,7 +65,7 @@ public static class JsonSerializerOptionsExtensions
             options.Converters.Add(new ExpressionConverter<Expression>(knownTypesRegistry, true));
         }
 
-        remoteLinqAssembly
+        RemoteLinqAssembly
             .GetTypes()
             .Where(static x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
             .Where(static x => x.GetCustomAttributes(typeof(DataContractAttribute), false).Length is not 0)
@@ -85,6 +83,8 @@ public static class JsonSerializerOptionsExtensions
         return options;
     }
 
+    private static Assembly RemoteLinqAssembly => typeof(RemoteQueryable).Assembly;
+
     [SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "False positive: 'knownTypesRegistry' used in local function")]
     private static void RegisterJsonConverter(this IEnumerable<Type> types, Type genericConverterType, JsonSerializerOptions options, KnownTypesRegistry knownTypesRegistry)
     {
@@ -101,28 +101,28 @@ public static class JsonSerializerOptionsExtensions
         }
     }
 
-    internal static KnownTypesRegistry RegisterRemoteLinqKnownTypes(this KnownTypesRegistry knownTypesRegistry)
+    extension(KnownTypesRegistry registry)
     {
-        var types = typeof(Expression).Assembly
-            .GetExportedTypes()
-            .Except([
-                typeof(Query),
-            ])
-            .Where(static x => !x.IsGenericType)
-            .Where(static x =>
-            {
-                var attributes = x.GetCustomAttributes(true);
-                return attributes.Any(static a => a is SerializableAttribute)
-                    || attributes.Any(static a => a is DataContractAttribute);
-            });
-        foreach (var type in types)
-        {
-            if (!knownTypesRegistry.TryRegister(type, type.Name))
-            {
-                throw new InvalidOperationException($"Failed to register '{type}' as known type.");
-            }
-        }
+        public static KnownTypesRegistry DefaultWithRemoteLinqTypes => KnownTypesRegistry.Default.RegisterKnownRemoteLinqTypes();
 
-        return knownTypesRegistry;
+        private KnownTypesRegistry RegisterKnownRemoteLinqTypes()
+        {
+            var types = RemoteLinqAssembly
+                .GetExportedTypes()
+                .Except([
+                    typeof(Query),
+                ])
+                .Where(static x => !x.IsGenericType)
+                .Where(static x => x.GetCustomAttributes(true).Any(static a => a is SerializableAttribute or DataContractAttribute));
+            foreach (var type in types)
+            {
+                if (!registry.TryRegister(type, type.Name))
+                {
+                    throw new InvalidOperationException($"Failed to register '{type}' as known type.");
+                }
+            }
+
+            return registry;
+        }
     }
 }

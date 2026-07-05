@@ -19,7 +19,7 @@ public class ExpressionConverter<TExpression>(KnownTypesRegistry knownTypesRegis
     }
 
     public ExpressionConverter()
-        : this(KnownTypesRegistry.Default.RegisterRemoteLinqKnownTypes())
+        : this(KnownTypesRegistry.DefaultWithRemoteLinqTypes)
     {
     }
 

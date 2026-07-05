@@ -11,7 +11,7 @@ using System.Text.Json;
 public sealed class VariableQueryArgumentConverter(KnownTypesRegistry knownTypeRegistry) : ObjectConverter<VariableQueryArgument>(knownTypeRegistry)
 {
     public VariableQueryArgumentConverter()
-        : this(KnownTypesRegistry.Default.RegisterRemoteLinqKnownTypes())
+        : this(KnownTypesRegistry.DefaultWithRemoteLinqTypes)
     {
     }
 
