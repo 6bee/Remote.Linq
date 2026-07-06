@@ -127,25 +127,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\15_R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\15_RemoteQueryable_ModelAbstraction\Server\Server.csproj", "{9C13073B-998A-4C9D-9DFE-4882000BF9DF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "20_RemoteQueryable_UsingBinarySerializationOverTcp", "20_RemoteQueryable_UsingBinarySerializationOverTcp", "{890EFF0D-45BF-47E1-A106-8732D6B1DF42}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "20_RemoteQueryable_UsingBinaryFormatterSerializationOverTcp", "20_RemoteQueryable_UsingBinaryFormatterSerializationOverTcp", "{890EFF0D-45BF-47E1-A106-8732D6B1DF42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\20_RemoteQueryable_UsingBinarySerializationOverTcp\Client\Client.csproj", "{17B7641C-BED4-4A33-8D36-F2E79A4853E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\20_RemoteQueryable_UsingBinaryFormatterSerializationOverTcp\Client\Client.csproj", "{17B7641C-BED4-4A33-8D36-F2E79A4853E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\20_RemoteQueryable_UsingBinarySerializationOverTcp\Common\Common.csproj", "{530784B1-66D7-4050-B9C3-CD42E8DA2A85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\20_RemoteQueryable_UsingBinaryFormatterSerializationOverTcp\Common\Common.csproj", "{530784B1-66D7-4050-B9C3-CD42E8DA2A85}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\20_RemoteQueryable_UsingBinarySerializationOverTcp\DemoStartUp\DemoStartUp.csproj", "{312AEF40-259A-4992-9A4A-144911DD4E67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\20_RemoteQueryable_UsingBinaryFormatterSerializationOverTcp\DemoStartUp\DemoStartUp.csproj", "{312AEF40-259A-4992-9A4A-144911DD4E67}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\20_RemoteQueryable_UsingBinarySerializationOverTcp\Server\Server.csproj", "{B15D3E79-AE6E-4ABD-A27C-1802698B4D86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\20_RemoteQueryable_UsingBinaryFormatterSerializationOverTcp\Server\Server.csproj", "{B15D3E79-AE6E-4ABD-A27C-1802698B4D86}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "21_RemoteQueryable_UsingBinarySerializationOverTcpAsync", "21_RemoteQueryable_UsingBinarySerializationOverTcpAsync", "{BB96643C-66FF-4FE5-8498-9EADAD0A46C7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "21_RemoteQueryable_UsingBinaryFormatterSerializationOverTcpAsync", "21_RemoteQueryable_UsingBinaryFormatterSerializationOverTcpAsync", "{BB96643C-66FF-4FE5-8498-9EADAD0A46C7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\21_RemoteQueryable_UsingBinarySerializationOverTcpAsync\Client\Client.csproj", "{5A9E46BD-7745-4904-87A4-41C75C6BC87C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\21_RemoteQueryable_UsingBinaryFormatterSerializationOverTcpAsync\Client\Client.csproj", "{5A9E46BD-7745-4904-87A4-41C75C6BC87C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\21_RemoteQueryable_UsingBinarySerializationOverTcpAsync\Common\Common.csproj", "{AED8CF0E-711B-4A70-8F7A-9F0B8BFE1A46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\21_RemoteQueryable_UsingBinaryFormatterSerializationOverTcpAsync\Common\Common.csproj", "{AED8CF0E-711B-4A70-8F7A-9F0B8BFE1A46}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\21_RemoteQueryable_UsingBinarySerializationOverTcpAsync\DemoStartUp\DemoStartUp.csproj", "{5CEAB9FD-A0DF-42D5-A836-7A24330125D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\21_RemoteQueryable_UsingBinaryFormatterSerializationOverTcpAsync\DemoStartUp\DemoStartUp.csproj", "{5CEAB9FD-A0DF-42D5-A836-7A24330125D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\21_RemoteQueryable_UsingBinarySerializationOverTcpAsync\Server\Server.csproj", "{D66BAAB1-90CA-45E2-873B-C37A679A65FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\21_RemoteQueryable_UsingBinaryFormatterSerializationOverTcpAsync\Server\Server.csproj", "{D66BAAB1-90CA-45E2-873B-C37A679A65FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "22_RemoteQueryable_UsingJsonSerializationOverTcp", "22_RemoteQueryable_UsingJsonSerializationOverTcp", "{24EF6B16-399E-466E-B350-00D478DAE066}"
 EndProject
