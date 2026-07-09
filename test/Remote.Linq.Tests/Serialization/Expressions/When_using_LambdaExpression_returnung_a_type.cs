@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Tests.Serialization.Expressions;
 
@@ -12,23 +12,23 @@ using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
 public abstract class When_using_LambdaExpression_returnung_a_type
 {
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_using_LambdaExpression_returnung_a_type(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
-
     public class With_data_contract_serializer() : When_using_LambdaExpression_returnung_a_type(DataContractSerializationHelper.CloneExpression);
 
     public class With_newtonsoft_json_serializer() : When_using_LambdaExpression_returnung_a_type(NewtonsoftJsonSerializationHelper.Clone);
 
     public class With_system_text_json_serializer() : When_using_LambdaExpression_returnung_a_type(SystemTextJsonSerializationHelper.Clone);
 
-#if NETFRAMEWORK
-    public class With_net_data_contract_serializer() : When_using_LambdaExpression_returnung_a_type(NetDataContractSerializationHelper.Clone);
-#endif // NETFRAMEWORK
+    public class With_protobuf_serializer() : When_using_LoopExpressions(ProtobufSerializationHelper.Clone);
 
-    public class With_protobuf_net_serializer() : When_using_LoopExpressions(ProtobufNetSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_using_LoopExpressions(MessagePackSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_using_LambdaExpression_returnung_a_type(x => XmlSerializationHelper.CloneExpression(x, [typeof(List<Aqua.TypeSystem.TypeInfo>), typeof(Aqua.TypeSystem.TypeInfo[])]));
+
+#if NETFRAMEWORK
+    public class With_binary_formatter() : When_using_LambdaExpression_returnung_a_type(BinarySerializationHelper.Clone);
+
+    public class With_net_data_contract_serializer() : When_using_LambdaExpression_returnung_a_type(NetDataContractSerializationHelper.Clone);
+#endif // NETFRAMEWORK
 
     private readonly Func<RemoteLambdaExpression, RemoteLambdaExpression> _serialize;
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Tests.Serialization.VariableQueryArgument;
 
@@ -9,10 +9,6 @@ using Xunit;
 
 public abstract class When_using_local_variable_query_argument_list
 {
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_using_local_variable_query_argument_list(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
-
     public class With_data_contract_serializer() : When_using_local_variable_query_argument_list(x => DataContractSerializationHelper.CloneExpression(x, [typeof(List<int>)]));
 
     public class With_newtonsoft_json_serializer() : When_using_local_variable_query_argument_list(NewtonsoftJsonSerializationHelper.Clone);
@@ -20,10 +16,14 @@ public abstract class When_using_local_variable_query_argument_list
     public class With_system_text_json_serializer() : When_using_local_variable_query_argument_list(SystemTextJsonSerializationHelper.Clone);
 
 #if NETFRAMEWORK
+    public class With_binary_formatter() : When_using_local_variable_query_argument_list(BinarySerializationHelper.Clone);
+
     public class With_net_data_contract_serializer() : When_using_local_variable_query_argument_list(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
-    public class With_protobuf_net_serializer() : When_using_local_variable_query_argument_list(ProtobufNetSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_using_local_variable_query_argument_list(ProtobufSerializationHelper.Clone);
+
+    public class With_messagepack_serializer() : When_using_local_variable_query_argument_list(MessagePackSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_using_local_variable_query_argument_list(x => XmlSerializationHelper.CloneExpression(x, [typeof(List<int>)]));
 

@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.EntityFramework
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.Newtonsoft.Json", "src\Remote.Linq.Newtonsoft.Json\Remote.Linq.Newtonsoft.Json.csproj", "{B7F2B77F-436A-478B-832E-36B84D4E9655}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.protobuf-net", "src\Remote.Linq.protobuf-net\Remote.Linq.protobuf-net.csproj", "{076D298F-C2CB-4BB6-9075-5277DC963C19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Remote.Linq.Protobuf", "src\Remote.Linq.Protobuf\Remote.Linq.Protobuf.csproj", "{076D298F-C2CB-4BB6-9075-5277DC963C19}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00_SimpleRemoteQuery", "00_SimpleRemoteQuery", "{692E4FD8-80B0-4AAF-AE58-3934D0247CAA}"
 	ProjectSection(SolutionItems) = preProject
@@ -287,15 +287,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{EE
 		samples\SharedCode\mssql\RemoteQueryableDemoDBSetup.cmd = samples\SharedCode\mssql\RemoteQueryableDemoDBSetup.cmd
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "29_RemoteQueryable_UsingProtobufNetSerializationOverTcp", "29_RemoteQueryable_UsingProtobufNetSerializationOverTcp", "{6F0E8CE5-F409-4D56-9495-D63172E9DAD6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "29_RemoteQueryable_UsingProtobufSerializationOverTcp", "29_RemoteQueryable_UsingProtobufSerializationOverTcp", "{6F0E8CE5-F409-4D56-9495-D63172E9DAD6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\29_RemoteQueryable_UsingProtobufNetSerializationOverTcp\Client\Client.csproj", "{596AE50D-D9F1-43ED-80FA-42FDE4D3EF39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "samples\29_RemoteQueryable_UsingProtobufSerializationOverTcp\Client\Client.csproj", "{596AE50D-D9F1-43ED-80FA-42FDE4D3EF39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\29_RemoteQueryable_UsingProtobufNetSerializationOverTcp\Common\Common.csproj", "{7BB4F936-FC31-4313-BA12-260435F06804}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "samples\29_RemoteQueryable_UsingProtobufSerializationOverTcp\Common\Common.csproj", "{7BB4F936-FC31-4313-BA12-260435F06804}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\29_RemoteQueryable_UsingProtobufNetSerializationOverTcp\DemoStartUp\DemoStartUp.csproj", "{45F369E5-0A8C-4AF6-A57B-30D660EA779E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoStartUp", "samples\29_RemoteQueryable_UsingProtobufSerializationOverTcp\DemoStartUp\DemoStartUp.csproj", "{45F369E5-0A8C-4AF6-A57B-30D660EA779E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\29_RemoteQueryable_UsingProtobufNetSerializationOverTcp\Server\Server.csproj", "{23F7E4E8-76E6-472F-AC73-CDD415C331CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "samples\29_RemoteQueryable_UsingProtobufSerializationOverTcp\Server\Server.csproj", "{23F7E4E8-76E6-472F-AC73-CDD415C331CA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03_RemoteQueryable_AsyncStream", "03_RemoteQueryable_AsyncStream", "{F9E20E6F-F7F6-4271-A0DB-73173A8B8A8F}"
 EndProject
@@ -342,6 +342,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp", "samples\35_RemoteQueryable_UsingWebAssembly\BlazorApp\BlazorApp.csproj", "{5A866744-281D-40E7-BB0B-ADF4615A6CFA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp.Client", "samples\35_RemoteQueryable_UsingWebAssembly\BlazorApp.Client\BlazorApp.Client.csproj", "{75A6C4B0-3E36-4D7C-BB2D-692507287CC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remote.Linq.MessagePack", "src\Remote.Linq.MessagePack\Remote.Linq.MessagePack.csproj", "{71BF3EE6-3220-C02E-1E5B-847F337141EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -813,6 +815,10 @@ Global
 		{75A6C4B0-3E36-4D7C-BB2D-692507287CC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75A6C4B0-3E36-4D7C-BB2D-692507287CC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75A6C4B0-3E36-4D7C-BB2D-692507287CC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71BF3EE6-3220-C02E-1E5B-847F337141EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71BF3EE6-3220-C02E-1E5B-847F337141EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71BF3EE6-3220-C02E-1E5B-847F337141EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71BF3EE6-3220-C02E-1E5B-847F337141EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -937,6 +943,7 @@ Global
 		{41E35159-ED90-405D-9D8D-0F04D8BC10A3} = {C92BA4B1-069E-4A9D-8EA6-F5E5B01FE6C3}
 		{5A866744-281D-40E7-BB0B-ADF4615A6CFA} = {984469D2-B50E-420E-A129-705B68DAAA42}
 		{75A6C4B0-3E36-4D7C-BB2D-692507287CC3} = {984469D2-B50E-420E-A129-705B68DAAA42}
+		{71BF3EE6-3220-C02E-1E5B-847F337141EB} = {8687346F-A492-4A8F-8F8F-637FAE0CE439}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7222E3B1-7D71-4663-8F49-6EFBF1019E06}

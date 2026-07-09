@@ -4,18 +4,19 @@
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <AquaCoreVersion>5.5.1</AquaCoreVersion>
+    <AquaCoreVersion>6.0.0-dev-027</AquaCoreVersion>
   </PropertyGroup>
   <!--
   global
   -->
   <ItemGroup>
     <PackageVersion Include="aqua-core" Version="$(AquaCoreVersion)" />
+    <PackageVersion Include="aqua-core-messagepack" Version="$(AquaCoreVersion)" />
     <PackageVersion Include="aqua-core-newtonsoft-json" Version="$(AquaCoreVersion)" />
-    <PackageVersion Include="aqua-core-protobuf-net" Version="$(AquaCoreVersion)" />
-    <PackageVersion Include="aqua-core-text-json" Version="$(AquaCoreVersion)" />
+    <PackageVersion Include="aqua-core-protobuf" Version="$(AquaCoreVersion)" />
     <PackageVersion Include="aqua.tool.Validation" Version="3.2.1" />
     <PackageVersion Include="EntityFramework" Version="6.5.2" />
+    <PackageVersion Include="Grpc.Tools" Version="2.83.0" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.26.0.92422" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
     <PackageVersion Include="System.Linq.Async.Queryable" Version="7.0.1" />
@@ -24,13 +25,13 @@
   target framework specific
   -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.11" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.17" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.17" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.19" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.19" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.32" />
@@ -46,12 +47,12 @@
   -->
   <ItemGroup Label="Tests">
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
-    <PackageVersion Include="Xunit.SkippableFact" Version="1.5.61" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.0" />
+    <PackageVersion Include="Xunit.SkippableFact" Version="1.5.85" />
   </ItemGroup>
   <!--
   samples projects specific

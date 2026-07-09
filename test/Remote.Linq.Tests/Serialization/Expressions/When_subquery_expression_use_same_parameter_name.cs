@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Tests.Serialization.Expressions;
 
@@ -14,23 +14,23 @@ using Expression = Remote.Linq.Expressions.Expression;
 
 public abstract class When_subquery_expression_use_same_parameter_name
 {
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_subquery_expression_use_same_parameter_name(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
-
     public class With_data_contract_serializer() : When_subquery_expression_use_same_parameter_name(DataContractSerializationHelper.Clone);
 
     public class With_newtonsoft_json_serializer() : When_subquery_expression_use_same_parameter_name(x => (Expression)NewtonsoftJsonSerializationHelper.Clone(x, x.GetType()));
 
     public class With_system_text_json_serializer() : When_subquery_expression_use_same_parameter_name(x => (Expression)SystemTextJsonSerializationHelper.Clone(x, x.GetType()));
 
-#if NETFRAMEWORK
-    public class With_net_data_contract_serializer() : When_subquery_expression_use_same_parameter_name(NetDataContractSerializationHelper.Clone);
-#endif // NETFRAMEWORK
+    public class With_protobuf_serializer() : When_using_LoopExpressions(ProtobufSerializationHelper.Clone);
 
-    public class With_protobuf_net_serializer() : When_using_LoopExpressions(ProtobufNetSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_using_LoopExpressions(MessagePackSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_subquery_expression_use_same_parameter_name(XmlSerializationHelper.Clone);
+
+#if NETFRAMEWORK
+    public class With_binary_formatter() : When_subquery_expression_use_same_parameter_name(BinarySerializationHelper.Clone);
+
+    public class With_net_data_contract_serializer() : When_subquery_expression_use_same_parameter_name(NetDataContractSerializationHelper.Clone);
+#endif // NETFRAMEWORK
 
     private interface IValue
     {

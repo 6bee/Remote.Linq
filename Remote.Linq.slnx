@@ -20,8 +20,9 @@
     <Project Path="src/Remote.Linq.Async.Queryable/Remote.Linq.Async.Queryable.csproj" />
     <Project Path="src/Remote.Linq.EntityFramework/Remote.Linq.EntityFramework.csproj" />
     <Project Path="src/Remote.Linq.EntityFrameworkCore/Remote.Linq.EntityFrameworkCore.csproj" />
+    <Project Path="src/Remote.Linq.MessagePack/Remote.Linq.MessagePack.csproj" />
     <Project Path="src/Remote.Linq.Newtonsoft.Json/Remote.Linq.Newtonsoft.Json.csproj" />
-    <Project Path="src/Remote.Linq.protobuf-net/Remote.Linq.protobuf-net.csproj" />
+    <Project Path="src/Remote.Linq.Protobuf/Remote.Linq.Protobuf.csproj" />
     <Project Path="src/Remote.Linq/Remote.Linq.csproj" />
   </Folder>
   <Folder Name="/test/">

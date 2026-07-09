@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Tests;
 
@@ -54,16 +54,20 @@ public static class TestData
             true,
             false,
             default(Guid),
-            Guid.NewGuid(),
+            Guid.Parse("0c67c9c9-245d-4d5b-ac7e-0803ca118f4c"),
             default(DateTime),
-            DateTime.Now,
+            new DateTime(0, DateTimeKind.Utc),
+            new DateTime(DateTime.MaxValue.Ticks / 10 * 10, DateTimeKind.Utc),
+            DateTime.Parse("1677-09-21T00:12:43.145224192Z").ToUniversalTime(), // smalest value that can be represented as unix nanoseconds with sub-microsecond precision
+            DateTime.Parse("2262-04-11T23:47:16.854775807Z").ToUniversalTime(), // biggest value that can be represented as unix nanoseconds with sub-microsecond precision
             Custom.Foo,
             Custom.Bar,
             default(TimeSpan),
-            new TimeSpan(long.MaxValue),
+            new TimeSpan(TimeSpan.MinValue.Ticks / 10 * 10), // min with microseconds precision
+            new TimeSpan(TimeSpan.MaxValue.Ticks / 10 * 10), // max with microseconds precision
             default(DateTimeOffset),
             DateTimeOffset.MinValue,
-            DateTimeOffset.MaxValue,
+            new DateTimeOffset(new DateTime(DateTime.MaxValue.Ticks / 10 * 10, DateTimeKind.Utc), TimeSpan.Zero),
             new DateTimeOffset(new DateTime(2012, 12, 12), new TimeSpan(12, 12, 0)),
             default(BigInteger),
             new BigInteger(ulong.MinValue) - 1,

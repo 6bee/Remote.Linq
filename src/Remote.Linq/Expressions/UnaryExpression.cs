@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Expressions;
 
@@ -37,6 +37,7 @@ public sealed class UnaryExpression : Expression
     [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = false)]
     public Expression Operand { get; set; } = null!;
 
+    // specifies the type to be converted to (or null if not applicable).
     [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
     public TypeInfo Type { get; set; } = null!;
 

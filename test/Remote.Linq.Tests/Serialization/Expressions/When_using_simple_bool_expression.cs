@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Tests.Serialization.Expressions;
 
@@ -8,23 +8,23 @@ using Xunit;
 
 public abstract class When_using_simple_bool_expression
 {
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_using_simple_bool_expression(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
-
     public class With_data_contract_serializer() : When_using_simple_bool_expression(DataContractSerializationHelper.CloneExpression);
 
     public class With_newtonsoft_json_serializer() : When_using_simple_bool_expression(NewtonsoftJsonSerializationHelper.Clone);
 
     public class With_system_text_json_serializer() : When_using_simple_bool_expression(SystemTextJsonSerializationHelper.Clone);
 
-#if NETFRAMEWORK
-    public class With_net_data_contract_serializer() : When_using_simple_bool_expression(NetDataContractSerializationHelper.Clone);
-#endif // NETFRAMEWORK
+    public class With_protobuf_serializer() : When_using_simple_bool_expression(ProtobufSerializationHelper.Clone);
 
-    public class With_protobuf_net_serializer() : When_using_simple_bool_expression(ProtobufNetSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_using_simple_bool_expression(MessagePackSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_using_simple_bool_expression(XmlSerializationHelper.CloneExpression);
+
+#if NETFRAMEWORK
+    public class With_binary_formatter() : When_using_simple_bool_expression(BinarySerializationHelper.Clone);
+
+    public class With_net_data_contract_serializer() : When_using_simple_bool_expression(NetDataContractSerializationHelper.Clone);
+#endif // NETFRAMEWORK
 
     private readonly LambdaExpression _remoteExpression;
 

@@ -4,8 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MessagePack" />
-    <ProjectReference Include="..\..\..\src\Remote.Linq\Remote.Linq.csproj" />
+    <ProjectReference Include="..\..\..\src\Remote.Linq.MessagePack\Remote.Linq.MessagePack.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedCode\Common.MessagePackFormatter.cs" Link="MessagePackFormatter.cs" />

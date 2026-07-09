@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
+    <PackageTags>Remote.Linq;messagepack;msgpack;binary;serialization</PackageTags>
+    <Description>Provides MessagePack serialization for Remote.Linq types.</Description>
+    <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="aqua-core-messagepack" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Remote.Linq\Remote.Linq.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Aqua.MessagePack" Global="true" />
+    <Using Include="MessagePack" Global="true" />
+    <Using Include="MessagePack.Formatters" Global="true" />
+  </ItemGroup>
+
+</Project>

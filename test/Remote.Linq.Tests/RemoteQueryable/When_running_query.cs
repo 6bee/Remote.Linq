@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Tests.RemoteQueryable;
 
@@ -33,13 +33,13 @@ public abstract class When_running_query
 
     public class With_xml_serializer() : When_running_query(XmlSerializationHelper.Clone);
 
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_running_query(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
+    public class With_protobuf_serializer() : When_running_query(ProtobufSerializationHelper.Clone);
 
-    public class With_protobuf_net_serializer() : When_running_query(ProtobufNetSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_running_query(MessagePackSerializationHelper.Clone);
 
 #if NETFRAMEWORK
+    public class With_binary_formatter() : When_running_query(BinarySerializationHelper.Clone);
+
     public class With_net_data_contract_serializer() : When_running_query(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
@@ -918,11 +918,6 @@ public abstract class When_running_query
             DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-        if (this.TestIs<With_protobuf_net_serializer>())
-        {
-            ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
-        }
-
         if (this.TestIs<With_system_text_json_serializer>())
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
@@ -952,11 +947,6 @@ public abstract class When_running_query
         if (this.TestIs<With_data_contract_serializer>())
         {
             DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
-        }
-
-        if (this.TestIs<With_protobuf_net_serializer>())
-        {
-            ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
         if (this.TestIs<With_system_text_json_serializer>())
@@ -989,11 +979,6 @@ public abstract class When_running_query
             DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-        if (this.TestIs<With_protobuf_net_serializer>())
-        {
-            ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
-        }
-
         if (this.TestIs<With_system_text_json_serializer>())
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
@@ -1023,11 +1008,6 @@ public abstract class When_running_query
         if (this.TestIs<With_data_contract_serializer>())
         {
             DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
-        }
-
-        if (this.TestIs<With_protobuf_net_serializer>())
-        {
-            ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
         if (this.TestIs<With_system_text_json_serializer>())

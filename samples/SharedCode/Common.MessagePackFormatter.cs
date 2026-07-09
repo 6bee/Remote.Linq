@@ -1,29 +1,33 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Common;
 
 using MessagePack;
-using MessagePack.Resolvers;
-using System.ComponentModel;
 using System.IO;
 
 public static class MessagePackFormatter
 {
-    private static readonly MessagePackSerializerOptions _options =
-        MessagePackSerializerOptions.Standard.WithResolver(TypelessObjectResolver.Instance);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public sealed class Envelope
-    {
-        public object Body { get; set; }
-    }
+    private static readonly MessagePackSerializerOptions _options = MessagePackSerializerOptions.Standard.ConfigureRemoteLinq();
 
     /// <summary>
-    /// Write serialized object to stream using MessagePack typeless object serializer.
+    /// Write serialized object to stream using MessagePack serializer.
     /// </summary>
-    public static async ValueTask WriteAsync(this Stream stream, object obj, CancellationToken cancellation = default)
+    public static async ValueTask WriteAsync<T>(this Stream stream, T obj, CancellationToken cancellation = default)
     {
-        var bin = MessagePackSerializer.Serialize(new Envelope { Body = obj }, _options);
+        byte[] bin;
+        byte datatype;
+        if (obj is Exception exception)
+        {
+            datatype = 1;
+            bin = MessagePackSerializer.Serialize(exception.Message, _options, cancellation);
+        }
+        else
+        {
+            datatype = 0;
+            bin = MessagePackSerializer.Serialize(obj, _options, cancellation);
+        }
+
+        stream.WriteByte(datatype);
         var len = BitConverter.GetBytes(bin.Length);
         stream.WriteByte((byte)len.Length);
         await stream.WriteAsync(len, cancellation).ConfigureAwait(false);
@@ -31,10 +35,13 @@ public static class MessagePackFormatter
     }
 
     /// <summary>
-    /// Read and deserialze object from stream using MessagePack typeless object serializer.
+    /// Read and deserialze object from stream using MessagePack serializer.
     /// </summary>
     public static async ValueTask<T> ReadAsync<T>(this Stream stream, CancellationToken cancellation = default)
     {
+        var t = stream.ReadByte();
+        bool isException = t is 1;
+
         var c = stream.ReadByte();
         var len = new byte[c];
         if (await stream.ReadAsync(len, 0, len.Length, cancellation).ConfigureAwait(false) != len.Length)
@@ -43,7 +50,7 @@ public static class MessagePackFormatter
         }
 
         var messageSize = BitConverter.ToInt32(len);
-        if (messageSize == 0)
+        if (messageSize is 0)
         {
             throw new IOException("Unexpected empty message");
         }
@@ -60,9 +67,13 @@ public static class MessagePackFormatter
         }
         while (count < messageSize);
 
-        var envelope = MessagePackSerializer.Deserialize<Envelope>(bin, _options);
-        return envelope.Body is Exception ex
-            ? throw ex
-            : (T)envelope.Body;
+        if (isException)
+        {
+            var exceptionMessage = MessagePackSerializer.Deserialize<string>(bin, _options, cancellation);
+            throw new Exception(exceptionMessage);
+        }
+
+        var obj = MessagePackSerializer.Deserialize<T>(bin, _options, cancellation);
+        return obj;
     }
 }

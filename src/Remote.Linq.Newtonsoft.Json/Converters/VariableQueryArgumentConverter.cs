@@ -1,8 +1,8 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Newtonsoft.Json.Converters;
 
-using Aqua.Newtonsoft.Json;
+using Aqua;
 using Aqua.Newtonsoft.Json.Converters;
 using Aqua.TypeSystem;
 using global::Newtonsoft.Json;

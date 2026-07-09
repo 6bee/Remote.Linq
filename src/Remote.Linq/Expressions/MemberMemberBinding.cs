@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Expressions;
 
@@ -24,6 +24,6 @@ public sealed class MemberMemberBinding : MemberBinding
 
     public override MemberBindingType BindingType => MemberBindingType.MemberBinding;
 
-    [DataMember(Order = 2)]
+    [DataMember(Order = 2, IsRequired = true)]
     public List<MemberBinding> Bindings { get; set; } = null!;
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 #pragma warning disable IDE0130 // Namespance does not match folder structure
 namespace System.Linq.Expressions;

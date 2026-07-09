@@ -9,11 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add MessagePack serialization backend (_Remote.Linq.MessagePack_) based on _aqua-core-messagepack_ and _MessagePack_
+
 ### Changed
+
+- Replace _protobuf-net_ serialization backend with a complete rewrite based on _aqua-core-protobuf_ and _Google.Protobuf_
 
 ### Deprecated
 
 ### Removed
+
+- Remove project _Remote.Linq.protobuf-net_ (fully replaced by new _Remote.Linq.Protobuf_ project)
 
 ### Fixed
 

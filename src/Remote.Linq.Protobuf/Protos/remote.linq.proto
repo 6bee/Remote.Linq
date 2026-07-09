@@ -1,0 +1,337 @@
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+syntax = "proto3";
+
+package remote.linq;
+
+option csharp_namespace = "Remote.Linq.Protobuf.Schema";
+
+import "aqua.proto";
+
+// query arguments
+message ConstantQueryArgument {
+  aqua.DynamicObject value = 1;
+}
+
+message QueryableResourceDescriptor {
+  aqua.TypeInfo type = 1;
+}
+
+message VariableQueryArgument {
+  aqua.TypeInfo type = 1;
+  aqua.Value value = 2;
+}
+
+message VariableQueryArgumentList {
+  aqua.TypeInfo element_type = 1;
+  repeated aqua.Value values = 2;
+}
+
+message SubstitutionValue {
+  aqua.TypeInfo type = 1;
+}
+
+// member bindings
+message MemberBinding {
+  oneof kind {
+    MemberAssignment member_assignment = 1;
+    MemberListBinding member_list_binding = 2;
+    MemberMemberBinding Member_member_binding = 3;
+  }
+}
+
+message MemberAssignment {
+  aqua.MemberInfo member = 1;
+  Expression expression = 2;
+}
+
+message MemberListBinding {
+  aqua.MemberInfo member = 1;
+  repeated ElementInit initializers = 2;
+}
+
+message MemberMemberBinding {
+  aqua.MemberInfo member = 1;
+  repeated MemberBinding bindings = 2;
+}
+
+message ElementInit {
+  aqua.MethodInfo add_method = 1;
+  repeated Expression arguments = 2;
+}
+
+// expressions
+message Expression {
+  oneof kind {
+    BinaryExpression binary_expression = 1;
+    BlockExpression block_expression = 2;
+    ConditionalExpression conditional_expression = 3;
+    ConstantExpression constant_expression = 4;
+    DefaultExpression default_expression = 5;
+    GotoExpression goto_expression = 6;
+    InvokeExpression invoke_expression = 7;
+    LabelExpression label_expression = 8;
+    LambdaExpression lambda_expression = 9;
+    ListInitExpression list_init_expression = 10;
+    LoopExpression loop_expression = 11;
+    MemberExpression member_expression = 12;
+    MemberInitExpression member_init_expression = 13;
+    MethodCallExpression method_call_expression = 14;
+    NewExpression new_expression = 15;
+    NewArrayExpression new_array_expression = 16;
+    ParameterExpression parameter_expression = 17;
+    SwitchExpression switch_expression = 18;
+    TryExpression try_expression = 19;
+    TypeBinaryExpression type_binary_expression = 20;
+    UnaryExpression unary_expression = 21;
+  }
+}
+
+message BinaryExpression {
+  BinaryOperator binary_operator = 1;
+  Expression left_operand = 2;
+  Expression right_operand = 3;
+  optional bool is_lifted_to_null = 4;
+  aqua.MethodInfo method = 5;
+  LambdaExpression conversion = 6;
+
+  enum BinaryOperator {
+    undefined = 0;
+
+    // Binary Arithmetic Operations
+    add = 1;
+    add_checked = 2;
+    divide = 3;
+    modulo = 4;
+    multiply = 5;
+    multiply_checked = 6;
+    power = 7;
+    subtract = 8;
+    subtract_checked = 9;
+
+    // Bitwise Operation
+    and = 10;
+    or = 11;
+    exclusive_or = 12;
+
+    // Shift Operation
+    left_shift = 13;
+    right_shift = 14;
+
+    // Conditional Boolean Operation
+    and_also = 15;
+    or_else = 16;
+
+    // Comparison Operation
+    equal = 17;
+    not_equal = 18;
+    greater_than_or_equal = 19;
+    greater_than = 20;
+    less_than = 21;
+    less_than_or_equal = 22;
+
+    // Coalescing Operation
+    coalesce = 23;
+
+    // Array Indexing Operation;
+    array_index = 24;
+
+    // Assignment Operation;
+    add_assign = 25;
+    add_assign_checked = 26;
+    and_assign = 27;
+    assign = 28;
+    divide_assign = 29;
+    exclusive_or_assign = 30;
+    left_shift_assign = 31;
+    modulo_assign = 32;
+    multiply_assign = 33;
+    multiply_assign_checked = 34;
+    or_assign = 35;
+    power_assign = 36;
+    right_shift_assign = 37;
+    subtract_assign = 38;
+    subtract_assign_checked = 39;
+  }
+}
+
+message BlockExpression {
+  aqua.TypeInfo type = 1;
+  repeated ParameterExpression variables = 2;
+  repeated Expression expressions = 3;  
+}
+
+message ConditionalExpression {
+  Expression test = 1;
+  Expression if_true = 2;
+  Expression if_false = 3;
+}
+
+message ConstantExpression {
+  aqua.TypeInfo type = 1;
+  ConstantValue value = 2;
+}
+
+message ConstantValue {
+  oneof kind {
+    ConstantQueryArgument constant_query_argument = 1;
+    VariableQueryArgument variable_query_argument = 2;
+    VariableQueryArgumentList variable_query_argument_list = 3;
+    SubstitutionValue substitution_value = 4;
+    QueryableResourceDescriptor queryable_resource_descriptor = 5;
+    aqua.Value value = 6;
+  }
+}
+
+message DefaultExpression {
+  aqua.TypeInfo type = 1;
+}
+
+message GotoExpression {
+  GotoExpressionKind kind = 1;
+  LabelTarget target = 2;
+  aqua.TypeInfo type = 3;
+  Expression value = 4;
+
+  enum GotoExpressionKind {
+    undefined = 0;
+    break = 1;
+    continue = 2;
+    goto = 3;
+    return = 4;
+  }
+}
+
+message InvokeExpression {
+  Expression expression = 1;
+  repeated Expression arguments = 2;
+}
+
+message LabelExpression {
+  LabelTarget target = 1;
+  Expression default_value = 2;
+}
+
+message LabelTarget {
+  string name = 1;
+  aqua.TypeInfo type = 2;
+  int32 instance_id = 3;
+}
+
+message LambdaExpression {
+  Expression expression = 1;
+  repeated ParameterExpression parameters = 2;
+  aqua.TypeInfo type = 3;
+}
+
+message ListInitExpression {
+  NewExpression new_expression = 1;
+  repeated ElementInit initializers = 2;
+}
+
+message LoopExpression {
+  Expression body = 1;
+  LabelTarget break_label = 2;
+  LabelTarget continue_label = 3;
+}
+
+message MemberExpression {
+  Expression expression = 1;
+  aqua.MemberInfo member = 2;
+}
+
+message MemberInitExpression {
+  NewExpression new_expression = 1;
+  repeated MemberBinding bindings = 2;  
+}
+
+message MethodCallExpression {
+  Expression instance = 1;
+  aqua.MethodInfo method = 2;
+  repeated Expression arguments = 3;
+}
+
+message NewExpression {
+  aqua.ConstructorInfo constructor = 1;
+  repeated Expression arguments = 2;
+  repeated aqua.MemberInfo members = 3;
+  aqua.TypeInfo type = 4;
+}
+
+message NewArrayExpression {
+  NewArrayType new_array_type = 1;
+  aqua.TypeInfo type = 2;
+  repeated Expression expressions = 3;
+
+  enum NewArrayType {
+    undefined = 0;
+    new_array_bounds = 1;
+    new_array_init = 2;
+  }
+}
+
+message ParameterExpression {
+  string parameter_name = 1;
+  aqua.TypeInfo parameter_type = 2;
+  optional int32 instance_id = 3;
+}
+
+message SwitchExpression {
+  Expression switch_value = 1;
+  aqua.MethodInfo comparison = 2;
+  Expression default_expression = 3;
+  repeated SwitchCase cases = 4;
+}
+
+message SwitchCase {
+  Expression body = 1;
+  repeated Expression test_values = 2;
+}
+
+message TryExpression {
+  Expression body = 1;
+  repeated CatchBlock handlers = 2;
+  Expression finally = 3;
+  Expression fault = 4;
+  aqua.TypeInfo type = 5;
+}
+
+message CatchBlock {
+  ParameterExpression variable = 1;
+  Expression filter = 2;
+  Expression body = 3;
+  aqua.TypeInfo test = 4;
+}
+
+message TypeBinaryExpression {
+  Expression expression = 1;
+  aqua.TypeInfo type_operand = 2;
+}
+
+message UnaryExpression {
+  UnaryOperator unary_operator = 1;
+  Expression operand = 2;
+  aqua.TypeInfo type = 3;
+  aqua.MethodInfo method = 4;
+
+  enum UnaryOperator {
+    undefined = 0;
+
+    array_length = 1;
+    convert = 2;
+    convert_checked = 3;
+    negate = 4;
+    negate_checked = 5;
+    not = 6;
+    quote = 7;
+    type_as = 8;
+    unary_plus = 9;
+
+    pre_decrement_assign = 10;
+    pre_increment_assign = 11;
+    post_decrement_assign = 12;
+    post_increment_assign = 13;
+
+    throw = 14;
+  }
+}

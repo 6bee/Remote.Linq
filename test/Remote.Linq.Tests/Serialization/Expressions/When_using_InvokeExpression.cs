@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Tests.Serialization.Expressions;
 
@@ -9,23 +9,23 @@ using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
 public abstract class When_using_InvokeExpression
 {
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_using_InvokeExpression(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
-
     public class With_data_contract_serializer() : When_using_InvokeExpression(DataContractSerializationHelper.CloneExpression);
 
     public class With_newtonsoft_json_serializer() : When_using_InvokeExpression(NewtonsoftJsonSerializationHelper.Clone);
 
     public class With_system_text_json_serializer() : When_using_InvokeExpression(SystemTextJsonSerializationHelper.Clone);
 
-#if NETFRAMEWORK
-    public class With_net_data_contract_serializer() : When_using_InvokeExpression(NetDataContractSerializationHelper.Clone);
-#endif // NETFRAMEWORK
+    public class With_protobuf_serializer() : When_using_InvokeExpression(ProtobufSerializationHelper.Clone);
 
-    public class With_protobuf_net_serializer() : When_using_InvokeExpression(ProtobufNetSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_using_InvokeExpression(MessagePackSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_using_InvokeExpression(XmlSerializationHelper.CloneExpression);
+
+#if NETFRAMEWORK
+    public class With_binary_formatter() : When_using_InvokeExpression(BinarySerializationHelper.Clone);
+
+    public class With_net_data_contract_serializer() : When_using_InvokeExpression(NetDataContractSerializationHelper.Clone);
+#endif // NETFRAMEWORK
 
     private readonly Expression<Func<decimal, bool>> _originalExpression;
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Expressions;
 
@@ -56,7 +56,7 @@ public sealed class NewExpression : Expression
     [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
     public List<MemberInfo>? Members { get; set; }
 
-    [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
+    [DataMember(Order = 4, IsRequired = true, EmitDefaultValue = false)]
     public TypeInfo Type { get; set; } = null!;
 
     public override string ToString() => $"new {Constructor?.DeclaringType ?? Type}({Arguments.StringJoin(", ")})";

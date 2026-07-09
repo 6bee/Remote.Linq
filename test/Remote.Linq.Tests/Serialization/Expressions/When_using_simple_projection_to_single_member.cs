@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Remote.Linq.Tests.Serialization.Expressions;
 
@@ -8,23 +8,23 @@ using Xunit;
 
 public abstract class When_using_simple_projection_to_single_member
 {
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_using_simple_projection_to_single_member(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
-
     public class With_data_contract_serializer() : When_using_simple_projection_to_single_member(DataContractSerializationHelper.CloneExpression);
 
     public class With_newtonsoft_json_serializer() : When_using_simple_projection_to_single_member(NewtonsoftJsonSerializationHelper.Clone);
 
     public class With_system_text_json_serializer() : When_using_simple_projection_to_single_member(SystemTextJsonSerializationHelper.Clone);
 
-#if NETFRAMEWORK
-    public class With_net_data_contract_serializer() : When_using_simple_projection_to_single_member(NetDataContractSerializationHelper.Clone);
-#endif // NETFRAMEWORK
+    public class With_protobuf_serializer() : When_using_simple_projection_to_single_member(ProtobufSerializationHelper.Clone);
 
-    public class With_protobuf_net_serializer() : When_using_simple_projection_to_single_member(ProtobufNetSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_using_simple_projection_to_single_member(MessagePackSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_using_simple_projection_to_single_member(XmlSerializationHelper.CloneExpression);
+
+#if NETFRAMEWORK
+    public class With_binary_formatter() : When_using_simple_projection_to_single_member(BinarySerializationHelper.Clone);
+
+    public class With_net_data_contract_serializer() : When_using_simple_projection_to_single_member(NetDataContractSerializationHelper.Clone);
+#endif // NETFRAMEWORK
 
     public class AType
     {
