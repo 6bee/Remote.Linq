@@ -5,7 +5,7 @@
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <AquaCoreVersion>6.0.0-dev-027</AquaCoreVersion>
+    <AquaCoreVersion>6.0.0-alpha-001</AquaCoreVersion>
   </PropertyGroup>
   <!--
   global
