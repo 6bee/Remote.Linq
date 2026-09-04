@@ -10,7 +10,7 @@
 | package                           | nuget                    | myget                          |
 | ---                               | ---                      | ---                            |
 | `Remote.Linq`                     | [![NuGet Badge][13]][14] | [![MyGet Pre Release][15]][16] |
-| `Remote.Linq.Queryable`           | [![NuGet Badge][17]][18] | [![MyGet Pre Release][19]][20] |
+| `Remote.Linq.Async.Queryable`     | [![NuGet Badge][17]][18] | [![MyGet Pre Release][19]][20] |
 | `Remote.Linq.EntityFramework`     | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
 | `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][25]][26] | [![MyGet Pre Release][27]][28] |
 | `Remote.Linq.MessagePack`         | [![NuGet Badge][29]][30] | [![MyGet Pre Release][31]][32] |
@@ -261,10 +261,10 @@ await httpClient.PostAsJsonAsync(uri, value, serializerOptions);
 [14]: https://www.nuget.org/packages/Remote.Linq
 [15]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.svg?label=myget
 [16]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq
-[17]: https://img.shields.io/nuget/v/Remote.Linq.Queryable.svg
-[18]: https://www.nuget.org/packages/Remote.Linq.Queryable
-[19]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Queryable.svg?label=myget
-[20]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Queryable
+[17]: https://img.shields.io/nuget/v/Remote.Linq.Async.Queryable.svg
+[18]: https://www.nuget.org/packages/Remote.Linq.Async.Queryable
+[19]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Async.Queryable.svg?label=myget
+[20]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Async.Queryable
 [21]: https://img.shields.io/nuget/v/Remote.Linq.EntityFramework.svg
 [22]: https://www.nuget.org/packages/Remote.Linq.EntityFramework
 [23]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.EntityFramework.svg?label=myget
