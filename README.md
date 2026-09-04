@@ -3,18 +3,19 @@
 [![GitHub license][lic-badge]][lic-link]
 [![Github Workflow][pub-badge]][pub-link]
 
-| branch | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy            | CodeFactor             |
-| ---    | ---                              | ---                            | ---                | ---               | ---                    |
-| `main` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy][7]][8] | [![CodeFactor][9]][10] |
+| branch | CI Build                                       | Codecov.io         | Codacy            | CodeFactor             |
+| ---    | ---                                            | ---                | ---               | ---                    |
+| `main` | [![Github CI-Build Status][ci-badge]][ci-link] | [![codecov][5]][6] | [![Codacy][7]][8] | [![CodeFactor][9]][10] |
 
 | package                           | nuget                    | myget                          |
 | ---                               | ---                      | ---                            |
 | `Remote.Linq`                     | [![NuGet Badge][13]][14] | [![MyGet Pre Release][15]][16] |
-| `Remote.Linq.Async.Queryable`     | [![NuGet Badge][33]][34] | [![MyGet Pre Release][35]][36] |
-| `Remote.Linq.EntityFramework`     | [![NuGet Badge][17]][18] | [![MyGet Pre Release][19]][20] |
-| `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
-| `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge][25]][26] | [![MyGet Pre Release][27]][28] |
-| `Remote.Linq.protobuf-net`        | [![NuGet Badge][29]][30] | [![MyGet Pre Release][31]][32] |
+| `Remote.Linq.Queryable`           | [![NuGet Badge][17]][18] | [![MyGet Pre Release][19]][20] |
+| `Remote.Linq.EntityFramework`     | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
+| `Remote.Linq.EntityFrameworkCore` | [![NuGet Badge][25]][26] | [![MyGet Pre Release][27]][28] |
+| `Remote.Linq.MessagePack`         | [![NuGet Badge][29]][30] | [![MyGet Pre Release][31]][32] |
+| `Remote.Linq.Newtonsoft.Json`     | [![NuGet Badge][33]][34] | [![MyGet Pre Release][35]][36] |
+| `Remote.Linq.Protobuf`            | [![NuGet Badge][37]][38] | [![MyGet Pre Release][39]][40] |
 
 ## Description
 
@@ -250,10 +251,6 @@ using var httpClient = new HttpClient();
 await httpClient.PostAsJsonAsync(uri, value, serializerOptions);
 ```
 
-[1]: https://ci.appveyor.com/api/projects/status/64kw6dsuvfwyrdtl/branch/main?svg=true
-[2]: https://ci.appveyor.com/project/6bee/remote-linq/branch/main
-[3]: https://api.travis-ci.com/6bee/Remote.Linq.svg?branch=main
-[4]: https://travis-ci.com/github/6bee/Remote.Linq?branch=main
 [5]: https://codecov.io/gh/6bee/Remote.Linq/branch/main/graph/badge.svg
 [6]: https://codecov.io/gh/6bee/Remote.Linq
 [7]: https://app.codacy.com/project/badge/Grade/e13355ef6833454daa3860963025f270
@@ -264,29 +261,36 @@ await httpClient.PostAsJsonAsync(uri, value, serializerOptions);
 [14]: https://www.nuget.org/packages/Remote.Linq
 [15]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.svg?label=myget
 [16]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq
-[17]: https://img.shields.io/nuget/v/Remote.Linq.EntityFramework.svg
-[18]: https://www.nuget.org/packages/Remote.Linq.EntityFramework
-[19]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.EntityFramework.svg?label=myget
-[20]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.EntityFramework
-[21]: https://img.shields.io/nuget/v/Remote.Linq.EntityFrameworkCore.svg
-[22]: https://www.nuget.org/packages/Remote.Linq.EntityFrameworkCore
-[23]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.EntityFrameworkCore.svg?label=myget
-[24]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.EntityFrameworkCore
-[25]: https://img.shields.io/nuget/v/Remote.Linq.Newtonsoft.Json.svg
-[26]: https://www.nuget.org/packages/Remote.Linq.Newtonsoft.Json
-[27]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Newtonsoft.Json.svg?label=myget
-[28]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Newtonsoft.Json
-[29]: https://img.shields.io/nuget/v/Remote.Linq.protobuf-net.svg
-[30]: https://www.nuget.org/packages/Remote.Linq.protobuf-net
-[31]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.protobuf-net.svg?label=myget
-[32]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.protobuf-net
-[33]: https://img.shields.io/nuget/v/Remote.Linq.Async.Queryable.svg
-[34]: https://www.nuget.org/packages/Remote.Linq.Async.Queryable
-[35]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Async.Queryable.svg?label=myget
-[36]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Async.Queryable
+[17]: https://img.shields.io/nuget/v/Remote.Linq.Queryable.svg
+[18]: https://www.nuget.org/packages/Remote.Linq.Queryable
+[19]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Queryable.svg?label=myget
+[20]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Queryable
+[21]: https://img.shields.io/nuget/v/Remote.Linq.EntityFramework.svg
+[22]: https://www.nuget.org/packages/Remote.Linq.EntityFramework
+[23]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.EntityFramework.svg?label=myget
+[24]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.EntityFramework
+[25]: https://img.shields.io/nuget/v/Remote.Linq.EntityFrameworkCore.svg
+[26]: https://www.nuget.org/packages/Remote.Linq.EntityFrameworkCore
+[27]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.EntityFrameworkCore.svg?label=myget
+[28]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.EntityFrameworkCore
+[29]: https://img.shields.io/nuget/v/Remote.Linq.MessagePack.svg
+[30]: https://www.nuget.org/packages/Remote.Linq.MessagePack.Json
+[31]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.MessagePack.svg?label=myget
+[32]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.MessagePack.Json
+[33]: https://img.shields.io/nuget/v/Remote.Linq.Newtonsoft.Json.svg
+[34]: https://www.nuget.org/packages/Remote.Linq.Newtonsoft.Json
+[35]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Newtonsoft.Json.svg?label=myget
+[36]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Newtonsoft.Json
+[37]: https://img.shields.io/nuget/v/Remote.Linq.Protobuf.svg
+[38]: https://www.nuget.org/packages/Remote.Linq.Protobuf
+[39]: https://img.shields.io/myget/aqua/vpre/Remote.Linq.Protobuf.svg?label=myget
+[40]: https://www.myget.org/feed/aqua/package/nuget/Remote.Linq.Protobuf
 
 [lic-badge]: https://img.shields.io/github/license/6bee/Remote.Linq.svg
 [lic-link]: https://github.com/6bee/Remote.Linq/blob/main/license.txt
+
+[ci-badge]: https://github.com/6bee/Remote.Linq/actions/workflows/ci-tests.yml/badge.svg
+[ci-link]: https://github.com/6bee/Remote.Linq/actions/workflows/ci-tests.yml
 
 [pub-badge]: https://github.com/6bee/Remote.Linq/actions/workflows/publish.yml/badge.svg
 [pub-link]: https://github.com/6bee/Remote.Linq/actions/workflows/publish.yml
