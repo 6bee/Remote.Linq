@@ -2,9 +2,9 @@
 <Project>
 
   <PropertyGroup>
-    <MajorVersion>7</MajorVersion>
-    <MinorVersion>3</MinorVersion>
-    <PatchVersion>3</PatchVersion>
+    <MajorVersion>8</MajorVersion>
+    <MinorVersion>0</MinorVersion>
+    <PatchVersion>0</PatchVersion>
     <PreReleaseLabel>dev</PreReleaseLabel>
   </PropertyGroup>
 
