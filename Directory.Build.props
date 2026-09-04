@@ -44,6 +44,7 @@
 
   <PropertyGroup>
     <LangVersion Condition="'$(LangVersion)' == ''">14.0</LangVersion>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <GenerateDocumentationFile Condition="'$(GenerateDocumentationFile)' == ''">true</GenerateDocumentationFile>
     <TreatWarningsAsErrors Condition="'$(TreatWarningsAsErrors)' == ''">true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>

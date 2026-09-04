@@ -38,7 +38,7 @@ jobs:
 
       - name: Check version
         # assert version match with project version so only pre-release label can be changed based on release tag
-        run: dotnet build Remote.Linq.slnx -t:CheckVersion -c Release -p BuildVersion="${{ steps.version.outputs.major_without_prefix }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}"
+        run: dotnet build Remote.Linq.slnx --no-restore -t:CheckVersion -c Release -p BuildVersion="${{ steps.version.outputs.major_without_prefix }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}"
 
       - name: Set version info
         run: |
@@ -56,10 +56,16 @@ jobs:
           echo "IsStable=$IsStable" >> $Env:GITHUB_ENV
           echo "Create release: v$Version"
 
+      - name: Restore
+        run: dotnet restore Remote.Linq.slnx --locked-mode
+
       - name: Build
-        env:
-          VSTEST_CONNECTION_TIMEOUT: 1200 # timeout 20 minutes
-        run: dotnet test Remote.Linq.slnx -c Release /bl
+        run: dotnet build Remote.Linq.slnx --no-restore -c Release /bl:build.binlog
+
+      - name: Test
+        #env:
+        #  VSTEST_CONNECTION_TIMEOUT: 1200 # timeout 20 minutes
+        run: dotnet test Remote.Linq.slnx --no-build -c Release
 
       - name: Upload build log
         uses: actions/upload-artifact@v4

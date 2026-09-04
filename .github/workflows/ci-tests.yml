@@ -20,11 +20,11 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Build framework
-        run: dotnet build Remote.Linq.slnx
+      - name: Restore framework
+        run: dotnet restore Remote.Linq.slnx --locked-mode
 
-      - name: Build samples
-        run: dotnet build Remote.Linq.Samples.sln
+      - name: Build framework
+        run: dotnet build Remote.Linq.slnx --no-restore
 
       - name: Run tests with coverage
         run: >
@@ -52,3 +52,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           verbose: true
+
+      - name: Build samples
+        run: dotnet build Remote.Linq.Samples.sln
