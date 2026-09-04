@@ -2,7 +2,6 @@
 
 namespace Remote.Linq;
 
-using Aqua.TypeSystem;
 using System.ComponentModel;
 using RemoteLinq = Remote.Linq.Expressions;
 using SystemLinq = System.Linq.Expressions;

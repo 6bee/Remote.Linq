@@ -19,7 +19,7 @@ public class When_executing_async_remote_stream
     public async Task Should_query_full_set()
     {
         var count = 0;
-        await foreach (var item in AsyncRemoteStreamQueryable.AsAsyncEnumerable())
+        await foreach (var item in AsyncRemoteStreamQueryable.AsAsyncEnumerable(cancellation: TestContext.Current.CancellationToken))
         {
             count++;
         }
@@ -31,7 +31,7 @@ public class When_executing_async_remote_stream
     public async Task Should_query_filtered_set()
     {
         var count = 0;
-        await foreach (var item in FilteredAsyncRemoteStreamQueryable.AsAsyncEnumerable())
+        await foreach (var item in FilteredAsyncRemoteStreamQueryable.AsAsyncEnumerable(cancellation: TestContext.Current.CancellationToken))
         {
             count++;
         }
@@ -45,7 +45,7 @@ public class When_executing_async_remote_stream
         var query = AsyncRemoteStreamQueryable.Where(x => x.Id == 5);
 
         var sum = 0;
-        await foreach (var item in query.AsAsyncEnumerable())
+        await foreach (var item in query.AsAsyncEnumerable(cancellation: TestContext.Current.CancellationToken))
         {
             sum += item.Id;
         }

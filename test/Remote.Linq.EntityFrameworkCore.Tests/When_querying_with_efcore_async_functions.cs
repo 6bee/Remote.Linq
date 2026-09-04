@@ -15,12 +15,12 @@ using Xunit;
 
 public sealed class When_querying_with_efcore_async_functions : IDisposable
 {
-    private readonly TestContext _context;
+    private readonly TestDbContext _context;
     private readonly IQueryable<LookupItem> _queryable;
 
     public When_querying_with_efcore_async_functions()
     {
-        _context = new TestContext();
+        _context = new TestDbContext();
         _context.Lookup.Add(new LookupItem { Key = "1", Value = "One" });
         _context.Lookup.Add(new LookupItem { Key = "2", Value = "Two" });
         _context.Lookup.Add(new LookupItem { Key = "3", Value = "Three" });
@@ -34,13 +34,13 @@ public sealed class When_querying_with_efcore_async_functions : IDisposable
     [Fact]
     public async Task Should_query_multiple()
     {
-        var results = await EntityFrameworkQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("O")));
+        var results = await EntityFrameworkQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("O")), TestContext.Current.CancellationToken);
         var keys = results.Select(x => x.Key).ToArray();
         keys.ShouldContain("1");
         keys.ShouldContain("2");
         keys.Length.ShouldBe(2);
 
-        results = await AsyncQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("O")));
+        results = await AsyncQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("O")), TestContext.Current.CancellationToken);
         keys = results.Select(x => x.Key).ToArray();
         keys.ShouldContain("1");
         keys.ShouldContain("2");
@@ -80,12 +80,12 @@ public sealed class When_querying_with_efcore_async_functions : IDisposable
     [Fact]
     public async Task Should_query_multiple_with_projection()
     {
-        var results = await EntityFrameworkQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("O")).Select(x => x.Key));
+        var results = await EntityFrameworkQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("O")).Select(x => x.Key), TestContext.Current.CancellationToken);
         results.ShouldContain("1");
         results.ShouldContain("2");
         results.Length.ShouldBe(2);
 
-        results = await AsyncQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("O")).Select(x => x.Key));
+        results = await AsyncQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("O")).Select(x => x.Key), TestContext.Current.CancellationToken);
         results.ShouldContain("1");
         results.ShouldContain("2");
         results.Length.ShouldBe(2);
@@ -121,10 +121,10 @@ public sealed class When_querying_with_efcore_async_functions : IDisposable
     [Fact]
     public async Task Should_query_multiple_with_empty_result()
     {
-        var results = await EntityFrameworkQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("no match")));
+        var results = await EntityFrameworkQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("no match")), TestContext.Current.CancellationToken);
         results.ShouldBeEmpty();
 
-        results = await AsyncQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("no match")));
+        results = await AsyncQueryableExtensions.ToArrayAsync(_queryable.Where(x => x.Value.ToUpper().Contains("no match")), TestContext.Current.CancellationToken);
         results.ShouldBeEmpty();
 
         results = _queryable.Where(x => x.Value.ToUpper().Contains("no match")).ToArray();
@@ -152,19 +152,19 @@ public sealed class When_querying_with_efcore_async_functions : IDisposable
     [Fact]
     public async Task Should_query_single()
     {
-        var result = await EntityFrameworkQueryableExtensions.SingleAsync(_queryable, x => x.Value.ToUpper().Contains("W"));
+        var result = await EntityFrameworkQueryableExtensions.SingleAsync(_queryable, x => x.Value.ToUpper().Contains("W"), TestContext.Current.CancellationToken);
 
         result.Key.ShouldBe("2");
 
-        result = await EntityFrameworkQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value.ToUpper().Contains("W")));
+        result = await EntityFrameworkQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value.ToUpper().Contains("W")), TestContext.Current.CancellationToken);
 
         result.Key.ShouldBe("2");
 
-        result = await AsyncQueryableExtensions.SingleAsync(_queryable, x => x.Value.ToUpper().Contains("W"));
+        result = await AsyncQueryableExtensions.SingleAsync(_queryable, x => x.Value.ToUpper().Contains("W"), TestContext.Current.CancellationToken);
 
         result.Key.ShouldBe("2");
 
-        result = await AsyncQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value.ToUpper().Contains("W")));
+        result = await AsyncQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value.ToUpper().Contains("W")), TestContext.Current.CancellationToken);
 
         result.Key.ShouldBe("2");
 
@@ -180,11 +180,11 @@ public sealed class When_querying_with_efcore_async_functions : IDisposable
     [Fact]
     public async Task Should_query_single_with_projection()
     {
-        var result = await EntityFrameworkQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value.ToUpper().Contains("W")).Select(x => x.Key));
+        var result = await EntityFrameworkQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value.ToUpper().Contains("W")).Select(x => x.Key), TestContext.Current.CancellationToken);
 
         result.ShouldBe("2");
 
-        result = await AsyncQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value.ToUpper().Contains("W")).Select(x => x.Key));
+        result = await AsyncQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value.ToUpper().Contains("W")).Select(x => x.Key), TestContext.Current.CancellationToken);
 
         result.ShouldBe("2");
 
@@ -196,19 +196,19 @@ public sealed class When_querying_with_efcore_async_functions : IDisposable
     [Fact]
     public async Task Should_query_single_with_subquery_predicate()
     {
-        var result = await EntityFrameworkQueryableExtensions.SingleAsync(_queryable, x => x.Value == _queryable.First().Value);
+        var result = await EntityFrameworkQueryableExtensions.SingleAsync(_queryable, x => x.Value == _queryable.First().Value, TestContext.Current.CancellationToken);
 
         result.Key.ShouldBe("1");
 
-        result = await EntityFrameworkQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value == _queryable.First().Value));
+        result = await EntityFrameworkQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value == _queryable.First().Value), TestContext.Current.CancellationToken);
 
         result.Key.ShouldBe("1");
 
-        result = await AsyncQueryableExtensions.SingleAsync(_queryable, x => x.Value == _queryable.First().Value);
+        result = await AsyncQueryableExtensions.SingleAsync(_queryable, x => x.Value == _queryable.First().Value, TestContext.Current.CancellationToken);
 
         result.Key.ShouldBe("1");
 
-        result = await AsyncQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value == _queryable.First().Value));
+        result = await AsyncQueryableExtensions.SingleAsync(_queryable.Where(x => x.Value == _queryable.First().Value), TestContext.Current.CancellationToken);
 
         result.Key.ShouldBe("1");
 
@@ -224,19 +224,19 @@ public sealed class When_querying_with_efcore_async_functions : IDisposable
     [Fact]
     public async Task SingleOrDefault_with_predicate_should_return_null_if_no_match()
     {
-        var result = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(_queryable, x => x.Value.ToUpper().Contains("no match"));
+        var result = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(_queryable, x => x.Value.ToUpper().Contains("no match"), TestContext.Current.CancellationToken);
 
         result.ShouldBeNull();
 
-        result = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(_queryable.Where(x => x.Value.ToUpper().Contains("no match")));
+        result = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(_queryable.Where(x => x.Value.ToUpper().Contains("no match")), TestContext.Current.CancellationToken);
 
         result.ShouldBeNull();
 
-        result = await AsyncQueryableExtensions.SingleOrDefaultAsync(_queryable, x => x.Value.ToUpper().Contains("no match"));
+        result = await AsyncQueryableExtensions.SingleOrDefaultAsync(_queryable, x => x.Value.ToUpper().Contains("no match"), TestContext.Current.CancellationToken);
 
         result.ShouldBeNull();
 
-        result = await AsyncQueryableExtensions.SingleOrDefaultAsync(_queryable.Where(x => x.Value.ToUpper().Contains("no match")));
+        result = await AsyncQueryableExtensions.SingleOrDefaultAsync(_queryable.Where(x => x.Value.ToUpper().Contains("no match")), TestContext.Current.CancellationToken);
 
         result.ShouldBeNull();
 

@@ -1,20 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
   <Import Project="$(MSBuildThisFileDirectory)../$(MSBuildThisFile)" />
 
   <PropertyGroup>
-    <Nullable>disable</Nullable>
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
+    <Nullable>disable</Nullable>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)../Style.Tests.ruleset</CodeAnalysisRuleSet>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" PrivateAssets="all" />
-    <PackageReference Include="Shouldly" PrivateAssets="all" />
-    <PackageReference Include="xunit" PrivateAssets="all" />
-    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
-    <PackageReference Include="Xunit.SkippableFact" PrivateAssets="all" />
+  <!--
+  Unit test settings
+  -->
+  <PropertyGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">
+    <OutputType>Exe</OutputType>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+  </PropertyGroup>
+
+  <!--
+  Unit test global namespace imports
+  -->
+  <ItemGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) And '$(SuppressGlobalUsings)' != 'true' ">
+    <Using Include="Shouldly" Global="true" />
+    <Using Include="Xunit" Global="true" />
+  </ItemGroup>
+
+  <!--
+  Unit test runner config
+  -->
+  <ItemGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">
+    <Content Include="$(MSBuildThisFileDirectory)../xunit.runner.json" Condition=" Exists('$(MSBuildThisFileDirectory)../xunit.runner.json')" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!--
+  Unit test packages
+  -->
+  <ItemGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">
+    <PackageReference Include="coverlet.MTP" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
 
 </Project>

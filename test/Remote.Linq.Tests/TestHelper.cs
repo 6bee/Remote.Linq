@@ -3,7 +3,6 @@
 namespace Remote.Linq.Tests;
 
 using Aqua.TypeExtensions;
-using Aqua.TypeSystem;
 using Shouldly;
 using System;
 using System.Collections;
@@ -60,7 +59,7 @@ public static class TestHelper
 
     public static bool IsNotPublic(this Type type)
         => type.IsNotPublic
-        || TypeHelper.GetElementType(type).IsNotPublic;
+        || Aqua.TypeSystem.TypeHelper.GetElementType(type).IsNotPublic;
 
     public static bool IsEnum(this Type type)
     {
@@ -69,7 +68,7 @@ public static class TestHelper
             return true;
         }
 
-        var elementType = TypeHelper.GetElementType(type);
+        var elementType = Aqua.TypeSystem.TypeHelper.GetElementType(type);
         return (type.IsCollection() && elementType.IsEnum)
             || (type.IsGenericType && typeof(Nullable<>) == type.GetGenericTypeDefinition() && type.GetGenericArguments()[0].IsEnum)
             || (type.IsCollection() && elementType.IsGenericType && typeof(Nullable<>) == elementType.GetGenericTypeDefinition() && elementType.GetGenericArguments()[0].IsEnum);

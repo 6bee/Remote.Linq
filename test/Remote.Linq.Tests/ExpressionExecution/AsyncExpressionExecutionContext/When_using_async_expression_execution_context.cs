@@ -22,7 +22,7 @@ public class When_using_async_expression_execution_context
     {
         var context = new AsyncTestExpressionExecutionContext();
 
-        var result = await context.ExecuteAsync();
+        var result = await context.ExecuteAsync(TestContext.Current.CancellationToken);
 
         result.ShouldBeSameAs(Step8_FinalResult);
 
@@ -58,7 +58,7 @@ public class When_using_async_expression_execution_context
                 x.ShouldBeSameAs(customExpression2);
                 return Step1_PreparedRemoteExpression;
             })
-            .ExecuteAsync();
+            .ExecuteAsync(TestContext.Current.CancellationToken);
 
         result.ShouldBeSameAs(Step8_FinalResult);
 
@@ -82,7 +82,7 @@ public class When_using_async_expression_execution_context
                 x.ShouldBeSameAs(Step1_PreparedRemoteExpression);
                 return Step2_InitialTransformedSystemExpression;
             })
-            .ExecuteAsync();
+            .ExecuteAsync(TestContext.Current.CancellationToken);
 
         result.ShouldBeSameAs(Step8_FinalResult);
 
@@ -133,7 +133,7 @@ public class When_using_async_expression_execution_context
                 x.ShouldBeSameAs(customExpression4);
                 return Step4_PreparedForAsyncExpression;
             })
-            .ExecuteAsync();
+            .ExecuteAsync(TestContext.Current.CancellationToken);
 
         result.ShouldBeSameAs(Step8_FinalResult);
 
@@ -181,7 +181,7 @@ public class When_using_async_expression_execution_context
                 x.ShouldBeSameAs(Step4_PreparedForAsyncExpression);
                 return new(Step5_ExecutionResult);
             })
-            .ExecuteAsync();
+            .ExecuteAsync(TestContext.Current.CancellationToken);
 
         result.ShouldBeSameAs(Step8_FinalResult);
 
@@ -218,7 +218,7 @@ public class When_using_async_expression_execution_context
                 x.ShouldBeSameAs(customResult2);
                 return Step6_ProcessedResult;
             })
-            .ExecuteAsync();
+            .ExecuteAsync(TestContext.Current.CancellationToken);
 
         result.ShouldBeSameAs(Step8_FinalResult);
 
@@ -242,7 +242,7 @@ public class When_using_async_expression_execution_context
                 x.ShouldBeSameAs(Step6_ProcessedResult);
                 return Step7_ConvertedResult;
             })
-            .ExecuteAsync();
+            .ExecuteAsync(TestContext.Current.CancellationToken);
 
         result.ShouldBeSameAs(Step8_FinalResult);
 
@@ -279,7 +279,7 @@ public class When_using_async_expression_execution_context
                 x.ShouldBeSameAs(customResult2);
                 return Step8_FinalResult;
             })
-            .ExecuteAsync();
+            .ExecuteAsync(TestContext.Current.CancellationToken);
 
         result.ShouldBeSameAs(Step8_FinalResult);
 

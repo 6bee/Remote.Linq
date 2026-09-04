@@ -13,12 +13,12 @@ using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtension
 
 public sealed class When_querying : IDisposable
 {
-    private readonly TestContext _context;
+    private readonly TestDbContext _context;
     private readonly IQueryable<LookupItem> _queryable;
 
     public When_querying()
     {
-        _context = new TestContext();
+        _context = new TestDbContext();
         _context.Lookup.Add(new LookupItem { Key = "1", Value = "One" });
         _context.Lookup.Add(new LookupItem { Key = "2", Value = "Two" });
         _context.Lookup.Add(new LookupItem { Key = "3", Value = "Three" });
@@ -34,7 +34,7 @@ public sealed class When_querying : IDisposable
     {
         var result = await _queryable
             .Where(p => DbFunctionsExtensions.Like(null, p.Value, "%e")) // EF.Functions.Like(<property>, <pattern>)
-            .ToListAsync();
+            .ToListAsync(cancellation: TestContext.Current.CancellationToken);
         result.Count.ShouldBe(2);
     }
 
@@ -48,14 +48,14 @@ public sealed class When_querying : IDisposable
     [Fact]
     public async Task Should_query_single_with_predicate_async()
     {
-        var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W"));
+        var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W"), cancellation: TestContext.Current.CancellationToken);
         result.Key.ShouldBe("2");
     }
 
     [Fact]
     public async Task Should_support_subquery_predicate()
     {
-        var result = await _queryable.SingleAsync(x => x.Value == _queryable.First().Value);
+        var result = await _queryable.SingleAsync(x => x.Value == _queryable.First().Value, cancellation: TestContext.Current.CancellationToken);
         result.Key.ShouldBe("1");
     }
 
@@ -69,7 +69,7 @@ public sealed class When_querying : IDisposable
             from i in _queryable
             select i.Value;
         var q = mainquery.Where(x => x.Value == subquery.First());
-        var result = await q.SingleAsync();
+        var result = await q.SingleAsync(cancellation: TestContext.Current.CancellationToken);
         result.Key.ShouldBe("1");
     }
 
@@ -84,7 +84,7 @@ public sealed class When_querying : IDisposable
             join b in subquery on a.Key equals b.Key
             where a.Value == subquery.OrderBy(x => x.Value.Length).Last().Value
             select new { a.Key, b.Value };
-        var result = await query.SingleAsync();
+        var result = await query.SingleAsync(cancellation: TestContext.Current.CancellationToken);
         result.Key.ShouldBe("3");
         result.Value.ShouldBe("Three");
     }
@@ -98,7 +98,7 @@ public sealed class When_querying : IDisposable
             where a.Value.Length == _queryable.Max(x => x.Value.Length)
             select new { a.Key, b.Value };
 
-        var result = await query.SingleAsync();
+        var result = await query.SingleAsync(cancellation: TestContext.Current.CancellationToken);
         result.Key.ShouldBe("3");
         result.Value.ShouldBe("Three");
     }
@@ -141,7 +141,7 @@ public sealed class When_querying : IDisposable
     [Fact]
     public async Task SingleOrDefaultAsync_with_predicate_should_return_null_if_no_match()
     {
-        var result = await _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("no match"));
+        var result = await _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("no match"), cancellation: TestContext.Current.CancellationToken);
         result.ShouldBeNull();
     }
 

@@ -45,7 +45,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ToListAsync()
     {
-        var result = await Queryable.ToListAsync();
+        var result = await Queryable.ToListAsync(cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBeSequenceEqual(Source);
     }
@@ -53,7 +53,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ToArrayAsync()
     {
-        var result = await Queryable.ToArrayAsync();
+        var result = await Queryable.ToArrayAsync(cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBeSequenceEqual(Source);
     }
@@ -61,7 +61,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ToDictionaryAsync_with_key_selector()
     {
-        var result = await Queryable.ToDictionaryAsync(x => x);
+        var result = await Queryable.ToDictionaryAsync(x => x, cancellation: TestContext.Current.CancellationToken);
 
         result.Keys.ShouldBeSequenceEqual(Source);
         result.Values.ShouldBeSequenceEqual(Source);
@@ -70,7 +70,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ToDictionaryAsync_with_key_and_element_selector()
     {
-        var result = await Queryable.ToDictionaryAsync(x => x, x => x);
+        var result = await Queryable.ToDictionaryAsync(x => x, x => x, cancellation: TestContext.Current.CancellationToken);
 
         result.Keys.ShouldBeSequenceEqual(Source);
         result.Values.ShouldBeSequenceEqual(Source);
@@ -79,7 +79,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ToDictionaryAsync_with_key_selector_and_equality_comparer()
     {
-        var result = await Queryable.ToDictionaryAsync(x => x, new Int32TestComparer());
+        var result = await Queryable.ToDictionaryAsync(x => x, new Int32TestComparer(), cancellation: TestContext.Current.CancellationToken);
 
         result.Keys.ShouldBeSequenceEqual(Source);
         result.Values.ShouldBeSequenceEqual(Source);
@@ -88,7 +88,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ToDictionaryAsync_with_key_and_element_selector_and_equality_comparer()
     {
-        var result = await Queryable.ToDictionaryAsync(x => x, x => x, new Int32TestComparer());
+        var result = await Queryable.ToDictionaryAsync(x => x, x => x, new Int32TestComparer(), cancellation: TestContext.Current.CancellationToken);
 
         result.Keys.ShouldBeSequenceEqual(Source);
         result.Values.ShouldBeSequenceEqual(Source);
@@ -97,9 +97,9 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_AsAsyncEnumerable()
     {
-        var asyncEenumerable = Queryable.AsAsyncEnumerable();
+        var asyncEenumerable = Queryable.AsAsyncEnumerable(cancellation: TestContext.Current.CancellationToken);
 
-        var asyncEnumerator = asyncEenumerable.GetAsyncEnumerator();
+        var asyncEnumerator = asyncEenumerable.GetAsyncEnumerator(TestContext.Current.CancellationToken);
 
         var list = new List<int>();
         while (await asyncEnumerator.MoveNextAsync())
@@ -113,7 +113,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_AggregateAsync()
     {
-        var result = await Queryable.AggregateAsync((x, y) => x + y);
+        var result = await Queryable.AggregateAsync((x, y) => x + y, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.Sum());
     }
@@ -121,7 +121,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_AggregateAsync_with_seed()
     {
-        var result = await Queryable.AggregateAsync(9999, (x, y) => x + y);
+        var result = await Queryable.AggregateAsync(9999, (x, y) => x + y, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.Sum() + 9999);
     }
@@ -129,7 +129,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_AggregateAsync_with_seed_and_selector()
     {
-        var result = await Queryable.AggregateAsync(9999, (x, y) => x + y, x => x);
+        var result = await Queryable.AggregateAsync(9999, (x, y) => x + y, x => x, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.Sum() + 9999);
     }
@@ -137,7 +137,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_FirstAsync()
     {
-        var result = await Queryable.FirstAsync();
+        var result = await Queryable.FirstAsync(cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.First());
     }
@@ -145,7 +145,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_FirstAsync_with_predicate()
     {
-        var result = await Queryable.FirstAsync(x => x < 0);
+        var result = await Queryable.FirstAsync(x => x < 0, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.First(x => x < 0));
     }
@@ -153,7 +153,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_FirstOrDefaultAsync()
     {
-        var result = await Queryable.FirstOrDefaultAsync();
+        var result = await Queryable.FirstOrDefaultAsync(cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.FirstOrDefault());
     }
@@ -161,7 +161,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_FirstOrDefaultAsync_with_predicate()
     {
-        var result = await Queryable.FirstOrDefaultAsync(x => x < 0);
+        var result = await Queryable.FirstOrDefaultAsync(x => x < 0, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.FirstOrDefault(x => x < 0));
     }
@@ -176,7 +176,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_SingleAsync_with_predicate()
     {
-        var result = await Queryable.SingleAsync(x => x == 1001);
+        var result = await Queryable.SingleAsync(x => x == 1001, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(1001);
     }
@@ -191,7 +191,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_SingleOrDefaultAsync_with_predicate()
     {
-        var result = await Queryable.SingleOrDefaultAsync(x => x == 1001);
+        var result = await Queryable.SingleOrDefaultAsync(x => x == 1001, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(1001);
     }
@@ -199,7 +199,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_LastAsync()
     {
-        var result = await Queryable.LastAsync();
+        var result = await Queryable.LastAsync(cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.Last());
     }
@@ -207,7 +207,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_LastAsync_with_predicate()
     {
-        var result = await Queryable.LastAsync(x => x < 0);
+        var result = await Queryable.LastAsync(x => x < 0, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.Last(x => x < 0));
     }
@@ -215,7 +215,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_LastOrDefaultAsync()
     {
-        var result = await Queryable.LastOrDefaultAsync();
+        var result = await Queryable.LastOrDefaultAsync(cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.LastOrDefault());
     }
@@ -223,7 +223,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_LastOrDefaultAsync_with_predicate()
     {
-        var result = await Queryable.LastOrDefaultAsync(x => x < 0);
+        var result = await Queryable.LastOrDefaultAsync(x => x < 0, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.LastOrDefault(x => x < 0));
     }
@@ -231,7 +231,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ElementAtAsync()
     {
-        var result = await Queryable.ElementAtAsync(10);
+        var result = await Queryable.ElementAtAsync(10, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.ElementAt(10));
     }
@@ -239,7 +239,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ElementAtOrDefaultAsync()
     {
-        var result = await Queryable.ElementAtOrDefaultAsync(10);
+        var result = await Queryable.ElementAtOrDefaultAsync(10, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe(Source.ElementAtOrDefault(10));
     }
@@ -247,7 +247,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ContainsAsync()
     {
-        var result = await Queryable.ContainsAsync(1001);
+        var result = await Queryable.ContainsAsync(1001, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBeTrue();
     }
@@ -255,7 +255,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ContainsAsync_with_equality_comparer()
     {
-        var result = await Queryable.ContainsAsync(1001, new Int32TestComparer());
+        var result = await Queryable.ContainsAsync(1001, new Int32TestComparer(), cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBeTrue();
     }
@@ -263,7 +263,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_SequenceEqualAsync()
     {
-        var result = await Queryable.SequenceEqualAsync(new[] { 1, 1001 });
+        var result = await Queryable.SequenceEqualAsync(new[] { 1, 1001 }, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBeFalse();
     }
@@ -271,7 +271,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_SequenceEqualAsync_with_equality_comparer()
     {
-        var result = await Queryable.SequenceEqualAsync(new[] { 1, 1001 }, new Int32TestComparer());
+        var result = await Queryable.SequenceEqualAsync(new[] { 1, 1001 }, new Int32TestComparer(), cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBeFalse();
     }
@@ -279,7 +279,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_AnyAsync()
     {
-        var result = await Queryable.AnyAsync();
+        var result = await Queryable.AnyAsync(cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBeTrue();
     }
@@ -287,7 +287,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_AnyAsync_with_predicate()
     {
-        var result = await Queryable.AnyAsync(x => x > 9999);
+        var result = await Queryable.AnyAsync(x => x > 9999, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBeFalse();
     }
@@ -295,7 +295,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_AllAsync()
     {
-        var result = await Queryable.AllAsync(x => x < 9999);
+        var result = await Queryable.AllAsync(x => x < 9999, cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBeTrue();
     }
@@ -303,7 +303,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_CountAsync()
     {
-        var resut = await Queryable.CountAsync();
+        var resut = await Queryable.CountAsync(cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.Count());
     }
@@ -311,7 +311,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_CountAsync_with_predicate()
     {
-        var resut = await Queryable.CountAsync(x => x > 1000);
+        var resut = await Queryable.CountAsync(x => x > 1000, cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.Count(x => x > 1000));
     }
@@ -319,7 +319,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_LongCountAsync()
     {
-        var resut = await Queryable.LongCountAsync();
+        var resut = await Queryable.LongCountAsync(cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.LongCount());
     }
@@ -327,7 +327,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_LongCountAsync_with_predicate()
     {
-        var resut = await Queryable.LongCountAsync(x => x > 1000);
+        var resut = await Queryable.LongCountAsync(x => x > 1000, cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.LongCount(x => x > 1000));
     }
@@ -335,7 +335,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_MinAsync()
     {
-        var resut = await Queryable.MinAsync();
+        var resut = await Queryable.MinAsync(cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.Min());
     }
@@ -343,7 +343,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_MinAsync_with_predicate()
     {
-        var resut = await Queryable.MinAsync(x => x > 1000);
+        var resut = await Queryable.MinAsync(x => x > 1000, cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.Min(x => x > 1001));
     }
@@ -351,7 +351,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_MaxAsync()
     {
-        var resut = await Queryable.MaxAsync();
+        var resut = await Queryable.MaxAsync(cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.Max());
     }
@@ -359,7 +359,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_MaxAsync_with_predicate()
     {
-        var resut = await Queryable.MaxAsync(x => x > 1000);
+        var resut = await Queryable.MaxAsync(x => x > 1000, cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.Max(x => x > 1001));
     }
@@ -367,7 +367,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_SumAsync()
     {
-        var resut = await Queryable.SumAsync();
+        var resut = await Queryable.SumAsync(cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.Sum());
     }
@@ -375,7 +375,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_SumAsync_with_selector()
     {
-        var resut = await Queryable.SumAsync(x => x % 2);
+        var resut = await Queryable.SumAsync(x => x % 2, cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.Count(x => x % 2 == 1) - Source.Count(x => x % 2 == -1));
     }
@@ -383,7 +383,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_AverageAsync()
     {
-        var resut = await Queryable.AverageAsync();
+        var resut = await Queryable.AverageAsync(cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.Average());
     }
@@ -391,7 +391,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_AverageAsync_with_selector()
     {
-        var resut = await Queryable.AverageAsync(x => x);
+        var resut = await Queryable.AverageAsync(x => x, cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBe(Source.Average(x => x));
     }
@@ -399,7 +399,7 @@ public abstract class When_using_async_linq_operations
     [Fact]
     public async Task Should_perform_ExecuteAsync()
     {
-        var resut = await Queryable.ExecuteAsync();
+        var resut = await Queryable.ExecuteAsync(cancellation: TestContext.Current.CancellationToken);
 
         resut.ShouldBeSequenceEqual(Source);
     }

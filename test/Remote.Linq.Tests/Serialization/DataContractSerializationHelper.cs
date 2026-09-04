@@ -6,7 +6,6 @@ using Remote.Linq.ExpressionVisitors;
 using System;
 using System.IO;
 using System.Runtime.Serialization;
-using Xunit;
 
 public static class DataContractSerializationHelper
 {

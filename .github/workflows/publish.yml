@@ -63,8 +63,6 @@ jobs:
         run: dotnet build Remote.Linq.slnx --no-restore -c Release /bl:build.binlog
 
       - name: Test
-        #env:
-        #  VSTEST_CONNECTION_TIMEOUT: 1200 # timeout 20 minutes
         run: dotnet test Remote.Linq.slnx --no-build -c Release
 
       - name: Upload build log

@@ -14,7 +14,7 @@ using Xunit;
 
 public sealed class When_querying : IDisposable
 {
-    private readonly TestContext _context;
+    private readonly TestDbContext _context;
     private readonly IQueryable<LookupItem> _queryable;
 
     public When_querying()
@@ -25,7 +25,7 @@ public sealed class When_querying : IDisposable
                 new() { Key = "2", Value = "Two" },
                 new() { Key = "3", Value = "Three" },
             };
-        _context = new ContextMock<TestContext>()
+        _context = new ContextMock<TestDbContext>()
             .WithSet(x => x.Items, data)
             .Object;
         _queryable = RemoteQueryable.Factory.CreateAsyncQueryable<LookupItem>(x => x.ExecuteWithEntityFrameworkAsync(_context));
@@ -50,7 +50,7 @@ public sealed class When_querying : IDisposable
     [Fact]
     public async Task Should_query_single_with_predicate_async()
     {
-        var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W"));
+        var result = await _queryable.SingleAsync(x => x.Value.ToUpper().Contains("W"), cancellation: TestContext.Current.CancellationToken);
         result.Key.ShouldBe("2");
     }
 
@@ -92,7 +92,7 @@ public sealed class When_querying : IDisposable
     [Fact]
     public async Task SingleOrDefaultAsync_with_predicate_should_return_null_if_no_match()
     {
-        var result = await _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("no match"));
+        var result = await _queryable.SingleOrDefaultAsync(x => x.Value.ToUpper().Contains("no match"), cancellation: TestContext.Current.CancellationToken);
         result.ShouldBeNull();
     }
 
@@ -106,7 +106,7 @@ public sealed class When_querying : IDisposable
             new() { Key = "3", Value = "Three" },
         };
         var filteredPeoplesNames = data.Where(x => x.Value.StartsWith("O")).Select(x => x.Value);
-        var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value));
+        var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value), cancellation: TestContext.Current.CancellationToken);
         result.Value.ShouldBe("One");
     }
 
@@ -120,7 +120,7 @@ public sealed class When_querying : IDisposable
             new() { Key = "3", Value = "Three" },
         };
         var filteredPeoplesNames = data.Where(x => x.Value.StartsWith("O")).Select(x => x.Value).AsQueryable();
-        var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value));
+        var result = await _queryable.FirstOrDefaultAsync(x => filteredPeoplesNames.Contains(x.Value), cancellation: TestContext.Current.CancellationToken);
         result.Value.ShouldBe("One");
     }
 
@@ -128,7 +128,7 @@ public sealed class When_querying : IDisposable
     private async Task Should_handle_closure_with_string_property()
     {
         var lookupitem = new LookupItem { Key = "1", Value = "One" };
-        var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem.Value);
+        var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem.Value, cancellation: TestContext.Current.CancellationToken);
         result.Value.ShouldBe("One");
     }
 
@@ -136,7 +136,7 @@ public sealed class When_querying : IDisposable
     private async Task Should_handle_string_closure()
     {
         var lookupitem = "One";
-        var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem);
+        var result = await _queryable.FirstOrDefaultAsync(x => x.Value == lookupitem, cancellation: TestContext.Current.CancellationToken);
         result.Value.ShouldBe("One");
     }
 }

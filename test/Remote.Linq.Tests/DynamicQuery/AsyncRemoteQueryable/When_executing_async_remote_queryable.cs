@@ -55,28 +55,28 @@ public class When_executing_async_remote_queryable
     [Fact]
     public async Task Should_query_countasync_on_remote_queryable()
     {
-        var count = await FilteredAsyncRemoteQueryable.CountAsync();
+        var count = await FilteredAsyncRemoteQueryable.CountAsync(cancellation: TestContext.Current.CancellationToken);
         count.ShouldBe(3);
     }
 
     [Fact]
     public async Task Should_query_singleasync_on_remote_queryable()
     {
-        var item = await AsyncRemoteQueryable.SingleAsync(x => x.Id == 1);
+        var item = await AsyncRemoteQueryable.SingleAsync(x => x.Id == 1, cancellation: TestContext.Current.CancellationToken);
         item.Id.ShouldBe(1);
     }
 
     [Fact]
     public async Task Should_query_tolistasync_on_remote_queryable()
     {
-        var result = await FilteredAsyncRemoteQueryable.ToListAsync();
+        var result = await FilteredAsyncRemoteQueryable.ToListAsync(cancellation: TestContext.Current.CancellationToken);
         result.Count.ShouldBe(3);
     }
 
     [Fact]
     public async Task Should_query_toarrayasync_on_remote_queryable()
     {
-        var result = await FilteredAsyncRemoteQueryable.ToArrayAsync();
+        var result = await FilteredAsyncRemoteQueryable.ToArrayAsync(cancellation: TestContext.Current.CancellationToken);
         result.Length.ShouldBe(3);
     }
 }

@@ -91,7 +91,7 @@ public abstract class When_querying_async
     [Fact]
     public async Task Should_query_async_enumerable_streaming_CountAsync()
     {
-        var count = await AsyncStream.AsAsyncEnumerable().CountAsync();
+        var count = await AsyncStream.AsAsyncEnumerable().CountAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         count.ShouldBe(10);
 
@@ -101,7 +101,7 @@ public abstract class When_querying_async
     [Fact]
     public async Task Should_query_non_streaming_CountAsync()
     {
-        var count = await AsyncStream.CountAsync();
+        var count = await AsyncStream.CountAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         count.ShouldBe(10);
 
@@ -132,7 +132,7 @@ public abstract class When_querying_async
     {
         var single = await AsyncStream
             .AsAsyncEnumerable()
-            .SingleAsync(x => x.Id == 5);
+            .SingleAsync(x => x.Id == 5, cancellationToken: TestContext.Current.CancellationToken);
 
         single.Id.ShouldBe(5);
 
@@ -142,7 +142,7 @@ public abstract class When_querying_async
     [Fact]
     public async Task Should_query_async_enumerable_streaming_AverageAsync()
     {
-        var average = await AsyncStream.AsAsyncEnumerable().Select(x => x.Id).AverageAsync();
+        var average = await AsyncStream.AsAsyncEnumerable().Select(x => x.Id).AverageAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         average.ShouldBe(4.5);
 
@@ -152,7 +152,7 @@ public abstract class When_querying_async
     [Fact]
     public async Task Should_query_non_streaming_SingleAsync()
     {
-        var single = await AsyncStream.SingleAsync(x => x.Id == 5);
+        var single = await AsyncStream.SingleAsync(x => x.Id == 5, cancellationToken: TestContext.Current.CancellationToken);
 
         single.Id.ShouldBe(5);
 
@@ -162,7 +162,7 @@ public abstract class When_querying_async
     [Fact]
     public async Task Should_query_non_streaming_ToListAsync()
     {
-        var list = await AsyncStream.ToListAsync();
+        var list = await AsyncStream.ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         list.Count.ShouldBe(10);
 
@@ -172,7 +172,7 @@ public abstract class When_querying_async
     [Fact]
     public async Task Should_query_non_streaming_ToArrayAsync()
     {
-        var array = await AsyncStream.ToArrayAsync();
+        var array = await AsyncStream.ToArrayAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         array.Length.ShouldBe(10);
 
@@ -182,7 +182,7 @@ public abstract class When_querying_async
     [Fact]
     public async Task Should_query_non_streaming_AverageAsync()
     {
-        var average = await AsyncStream.Select(x => x.Id).AverageAsync();
+        var average = await AsyncStream.Select(x => x.Id).AverageAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         average.ShouldBe(4.5);
 
@@ -194,7 +194,7 @@ public abstract class When_querying_async
     {
         var groupedResult = await AsyncStream
             .GroupBy(x => x.Id)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         groupedResult.Count.ShouldBe(10);
 

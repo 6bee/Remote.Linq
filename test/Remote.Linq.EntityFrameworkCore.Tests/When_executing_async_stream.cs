@@ -15,13 +15,13 @@ using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtension
 
 public class When_executing_async_stream : IDisposable
 {
-    private readonly TestContext _context;
+    private readonly TestDbContext _context;
     private readonly IQueryable<LookupItem> _queryable;
 
     [SecuritySafeCritical]
     public When_executing_async_stream()
     {
-        _context = new TestContext();
+        _context = new TestDbContext();
         _context.Lookup.Add(new LookupItem { Key = "1", Value = "One" });
         _context.Lookup.Add(new LookupItem { Key = "2", Value = "Two" });
         _context.Lookup.Add(new LookupItem { Key = "3", Value = "Three" });
@@ -48,7 +48,7 @@ public class When_executing_async_stream : IDisposable
     {
         var asyncResultStream = _queryable
             .Where(p => DbFunctionsExtensions.Like(null, p.Value, "%e")) // EF.Functions.Like(<property>, <pattern>)
-            .AsAsyncEnumerable();
+            .AsAsyncEnumerable(cancellation: TestContext.Current.CancellationToken);
         var result = await ToArrayAsync(asyncResultStream);
         result.Length.ShouldBe(2);
     }
@@ -58,7 +58,7 @@ public class When_executing_async_stream : IDisposable
     {
         var asyncResultStream = _queryable
             .Where(x => x.Value.ToUpper().Contains("W"))
-            .AsAsyncEnumerable();
+            .AsAsyncEnumerable(cancellation: TestContext.Current.CancellationToken);
         var result = await ToArrayAsync(asyncResultStream);
         result.Single().Key.ShouldBe("2");
     }
@@ -69,7 +69,7 @@ public class When_executing_async_stream : IDisposable
         var asyncResultStream = _queryable
             .Where(x => x.Value.ToUpper().Contains("O"))
             .OrderByDescending(x => x.Key)
-            .AsAsyncEnumerable();
+            .AsAsyncEnumerable(cancellation: TestContext.Current.CancellationToken);
         var result = await ToArrayAsync(asyncResultStream);
         result.Length.ShouldBe(2);
         result[0].Key.ShouldBe("2");
@@ -81,7 +81,7 @@ public class When_executing_async_stream : IDisposable
     {
         var asyncResultStream = _queryable
             .Where(x => x.Value.ToUpper().Contains("no match"))
-            .AsAsyncEnumerable();
+            .AsAsyncEnumerable(cancellation: TestContext.Current.CancellationToken);
         var result = await ToArrayAsync(asyncResultStream);
         result.ShouldBeEmpty();
     }

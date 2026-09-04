@@ -6,7 +6,6 @@ using Aqua.Text.Json.Converters;
 using System;
 using System.Numerics;
 using System.Text.Json;
-using Xunit;
 
 public static class SystemTextJsonSerializationHelper
 {

@@ -909,7 +909,7 @@ public abstract class When_running_query
         result.Count.ShouldBe(1);
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     public void Should_query_primitive_value_injected_as_variable_closure(Type type, object value)
     {
@@ -939,7 +939,7 @@ public abstract class When_running_query
         _productQueryable.Select(_ => value).ShouldAllBe(x => Equals(x, value), $"type: {typeof(T).FullName}, value: {value}");
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_query_primitive_value_collection_injected_as_variable_closure(Type type, object value)
@@ -970,7 +970,7 @@ public abstract class When_running_query
         _productQueryable.Select(_ => collection).ShouldAllBe(x => x.CollectionEquals(collection), $"element type: {typeof(T).FullName}, array: {collection}");
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     public void Should_query_anonymous_type_with_primitive_value_injected_as_variable_closure(Type type, object value)
     {
@@ -1000,7 +1000,7 @@ public abstract class When_running_query
         .Select(_ => new { Value = value })
         .ShouldAllBe(x => Equals(x.Value, value), $"type: {typeof(T).FullName}, value: {value}");
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_query_anonymous_type_with_primitive_value_collection_injected_as_variable_closure(Type type, object value)

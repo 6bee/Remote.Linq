@@ -45,7 +45,7 @@ public class When_executing_straight
     {
         var instance = new Entity();
         var queryable = RemoteQueryable.Factory.CreateAsyncQueryable<Entity>(exp => new ValueTask<object>(new[] { instance }));
-        var result = await queryable.ExecuteAsync<Entity>();
+        var result = await queryable.ExecuteAsync<Entity>(cancellation: TestContext.Current.CancellationToken);
         result.Single().ShouldBeSameAs(instance);
     }
 
@@ -54,7 +54,7 @@ public class When_executing_straight
     {
         var instance = new Entity();
         var queryable = RemoteQueryable.Factory.CreateAsyncQueryable<Entity>(exp => new ValueTask<object>(new[] { instance }));
-        var result = await queryable.ExecuteAsync<Entity[]>();
+        var result = await queryable.ExecuteAsync<Entity[]>(cancellation: TestContext.Current.CancellationToken);
         result.Single().ShouldBeSameAs(instance);
     }
 
@@ -81,7 +81,7 @@ public class When_executing_straight
     {
         var instance = new Entity();
         var queryable = RemoteQueryable.Factory.CreateAsyncQueryable(typeof(object), exp => new ValueTask<object>(instance));
-        var result = await queryable.ExecuteAsync<Entity>();
+        var result = await queryable.ExecuteAsync<Entity>(cancellation: TestContext.Current.CancellationToken);
         result.ShouldBeSameAs(instance);
     }
 
@@ -90,7 +90,7 @@ public class When_executing_straight
     {
         var instance = new Entity();
         var queryable = RemoteQueryable.Factory.CreateAsyncQueryable(typeof(object), exp => new ValueTask<object>(new[] { instance }));
-        var result = await queryable.ExecuteAsync<IEnumerable<Entity>>();
+        var result = await queryable.ExecuteAsync<IEnumerable<Entity>>(cancellation: TestContext.Current.CancellationToken);
         result.Single().ShouldBeSameAs(instance);
     }
 }

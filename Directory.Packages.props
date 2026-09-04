@@ -47,13 +47,10 @@
   test projects specific
   -->
   <ItemGroup Label="Tests">
-    <PackageVersion Include="coverlet.collector" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
+    <PackageVersion Include="coverlet.MTP" Version="10.0.1" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.0" />
-    <PackageVersion Include="Xunit.SkippableFact" Version="1.5.85" />
+    <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.0" />
   </ItemGroup>
   <!--
   samples projects specific

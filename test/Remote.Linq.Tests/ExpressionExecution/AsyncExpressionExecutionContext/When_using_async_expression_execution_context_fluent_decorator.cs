@@ -19,19 +19,19 @@ public class When_using_async_expression_execution_context_fluent_decorator : ID
 
     [Fact]
     public async Task Should_call_prepare_remote_expression_decorator()
-        => await _context.With(PrepareRemoteExpressionStrategy).ExecuteAsync();
+        => await _context.With(PrepareRemoteExpressionStrategy).ExecuteAsync(TestContext.Current.CancellationToken);
 
     [Fact]
     public async Task Should_call_transform_remote_expression_decorator()
-        => await _context.With(TransformRemoteExpressionStrategy).ExecuteAsync();
+        => await _context.With(TransformRemoteExpressionStrategy).ExecuteAsync(TestContext.Current.CancellationToken);
 
     [Fact]
     public async Task Should_call_prepare_system_expression_decorator()
-        => await _context.With(PrepareSystemExpressionStrategy).ExecuteAsync();
+        => await _context.With(PrepareSystemExpressionStrategy).ExecuteAsync(TestContext.Current.CancellationToken);
 
     [Fact]
     public async Task Should_call_prepare_system_expression_for_async_execution_decorator()
-        => await _context.With(PrepareSystemExpressionForAsyncExecutionStrategy).ExecuteAsync();
+        => await _context.With(PrepareSystemExpressionForAsyncExecutionStrategy).ExecuteAsync(TestContext.Current.CancellationToken);
 
     [Fact]
     public void Should_call_execute_expression_decorator()
@@ -39,19 +39,19 @@ public class When_using_async_expression_execution_context_fluent_decorator : ID
 
     [Fact]
     public async Task Should_call_async_execute_expression_decorator()
-        => await _context.With(ExecuteAsyncStrategy).ExecuteAsync();
+        => await _context.With(ExecuteAsyncStrategy).ExecuteAsync(TestContext.Current.CancellationToken);
 
     [Fact]
     public async Task Should_call_process_execution_result_decorator()
-        => await _context.With(ProcessExecutionResultStrategy).ExecuteAsync();
+        => await _context.With(ProcessExecutionResultStrategy).ExecuteAsync(TestContext.Current.CancellationToken);
 
     [Fact]
     public async Task Should_call_convert_execution_result_decorator()
-        => await _context.With(ConvertExecutionResultStrategy).ExecuteAsync();
+        => await _context.With(ConvertExecutionResultStrategy).ExecuteAsync(TestContext.Current.CancellationToken);
 
     [Fact]
     public async Task Should_call_process_converted_result_decorator()
-        => await _context.With(ProcessConvertedResultStrategy).ExecuteAsync();
+        => await _context.With(ProcessConvertedResultStrategy).ExecuteAsync(TestContext.Current.CancellationToken);
 
     public void Dispose()
         => _callBackCount.ShouldBe(1, "Decorator should have been invoked exactly once");

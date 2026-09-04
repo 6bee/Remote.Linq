@@ -38,7 +38,7 @@ public class When_using_test_support_remote_queryable
     [Fact]
     public async Task Should_allow_async_execution_of_remote_queryable_created_with_test_support_method()
     {
-        var result = await Enumerable.Range(1, 100).AsRemoteQueryable().SumAsync();
+        var result = await Enumerable.Range(1, 100).AsRemoteQueryable().SumAsync(cancellation: TestContext.Current.CancellationToken);
         result.ShouldBe(5050);
     }
 
@@ -53,7 +53,7 @@ public class When_using_test_support_remote_queryable
                 from x in _queryable
                 from f in factors
                 select x * f)
-            .SumAsync();
+            .SumAsync(cancellation: TestContext.Current.CancellationToken);
 
         result.ShouldBe((_queryable.Sum() * factor1) + (_queryable.Sum() * factor2), 0.0000001);
     }

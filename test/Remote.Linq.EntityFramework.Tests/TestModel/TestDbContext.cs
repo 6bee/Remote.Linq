@@ -4,7 +4,7 @@ namespace Remote.Linq.EntityFramework.Tests.TestModel;
 
 using System.Data.Entity;
 
-public class TestContext : DbContext
+public class TestDbContext : DbContext
 {
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {

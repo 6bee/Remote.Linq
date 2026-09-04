@@ -7,14 +7,14 @@ using System;
 using System.Security;
 
 [SecuritySafeCritical]
-public class TestContext : DbContext
+public class TestDbContext : DbContext
 {
-    public TestContext()
-        : this(new DbContextOptionsBuilder<TestContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options)
+    public TestDbContext()
+        : this(new DbContextOptionsBuilder<TestDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options)
     {
     }
 
-    public TestContext(DbContextOptions options)
+    public TestDbContext(DbContextOptions options)
         : base(options)
     {
     }
