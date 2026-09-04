@@ -1,0 +1,36 @@
+# .gitea/workflows/ci-tests.yml
+name: CI Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+
+    runs-on: dotnet-10.0
+
+    strategy:
+      matrix:
+        framework: [net10.0]
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Build and run tests
+        run: dotnet test Remote.Linq.slnx -f ${{ matrix.framework }} /bl
+
+      - name: Upload build log
+        uses: actions/upload-artifact@v3
+        with:
+          name: msbuild_log_${{ matrix.framework }}
+          path: msbuild.binlog
+          if-no-files-found: error
