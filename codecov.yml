@@ -10,4 +10,4 @@ flags:
 
 codecov:
   ci:
-    - appveyor
+    - github
