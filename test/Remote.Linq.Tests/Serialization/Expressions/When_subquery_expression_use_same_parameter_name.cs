@@ -16,9 +16,9 @@ public abstract class When_subquery_expression_use_same_parameter_name
 {
     public class With_data_contract_serializer() : When_subquery_expression_use_same_parameter_name(DataContractSerializationHelper.Clone);
 
-    public class With_newtonsoft_json_serializer() : When_subquery_expression_use_same_parameter_name(x => (Expression)NewtonsoftJsonSerializationHelper.Clone(x, x.GetType()));
+    public class With_newtonsoft_json_serializer() : When_subquery_expression_use_same_parameter_name(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_subquery_expression_use_same_parameter_name(x => (Expression)SystemTextJsonSerializationHelper.Clone(x, x.GetType()));
+    public class With_system_text_json_serializer() : When_subquery_expression_use_same_parameter_name(SystemTextJsonSerializationHelper.Clone);
 
     public class With_protobuf_serializer() : When_using_LoopExpressions(ProtobufSerializationHelper.Clone);
 

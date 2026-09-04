@@ -27,9 +27,9 @@ public abstract class When_running_query
 
     public class With_data_contract_serializer() : When_running_query(DataContractSerializationHelper.Clone);
 
-    public class With_newtonsoft_json_serializer() : When_running_query(x => (Expression)NewtonsoftJsonSerializationHelper.Clone(x, x.GetType()));
+    public class With_newtonsoft_json_serializer() : When_running_query(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_running_query(x => (Expression)SystemTextJsonSerializationHelper.Clone(x, x.GetType()));
+    public class With_system_text_json_serializer() : When_running_query(SystemTextJsonSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_running_query(XmlSerializationHelper.Clone);
 

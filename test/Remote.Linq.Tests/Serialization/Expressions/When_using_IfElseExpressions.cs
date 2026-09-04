@@ -11,9 +11,9 @@ public abstract class When_using_IfElseExpressions
 {
     public class With_data_contract_serializer() : When_using_IfElseExpressions(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_IfElseExpressions(x => (RemoteExpression)NewtonsoftJsonSerializationHelper.Clone(x, x.GetType()));
+    public class With_newtonsoft_json_serializer() : When_using_IfElseExpressions(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_IfElseExpressions(x => (RemoteExpression)SystemTextJsonSerializationHelper.Clone(x, x.GetType()));
+    public class With_system_text_json_serializer() : When_using_IfElseExpressions(SystemTextJsonSerializationHelper.Clone);
 
     public class With_protobuf_serializer() : When_using_IfElseExpressions(ProtobufSerializationHelper.Clone);
 
