@@ -11,6 +11,10 @@ jobs:
 
     runs-on: dotnet-10.0
 
+    defaults:
+      run:
+        shell: pwsh
+
     strategy:
       matrix:
         framework: [net10.0]
@@ -25,8 +29,18 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Build and run tests
-        run: dotnet test Remote.Linq.slnx -f ${{ matrix.framework }} /bl
+      - name: Run tests with coverage
+        run: >
+          dotnet test Remote.Linq.slnx -f ${{ matrix.framework }} /bl `
+            --coverlet `
+            --results-directory TestResults `
+            --coverlet-output-format json `
+            --coverlet-output-format cobertura `
+            --coverlet-exclude-assemblies-without-sources MissingAll `
+            --coverlet-exclude-by-attribute Obsolete `
+            --coverlet-exclude-by-attribute GeneratedCode `
+            --coverlet-exclude-by-attribute DebuggerNonUserCode `
+            --coverlet-exclude-by-attribute CompilerGenerated
 
       - name: Upload build log
         uses: actions/upload-artifact@v3
@@ -34,3 +48,9 @@ jobs:
           name: msbuild_log_${{ matrix.framework }}
           path: msbuild.binlog
           if-no-files-found: error
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: TestResults/*
