@@ -1,0 +1,52 @@
+name: CI Tests
+
+on:
+  push:
+    branches:
+      - '!experimental*'
+    tags:
+      - '!*'
+  pull_request:
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Build
+        run: dotnet build
+
+      - name: Run tests with coverage
+        run: >
+          dotnet test Remote.Linq.slnx --no-build `
+            --coverlet `
+            --results-directory TestResults `
+            --coverlet-output-format json `
+            --coverlet-output-format cobertura `
+            --coverlet-exclude-assemblies-without-sources MissingAll `
+            --coverlet-exclude-by-attribute Obsolete `
+            --coverlet-exclude-by-attribute GeneratedCode `
+            --coverlet-exclude-by-attribute DebuggerNonUserCode `
+            --coverlet-exclude-by-attribute CompilerGenerated
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: TestResults/*
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          files: TestResults/coverage.cobertura.*.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          verbose: true
