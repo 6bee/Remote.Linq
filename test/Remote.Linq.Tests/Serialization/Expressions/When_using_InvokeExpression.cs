@@ -56,9 +56,9 @@ public abstract class When_using_InvokeExpression
 
         bool result1 = _originalExpression.Compile()(argument);
 
-        bool result2 = _remoteExpression.ToLinqExpression<decimal, bool>().Compile()(argument);
+        bool result2 = _remoteExpression.ToLinqExpression<Func<decimal, bool>>().Compile()(argument);
 
-        bool result3 = _serializedRemoteExpression.ToLinqExpression<decimal, bool>().Compile()(argument);
+        bool result3 = _serializedRemoteExpression.ToLinqExpression<Func<decimal, bool>>().Compile()(argument);
 
         false
             .ShouldMatch(result1)

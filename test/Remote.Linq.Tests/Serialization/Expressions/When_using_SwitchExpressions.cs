@@ -74,11 +74,11 @@ public abstract class When_using_SwitchExpressions
         int intNegativeDefault1 = _originalExpression.Compile()(minusOne);
         int intMaxDefault1 = _originalExpression.Compile()(maxValue);
 
-        int intNegativeDefault2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(minusOne);
-        int intMaxDefault2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(maxValue);
+        int intNegativeDefault2 = _remoteExpression.ToLinqExpression<Func<int, int>>().Compile()(minusOne);
+        int intMaxDefault2 = _remoteExpression.ToLinqExpression<Func<int, int>>().Compile()(maxValue);
 
-        int intNegativeDefault3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(minusOne);
-        int intMaxDefault3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(maxValue);
+        int intNegativeDefault3 = _serializedRemoteExpression.ToLinqExpression<Func<int, int>>().Compile()(minusOne);
+        int intMaxDefault3 = _serializedRemoteExpression.ToLinqExpression<Func<int, int>>().Compile()(maxValue);
 
         (-1)
             .ShouldMatch(intNegativeDefault1)
@@ -98,11 +98,11 @@ public abstract class When_using_SwitchExpressions
         int intZeroEven1 = _originalExpression.Compile()(zero);
         int intTwoEven1 = _originalExpression.Compile()(two);
 
-        int intZeroEven2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(zero);
-        int intTwoEven2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(two);
+        int intZeroEven2 = _remoteExpression.ToLinqExpression<Func<int, int>>().Compile()(zero);
+        int intTwoEven2 = _remoteExpression.ToLinqExpression<Func<int, int>>().Compile()(two);
 
-        int intZeroEven3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(zero);
-        int intTwoEven3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(two);
+        int intZeroEven3 = _serializedRemoteExpression.ToLinqExpression<Func<int, int>>().Compile()(zero);
+        int intTwoEven3 = _serializedRemoteExpression.ToLinqExpression<Func<int, int>>().Compile()(two);
 
         1
             .ShouldMatch(intZeroEven1)
@@ -122,11 +122,11 @@ public abstract class When_using_SwitchExpressions
         int intOneOdd1 = _originalExpression.Compile()(one);
         int intThreeOdd1 = _originalExpression.Compile()(three);
 
-        int intOneOdd2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(one);
-        int intThreeOdd2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(three);
+        int intOneOdd2 = _remoteExpression.ToLinqExpression<Func<int, int>>().Compile()(one);
+        int intThreeOdd2 = _remoteExpression.ToLinqExpression<Func<int, int>>().Compile()(three);
 
-        int intOneOdd3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(one);
-        int intThreeOdd3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(three);
+        int intOneOdd3 = _serializedRemoteExpression.ToLinqExpression<Func<int, int>>().Compile()(one);
+        int intThreeOdd3 = _serializedRemoteExpression.ToLinqExpression<Func<int, int>>().Compile()(three);
 
         2
             .ShouldMatch(intOneOdd1)

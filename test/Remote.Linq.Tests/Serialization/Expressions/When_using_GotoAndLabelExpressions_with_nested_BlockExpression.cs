@@ -71,9 +71,9 @@ public abstract class When_using_GotoAndLabelExpressions_with_nested_BlockExpres
 
         long long1 = _originalExpression.Compile()(argument);
 
-        long long2 = _remoteExpression.ToLinqExpression<StreamWriter, long>().Compile()(argument);
+        long long2 = _remoteExpression.ToLinqExpression<Func<StreamWriter, long>>().Compile()(argument);
 
-        long long3 = _serializedRemoteExpression.ToLinqExpression<StreamWriter, long>().Compile()(argument);
+        long long3 = _serializedRemoteExpression.ToLinqExpression<Func<StreamWriter, long>>().Compile()(argument);
 
         0L
             .ShouldMatch(long1)

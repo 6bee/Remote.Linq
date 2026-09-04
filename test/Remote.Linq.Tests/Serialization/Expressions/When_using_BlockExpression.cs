@@ -73,9 +73,9 @@ public abstract class When_using_BlockExpression
 
         string str1 = _originalExpression.Compile()(argument);
 
-        string str2 = _remoteExpression.ToLinqExpression<decimal, string>().Compile()(argument);
+        string str2 = _remoteExpression.ToLinqExpression<Func<decimal, string>>().Compile()(argument);
 
-        string str3 = _serializedRemoteExpression.ToLinqExpression<decimal, string>().Compile()(argument);
+        string str3 = _serializedRemoteExpression.ToLinqExpression<Func<decimal, string>>().Compile()(argument);
 
         "3,15"
             .ShouldMatch(str1)

@@ -50,8 +50,8 @@ public abstract class When_using_complex_expression_with_local_lambda
     [Fact]
     public void System_expresison_should_be_equal()
     {
-        var exp1 = _remoteExpression.ToLinqExpression<bool, bool>();
-        var exp2 = _serializedRemoteExpression.ToLinqExpression<bool, bool>();
+        var exp1 = _remoteExpression.ToLinqExpression<Func<bool, bool>>();
+        var exp2 = _serializedRemoteExpression.ToLinqExpression<Func<bool, bool>>();
 
         exp1.ShouldEqualExpression(exp2);
     }

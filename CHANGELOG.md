@@ -14,6 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Replace _protobuf-net_ serialization backend with a complete rewrite based on _aqua-core-protobuf_ and _Google.Protobuf_
+- Changed `ToLinqExpression<T, TResult>()` to `ToLinqExpression<Func<T, TResult>>()` <br/>
+  and `ToLinqExpression<TResult>()` to `ToLinqExpression<Func<TResult>>()`. <br/>
+  Update existing usages to specify the delegate type as the generic argument. <br/>
+  To migrate, the following regular expression search and replace can be used:
+  ```
+  Search:  ToLinqExpression<(?!Func<)([^>]+)>
+  Replace: ToLinqExpression<Func<$1>>
+  ```
 
 ### Deprecated
 

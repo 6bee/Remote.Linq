@@ -71,11 +71,11 @@ public abstract class When_using_TryCatchExpressions
         bool boolFail1 = _originalExpression.Compile()(fail);
         bool boolSuccess1 = _originalExpression.Compile()(success);
 
-        bool boolFail2 = _remoteExpression.ToLinqExpression<bool, bool>().Compile()(fail);
-        bool boolSuccess2 = _remoteExpression.ToLinqExpression<bool, bool>().Compile()(success);
+        bool boolFail2 = _remoteExpression.ToLinqExpression<Func<bool, bool>>().Compile()(fail);
+        bool boolSuccess2 = _remoteExpression.ToLinqExpression<Func<bool, bool>>().Compile()(success);
 
-        bool boolFail3 = _serializedRemoteExpression.ToLinqExpression<bool, bool>().Compile()(fail);
-        bool boolSuccess3 = _serializedRemoteExpression.ToLinqExpression<bool, bool>().Compile()(success);
+        bool boolFail3 = _serializedRemoteExpression.ToLinqExpression<Func<bool, bool>>().Compile()(fail);
+        bool boolSuccess3 = _serializedRemoteExpression.ToLinqExpression<Func<bool, bool>>().Compile()(success);
 
         false
             .ShouldMatch(boolFail1)

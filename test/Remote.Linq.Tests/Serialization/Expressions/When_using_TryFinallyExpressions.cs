@@ -67,10 +67,10 @@ public abstract class When_using_TryFinallyExpressions
         Assert.Throws<InvalidOperationException>(() => _originalExpression.Compile()(true)).Message.ShouldMatch("y");
         Assert.Throws<InvalidOperationException>(() => _originalExpression.Compile()(false)).Message.ShouldMatch("y");
 
-        Assert.Throws<InvalidOperationException>(() => _remoteExpression.ToLinqExpression<bool, bool>().Compile()(true)).Message.ShouldMatch("y");
-        Assert.Throws<InvalidOperationException>(() => _remoteExpression.ToLinqExpression<bool, bool>().Compile()(false)).Message.ShouldMatch("y");
+        Assert.Throws<InvalidOperationException>(() => _remoteExpression.ToLinqExpression<Func<bool, bool>>().Compile()(true)).Message.ShouldMatch("y");
+        Assert.Throws<InvalidOperationException>(() => _remoteExpression.ToLinqExpression<Func<bool, bool>>().Compile()(false)).Message.ShouldMatch("y");
 
-        Assert.Throws<InvalidOperationException>(() => _serializedRemoteExpression.ToLinqExpression<bool, bool>().Compile()(true)).Message.ShouldMatch("y");
-        Assert.Throws<InvalidOperationException>(() => _serializedRemoteExpression.ToLinqExpression<bool, bool>().Compile()(false)).Message.ShouldMatch("y");
+        Assert.Throws<InvalidOperationException>(() => _serializedRemoteExpression.ToLinqExpression<Func<bool, bool>>().Compile()(true)).Message.ShouldMatch("y");
+        Assert.Throws<InvalidOperationException>(() => _serializedRemoteExpression.ToLinqExpression<Func<bool, bool>>().Compile()(false)).Message.ShouldMatch("y");
     }
 }

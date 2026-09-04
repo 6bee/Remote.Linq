@@ -77,7 +77,7 @@ public static class SimpleQueryQueryableExtensions
         query.AssertNotNull();
         foreach (var filter in query.FilterExpressions ?? Enumerable.Empty<RemoteLinq.LambdaExpression>())
         {
-            var predicate = expressionVisitor(filter).ToLinqExpression<T, bool>();
+            var predicate = expressionVisitor(filter).ToLinqExpression<Func<T, bool>>();
             queriable = queriable.Where(predicate);
         }
 

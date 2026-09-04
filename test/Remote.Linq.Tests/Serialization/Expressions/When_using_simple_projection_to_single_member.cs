@@ -53,8 +53,8 @@ public abstract class When_using_simple_projection_to_single_member
     [Fact]
     public void System_expresison_should_be_equal()
     {
-        var exp1 = _remoteExpression.ToLinqExpression<AType, string>();
-        var exp2 = _serializedRemoteExpression.ToLinqExpression<AType, string>();
+        var exp1 = _remoteExpression.ToLinqExpression<Func<AType, string>>();
+        var exp2 = _serializedRemoteExpression.ToLinqExpression<Func<AType, string>>();
 
         exp1.ShouldEqualExpression(exp2);
     }

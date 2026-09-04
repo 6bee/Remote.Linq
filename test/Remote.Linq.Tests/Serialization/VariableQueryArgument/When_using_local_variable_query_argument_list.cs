@@ -56,8 +56,8 @@ public abstract class When_using_local_variable_query_argument_list
     [Fact]
     public void System_expresison_should_be_equal()
     {
-        var exp1 = _remoteExpression.ToLinqExpression<AType, bool>();
-        var exp2 = _serializedRemoteExpression.ToLinqExpression<AType, bool>();
+        var exp1 = _remoteExpression.ToLinqExpression<Func<AType, bool>>();
+        var exp2 = _serializedRemoteExpression.ToLinqExpression<Func<AType, bool>>();
 
         exp1.ShouldEqualExpression(exp2);
     }

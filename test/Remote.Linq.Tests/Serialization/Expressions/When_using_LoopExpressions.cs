@@ -76,9 +76,9 @@ public abstract class When_using_LoopExpressions
 
         int int1 = _originalExpression.Compile()(argument);
 
-        int int2 = _remoteExpression.ToLinqExpression<int, int>().Compile()(argument);
+        int int2 = _remoteExpression.ToLinqExpression<Func<int, int>>().Compile()(argument);
 
-        int int3 = _serializedRemoteExpression.ToLinqExpression<int, int>().Compile()(argument);
+        int int3 = _serializedRemoteExpression.ToLinqExpression<Func<int, int>>().Compile()(argument);
 
         30
             .ShouldMatch(int1)

@@ -44,7 +44,7 @@ public abstract class When_using_LambdaExpression_returnung_a_type
         Expression<Func<Type>> transform = () => type;
         var expression = transform.ToRemoteLinqExpression();
         var serialized = _serialize(expression);
-        var resurectedExpression = serialized.ToLinqExpression<Type>();
+        var resurectedExpression = serialized.ToLinqExpression<Func<Type>>();
         resurectedExpression.Compile()().ShouldBe(type);
     }
 
@@ -55,7 +55,7 @@ public abstract class When_using_LambdaExpression_returnung_a_type
         Expression<Func<Type>> transform = () => type;
         var expression = transform.ToRemoteLinqExpression();
         var serialized = _serialize(expression);
-        var resurectedExpression = serialized.ToLinqExpression<Type>();
+        var resurectedExpression = serialized.ToLinqExpression<Func<Type>>();
         resurectedExpression.Compile()().ShouldBe(type);
     }
 }

@@ -50,22 +50,58 @@ public static partial class ExpressionTranslationExtensions
         => new RemoteToSystemLinqTranslator(context ?? ExpressionTranslatorContext.Default).ToExpression(expression);
 
     /// <summary>
-    /// Translates a given query expression into a lambda expression.
+    ///   Translates a given query expression into a lambda expression.
     /// </summary>
+    /// <remarks>
+    ///   To migrate usages of <c>ToLinqExpression&lt;T, TResult&gt;</c> to
+    ///   <c>ToLinqExpression&lt;Func&lt;T, TResult&gt;&gt;</c>, use the following
+    ///   regular expression search and replace:
+    ///
+    ///   <code>
+    ///     Search:  ToLinqExpression&lt;(?!Func&lt;)([^&gt;]+)&gt;
+    ///     Replace: ToLinqExpression&lt;Func&lt;$1&gt;&gt;
+    ///   </code>
+    ///
+    ///   This preserves both type arguments and prevents already migrated <c>ToLinqExpression&lt;Func&lt;T, TResult&gt;&gt;</c> usages from being matched.
+    /// </remarks>
+    // Search:  ToLinqExpression<(?!Func<)([^>]+)>
+    // Replace: ToLinqExpression<Func<$1>>
+    [Obsolete("Call ToLinqExpression<Func<T, TResult>>() instead of ToLinqExpression<T, TResult>()", true)]
     public static SystemLinq.Expression<Func<T, TResult>> ToLinqExpression<T, TResult>(this RemoteLinq.LambdaExpression expression)
-    {
-        var exp = expression.ToLinqExpression();
-        var lambdaExpression = SystemLinq.Expression.Lambda<Func<T, TResult>>(exp.Body, exp.Parameters);
-        return lambdaExpression;
-    }
+        => expression.ToLinqExpression<Func<T, TResult>>();
 
     /// <summary>
-    /// Translates a given query expression into a lambda expression.
+    ///   Translates a given query expression into a lambda expression.
     /// </summary>
-    public static SystemLinq.Expression<Func<TResult>> ToLinqExpression<TResult>(this RemoteLinq.LambdaExpression expression)
+    /// <remarks>
+    /// <para>
+    ///     <b>Breaking change:</b> The generic type parameter is now
+    ///     <c>TDelegate</c> rather than <c>TResult</c>.
+    /// </para>
+    /// <para>
+    ///     Update calls to specify the delegate type represented by the expression.
+    ///     For example, use <c>ToLinqExpression&lt;Func&lt;int&gt;&gt;()</c>
+    ///     instead of <c>ToLinqExpression&lt;int&gt;()</c>.
+    /// </para>
+    /// <para>
+    ///   To migrate usages of <c>ToLinqExpression&lt;TResult&gt;</c> to
+    ///   <c>ToLinqExpression&lt;Func&lt;TResult&gt;&gt;</c>, use the following
+    ///   regular expression search and replace:
+    ///
+    ///   <code>
+    ///     Search:  ToLinqExpression&lt;(?!Func&lt;)([^&gt;]+)&gt;
+    ///     Replace: ToLinqExpression&lt;Func&lt;$1&gt;&gt;
+    ///   </code>
+    ///
+    ///   This preserves the type argument and prevents already migrated <c>ToLinqExpression&lt;Func&lt;TResult&gt;&gt;</c> usages from being matched.
+    /// </para>
+    /// </remarks>
+    // Search:  ToLinqExpression<(?!Func<)([^>]+)>
+    // Replace: ToLinqExpression<Func<$1>>
+    public static SystemLinq.Expression<TDelegate> ToLinqExpression<TDelegate>(this RemoteLinq.LambdaExpression expression)
     {
         var exp = expression.ToLinqExpression();
-        var lambdaExpression = SystemLinq.Expression.Lambda<Func<TResult>>(exp.Body, exp.Parameters);
+        var lambdaExpression = SystemLinq.Expression.Lambda<TDelegate>(exp.Body, exp.Parameters);
         return lambdaExpression;
     }
 
