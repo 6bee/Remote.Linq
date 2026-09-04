@@ -3,9 +3,8 @@ name: CI Tests
 on:
   push:
     branches:
+      - '**'
       - '!experimental*'
-    tags:
-      - '!*'
   pull_request:
 
 jobs:
