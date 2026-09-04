@@ -20,8 +20,11 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Build
-        run: dotnet build
+      - name: Build framework
+        run: dotnet build Remote.Linq.slnx
+
+      - name: Build samples
+        run: dotnet build Remote.Linq.Samples.sln
 
       - name: Run tests with coverage
         run: >
