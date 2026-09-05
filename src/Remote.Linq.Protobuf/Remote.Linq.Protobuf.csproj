@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
-    <PackageTags>Remote.Linq;protobuf;google-protobuf;proto3;binary;serialization</PackageTags>
+    <PackageTags>remote-linq;protobuf;google-protobuf;proto3;binary;serialization</PackageTags>
     <Description>Provides schema-first Google.Protobuf serialization for Remote.Linq types.</Description>
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
     <IncludeAquaProtos>true</IncludeAquaProtos>

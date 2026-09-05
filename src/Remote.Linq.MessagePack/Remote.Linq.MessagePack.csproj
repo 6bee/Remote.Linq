@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
-    <PackageTags>Remote.Linq;messagepack;msgpack;binary;serialization</PackageTags>
+    <PackageTags>remote-linq;messagepack;msgpack;binary;serialization</PackageTags>
     <Description>Provides MessagePack serialization for Remote.Linq types.</Description>
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
   </PropertyGroup>
