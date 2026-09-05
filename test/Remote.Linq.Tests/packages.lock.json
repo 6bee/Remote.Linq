@@ -109,6 +109,16 @@
           "System.Threading.Tasks.Extensions": "4.6.3"
         }
       },
+      "Microsoft.Bcl.Memory": {
+        "type": "Transitive",
+        "resolved": "10.0.6",
+        "contentHash": "UwfP931zu2NjuZd54ydCxjZvf7yfY8RcBQurCQcq1CbUz1Chg6exvc5frkZDMzzk68+nvC10Ahn4fcSJeI8W1A==",
+        "dependencies": {
+          "System.Memory": "4.6.3",
+          "System.Runtime.CompilerServices.Unsafe": "6.1.2",
+          "System.ValueTuple": "4.6.2"
+        }
+      },
       "Microsoft.CSharp": {
         "type": "Transitive",
         "resolved": "4.7.0",
@@ -299,6 +309,14 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
       },
+      "System.Interactive.Async": {
+        "type": "Transitive",
+        "resolved": "7.0.1",
+        "contentHash": "oL1iox7sAJL8i+muGzVMQjDB0axQgOoT5CkwYdap8cQJMkWDWMRErNqhOcZkn31+aKr/uCfgMEdhUARCU4G7gg==",
+        "dependencies": {
+          "System.Linq.AsyncEnumerable": "10.0.6"
+        }
+      },
       "System.IO.Pipelines": {
         "type": "Transitive",
         "resolved": "10.0.11",
@@ -307,6 +325,26 @@
           "System.Buffers": "4.6.1",
           "System.Memory": "4.6.3",
           "System.Threading.Tasks.Extensions": "4.6.3"
+        }
+      },
+      "System.Linq.Async": {
+        "type": "Transitive",
+        "resolved": "7.0.1",
+        "contentHash": "gwQtBHVY/WgqWgAYSe4JspXR+f1FvMbVIW4ixsJpGV/Kj8Nun3zp1ajIdvCWfmac8ektJGVLiJ/OR8JU9nZnMg==",
+        "dependencies": {
+          "System.Interactive.Async": "7.0.1",
+          "System.Linq.AsyncEnumerable": "10.0.6"
+        }
+      },
+      "System.Linq.AsyncEnumerable": {
+        "type": "Transitive",
+        "resolved": "10.0.6",
+        "contentHash": "1Ttf7dyLoKXks2bVBVULmDPOSjxaMEE3JRTe/KGEJl3rfepCc4ipUEGMIKa/iBKLSN8rjEedF8Qv3UCtiwaDBw==",
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "10.0.6",
+          "Microsoft.Bcl.Memory": "10.0.6",
+          "System.Threading.Tasks.Extensions": "4.6.3",
+          "System.ValueTuple": "4.6.2"
         }
       },
       "System.Management": {
@@ -453,6 +491,13 @@
           "aqua-core": "[6.0.0-alpha-001, )"
         }
       },
+      "remote.linq.async.queryable": {
+        "type": "Project",
+        "dependencies": {
+          "Remote.Linq": "[8.0.0-dev, )",
+          "System.Linq.Async.Queryable": "[7.0.1, )"
+        }
+      },
       "remote.linq.messagepack": {
         "type": "Project",
         "dependencies": {
@@ -528,6 +573,16 @@
           "System.Memory": "4.5.5",
           "System.Runtime.CompilerServices.Unsafe": "6.0.0",
           "System.Threading.Tasks.Extensions": "4.5.4"
+        }
+      },
+      "System.Linq.Async.Queryable": {
+        "type": "CentralTransitive",
+        "requested": "[7.0.1, )",
+        "resolved": "7.0.1",
+        "contentHash": "kC3gqcz/yvrMUq6twgVtodTW3+vRCcx5NUijERHEPx1Ek+8ppNHb1MybYdHkUr9T2+kL6XMY9cbBRAesRVRG2A==",
+        "dependencies": {
+          "System.Linq.Async": "7.0.1",
+          "System.Linq.AsyncEnumerable": "10.0.6"
         }
       },
       "System.Threading.Tasks.Extensions": {
@@ -796,6 +851,19 @@
         "resolved": "6.0.0",
         "contentHash": "CPc6tWO1LAer3IzfZufDBRL+UZQcj5uS207NHALQzP84Vp/z6wF0Aa0YZImOQY8iStY0A2zI/e3ihKNPfUm8XA=="
       },
+      "System.Interactive.Async": {
+        "type": "Transitive",
+        "resolved": "7.0.1",
+        "contentHash": "oL1iox7sAJL8i+muGzVMQjDB0axQgOoT5CkwYdap8cQJMkWDWMRErNqhOcZkn31+aKr/uCfgMEdhUARCU4G7gg=="
+      },
+      "System.Linq.Async": {
+        "type": "Transitive",
+        "resolved": "7.0.1",
+        "contentHash": "gwQtBHVY/WgqWgAYSe4JspXR+f1FvMbVIW4ixsJpGV/Kj8Nun3zp1ajIdvCWfmac8ektJGVLiJ/OR8JU9nZnMg==",
+        "dependencies": {
+          "System.Interactive.Async": "7.0.1"
+        }
+      },
       "System.Management": {
         "type": "Transitive",
         "resolved": "6.0.1",
@@ -873,6 +941,13 @@
           "aqua-core": "[6.0.0-alpha-001, )"
         }
       },
+      "remote.linq.async.queryable": {
+        "type": "Project",
+        "dependencies": {
+          "Remote.Linq": "[8.0.0-dev, )",
+          "System.Linq.Async.Queryable": "[7.0.1, )"
+        }
+      },
       "remote.linq.messagepack": {
         "type": "Project",
         "dependencies": {
@@ -939,6 +1014,15 @@
           "MessagePack.Annotations": "3.1.8",
           "MessagePackAnalyzer": "3.1.8",
           "Microsoft.NET.StringTools": "17.11.4"
+        }
+      },
+      "System.Linq.Async.Queryable": {
+        "type": "CentralTransitive",
+        "requested": "[7.0.1, )",
+        "resolved": "7.0.1",
+        "contentHash": "kC3gqcz/yvrMUq6twgVtodTW3+vRCcx5NUijERHEPx1Ek+8ppNHb1MybYdHkUr9T2+kL6XMY9cbBRAesRVRG2A==",
+        "dependencies": {
+          "System.Linq.Async": "7.0.1"
         }
       }
     },
@@ -1195,10 +1279,32 @@
         "resolved": "6.0.0",
         "contentHash": "CPc6tWO1LAer3IzfZufDBRL+UZQcj5uS207NHALQzP84Vp/z6wF0Aa0YZImOQY8iStY0A2zI/e3ihKNPfUm8XA=="
       },
+      "System.Interactive.Async": {
+        "type": "Transitive",
+        "resolved": "7.0.1",
+        "contentHash": "oL1iox7sAJL8i+muGzVMQjDB0axQgOoT5CkwYdap8cQJMkWDWMRErNqhOcZkn31+aKr/uCfgMEdhUARCU4G7gg==",
+        "dependencies": {
+          "System.Linq.AsyncEnumerable": "10.0.6"
+        }
+      },
       "System.IO.Pipelines": {
         "type": "Transitive",
         "resolved": "10.0.8",
         "contentHash": "STVNTIVd+UrYvSo31D2tOOTs19IThdjGDN14FS3/NZb4PWsVakAg/VT4sq+JYWGP/GtazzvXwebWL6LPBAwnFQ=="
+      },
+      "System.Linq.Async": {
+        "type": "Transitive",
+        "resolved": "7.0.1",
+        "contentHash": "gwQtBHVY/WgqWgAYSe4JspXR+f1FvMbVIW4ixsJpGV/Kj8Nun3zp1ajIdvCWfmac8ektJGVLiJ/OR8JU9nZnMg==",
+        "dependencies": {
+          "System.Interactive.Async": "7.0.1",
+          "System.Linq.AsyncEnumerable": "10.0.6"
+        }
+      },
+      "System.Linq.AsyncEnumerable": {
+        "type": "Transitive",
+        "resolved": "10.0.6",
+        "contentHash": "1Ttf7dyLoKXks2bVBVULmDPOSjxaMEE3JRTe/KGEJl3rfepCc4ipUEGMIKa/iBKLSN8rjEedF8Qv3UCtiwaDBw=="
       },
       "System.Management": {
         "type": "Transitive",
@@ -1291,6 +1397,13 @@
           "aqua-core": "[6.0.0-alpha-001, )"
         }
       },
+      "remote.linq.async.queryable": {
+        "type": "Project",
+        "dependencies": {
+          "Remote.Linq": "[8.0.0-dev, )",
+          "System.Linq.Async.Queryable": "[7.0.1, )"
+        }
+      },
       "remote.linq.messagepack": {
         "type": "Project",
         "dependencies": {
@@ -1357,6 +1470,16 @@
           "MessagePack.Annotations": "3.1.8",
           "MessagePackAnalyzer": "3.1.8",
           "Microsoft.NET.StringTools": "17.11.4"
+        }
+      },
+      "System.Linq.Async.Queryable": {
+        "type": "CentralTransitive",
+        "requested": "[7.0.1, )",
+        "resolved": "7.0.1",
+        "contentHash": "kC3gqcz/yvrMUq6twgVtodTW3+vRCcx5NUijERHEPx1Ek+8ppNHb1MybYdHkUr9T2+kL6XMY9cbBRAesRVRG2A==",
+        "dependencies": {
+          "System.Linq.Async": "7.0.1",
+          "System.Linq.AsyncEnumerable": "10.0.6"
         }
       }
     },

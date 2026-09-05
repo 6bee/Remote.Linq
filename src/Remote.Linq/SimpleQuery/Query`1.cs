@@ -23,7 +23,7 @@ public class Query<T> : IOrderedQuery<T>
     /// <summary>
     /// Initializes a new instance of the <see cref="Query{T}"/> class.
     /// </summary>
-    private Query()
+    public Query()
     {
         _expressionTranslator = exp => exp.ToRemoteLinqExpression().ReplaceGenericQueryArgumentsByNonGenericArguments();
     }

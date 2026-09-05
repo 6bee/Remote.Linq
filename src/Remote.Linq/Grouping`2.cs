@@ -18,12 +18,14 @@ public class Grouping<TKey, TElement> : IGrouping<TKey, TElement>
     /// <summary>
     /// Gets or sets the grouping key.
     /// </summary>
+    [DataMember(Order = 1, IsRequired = true, EmitDefaultValue = true)]
     public TKey Key { get; set; } = default!;
 
     /// <summary>
     /// Gets or sets the grouped sequence.
     /// </summary>
     [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Property serves as serialization contract")]
+    [DataMember(Order = 2, IsRequired = true, EmitDefaultValue = true)]
     public TElement[] Elements { get; set; } = default!;
 
     /// <inheritdoc/>

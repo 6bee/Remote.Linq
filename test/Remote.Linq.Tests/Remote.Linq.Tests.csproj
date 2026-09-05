@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Remote.Linq\Remote.Linq.csproj" />
+    <ProjectReference Include="..\..\src\Remote.Linq.Async.Queryable\Remote.Linq.Async.Queryable.csproj" />
     <ProjectReference Include="..\..\src\Remote.Linq.MessagePack\Remote.Linq.MessagePack.csproj" />
     <ProjectReference Include="..\..\src\Remote.Linq.Newtonsoft.Json\Remote.Linq.Newtonsoft.Json.csproj" />
     <ProjectReference Include="..\..\src\Remote.Linq.Protobuf\Remote.Linq.Protobuf.csproj" />
