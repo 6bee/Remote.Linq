@@ -14,10 +14,6 @@ using RemoteExpression = Remote.Linq.Expressions.Expression;
 // xml serializer: not supporting expression array
 public abstract class When_serializing_ConstExpression_of_expression
 {
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_serializing_ConstExpression_of_expression(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
-
     public class With_data_contract_serializer() : When_serializing_ConstExpression_of_expression(DataContractSerializationHelper.CloneExpression);
 
     public class With_newtonsoft_json_serializer() : When_serializing_ConstExpression_of_expression(NewtonsoftJsonSerializationHelper.Clone);
@@ -25,6 +21,8 @@ public abstract class When_serializing_ConstExpression_of_expression
     public class With_system_text_json_serializer() : When_serializing_ConstExpression_of_expression(SystemTextJsonSerializationHelper.Clone);
 
 #if NETFRAMEWORK
+    public class With_binary_formatter() : When_serializing_ConstExpression_of_expression(BinarySerializationHelper.Clone);
+
     public class With_net_data_contract_serializer() : When_serializing_ConstExpression_of_expression(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 

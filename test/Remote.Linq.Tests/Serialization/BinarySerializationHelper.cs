@@ -1,5 +1,6 @@
 // Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+#if NETFRAMEWORK
 namespace Remote.Linq.Tests.Serialization;
 
 using Remote.Linq.ExpressionVisitors;
@@ -10,13 +11,11 @@ public static class BinarySerializationHelper
 {
     public static T Clone<T>(T graph)
     {
-#pragma warning disable SYSLIB0011 // Type or member is obsolete
         var serializer = new BinaryFormatter();
         using var stream = new MemoryStream();
         serializer.Serialize(stream, graph);
         stream.Seek(0, SeekOrigin.Begin);
         return (T)serializer.Deserialize(stream);
-#pragma warning restore SYSLIB0011 // Type or member is obsolete
     }
 
     public static T CloneExpression<T>(T expression)
@@ -28,3 +27,5 @@ public static class BinarySerializationHelper
         return exp3;
     }
 }
+
+#endif // NETFRAMEWORK
