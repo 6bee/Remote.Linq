@@ -4,29 +4,28 @@ namespace Remote.Linq.Tests.Serialization.Expressions;
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Linq.Expressions;
 using Xunit;
 using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
-public abstract class When_using_MethodCallExpression
+public abstract class When_serializing_MethodCallExpression
 {
-    public class With_data_contract_serializer() : When_using_MethodCallExpression(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_MethodCallExpression(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_MethodCallExpression(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_MethodCallExpression(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_MethodCallExpression(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_MethodCallExpression(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_MethodCallExpression(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_MethodCallExpression(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_MethodCallExpression(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_MethodCallExpression(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_MethodCallExpression(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_MethodCallExpression(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_MethodCallExpression(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_MethodCallExpression(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_MethodCallExpression(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_MethodCallExpression(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Expression<Func<string, int>> _originalExpression;
@@ -36,7 +35,7 @@ public abstract class When_using_MethodCallExpression
     private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
     [SuppressMessage("Minor Code Smell", "S3220:Method calls should not resolve ambiguously to overloads with \"params\"", Justification = "Intentional test setup")]
-    protected When_using_MethodCallExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
+    protected When_serializing_MethodCallExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
     {
         var parameter = Expression.Parameter(typeof(string), "s");
 

@@ -9,24 +9,24 @@ using System.Reflection;
 using Xunit;
 using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
-public abstract class When_using_TryFinallyExpressions
+public abstract class When_serializing_TryFinallyExpressions
 {
-    public class With_data_contract_serializer() : When_using_TryFinallyExpressions(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_TryFinallyExpressions(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_TryFinallyExpressions(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_TryFinallyExpressions(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_TryFinallyExpressions(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_TryFinallyExpressions(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_TryFinallyExpressions(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_TryFinallyExpressions(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_TryFinallyExpressions(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_TryFinallyExpressions(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_TryFinallyExpressions(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_TryFinallyExpressions(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_TryFinallyExpressions(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_TryFinallyExpressions(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_TryFinallyExpressions(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_TryFinallyExpressions(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Expression<Func<bool, bool>> _originalExpression;
@@ -36,7 +36,7 @@ public abstract class When_using_TryFinallyExpressions
     private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
     [SuppressMessage("Minor Code Smell", "S3220:Method calls should not resolve ambiguously to overloads with \"params\"", Justification = "Test setup")]
-    protected When_using_TryFinallyExpressions(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
+    protected When_serializing_TryFinallyExpressions(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
     {
         ParameterExpression shouldFail = Expression.Parameter(typeof(bool));
         ParameterExpression result = Expression.Variable(typeof(bool));

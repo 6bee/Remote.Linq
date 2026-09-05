@@ -12,25 +12,25 @@ using RemoteExpression = Remote.Linq.Expressions.Expression;
 // NOTES:
 // protobuf-net serializer: model not supporting const expression of expression
 // xml serializer: not supporting expression array
-public abstract class When_using_ConstExpression_of_expression
+public abstract class When_serializing_ConstExpression_of_expression
 {
 #if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_using_ConstExpression_of_expression(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_ConstExpression_of_expression(BinarySerializationHelper.Clone);
 #endif // NET8_0_OR_GREATER
 
-    public class With_data_contract_serializer() : When_using_ConstExpression_of_expression(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_ConstExpression_of_expression(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_ConstExpression_of_expression(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_ConstExpression_of_expression(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_ConstExpression_of_expression(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_ConstExpression_of_expression(SystemTextJsonSerializationHelper.Clone);
 
 #if NETFRAMEWORK
-    public class With_net_data_contract_serializer() : When_using_ConstExpression_of_expression(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_ConstExpression_of_expression(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Func<RemoteExpression, RemoteExpression> _serialize;
 
-    protected When_using_ConstExpression_of_expression(Func<RemoteExpression, RemoteExpression> serialize)
+    protected When_serializing_ConstExpression_of_expression(Func<RemoteExpression, RemoteExpression> serialize)
         => _serialize = serialize;
 
     [Fact]

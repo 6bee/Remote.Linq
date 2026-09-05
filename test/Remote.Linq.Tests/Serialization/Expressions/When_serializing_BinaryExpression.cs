@@ -8,24 +8,24 @@ using System.Linq.Expressions;
 using Xunit;
 using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
-public abstract class When_using_BinaryExpression
+public abstract class When_serializing_BinaryExpression
 {
-    public class With_data_contract_serializer() : When_using_BinaryExpression(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_BinaryExpression(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_BinaryExpression(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_BinaryExpression(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_BinaryExpression(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_BinaryExpression(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_BinaryExpression(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_BinaryExpression(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_BinaryExpression(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_BinaryExpression(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_BinaryExpression(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_BinaryExpression(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_BinaryExpression(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_BinaryExpression(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_BinaryExpression(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_BinaryExpression(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Expression<Func<int, int, bool>> _originalExpression;
@@ -35,7 +35,7 @@ public abstract class When_using_BinaryExpression
     private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
     [SuppressMessage("Minor Code Smell", "S3220:Method calls should not resolve ambiguously to overloads with \"params\"", Justification = "Intentional test setup")]
-    protected When_using_BinaryExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
+    protected When_serializing_BinaryExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
     {
         var a = Expression.Parameter(typeof(int), "a");
         var b = Expression.Parameter(typeof(int), "b");

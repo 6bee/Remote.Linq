@@ -8,24 +8,24 @@ using System.Linq.Expressions;
 using Xunit;
 using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
-public abstract class When_using_MemberExpression
+public abstract class When_serializing_MemberExpression
 {
-    public class With_data_contract_serializer() : When_using_MemberExpression(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_MemberExpression(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_MemberExpression(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_MemberExpression(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_MemberExpression(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_MemberExpression(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_MemberExpression(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_MemberExpression(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_MemberExpression(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_MemberExpression(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_MemberExpression(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_MemberExpression(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_MemberExpression(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_MemberExpression(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_MemberExpression(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_MemberExpression(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Expression<Func<Person, string>> _originalExpression;
@@ -35,7 +35,7 @@ public abstract class When_using_MemberExpression
     private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
     [SuppressMessage("Minor Code Smell", "S3220:Method calls should not resolve ambiguously to overloads with \"params\"", Justification = "Intentional test setup")]
-    protected When_using_MemberExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
+    protected When_serializing_MemberExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
     {
         var p = Expression.Parameter(typeof(Person), "person");
         var expression = Expression.Lambda<Func<Person, string>>(

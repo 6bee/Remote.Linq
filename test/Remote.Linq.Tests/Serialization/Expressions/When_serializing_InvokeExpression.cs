@@ -7,24 +7,24 @@ using System.Linq.Expressions;
 using Xunit;
 using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
-public abstract class When_using_InvokeExpression
+public abstract class When_serializing_InvokeExpression
 {
-    public class With_data_contract_serializer() : When_using_InvokeExpression(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_InvokeExpression(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_InvokeExpression(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_InvokeExpression(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_InvokeExpression(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_InvokeExpression(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_InvokeExpression(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_InvokeExpression(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_InvokeExpression(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_InvokeExpression(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_InvokeExpression(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_InvokeExpression(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_InvokeExpression(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_InvokeExpression(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_InvokeExpression(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_InvokeExpression(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Expression<Func<decimal, bool>> _originalExpression;
@@ -33,7 +33,7 @@ public abstract class When_using_InvokeExpression
 
     private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
-    protected When_using_InvokeExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
+    protected When_serializing_InvokeExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
     {
         Expression<Func<decimal, bool>> exp = x => x <= 0m;
 

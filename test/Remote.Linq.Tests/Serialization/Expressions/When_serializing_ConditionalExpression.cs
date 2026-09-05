@@ -8,24 +8,24 @@ using System.Linq.Expressions;
 using Xunit;
 using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
-public abstract class When_using_ConditionalExpression
+public abstract class When_serializing_ConditionalExpression
 {
-    public class With_data_contract_serializer() : When_using_ConditionalExpression(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_ConditionalExpression(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_ConditionalExpression(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_ConditionalExpression(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_ConditionalExpression(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_ConditionalExpression(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_ConditionalExpression(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_ConditionalExpression(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_ConditionalExpression(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_ConditionalExpression(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_ConditionalExpression(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_ConditionalExpression(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_ConditionalExpression(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_ConditionalExpression(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_ConditionalExpression(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_ConditionalExpression(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Expression<Func<int, int, int>> _originalExpression;
@@ -35,7 +35,7 @@ public abstract class When_using_ConditionalExpression
     private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
     [SuppressMessage("Minor Code Smell", "S3220:Method calls should not resolve ambiguously to overloads with \"params\"", Justification = "Intentional test setup")]
-    protected When_using_ConditionalExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
+    protected When_serializing_ConditionalExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
     {
         ParameterExpression x = Expression.Parameter(typeof(int), "x");
         ParameterExpression y = Expression.Parameter(typeof(int), "y");

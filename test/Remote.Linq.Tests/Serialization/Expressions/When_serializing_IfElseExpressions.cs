@@ -7,24 +7,24 @@ using System.Linq.Expressions;
 using Xunit;
 using RemoteExpression = Remote.Linq.Expressions.Expression;
 
-public abstract class When_using_IfElseExpressions
+public abstract class When_serializing_IfElseExpressions
 {
-    public class With_data_contract_serializer() : When_using_IfElseExpressions(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_IfElseExpressions(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_IfElseExpressions(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_IfElseExpressions(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_IfElseExpressions(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_IfElseExpressions(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_IfElseExpressions(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_IfElseExpressions(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_IfElseExpressions(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_IfElseExpressions(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_IfElseExpressions(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_IfElseExpressions(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_IfElseExpressions(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_IfElseExpressions(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_IfElseExpressions(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_IfElseExpressions(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Expression _originalExpression;
@@ -33,7 +33,7 @@ public abstract class When_using_IfElseExpressions
 
     private readonly RemoteExpression _serializedRemoteExpression;
 
-    protected When_using_IfElseExpressions(Func<RemoteExpression, RemoteExpression> serialize)
+    protected When_serializing_IfElseExpressions(Func<RemoteExpression, RemoteExpression> serialize)
     {
         var expression = Expression.IfThenElse(
             Expression.MakeBinary(ExpressionType.LessThan, Expression.Constant(5), Expression.Constant(2)),

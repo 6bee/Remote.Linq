@@ -8,24 +8,24 @@ using System.Linq.Expressions;
 using Xunit;
 using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
-public abstract class When_using_LoopExpressions
+public abstract class When_serializing_LoopExpressions
 {
-    public class With_data_contract_serializer() : When_using_LoopExpressions(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_LoopExpressions(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_LoopExpressions(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_LoopExpressions(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_LoopExpressions(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_LoopExpressions(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_LoopExpressions(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_LoopExpressions(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_LoopExpressions(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_LoopExpressions(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_LoopExpressions(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_LoopExpressions(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_LoopExpressions(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_LoopExpressions(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_LoopExpressions(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_LoopExpressions(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Expression<Func<int, int>> _originalExpression;
@@ -35,7 +35,7 @@ public abstract class When_using_LoopExpressions
     private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
     [SuppressMessage("Minor Code Smell", "S3220:Method calls should not resolve ambiguously to overloads with \"params\"", Justification = "Intentional test setup")]
-    protected When_using_LoopExpressions(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
+    protected When_serializing_LoopExpressions(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
     {
         ParameterExpression maxRange = Expression.Parameter(typeof(int));
 

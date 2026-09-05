@@ -8,24 +8,24 @@ using System.Linq.Expressions;
 using Xunit;
 using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
-public abstract class When_using_GotoAndLabelExpressions_with_nested_BlockExpression
+public abstract class When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression
 {
-    public class With_data_contract_serializer() : When_using_GotoAndLabelExpressions_with_nested_BlockExpression(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_GotoAndLabelExpressions_with_nested_BlockExpression(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_GotoAndLabelExpressions_with_nested_BlockExpression(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_GotoAndLabelExpressions_with_nested_BlockExpression(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_GotoAndLabelExpressions_with_nested_BlockExpression(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_GotoAndLabelExpressions_with_nested_BlockExpression(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_GotoAndLabelExpressions_with_nested_BlockExpression(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_GotoAndLabelExpressions_with_nested_BlockExpression(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Expression<Func<StreamWriter, long>> _originalExpression;
@@ -34,7 +34,7 @@ public abstract class When_using_GotoAndLabelExpressions_with_nested_BlockExpres
 
     private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
-    protected When_using_GotoAndLabelExpressions_with_nested_BlockExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
+    protected When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
     {
         ParameterExpression writer = Expression.Parameter(typeof(StreamWriter));
         ParameterExpression position = Expression.Variable(typeof(long));

@@ -7,24 +7,24 @@ using System.Linq.Expressions;
 using Xunit;
 using RemoteExpression = Remote.Linq.Expressions.Expression;
 
-public abstract class When_using_DefaultExpression
+public abstract class When_serializing_DefaultExpression
 {
-    public class With_data_contract_serializer() : When_using_DefaultExpression(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_DefaultExpression(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_DefaultExpression(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_DefaultExpression(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_DefaultExpression(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_DefaultExpression(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_DefaultExpression(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_DefaultExpression(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_DefaultExpression(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_DefaultExpression(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_DefaultExpression(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_DefaultExpression(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_DefaultExpression(BinarySerializationHelper.CloneExpression);
+    public class With_binary_formatter() : When_serializing_DefaultExpression(BinarySerializationHelper.CloneExpression);
 
-    public class With_net_data_contract_serializer() : When_using_DefaultExpression(NetDataContractSerializationHelper.CloneExpression);
+    public class With_net_data_contract_serializer() : When_serializing_DefaultExpression(NetDataContractSerializationHelper.CloneExpression);
 #endif // NETFRAMEWORK
 
     private readonly Expression _originalExpression;
@@ -33,7 +33,7 @@ public abstract class When_using_DefaultExpression
 
     private readonly RemoteExpression _serializedRemoteExpression;
 
-    protected When_using_DefaultExpression(Func<RemoteExpression, RemoteExpression> serialize)
+    protected When_serializing_DefaultExpression(Func<RemoteExpression, RemoteExpression> serialize)
     {
         var expression = Expression.Default(typeof(int));
 

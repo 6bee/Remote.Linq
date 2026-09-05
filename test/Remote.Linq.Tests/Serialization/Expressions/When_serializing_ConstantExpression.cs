@@ -5,27 +5,26 @@ namespace Remote.Linq.Tests.Serialization.Expressions;
 using System;
 using System.Linq.Expressions;
 using Xunit;
-using RemoteConstantExpression = Remote.Linq.Expressions.ConstantExpression;
 using RemoteExpression = Remote.Linq.Expressions.Expression;
 
-public abstract class When_using_ConstantExpression
+public abstract class When_serializing_ConstantExpression
 {
-    public class With_data_contract_serializer() : When_using_ConstantExpression(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_ConstantExpression(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_ConstantExpression(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_ConstantExpression(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_ConstantExpression(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_ConstantExpression(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_ConstantExpression(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_ConstantExpression(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_ConstantExpression(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_ConstantExpression(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_ConstantExpression(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_ConstantExpression(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_ConstantExpression(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_ConstantExpression(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_ConstantExpression(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_ConstantExpression(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly ConstantExpression _originalConstant;
@@ -34,7 +33,7 @@ public abstract class When_using_ConstantExpression
 
     private readonly RemoteExpression _serializedRemoteConstant;
 
-    protected When_using_ConstantExpression(Func<RemoteExpression, RemoteExpression> serialize)
+    protected When_serializing_ConstantExpression(Func<RemoteExpression, RemoteExpression> serialize)
     {
         _originalConstant = Expression.Constant(42);
 

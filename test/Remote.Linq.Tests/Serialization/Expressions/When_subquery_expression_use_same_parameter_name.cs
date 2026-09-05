@@ -20,9 +20,9 @@ public abstract class When_subquery_expression_use_same_parameter_name
 
     public class With_system_text_json_serializer() : When_subquery_expression_use_same_parameter_name(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_LoopExpressions(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_subquery_expression_use_same_parameter_name(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_LoopExpressions(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_subquery_expression_use_same_parameter_name(MessagePackSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_subquery_expression_use_same_parameter_name(XmlSerializationHelper.Clone);
 

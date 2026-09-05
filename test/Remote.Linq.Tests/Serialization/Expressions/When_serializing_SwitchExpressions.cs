@@ -8,24 +8,24 @@ using System.Linq.Expressions;
 using Xunit;
 using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
-public abstract class When_using_SwitchExpressions
+public abstract class When_serializing_SwitchExpressions
 {
-    public class With_data_contract_serializer() : When_using_SwitchExpressions(DataContractSerializationHelper.CloneExpression);
+    public class With_data_contract_serializer() : When_serializing_SwitchExpressions(DataContractSerializationHelper.CloneExpression);
 
-    public class With_newtonsoft_json_serializer() : When_using_SwitchExpressions(NewtonsoftJsonSerializationHelper.Clone);
+    public class With_newtonsoft_json_serializer() : When_serializing_SwitchExpressions(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer() : When_using_SwitchExpressions(SystemTextJsonSerializationHelper.Clone);
+    public class With_system_text_json_serializer() : When_serializing_SwitchExpressions(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_SwitchExpressions(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_SwitchExpressions(ProtobufSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_SwitchExpressions(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_SwitchExpressions(MessagePackSerializationHelper.Clone);
 
-    public class With_xml_serializer() : When_using_SwitchExpressions(XmlSerializationHelper.CloneExpression);
+    public class With_xml_serializer() : When_serializing_SwitchExpressions(XmlSerializationHelper.CloneExpression);
 
 #if NETFRAMEWORK
-    public class With_binary_formatter() : When_using_SwitchExpressions(BinarySerializationHelper.Clone);
+    public class With_binary_formatter() : When_serializing_SwitchExpressions(BinarySerializationHelper.Clone);
 
-    public class With_net_data_contract_serializer() : When_using_SwitchExpressions(NetDataContractSerializationHelper.Clone);
+    public class With_net_data_contract_serializer() : When_serializing_SwitchExpressions(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly Expression<Func<int, int>> _originalExpression;
@@ -35,7 +35,7 @@ public abstract class When_using_SwitchExpressions
     private readonly RemoteLambdaExpression _serializedRemoteExpression;
 
     [SuppressMessage("Minor Code Smell", "S3220:Method calls should not resolve ambiguously to overloads with \"params\"", Justification = "Intentional test setup")]
-    protected When_using_SwitchExpressions(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
+    protected When_serializing_SwitchExpressions(Func<RemoteLambdaExpression, RemoteLambdaExpression> serialize)
     {
         ParameterExpression switchOver = Expression.Parameter(typeof(int));
         ParameterExpression result = Expression.Variable(typeof(int));
