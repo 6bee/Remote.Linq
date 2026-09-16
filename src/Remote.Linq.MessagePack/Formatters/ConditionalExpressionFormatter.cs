@@ -31,7 +31,7 @@ public sealed class ConditionalExpressionFormatter : IMessagePackFormatter<Condi
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var test = len > 0 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var ifTrue = len > 1 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var ifFalse = len > 2 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;

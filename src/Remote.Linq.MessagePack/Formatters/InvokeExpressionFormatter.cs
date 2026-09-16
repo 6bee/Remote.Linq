@@ -30,7 +30,7 @@ public sealed class InvokeExpressionFormatter : IMessagePackFormatter<InvokeExpr
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var expr = len > 0 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var args = len > 1 ? FormatterHelpers.ReadExpressionList(ref reader, options) : null;
         for (var i = FieldCount; i < len; i++)

@@ -32,7 +32,7 @@ public sealed class MethodCallExpressionFormatter : IMessagePackFormatter<Method
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var instance = len > 0 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var method = len > 1 ? MethodInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         var args = len > 2 ? FormatterHelpers.ReadExpressionList(ref reader, options) : null;

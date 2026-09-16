@@ -30,7 +30,7 @@ public sealed class SwitchCaseFormatter : IMessagePackFormatter<SwitchCase?>
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var body = len > 0 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var testVals = len > 1 ? FormatterHelpers.ReadExpressionList(ref reader, options) : null;
         for (var i = FieldCount; i < len; i++)

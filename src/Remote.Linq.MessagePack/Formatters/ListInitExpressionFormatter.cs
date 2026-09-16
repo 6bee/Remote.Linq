@@ -30,7 +30,7 @@ public sealed class ListInitExpressionFormatter : IMessagePackFormatter<ListInit
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var newExpr = len > 0 ? NewExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var inits = len > 1 ? FormatterHelpers.ReadElementInitList(ref reader, options) : [];
         for (var i = FieldCount; i < len; i++)

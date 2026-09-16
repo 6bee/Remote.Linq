@@ -33,7 +33,7 @@ public sealed class NewExpressionFormatter : IMessagePackFormatter<NewExpression
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var ctor = len > 0 ? ConstructorInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         var args = len > 1 ? FormatterHelpers.ReadExpressionList(ref reader, options) : null;
         var members = len > 2 ? FormatterHelpers.ReadMemberInfoList(ref reader, options) : null;

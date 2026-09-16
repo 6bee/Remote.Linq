@@ -32,7 +32,7 @@ public sealed class BlockExpressionFormatter : IMessagePackFormatter<BlockExpres
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var type = len > 0 ? TypeInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         var vars = len > 1 ? FormatterHelpers.ReadParameterList(ref reader, options) : null;
         var exprs = len > 2 ? FormatterHelpers.ReadExpressionList(ref reader, options) : null;

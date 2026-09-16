@@ -35,7 +35,7 @@ public sealed class BinaryExpressionFormatter : IMessagePackFormatter<BinaryExpr
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var op = len > 0 ? (BinaryOperator)reader.ReadInt32() : default;
         var left = len > 1 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var right = len > 2 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;

@@ -34,7 +34,7 @@ public sealed class TryExpressionFormatter : IMessagePackFormatter<TryExpression
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var body = len > 0 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var handlers = len > 1 ? FormatterHelpers.ReadCatchBlockList(ref reader, options) : null;
         var @finally = len > 2 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;

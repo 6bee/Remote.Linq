@@ -30,7 +30,7 @@ public sealed class SubstitutionValueFormatter : IMessagePackFormatter<Substitut
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var type = len > 0 ? TypeInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         for (var i = FieldCount; i < len; i++)
         {

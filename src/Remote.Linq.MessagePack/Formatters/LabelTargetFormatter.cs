@@ -32,7 +32,7 @@ public sealed class LabelTargetFormatter : IMessagePackFormatter<LabelTarget?>
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var name = len > 0 ? reader.ReadString() : null;
         var type = len > 1 ? TypeInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         var id = len > 2 ? reader.ReadInt32() : 0;

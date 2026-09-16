@@ -30,7 +30,7 @@ public sealed class ConstantQueryArgumentFormatter : IMessagePackFormatter<Const
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var val = len > 0 ? DynamicObjectFormatter.Instance.Deserialize(ref reader, options) : null;
         for (var i = FieldCount; i < len; i++)
         {

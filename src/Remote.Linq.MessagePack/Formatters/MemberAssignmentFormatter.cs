@@ -31,7 +31,7 @@ public sealed class MemberAssignmentFormatter : IMessagePackFormatter<MemberAssi
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var member = len > 0 ? MemberInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         var expr = len > 1 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         for (var i = FieldCount; i < len; i++)

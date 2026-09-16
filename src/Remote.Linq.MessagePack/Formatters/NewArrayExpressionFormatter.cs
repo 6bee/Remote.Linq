@@ -32,7 +32,7 @@ public sealed class NewArrayExpressionFormatter : IMessagePackFormatter<NewArray
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var arrayType = len > 0 ? (NewArrayType)reader.ReadInt32() : default;
         var type = len > 1 ? TypeInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         var exprs = len > 2 ? FormatterHelpers.ReadExpressionList(ref reader, options) : null;

@@ -29,7 +29,7 @@ internal static class FormatterHelpers
             return null;
         }
 
-        var count = (int)reader.ReadArrayHeader();
+        var count = reader.ReadArrayHeader();
         var list = new List<Expression>(count);
         for (var i = 0; i < count; i++)
         {
@@ -61,7 +61,7 @@ internal static class FormatterHelpers
             return null;
         }
 
-        var count = (int)reader.ReadArrayHeader();
+        var count = reader.ReadArrayHeader();
         var list = new List<ParameterExpression>(count);
         for (var i = 0; i < count; i++)
         {
@@ -93,7 +93,7 @@ internal static class FormatterHelpers
             return null;
         }
 
-        var count = (int)reader.ReadArrayHeader();
+        var count = reader.ReadArrayHeader();
         var list = new List<Aqua.TypeSystem.MemberInfo>(count);
         for (var i = 0; i < count; i++)
         {
@@ -114,7 +114,7 @@ internal static class FormatterHelpers
 
     internal static List<ElementInit> ReadElementInitList(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
-        var count = (int)reader.ReadArrayHeader();
+        var count = reader.ReadArrayHeader();
         var list = new List<ElementInit>(count);
         for (var i = 0; i < count; i++)
         {
@@ -135,7 +135,7 @@ internal static class FormatterHelpers
 
     internal static List<MemberBinding> ReadMemberBindingList(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
-        var count = (int)reader.ReadArrayHeader();
+        var count = reader.ReadArrayHeader();
         var list = new List<MemberBinding>(count);
         for (var i = 0; i < count; i++)
         {
@@ -167,7 +167,7 @@ internal static class FormatterHelpers
             return null;
         }
 
-        var count = (int)reader.ReadArrayHeader();
+        var count = reader.ReadArrayHeader();
         var list = new List<SwitchCase>(count);
         for (var i = 0; i < count; i++)
         {
@@ -199,7 +199,7 @@ internal static class FormatterHelpers
             return null;
         }
 
-        var count = (int)reader.ReadArrayHeader();
+        var count = reader.ReadArrayHeader();
         var list = new List<CatchBlock>(count);
         for (var i = 0; i < count; i++)
         {

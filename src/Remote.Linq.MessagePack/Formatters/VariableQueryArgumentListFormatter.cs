@@ -42,14 +42,14 @@ public sealed class VariableQueryArgumentListFormatter : IMessagePackFormatter<V
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var elementType = len > 0 ? TypeInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         List<object?>? values = null;
         if (len > 1)
         {
             if (!reader.TryReadNil())
             {
-                var count = (int)reader.ReadArrayHeader();
+                var count = reader.ReadArrayHeader();
                 values = new List<object?>(count);
                 for (var i = 0; i < count; i++)
                 {

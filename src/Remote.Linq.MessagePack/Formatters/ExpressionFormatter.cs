@@ -55,7 +55,7 @@ public sealed class ExpressionFormatter : IMessagePackFormatter<Expression?>
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         if (len < 1)
         {
             throw new MessagePackSerializationException("Empty expression array.");

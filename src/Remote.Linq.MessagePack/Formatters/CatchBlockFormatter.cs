@@ -33,7 +33,7 @@ public sealed class CatchBlockFormatter : IMessagePackFormatter<CatchBlock?>
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var variable = len > 0 ? ParameterExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var filter = len > 1 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var body = len > 2 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;

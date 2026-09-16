@@ -33,7 +33,7 @@ public sealed class SwitchExpressionFormatter : IMessagePackFormatter<SwitchExpr
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var switchVal = len > 0 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var comparison = len > 1 ? MethodInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         var defaultExpr = len > 2 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;

@@ -33,7 +33,7 @@ public sealed class GotoExpressionFormatter : IMessagePackFormatter<GotoExpressi
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var kind = len > 0 ? (GotoExpressionKind)reader.ReadInt32() : default;
         var target = len > 1 ? LabelTargetFormatter.Instance.Deserialize(ref reader, options) : null;
         var type = len > 2 ? TypeInfoFormatter.Instance.Deserialize(ref reader, options) : null;

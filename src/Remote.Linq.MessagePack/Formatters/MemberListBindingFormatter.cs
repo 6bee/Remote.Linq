@@ -31,7 +31,7 @@ public sealed class MemberListBindingFormatter : IMessagePackFormatter<MemberLis
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var member = len > 0 ? MemberInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         var inits = len > 1 ? FormatterHelpers.ReadElementInitList(ref reader, options) : [];
         for (var i = FieldCount; i < len; i++)

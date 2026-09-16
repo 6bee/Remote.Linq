@@ -32,7 +32,7 @@ public sealed class LambdaExpressionFormatter : IMessagePackFormatter<LambdaExpr
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var expr = len > 0 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var parameters = len > 1 ? FormatterHelpers.ReadParameterList(ref reader, options) : null;
         var type = len > 2 ? TypeInfoFormatter.Instance.Deserialize(ref reader, options) : null;

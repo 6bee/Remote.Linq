@@ -30,7 +30,7 @@ public sealed class LabelExpressionFormatter : IMessagePackFormatter<LabelExpres
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var target = len > 0 ? LabelTargetFormatter.Instance.Deserialize(ref reader, options) : null;
         var defaultVal = len > 1 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         for (var i = FieldCount; i < len; i++)

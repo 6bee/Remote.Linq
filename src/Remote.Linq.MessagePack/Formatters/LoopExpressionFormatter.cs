@@ -31,7 +31,7 @@ public sealed class LoopExpressionFormatter : IMessagePackFormatter<LoopExpressi
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var body = len > 0 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var breakLabel = len > 1 ? LabelTargetFormatter.Instance.Deserialize(ref reader, options) : null;
         var continueLabel = len > 2 ? LabelTargetFormatter.Instance.Deserialize(ref reader, options) : null;

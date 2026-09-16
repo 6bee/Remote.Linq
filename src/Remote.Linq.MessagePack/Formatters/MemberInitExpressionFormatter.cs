@@ -30,7 +30,7 @@ public sealed class MemberInitExpressionFormatter : IMessagePackFormatter<Member
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var newExpr = len > 0 ? NewExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var bindings = len > 1 ? FormatterHelpers.ReadMemberBindingList(ref reader, options) : [];
         for (var i = FieldCount; i < len; i++)

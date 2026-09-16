@@ -31,7 +31,7 @@ public sealed class ElementInitFormatter : IMessagePackFormatter<ElementInit?>
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var addMethod = len > 0 ? MethodInfoFormatter.Instance.Deserialize(ref reader, options) : null;
         var args = len > 1 ? FormatterHelpers.ReadExpressionList(ref reader, options) : null;
         for (var i = FieldCount; i < len; i++)

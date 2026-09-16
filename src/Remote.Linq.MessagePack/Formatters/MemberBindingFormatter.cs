@@ -42,7 +42,7 @@ public sealed class MemberBindingFormatter : IMessagePackFormatter<MemberBinding
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         if (len < 1)
         {
             throw new MessagePackSerializationException("Empty member binding array.");

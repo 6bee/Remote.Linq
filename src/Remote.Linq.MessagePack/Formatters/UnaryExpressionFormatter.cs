@@ -33,7 +33,7 @@ public sealed class UnaryExpressionFormatter : IMessagePackFormatter<UnaryExpres
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         var op = len > 0 ? (UnaryOperator)reader.ReadInt32() : default;
         var operand = len > 1 ? ExpressionFormatter.Instance.Deserialize(ref reader, options) : null;
         var type = len > 2 ? TypeInfoFormatter.Instance.Deserialize(ref reader, options) : null;
