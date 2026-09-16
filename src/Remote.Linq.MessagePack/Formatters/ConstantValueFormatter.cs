@@ -14,6 +14,12 @@ public sealed class ConstantValueFormatter : IMessagePackFormatter<object?>
 
     public void Serialize(ref MessagePackWriter writer, object? value, MessagePackSerializerOptions options)
     {
+        if (value is null)
+        {
+            writer.WriteNil();
+            return;
+        }
+
         writer.WriteArrayHeader(2);
         switch (value)
         {
@@ -51,7 +57,7 @@ public sealed class ConstantValueFormatter : IMessagePackFormatter<object?>
             return null;
         }
 
-        var len = (int)reader.ReadArrayHeader();
+        var len = reader.ReadArrayHeader();
         if (len < 1)
         {
             return null;
