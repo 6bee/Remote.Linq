@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Search:  ToLinqExpression<(?!Func<)([^>]+)>
   Replace: ToLinqExpression<Func<$1>>
   ```
+- Bump _Microsoft.EntityFrameworkCore_ from 10.0.9 to 10.0.12 (net8.0 9.0.19 → 9.0.20) (concerns _Remote.Linq.EntityFrameworkCore_)
 
 ### Deprecated
 

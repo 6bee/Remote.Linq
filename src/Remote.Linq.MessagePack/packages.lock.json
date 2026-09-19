@@ -4,12 +4,12 @@
     ".NETStandard,Version=v2.0": {
       "aqua-core-messagepack": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-001, )",
-        "resolved": "6.0.0-alpha-001",
-        "contentHash": "KEiCjuQU6WLCXvHArypaF/Hk31cifsr3rS99dTLMp1DXbiaFinloR67heGCi/afNrdE/7PpY/ivFu4gE4YCEog==",
+        "requested": "[6.0.0-alpha-002, )",
+        "resolved": "6.0.0-alpha-002",
+        "contentHash": "wm2BYfqMTCpvi3eocLVcJyEjni+LcShOF6s97CKlgqMZHv3P5fSftb/wQsoZnJgz079Ki2UTgrGcoVvWp4/tNQ==",
         "dependencies": {
-          "MessagePack": "3.1.8",
-          "aqua-core": "6.0.0-alpha-001"
+          "MessagePack": "3.1.9",
+          "aqua-core": "6.0.0-alpha-002"
         }
       },
       "aqua.tool.Validation": {
@@ -41,18 +41,18 @@
       },
       "MessagePack.Annotations": {
         "type": "Transitive",
-        "resolved": "3.1.8",
-        "contentHash": "SitOtZ4tOlAZZPF7p52M7143F+Cuz7o/aU0MrtAXX0+ZkPXzDNroOFhzzE2ogMFThsoEW/E6akXVVcBFM9ZKaw=="
+        "resolved": "3.1.9",
+        "contentHash": "bd+/udHmQECcfdcnlLHXR+/5Oc+UdQTEwZI5M1xw8Olymcb7SPXHleMxkkBkSLiK2+fpmY+0uAR7Jy3oiPPhKA=="
       },
       "MessagePackAnalyzer": {
         "type": "Transitive",
-        "resolved": "3.1.8",
-        "contentHash": "Vm4g0cR4YRKRchEOmMJ0uVFU6yxdg7cJa2KHv3SUAHEsdYKvMpHMF5A1hZfsix89ymD5cmuzRnw9a6dKMcvq+Q=="
+        "resolved": "3.1.9",
+        "contentHash": "/nMSlVz4p8BjlPbgxgBfE9kHyObHvmjczShWp2rGeKMH7oVEyPd0a3Fcd6yO3Xf36Jsf2ax/VvhV28Z7F5ibmQ=="
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "Transitive",
-        "resolved": "10.0.11",
-        "contentHash": "pUkYI1f99hY9giu/MRaEVN53RO7skXwR7FGtVvFJCK5ezdg5i0W+z1yj/91X5aKv07xGuSB5n1g/Zt2P4Ooq6g==",
+        "resolved": "10.0.12",
+        "contentHash": "vHPomsJPqUvf1ExdzCCSEUMQqloONPTBMGqNqBUdr4UgSTs9bCzH1oLkuS6WgUgIu+xqWngQbjelUBNlDuzLWQ==",
         "dependencies": {
           "System.Threading.Tasks.Extensions": "4.6.3"
         }
@@ -97,8 +97,8 @@
       },
       "System.IO.Pipelines": {
         "type": "Transitive",
-        "resolved": "10.0.11",
-        "contentHash": "rg8LPOZ62quw3aTnsQNh9rssncaMs69WEM1DiJdDkV+o4Llb2s5Pasy5Bulfm8zL+pE4gDcSQo7V2zW2jvxwYg==",
+        "resolved": "10.0.12",
+        "contentHash": "5e8M112rzbW5xKNXKipNFoTgM330QS6S6+UA6CaDyr/KDrow8bzfvOPFA4S05QC3n/m096oj+pfttvme6I0YyA==",
         "dependencies": {
           "System.Buffers": "4.6.1",
           "System.Memory": "4.6.3",
@@ -148,8 +148,8 @@
       },
       "System.Text.Encodings.Web": {
         "type": "Transitive",
-        "resolved": "10.0.11",
-        "contentHash": "R7H2/Oqr3onFff/JKDpfRjwxcQZlocF/eQ0ce8go/OTjqz+6LEp/fZK8j1YnDobtysChATEg7krVq4hQJ3IoeQ==",
+        "resolved": "10.0.12",
+        "contentHash": "5wdXVVbJ5TH6YdKJYM0CHvQOY6SiCCeQ3KyLRx9daWag0cT9g4FT5CGN2qCNWbHZkqaCOEPRiA0uCBARB5Vk7w==",
         "dependencies": {
           "System.Buffers": "4.6.1",
           "System.Memory": "4.6.3",
@@ -158,42 +158,42 @@
       },
       "System.Text.Json": {
         "type": "Transitive",
-        "resolved": "10.0.11",
-        "contentHash": "X2rXQy7g8KEUvWVbAz6vOk6byI1eMgmzFeXbKxq4BfZCfFy5S91K+K+hd4ZBlSp0wL1Y8FyGRXs6+hvABTjwQw==",
+        "resolved": "10.0.12",
+        "contentHash": "AHlVpUiY96eC6Oar1Gf0YbafU7E2NUU9D80O2Xk5v7ryL3kpSsbI0EusJBE8kQfwPuDdUDoKUItArzXQHxomCg==",
         "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "10.0.11",
+          "Microsoft.Bcl.AsyncInterfaces": "10.0.12",
           "System.Buffers": "4.6.1",
-          "System.IO.Pipelines": "10.0.11",
+          "System.IO.Pipelines": "10.0.12",
           "System.Memory": "4.6.3",
           "System.Runtime.CompilerServices.Unsafe": "6.1.2",
-          "System.Text.Encodings.Web": "10.0.11",
+          "System.Text.Encodings.Web": "10.0.12",
           "System.Threading.Tasks.Extensions": "4.6.3"
         }
       },
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-001, )"
+          "aqua-core": "[6.0.0-alpha-002, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-001, )",
-        "resolved": "6.0.0-alpha-001",
-        "contentHash": "Nqxq1J/GA6nmYUMvSvFTdN3jiCFl0MUpxsrw0zgeSFLljMc898oLLgbMSpL1PN+Ximsan77+jnQyBog1h/f0ng==",
+        "requested": "[6.0.0-alpha-002, )",
+        "resolved": "6.0.0-alpha-002",
+        "contentHash": "/GsIIXdEycFIWuG2/yyCQrniZbg4SNWNS/2BfWQpWIhm+deEZguikzGBgrTGXFFLp5r62QpgbbPB+8e98W4u9w==",
         "dependencies": {
           "System.Reflection.Emit": "4.7.0",
-          "System.Text.Json": "10.0.11"
+          "System.Text.Json": "10.0.12"
         }
       },
       "MessagePack": {
         "type": "CentralTransitive",
         "requested": "[3.1.7, )",
-        "resolved": "3.1.8",
-        "contentHash": "Qk2q+9FVxnMSp+NQ9y3SLz3HqWe7Rg3KRMHhBX28FkKUoOeP9YIU86mA4pFOxDDjUIRA9e7Ssbxs/LwWUcAzPw==",
+        "resolved": "3.1.9",
+        "contentHash": "9IuUiOycxveb2R4RER5yQl7qYHMeRRMghOFuI/c+A8aX8j0zEzJ9QJD0u3Sr3MrNewUUkqOcTVLW9Zn6odZyIQ==",
         "dependencies": {
-          "MessagePack.Annotations": "3.1.8",
-          "MessagePackAnalyzer": "3.1.8",
+          "MessagePack.Annotations": "3.1.9",
+          "MessagePackAnalyzer": "3.1.9",
           "Microsoft.Bcl.AsyncInterfaces": "8.0.0",
           "Microsoft.NET.StringTools": "17.11.4",
           "System.Collections.Immutable": "8.0.0",
@@ -217,12 +217,12 @@
     "net10.0": {
       "aqua-core-messagepack": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-001, )",
-        "resolved": "6.0.0-alpha-001",
-        "contentHash": "KEiCjuQU6WLCXvHArypaF/Hk31cifsr3rS99dTLMp1DXbiaFinloR67heGCi/afNrdE/7PpY/ivFu4gE4YCEog==",
+        "requested": "[6.0.0-alpha-002, )",
+        "resolved": "6.0.0-alpha-002",
+        "contentHash": "wm2BYfqMTCpvi3eocLVcJyEjni+LcShOF6s97CKlgqMZHv3P5fSftb/wQsoZnJgz079Ki2UTgrGcoVvWp4/tNQ==",
         "dependencies": {
-          "MessagePack": "3.1.8",
-          "aqua-core": "6.0.0-alpha-001"
+          "MessagePack": "3.1.9",
+          "aqua-core": "6.0.0-alpha-002"
         }
       },
       "aqua.tool.Validation": {
@@ -245,13 +245,13 @@
       },
       "MessagePack.Annotations": {
         "type": "Transitive",
-        "resolved": "3.1.8",
-        "contentHash": "SitOtZ4tOlAZZPF7p52M7143F+Cuz7o/aU0MrtAXX0+ZkPXzDNroOFhzzE2ogMFThsoEW/E6akXVVcBFM9ZKaw=="
+        "resolved": "3.1.9",
+        "contentHash": "bd+/udHmQECcfdcnlLHXR+/5Oc+UdQTEwZI5M1xw8Olymcb7SPXHleMxkkBkSLiK2+fpmY+0uAR7Jy3oiPPhKA=="
       },
       "MessagePackAnalyzer": {
         "type": "Transitive",
-        "resolved": "3.1.8",
-        "contentHash": "Vm4g0cR4YRKRchEOmMJ0uVFU6yxdg7cJa2KHv3SUAHEsdYKvMpHMF5A1hZfsix89ymD5cmuzRnw9a6dKMcvq+Q=="
+        "resolved": "3.1.9",
+        "contentHash": "/nMSlVz4p8BjlPbgxgBfE9kHyObHvmjczShWp2rGeKMH7oVEyPd0a3Fcd6yO3Xf36Jsf2ax/VvhV28Z7F5ibmQ=="
       },
       "Microsoft.NET.StringTools": {
         "type": "Transitive",
@@ -271,23 +271,23 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-001, )"
+          "aqua-core": "[6.0.0-alpha-002, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-001, )",
-        "resolved": "6.0.0-alpha-001",
-        "contentHash": "Nqxq1J/GA6nmYUMvSvFTdN3jiCFl0MUpxsrw0zgeSFLljMc898oLLgbMSpL1PN+Ximsan77+jnQyBog1h/f0ng=="
+        "requested": "[6.0.0-alpha-002, )",
+        "resolved": "6.0.0-alpha-002",
+        "contentHash": "/GsIIXdEycFIWuG2/yyCQrniZbg4SNWNS/2BfWQpWIhm+deEZguikzGBgrTGXFFLp5r62QpgbbPB+8e98W4u9w=="
       },
       "MessagePack": {
         "type": "CentralTransitive",
         "requested": "[3.1.7, )",
-        "resolved": "3.1.8",
-        "contentHash": "Qk2q+9FVxnMSp+NQ9y3SLz3HqWe7Rg3KRMHhBX28FkKUoOeP9YIU86mA4pFOxDDjUIRA9e7Ssbxs/LwWUcAzPw==",
+        "resolved": "3.1.9",
+        "contentHash": "9IuUiOycxveb2R4RER5yQl7qYHMeRRMghOFuI/c+A8aX8j0zEzJ9QJD0u3Sr3MrNewUUkqOcTVLW9Zn6odZyIQ==",
         "dependencies": {
-          "MessagePack.Annotations": "3.1.8",
-          "MessagePackAnalyzer": "3.1.8",
+          "MessagePack.Annotations": "3.1.9",
+          "MessagePackAnalyzer": "3.1.9",
           "Microsoft.NET.StringTools": "17.11.4"
         }
       }
@@ -295,12 +295,12 @@
     "net8.0": {
       "aqua-core-messagepack": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-001, )",
-        "resolved": "6.0.0-alpha-001",
-        "contentHash": "KEiCjuQU6WLCXvHArypaF/Hk31cifsr3rS99dTLMp1DXbiaFinloR67heGCi/afNrdE/7PpY/ivFu4gE4YCEog==",
+        "requested": "[6.0.0-alpha-002, )",
+        "resolved": "6.0.0-alpha-002",
+        "contentHash": "wm2BYfqMTCpvi3eocLVcJyEjni+LcShOF6s97CKlgqMZHv3P5fSftb/wQsoZnJgz079Ki2UTgrGcoVvWp4/tNQ==",
         "dependencies": {
-          "MessagePack": "3.1.8",
-          "aqua-core": "6.0.0-alpha-001"
+          "MessagePack": "3.1.9",
+          "aqua-core": "6.0.0-alpha-002"
         }
       },
       "aqua.tool.Validation": {
@@ -323,13 +323,13 @@
       },
       "MessagePack.Annotations": {
         "type": "Transitive",
-        "resolved": "3.1.8",
-        "contentHash": "SitOtZ4tOlAZZPF7p52M7143F+Cuz7o/aU0MrtAXX0+ZkPXzDNroOFhzzE2ogMFThsoEW/E6akXVVcBFM9ZKaw=="
+        "resolved": "3.1.9",
+        "contentHash": "bd+/udHmQECcfdcnlLHXR+/5Oc+UdQTEwZI5M1xw8Olymcb7SPXHleMxkkBkSLiK2+fpmY+0uAR7Jy3oiPPhKA=="
       },
       "MessagePackAnalyzer": {
         "type": "Transitive",
-        "resolved": "3.1.8",
-        "contentHash": "Vm4g0cR4YRKRchEOmMJ0uVFU6yxdg7cJa2KHv3SUAHEsdYKvMpHMF5A1hZfsix89ymD5cmuzRnw9a6dKMcvq+Q=="
+        "resolved": "3.1.9",
+        "contentHash": "/nMSlVz4p8BjlPbgxgBfE9kHyObHvmjczShWp2rGeKMH7oVEyPd0a3Fcd6yO3Xf36Jsf2ax/VvhV28Z7F5ibmQ=="
       },
       "Microsoft.NET.StringTools": {
         "type": "Transitive",
@@ -349,23 +349,23 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-001, )"
+          "aqua-core": "[6.0.0-alpha-002, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-001, )",
-        "resolved": "6.0.0-alpha-001",
-        "contentHash": "Nqxq1J/GA6nmYUMvSvFTdN3jiCFl0MUpxsrw0zgeSFLljMc898oLLgbMSpL1PN+Ximsan77+jnQyBog1h/f0ng=="
+        "requested": "[6.0.0-alpha-002, )",
+        "resolved": "6.0.0-alpha-002",
+        "contentHash": "/GsIIXdEycFIWuG2/yyCQrniZbg4SNWNS/2BfWQpWIhm+deEZguikzGBgrTGXFFLp5r62QpgbbPB+8e98W4u9w=="
       },
       "MessagePack": {
         "type": "CentralTransitive",
         "requested": "[3.1.7, )",
-        "resolved": "3.1.8",
-        "contentHash": "Qk2q+9FVxnMSp+NQ9y3SLz3HqWe7Rg3KRMHhBX28FkKUoOeP9YIU86mA4pFOxDDjUIRA9e7Ssbxs/LwWUcAzPw==",
+        "resolved": "3.1.9",
+        "contentHash": "9IuUiOycxveb2R4RER5yQl7qYHMeRRMghOFuI/c+A8aX8j0zEzJ9QJD0u3Sr3MrNewUUkqOcTVLW9Zn6odZyIQ==",
         "dependencies": {
-          "MessagePack.Annotations": "3.1.8",
-          "MessagePackAnalyzer": "3.1.8",
+          "MessagePack.Annotations": "3.1.9",
+          "MessagePackAnalyzer": "3.1.9",
           "Microsoft.NET.StringTools": "17.11.4"
         }
       }
