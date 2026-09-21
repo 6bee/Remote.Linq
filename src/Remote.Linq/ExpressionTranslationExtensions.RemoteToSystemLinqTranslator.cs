@@ -360,7 +360,7 @@ partial class ExpressionTranslationExtensions
                 var list = VisitExpressionList(expressionCollection).ToArray();
                 value = list;
             }
-            else if (type == typeof(Type) && value is Aqua.TypeSystem.TypeInfo typeInfo)
+            else if (typeof(Type).IsAssignableFrom(type) && value is Aqua.TypeSystem.TypeInfo typeInfo)
             {
                 value = typeInfo.ResolveType(_typeResolver);
             }

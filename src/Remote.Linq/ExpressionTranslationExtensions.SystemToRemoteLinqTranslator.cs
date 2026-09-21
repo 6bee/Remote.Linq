@@ -139,7 +139,7 @@ partial class ExpressionTranslationExtensions
                 var list = VisitExpressionList(new ReadOnlyCollection<SystemLinq.Expression>(expressionCollection.ToArray())).Select(Unwrap<RemoteLinq.Expression>).ToArray();
                 exp = new RemoteLinq.ConstantExpression(list, _typeInfoProvider.GetTypeInfo(type));
             }
-            else if (type == typeof(Type) && value is Type typeValue)
+            else if (typeof(Type).IsAssignableFrom(type) && value is Type typeValue)
             {
                 exp = new RemoteLinq.ConstantExpression(typeValue.AsTypeInfo(), type);
             }
