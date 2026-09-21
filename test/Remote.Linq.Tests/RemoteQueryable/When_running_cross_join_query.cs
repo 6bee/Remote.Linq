@@ -4,10 +4,6 @@ namespace Remote.Linq.Tests.RemoteQueryable;
 
 using Remote.Linq;
 using Remote.Linq.ExpressionExecution;
-using Shouldly;
-using System;
-using System.Linq;
-using Xunit;
 
 public class When_running_cross_join_query
 {

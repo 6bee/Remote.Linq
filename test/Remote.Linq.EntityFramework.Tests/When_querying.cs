@@ -5,12 +5,6 @@ namespace Remote.Linq.EntityFramework.Tests;
 using Remote.Linq.Async;
 using Remote.Linq.EntityFramework.Tests.TestInfrastructure;
 using Remote.Linq.EntityFramework.Tests.TestModel;
-using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
 public sealed class When_querying : IDisposable
 {

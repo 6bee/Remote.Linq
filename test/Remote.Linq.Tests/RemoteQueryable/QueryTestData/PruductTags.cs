@@ -2,8 +2,6 @@
 
 namespace Remote.Linq.Tests.RemoteQueryable.QueryTestData;
 
-using System;
-
 [Flags]
 public enum PruductTags
 {

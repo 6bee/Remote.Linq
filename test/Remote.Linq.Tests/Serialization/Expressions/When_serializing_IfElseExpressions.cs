@@ -2,9 +2,7 @@
 
 namespace Remote.Linq.Tests.Serialization.Expressions;
 
-using System;
 using System.Linq.Expressions;
-using Xunit;
 using RemoteExpression = Remote.Linq.Expressions.Expression;
 
 public abstract class When_serializing_IfElseExpressions

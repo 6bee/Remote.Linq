@@ -4,11 +4,6 @@ namespace Remote.Linq.EntityFrameworkCore.Tests;
 
 using Remote.Linq.Async;
 using Remote.Linq.EntityFrameworkCore.Tests.Model;
-using Shouldly;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtensions;
 
 public sealed class When_querying : IDisposable

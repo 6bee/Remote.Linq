@@ -3,7 +3,6 @@
 namespace Remote.Linq.Tests.Serialization;
 
 using Aqua.TypeExtensions;
-using Xunit;
 using BindingFlags = System.Reflection.BindingFlags;
 using MethodInfo = System.Reflection.MethodInfo;
 

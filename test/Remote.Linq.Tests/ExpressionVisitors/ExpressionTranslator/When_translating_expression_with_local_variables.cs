@@ -2,10 +2,7 @@
 
 namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator;
 
-using Shouldly;
-using System;
 using System.Linq.Expressions;
-using Xunit;
 
 public class When_translating_expression_with_local_variables
 {

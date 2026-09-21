@@ -4,8 +4,6 @@ namespace Remote.Linq.Tests.DynamicQuery.QueryArgumentAttribute;
 
 using Aqua.Dynamic;
 using Remote.Linq.DynamicQuery;
-using Shouldly;
-using Xunit;
 using RemoteLinq = Remote.Linq.Expressions;
 using SystemLinq = System.Linq.Expressions;
 

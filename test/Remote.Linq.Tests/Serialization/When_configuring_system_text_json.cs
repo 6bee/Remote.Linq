@@ -3,7 +3,6 @@
 namespace Remote.Linq.Tests.Serialization;
 
 using Remote.Linq.Text.Json.Converters;
-using System.Linq;
 using System.Text.Json;
 using VariableArgument = Remote.Linq.DynamicQuery.VariableQueryArgument;
 using VariableArgumentList = Remote.Linq.DynamicQuery.VariableQueryArgumentList;

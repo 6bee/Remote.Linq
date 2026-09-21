@@ -4,13 +4,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests;
 
 using Remote.Linq.Async;
 using Remote.Linq.EntityFrameworkCore.Tests.Model;
-using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security;
-using System.Threading.Tasks;
-using Xunit;
 using DbFunctionsExtensions = Microsoft.EntityFrameworkCore.DbFunctionsExtensions;
 
 public class When_executing_async_stream : IDisposable

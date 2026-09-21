@@ -5,9 +5,7 @@ namespace Remote.Linq.Tests.ExpressionExecution.ExpressionExecutor;
 using Aqua.Dynamic;
 using Remote.Linq.ExpressionExecution;
 using Remote.Linq.Expressions;
-using Shouldly;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
 public class TestExpressionExecutor : DefaultExpressionExecutor

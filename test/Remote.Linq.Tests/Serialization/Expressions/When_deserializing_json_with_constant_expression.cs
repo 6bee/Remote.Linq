@@ -5,8 +5,6 @@ namespace Remote.Linq.Tests.Serialization.Expressions;
 using global::Newtonsoft.Json;
 using Remote.Linq.DynamicQuery;
 using Remote.Linq.Expressions;
-using Shouldly;
-using Xunit;
 
 public class When_deserializing_json_with_constant_expression
 {

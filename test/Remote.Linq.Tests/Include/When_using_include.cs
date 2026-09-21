@@ -6,11 +6,6 @@ using Aqua.Dynamic;
 using Remote.Linq;
 using Remote.Linq.Expressions;
 using Remote.Linq.Include;
-using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
 using QueryableResourceDescriptor = Remote.Linq.DynamicQuery.QueryableResourceDescriptor;
 
 public abstract class When_using_include

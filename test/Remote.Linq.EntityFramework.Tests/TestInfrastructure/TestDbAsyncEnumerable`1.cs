@@ -2,9 +2,7 @@
 
 namespace Remote.Linq.EntityFramework.Tests.TestInfrastructure;
 
-using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Linq.Expressions;
 
 internal class TestDbAsyncEnumerable<T> : EnumerableQuery<T>, IDbAsyncEnumerable<T>, IQueryable<T>

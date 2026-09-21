@@ -2,10 +2,8 @@
 
 namespace Remote.Linq.Tests.Serialization.Expressions;
 
-using System;
 using System.IO;
 using System.Linq.Expressions;
-using Xunit;
 using RemoteLambdaExpression = Remote.Linq.Expressions.LambdaExpression;
 
 public abstract class When_serializing_GotoAndLabelExpressions_with_nested_BlockExpression

@@ -3,11 +3,6 @@
 namespace Remote.Linq.Async.Queryable.Tests;
 
 using Remote.Linq.Async.Queryable.TestSupport;
-using Shouldly;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
 public abstract class When_querying_async
 {

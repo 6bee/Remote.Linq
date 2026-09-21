@@ -3,7 +3,6 @@
 namespace Remote.Linq.EntityFrameworkCore.Tests.Model;
 
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Security;
 
 [SecuritySafeCritical]

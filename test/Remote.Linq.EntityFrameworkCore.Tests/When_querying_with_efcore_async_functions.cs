@@ -5,13 +5,7 @@ namespace Remote.Linq.EntityFrameworkCore.Tests;
 using Microsoft.EntityFrameworkCore;
 using Remote.Linq.Async;
 using Remote.Linq.EntityFrameworkCore.Tests.Model;
-using Shouldly;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
 public sealed class When_querying_with_efcore_async_functions : IDisposable
 {

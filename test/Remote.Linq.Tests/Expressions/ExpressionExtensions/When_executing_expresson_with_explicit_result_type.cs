@@ -4,9 +4,6 @@ namespace Remote.Linq.Tests.Expressions.ExpressionExtensions;
 
 using Remote.Linq.ExpressionExecution;
 using Remote.Linq.Expressions;
-using Shouldly;
-using System;
-using Xunit;
 
 public class When_executing_expresson_with_explicit_result_type
 {

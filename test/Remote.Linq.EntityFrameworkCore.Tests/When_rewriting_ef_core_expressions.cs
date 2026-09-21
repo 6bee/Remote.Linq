@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Remote.Linq.EntityFrameworkCore.ExpressionVisitors;
 using Remote.Linq.EntityFrameworkCore.Tests.Model;
 using Remote.Linq.Include;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 public class When_rewriting_ef_core_expressions

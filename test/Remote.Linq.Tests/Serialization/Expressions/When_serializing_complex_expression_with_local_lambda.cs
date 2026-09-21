@@ -3,8 +3,6 @@
 namespace Remote.Linq.Tests.Serialization.Expressions;
 
 using Remote.Linq.Expressions;
-using System;
-using Xunit;
 
 public abstract class When_serializing_complex_expression_with_local_lambda
 {

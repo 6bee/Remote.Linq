@@ -3,9 +3,6 @@
 namespace Remote.Linq.Tests.Serialization.VariableQueryArgument;
 
 using Remote.Linq.Expressions;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
 public abstract class When_serializing_local_variable_query_string_argument_list
 {

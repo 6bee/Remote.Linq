@@ -3,7 +3,6 @@
 namespace Remote.Linq.Tests.Serialization;
 
 using System.Security;
-using Xunit;
 
 public static class ExpressionHelper
 {

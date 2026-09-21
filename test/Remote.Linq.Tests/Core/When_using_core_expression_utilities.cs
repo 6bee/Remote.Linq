@@ -3,8 +3,6 @@
 namespace Remote.Linq.Tests.Core;
 
 using Remote.Linq;
-using System;
-using System.Linq;
 using System.Reflection;
 using SystemLinq = System.Linq.Expressions;
 

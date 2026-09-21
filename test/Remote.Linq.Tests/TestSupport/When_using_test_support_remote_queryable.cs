@@ -4,11 +4,6 @@ namespace Remote.Linq.Tests.TestSupport;
 
 using Remote.Linq.Async;
 using Remote.Linq.TestSupport;
-using Shouldly;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
 public class When_using_test_support_remote_queryable
 {

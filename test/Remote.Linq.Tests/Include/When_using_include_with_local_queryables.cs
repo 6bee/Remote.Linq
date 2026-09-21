@@ -3,9 +3,6 @@
 namespace Remote.Linq.Tests.Include;
 
 using Remote.Linq.Include;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 public class When_using_include_with_local_queryables
 {

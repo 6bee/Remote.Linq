@@ -3,10 +3,6 @@
 namespace Remote.Linq.Tests.DynamicQuery.AsyncRemoteQueryable;
 
 using Remote.Linq.Async;
-using Shouldly;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 using static Remote.Linq.Tests.DynamicQuery.EntityQueryables;
 
 public class When_executing_async_remote_queryable

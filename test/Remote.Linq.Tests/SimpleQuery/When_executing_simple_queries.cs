@@ -3,8 +3,6 @@
 namespace Remote.Linq.Tests.SimpleQuery;
 
 using Remote.Linq.SimpleQuery;
-using System;
-using System.Linq;
 
 public class When_executing_simple_queries
 {
