@@ -17,15 +17,9 @@ partial class ExpressionTranslationExtensions
 {
     private sealed class SystemToRemoteLinqTranslator : SystemExpressionVisitorBase
     {
-        private readonly Dictionary<SystemLinq.ParameterExpression, RemoteLinq.ParameterExpression> _parameterExpressionCache =
-            new(ReferenceEqualityComparer<SystemLinq.ParameterExpression>.Default);
-
-        private readonly Dictionary<SystemLinq.LabelTarget, RemoteLinq.LabelTarget> _labelTargetCache =
-            new(ReferenceEqualityComparer<SystemLinq.LabelTarget>.Default);
-
-        private readonly Dictionary<object, ConstantQueryArgument> _constantQueryArgumentCache =
-            new(ReferenceEqualityComparer<object>.Default);
-
+        private readonly Dictionary<SystemLinq.ParameterExpression, RemoteLinq.ParameterExpression> _parameterExpressionCache;
+        private readonly Dictionary<SystemLinq.LabelTarget, RemoteLinq.LabelTarget> _labelTargetCache;
+        private readonly Dictionary<object, ConstantQueryArgument> _constantQueryArgumentCache;
         private readonly Func<SystemLinq.Expression, bool>? _canBeEvaluatedLocally;
         private readonly Func<object, bool> _needsMapping;
         private readonly ITypeInfoProvider _typeInfoProvider;
@@ -34,6 +28,12 @@ partial class ExpressionTranslationExtensions
         public SystemToRemoteLinqTranslator(IExpressionToRemoteLinqContext expressionTranslatorContext)
         {
             expressionTranslatorContext.AssertNotNull();
+
+            _parameterExpressionCache = new(ReferenceEqualityComparer<SystemLinq.ParameterExpression>.Default);
+
+            _labelTargetCache = new(ReferenceEqualityComparer<SystemLinq.LabelTarget>.Default);
+
+            _constantQueryArgumentCache = [];
 
             _canBeEvaluatedLocally = expressionTranslatorContext.CanBeEvaluatedLocally;
 
