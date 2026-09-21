@@ -2,7 +2,6 @@
 
 namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator;
 
-using System;
 using System.Linq.Expressions;
 using RemoteLinq = Remote.Linq.Expressions;
 
@@ -16,7 +15,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
 
         public NestedContainer Nested { get; set; } = new();
 
-        public System.Collections.Generic.List<int> Values { get; set; } = [];
+        public List<int> Values { get; set; } = [];
     }
 
     private class NestedContainer
@@ -46,7 +45,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
                 s.Cases[0]!.TestValues!.Count.ShouldBe(2);
             });
 
-        var (original, roundTrip) = BackAndForth<Expression<Func<int, int>>>(Expression.Lambda<Func<int, int>>(switchExpression, p));
+        var (original, roundTrip) = BackAndForth(Expression.Lambda<Func<int, int>>(switchExpression, p));
         var originalFunc = original.Compile();
         var roundTripFunc = roundTrip.Compile();
 
@@ -84,7 +83,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
         var catchExpression = Expression.MakeTry(typeof(int), body, @finally: null, fault: null, [catchBlock]);
 
         _sideEffectCounter.Value = 0;
-        var (originalCatch, roundTripCatch) = BackAndForth<Expression<Func<int, int>>>(Expression.Lambda<Func<int, int>>(catchExpression, p));
+        var (originalCatch, roundTripCatch) = BackAndForth(Expression.Lambda<Func<int, int>>(catchExpression, p));
         var originalCatchFunc = originalCatch.Compile();
         var roundTripCatchFunc = roundTripCatch.Compile();
         originalCatchFunc(0).ShouldBe(0);
@@ -108,7 +107,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
             handlers: null);
 
         _sideEffectCounter.Value = 0;
-        var (originalFinally, roundTripFinally) = BackAndForth<Expression<Func<int, int>>>(Expression.Lambda<Func<int, int>>(finallyExpression, p2));
+        var (originalFinally, roundTripFinally) = BackAndForth(Expression.Lambda<Func<int, int>>(finallyExpression, p2));
         var originalFinallyFunc = originalFinally.Compile();
         var roundTripFinallyFunc = roundTripFinally.Compile();
         originalFinallyFunc(3).ShouldBe(3);
@@ -131,7 +130,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
             handlers: null);
 
         _sideEffectCounter.Value = 0;
-        var (originalFault, roundTripFault) = BackAndForth<Expression<Action<int>>>(Expression.Lambda<Action<int>>(faultExpression, p3));
+        var (originalFault, roundTripFault) = BackAndForth(Expression.Lambda<Action<int>>(faultExpression, p3));
         var originalFaultFunc = originalFault.Compile();
         var roundTripFaultFunc = roundTripFault.Compile();
         originalFaultFunc(5);
@@ -145,12 +144,12 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
     public void Should_roundtrip_new_array_bounds_and_initializers()
     {
         var initExpression = Expression.NewArrayInit(typeof(int), Expression.Constant(7), Expression.Constant(8), Expression.Constant(9));
-        var (originalInit, roundTripInit) = BackAndForth<Expression<Func<int[]>>>(Expression.Lambda<Func<int[]>>(initExpression));
+        var (originalInit, roundTripInit) = BackAndForth(Expression.Lambda<Func<int[]>>(initExpression));
         originalInit.Compile().Invoke().ShouldBe([7, 8, 9]);
         roundTripInit.Compile().Invoke().ShouldBeSequenceEqual(originalInit.Compile().Invoke());
 
         var boundsExpression = Expression.NewArrayBounds(typeof(int), Expression.Constant(3), Expression.Constant(2));
-        var (originalBounds, roundTripBounds) = BackAndForth<Expression<Func<int[,]>>>(Expression.Lambda<Func<int[,]>>(boundsExpression));
+        var (originalBounds, roundTripBounds) = BackAndForth(Expression.Lambda<Func<int[,]>>(boundsExpression));
         originalBounds.Compile().Invoke().ShouldBeOfType<int[,]>()
             .With(a =>
             {
@@ -168,7 +167,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
     [Fact]
     public void Should_roundtrip_member_init_assignment_member_and_list_bindings()
     {
-        var addMethod = typeof(System.Collections.Generic.List<int>).GetMethod(nameof(System.Collections.Generic.List<int>.Add), [typeof(int)])!;
+        var addMethod = typeof(List<int>).GetMethod(nameof(System.Collections.Generic.List<int>.Add), [typeof(int)])!;
         var numberProperty = typeof(ComplexContainer).GetProperty(nameof(ComplexContainer.Number))!;
         var nestedProperty = typeof(ComplexContainer).GetProperty(nameof(ComplexContainer.Nested))!;
         var valuesProperty = typeof(ComplexContainer).GetProperty(nameof(ComplexContainer.Values))!;
@@ -192,7 +191,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
         // Self-contained subtrees may be locally evaluated or wrapped by the translator
         // to preserve semantics across serialization, so only behavioral equivalence
         // of the roundtripped expression is asserted here.
-        var (original, roundTrip) = BackAndForth<Expression<Func<ComplexContainer>>>(Expression.Lambda<Func<ComplexContainer>>(memberInitExpression));
+        var (original, roundTrip) = BackAndForth(Expression.Lambda<Func<ComplexContainer>>(memberInitExpression));
         var originalResult = original.Compile().Invoke();
         var roundTripResult = roundTrip.Compile().Invoke();
 
@@ -213,7 +212,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
         var p = Expression.Parameter(typeof(int), "p");
         var ifThenExpression = Expression.IfThen(Expression.GreaterThan(p, Expression.Constant(5)), Expression.Call(null, recordSideEffect));
         _sideEffectCounter.Value = 0;
-        var (originalIfThen, roundTripIfThen) = BackAndForth<Expression<Action<int>>>(Expression.Lambda<Action<int>>(ifThenExpression, p));
+        var (originalIfThen, roundTripIfThen) = BackAndForth(Expression.Lambda<Action<int>>(ifThenExpression, p));
         originalIfThen.Compile().Invoke(6);
         originalIfThen.Compile().Invoke(3);
         roundTripIfThen.Compile().Invoke(6);
@@ -228,7 +227,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
             Expression.IfThen(Expression.LessThan(p2, Expression.Constant(0)), Expression.Goto(target, Expression.Constant("neg"))),
             Expression.Goto(target, Expression.Constant("zero")),
             Expression.Label(target, Expression.Constant("default")));
-        var (originalGoto, roundTripGoto) = BackAndForth<Expression<Func<int, string>>>(Expression.Lambda<Func<int, string>>(gotoExpression, p2));
+        var (originalGoto, roundTripGoto) = BackAndForth(Expression.Lambda<Func<int, string>>(gotoExpression, p2));
         var originalGotoFunc = originalGoto.Compile();
         var roundTripGotoFunc = roundTripGoto.Compile();
         originalGotoFunc(1).ShouldBe("pos");
@@ -250,7 +249,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
             Expression.Goto(continueTarget));
         var loopExpression = Expression.Loop(loopBody, breakTarget, continueTarget);
         var loopBlockExpression = Expression.Block([counter, sum], loopExpression, sum);
-        var (originalLoop, roundTripLoop) = BackAndForth<Expression<Func<int>>>(Expression.Lambda<Func<int>>(loopBlockExpression));
+        var (originalLoop, roundTripLoop) = BackAndForth(Expression.Lambda<Func<int>>(loopBlockExpression));
         originalLoop.Compile().Invoke().ShouldBe(10);
         roundTripLoop.Compile().Invoke().ShouldBe(10);
     }
@@ -262,7 +261,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
         var sharedParameterExpression = Expression.Equal(
             Expression.Add(p, p),
             Expression.Multiply(p, Expression.Constant(2)));
-        var (original, roundTrip) = BackAndForth<Expression<Func<int, bool>>>(Expression.Lambda<Func<int, bool>>(sharedParameterExpression, p));
+        var (original, roundTrip) = BackAndForth(Expression.Lambda<Func<int, bool>>(sharedParameterExpression, p));
         var body = (BinaryExpression)roundTrip.Body;
         var leftParameters = new[] { ((BinaryExpression)body.Left).Left, ((BinaryExpression)body.Left).Right };
         var rightParameter = ((BinaryExpression)body.Right).Left;
@@ -282,7 +281,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
             Expression.IfThen(Expression.LessThan(p2, Expression.Constant(0)), Expression.Goto(sharedLabelTarget, Expression.Constant("neg"))),
             Expression.Goto(sharedLabelTarget, Expression.Constant("zero")),
             Expression.Label(sharedLabelTarget, Expression.Constant("default")));
-        var (originalLabel, roundTripLabel) = BackAndForth<Expression<Func<int, string>>>(Expression.Lambda<Func<int, string>>(sharedLabelExpression, p2));
+        var (originalLabel, roundTripLabel) = BackAndForth(Expression.Lambda<Func<int, string>>(sharedLabelExpression, p2));
         var originalLabelFunc = originalLabel.Compile();
         var roundTripLabelFunc = roundTripLabel.Compile();
         originalLabelFunc(1).ShouldBe("pos");
@@ -294,5 +293,5 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
     }
 
     private static void RecordSideEffect()
-        => _sideEffectCounter.Value = _sideEffectCounter.Value + 1;
+        => _sideEffectCounter.Value++;
 }

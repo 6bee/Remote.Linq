@@ -64,10 +64,12 @@ public class Test
             new Person("Ross", 50),
             new Person("Monica", 60),
         };
+
+    public record Person(string Name, int Age);
 }
 
 #pragma warning disable SA1402 // File may only contain a single type
-public sealed class MyQueryable<T> : IQueryable<T>, IQueryProvider
+file sealed class MyQueryable<T> : IQueryable<T>, IQueryProvider
 {
     public MyQueryable() => Expression = Expression.Constant(this);
 
@@ -92,9 +94,7 @@ public sealed class MyQueryable<T> : IQueryable<T>, IQueryProvider
     IEnumerator IEnumerable.GetEnumerator() => throw new NotSupportedException();
 }
 
-public record Person(string Name, int Age);
-
-public static class ExpressionHelper
+file static class ExpressionHelper
 {
     public static TExpression? DeepCopy<TExpression>(TExpression expression)
         where TExpression : Remote.Linq.Expressions.Expression

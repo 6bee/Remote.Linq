@@ -11,13 +11,16 @@ using System.ComponentModel;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class SystemExpressionFactoryExtensions
 {
-    public static MemberExpression CreateVariableQueryArgumentExpression<T>(this SystemExpressionFactory factory, T? value, Type? type = null)
+    extension(SystemExpressionFactory factory)
     {
-        type ??= value?.GetType() ?? typeof(T);
-        return Expression.Property(
-            Expression.New(
-                typeof(VariableQueryArgument<>).MakeGenericType(type).GetConstructor([type])!,
-                Expression.Constant(value, type)),
-            nameof(VariableQueryArgument<>.Value));
+        public MemberExpression CreateVariableQueryArgumentExpression<T>(T? value, Type? type = null)
+        {
+            type ??= value?.GetType() ?? typeof(T);
+            return Expression.Property(
+                Expression.New(
+                    typeof(VariableQueryArgument<>).MakeGenericType(type).GetConstructor([type])!,
+                    Expression.Constant(value, type)),
+                nameof(VariableQueryArgument<>.Value));
+        }
     }
 }

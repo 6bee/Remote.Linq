@@ -3,9 +3,6 @@
 #nullable enable
 namespace Remote.Linq.Tests;
 
-using Shouldly;
-using System;
-
 public static class ShouldlyExtensions
 {
     extension(Type? actual)
