@@ -41,13 +41,13 @@ public abstract class When_serializing_ListInitExpression
                 new[]
                 {
                     Expression.ElementInit(
-                        typeof(List<int>).GetMethod(nameof(List<int>.Add))!,
+                        typeof(List<int>).GetMethod(nameof(List<>.Add))!,
                         new[] { Expression.Constant(1) }),
                     Expression.ElementInit(
-                        typeof(List<int>).GetMethod(nameof(List<int>.Add))!,
+                        typeof(List<int>).GetMethod(nameof(List<>.Add))!,
                         new[] { Expression.Constant(2) }),
                     Expression.ElementInit(
-                        typeof(List<int>).GetMethod(nameof(List<int>.Add))!,
+                        typeof(List<int>).GetMethod(nameof(List<>.Add))!,
                         new[] { Expression.Constant(3) }),
                 }));
 

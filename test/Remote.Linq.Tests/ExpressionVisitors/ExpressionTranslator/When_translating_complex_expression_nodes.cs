@@ -167,7 +167,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
     [Fact]
     public void Should_roundtrip_member_init_assignment_member_and_list_bindings()
     {
-        var addMethod = typeof(List<int>).GetMethod(nameof(System.Collections.Generic.List<int>.Add), [typeof(int)])!;
+        var addMethod = typeof(List<int>).GetMethod(nameof(List<>.Add), [typeof(int)])!;
         var numberProperty = typeof(ComplexContainer).GetProperty(nameof(ComplexContainer.Number))!;
         var nestedProperty = typeof(ComplexContainer).GetProperty(nameof(ComplexContainer.Nested))!;
         var valuesProperty = typeof(ComplexContainer).GetProperty(nameof(ComplexContainer.Values))!;

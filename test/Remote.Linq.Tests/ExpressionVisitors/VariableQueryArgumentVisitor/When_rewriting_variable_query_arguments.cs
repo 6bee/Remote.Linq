@@ -73,7 +73,7 @@ public class When_rewriting_variable_query_arguments
         var argument = new VariableQueryArgument<int>(42);
         var memberAccess = new RemoteLinq.MemberExpression(
             new RemoteLinq.ConstantExpression(argument),
-            typeof(VariableQueryArgument<int>).GetProperty(nameof(VariableQueryArgument<int>.Value))!);
+            typeof(VariableQueryArgument<int>).GetProperty(nameof(VariableQueryArgument<>.Value))!);
 
         var toNonGeneric = memberAccess.ReplaceGenericQueryArgumentsByNonGenericArguments();
         toNonGeneric.Member.Name.ShouldBe(nameof(VariableQueryArgument.Value));
@@ -81,7 +81,7 @@ public class When_rewriting_variable_query_arguments
         toNonGeneric.Expression.ShouldBeOfType<RemoteLinq.ConstantExpression>().Value.ShouldBeOfType<VariableQueryArgument>();
 
         var restored = toNonGeneric.ReplaceNonGenericQueryArgumentsByGenericArguments();
-        restored.Member.Name.ShouldBe(nameof(VariableQueryArgument<int>.Value));
+        restored.Member.Name.ShouldBe(nameof(VariableQueryArgument<>.Value));
         restored.Member.DeclaringType.ShouldNotBeNull().ToType().ShouldBe(typeof(VariableQueryArgument<int>));
         restored.Expression.ShouldBeOfType<RemoteLinq.ConstantExpression>().Value.ShouldBeOfType<VariableQueryArgument<int>>();
     }
@@ -92,7 +92,7 @@ public class When_rewriting_variable_query_arguments
         var argument = new VariableQueryArgument<List<int>>([1, 2]);
         var memberAccess = new RemoteLinq.MemberExpression(
             new RemoteLinq.ConstantExpression(argument),
-            typeof(VariableQueryArgument<List<int>>).GetProperty(nameof(VariableQueryArgument<List<int>>.Value))!);
+            typeof(VariableQueryArgument<List<int>>).GetProperty(nameof(VariableQueryArgument<>.Value))!);
 
         var toNonGeneric = memberAccess.ReplaceGenericQueryArgumentsByNonGenericArguments();
         toNonGeneric.Member.Name.ShouldBe(nameof(VariableQueryArgumentList.Values));
@@ -100,7 +100,7 @@ public class When_rewriting_variable_query_arguments
         toNonGeneric.Expression.ShouldBeOfType<RemoteLinq.ConstantExpression>().Value.ShouldBeOfType<VariableQueryArgumentList>();
 
         var restored = toNonGeneric.ReplaceNonGenericQueryArgumentsByGenericArguments();
-        restored.Member.Name.ShouldBe(nameof(VariableQueryArgument<int>.Value));
+        restored.Member.Name.ShouldBe(nameof(VariableQueryArgument<>.Value));
         restored.Member.DeclaringType.ShouldNotBeNull().ToType().ShouldBe(typeof(VariableQueryArgument<List<int>>));
         restored.Expression.ShouldBeOfType<RemoteLinq.ConstantExpression>().Value.ShouldBeOfType<VariableQueryArgument<List<int>>>();
     }
@@ -126,7 +126,7 @@ public class When_rewriting_variable_query_arguments
     {
         var memberAccess = new RemoteLinq.MemberExpression(
             new RemoteLinq.ConstantExpression("not a query argument"),
-            typeof(VariableQueryArgument<int>).GetProperty(nameof(VariableQueryArgument<int>.Value))!);
+            typeof(VariableQueryArgument<int>).GetProperty(nameof(VariableQueryArgument<>.Value))!);
 
         var ex = Should.Throw<RemoteLinqException>(() => memberAccess.ReplaceGenericQueryArgumentsByNonGenericArguments());
         ex.Message.ShouldStartWith("Expected instance expression");
