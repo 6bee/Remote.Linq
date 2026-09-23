@@ -5,8 +5,8 @@ namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator;
 
 using Aqua.Dynamic;
 using Remote.Linq.DynamicQuery;
-using System.Linq.Expressions;
 using RemoteLinq = Remote.Linq.Expressions;
+using SystemLinq = System.Linq.Expressions;
 
 public class When_translating_complex_constants : ExpressionTranslatorTestBase
 {
@@ -28,63 +28,63 @@ public class When_translating_complex_constants : ExpressionTranslatorTestBase
     {
         // Type constant: translated into a TypeInfo carrying the same type on the remote side.
         // The NoMappingContext disables local evaluation, so the constant keeps its shape.
-        var typeRemote = (RemoteLinq.ConstantExpression)Expression.Constant(typeof(int), typeof(Type)).ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
+        var typeRemote = (RemoteLinq.ConstantExpression)SystemLinq.Expression.Constant(typeof(int), typeof(Type)).ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
         typeRemote.NodeType.ShouldBe(RemoteLinq.ExpressionType.Constant);
         typeRemote.Type.ToType().ShouldBe(typeof(Type));
         typeRemote.Value.ShouldNotBeNull().ShouldBeOfType<Aqua.TypeSystem.TypeInfo>().ToType().ShouldBe(typeof(int));
 
-        var (typeOriginal, typeRoundTrip) = BackAndForth(Expression.Constant(typeof(int), typeof(Type)), ExpressionTranslatorContext.NoMappingContext);
+        var (typeOriginal, typeRoundTrip) = BackAndForth(SystemLinq.Expression.Constant(typeof(int), typeof(Type)), ExpressionTranslatorContext.NoMappingContext);
         typeOriginal.Value.ShouldBe(typeof(int));
         typeRoundTrip.Value.ShouldBe(typeof(int));
 
         // Under the default context plain constants are not rewritten by the partial
         // evaluation pass, so the type constant still takes the type-specific branch and the
         // value roundtrips back to the original type.
-        var defaultTypeRemote = Expression.Constant(typeof(int), typeof(Type)).ToRemoteLinqExpression();
+        var defaultTypeRemote = SystemLinq.Expression.Constant(typeof(int), typeof(Type)).ToRemoteLinqExpression();
         defaultTypeRemote.NodeType.ShouldBe(RemoteLinq.ExpressionType.Constant);
         var defaultTypeConstant = defaultTypeRemote.ShouldBeOfType<RemoteLinq.ConstantExpression>();
         defaultTypeConstant.Type.ToType().ShouldBe(typeof(Type));
         defaultTypeConstant.Value.ShouldNotBeNull().ShouldBeAssignableTo<Aqua.TypeSystem.TypeInfo>().ToType().ShouldBe(typeof(int));
-        Expression.Lambda<Func<Type>>(defaultTypeRemote.ToLinqExpression()).Compile().Invoke().ShouldBe(typeof(int));
+        SystemLinq.Expression.Lambda<Func<Type>>(defaultTypeRemote.ToLinqExpression()).Compile().Invoke().ShouldBe(typeof(int));
 
         // Expression constant: the inner expression references the lambda parameter and cannot be
         // locally evaluated, so it is translated recursively and retained as a remote expression.
-        var p = Expression.Parameter(typeof(int), "p");
-        var inner = Expression.Lambda<Func<int, int>>(Expression.Multiply(p, Expression.Constant(2)), p);
-        var expressionRemote = (RemoteLinq.ConstantExpression)Expression.Constant(inner).ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
+        var p = SystemLinq.Expression.Parameter(typeof(int), "p");
+        var inner = SystemLinq.Expression.Lambda<Func<int, int>>(SystemLinq.Expression.Multiply(p, SystemLinq.Expression.Constant(2)), p);
+        var expressionRemote = (RemoteLinq.ConstantExpression)SystemLinq.Expression.Constant(inner).ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
         expressionRemote.NodeType.ShouldBe(RemoteLinq.ExpressionType.Constant);
-        expressionRemote.Type.ToType().ShouldBeAssignableTypeTo<Expression<Func<int, int>>>();
+        expressionRemote.Type.ToType().ShouldBeAssignableTypeTo<SystemLinq.Expression<Func<int, int>>>();
         expressionRemote.Value.ShouldBeOfType<RemoteLinq.LambdaExpression>();
 
-        var (expressionOriginal, expressionRoundTrip) = BackAndForth(Expression.Constant(inner), ExpressionTranslatorContext.NoMappingContext);
+        var (expressionOriginal, expressionRoundTrip) = BackAndForth(SystemLinq.Expression.Constant(inner), ExpressionTranslatorContext.NoMappingContext);
         expressionOriginal.Value.ShouldBe(inner);
-        expressionRoundTrip.Value.ShouldBeAssignableTo<Expression<Func<int, int>>>();
+        expressionRoundTrip.Value.ShouldBeAssignableTo<SystemLinq.Expression<Func<int, int>>>();
 
         // Under the default context the inner expression references its parameter and cannot
         // be locally evaluated, so the constant still holds the recursively translated remote
         // expression and the roundtrip compiles to an equivalent lambda.
-        var defaultInnerRemote = Expression.Constant(inner).ToRemoteLinqExpression();
+        var defaultInnerRemote = SystemLinq.Expression.Constant(inner).ToRemoteLinqExpression();
         defaultInnerRemote.NodeType.ShouldBe(RemoteLinq.ExpressionType.Constant);
         var defaultInnerConstant = defaultInnerRemote.ShouldBeOfType<RemoteLinq.ConstantExpression>();
-        defaultInnerConstant.Type.ToType().ShouldBeAssignableTypeTo<Expression<Func<int, int>>>();
+        defaultInnerConstant.Type.ToType().ShouldBeAssignableTypeTo<SystemLinq.Expression<Func<int, int>>>();
         defaultInnerConstant.Value.ShouldBeOfType<RemoteLinq.LambdaExpression>();
-        var defaultInnerSystem = defaultInnerRemote.ToLinqExpression().ShouldBeOfType<ConstantExpression>();
-        defaultInnerSystem.Value.ShouldBeAssignableTo<Expression<Func<int, int>>>()
+        var defaultInnerSystem = defaultInnerRemote.ToLinqExpression().ShouldBeOfType<SystemLinq.ConstantExpression>();
+        defaultInnerSystem.Value.ShouldBeAssignableTo<SystemLinq.Expression<Func<int, int>>>()
             .With(defaultInnerFunc =>
             {
                 defaultInnerFunc.ShouldNotBeNull().Compile().Invoke(9).ShouldBe(inner.Compile().Invoke(9));
             });
 
         // Expression collection constant: each expression in the collection is translated recursively.
-        var p2 = Expression.Parameter(typeof(int), "p2");
-        var collection = new Expression[]
+        var p2 = SystemLinq.Expression.Parameter(typeof(int), "p2");
+        var collection = new SystemLinq.Expression[]
         {
-            Expression.Lambda<Func<int, int>>(Expression.Multiply(p2, Expression.Constant(3)), p2),
-            Expression.Lambda<Func<int, int>>(Expression.Add(p2, Expression.Constant(4)), p2),
+            SystemLinq.Expression.Lambda<Func<int, int>>(SystemLinq.Expression.Multiply(p2, SystemLinq.Expression.Constant(3)), p2),
+            SystemLinq.Expression.Lambda<Func<int, int>>(SystemLinq.Expression.Add(p2, SystemLinq.Expression.Constant(4)), p2),
         };
-        var collectionRemote = (RemoteLinq.ConstantExpression)Expression.Constant(collection).ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
+        var collectionRemote = (RemoteLinq.ConstantExpression)SystemLinq.Expression.Constant(collection).ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
         collectionRemote.NodeType.ShouldBe(RemoteLinq.ExpressionType.Constant);
-        collectionRemote.Type.ToType().ShouldBe(typeof(Expression[]));
+        collectionRemote.Type.ToType().ShouldBe(typeof(SystemLinq.Expression[]));
         collectionRemote.Value.ShouldBeAssignableTo<RemoteLinq.Expression[]>()
             .With(collectionValues =>
             {
@@ -94,24 +94,24 @@ public class When_translating_complex_constants : ExpressionTranslatorTestBase
                 collectionValues[1].ShouldBeOfType<RemoteLinq.LambdaExpression>();
             });
 
-        var (collectionOriginal, collectionRoundTrip) = BackAndForth(Expression.Constant(collection), ExpressionTranslatorContext.NoMappingContext);
+        var (collectionOriginal, collectionRoundTrip) = BackAndForth(SystemLinq.Expression.Constant(collection), ExpressionTranslatorContext.NoMappingContext);
         collectionOriginal.Value.ShouldBe(collection);
-        collectionRoundTrip.Value.ShouldBeAssignableTo<Expression[]>()
+        collectionRoundTrip.Value.ShouldBeAssignableTo<SystemLinq.Expression[]>()
             .With(roundTrippedCollection =>
             {
                 roundTrippedCollection.ShouldNotBeNull();
                 roundTrippedCollection.Length.ShouldBe(2);
-                roundTrippedCollection[0].ShouldBeAssignableTo<Expression<Func<int, int>>>();
-                roundTrippedCollection[1].ShouldBeAssignableTo<Expression<Func<int, int>>>();
+                roundTrippedCollection[0].ShouldBeAssignableTo<SystemLinq.Expression<Func<int, int>>>();
+                roundTrippedCollection[1].ShouldBeAssignableTo<SystemLinq.Expression<Func<int, int>>>();
             });
 
         // Under the default context the self-contained collection constant still takes the
         // expression-collection branch, so each expression is translated recursively and the
         // roundtrip yields an equivalent collection.
-        var defaultCollectionRemote = Expression.Constant(collection).ToRemoteLinqExpression();
+        var defaultCollectionRemote = SystemLinq.Expression.Constant(collection).ToRemoteLinqExpression();
         defaultCollectionRemote.NodeType.ShouldBe(RemoteLinq.ExpressionType.Constant);
         var defaultCollectionConstant = defaultCollectionRemote.ShouldBeOfType<RemoteLinq.ConstantExpression>();
-        defaultCollectionConstant.Type.ToType().ShouldBe(typeof(Expression[]));
+        defaultCollectionConstant.Type.ToType().ShouldBe(typeof(SystemLinq.Expression[]));
         defaultCollectionConstant.Value.ShouldBeAssignableTo<RemoteLinq.Expression[]>()
             .With(defaultCollectionValues =>
             {
@@ -120,14 +120,14 @@ public class When_translating_complex_constants : ExpressionTranslatorTestBase
                 defaultCollectionValues[0].ShouldBeOfType<RemoteLinq.LambdaExpression>();
                 defaultCollectionValues[1].ShouldBeOfType<RemoteLinq.LambdaExpression>();
             });
-        var defaultCollectionSystem = defaultCollectionRemote.ToLinqExpression().ShouldBeOfType<ConstantExpression>();
-        defaultCollectionSystem.Value.ShouldBeAssignableTo<Expression[]>()
+        var defaultCollectionSystem = defaultCollectionRemote.ToLinqExpression().ShouldBeOfType<SystemLinq.ConstantExpression>();
+        defaultCollectionSystem.Value.ShouldBeAssignableTo<SystemLinq.Expression[]>()
             .With(defaultRoundTrippedCollection =>
             {
                 defaultRoundTrippedCollection.ShouldNotBeNull();
                 defaultRoundTrippedCollection.Length.ShouldBe(2);
-                defaultRoundTrippedCollection[0].ShouldBeAssignableTo<Expression<Func<int, int>>>();
-                defaultRoundTrippedCollection[1].ShouldBeAssignableTo<Expression<Func<int, int>>>();
+                defaultRoundTrippedCollection[0].ShouldBeAssignableTo<SystemLinq.Expression<Func<int, int>>>();
+                defaultRoundTrippedCollection[1].ShouldBeAssignableTo<SystemLinq.Expression<Func<int, int>>>();
             });
     }
 
@@ -141,7 +141,7 @@ public class When_translating_complex_constants : ExpressionTranslatorTestBase
         // Under the default context the POCO constant is unknown to the type provider and is
         // therefore mapped: the remote constant holds a ConstantQueryArgument with the
         // DynamicObject representation of the POCO.
-        var mappedRemote = Expression.Constant(p, typeof(ProbeDto)).ToRemoteLinqExpression();
+        var mappedRemote = SystemLinq.Expression.Constant(p, typeof(ProbeDto)).ToRemoteLinqExpression();
         mappedRemote.NodeType.ShouldBe(RemoteLinq.ExpressionType.Constant);
         var mappedConstant = mappedRemote.ShouldBeOfType<RemoteLinq.ConstantExpression>();
         mappedConstant.Type.ToType().ShouldBe(typeof(ProbeDto));
@@ -157,9 +157,9 @@ public class When_translating_complex_constants : ExpressionTranslatorTestBase
             });
 
         // The wrapped value must roundtrip back to a POCO with equal property values.
-        var (mappedOriginal, mappedRoundTrip) = BackAndForth((Expression)Expression.Constant(p, typeof(ProbeDto)));
-        mappedOriginal.ShouldBeAssignableTo<ConstantExpression>().Value.ShouldBeSameAs(p);
-        var mappedResult = Expression.Lambda<Func<ProbeDto>>(mappedRoundTrip).Compile().Invoke();
+        var (mappedOriginal, mappedRoundTrip) = BackAndForth((SystemLinq.Expression)SystemLinq.Expression.Constant(p, typeof(ProbeDto)));
+        mappedOriginal.ShouldBeAssignableTo<SystemLinq.ConstantExpression>().Value.ShouldBeSameAs(p);
+        var mappedResult = SystemLinq.Expression.Lambda<Func<ProbeDto>>(mappedRoundTrip).Compile().Invoke();
         mappedResult.Count.ShouldBe(5);
         mappedResult.Name.ShouldBe("probe");
 
@@ -170,14 +170,14 @@ public class When_translating_complex_constants : ExpressionTranslatorTestBase
             ("Count", (object?)7),
             ("Name", "unmapped"),
         }));
-        var unmappedRemote = (RemoteLinq.ConstantExpression)Expression.Constant(arg, typeof(ConstantQueryArgument)).ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
+        var unmappedRemote = (RemoteLinq.ConstantExpression)SystemLinq.Expression.Constant(arg, typeof(ConstantQueryArgument)).ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
         unmappedRemote.NodeType.ShouldBe(RemoteLinq.ExpressionType.Constant);
         unmappedRemote.Type.ToType().ShouldBe(typeof(ConstantQueryArgument));
         unmappedRemote.Value.ShouldBeSameAs(arg);
 
         // Without type information on the wrapped DynamicObject the value passes through
         // unchanged in both directions under the NoMappingContext.
-        var (unmappedOriginal, unmappedRoundTrip) = BackAndForth(Expression.Constant(arg, typeof(ConstantQueryArgument)), ExpressionTranslatorContext.NoMappingContext);
+        var (unmappedOriginal, unmappedRoundTrip) = BackAndForth(SystemLinq.Expression.Constant(arg, typeof(ConstantQueryArgument)), ExpressionTranslatorContext.NoMappingContext);
         unmappedOriginal.Value.ShouldBeSameAs(arg);
         unmappedRoundTrip.Value.ShouldBeSameAs(arg);
     }
@@ -186,16 +186,16 @@ public class When_translating_complex_constants : ExpressionTranslatorTestBase
     public void Should_translate_string_constants_with_explicit_type_information()
     {
         // String constant with string type stays a plain constant.
-        var plainRemote = (RemoteLinq.ConstantExpression)Expression.Constant("hello", typeof(string)).ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
+        var plainRemote = (RemoteLinq.ConstantExpression)SystemLinq.Expression.Constant("hello", typeof(string)).ToRemoteLinqExpression(ExpressionTranslatorContext.NoMappingContext);
         plainRemote.NodeType.ShouldBe(RemoteLinq.ExpressionType.Constant);
         plainRemote.Type.ToType().ShouldBe(typeof(string));
         plainRemote.Value.ShouldBe("hello");
 
         // Under the default context the plain string constant keeps its shape, so the
         // roundtrip returns the same value.
-        var (stringOriginal, stringRoundTrip) = BackAndForth((Expression)Expression.Constant("hello", typeof(string)));
-        stringOriginal.ShouldBeAssignableTo<ConstantExpression>().Value.ShouldBe("hello");
-        Expression.Lambda<Func<string>>(stringRoundTrip).Compile().Invoke().ShouldBe("hello");
+        var (stringOriginal, stringRoundTrip) = BackAndForth((SystemLinq.Expression)SystemLinq.Expression.Constant("hello", typeof(string)));
+        stringOriginal.ShouldBeAssignableTo<SystemLinq.ConstantExpression>().Value.ShouldBe("hello");
+        SystemLinq.Expression.Lambda<Func<string>>(stringRoundTrip).Compile().Invoke().ShouldBe("hello");
 
         // The system API forbids constants whose value is not assignable to the declared type,
         // so a string constant with a non-string type can only exist on the remote side. The
@@ -206,18 +206,18 @@ public class When_translating_complex_constants : ExpressionTranslatorTestBase
         intStringRemote.Value.ShouldBe("42");
         intStringRemote.Type.ToType().ShouldBe(typeof(int));
 
-        var intSystem = intStringRemote.ToLinqExpression().ShouldBeOfType<ConstantExpression>();
+        var intSystem = intStringRemote.ToLinqExpression().ShouldBeOfType<SystemLinq.ConstantExpression>();
         intSystem.Type.ShouldBe(typeof(int));
         intSystem.Value.ShouldBe(42);
 
         var date = new DateTime(2026, 9, 19, 12, 0, 0, DateTimeKind.Local);
         var dateStringRemote = new RemoteLinq.ConstantExpression(date.ToString("o"), typeof(DateTime));
-        var dateSystem = dateStringRemote.ToLinqExpression().ShouldBeOfType<ConstantExpression>();
+        var dateSystem = dateStringRemote.ToLinqExpression().ShouldBeOfType<SystemLinq.ConstantExpression>();
         dateSystem.Type.ShouldBe(typeof(DateTime));
         dateSystem.Value.ShouldBe(date);
 
         var enumStringRemote = new RemoteLinq.ConstantExpression("Friday", typeof(DayOfWeek));
-        var enumSystem = enumStringRemote.ToLinqExpression().ShouldBeOfType<ConstantExpression>();
+        var enumSystem = enumStringRemote.ToLinqExpression().ShouldBeOfType<SystemLinq.ConstantExpression>();
         enumSystem.Type.ShouldBe(typeof(DayOfWeek));
         enumSystem.Value.ShouldBe(DayOfWeek.Friday);
     }
@@ -230,12 +230,12 @@ public class When_translating_complex_constants : ExpressionTranslatorTestBase
         // keeps the constants from being locally evaluated, so both reach the mapping branch
         // of the translator and share the cached wrapper.
         var p = new QueryArgumentDto { Count = 5 };
-        var c1 = Expression.Constant(p, typeof(QueryArgumentDto));
-        var c2 = Expression.Constant(p, typeof(QueryArgumentDto));
+        var c1 = SystemLinq.Expression.Constant(p, typeof(QueryArgumentDto));
+        var c2 = SystemLinq.Expression.Constant(p, typeof(QueryArgumentDto));
         var count = typeof(QueryArgumentDto).GetProperty(nameof(QueryArgumentDto.Count))!;
-        var parameter = Expression.Parameter(typeof(QueryArgumentDto), "x");
-        var body = Expression.Add(Expression.Property(c1, count), Expression.Property(c2, count));
-        var lambda = Expression.Lambda<Func<QueryArgumentDto, int>>(body, parameter);
+        var parameter = SystemLinq.Expression.Parameter(typeof(QueryArgumentDto), "x");
+        var body = SystemLinq.Expression.Add(SystemLinq.Expression.Property(c1, count), SystemLinq.Expression.Property(c2, count));
+        var lambda = SystemLinq.Expression.Lambda<Func<QueryArgumentDto, int>>(body, parameter);
 
         var remote = lambda.ToRemoteLinqExpression();
         var constantArguments = new List<ConstantQueryArgument>();
