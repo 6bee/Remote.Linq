@@ -16,17 +16,8 @@ using SystemLinq = System.Linq.Expressions;
 /// Records invocations of a deterministic synchronous data provider.
 /// </summary>
 /// <typeparam name="TSource">Type of source data values.</typeparam>
-internal sealed class RecordingSyncProvider<TSource>
+internal sealed class RecordingSyncProvider<TSource>(TSource result)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RecordingSyncProvider{TSource}"/> class.
-    /// </summary>
-    /// <param name="result">The deterministic result returned by the data provider.</param>
-    public RecordingSyncProvider(TSource result)
-    {
-        Result = result;
-    }
-
     /// <summary>
     /// Gets the number of invocations of the data provider.
     /// </summary>
@@ -40,7 +31,7 @@ internal sealed class RecordingSyncProvider<TSource>
     /// <summary>
     /// Gets the deterministic result returned by the data provider.
     /// </summary>
-    public TSource Result { get; }
+    public TSource Result { get; } = result;
 
     /// <summary>
     /// Gets the data provider delegate.
@@ -57,17 +48,8 @@ internal sealed class RecordingSyncProvider<TSource>
 /// Records invocations of a deterministic asynchronous data provider.
 /// </summary>
 /// <typeparam name="TSource">Type of source data values.</typeparam>
-internal sealed class RecordingAsyncProvider<TSource>
+internal sealed class RecordingAsyncProvider<TSource>(TSource result)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RecordingAsyncProvider{TSource}"/> class.
-    /// </summary>
-    /// <param name="result">The deterministic result returned by the data provider.</param>
-    public RecordingAsyncProvider(TSource result)
-    {
-        Result = result;
-    }
-
     /// <summary>
     /// Gets the number of invocations of the data provider.
     /// </summary>
@@ -86,7 +68,7 @@ internal sealed class RecordingAsyncProvider<TSource>
     /// <summary>
     /// Gets the deterministic result returned by the data provider.
     /// </summary>
-    public TSource Result { get; }
+    public TSource Result { get; } = result;
 
     /// <summary>
     /// Gets the data provider delegate.
@@ -104,17 +86,8 @@ internal sealed class RecordingAsyncProvider<TSource>
 /// Records invocations of a deterministic asynchronous stream data provider.
 /// </summary>
 /// <typeparam name="TSource">Type of source data values.</typeparam>
-internal sealed class RecordingAsyncStreamProvider<TSource>
+internal sealed class RecordingAsyncStreamProvider<TSource>(IEnumerable<TSource> values)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RecordingAsyncStreamProvider{TSource}"/> class.
-    /// </summary>
-    /// <param name="values">The deterministic values yielded by the data provider.</param>
-    public RecordingAsyncStreamProvider(IEnumerable<TSource> values)
-    {
-        Values = [.. values];
-    }
-
     /// <summary>
     /// Gets the number of invocations of the data provider.
     /// </summary>
@@ -133,7 +106,7 @@ internal sealed class RecordingAsyncStreamProvider<TSource>
     /// <summary>
     /// Gets the deterministic values yielded by the data provider.
     /// </summary>
-    public IReadOnlyList<TSource> Values { get; }
+    public IReadOnlyList<TSource> Values { get; } = [.. values];
 
     /// <summary>
     /// Gets the non-token async enumerable factory delegate.
@@ -144,8 +117,7 @@ internal sealed class RecordingAsyncStreamProvider<TSource>
     /// <summary>
     /// Gets the token async enumerable factory delegate.
     /// </summary>
-    public Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource>> DataProviderWithToken =>
-        (expression, token) => CreateAsyncEnumerable(expression, token);
+    public Func<RemoteLinq.Expression, CancellationToken, IAsyncEnumerable<TSource>> DataProviderWithToken => CreateAsyncEnumerable;
 
     private async IAsyncEnumerable<TSource> CreateAsyncEnumerable(RemoteLinq.Expression expression, [EnumeratorCancellation] CancellationToken token = default)
     {
