@@ -5,7 +5,7 @@
 
 #nullable enable
 
-namespace Remote.Linq.Tests.TestSupport;
+namespace Remote.Linq.Tests;
 
 using Remote.Linq.DynamicQuery;
 using System.Runtime.CompilerServices;

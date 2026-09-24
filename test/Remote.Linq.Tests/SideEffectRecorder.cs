@@ -1,6 +1,6 @@
 // Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator;
+namespace Remote.Linq.Tests;
 
 /// <summary>
 /// Records side effects triggered by compiled expression trees.

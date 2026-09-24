@@ -3,6 +3,8 @@
 namespace Remote.Linq.Tests.ExpressionVisitors.ExpressionTranslator;
 
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Emit;
 using RemoteLinq = Remote.Linq.Expressions;
 
 public class When_translating_complex_expression_nodes : ExpressionTranslatorTestBase
@@ -63,7 +65,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
     [Fact]
     public void Should_roundtrip_try_catch_finally_and_fault_expressions()
     {
-        var recordSideEffect = typeof(SideEffectRecorder).GetMethod(nameof(SideEffectRecorder.RecordSideEffect), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)!;
+        var recordSideEffect = typeof(SideEffectRecorder).GetMethod(nameof(SideEffectRecorder.RecordSideEffect), BindingFlags.Public | BindingFlags.Static)!;
 
         // Catch with filter
         var p = Expression.Parameter(typeof(int), "p");
@@ -204,7 +206,7 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
     [Fact]
     public void Should_roundtrip_conditional_if_then_label_goto_and_loop()
     {
-        var recordSideEffect = typeof(SideEffectRecorder).GetMethod(nameof(SideEffectRecorder.RecordSideEffect), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)!;
+        var recordSideEffect = typeof(SideEffectRecorder).GetMethod(nameof(SideEffectRecorder.RecordSideEffect), BindingFlags.Public | BindingFlags.Static)!;
 
         // IfThen
         var p = Expression.Parameter(typeof(int), "p");
@@ -293,20 +295,20 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
     private static TDelegate CompileLambda<TDelegate>(Expression<TDelegate> lambda)
         where TDelegate : Delegate
     {
-#if NET48
+#if NETFRAMEWORK
         // net48 DynamicMethod cannot emit exception filter blocks (BeginExceptFilterBlock throws
         // NotSupportedException), so compile the lambda into a dedicated dynamic type via
         // MethodBuilder, which supports full exception-handling IL.
         var name = "RemoteLinqTests.DynamicLambda" + Guid.NewGuid().ToString("N");
         var invoke = typeof(TDelegate).GetMethod("Invoke")!;
-        var assemblyBuilder = System.Reflection.Emit.AssemblyBuilder.DefineDynamicAssembly(new System.Reflection.AssemblyName(name), System.Reflection.Emit.AssemblyBuilderAccess.Run);
+        var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(name), AssemblyBuilderAccess.Run);
         var moduleBuilder = assemblyBuilder.DefineDynamicModule("RemoteLinqTests.DynamicModule");
-        var typeBuilder = moduleBuilder.DefineType(name, System.Reflection.TypeAttributes.NotPublic);
-        var methodBuilder = typeBuilder.DefineMethod("Invoke", System.Reflection.MethodAttributes.Public | System.Reflection.MethodAttributes.Static, invoke.ReturnType, invoke.GetParameters().Select(x => x.ParameterType).ToArray());
+        var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.NotPublic);
+        var methodBuilder = typeBuilder.DefineMethod("Invoke", MethodAttributes.Public | MethodAttributes.Static, invoke.ReturnType, [.. invoke.GetParameters().Select(x => x.ParameterType)]);
         lambda.CompileToMethod(methodBuilder);
         return (TDelegate)typeBuilder.CreateType()!.GetMethod("Invoke")!.CreateDelegate(typeof(TDelegate));
 #else
         return lambda.Compile();
-#endif
+#endif // NETFRAMEWORK
     }
 }
