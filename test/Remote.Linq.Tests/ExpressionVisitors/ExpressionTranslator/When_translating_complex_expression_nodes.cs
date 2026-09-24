@@ -7,8 +7,6 @@ using RemoteLinq = Remote.Linq.Expressions;
 
 public class When_translating_complex_expression_nodes : ExpressionTranslatorTestBase
 {
-    private static readonly ThreadLocal<int> _sideEffectCounter = new(() => 0);
-
     private class ComplexContainer
     {
         public int Number { get; set; }
@@ -65,14 +63,14 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
     [Fact]
     public void Should_roundtrip_try_catch_finally_and_fault_expressions()
     {
-        var recordSideEffect = typeof(When_translating_complex_expression_nodes).GetMethod(nameof(RecordSideEffect), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
+        var recordSideEffect = typeof(SideEffectRecorder).GetMethod(nameof(SideEffectRecorder.RecordSideEffect), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)!;
 
         // Catch with filter
         var p = Expression.Parameter(typeof(int), "p");
         var exceptionParameter = Expression.Parameter(typeof(Exception), "ex");
         var body = Expression.Block(
-            Expression.IfThen(Expression.Equal(p, Expression.Constant(0)), Expression.Throw(Expression.Constant(new DivideByZeroException()))),
-            Expression.IfThen(Expression.Equal(p, Expression.Constant(10)), Expression.Throw(Expression.Constant(new InvalidOperationException()))),
+            Expression.IfThen(Expression.Equal(p, Expression.Constant(0)), Expression.Throw(Expression.New(typeof(DivideByZeroException)))),
+            Expression.IfThen(Expression.Equal(p, Expression.Constant(10)), Expression.Throw(Expression.New(typeof(InvalidOperationException)))),
             p);
         var filter = Expression.TypeIs(exceptionParameter, typeof(DivideByZeroException));
         var catchBlock = Expression.MakeCatchBlock(
@@ -82,22 +80,22 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
             filter);
         var catchExpression = Expression.MakeTry(typeof(int), body, @finally: null, fault: null, [catchBlock]);
 
-        _sideEffectCounter.Value = 0;
+        SideEffectRecorder.Reset();
         var (originalCatch, roundTripCatch) = BackAndForth(Expression.Lambda<Func<int, int>>(catchExpression, p));
-        var originalCatchFunc = originalCatch.Compile();
-        var roundTripCatchFunc = roundTripCatch.Compile();
+        var originalCatchFunc = CompileLambda(originalCatch);
+        var roundTripCatchFunc = CompileLambda(roundTripCatch);
         originalCatchFunc(0).ShouldBe(0);
         roundTripCatchFunc(0).ShouldBe(0);
         originalCatchFunc(5).ShouldBe(5);
         roundTripCatchFunc(5).ShouldBe(5);
         Should.Throw<InvalidOperationException>(() => originalCatchFunc(10));
         Should.Throw<InvalidOperationException>(() => roundTripCatchFunc(10));
-        _sideEffectCounter.Value.ShouldBe(2);
+        SideEffectRecorder.Count.ShouldBe(2);
 
         // Finally
         var p2 = Expression.Parameter(typeof(int), "p2");
         var finallyBody = Expression.Block(
-            Expression.IfThen(Expression.Equal(p2, Expression.Constant(0)), Expression.Throw(Expression.Constant(new DivideByZeroException()))),
+            Expression.IfThen(Expression.Equal(p2, Expression.Constant(0)), Expression.Throw(Expression.New(typeof(DivideByZeroException)))),
             p2);
         var finallyExpression = Expression.MakeTry(
             typeof(int),
@@ -106,10 +104,10 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
             fault: null,
             handlers: null);
 
-        _sideEffectCounter.Value = 0;
+        SideEffectRecorder.Reset();
         var (originalFinally, roundTripFinally) = BackAndForth(Expression.Lambda<Func<int, int>>(finallyExpression, p2));
-        var originalFinallyFunc = originalFinally.Compile();
-        var roundTripFinallyFunc = roundTripFinally.Compile();
+        var originalFinallyFunc = CompileLambda(originalFinally);
+        var roundTripFinallyFunc = CompileLambda(roundTripFinally);
         originalFinallyFunc(3).ShouldBe(3);
         roundTripFinallyFunc(3).ShouldBe(3);
         Should.Throw<DivideByZeroException>(() => originalFinallyFunc(0));
@@ -117,11 +115,11 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
 
         // The finally block executes on every invocation, including the ones that complete normally,
         // so the side effect is recorded once per call: 4 calls -> 4 side effects.
-        _sideEffectCounter.Value.ShouldBe(4);
+        SideEffectRecorder.Count.ShouldBe(4);
 
         // Fault
         var p3 = Expression.Parameter(typeof(int), "p3");
-        var faultBody = Expression.IfThen(Expression.Equal(p3, Expression.Constant(0)), Expression.Throw(Expression.Constant(new InvalidOperationException())));
+        var faultBody = Expression.IfThen(Expression.Equal(p3, Expression.Constant(0)), Expression.Throw(Expression.New(typeof(InvalidOperationException))));
         var faultExpression = Expression.MakeTry(
             typeof(void),
             faultBody,
@@ -129,15 +127,15 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
             fault: Expression.Block(Expression.Call(null, recordSideEffect)),
             handlers: null);
 
-        _sideEffectCounter.Value = 0;
+        SideEffectRecorder.Reset();
         var (originalFault, roundTripFault) = BackAndForth(Expression.Lambda<Action<int>>(faultExpression, p3));
-        var originalFaultFunc = originalFault.Compile();
-        var roundTripFaultFunc = roundTripFault.Compile();
+        var originalFaultFunc = CompileLambda(originalFault);
+        var roundTripFaultFunc = CompileLambda(roundTripFault);
         originalFaultFunc(5);
         roundTripFaultFunc(5);
         Should.Throw<InvalidOperationException>(() => originalFaultFunc(0));
         Should.Throw<InvalidOperationException>(() => roundTripFaultFunc(0));
-        _sideEffectCounter.Value.ShouldBe(2);
+        SideEffectRecorder.Count.ShouldBe(2);
     }
 
     [Fact]
@@ -206,18 +204,18 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
     [Fact]
     public void Should_roundtrip_conditional_if_then_label_goto_and_loop()
     {
-        var recordSideEffect = typeof(When_translating_complex_expression_nodes).GetMethod(nameof(RecordSideEffect), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
+        var recordSideEffect = typeof(SideEffectRecorder).GetMethod(nameof(SideEffectRecorder.RecordSideEffect), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)!;
 
         // IfThen
         var p = Expression.Parameter(typeof(int), "p");
         var ifThenExpression = Expression.IfThen(Expression.GreaterThan(p, Expression.Constant(5)), Expression.Call(null, recordSideEffect));
-        _sideEffectCounter.Value = 0;
+        SideEffectRecorder.Reset();
         var (originalIfThen, roundTripIfThen) = BackAndForth(Expression.Lambda<Action<int>>(ifThenExpression, p));
         originalIfThen.Compile().Invoke(6);
         originalIfThen.Compile().Invoke(3);
         roundTripIfThen.Compile().Invoke(6);
         roundTripIfThen.Compile().Invoke(3);
-        _sideEffectCounter.Value.ShouldBe(2);
+        SideEffectRecorder.Count.ShouldBe(2);
 
         // Goto/label
         var p2 = Expression.Parameter(typeof(int), "p2");
@@ -292,6 +290,23 @@ public class When_translating_complex_expression_nodes : ExpressionTranslatorTes
         roundTripLabelFunc(0).ShouldBe("zero");
     }
 
-    private static void RecordSideEffect()
-        => _sideEffectCounter.Value++;
+    private static TDelegate CompileLambda<TDelegate>(Expression<TDelegate> lambda)
+        where TDelegate : Delegate
+    {
+#if NET48
+        // net48 DynamicMethod cannot emit exception filter blocks (BeginExceptFilterBlock throws
+        // NotSupportedException), so compile the lambda into a dedicated dynamic type via
+        // MethodBuilder, which supports full exception-handling IL.
+        var name = "RemoteLinqTests.DynamicLambda" + Guid.NewGuid().ToString("N");
+        var invoke = typeof(TDelegate).GetMethod("Invoke")!;
+        var assemblyBuilder = System.Reflection.Emit.AssemblyBuilder.DefineDynamicAssembly(new System.Reflection.AssemblyName(name), System.Reflection.Emit.AssemblyBuilderAccess.Run);
+        var moduleBuilder = assemblyBuilder.DefineDynamicModule("RemoteLinqTests.DynamicModule");
+        var typeBuilder = moduleBuilder.DefineType(name, System.Reflection.TypeAttributes.NotPublic);
+        var methodBuilder = typeBuilder.DefineMethod("Invoke", System.Reflection.MethodAttributes.Public | System.Reflection.MethodAttributes.Static, invoke.ReturnType, invoke.GetParameters().Select(x => x.ParameterType).ToArray());
+        lambda.CompileToMethod(methodBuilder);
+        return (TDelegate)typeBuilder.CreateType()!.GetMethod("Invoke")!.CreateDelegate(typeof(TDelegate));
+#else
+        return lambda.Compile();
+#endif
+    }
 }
