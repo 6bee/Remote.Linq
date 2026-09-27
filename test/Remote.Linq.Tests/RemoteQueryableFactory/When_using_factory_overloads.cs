@@ -7,7 +7,6 @@ using Aqua.Dynamic;
 using Aqua.TypeSystem;
 using Remote.Linq;
 using Remote.Linq.SimpleQuery;
-using Remote.Linq.Tests.TestSupport;
 using ExpressionTranslator = Remote.Linq.DynamicQuery.ExpressionTranslator;
 using IExpressionTranslator = Remote.Linq.DynamicQuery.IExpressionTranslator;
 using QueryableResourceDescriptor = Remote.Linq.DynamicQuery.QueryableResourceDescriptor;

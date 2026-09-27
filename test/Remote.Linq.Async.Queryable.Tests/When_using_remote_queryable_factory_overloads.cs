@@ -15,7 +15,6 @@
 namespace Remote.Linq.Async.Queryable.Tests;
 
 using Aqua.Dynamic;
-using Aqua.TypeSystem;
 using Remote.Linq.DynamicQuery;
 using RemoteLinq = Remote.Linq.Expressions;
 using RemoteQueryable = Remote.Linq.RemoteQueryable;

@@ -27,7 +27,6 @@
 namespace Remote.Linq.Tests.RemoteQueryableFactory;
 
 using Aqua.Dynamic;
-using Aqua.TypeSystem;
 using Remote.Linq;
 using Remote.Linq.Async;
 using Remote.Linq.DynamicQuery;

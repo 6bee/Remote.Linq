@@ -11,7 +11,6 @@ using Remote.Linq.EntityFrameworkCore.ExpressionVisitors;
 using Remote.Linq.EntityFrameworkCore.Tests.Model;
 using Remote.Linq.Include;
 using System.Linq.Expressions;
-using System.Reflection;
 
 public class When_rewriting_ef_core_expressions
 {
