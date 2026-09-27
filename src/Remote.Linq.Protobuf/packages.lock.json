@@ -4,12 +4,12 @@
     ".NETStandard,Version=v2.0": {
       "aqua-core-protobuf": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "Ltuoez6W9sZajKroukmvGha8GD7OCIXrbyP/weI6496VXIey5ua7EHRgEjY+RyhoEKboiVipRZLdIxeQlB/EGg==",
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "cfQscTll3rpoyDcKEMfdRtz5yz7rNKIBwnKLgWvCXnfIPuchHkyOne069sluGLOLsquGq0SWCiXyz8XW+hcLRQ==",
         "dependencies": {
           "Google.Protobuf": "3.36.2",
-          "aqua-core": "6.0.0-alpha-002"
+          "aqua-core": "6.0.0-alpha-003"
         }
       },
       "aqua.tool.Validation": {
@@ -152,14 +152,14 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-002, )"
+          "aqua-core": "[6.0.0-alpha-003, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "/GsIIXdEycFIWuG2/yyCQrniZbg4SNWNS/2BfWQpWIhm+deEZguikzGBgrTGXFFLp5r62QpgbbPB+8e98W4u9w==",
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A==",
         "dependencies": {
           "System.Reflection.Emit": "4.7.0",
           "System.Text.Json": "10.0.12"
@@ -178,12 +178,12 @@
     "net10.0": {
       "aqua-core-protobuf": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "Ltuoez6W9sZajKroukmvGha8GD7OCIXrbyP/weI6496VXIey5ua7EHRgEjY+RyhoEKboiVipRZLdIxeQlB/EGg==",
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "cfQscTll3rpoyDcKEMfdRtz5yz7rNKIBwnKLgWvCXnfIPuchHkyOne069sluGLOLsquGq0SWCiXyz8XW+hcLRQ==",
         "dependencies": {
           "Google.Protobuf": "3.36.2",
-          "aqua-core": "6.0.0-alpha-002"
+          "aqua-core": "6.0.0-alpha-003"
         }
       },
       "aqua.tool.Validation": {
@@ -228,25 +228,25 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-002, )"
+          "aqua-core": "[6.0.0-alpha-003, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "/GsIIXdEycFIWuG2/yyCQrniZbg4SNWNS/2BfWQpWIhm+deEZguikzGBgrTGXFFLp5r62QpgbbPB+8e98W4u9w=="
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A=="
       }
     },
     "net8.0": {
       "aqua-core-protobuf": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "Ltuoez6W9sZajKroukmvGha8GD7OCIXrbyP/weI6496VXIey5ua7EHRgEjY+RyhoEKboiVipRZLdIxeQlB/EGg==",
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "cfQscTll3rpoyDcKEMfdRtz5yz7rNKIBwnKLgWvCXnfIPuchHkyOne069sluGLOLsquGq0SWCiXyz8XW+hcLRQ==",
         "dependencies": {
           "Google.Protobuf": "3.36.2",
-          "aqua-core": "6.0.0-alpha-002"
+          "aqua-core": "6.0.0-alpha-003"
         }
       },
       "aqua.tool.Validation": {
@@ -291,14 +291,14 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-002, )"
+          "aqua-core": "[6.0.0-alpha-003, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "/GsIIXdEycFIWuG2/yyCQrniZbg4SNWNS/2BfWQpWIhm+deEZguikzGBgrTGXFFLp5r62QpgbbPB+8e98W4u9w=="
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A=="
       }
     }
   }

@@ -4,12 +4,12 @@
     ".NETStandard,Version=v2.0": {
       "aqua-core-newtonsoft-json": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "kbQcoNfggCAA7H0OvLQQezdQqZXyzY9o+JNkAYtyxk5i/DDv8msL8fp4FBV+yMbbi+5MzIOlXZjvjmXs+lSjfA==",
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "52hbgfYRloHWi035AcogsO6zcBgCtbno3Dbf63mnwOv5GqncWe9qhvaPI6GevIuJ/08a46iemmeXRB+VeD5Jrg==",
         "dependencies": {
           "Newtonsoft.Json": "13.0.4",
-          "aqua-core": "6.0.0-alpha-002"
+          "aqua-core": "6.0.0-alpha-003"
         }
       },
       "aqua.tool.Validation": {
@@ -142,14 +142,14 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-002, )"
+          "aqua-core": "[6.0.0-alpha-003, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "/GsIIXdEycFIWuG2/yyCQrniZbg4SNWNS/2BfWQpWIhm+deEZguikzGBgrTGXFFLp5r62QpgbbPB+8e98W4u9w==",
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A==",
         "dependencies": {
           "System.Reflection.Emit": "4.7.0",
           "System.Text.Json": "10.0.12"

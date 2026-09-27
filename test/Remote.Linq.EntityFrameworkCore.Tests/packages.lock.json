@@ -516,7 +516,7 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-002, )"
+          "aqua-core": "[6.0.0-alpha-003, )"
         }
       },
       "remote.linq.entityframeworkcore": {
@@ -528,9 +528,9 @@
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "/GsIIXdEycFIWuG2/yyCQrniZbg4SNWNS/2BfWQpWIhm+deEZguikzGBgrTGXFFLp5r62QpgbbPB+8e98W4u9w==",
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A==",
         "dependencies": {
           "System.Reflection.Emit": "4.7.0",
           "System.Text.Json": "10.0.12"
@@ -919,7 +919,7 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-002, )"
+          "aqua-core": "[6.0.0-alpha-003, )"
         }
       },
       "remote.linq.entityframeworkcore": {
@@ -931,9 +931,9 @@
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "/GsIIXdEycFIWuG2/yyCQrniZbg4SNWNS/2BfWQpWIhm+deEZguikzGBgrTGXFFLp5r62QpgbbPB+8e98W4u9w=="
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A=="
       },
       "Microsoft.EntityFrameworkCore": {
         "type": "CentralTransitive",
@@ -1343,7 +1343,7 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-002, )"
+          "aqua-core": "[6.0.0-alpha-003, )"
         }
       },
       "remote.linq.entityframeworkcore": {
@@ -1355,9 +1355,9 @@
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-002, )",
-        "resolved": "6.0.0-alpha-002",
-        "contentHash": "/GsIIXdEycFIWuG2/yyCQrniZbg4SNWNS/2BfWQpWIhm+deEZguikzGBgrTGXFFLp5r62QpgbbPB+8e98W4u9w=="
+        "requested": "[6.0.0-alpha-003, )",
+        "resolved": "6.0.0-alpha-003",
+        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A=="
       },
       "Microsoft.EntityFrameworkCore": {
         "type": "CentralTransitive",
