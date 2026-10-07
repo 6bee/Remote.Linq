@@ -4,9 +4,9 @@
     ".NETStandard,Version=v2.0": {
       "aqua-core": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A==",
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "EjQqSNEAFLzlgNLwHpdxpnQb2SGLPoMV23bOseaqStmKYZvIDwbA67chQ+abqIcA6v2RIw4If76byT/TSB51jQ==",
         "dependencies": {
           "System.Reflection.Emit": "4.7.0",
           "System.Text.Json": "10.0.12"
@@ -147,9 +147,9 @@
     ".NETStandard,Version=v2.1": {
       "aqua-core": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A==",
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "EjQqSNEAFLzlgNLwHpdxpnQb2SGLPoMV23bOseaqStmKYZvIDwbA67chQ+abqIcA6v2RIw4If76byT/TSB51jQ==",
         "dependencies": {
           "System.Text.Json": "10.0.12"
         }
@@ -220,9 +220,9 @@
     "net10.0": {
       "aqua-core": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A=="
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "EjQqSNEAFLzlgNLwHpdxpnQb2SGLPoMV23bOseaqStmKYZvIDwbA67chQ+abqIcA6v2RIw4If76byT/TSB51jQ=="
       },
       "aqua.tool.Validation": {
         "type": "Direct",
@@ -256,9 +256,9 @@
     "net8.0": {
       "aqua-core": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A=="
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "EjQqSNEAFLzlgNLwHpdxpnQb2SGLPoMV23bOseaqStmKYZvIDwbA67chQ+abqIcA6v2RIw4If76byT/TSB51jQ=="
       },
       "aqua.tool.Validation": {
         "type": "Direct",

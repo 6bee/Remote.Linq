@@ -173,14 +173,14 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-003, )"
+          "aqua-core": "[6.0.0-alpha-004, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A==",
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "EjQqSNEAFLzlgNLwHpdxpnQb2SGLPoMV23bOseaqStmKYZvIDwbA67chQ+abqIcA6v2RIw4If76byT/TSB51jQ==",
         "dependencies": {
           "System.Reflection.Emit": "4.7.0",
           "System.Text.Json": "10.0.12"
@@ -306,14 +306,14 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-003, )"
+          "aqua-core": "[6.0.0-alpha-004, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A==",
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "EjQqSNEAFLzlgNLwHpdxpnQb2SGLPoMV23bOseaqStmKYZvIDwbA67chQ+abqIcA6v2RIw4If76byT/TSB51jQ==",
         "dependencies": {
           "System.Text.Json": "10.0.12"
         }
@@ -373,14 +373,14 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-003, )"
+          "aqua-core": "[6.0.0-alpha-004, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A=="
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "EjQqSNEAFLzlgNLwHpdxpnQb2SGLPoMV23bOseaqStmKYZvIDwbA67chQ+abqIcA6v2RIw4If76byT/TSB51jQ=="
       }
     }
   }

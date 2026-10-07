@@ -16,9 +16,7 @@ using VQArg = global::Remote.Linq.DynamicQuery.VariableQueryArgument;
 /// </summary>
 public class When_mapping_protobuf_operators
 {
-    private static readonly ProtoContext ReadContext = ProtoContext.ForRead(ProtoOptions.WithRemoteLinqTypesOptimized);
-
-    private static readonly ProtoContext WriteContext = ProtoContext.ForWrite(ProtoOptions.WithRemoteLinqTypesOptimized);
+    private static readonly ProtoOptions ProtoOptions = ProtoOptions.WithRemoteLinqTypesOptimized;
 
     [Theory]
     [MemberData(nameof(AllBinaryOperators))]
@@ -26,25 +24,25 @@ public class When_mapping_protobuf_operators
     {
         var remote = new RemoteLinq.BinaryExpression(op, new RemoteLinq.ConstantExpression(1, typeof(int)), new RemoteLinq.ConstantExpression(2, typeof(int)));
 
-        var proto = BinaryExpressionMapper.Instance.ToProto(remote, WriteContext);
+        var proto = BinaryExpressionMapper.Instance.ToProto(remote, ProtoOptions);
         proto.BinaryOperator.ShouldBe(protoOp);
 
-        var clone = BinaryExpressionMapper.Instance.FromProto(new Proto.BinaryExpression { BinaryOperator = protoOp }, ReadContext);
+        var clone = BinaryExpressionMapper.Instance.FromProto(new Proto.BinaryExpression { BinaryOperator = protoOp }, ProtoOptions);
         clone.BinaryOperator.ShouldBe(op);
     }
 
     [Fact]
     public void Should_map_null_binary_expression_to_null_proto()
-        => BinaryExpressionMapper.Instance.ToProto(null, WriteContext).ShouldBeNull();
+        => BinaryExpressionMapper.Instance.ToProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_map_null_binary_proto_to_null_expression()
-        => BinaryExpressionMapper.Instance.FromProto(null, ReadContext).ShouldBeNull();
+        => BinaryExpressionMapper.Instance.FromProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_throw_for_unknown_binary_operator_in_proto()
     {
-        var act = () => BinaryExpressionMapper.Instance.FromProto(new Proto.BinaryExpression { BinaryOperator = (Proto.BinaryExpression.Types.BinaryOperator)int.MaxValue }, ReadContext);
+        var act = () => BinaryExpressionMapper.Instance.FromProto(new Proto.BinaryExpression { BinaryOperator = (Proto.BinaryExpression.Types.BinaryOperator)int.MaxValue }, ProtoOptions);
 
         var exception = act.ShouldThrow<ProtobufSerializationException>();
         exception.Message.ShouldBe("Binary operator 2147483647 is not suported");
@@ -55,7 +53,7 @@ public class When_mapping_protobuf_operators
     {
         var remote = new RemoteLinq.BinaryExpression((RemoteLinq.BinaryOperator)int.MaxValue, new RemoteLinq.ConstantExpression(1, typeof(int)), new RemoteLinq.ConstantExpression(2, typeof(int)));
 
-        var act = () => BinaryExpressionMapper.Instance.ToProto(remote, WriteContext);
+        var act = () => BinaryExpressionMapper.Instance.ToProto(remote, ProtoOptions);
 
         var exception = act.ShouldThrow<ProtobufSerializationException>();
         exception.Message.ShouldBe("Binary operator 2147483647 is not suported");
@@ -67,25 +65,25 @@ public class When_mapping_protobuf_operators
     {
         var remote = new RemoteLinq.UnaryExpression(op, new RemoteLinq.ConstantExpression(42, typeof(int)), typeof(int), null);
 
-        var proto = UnaryExpressionMapper.Instance.ToProto(remote, WriteContext);
+        var proto = UnaryExpressionMapper.Instance.ToProto(remote, ProtoOptions);
         proto.UnaryOperator.ShouldBe(protoOp);
 
-        var clone = UnaryExpressionMapper.Instance.FromProto(new Proto.UnaryExpression { UnaryOperator = protoOp }, ReadContext);
+        var clone = UnaryExpressionMapper.Instance.FromProto(new Proto.UnaryExpression { UnaryOperator = protoOp }, ProtoOptions);
         clone.UnaryOperator.ShouldBe(op);
     }
 
     [Fact]
     public void Should_map_null_unary_expression_to_null_proto()
-        => UnaryExpressionMapper.Instance.ToProto(null, WriteContext).ShouldBeNull();
+        => UnaryExpressionMapper.Instance.ToProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_map_null_unary_proto_to_null_expression()
-        => UnaryExpressionMapper.Instance.FromProto(null, ReadContext).ShouldBeNull();
+        => UnaryExpressionMapper.Instance.FromProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_throw_for_unknown_unary_operator_in_proto()
     {
-        var act = () => UnaryExpressionMapper.Instance.FromProto(new Proto.UnaryExpression { UnaryOperator = (Proto.UnaryExpression.Types.UnaryOperator)int.MaxValue }, ReadContext);
+        var act = () => UnaryExpressionMapper.Instance.FromProto(new Proto.UnaryExpression { UnaryOperator = (Proto.UnaryExpression.Types.UnaryOperator)int.MaxValue }, ProtoOptions);
 
         var exception = act.ShouldThrow<ProtobufSerializationException>();
         exception.Message.ShouldBe("Unary operator 2147483647 is not suported");
@@ -96,7 +94,7 @@ public class When_mapping_protobuf_operators
     {
         var remote = new RemoteLinq.UnaryExpression((RemoteLinq.UnaryOperator)int.MaxValue, new RemoteLinq.ConstantExpression(42, typeof(int)), typeof(int), null);
 
-        var act = () => UnaryExpressionMapper.Instance.ToProto(remote, WriteContext);
+        var act = () => UnaryExpressionMapper.Instance.ToProto(remote, ProtoOptions);
 
         var exception = act.ShouldThrow<ProtobufSerializationException>();
         exception.Message.ShouldBe("Unary operator 2147483647 is not suported");
@@ -111,25 +109,25 @@ public class When_mapping_protobuf_operators
     {
         var remote = new RemoteLinq.GotoExpression(kind, new RemoteLinq.LabelTarget("goto", typeof(int)), typeof(int), null);
 
-        var proto = GotoExpressionMapper.Instance.ToProto(remote, WriteContext);
+        var proto = GotoExpressionMapper.Instance.ToProto(remote, ProtoOptions);
         proto.Kind.ShouldBe(protoKind);
 
-        var clone = GotoExpressionMapper.Instance.FromProto(new Proto.GotoExpression { Kind = protoKind }, ReadContext);
+        var clone = GotoExpressionMapper.Instance.FromProto(new Proto.GotoExpression { Kind = protoKind }, ProtoOptions);
         clone.Kind.ShouldBe(kind);
     }
 
     [Fact]
     public void Should_map_null_goto_expression_to_null_proto()
-        => GotoExpressionMapper.Instance.ToProto(null, WriteContext).ShouldBeNull();
+        => GotoExpressionMapper.Instance.ToProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_map_null_goto_proto_to_null_expression()
-        => GotoExpressionMapper.Instance.FromProto(null, ReadContext).ShouldBeNull();
+        => GotoExpressionMapper.Instance.FromProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_throw_for_unknown_goto_expression_kind()
     {
-        var act = () => GotoExpressionMapper.Instance.FromProto(new Proto.GotoExpression { Kind = (Proto.GotoExpression.Types.GotoExpressionKind)int.MaxValue }, ReadContext);
+        var act = () => GotoExpressionMapper.Instance.FromProto(new Proto.GotoExpression { Kind = (Proto.GotoExpression.Types.GotoExpressionKind)int.MaxValue }, ProtoOptions);
 
         var exception = act.ShouldThrow<ProtobufSerializationException>();
         exception.Message.ShouldBe("Goto expression kind 2147483647 is not suported");
@@ -142,25 +140,25 @@ public class When_mapping_protobuf_operators
     {
         var remote = new RemoteLinq.NewArrayExpression(newArrayType, typeof(int), [new RemoteLinq.ConstantExpression(1, typeof(int))]);
 
-        var proto = NewArrayExpressionMapper.Instance.ToProto(remote, WriteContext);
+        var proto = NewArrayExpressionMapper.Instance.ToProto(remote, ProtoOptions);
         proto.NewArrayType.ShouldBe(protoType);
 
-        var clone = NewArrayExpressionMapper.Instance.FromProto(new Proto.NewArrayExpression { NewArrayType = protoType }, ReadContext);
+        var clone = NewArrayExpressionMapper.Instance.FromProto(new Proto.NewArrayExpression { NewArrayType = protoType }, ProtoOptions);
         clone.NewArrayType.ShouldBe(newArrayType);
     }
 
     [Fact]
     public void Should_map_null_new_array_expression_to_null_proto()
-        => NewArrayExpressionMapper.Instance.ToProto(null, WriteContext).ShouldBeNull();
+        => NewArrayExpressionMapper.Instance.ToProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_map_null_new_array_proto_to_null_expression()
-        => NewArrayExpressionMapper.Instance.FromProto(null, ReadContext).ShouldBeNull();
+        => NewArrayExpressionMapper.Instance.FromProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_throw_for_unknown_new_array_type()
     {
-        var act = () => NewArrayExpressionMapper.Instance.FromProto(new Proto.NewArrayExpression { NewArrayType = (Proto.NewArrayExpression.Types.NewArrayType)int.MaxValue }, ReadContext);
+        var act = () => NewArrayExpressionMapper.Instance.FromProto(new Proto.NewArrayExpression { NewArrayType = (Proto.NewArrayExpression.Types.NewArrayType)int.MaxValue }, ProtoOptions);
 
         var exception = act.ShouldThrow<ProtobufSerializationException>();
         exception.Message.ShouldBe("New array type 2147483647 is not suported");
@@ -170,26 +168,26 @@ public class When_mapping_protobuf_operators
     [MemberData(nameof(MemberBindingCases))]
     public void Should_map_member_binding_oneof_case_both_ways(RemoteLinq.MemberBinding value, Proto.MemberBinding.KindOneofCase expectedKindCase)
     {
-        var proto = MemberBindingMapper.Instance.ToProto(value, WriteContext);
+        var proto = MemberBindingMapper.Instance.ToProto(value, ProtoOptions);
         proto.KindCase.ShouldBe(expectedKindCase);
 
-        var clone = MemberBindingMapper.Instance.FromProto(proto, ReadContext);
+        var clone = MemberBindingMapper.Instance.FromProto(proto, ProtoOptions);
         clone.ShouldBeOfType(value.GetType());
         clone.BindingType.ShouldBe(value.BindingType);
     }
 
     [Fact]
     public void Should_map_null_member_binding_to_null_proto()
-        => MemberBindingMapper.Instance.ToProto(null, WriteContext).ShouldBeNull();
+        => MemberBindingMapper.Instance.ToProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_map_null_member_binding_proto_to_null_binding()
-        => MemberBindingMapper.Instance.FromProto(null, ReadContext).ShouldBeNull();
+        => MemberBindingMapper.Instance.FromProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_throw_for_proto_member_binding_without_selected_oneof_case()
     {
-        var act = () => MemberBindingMapper.Instance.FromProto(new Proto.MemberBinding(), ReadContext);
+        var act = () => MemberBindingMapper.Instance.FromProto(new Proto.MemberBinding(), ProtoOptions);
 
         var exception = act.ShouldThrow<ProtobufSerializationException>();
         exception.Message.ShouldBe("None is not supported");
@@ -199,25 +197,25 @@ public class When_mapping_protobuf_operators
     [MemberData(nameof(ConstantValueCases))]
     public void Should_map_constant_value_oneof_case_both_ways(object value, Proto.ConstantValue.KindOneofCase expectedKindCase, Action<object> assert)
     {
-        var proto = ConstantValueMapper.Instance.ToProto(value, WriteContext);
+        var proto = ConstantValueMapper.Instance.ToProto(value, ProtoOptions);
         proto.KindCase.ShouldBe(expectedKindCase);
 
-        var clone = ConstantValueMapper.Instance.FromProto(proto, ReadContext);
+        var clone = ConstantValueMapper.Instance.FromProto(proto, ProtoOptions);
         assert(clone);
     }
 
     [Fact]
     public void Should_map_null_constant_value_to_null_proto()
-        => ConstantValueMapper.Instance.ToProto(null, WriteContext).ShouldBeNull();
+        => ConstantValueMapper.Instance.ToProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_map_null_constant_value_proto_to_null_value()
-        => ConstantValueMapper.Instance.FromProto(null, ReadContext).ShouldBeNull();
+        => ConstantValueMapper.Instance.FromProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_throw_for_proto_constant_value_without_selected_oneof_case()
     {
-        var act = () => ConstantValueMapper.Instance.FromProto(new Proto.ConstantValue(), ReadContext);
+        var act = () => ConstantValueMapper.Instance.FromProto(new Proto.ConstantValue(), ProtoOptions);
 
         var exception = act.ShouldThrow<ProtobufSerializationException>();
         exception.Message.ShouldBe("None is not supported");

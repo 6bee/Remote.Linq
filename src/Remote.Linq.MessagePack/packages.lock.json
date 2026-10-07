@@ -4,12 +4,12 @@
     ".NETStandard,Version=v2.0": {
       "aqua-core-messagepack": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "K6mw/FXkg3yyrhAVdPO1Pw2L/yB5GDBFpBrJVnMbPhTbCLUYMh6Dp8XynIJAT9GfHIaWwtQs4BMq3iMp6YFiZA==",
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "oNU7Z5SmOmGhMcX/cyUSR9HggUKpkeqkN6Y7+AdMRv6OwmwC1Voa/n1hz9eqbwJRpSLYn/9V9XYMMsGs55T4/Q==",
         "dependencies": {
           "MessagePack": "3.1.9",
-          "aqua-core": "6.0.0-alpha-003"
+          "aqua-core": "6.0.0-alpha-004"
         }
       },
       "aqua.tool.Validation": {
@@ -173,14 +173,14 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-003, )"
+          "aqua-core": "[6.0.0-alpha-004, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A==",
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "EjQqSNEAFLzlgNLwHpdxpnQb2SGLPoMV23bOseaqStmKYZvIDwbA67chQ+abqIcA6v2RIw4If76byT/TSB51jQ==",
         "dependencies": {
           "System.Reflection.Emit": "4.7.0",
           "System.Text.Json": "10.0.12"
@@ -217,12 +217,12 @@
     "net10.0": {
       "aqua-core-messagepack": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "K6mw/FXkg3yyrhAVdPO1Pw2L/yB5GDBFpBrJVnMbPhTbCLUYMh6Dp8XynIJAT9GfHIaWwtQs4BMq3iMp6YFiZA==",
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "oNU7Z5SmOmGhMcX/cyUSR9HggUKpkeqkN6Y7+AdMRv6OwmwC1Voa/n1hz9eqbwJRpSLYn/9V9XYMMsGs55T4/Q==",
         "dependencies": {
           "MessagePack": "3.1.9",
-          "aqua-core": "6.0.0-alpha-003"
+          "aqua-core": "6.0.0-alpha-004"
         }
       },
       "aqua.tool.Validation": {
@@ -271,14 +271,14 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-003, )"
+          "aqua-core": "[6.0.0-alpha-004, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A=="
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "EjQqSNEAFLzlgNLwHpdxpnQb2SGLPoMV23bOseaqStmKYZvIDwbA67chQ+abqIcA6v2RIw4If76byT/TSB51jQ=="
       },
       "MessagePack": {
         "type": "CentralTransitive",
@@ -295,12 +295,12 @@
     "net8.0": {
       "aqua-core-messagepack": {
         "type": "Direct",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "K6mw/FXkg3yyrhAVdPO1Pw2L/yB5GDBFpBrJVnMbPhTbCLUYMh6Dp8XynIJAT9GfHIaWwtQs4BMq3iMp6YFiZA==",
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "oNU7Z5SmOmGhMcX/cyUSR9HggUKpkeqkN6Y7+AdMRv6OwmwC1Voa/n1hz9eqbwJRpSLYn/9V9XYMMsGs55T4/Q==",
         "dependencies": {
           "MessagePack": "3.1.9",
-          "aqua-core": "6.0.0-alpha-003"
+          "aqua-core": "6.0.0-alpha-004"
         }
       },
       "aqua.tool.Validation": {
@@ -349,14 +349,14 @@
       "remote.linq": {
         "type": "Project",
         "dependencies": {
-          "aqua-core": "[6.0.0-alpha-003, )"
+          "aqua-core": "[6.0.0-alpha-004, )"
         }
       },
       "aqua-core": {
         "type": "CentralTransitive",
-        "requested": "[6.0.0-alpha-003, )",
-        "resolved": "6.0.0-alpha-003",
-        "contentHash": "ggptv1HoUcmfaJcmL6lRQR8En3RdooPWwEN14wMruXOQbWXU28ih/tLxpK0f8IIYvY3DIT7agShgzraxTv/17A=="
+        "requested": "[6.0.0-alpha-004, )",
+        "resolved": "6.0.0-alpha-004",
+        "contentHash": "EjQqSNEAFLzlgNLwHpdxpnQb2SGLPoMV23bOseaqStmKYZvIDwbA67chQ+abqIcA6v2RIw4If76byT/TSB51jQ=="
       },
       "MessagePack": {
         "type": "CentralTransitive",

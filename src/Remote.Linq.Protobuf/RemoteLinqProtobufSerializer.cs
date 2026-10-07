@@ -19,7 +19,7 @@ public static class RemoteLinqProtobufSerializer
     /// <param name="options">Protobuf serializer options.</param>
     /// <returns>The protobuf-encoded representation of <paramref name="graph"/>.</returns>
     public static byte[] Serialize<T>(T graph, ProtoOptions? options = null)
-        => CreateWriteContext(options).Serialize(graph);
+        => CreateContext(options).Serialize(graph);
 
     /// <summary>
     /// Serializes the specified <paramref name="graph"/> to the given <paramref name="stream"/>.
@@ -29,7 +29,7 @@ public static class RemoteLinqProtobufSerializer
     /// <param name="stream">The destination stream.</param>
     /// <param name="options">Protobuf serializer options.</param>
     public static void Serialize<T>(T graph, Stream stream, ProtoOptions? options = null)
-        => CreateWriteContext(options).Serialize(graph, stream);
+        => CreateContext(options).Serialize(graph, stream);
 
     /// <summary>
     /// Serializes the specified <paramref name="graph"/> to the given <paramref name="span"/>.
@@ -39,7 +39,7 @@ public static class RemoteLinqProtobufSerializer
     /// <param name="span">The destination span.</param>
     /// <param name="options">Protobuf serializer options.</param>
     public static void Serialize<T>(T graph, Span<byte> span, ProtoOptions? options = null)
-        => CreateWriteContext(options).Serialize(graph, span);
+        => CreateContext(options).Serialize(graph, span);
 
     /// <summary>
     /// Serializes the specified <paramref name="graph"/> to the given <paramref name="writer"/>.
@@ -49,7 +49,7 @@ public static class RemoteLinqProtobufSerializer
     /// <param name="writer">The destination writer.</param>
     /// <param name="options">Protobuf serializer options.</param>
     public static void Serialize<T>(T graph, IBufferWriter<byte> writer, ProtoOptions? options = null)
-        => CreateWriteContext(options).Serialize(graph, writer);
+        => CreateContext(options).Serialize(graph, writer);
 
     /// <summary>
     /// Deserializes a graph of type <typeparamref name="T"/> from the protobuf-encoded <paramref name="data"/>.
@@ -61,7 +61,7 @@ public static class RemoteLinqProtobufSerializer
     public static T? Deserialize<T>(byte[] data, ProtoOptions? options = null)
     {
         data.AssertNotNull();
-        return CreateReadContext(options).Deserialize<T>(data);
+        return CreateContext(options).Deserialize<T>(data);
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public static class RemoteLinqProtobufSerializer
     public static T? Deserialize<T>(Stream stream, ProtoOptions? options = null)
     {
         stream.AssertNotNull();
-        return CreateReadContext(options).Deserialize<T>(stream);
+        return CreateContext(options).Deserialize<T>(stream);
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public static class RemoteLinqProtobufSerializer
     /// <returns>The deserialized graph.</returns>
     public static T? Deserialize<T>(ReadOnlySequence<byte> data, ProtoOptions? options = null)
     {
-        return CreateReadContext(options).Deserialize<T>(data);
+        return CreateContext(options).Deserialize<T>(data);
     }
 
     /// <summary>
@@ -98,10 +98,8 @@ public static class RemoteLinqProtobufSerializer
     /// <returns>The deserialized graph.</returns>
     public static T? Deserialize<T>(ReadOnlySpan<byte> data, ProtoOptions? options = null)
     {
-        return CreateReadContext(options).Deserialize<T>(data);
+        return CreateContext(options).Deserialize<T>(data);
     }
 
-    private static ProtoContext CreateReadContext(ProtoOptions? options) => ProtoContext.ForRead(options ?? ProtoOptions.WithRemoteLinqTypesOptimized);
-
-    private static ProtoContext CreateWriteContext(ProtoOptions? options) => ProtoContext.ForWrite(options ?? ProtoOptions.WithRemoteLinqTypesOptimized);
+    private static ProtoContext CreateContext(ProtoOptions? options) => new(options ?? ProtoOptions.WithRemoteLinqTypesOptimized);
 }

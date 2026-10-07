@@ -13,9 +13,7 @@ using RemoteLinq = Remote.Linq.Expressions;
 /// </summary>
 public class When_mapping_protobuf_expression_kinds
 {
-    private static readonly ProtoContext ReadContext = ProtoContext.ForRead(ProtoOptions.WithRemoteLinqTypesOptimized);
-
-    private static readonly ProtoContext WriteContext = ProtoContext.ForWrite(ProtoOptions.WithRemoteLinqTypesOptimized);
+    private static readonly ProtoOptions ProtoOptions = ProtoOptions.WithRemoteLinqTypesOptimized;
 
     [Theory]
     [MemberData(nameof(AllExpressionKinds))]
@@ -23,7 +21,7 @@ public class When_mapping_protobuf_expression_kinds
     {
         var expression = UnionTagExpressionFactory.Build(nodeType);
 
-        var proto = ExpressionMapper.Instance.ToProto(expression, WriteContext);
+        var proto = ExpressionMapper.Instance.ToProto(expression, ProtoOptions);
 
         proto.KindCase.ShouldBe(expectedKindCase);
     }
@@ -33,10 +31,10 @@ public class When_mapping_protobuf_expression_kinds
     public void Should_map_proto_oneof_case_back_to_expression_kind(RemoteLinq.ExpressionType nodeType, Proto.Expression.KindOneofCase expectedKindCase)
     {
         var expression = UnionTagExpressionFactory.Build(nodeType);
-        var proto = ExpressionMapper.Instance.ToProto(expression, WriteContext);
+        var proto = ExpressionMapper.Instance.ToProto(expression, ProtoOptions);
         proto.KindCase.ShouldBe(expectedKindCase);
 
-        var clone = ExpressionMapper.Instance.FromProto(proto, ReadContext);
+        var clone = ExpressionMapper.Instance.FromProto(proto, ProtoOptions);
 
         clone.NodeType.ShouldBe(nodeType);
         clone.ShouldBeOfType(expression.GetType());
@@ -44,16 +42,16 @@ public class When_mapping_protobuf_expression_kinds
 
     [Fact]
     public void Should_map_null_expression_to_null_proto()
-        => ExpressionMapper.Instance.ToProto(null, WriteContext).ShouldBeNull();
+        => ExpressionMapper.Instance.ToProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_map_null_proto_to_null_expression()
-        => ExpressionMapper.Instance.FromProto(null, ReadContext).ShouldBeNull();
+        => ExpressionMapper.Instance.FromProto(null, ProtoOptions).ShouldBeNull();
 
     [Fact]
     public void Should_throw_for_proto_expression_without_selected_oneof_case()
     {
-        var act = () => ExpressionMapper.Instance.FromProto(new Proto.Expression(), ReadContext);
+        var act = () => ExpressionMapper.Instance.FromProto(new Proto.Expression(), ProtoOptions);
 
         var exception = act.ShouldThrow<ProtobufSerializationException>();
         exception.Message.ShouldBe("None is not supported");
