@@ -4,13 +4,11 @@ namespace Remote.Linq.DynamicQuery;
 
 using Aqua.TypeExtensions;
 using Aqua.TypeSystem;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.ExceptionServices;
 using MethodInfo = System.Reflection.MethodInfo;
 using RemoteLinq = Remote.Linq.Expressions;
 using SystemLinq = System.Linq.Expressions;
 
-[SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "Methods appear in logical order")]
 public sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvider
 {
     private static readonly MethodInfo _executeMethod = typeof(AsyncRemoteQueryProvider<TSource>)
@@ -62,6 +60,10 @@ public sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvide
     }
 
     /// <inheritdoc/>
+    public object? Execute(SystemLinq.Expression expression)
+        => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
+
+    /// <inheritdoc/>
     public async ValueTask<TResult> ExecuteAsync<TResult>(SystemLinq.Expression expression, CancellationToken cancellation)
     {
         ExpressionHelper.CheckExpressionResultType<TResult>(expression);
@@ -74,8 +76,4 @@ public sealed class AsyncRemoteQueryProvider<TSource> : IAsyncRemoteQueryProvide
 
         return result;
     }
-
-    /// <inheritdoc/>
-    public object? Execute(SystemLinq.Expression expression)
-        => this.InvokeAndUnwrap<object?>(_executeMethod, expression);
 }
