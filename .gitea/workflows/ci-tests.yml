@@ -29,7 +29,7 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Run tests with coverage
+      - name: Test
         run: >
           dotnet test Remote.Linq.slnx -f ${{ matrix.framework }} /bl:msbuild.${{ matrix.framework }}.binlog `
             --coverlet `

@@ -26,7 +26,7 @@ jobs:
       - name: Build
         run: dotnet build Remote.Linq.slnx --no-restore /bl:msbuild.build.binlog
 
-      - name: Run tests with coverage
+      - name: Test
         run: >
           dotnet test Remote.Linq.slnx --no-build /bl:msbuild.test.binlog `
             --coverlet `
