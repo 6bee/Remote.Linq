@@ -14,7 +14,7 @@ using Remote.Linq.MessagePack.Formatters;
 using System.Buffers;
 using System.IO;
 using RemoteLinq = Remote.Linq.Expressions;
-using VQArg = global::Remote.Linq.DynamicQuery.VariableQueryArgument;
+using VQArg = Remote.Linq.DynamicQuery.VariableQueryArgument;
 
 /// <summary>
 /// Verifies the MessagePack tagged-union wire format for remote expressions, constant values,
@@ -250,47 +250,44 @@ public class When_serializing_messagepack_union_tags
         }
     }
 
-    public static IEnumerable<object[]> RegisteredFormatters
-    {
-        get
-        {
-            yield return [typeof(RemoteLinq.Expression), ExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.BinaryExpression), BinaryExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.BlockExpression), BlockExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.ConditionalExpression), ConditionalExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.ConstantExpression), ConstantExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.DefaultExpression), DefaultExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.GotoExpression), GotoExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.InvokeExpression), InvokeExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.LabelExpression), LabelExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.LambdaExpression), LambdaExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.ListInitExpression), ListInitExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.LoopExpression), LoopExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.MemberExpression), MemberExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.MemberInitExpression), MemberInitExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.MethodCallExpression), MethodCallExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.NewExpression), NewExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.NewArrayExpression), NewArrayExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.ParameterExpression), ParameterExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.SwitchExpression), SwitchExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.TryExpression), TryExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.TypeBinaryExpression), TypeBinaryExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.UnaryExpression), UnaryExpressionFormatter.Instance];
-            yield return [typeof(RemoteLinq.CatchBlock), CatchBlockFormatter.Instance];
-            yield return [typeof(RemoteLinq.LabelTarget), LabelTargetFormatter.Instance];
-            yield return [typeof(RemoteLinq.SwitchCase), SwitchCaseFormatter.Instance];
-            yield return [typeof(RemoteLinq.ElementInit), ElementInitFormatter.Instance];
-            yield return [typeof(RemoteLinq.MemberBinding), MemberBindingFormatter.Instance];
-            yield return [typeof(RemoteLinq.MemberAssignment), MemberAssignmentFormatter.Instance];
-            yield return [typeof(RemoteLinq.MemberListBinding), MemberListBindingFormatter.Instance];
-            yield return [typeof(RemoteLinq.MemberMemberBinding), MemberMemberBindingFormatter.Instance];
-            yield return [typeof(ConstantQueryArgument), ConstantQueryArgumentFormatter.Instance];
-            yield return [typeof(VQArg), VariableQueryArgumentFormatter.Instance];
-            yield return [typeof(VariableQueryArgumentList), VariableQueryArgumentListFormatter.Instance];
-            yield return [typeof(SubstitutionValue), SubstitutionValueFormatter.Instance];
-            yield return [typeof(QueryableResourceDescriptor), QueryableResourceDescriptorFormatter.Instance];
-        }
-    }
+    public static IEnumerable<object[]> RegisteredFormatters =>
+    [
+         [typeof(RemoteLinq.Expression), ExpressionFormatter.Instance],
+         [typeof(RemoteLinq.BinaryExpression), BinaryExpressionFormatter.Instance],
+         [typeof(RemoteLinq.BlockExpression), BlockExpressionFormatter.Instance],
+         [typeof(RemoteLinq.ConditionalExpression), ConditionalExpressionFormatter.Instance],
+         [typeof(RemoteLinq.ConstantExpression), ConstantExpressionFormatter.Instance],
+         [typeof(RemoteLinq.DefaultExpression), DefaultExpressionFormatter.Instance],
+         [typeof(RemoteLinq.GotoExpression), GotoExpressionFormatter.Instance],
+         [typeof(RemoteLinq.InvokeExpression), InvokeExpressionFormatter.Instance],
+         [typeof(RemoteLinq.LabelExpression), LabelExpressionFormatter.Instance],
+         [typeof(RemoteLinq.LambdaExpression), LambdaExpressionFormatter.Instance],
+         [typeof(RemoteLinq.ListInitExpression), ListInitExpressionFormatter.Instance],
+         [typeof(RemoteLinq.LoopExpression), LoopExpressionFormatter.Instance],
+         [typeof(RemoteLinq.MemberExpression), MemberExpressionFormatter.Instance],
+         [typeof(RemoteLinq.MemberInitExpression), MemberInitExpressionFormatter.Instance],
+         [typeof(RemoteLinq.MethodCallExpression), MethodCallExpressionFormatter.Instance],
+         [typeof(RemoteLinq.NewExpression), NewExpressionFormatter.Instance],
+         [typeof(RemoteLinq.NewArrayExpression), NewArrayExpressionFormatter.Instance],
+         [typeof(RemoteLinq.ParameterExpression), ParameterExpressionFormatter.Instance],
+         [typeof(RemoteLinq.SwitchExpression), SwitchExpressionFormatter.Instance],
+         [typeof(RemoteLinq.TryExpression), TryExpressionFormatter.Instance],
+         [typeof(RemoteLinq.TypeBinaryExpression), TypeBinaryExpressionFormatter.Instance],
+         [typeof(RemoteLinq.UnaryExpression), UnaryExpressionFormatter.Instance],
+         [typeof(RemoteLinq.CatchBlock), CatchBlockFormatter.Instance],
+         [typeof(RemoteLinq.LabelTarget), LabelTargetFormatter.Instance],
+         [typeof(RemoteLinq.SwitchCase), SwitchCaseFormatter.Instance],
+         [typeof(RemoteLinq.ElementInit), ElementInitFormatter.Instance],
+         [typeof(RemoteLinq.MemberBinding), MemberBindingFormatter.Instance],
+         [typeof(RemoteLinq.MemberAssignment), MemberAssignmentFormatter.Instance],
+         [typeof(RemoteLinq.MemberListBinding), MemberListBindingFormatter.Instance],
+         [typeof(RemoteLinq.MemberMemberBinding), MemberMemberBindingFormatter.Instance],
+         [typeof(ConstantQueryArgument), ConstantQueryArgumentFormatter.Instance],
+         [typeof(VQArg), VariableQueryArgumentFormatter.Instance],
+         [typeof(VariableQueryArgumentList), VariableQueryArgumentListFormatter.Instance],
+         [typeof(SubstitutionValue), SubstitutionValueFormatter.Instance],
+         [typeof(QueryableResourceDescriptor), QueryableResourceDescriptorFormatter.Instance],
+    ];
 
     private static object RoundtripConstantValue(object value)
     {
@@ -331,30 +328,23 @@ public class When_serializing_messagepack_union_tags
         public string City { get; set; } = string.Empty;
     }
 
-    private sealed class MemoryStreamBufferWriter : IBufferWriter<byte>
+    private sealed class MemoryStreamBufferWriter(MemoryStream stream) : IBufferWriter<byte>
     {
-        private readonly MemoryStream _stream;
-
         private byte[] _buffer = new byte[4096];
 
         private int _offset;
 
-        public MemoryStreamBufferWriter(MemoryStream stream)
-        {
-            _stream = stream;
-        }
-
         public void Advance(int count)
         {
-            _stream.Write(_buffer, _offset, count);
+            stream.Write(_buffer, _offset, count);
             _offset += count;
         }
 
         public Memory<byte> GetMemory(int sizeHint = 0)
-            => new Memory<byte>(_buffer, _offset, _buffer.Length - _offset);
+            => new(_buffer, _offset, _buffer.Length - _offset);
 
         public Span<byte> GetSpan(int sizeHint = 0)
-            => new Span<byte>(_buffer, _offset, _buffer.Length - _offset);
+            => new(_buffer, _offset, _buffer.Length - _offset);
 
         public void Complete() => _offset = 0;
     }
