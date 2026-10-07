@@ -20,10 +20,10 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Restore framework
+      - name: Restore
         run: dotnet restore Remote.Linq.slnx --locked-mode
 
-      - name: Build framework
+      - name: Build
         run: dotnet build Remote.Linq.slnx --no-restore
 
       - name: Run tests with coverage
@@ -40,6 +40,7 @@ jobs:
             --coverlet-exclude-by-attribute CompilerGenerated
 
       - name: Upload coverage artifact
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: coverage

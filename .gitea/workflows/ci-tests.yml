@@ -43,10 +43,11 @@ jobs:
             --coverlet-exclude-by-attribute CompilerGenerated
 
       - name: Upload build log
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: msbuild_log_${{ matrix.framework }}
-          path: msbuild.binlog
+          path: msbuild.${{ matrix.framework }}.binlog
           if-no-files-found: error
 
       - name: Upload coverage reports
