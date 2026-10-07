@@ -19,7 +19,9 @@ public static class RemoteLinqProtobufSerializer
     /// <param name="options">Protobuf serializer options.</param>
     /// <returns>The protobuf-encoded representation of <paramref name="graph"/>.</returns>
     public static byte[] Serialize<T>(T graph, ProtoOptions? options = null)
-        => CreateContext(options).Serialize(graph);
+    {
+        return CreateContext(options).Serialize(graph);
+    }
 
     /// <summary>
     /// Serializes the specified <paramref name="graph"/> to the given <paramref name="stream"/>.
@@ -29,7 +31,10 @@ public static class RemoteLinqProtobufSerializer
     /// <param name="stream">The destination stream.</param>
     /// <param name="options">Protobuf serializer options.</param>
     public static void Serialize<T>(T graph, Stream stream, ProtoOptions? options = null)
-        => CreateContext(options).Serialize(graph, stream);
+    {
+        stream.AssertNotNull();
+        CreateContext(options).Serialize(graph, stream);
+    }
 
     /// <summary>
     /// Serializes the specified <paramref name="graph"/> to the given <paramref name="span"/>.
@@ -39,7 +44,9 @@ public static class RemoteLinqProtobufSerializer
     /// <param name="span">The destination span.</param>
     /// <param name="options">Protobuf serializer options.</param>
     public static void Serialize<T>(T graph, Span<byte> span, ProtoOptions? options = null)
-        => CreateContext(options).Serialize(graph, span);
+    {
+        CreateContext(options).Serialize(graph, span);
+    }
 
     /// <summary>
     /// Serializes the specified <paramref name="graph"/> to the given <paramref name="writer"/>.
@@ -49,7 +56,10 @@ public static class RemoteLinqProtobufSerializer
     /// <param name="writer">The destination writer.</param>
     /// <param name="options">Protobuf serializer options.</param>
     public static void Serialize<T>(T graph, IBufferWriter<byte> writer, ProtoOptions? options = null)
-        => CreateContext(options).Serialize(graph, writer);
+    {
+        writer.AssertNotNull();
+        CreateContext(options).Serialize(graph, writer);
+    }
 
     /// <summary>
     /// Deserializes a graph of type <typeparamref name="T"/> from the protobuf-encoded <paramref name="data"/>.
