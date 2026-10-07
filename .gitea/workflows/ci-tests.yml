@@ -31,7 +31,7 @@ jobs:
 
       - name: Run tests with coverage
         run: >
-          dotnet test Remote.Linq.slnx -f ${{ matrix.framework }} /bl `
+          dotnet test Remote.Linq.slnx -f ${{ matrix.framework }} /bl:msbuild.${{ matrix.framework }}.binlog `
             --coverlet `
             --results-directory TestResults `
             --coverlet-output-format json `
