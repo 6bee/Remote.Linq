@@ -31,27 +31,30 @@ jobs:
 
       - name: Test
         run: >
-          dotnet test Remote.Linq.slnx -f ${{ matrix.framework }} /bl:msbuild.${{ matrix.framework }}.binlog `
-            --coverlet `
+          dotnet test Remote.Linq.slnx -f ${{ matrix.framework }} `
+            /bl:msbuild.${{ matrix.framework }}.binlog `
             --results-directory TestResults `
+            --coverlet `
             --coverlet-output-format json `
             --coverlet-output-format cobertura `
             --coverlet-exclude-assemblies-without-sources MissingAll `
             --coverlet-exclude-by-attribute Obsolete `
             --coverlet-exclude-by-attribute GeneratedCode `
             --coverlet-exclude-by-attribute DebuggerNonUserCode `
-            --coverlet-exclude-by-attribute CompilerGenerated
+            --coverlet-exclude-by-attribute CompilerGenerated `
+            -- --report-trx
 
-      - name: Upload build log
+      - name: Upload build logs
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: msbuild_log_${{ matrix.framework }}
-          path: msbuild.${{ matrix.framework }}.binlog
+          name: msbuild_logs_${{ matrix.framework }}
+          path: msbuild.*.binlog
           if-no-files-found: error
 
-      - name: Upload coverage reports
+      - name: Upload test results and coverage
+        if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: coverage
+          name: test_results_${{ matrix.framework }}
           path: TestResults/*

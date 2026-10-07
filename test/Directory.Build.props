@@ -39,6 +39,7 @@
   -->
   <ItemGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">
     <PackageReference Include="coverlet.MTP" />
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>

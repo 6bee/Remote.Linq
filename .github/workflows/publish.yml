@@ -63,18 +63,22 @@ jobs:
         run: dotnet build Remote.Linq.slnx --no-restore -c Release /bl:msbuild.build.binlog
 
       - name: Test
-        run: dotnet test Remote.Linq.slnx --no-build -c Release /bl:msbuild.test.binlog
+        run: dotnet test Remote.Linq.slnx --no-build -c Release /bl:msbuild.test.binlog --results-directory TestResults -- --report-trx
 
       - name: Upload build logs
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: msbuild_logs
-          path: |
-            msbuild.restore.binlog
-            msbuild.build.binlog
-            msbuild.test.binlog
+          path: msbuild.*.binlog
           if-no-files-found: error
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test_results
+          path: TestResults/*
 
       - name: Upload packages
         uses: actions/upload-artifact@v7

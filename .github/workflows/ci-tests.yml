@@ -29,31 +29,30 @@ jobs:
       - name: Test
         run: >
           dotnet test Remote.Linq.slnx --no-build /bl:msbuild.test.binlog `
-            --coverlet `
             --results-directory TestResults `
+            --coverlet `
             --coverlet-output-format json `
             --coverlet-output-format cobertura `
             --coverlet-exclude-assemblies-without-sources MissingAll `
             --coverlet-exclude-by-attribute Obsolete `
             --coverlet-exclude-by-attribute GeneratedCode `
             --coverlet-exclude-by-attribute DebuggerNonUserCode `
-            --coverlet-exclude-by-attribute CompilerGenerated
+            --coverlet-exclude-by-attribute CompilerGenerated `
+            -- --report-trx
 
       - name: Upload build logs
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: msbuild_logs
-          path: |
-            msbuild.restore.binlog
-            msbuild.build.binlog
-            msbuild.test.binlog
+          path: msbuild.*.binlog
           if-no-files-found: error
 
-      - name: Upload coverage reports
+      - name: Upload test results and coverage
+        if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: coverage
+          name: test_results
           path: TestResults/*
 
       - name: Upload to Codecov
