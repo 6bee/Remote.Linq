@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Bump _aqua-core_ packages from 5.5.1 to 6.0.0
 - Replace _protobuf-net_ serialization backend with a complete rewrite based on _aqua-core-protobuf_ and _Google.Protobuf_
 - Changed `ToLinqExpression<T, TResult>()` to `ToLinqExpression<Func<T, TResult>>()` <br/>
   and `ToLinqExpression<TResult>()` to `ToLinqExpression<Func<TResult>>()`. <br/>
