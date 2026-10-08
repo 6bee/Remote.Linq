@@ -4,11 +4,11 @@
     ".NETFramework,Version=v4.8": {
       "aqua.tool.Validation": {
         "type": "Direct",
-        "requested": "[3.2.1, )",
-        "resolved": "3.2.1",
-        "contentHash": "Pe3AKwJbiqprRIjv7u8CPjV2kVObtBFBD8ZP9JLwOmi/ypHxwFC8vLcbYhHZjZ2DVh9rXEkywZlULUVwtHIFmw==",
+        "requested": "[4.0.0-alpha-001, )",
+        "resolved": "4.0.0-alpha-001",
+        "contentHash": "ZIrU3LrEWvHW0DsImVEJUQKKCZmVXjYQoPIbEi91HNo0lzIImXgpfEKXauQIwJxfG9h+8mLw3rdPyRVNNdnzMw==",
         "dependencies": {
-          "PolySharp": "1.15.0"
+          "PolySharp": "1.16.0"
         }
       },
       "coverlet.MTP": {
@@ -283,8 +283,8 @@
       },
       "PolySharp": {
         "type": "Transitive",
-        "resolved": "1.15.0",
-        "contentHash": "FbU0El+EEjdpuIX4iDbeS7ki1uzpJPx8vbqOzEtqnl1GZeAGJfq+jCbxeJL2y0EPnUNk8dRnnqR2xnYXg9Tf+g=="
+        "resolved": "1.16.0",
+        "contentHash": "3kdIIceBPumwjw279FuiVMfVENT2cGASXJgcigdySsbX2dJB8ofUgG6i47yqF/k1qu6fvNR3csrSekZPviR6kQ=="
       },
       "StyleCop.Analyzers.Unstable": {
         "type": "Transitive",
@@ -632,11 +632,11 @@
     "net10.0": {
       "aqua.tool.Validation": {
         "type": "Direct",
-        "requested": "[3.2.1, )",
-        "resolved": "3.2.1",
-        "contentHash": "Pe3AKwJbiqprRIjv7u8CPjV2kVObtBFBD8ZP9JLwOmi/ypHxwFC8vLcbYhHZjZ2DVh9rXEkywZlULUVwtHIFmw==",
+        "requested": "[4.0.0-alpha-001, )",
+        "resolved": "4.0.0-alpha-001",
+        "contentHash": "ZIrU3LrEWvHW0DsImVEJUQKKCZmVXjYQoPIbEi91HNo0lzIImXgpfEKXauQIwJxfG9h+8mLw3rdPyRVNNdnzMw==",
         "dependencies": {
-          "PolySharp": "1.15.0"
+          "PolySharp": "1.16.0"
         }
       },
       "coverlet.MTP": {
@@ -858,8 +858,8 @@
       },
       "PolySharp": {
         "type": "Transitive",
-        "resolved": "1.15.0",
-        "contentHash": "FbU0El+EEjdpuIX4iDbeS7ki1uzpJPx8vbqOzEtqnl1GZeAGJfq+jCbxeJL2y0EPnUNk8dRnnqR2xnYXg9Tf+g=="
+        "resolved": "1.16.0",
+        "contentHash": "3kdIIceBPumwjw279FuiVMfVENT2cGASXJgcigdySsbX2dJB8ofUgG6i47yqF/k1qu6fvNR3csrSekZPviR6kQ=="
       },
       "StyleCop.Analyzers.Unstable": {
         "type": "Transitive",
@@ -1069,11 +1069,11 @@
     "net8.0": {
       "aqua.tool.Validation": {
         "type": "Direct",
-        "requested": "[3.2.1, )",
-        "resolved": "3.2.1",
-        "contentHash": "Pe3AKwJbiqprRIjv7u8CPjV2kVObtBFBD8ZP9JLwOmi/ypHxwFC8vLcbYhHZjZ2DVh9rXEkywZlULUVwtHIFmw==",
+        "requested": "[4.0.0-alpha-001, )",
+        "resolved": "4.0.0-alpha-001",
+        "contentHash": "ZIrU3LrEWvHW0DsImVEJUQKKCZmVXjYQoPIbEi91HNo0lzIImXgpfEKXauQIwJxfG9h+8mLw3rdPyRVNNdnzMw==",
         "dependencies": {
-          "PolySharp": "1.15.0"
+          "PolySharp": "1.16.0"
         }
       },
       "coverlet.MTP": {
@@ -1296,8 +1296,8 @@
       },
       "PolySharp": {
         "type": "Transitive",
-        "resolved": "1.15.0",
-        "contentHash": "FbU0El+EEjdpuIX4iDbeS7ki1uzpJPx8vbqOzEtqnl1GZeAGJfq+jCbxeJL2y0EPnUNk8dRnnqR2xnYXg9Tf+g=="
+        "resolved": "1.16.0",
+        "contentHash": "3kdIIceBPumwjw279FuiVMfVENT2cGASXJgcigdySsbX2dJB8ofUgG6i47yqF/k1qu6fvNR3csrSekZPviR6kQ=="
       },
       "StyleCop.Analyzers.Unstable": {
         "type": "Transitive",

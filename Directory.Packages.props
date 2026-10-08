@@ -15,7 +15,7 @@
     <PackageVersion Include="aqua-core-messagepack" Version="$(AquaCoreVersion)" />
     <PackageVersion Include="aqua-core-newtonsoft-json" Version="$(AquaCoreVersion)" />
     <PackageVersion Include="aqua-core-protobuf" Version="$(AquaCoreVersion)" />
-    <PackageVersion Include="aqua.tool.Validation" Version="3.2.1" />
+    <PackageVersion Include="aqua.tool.Validation" Version="4.0.0-alpha-001" />
     <PackageVersion Include="EntityFramework" Version="6.5.2" />
     <PackageVersion Include="Grpc.Tools" Version="2.84.0" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.26.0.92422" />
