@@ -4,9 +4,9 @@
     ".NETStandard,Version=v2.0": {
       "aqua.tool.Validation": {
         "type": "Direct",
-        "requested": "[4.0.0-alpha-001, )",
-        "resolved": "4.0.0-alpha-001",
-        "contentHash": "ZIrU3LrEWvHW0DsImVEJUQKKCZmVXjYQoPIbEi91HNo0lzIImXgpfEKXauQIwJxfG9h+8mLw3rdPyRVNNdnzMw==",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "0e6NbXjPeaexK154v1w2sGrbgWWcZnkBUwZ02FtiuRI+w8T6uHsSSeDOT5RznRJhnsSeg5YyLqE1L26j64p3gg==",
         "dependencies": {
           "PolySharp": "1.16.0"
         }
@@ -299,9 +299,9 @@
     ".NETStandard,Version=v2.1": {
       "aqua.tool.Validation": {
         "type": "Direct",
-        "requested": "[4.0.0-alpha-001, )",
-        "resolved": "4.0.0-alpha-001",
-        "contentHash": "ZIrU3LrEWvHW0DsImVEJUQKKCZmVXjYQoPIbEi91HNo0lzIImXgpfEKXauQIwJxfG9h+8mLw3rdPyRVNNdnzMw==",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "0e6NbXjPeaexK154v1w2sGrbgWWcZnkBUwZ02FtiuRI+w8T6uHsSSeDOT5RznRJhnsSeg5YyLqE1L26j64p3gg==",
         "dependencies": {
           "PolySharp": "1.16.0"
         }
@@ -489,9 +489,9 @@
     "net10.0": {
       "aqua.tool.Validation": {
         "type": "Direct",
-        "requested": "[4.0.0-alpha-001, )",
-        "resolved": "4.0.0-alpha-001",
-        "contentHash": "ZIrU3LrEWvHW0DsImVEJUQKKCZmVXjYQoPIbEi91HNo0lzIImXgpfEKXauQIwJxfG9h+8mLw3rdPyRVNNdnzMw==",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "0e6NbXjPeaexK154v1w2sGrbgWWcZnkBUwZ02FtiuRI+w8T6uHsSSeDOT5RznRJhnsSeg5YyLqE1L26j64p3gg==",
         "dependencies": {
           "PolySharp": "1.16.0"
         }
@@ -618,9 +618,9 @@
     "net8.0": {
       "aqua.tool.Validation": {
         "type": "Direct",
-        "requested": "[4.0.0-alpha-001, )",
-        "resolved": "4.0.0-alpha-001",
-        "contentHash": "ZIrU3LrEWvHW0DsImVEJUQKKCZmVXjYQoPIbEi91HNo0lzIImXgpfEKXauQIwJxfG9h+8mLw3rdPyRVNNdnzMw==",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "0e6NbXjPeaexK154v1w2sGrbgWWcZnkBUwZ02FtiuRI+w8T6uHsSSeDOT5RznRJhnsSeg5YyLqE1L26j64p3gg==",
         "dependencies": {
           "PolySharp": "1.16.0"
         }
