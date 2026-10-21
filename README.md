@@ -50,7 +50,7 @@ public class ClientDataRepository
 {
     private readonly Func<Expression, DynamicObject> _dataProvider;
 
-    public RemoteRepository(string uri)
+    public ClientDataRepository(string uri)
     {
         _dataProvider = expression =>
         {
